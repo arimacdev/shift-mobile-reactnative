@@ -10,8 +10,32 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@react-native-community/async-storage": "^1.6.1",
+    "@react-navigation/material-top-tabs": "^5.1.1",
+    "@react-navigation/native": "^5.0.9",
+    "axios": "^0.19.0",
+    "jwt-decode": "^2.2.0",
+    "lodash": "^4.17.11",
+    "moment": "^2.24.0",
+    "native-base": "^2.13.7",
     "react": "16.11.0",
-    "react-native": "0.62.1"
+    "react-native": "0.62.1",
+    "react-native-easy-toast": "^1.2.0",
+    "react-native-elements": "^1.2.7",
+    "react-native-extended-stylesheet": "^0.12.0",
+    "react-native-gesture-handler": "^1.6.1",
+    "react-native-indicators": "^0.16.0",
+    "react-native-reanimated": "^1.2.0",
+    "react-native-screens": "^2.3.0",
+    "react-native-search-header": "^0.3.5",
+    "react-native-vector-icons": "^6.6.0",
+    "react-navigation": "^4.0.0",
+    "react-navigation-drawer": "^2.2.1",
+    "react-navigation-material-bottom-tabs": "^1.1.1",
+    "react-navigation-stack": "^1.5.1",
+    "react-redux": "^7.1.1",
+    "redux": "^4.0.4",
+    "redux-thunk": "^2.3.0"
   },
   "devDependencies": {
     "@babel/core": "7.9.0",
