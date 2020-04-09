@@ -1,13 +1,13 @@
 import React from 'react';
 import { createStackNavigator } from 'react-navigation-stack';
-import LoginScreen from '../screens/Auth/LoginScreen';
+import Home from '../screens/Auth/Home';
 
 
 export const AuthStackNavigator = createStackNavigator(
     {
-        LoginScreen: {
-            screen: LoginScreen,
-            headerMode: 'Login',
+        Home: {
+            screen: Home,
+            headerMode: 'Home',
             header: null,
             navigationOptions: {
                 header: null,
@@ -16,6 +16,6 @@ export const AuthStackNavigator = createStackNavigator(
         },
     },
     {
-        initialRouteName: 'LoginScreen'
+        initialRouteName: 'Home'
     }
 );

@@ -30,9 +30,17 @@ class Header extends Component {
                                 </TouchableOpacity>
                             </View>
                             <View style={styles.leftContainer}>
+                                {/* {code hear} */}
                             </View>
                             <View style={styles.rightContainer} >
+                            <TouchableOpacity style={{alignItems:'flex-end'}} onPress={() => navigation.navigate('Your Cart')}>
+                                    <Icon name={'menu'} style={styles.icon} type={'SimpleLineIcons'} />
+                                </TouchableOpacity>
+                                <TouchableOpacity style={{alignItems:'flex-end'}} onPress={() => navigation.navigate('Your Cart')}>
+                                    <Icon name={'menu'} style={styles.icon} type={'SimpleLineIcons'} />
+                                </TouchableOpacity>
                             </View>
+                            
                         </View>
 
                         :

@@ -14,10 +14,10 @@ import {
 import EStyleSheet from 'react-native-extended-stylesheet';
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
-import colors from '../config/colors';
-import icons from '../assest/icons/icons';
+import colors from '../../config/colors';
+import icons from '../../assest/icons/icons';
 
-export default class Login extends Component {
+export default class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -27,7 +27,7 @@ export default class Login extends Component {
   }
 
   navigateToHome() {
-    this.props.navigation.navigate('App');
+    this.props.navigation.navigate('aaa');
   }
 
   onUsernameChange(text){
@@ -45,7 +45,7 @@ export default class Login extends Component {
     return (
       <View style={styles.container}>
         <View style={styles.textContainer}>
-          <Text style={styles.textTitle}>Welcome to Arimac PM tool</Text>
+          <Text style={styles.textTitle}>Home</Text>
           <Text style={styles.textSubTitle}>
             Enter your email address and password to get access your account
           </Text>

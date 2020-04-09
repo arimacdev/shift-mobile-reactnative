@@ -10,5 +10,8 @@ const colors = {
     lightBlue: '#38afff',
     lightgray: '#D3D3D3',
     lighterGray: '#e5e5e5',
+    gray:'#6e6e6e',
+    projectText: '#737d8e',
+    projectBgColor:'#edf0f5'
 };
 export default colors;
