@@ -21,6 +21,7 @@
     "native-base": "^2.13.7",
     "react": "16.11.0",
     "react-native": "0.62.1",
+    "react-native-app-auth": "^5.1.1",
     "react-native-easy-toast": "^1.2.0",
     "react-native-elements": "^1.2.7",
     "react-native-extended-stylesheet": "^0.12.0",

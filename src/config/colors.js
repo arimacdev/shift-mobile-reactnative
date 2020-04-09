@@ -12,6 +12,9 @@ const colors = {
     lighterGray: '#e5e5e5',
     gray:'#6e6e6e',
     projectText: '#737d8e',
-    projectBgColor:'#edf0f5'
+    projectBgColor:'#edf0f5',
+    loginBlue:'#0C0C5A',
+    loginGray:'#576377',
+    loginButton: '#0BAFFF'
 };
 export default colors;

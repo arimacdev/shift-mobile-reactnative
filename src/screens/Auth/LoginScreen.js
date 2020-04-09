@@ -1,9 +1,23 @@
 import React, { Component } from 'react';
-import {StyleSheet, View } from 'react-native';
+import {StyleSheet, View,Button} from 'react-native';
 import { connect } from 'react-redux';
 import * as actions from '../../redux/actions';
 import colors from '../../config/colors'
 import strings from '../../config/strings'
+import { authorize } from 'react-native-app-auth';
+
+// base config
+const config = {
+        issuer : 'http://pmtool.devops.arimac.xyz/auth',
+        serviceConfiguration  : {
+            authorizationEndpoint : 'http://pmtool.devops.arimac.xyz/auth/realms/pm-tool/protocol/openid-connect/auth',
+            tokenEndpoint  : 'http://pmtool.devops.arimac.xyz/auth/realms/pm-tool/protocol/openid-connect/token',
+        },
+        clientId : 'pmtool-frontend',
+        redirectUrl  : 'io.identityserver.demo:/oauthredirect',
+        scopes : ['openid', 'roles', 'profile'],
+  };
+  
 
 class LoginScreen extends Component {
     constructor(props) {
@@ -21,13 +35,36 @@ class LoginScreen extends Component {
     componentDidUpdate(prevProps, prevState, snapshot) {
     }
 
-    render() {
-        let userName = this.state.userName;
-        let password = this.state.password;
-        return (
-            <View
-                style={styles.backgroundImage}>
+    async initialUserLogin() {
+        try {
+            const result = await authorize(config);
+            console.log(result)
+            // result includes accessToken, accessTokenExpirationDate and refreshToken
+          } catch (error) {
+            alert(error)
+          }
+    }
 
+    async initialUserLogout() {
+        try {
+            const result = await authorize(config);
+            console.log(result)
+            // result includes accessToken, accessTokenExpirationDate and refreshToken
+          } catch (error) {
+            alert(error)
+          }
+    }
+
+    
+
+    render() {
+        return (
+            <View style={styles.backgroundImage}>
+                <Button
+                    onPress={() => this.initialUserLogin()}
+                    title="Login"
+                    color="#841584"
+                />
             </View>
         );
     }
@@ -36,7 +73,7 @@ class LoginScreen extends Component {
 const styles = StyleSheet.create({
     backgroundImage: {
       flex: 1,
-      backgroundColor : 'yellow',
+      backgroundColor : colors.pageBackGroundColor,
       justifyContent: "center",
       alignItems: "center"
     },
