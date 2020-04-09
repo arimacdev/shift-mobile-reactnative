@@ -10,41 +10,55 @@ EStyleSheet.build({$rem: entireScreenWidth / 380});
 import { Dropdown } from 'react-native-material-dropdown';
 
 let dropData = [{
-    value: 'Ongoing',
+    value: 'Status',
   }, {
     value: 'Completed',
   }, {
     value: 'Not started',
+  }, {
+    value: 'QA',
+  }, {
+    value: 'Unassigned',
+  }, {
+    value: 'Assigned',
   }];
 
-class ProjectsScreen extends Component {
+class BordTabScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
       data: [
         {
-          projId: '0001',
-          projName: 'REDD MRI',
-          projStatus: 'Ongoing',
-          projStatusColor: '#ffc213'
+          taskId: '0001',
+          taskName: 'Home page login',
+          taskStatus: 'Ongoing',
+          taskStatusColor: '#ffc213',
+          taskDate:'Yesterday',
+          avatr:icons.folder
         },
         {
-          projId: '0002',
-          projName: 'VISA',
-          projStatus: 'Completed',
-          projStatusColor: '#2ec973',
+          taskId: '0002',
+          taskName: 'Home page login',
+          taskStatus: 'Ongoing',
+          taskStatusColor: '#ffc213',
+          taskDate:'Yesterday',
+          avatr:icons.folder
         },
         {
-          projId: '0003',
-          projName: 'BLUEMOUNTION_IOT',
-          projStatus: 'Not Started',
-          projStatusColor: '#ff4c13',
+          taskId: '0003',
+          taskName: 'Home page login',
+          taskStatus: 'Ongoing',
+          taskStatusColor: '#ffc213',
+          taskDate:'Yesterday',
+          avatr:icons.folder
         },
         {
-          projId: '0004',
-          projName: 'DILMAH_DISIGN',
-          projStatus: 'Over due',
-          projStatusColor: '#ff4c13',
+          taskId: '0004',
+          taskName: 'Home page login',
+          taskStatus: 'Ongoing',
+          taskStatusColor: '#ffc213',
+          taskDate:'Yesterday',
+          avatr:icons.folder
         },
       ],
     };
@@ -56,13 +70,16 @@ class ProjectsScreen extends Component {
 
   renderProjectList(item) {
     return (
-    <TouchableOpacity onPress={()=>this.props.navigation.navigate('TasksScreen',{projDetails:item})}>
+    <TouchableOpacity onPress={()=>this.props.navigation.navigate('TasksScreen',{taskDetails:item})}>
       <View style={styles.projectView}>
-        <Image style={styles.userIcon} source={icons.folder} />
+        <Image style={styles.userIcon} source={item.avatr} />
         <View style={{flex:1}}>
-            <Text style={styles.text}>{item.projName}</Text>
+            <Text style={styles.text}>{item.taskName}</Text>
         </View>
-        <View style={[styles.statusView, {backgroundColor: item.projStatusColor}]}/>
+        <View style={styles.statusView}>
+          <Text style={styles.text}>{item.projName}</Text>
+          <Image style={styles.userIcon} source={item.avatr} />
+        </View>
       </View>
       </TouchableOpacity>
     );
@@ -71,7 +88,7 @@ class ProjectsScreen extends Component {
 renderBase(){
     return(
         <View style={{justifyContent:'center',flex:1}}>
-           <Image style={styles.dropIcon} source={icons.arrow} />
+           <Image style={styles.dropIcon} source={icons.arrowDark} />
         </View>
     )
 }
@@ -85,18 +102,18 @@ renderBase(){
         label=''
         labelFontSize={0}
         data={dropData}
-        textColor={'white'}
+        textColor={colors.lightgray}
         error={''}
         animationDuration={0.5}
         containerStyle={{width:'100%'}}
         overlayStyle={{width:'100%'}}
         pickerStyle={{width:'89%',marginTop:70, marginLeft:15}}
         dropdownPosition={0}
-        value={'Ongoing'}
+        value={'Status'}
         itemColor={'black'}
         selectedItemColor={'black'}
         dropdownOffset={{top:10}}
-        baseColor={colors.lightBlue}
+        baseColor={colors.projectBgColor}
         // renderBase={this.renderBase}
         renderAccessory={this.renderBase}
         itemTextStyle={{marginLeft:15}}
@@ -125,7 +142,7 @@ const styles = EStyleSheet.create({
     // backgroundColor: colors.pageBackGroundColor,
   },
   projectFilerView:{
-    backgroundColor: colors.lightBlue,
+    backgroundColor: colors.projectBgColor,
     borderRadius: 5,
     // width: '330rem',
     marginTop: '17rem',
@@ -153,11 +170,11 @@ const styles = EStyleSheet.create({
     marginTop: '7rem',
     flexDirection: 'row',
     alignItems: 'center',
-    paddingLeft: '12rem',
+    paddingHorizontal: '12rem',
     marginHorizontal:'20rem'
   },
   text: {
-    fontSize: '14rem',
+    fontSize: '12rem',
     color: colors.projectText,
     textAlign: 'center',
     fontWeight: 'bold',
@@ -171,12 +188,13 @@ const styles = EStyleSheet.create({
     height: '20rem',
   },
   statusView:{
-    backgroundColor: colors.gray,
-    width:'5rem',
-    height:'60rem',
-    alignItems:'flex-end',
-    borderTopRightRadius: 5,
-    borderBottomRightRadius: 5,
+    // backgroundColor: colors.gray,
+    // width:'5rem',
+    // height:'60rem',
+    alignItems:'center',
+    flexDirection:'row',
+    // borderTopRightRadius: 5,
+    // borderBottomRightRadius: 5,
   },
   dropIcon:{
     width: '13rem',
@@ -190,4 +208,4 @@ const mapStateToProps = state => {
 export default connect(
   mapStateToProps,
   actions,
-)(ProjectsScreen);
+)(BordTabScreen);
