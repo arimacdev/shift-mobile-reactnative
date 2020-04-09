@@ -55,7 +55,8 @@ target 'arimacPmTool' do
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
 
   pod 'RNGestureHandler', :path => '../node_modules/react-native-gesture-handler'
-
+  pod 'AppAuth'
+  
   target 'arimacPmToolTests' do
     inherit! :complete
     # Pods for testing
