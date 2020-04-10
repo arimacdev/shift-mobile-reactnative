@@ -12,6 +12,7 @@ const colors = {
     lighterGray: '#e5e5e5',
     gray:'#6e6e6e',
     projectText: '#737d8e',
-    projectBgColor:'#edf0f5'
+    projectBgColor:'#edf0f5',
+    lightGreen:'#2ec973'
 };
 export default colors;
