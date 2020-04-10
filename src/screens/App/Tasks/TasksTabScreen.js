@@ -19,27 +19,47 @@ import AddNewTasksScreen from '../Tasks/AddNewTasksScreen'
 import AsyncStorage from '@react-native-community/async-storage';
 import Loader from '../../../components/Loader';
 import moment from "moment";
+import FadeIn from 'react-native-fade-in-image';
+import {
+  SkypeIndicator,
+} from 'react-native-indicators';
+
+const Placeholder = () => (
+  <View style={styles.landing}>
+    <SkypeIndicator color={colors.primary}/>
+  </View>
+);
 
 let dropData = [
   {
-    value: 'Status',
+      id: 'Pending',
+      value: 'Pending',
   },
   {
-    value: 'Completed',
+    id: 'Implementing',
+    value: 'Implementing',
   },
   {
-    value: 'Not started',
-  },
-  {
+    id: 'QA',
     value: 'QA',
   },
   {
-    value: 'Unassigned',
+    id: 'Ready to Deploy',
+    value: 'Ready to Deploy',
   },
   {
-    value: 'Assigned',
+    id: 'Re-Opened',
+    value: 'Re-Opened',
   },
-];
+  {
+    id: 'Deployed',
+    value: 'Deployed',
+  },
+  {
+    id: 'Closed',
+    value: 'Closed',
+  },
+]
 
 let bottomData = [
   {
@@ -73,12 +93,34 @@ class TasksTabScreen extends Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
+
+    // all tasks
     if (prevProps.allTaskByProjectLoading !== this.props.allTaskByProjectLoading && this.props.allTaskByProject && this.props.allTaskByProject.length > 0) {
-      this.setState({
-        filterdDataAllTaks :  this.props.allTaskByProject,
-        allDataAllTaks : this.props.allTaskByProject,
-    });
+      
+        let searchValueAllTask = 'pending';
+        let filteredDataAllTask = this.props.allTaskByProject.filter(function (item) {
+          return item.taskStatus.includes(searchValueAllTask);
+        });
+        
+        this.setState({
+          filterdDataAllTaks :  filteredDataAllTask,
+          allDataAllTaks : this.props.allTaskByProject,
+        });
     }
+
+    // my task
+    if (prevProps.myTaskByProjectLoading !== this.props.myTaskByProjectLoading && this.props.myTaskByProject && this.props.myTaskByProject.length > 0) {
+      
+      let searchValueMyTask = 'pending';
+      let filteredDataMyTask = this.props.myTaskByProject.filter(function (item) {
+        return item.taskStatus.includes(searchValueMyTask);
+      });
+      
+      this.setState({
+        filterdDataMyTasks :  filteredDataMyTask,
+        allDataMyTasks : this.props.allTaskByProject,
+      });
+  }
   }
 
   componentDidMount() {
@@ -125,6 +167,30 @@ class TasksTabScreen extends Component {
     );
   };
 
+  userImage = function (item) {
+
+    let userImage = item.taskAssigneeProfileImage
+
+    if(userImage){
+      return (
+          <FadeIn>
+              <Image
+                  source={{uri: userImage}}
+                  style={{width: 24, height: 24,borderRadius: 24/ 2}} 
+                />
+          </FadeIn>
+      );
+  }else{
+      return (
+        <Image 
+          style={{width: 24, height: 24,borderRadius: 24/ 2}} 
+          source={require('../../../asserts/img/defult_user.png')}
+        />
+      );
+  }
+
+  };
+
   renderProjectList(item) {
     return (
       <TouchableOpacity
@@ -145,7 +211,7 @@ class TasksTabScreen extends Component {
           </View>
           <View style={styles.statusView}>
               {this.dateView(item)}
-            <Image style={styles.avatarIcon} source={item.avatr} />
+              {this.userImage(item)}
           </View>
         </View>
       </TouchableOpacity>
@@ -224,43 +290,135 @@ class TasksTabScreen extends Component {
     );
   }
 
+  onFilterAllTasks(key) {
+      let value = key;
+      let searchValue = '';
+      let index = this.state.index;
+      switch (value) {
+        case 'Pending':
+              searchValue = 'pending'
+              break;
+        case 'Implementing':
+              searchValue = 'implementing'
+              break;
+        case 'QA':
+              searchValue = 'qa'
+              break;
+        case 'Ready to Deploy':  
+              searchValue = 'readyToDeploy'
+              break;
+        case 'Re-Opened':
+              searchValue = 'reOpened'
+              break;
+        case 'Deployed':
+              searchValue = 'deployed'
+              break;
+        case 'Closed':
+              searchValue = 'closed'
+              break;
+      }
+
+      let filteredData = this.state.allDataAllTaks.filter(function (item) {
+        return item.taskStatus.includes(searchValue);
+      });
+      this.setState({filterdDataAllTaks: filteredData});  
+  }
+
+  onFilterMyTasks(key) {
+    let value = key;
+    let searchValue = '';
+    let index = this.state.index;
+    switch (value) {
+      case 'Pending':
+            searchValue = 'pending'
+            break;
+      case 'Implementing':
+            searchValue = 'implementing'
+            break;
+      case 'QA':
+            searchValue = 'qa'
+            break;
+      case 'Ready to Deploy':  
+            searchValue = 'readyToDeploy'
+            break;
+      case 'Re-Opened':
+            searchValue = 'reOpened'
+            break;
+      case 'Deployed':
+            searchValue = 'deployed'
+            break;
+      case 'Closed':
+            searchValue = 'closed'
+            break;
+    }
+    let filteredData = this.state.allDataMyTasks.filter(function (item) {
+      return item.taskStatus.includes(searchValue);
+    });
+    this.setState({filterdDataMyTasks: filteredData});  
+}
+
   render() {
     let index = this.state.index;
     let filterdDataAllTaks = this.state.filterdDataAllTaks; 
     let filterdDataMyTasks = this.state.filterdDataMyTasks;
+    let allTaskByProjectLoading = this.props.allTaskByProjectLoading;
+    let myTaskByProjectLoading = this.props.myTaskByProjectLoading;
 
     return (
       <View style={styles.backgroundImage}>
         {this.state.index !== 2 ? (
           <View>
             <View style={styles.projectFilerView}>
-              <Dropdown
-                // style={{}}
-                label=""
-                labelFontSize={0}
-                data={dropData}
-                textColor={colors.dropDownText}
-                error={''}
-                animationDuration={0.5}
-                containerStyle={{width: '100%'}}
-                overlayStyle={{width: '100%'}}
-                pickerStyle={{width: '89%', marginTop: 70, marginLeft: 15}}
-                dropdownPosition={0}
-                value={'Status'}
-                itemColor={'black'}
-                selectedItemColor={'black'}
-                dropdownOffset={{top: 10}}
-                baseColor={colors.projectBgColor}
-                // renderBase={this.renderBase}
-                renderAccessory={this.renderBase}
-                itemTextStyle={{marginLeft: 15,fontFamily: 'CircularStd-Medium'}}
-                itemPadding={10}
-              />
-              {/* <TouchableOpacity>
-                <View>
-                    <Text style={styles.textFilter}>Ongoing</Text>
-                </View>
-            </TouchableOpacity> */}
+              { index == 0 ? 
+                  <Dropdown
+                    // style={{}}
+                    label=""
+                    labelFontSize={0}
+                    data={dropData}
+                    textColor={colors.dropDownText}
+                    error={''}
+                    animationDuration={0.5}
+                    containerStyle={{width: '100%'}}
+                    overlayStyle={{width: '100%'}}
+                    pickerStyle={{width: '89%', marginTop: 70, marginLeft: 15}}
+                    dropdownPosition={0}
+                    value={'Pending'}
+                    itemColor={'black'}
+                    selectedItemColor={'black'}
+                    dropdownOffset={{top: 10}}
+                    baseColor={colors.projectBgColor}
+                    // renderBase={this.renderBase}
+                    renderAccessory={this.renderBase}
+                    itemTextStyle={{marginLeft: 15,fontFamily: 'CircularStd-Book'}}
+                    itemPadding={10}
+                    onChangeText={(value => this.onFilterAllTasks(value))}
+                  />
+                :  
+                  <Dropdown
+                      // style={{}}
+                      label=""
+                      labelFontSize={0}
+                      data={dropData}
+                      textColor={colors.dropDownText}
+                      error={''}
+                      animationDuration={0.5}
+                      containerStyle={{width: '100%'}}
+                      overlayStyle={{width: '100%'}}
+                      pickerStyle={{width: '89%', marginTop: 70, marginLeft: 15}}
+                      dropdownPosition={0}
+                      value={'Pending'}
+                      itemColor={'black'}
+                      selectedItemColor={'black'}
+                      dropdownOffset={{top: 10}}
+                      baseColor={colors.projectBgColor}
+                      // renderBase={this.renderBase}
+                      renderAccessory={this.renderBase}
+                      itemTextStyle={{marginLeft: 15,fontFamily: 'CircularStd-Book'}}
+                      itemPadding={10}
+                      onChangeText={(value => this.onFilterMyTasks(value))}
+                    />
+              }
+              
             </View>
             <FlatList
               style={{marginBottom: 90}}
@@ -276,6 +434,8 @@ class TasksTabScreen extends Component {
         )}
 
         {this.renderBottomBar()}
+        {allTaskByProjectLoading && <Loader/>}
+        {myTaskByProjectLoading && <Loader/>}
       </View>
     );
   }
@@ -338,6 +498,7 @@ const styles = EStyleSheet.create({
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
     marginLeft: '10rem',
+    marginRight : '5rem'
   },
   avatarIcon: {
     width: '20rem',
@@ -393,12 +554,17 @@ const styles = EStyleSheet.create({
     width: '20rem',
     height: '20rem',
   },
+  landing: {
+    flex: 1, alignItems: 'center', justifyContent: 'center' 
+},
 });
 
 const mapStateToProps = state => {
   return {
     allTaskByProjectLoading : state.project.allTaskByProjectLoading,
-    allTaskByProject : state.project.allTaskByProject
+    allTaskByProject : state.project.allTaskByProject,
+    myTaskByProjectLoading : state.project.myTaskByProjectLoading,
+    myTaskByProject : state.project.myTaskByProject,
   };
 };
 export default connect(
