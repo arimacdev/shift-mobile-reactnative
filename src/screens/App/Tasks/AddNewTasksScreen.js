@@ -85,9 +85,15 @@ class AddNewTasksScreen extends Component {
       index: 0,
       bottomItemPressColor: colors.darkBlue,
       showPicker: false,
+      showTimePicker:false,
       selectedDate: '',
       date: new Date(),
+      selectedDateReminder: '',
+      selectedTimeReminder: '',
+      dateReminder: new Date(),
+      timeReminder: new Date(),
       mode: 'date',
+      reminder: false,
     };
   }
 
@@ -132,34 +138,82 @@ class AddNewTasksScreen extends Component {
     );
   }
 
-  onChangeDateTime(event, selectedDate) {
+  onChangeDate(event, selectedDate) {
     let date = new Date(selectedDate);
     // const NewDate = moment(date, 'DD-MM-YYYY')
+
     let NewDate =
       date.getDate() +
       '/' +
       parseInt(date.getMonth() + 1) +
       '/' +
       date.getFullYear();
+
     // console.log("event.type",event.type)
-    if(event.type == 'set'){
-      this.setState({selectedDate: NewDate, showPicker:false, date:new Date(selectedDate)});
+    if (event.type == 'set') {
+      if (this.state.reminder) {
+        this.setState({
+          selectedDateReminder: NewDate,
+          showPicker: false,
+          showTimePicker: true,
+          dateReminder: new Date(selectedDate),
+        });
+      } else {
+        this.setState({
+          selectedDate: NewDate,
+          showPicker: false,
+          showTimePicker: false,
+          date: new Date(selectedDate),
+        });
+      }
     }
     // event.dismissed
     // event.set
   }
 
-  renderDateTimePicker() {
+  onChangeTime(event, selectedTime) {
+    let time = new Date(selectedTime);
+    let newTime =time.getHours() +':' +time.getMinutes();
+
+    if (event.type == 'set') {
+      if (this.state.reminder) {
+        this.setState({
+          selectedTimeReminder: newTime,
+          showPicker: false,
+          showTimePicker: false,
+          timeReminder: new Date(selectedTime),
+        });
+      }
+    }
+  }
+
+  renderDatePicker() {
+    return (
+      <DateTimePicker
+        testID="dateTimePicker"
+        timeZoneOffsetInMinutes={0}
+        value={this.state.reminder == true? this.state.dateReminder : this.state.date}
+        mode={this.state.mode}
+        is24Hour={true}
+        display="default"
+        onChange={(event, selectedDate) =>
+          this.onChangeDate(event, selectedDate)
+        }
+      />
+    );
+  }
+
+  renderTimePicker() {
     return (
       <DateTimePicker
         testID="dateTimePicker"
         timeZoneOffsetInMinutes={0}
         value={this.state.date}
-        mode={this.state.mode}
+        mode={'time'}
         is24Hour={true}
         display="default"
         onChange={(event, selectedDate) =>
-          this.onChangeDateTime(event, selectedDate)
+          this.onChangeTime(event, selectedDate)
         }
       />
     );
@@ -226,41 +280,61 @@ class AddNewTasksScreen extends Component {
             itemPadding={10}
           />
         </View>
-        <TouchableOpacity onPress={() => this.setState({showPicker: true})}>
+        <TouchableOpacity
+          onPress={() =>
+            this.setState({showPicker: true, reminder: false, mode: 'date'})
+          }>
           <View style={[styles.taskFieldView, {flexDirection: 'row'}]}>
-            {/* <TextInput
-              style={[styles.textInput, {flex: 1}]}
-              placeholder={'Due Date'}
-              value={this.state.password}
-              onChangeText={text => this.onPasswordChange(text)}
-            /> */}
             <Text style={[styles.textInput, {flex: 1}]}>
               {this.state.selectedDate == ''
                 ? 'Due Date'
                 : this.state.selectedDate}
             </Text>
-            <Image style={styles.calendarIcon} source={icons.calendar} />
+            <Image
+              style={styles.calendarIcon}
+              source={icons.calendar}
+              resizeMode={'center'}
+            />
           </View>
         </TouchableOpacity>
-        <View style={[styles.taskFieldView, {flexDirection: 'row'}]}>
-          <TextInput
-            style={[styles.textInput, {flex: 1}]}
-            placeholder={'Reminder'}
-            value={this.state.password}
-            onChangeText={text => this.onPasswordChange(text)}
+        <TouchableOpacity
+          onPress={() =>
+            this.setState({showPicker: true, reminder: true, mode: 'date'})
+          }>
+          <View style={[styles.taskFieldView, {flexDirection: 'row'}]}>
+            <Text style={[styles.textInput, {flex: 1}]}>
+              {this.state.selectedDateReminder == ''
+                ? 'Reminder'
+                : this.state.selectedTimeReminder + " " +this.state.selectedDateReminder}
+            </Text>
+            <Image
+              style={styles.calendarIcon}
+              source={icons.calendar}
+              resizeMode={'center'}
+            />
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() =>
+            this.setState({showPicker: true, reminder: true, mode: 'date'})
+          }>
+          <View style={[styles.taskFieldView, {flexDirection: 'row'}]}>
+          <Image
+            style={[styles.calendarIcon, {marginRight:10}]}
+            source={icons.upload}
+            resizeMode={'center'}
           />
-          <Image style={styles.calendarIcon} source={icons.calendar} />
-        </View>
-        <View style={[styles.taskFieldView, {flexDirection: 'row'}]}>
-          <Image style={styles.calendarIcon} source={icons.calendar} />
-          <TextInput
-            style={[styles.textInput, {flex: 1}]}
-            placeholder={'Reminder'}
-            value={this.state.password}
-            onChangeText={text => this.onPasswordChange(text)}
-          />
-        </View>
-        {this.state.showPicker ? this.renderDateTimePicker() : null}
+            <Text style={[styles.textInput, {flex: 1}]}>
+              {this.state.selectedDateReminder == ''
+                ? 'Add files'
+                : this.state.selectedTimeReminder + " " +this.state.selectedDateReminder}
+            </Text>
+          </View>
+        </TouchableOpacity>
+
+
+        {this.state.showPicker ? this.renderDatePicker() : null}
+        {this.state.showTimePicker ? this.renderTimePicker() : null}
       </ScrollView>
     );
   }
