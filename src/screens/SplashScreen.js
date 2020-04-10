@@ -15,6 +15,8 @@ import NavigationService from '../services/NavigationService';
 import EStyleSheet from 'react-native-extended-stylesheet';
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
+import jwtDecode from 'jwt-decode';
+//import jwt from "jsonwebtoken";
 
 const config = {
         issuer : 'http://pmtool.devops.arimac.xyz/auth',
@@ -57,9 +59,12 @@ class SplashScreen extends Component {
     async initialUserLogin() {
         try {
             const result = await authorize(config);
+            console.log("result.accessToken",result.accessToken);
             AsyncStorage.setItem('accessToken', result.accessToken);
             AsyncStorage.setItem('refreshToken', result.refreshToken);
             AsyncStorage.setItem('accessTokenExpirationDate', result.accessTokenExpirationDate);
+            let decoded = jwtDecode(result.accessToken);
+            AsyncStorage.setItem('userID', decoded.userId);
             AsyncStorage.setItem('userLoggedIn', 'true');
             NavigationService.navigate('App');
           } catch (error) {

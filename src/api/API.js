@@ -1,4 +1,4 @@
-export const PROTOCOL = 'https://';
-export const HOST = 'arimac-inventory.arimac.digital/';
+export const PROTOCOL = 'http://';
+export const HOST = 'pmtool.devops.arimac.xyz/api/pm-service/';
 
-export const LOGIN = `${PROTOCOL}${HOST}api/login`;
+export const GET_ALL_PROJECTS_BY_USER = `${PROTOCOL}${HOST}projects?`;

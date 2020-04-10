@@ -1,23 +1,17 @@
 import request from './ApiCentral';
 import {
-    LOGIN,
+    GET_ALL_PROJECTS_BY_USER,
 } from '../api/API';
 
-
-//auth--------------------------------------------------------------------------------------
-function login(email, password) {
+ function getAllProjectsByUserData(userID) {
     return request({
-        url: LOGIN,
-        method: 'POST',
-        data: {
-            email : email,
-            password : password,
-        }
-    }, false);
+        url: GET_ALL_PROJECTS_BY_USER + 'userId='+userID,
+        method: 'GET'
+    }, true);
 }
 
 const APIServices = {
-    login,
+    getAllProjectsByUserData,
 };
 
 export default APIServices;
