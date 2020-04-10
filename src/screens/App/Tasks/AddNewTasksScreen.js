@@ -18,6 +18,7 @@ const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
 import {Dropdown} from 'react-native-material-dropdown';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import DocumentPicker from 'react-native-document-picker';
 
 let dropData = [
   {
@@ -85,7 +86,7 @@ class AddNewTasksScreen extends Component {
       index: 0,
       bottomItemPressColor: colors.darkBlue,
       showPicker: false,
-      showTimePicker:false,
+      showTimePicker: false,
       selectedDate: '',
       date: new Date(),
       selectedDateReminder: '',
@@ -173,7 +174,7 @@ class AddNewTasksScreen extends Component {
 
   onChangeTime(event, selectedTime) {
     let time = new Date(selectedTime);
-    let newTime =time.getHours() +':' +time.getMinutes();
+    let newTime = time.getHours() + ':' + time.getMinutes();
 
     if (event.type == 'set') {
       if (this.state.reminder) {
@@ -192,7 +193,11 @@ class AddNewTasksScreen extends Component {
       <DateTimePicker
         testID="dateTimePicker"
         timeZoneOffsetInMinutes={0}
-        value={this.state.reminder == true? this.state.dateReminder : this.state.date}
+        value={
+          this.state.reminder == true
+            ? this.state.dateReminder
+            : this.state.date
+        }
         mode={this.state.mode}
         is24Hour={true}
         display="default"
@@ -217,6 +222,31 @@ class AddNewTasksScreen extends Component {
         }
       />
     );
+  }
+
+  
+
+  async doumentPicker() {
+    // Pick multiple files
+    try {
+      const results = await DocumentPicker.pickMultiple({
+        type: [DocumentPicker.types.images],
+      });
+      for (const res of results) {
+        console.log(
+          res.uri,
+          res.type, // mime type
+          res.name,
+          res.size,
+        );
+      }
+    } catch (err) {
+      if (DocumentPicker.isCancel(err)) {
+        // User cancelled the picker, exit any dialogs or menus and move on
+      } else {
+        throw err;
+      }
+    }
   }
 
   render() {
@@ -305,7 +335,9 @@ class AddNewTasksScreen extends Component {
             <Text style={[styles.textInput, {flex: 1}]}>
               {this.state.selectedDateReminder == ''
                 ? 'Reminder'
-                : this.state.selectedTimeReminder + " " +this.state.selectedDateReminder}
+                : this.state.selectedTimeReminder +
+                  ' ' +
+                  this.state.selectedDateReminder}
             </Text>
             <Image
               style={styles.calendarIcon}
@@ -314,24 +346,22 @@ class AddNewTasksScreen extends Component {
             />
           </View>
         </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() =>
-            this.setState({showPicker: true, reminder: true, mode: 'date'})
-          }>
+        <TouchableOpacity onPress={() => this.doumentPicker()}>
           <View style={[styles.taskFieldView, {flexDirection: 'row'}]}>
-          <Image
-            style={[styles.calendarIcon, {marginRight:10}]}
-            source={icons.upload}
-            resizeMode={'center'}
-          />
+            <Image
+              style={[styles.calendarIcon, {marginRight: 10}]}
+              source={icons.upload}
+              resizeMode={'center'}
+            />
             <Text style={[styles.textInput, {flex: 1}]}>
               {this.state.selectedDateReminder == ''
                 ? 'Add files'
-                : this.state.selectedTimeReminder + " " +this.state.selectedDateReminder}
+                : this.state.selectedTimeReminder +
+                  ' ' +
+                  this.state.selectedDateReminder}
             </Text>
           </View>
         </TouchableOpacity>
-
 
         {this.state.showPicker ? this.renderDatePicker() : null}
         {this.state.showTimePicker ? this.renderTimePicker() : null}
