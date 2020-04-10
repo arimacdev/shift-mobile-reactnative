@@ -119,7 +119,7 @@ class TasksTabScreen extends Component {
       
       this.setState({
         filterdDataMyTasks :  filteredDataMyTask,
-        allDataMyTasks : this.props.allTaskByProject,
+        allDataMyTasks : this.props.myTaskByProject,
       });
   }
   }
@@ -430,10 +430,10 @@ class TasksTabScreen extends Component {
               
             </View>
             <FlatList
-              style={{marginBottom: 90}}
+              style={{marginBottom: EStyleSheet.value('160rem')}}
               data={index == 0 ? filterdDataAllTaks : filterdDataMyTasks}
               renderItem={({item}) => this.renderProjectList(item)}
-              keyExtractor={item => item.projId}
+              keyExtractor={item => item.taskId}
             />
           </View>
         ) : (
