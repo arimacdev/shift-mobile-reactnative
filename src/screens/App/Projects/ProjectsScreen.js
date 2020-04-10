@@ -9,6 +9,7 @@ const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
 import { Dropdown } from 'react-native-material-dropdown';
 import AsyncStorage from '@react-native-community/async-storage';
+import Loader from '../../../components/Loader';
 
 
 let dropData = [
@@ -169,6 +170,7 @@ class ProjectsScreen extends Component {
 
   render() {
     let projects = this.state.projects;
+    let projectsLoading = this.state.projectsLoading;
     return (
       <View style={styles.backgroundImage}>
         <View style={styles.projectFilerView}>
@@ -191,7 +193,7 @@ class ProjectsScreen extends Component {
         baseColor={colors.lightBlue}
         // renderBase={this.renderBase}
         renderAccessory={this.renderBase}
-        itemTextStyle={{marginLeft:15}}
+        itemTextStyle={{marginLeft:15,fontFamily: 'CircularStd-Book',}}
         itemPadding={10}
         onChangeText={(value => this.onFilter(value))}
 
@@ -207,6 +209,7 @@ class ProjectsScreen extends Component {
           renderItem={({item}) => this.renderProjectList(item)}
           keyExtractor={item => item.projId}
         />
+        {projectsLoading && <Loader/>}
       </View>
     );
   }
@@ -235,7 +238,7 @@ const styles = EStyleSheet.create({
     color: colors.white,
     textAlign: 'center',
     lineHeight: '17rem',
-    fontFamily: 'HelveticaNeuel',
+    fontFamily: 'CircularStd-Medium',
     textAlign: 'center',
     // fontWeight: 'bold',
   },
@@ -255,7 +258,7 @@ const styles = EStyleSheet.create({
     textAlign: 'center',
     fontWeight: 'bold',
     lineHeight: '17rem',
-    fontFamily: 'HelveticaNeuel',
+    fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
     marginLeft:'10rem'
   },
