@@ -10,5 +10,6 @@ const icons = {
     taskGreen: require('./icon_task_green.png'),
     taskWhite: require('./icon_task_white.png'),
     taskDark: require('./icon_task_dark.png'),
+    calendar: require('./calendar.png'),
 };
 export default icons;

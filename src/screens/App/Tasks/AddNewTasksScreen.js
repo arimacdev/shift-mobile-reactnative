@@ -6,6 +6,8 @@ import {
   Dimensions,
   Image,
   TouchableOpacity,
+  TextInput,
+  ScrollView,
 } from 'react-native';
 import {connect} from 'react-redux';
 import * as actions from '../../../redux/actions';
@@ -15,7 +17,7 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
 import {Dropdown} from 'react-native-material-dropdown';
-import AddNewTasksScreen from '../Tasks/AddNewTasksScreen'
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 let dropData = [
   {
@@ -38,25 +40,7 @@ let dropData = [
   },
 ];
 
-let bottomData = [
-  {
-    value: 'All tasks',
-    bottomBarColor: colors.darkBlue,
-    bottomBarIcon: icons.taskDark,
-  },
-  {
-    value: 'My tasks',
-    bottomBarColor: colors.lightGreen,
-    bottomBarIcon: icons.taskGreen,
-  },
-  {
-    value: 'Add new tasks',
-    bottomBarColor: colors.lightBlue,
-    bottomBarIcon: icons.taskBlue,
-  },
-];
-
-class TasksTabScreen extends Component {
+class AddNewTasksScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -100,6 +84,10 @@ class TasksTabScreen extends Component {
       ],
       index: 0,
       bottomItemPressColor: colors.darkBlue,
+      showPicker: false,
+      selectedDate: '',
+      date: new Date(),
+      mode: 'date',
     };
   }
 
@@ -144,118 +132,136 @@ class TasksTabScreen extends Component {
     );
   }
 
-  onBottomItemPress(index) {
-    // let color;
-    this.setState({index: index});
-    // if (index == 0) {
-    //   color = colors.darkBlue;
-    // } else if (index == 1) {
-    //   color =  colors.lightGreen;
-    // } else {
-    //   color = colors.lightBlue;
-    // }
-
-    // this.setState({bottomItemPressColor: color});
+  onChangeDateTime(event, selectedDate) {
+    let date = new Date(selectedDate);
+    // const NewDate = moment(date, 'DD-MM-YYYY')
+    let NewDate =
+      date.getDate() +
+      '/' +
+      parseInt(date.getMonth() + 1) +
+      '/' +
+      date.getFullYear();
+    // console.log("event.type",event.type)
+    if(event.type == 'set'){
+      this.setState({selectedDate: NewDate, showPicker:false, date:new Date(selectedDate)});
+    }
+    // event.dismissed
+    // event.set
   }
 
-  renderBottomBar() {
+  renderDateTimePicker() {
     return (
-      <View style={styles.bottomBarContainer}>
-        <View style={styles.bottomBarInnerContainer}>
-          {bottomData.map((item, index) => {
-            return (
-              <View style={styles.bottomItemView}>
-                <TouchableOpacity
-                  style={[
-                    styles.bottomItemTouch,
-                    {
-                      backgroundColor:
-                        index == this.state.index
-                          ? item.bottomBarColor
-                          : colors.projectBgColor,
-                    },
-                  ]}
-                  onPress={() => this.onBottomItemPress(index)}>
-                  <Image
-                    style={styles.bottomBarIcon}
-                    source={
-                      index == this.state.index
-                        ? icons.taskWhite
-                        : item.bottomBarIcon
-                    }
-                  />
-                  <Text
-                    style={{
-                      marginTop: 10,
-                      fontSize: 12,
-                      color:
-                        index == this.state.index
-                          ? colors.white
-                          : item.bottomBarColor,
-                    }}>
-                    {item.value}
-                  </Text>
-                </TouchableOpacity>
-                {index !== bottomData.length - 1 ? (
-                  <View style={styles.horizontalLine} />
-                ) : null}
-              </View>
-            );
-          })}
-        </View>
-      </View>
+      <DateTimePicker
+        testID="dateTimePicker"
+        timeZoneOffsetInMinutes={0}
+        value={this.state.date}
+        mode={this.state.mode}
+        is24Hour={true}
+        display="default"
+        onChange={(event, selectedDate) =>
+          this.onChangeDateTime(event, selectedDate)
+        }
+      />
     );
   }
 
   render() {
     return (
-      <View style={styles.backgroundImage}>
-        {this.state.index !== 2 ? (
-          <View>
-            <View style={styles.projectFilerView}>
-              <Dropdown
-                // style={{}}
-                label=""
-                labelFontSize={0}
-                data={dropData}
-                textColor={colors.lightgray}
-                error={''}
-                animationDuration={0.5}
-                containerStyle={{width: '100%'}}
-                overlayStyle={{width: '100%'}}
-                pickerStyle={{width: '89%', marginTop: 70, marginLeft: 15}}
-                dropdownPosition={0}
-                value={'Status'}
-                itemColor={'black'}
-                selectedItemColor={'black'}
-                dropdownOffset={{top: 10}}
-                baseColor={colors.projectBgColor}
-                // renderBase={this.renderBase}
-                renderAccessory={this.renderBase}
-                itemTextStyle={{marginLeft: 15}}
-                itemPadding={10}
-              />
-              {/* <TouchableOpacity>
-                <View>
-                    <Text style={styles.textFilter}>Ongoing</Text>
-                </View>
-            </TouchableOpacity> */}
-            </View>
-            <FlatList
-              style={{marginBottom: 90}}
-              data={this.state.data}
-              renderItem={({item}) => this.renderProjectList(item)}
-              keyExtractor={item => item.projId}
-            />
+      <ScrollView style={{marginBottom: 90}}>
+        <View style={[styles.taskFieldView, {marginTop: 30}]}>
+          <TextInput
+            style={styles.textInput}
+            placeholder={'Task name'}
+            value={this.state.password}
+            onChangeText={text => this.onPasswordChange(text)}
+          />
+        </View>
+        <View style={styles.taskFieldView}>
+          <Dropdown
+            style={{paddingLeft: 5}}
+            label=""
+            labelFontSize={0}
+            fontSize={13}
+            data={dropData}
+            textColor={colors.gray}
+            error={''}
+            animationDuration={0.5}
+            containerStyle={{width: '100%'}}
+            overlayStyle={{width: '100%'}}
+            pickerStyle={{width: '89%', marginTop: 70, marginLeft: 15}}
+            dropdownPosition={0}
+            value={'Assignee'}
+            itemColor={'black'}
+            selectedItemColor={'black'}
+            dropdownOffset={{top: 10}}
+            baseColor={colors.projectBgColor}
+            // renderBase={this.renderBase}
+            renderAccessory={this.renderBase}
+            itemTextStyle={{marginLeft: 15}}
+            itemPadding={10}
+          />
+        </View>
+        <View style={styles.taskFieldView}>
+          <Dropdown
+            style={{paddingLeft: 5}}
+            label=""
+            labelFontSize={0}
+            fontSize={13}
+            data={dropData}
+            textColor={colors.gray}
+            error={''}
+            animationDuration={0.5}
+            containerStyle={{width: '100%'}}
+            overlayStyle={{width: '100%'}}
+            pickerStyle={{width: '89%', marginTop: 70, marginLeft: 15}}
+            dropdownPosition={0}
+            value={'Tasks Status'}
+            itemColor={'black'}
+            selectedItemColor={'black'}
+            dropdownOffset={{top: 10}}
+            baseColor={colors.projectBgColor}
+            // renderBase={this.renderBase}
+            renderAccessory={this.renderBase}
+            itemTextStyle={{marginLeft: 15}}
+            itemPadding={10}
+          />
+        </View>
+        <TouchableOpacity onPress={() => this.setState({showPicker: true})}>
+          <View style={[styles.taskFieldView, {flexDirection: 'row'}]}>
+            {/* <TextInput
+              style={[styles.textInput, {flex: 1}]}
+              placeholder={'Due Date'}
+              value={this.state.password}
+              onChangeText={text => this.onPasswordChange(text)}
+            /> */}
+            <Text style={[styles.textInput, {flex: 1}]}>
+              {this.state.selectedDate == ''
+                ? 'Due Date'
+                : this.state.selectedDate}
+            </Text>
+            <Image style={styles.calendarIcon} source={icons.calendar} />
           </View>
-        ) : (
-          <View>
-            <AddNewTasksScreen/>
-          </View>
-        )}
-
-        {this.renderBottomBar()}
-      </View>
+        </TouchableOpacity>
+        <View style={[styles.taskFieldView, {flexDirection: 'row'}]}>
+          <TextInput
+            style={[styles.textInput, {flex: 1}]}
+            placeholder={'Reminder'}
+            value={this.state.password}
+            onChangeText={text => this.onPasswordChange(text)}
+          />
+          <Image style={styles.calendarIcon} source={icons.calendar} />
+        </View>
+        <View style={[styles.taskFieldView, {flexDirection: 'row'}]}>
+          <Image style={styles.calendarIcon} source={icons.calendar} />
+          <TextInput
+            style={[styles.textInput, {flex: 1}]}
+            placeholder={'Reminder'}
+            value={this.state.password}
+            onChangeText={text => this.onPasswordChange(text)}
+          />
+        </View>
+        {this.state.showPicker ? this.renderDateTimePicker() : null}
+      </ScrollView>
     );
   }
 }
@@ -263,19 +269,18 @@ class TasksTabScreen extends Component {
 const styles = EStyleSheet.create({
   backgroundImage: {
     flex: 1,
-    // backgroundColor: colors.pageBackGroundColor,
   },
-  projectFilerView: {
+  taskFieldView: {
     backgroundColor: colors.projectBgColor,
     borderRadius: 5,
     // width: '330rem',
-    marginTop: '17rem',
-    marginBottom: '12rem',
+    marginTop: '0rem',
+    marginBottom: '7rem',
     flexDirection: 'row',
     alignItems: 'center',
     // justifyContent: 'center',
     paddingHorizontal: '12rem',
-    height: '45rem',
+    height: '60rem',
     marginHorizontal: '20rem',
   },
   textFilter: {
@@ -371,6 +376,19 @@ const styles = EStyleSheet.create({
     width: '20rem',
     height: '20rem',
   },
+  textInput: {
+    fontSize: '12rem',
+    color: colors.gray,
+    textAlign: 'center',
+    lineHeight: '17rem',
+    fontFamily: 'HelveticaNeuel',
+    textAlign: 'left',
+    // width: '95%'
+  },
+  calendarIcon: {
+    width: '23rem',
+    height: '23rem',
+  },
 });
 
 const mapStateToProps = state => {
@@ -379,4 +397,4 @@ const mapStateToProps = state => {
 export default connect(
   mapStateToProps,
   actions,
-)(TasksTabScreen);
+)(AddNewTasksScreen);
