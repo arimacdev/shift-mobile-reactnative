@@ -36,9 +36,6 @@ class TasksScreen extends Component {
   componentDidUpdate(prevProps, prevState, snapshot) {}
 
   componentDidMount() {
-      const {navigation: {state: {params}}} = this.props;
-      let projectId = params.projDetails.projectId;
-      console.log("projectId",projectId);
   }
 
   renderTabBar(props) {
@@ -57,11 +54,11 @@ class TasksScreen extends Component {
   }
 
   renderScene(route) {
+    const {navigation: {state: {params}}} = this.props;
+    let projectId = params.projDetails.projectId;
     switch (route.route.key) {
       case 'tasks':
-        return <Tasks />;
-      case 'board':
-        return <Tasks />;
+        return <Tasks selectedProjectID={projectId}/>;
     }
   }
 

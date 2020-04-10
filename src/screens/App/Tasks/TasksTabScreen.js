@@ -89,6 +89,7 @@ class TasksTabScreen extends Component {
       allDataMyTasks:[],
       index: 0,
       bottomItemPressColor: colors.darkBlue,
+      selectedProjectID : 0 ,
     };
   }
 
@@ -124,18 +125,26 @@ class TasksTabScreen extends Component {
   }
 
   componentDidMount() {
-    this.getAllTaskInProject();
+      let selectedProjectID = this.props.selectedProjectID;
+
+      this.setState({
+        selectedProjectID : selectedProjectID,
+      }, () => {
+          this.getAllTaskInProject();
+      });
   }
 
   async getAllTaskInProject() {
+    let selectedProjectID = this.state.selectedProjectID;
     AsyncStorage.getItem('userID').then(userID => {
-      this.props.getAllTaskInProjects(userID,'193483d7-f5b2-4286-bccf-968c85e08600')
+      this.props.getAllTaskInProjects(userID,selectedProjectID)
     });
   }
 
   async getMyTaskInProject() {
+    let selectedProjectID = this.state.selectedProjectID;
     AsyncStorage.getItem('userID').then(userID => {
-      this.props.getMyTaskInProjects(userID,'193483d7-f5b2-4286-bccf-968c85e08600')
+      this.props.getMyTaskInProjects(userID,selectedProjectID)
     });
   }
 
