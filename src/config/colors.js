@@ -15,6 +15,7 @@ const colors = {
     projectBgColor:'#edf0f5',
     loginBlue:'#0C0C5A',
     loginGray:'#576377',
-    loginButton: '#0BAFFF'
+    loginButton: '#0BAFFF',
+    lightGreen:'#2ec973'
 };
 export default colors;

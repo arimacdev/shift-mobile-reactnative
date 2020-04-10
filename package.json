@@ -32,6 +32,7 @@
     "react-native-screens": "^2.3.0",
     "react-native-scrollable-tab-view": "^1.0.0",
     "react-native-search-header": "^0.3.5",
+    "react-native-tab-view": "^2.14.0",
     "react-native-vector-icons": "^6.6.0",
     "react-navigation": "^4.0.0",
     "react-navigation-drawer": "^2.2.1",
