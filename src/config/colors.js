@@ -16,6 +16,9 @@ const colors = {
     loginBlue:'#0C0C5A',
     loginGray:'#576377',
     loginButton: '#0BAFFF',
-    lightGreen:'#2ec973'
+    lightGreen:'#2ec973',
+    dropDownText : '#576377',
+    projectTaskNameColor : '#576377'
+
 };
 export default colors;

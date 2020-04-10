@@ -35,7 +35,11 @@ class TasksScreen extends Component {
 
   componentDidUpdate(prevProps, prevState, snapshot) {}
 
-  componentDidMount() {}
+  componentDidMount() {
+      const {navigation: {state: {params}}} = this.props;
+      let projectId = params.projDetails.projectId;
+      console.log("projectId",projectId);
+  }
 
   renderTabBar(props) {
     return (
@@ -53,11 +57,10 @@ class TasksScreen extends Component {
   }
 
   renderScene(route) {
-    debugger;
     switch (route.route.key) {
       case 'tasks':
         return <Tasks />;
-      case 'albums':
+      case 'board':
         return <Tasks />;
     }
   }

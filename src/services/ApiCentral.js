@@ -4,17 +4,22 @@ import jwtDecode from 'jwt-decode';
 import { BASE_URL, GET_NEW_TOKENS } from '../api/API';
 import NavigationService from '../services/NavigationService';
 
-const request = async function (options, isHeader) {
+const request = async function (options, isHeader,type) {
     let authHeader = null;
+    let typeHeader = null;
     if (isHeader) {
         authHeader = `Bearer ${await AsyncStorage.getItem('accessToken')}`;
+    }
+    if (type) {
+        typeHeader = 'project'
     }
     const client = axios.create({
         baseURL: BASE_URL,
         headers: {
             Authorization: authHeader,
             Accept: 'application/json',
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            type : typeHeader,
         },
         timeout: 90000,
     });

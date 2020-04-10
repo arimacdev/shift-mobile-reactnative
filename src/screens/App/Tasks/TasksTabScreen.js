@@ -16,6 +16,9 @@ const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
 import {Dropdown} from 'react-native-material-dropdown';
 import AddNewTasksScreen from '../Tasks/AddNewTasksScreen'
+import AsyncStorage from '@react-native-community/async-storage';
+import Loader from '../../../components/Loader';
+import moment from "moment";
 
 let dropData = [
   {
@@ -60,52 +63,67 @@ class TasksTabScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: [
-        {
-          taskId: '0001',
-          taskName: 'Home page login',
-          taskStatus: 'Ongoing',
-          taskStatusColor: '#ffc213',
-          taskCompletion: false,
-          taskDate: 'Yesterday',
-          avatr: icons.whiteCircule,
-        },
-        {
-          taskId: '0002',
-          taskName: 'Home page login',
-          taskStatus: 'Ongoing',
-          taskStatusColor: 'red',
-          taskCompletion: false,
-          taskDate: 'Today',
-          avatr: icons.folder,
-        },
-        {
-          taskId: '0003',
-          taskName: 'Home page login',
-          taskStatus: 'Ongoing',
-          taskStatusColor: 'gray',
-          taskCompletion: false,
-          taskDate: '2020/02/03',
-          avatr: icons.folder,
-        },
-        {
-          taskId: '0004',
-          taskName: 'Home page login',
-          taskStatus: 'Ongoing',
-          taskStatusColor: 'gray',
-          taskCompletion: true,
-          taskDate: '2020/01/12',
-          avatr: icons.folder,
-        },
-      ],
+      filterdDataAllTaks: [],
+      allDataAllTaks:[],
+      filterdDataMyTasks: [],
+      allDataMyTasks:[],
       index: 0,
       bottomItemPressColor: colors.darkBlue,
     };
   }
 
-  componentDidUpdate(prevProps, prevState, snapshot) {}
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (prevProps.allTaskByProjectLoading !== this.props.allTaskByProjectLoading && this.props.allTaskByProject && this.props.allTaskByProject.length > 0) {
+      this.setState({
+        filterdDataAllTaks :  this.props.allTaskByProject,
+        allDataAllTaks : this.props.allTaskByProject,
+    });
+    }
+  }
 
-  componentDidMount() {}
+  componentDidMount() {
+    this.getAllTaskInProject();
+  }
+
+  async getAllTaskInProject() {
+    AsyncStorage.getItem('userID').then(userID => {
+      this.props.getAllTaskInProjects(userID,'193483d7-f5b2-4286-bccf-968c85e08600')
+    });
+  }
+
+  async getMyTaskInProject() {
+    AsyncStorage.getItem('userID').then(userID => {
+      this.props.getMyTaskInProjects(userID,'193483d7-f5b2-4286-bccf-968c85e08600')
+    });
+  }
+
+  dateView = function (item) {
+    let date = item.taskDueDateAt;
+    let currentTime = moment().format();
+    let dateText = '';
+    let color = '';
+
+    let taskStatus = item.taskStatus;
+    if(taskStatus == 'closed'){
+        // task complete 
+        dateText = moment(date).format('DD/MM/YYYY');
+        color = '#36DD5B';
+    }else{
+        if(moment(date).isAfter(currentTime)){
+          dateText = moment(date).format('DD/MM/YYYY');
+          color = '#0C0C5A';
+        }else{
+          dateText = moment(date).format('DD/MM/YYYY');
+          color = '#ff6161';
+        }
+    }
+
+    return (
+      <Text style={[styles.textDate, {color: color}]}>
+              {dateText}
+      </Text>
+    );
+  };
 
   renderProjectList(item) {
     return (
@@ -117,7 +135,7 @@ class TasksTabScreen extends Component {
           <Image
             style={styles.completionIcon}
             source={
-              item.taskCompletion == true
+              item.taskStatus == 'closed'
                 ? icons.rightCircule
                 : icons.whiteCircule
             }
@@ -126,9 +144,7 @@ class TasksTabScreen extends Component {
             <Text style={styles.text}>{item.taskName}</Text>
           </View>
           <View style={styles.statusView}>
-            <Text style={[styles.textDate, {color: item.taskStatusColor}]}>
-              {item.taskDate}
-            </Text>
+              {this.dateView(item)}
             <Image style={styles.avatarIcon} source={item.avatr} />
           </View>
         </View>
@@ -147,15 +163,16 @@ class TasksTabScreen extends Component {
   onBottomItemPress(index) {
     // let color;
     this.setState({index: index});
-    // if (index == 0) {
-    //   color = colors.darkBlue;
-    // } else if (index == 1) {
-    //   color =  colors.lightGreen;
-    // } else {
-    //   color = colors.lightBlue;
-    // }
-
-    // this.setState({bottomItemPressColor: color});
+      switch (index) {
+        case 0:
+            // All tasks
+            this.getAllTaskInProject();
+            break;
+        case 1 : 
+            // my tasks
+            this.getMyTaskInProject();
+            break    
+    }
   }
 
   renderBottomBar() {
@@ -208,6 +225,10 @@ class TasksTabScreen extends Component {
   }
 
   render() {
+    let index = this.state.index;
+    let filterdDataAllTaks = this.state.filterdDataAllTaks; 
+    let filterdDataMyTasks = this.state.filterdDataMyTasks;
+
     return (
       <View style={styles.backgroundImage}>
         {this.state.index !== 2 ? (
@@ -218,7 +239,7 @@ class TasksTabScreen extends Component {
                 label=""
                 labelFontSize={0}
                 data={dropData}
-                textColor={colors.lightgray}
+                textColor={colors.dropDownText}
                 error={''}
                 animationDuration={0.5}
                 containerStyle={{width: '100%'}}
@@ -232,7 +253,7 @@ class TasksTabScreen extends Component {
                 baseColor={colors.projectBgColor}
                 // renderBase={this.renderBase}
                 renderAccessory={this.renderBase}
-                itemTextStyle={{marginLeft: 15}}
+                itemTextStyle={{marginLeft: 15,fontFamily: 'CircularStd-Medium'}}
                 itemPadding={10}
               />
               {/* <TouchableOpacity>
@@ -243,7 +264,7 @@ class TasksTabScreen extends Component {
             </View>
             <FlatList
               style={{marginBottom: 90}}
-              data={this.state.data}
+              data={index == 0 ? filterdDataAllTaks : filterdDataMyTasks}
               renderItem={({item}) => this.renderProjectList(item)}
               keyExtractor={item => item.projId}
             />
@@ -283,7 +304,7 @@ const styles = EStyleSheet.create({
     color: colors.white,
     textAlign: 'center',
     lineHeight: '17rem',
-    fontFamily: 'HelveticaNeuel',
+    fontFamily: 'CircularStd-Medium',
     textAlign: 'center',
     // fontWeight: 'bold',
   },
@@ -298,22 +319,23 @@ const styles = EStyleSheet.create({
     marginHorizontal: '20rem',
   },
   text: {
-    fontSize: '12rem',
-    color: colors.projectText,
+    fontSize: '11rem',
+    color: colors.projectTaskNameColor,
     textAlign: 'center',
     fontWeight: 'bold',
     lineHeight: '17rem',
-    fontFamily: 'HelveticaNeuel',
+    fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
     marginLeft: '10rem',
+    fontWeight: '400'
   },
   textDate: {
+    fontFamily: 'Circular Std Book',
     fontSize: '9rem',
-    color: colors.projectText,
+    fontWeight: '400',
     textAlign: 'center',
-    fontWeight: 'bold',
     lineHeight: '17rem',
-    fontFamily: 'HelveticaNeuel',
+    fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
     marginLeft: '10rem',
   },
@@ -374,7 +396,10 @@ const styles = EStyleSheet.create({
 });
 
 const mapStateToProps = state => {
-  return {};
+  return {
+    allTaskByProjectLoading : state.project.allTaskByProjectLoading,
+    allTaskByProject : state.project.allTaskByProject
+  };
 };
 export default connect(
   mapStateToProps,
