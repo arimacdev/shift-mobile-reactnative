@@ -69,9 +69,11 @@ class UsersScreen extends Component {
 
   };
 
+
+
   renderUserListList(item) {
     return (
-    <TouchableOpacity >
+    <TouchableOpacity onPress={()=>this.props.navigation.navigate('ViewUserScreen',{userItem:item})}>
       <View style={styles.userView}>
           {this.userIcon(item)}
           <View style={{flex: 1}}>

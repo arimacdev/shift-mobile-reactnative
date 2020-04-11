@@ -19,7 +19,9 @@ const colors = {
     lightGreen:'#2ec973',
     dropDownText : '#576377',
     projectTaskNameColor : '#576377',
-    userListUserNameColor : '#576377'
+    userListUserNameColor : '#576377',
+    userViewHeader : '#040428',
+    userViewData : '#576377'
 
 };
 export default colors;

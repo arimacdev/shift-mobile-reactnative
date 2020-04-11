@@ -4,7 +4,8 @@ import {
     GET_ALL_TASKS_BY_PROJECT,
     GET_MY_TASKS_BY_PROJECT,
 
-    GET_ALL_USERS
+    GET_ALL_USERS,
+    GET_ALL_USER
 
 } from '../api/API';
 
@@ -36,11 +37,19 @@ function getAllUsersData() {
     }, true,false);
 }
 
+function getUserData(userID) {
+    return request({
+        url: GET_ALL_USER+'/'+userID,
+        method: 'GET'
+    }, true,false);
+}
+
 const APIServices = {
     getAllProjectsByUserData,
     getAllTaskInProjectsData,
     getMyTaskInProjectsData,
-    getAllUsersData
+    getAllUsersData,
+    getUserData
 };
 
 export default APIServices;
