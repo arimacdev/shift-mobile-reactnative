@@ -19,6 +19,7 @@ EStyleSheet.build({$rem: entireScreenWidth / 380});
 import {Dropdown} from 'react-native-material-dropdown';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import DocumentPicker from 'react-native-document-picker';
+import moment from 'moment';
 
 let dropData = [
   {
@@ -95,6 +96,7 @@ class AddNewTasksScreen extends Component {
       timeReminder: new Date(),
       mode: 'date',
       reminder: false,
+      files: [],
     };
   }
 
@@ -224,7 +226,66 @@ class AddNewTasksScreen extends Component {
     );
   }
 
-  
+  onFilesCrossPress(uri) {
+    let filesArray = this.state.files.filter(item => {
+      return item.uri !== uri;
+    });
+    this.setState({files: filesArray});
+  }
+
+  renderDocPickeredView(item) {
+    return (
+      <View
+        style={{
+          width: 165,
+          height: 50,
+          flexDirection: 'row',
+          backgroundColor: colors.white,
+          borderRadius: 5,
+          marginRight: 5,
+          marginBottom: 5,
+        }}>
+        <View style={{justifyContent: 'center', marginLeft: 10}}>
+          <Image
+            style={styles.gallaryIcon}
+            source={icons.gallary}
+            resizeMode={'center'}
+          />
+        </View>
+
+        <View
+          style={{
+            flexDirection: 'column',
+            marginLeft: 10,
+            justifyContent: 'center',
+            flex: 1,
+          }}>
+          <Text style={{marginTop: -2}}>
+            {item.name.substring(0, 5)}...{item.name.substr(-7)}
+          </Text>
+          <Text style={{fontSize: 10, marginTop: -2, color: colors.lightgray}}>
+            {moment().format('YYYY/MM/DD')} | {moment().format('HH:mm')}
+          </Text>
+        </View>
+
+        <View
+          style={{
+            justifyContent: 'flex-start',
+            marginRight: 4,
+            marginTop: 4,
+            // backgroundColor:'red'
+          }}>
+          <TouchableOpacity onPress={() => this.onFilesCrossPress(item.uri)}>
+            <Image
+              style={styles.cross}
+              source={icons.cross}
+              resizeMode={'center'}
+            />
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  }
 
   async doumentPicker() {
     // Pick multiple files
@@ -233,6 +294,15 @@ class AddNewTasksScreen extends Component {
         type: [DocumentPicker.types.images],
       });
       for (const res of results) {
+        
+        this.onFilesCrossPress(res.uri)
+
+        await this.state.files.push({
+          uri: res.uri,
+          type: res.type, // mime type
+          name: res.name,
+          size: res.size,
+        });
         console.log(
           res.uri,
           res.type, // mime type
@@ -240,9 +310,11 @@ class AddNewTasksScreen extends Component {
           res.size,
         );
       }
+      this.setState({files: this.state.files});
+      console.log(this.state.files);
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
-        // User cancelled the picker, exit any dialogs or menus and move on
+        console.log('file pick error', err);
       } else {
         throw err;
       }
@@ -347,20 +419,32 @@ class AddNewTasksScreen extends Component {
           </View>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => this.doumentPicker()}>
-          <View style={[styles.taskFieldView, {flexDirection: 'row'}]}>
-            <Image
-              style={[styles.calendarIcon, {marginRight: 10}]}
-              source={icons.upload}
-              resizeMode={'center'}
-            />
-            <Text style={[styles.textInput, {flex: 1}]}>
-              {this.state.selectedDateReminder == ''
-                ? 'Add files'
-                : this.state.selectedTimeReminder +
-                  ' ' +
-                  this.state.selectedDateReminder}
-            </Text>
-          </View>
+          {this.state.files.length > 0 ? (
+            <View
+              style={[
+                styles.taskFieldDocPickView,
+                {flexDirection: 'row', flexWrap: 'wrap'},
+              ]}>
+              {this.state.files.map(item => {
+                return this.renderDocPickeredView(item);
+              })}
+            </View>
+          ) : (
+            <View style={[styles.taskFieldView, {flexDirection: 'row'}]}>
+              <Image
+                style={[styles.calendarIcon, {marginRight: 10}]}
+                source={icons.upload}
+                resizeMode={'center'}
+              />
+              <Text style={[styles.textInput, {flex: 1}]}>
+                {this.state.selectedDateReminder == ''
+                  ? 'Add files'
+                  : this.state.selectedTimeReminder +
+                    ' ' +
+                    this.state.selectedDateReminder}
+              </Text>
+            </View>
+          )}
         </TouchableOpacity>
 
         {this.state.showPicker ? this.renderDatePicker() : null}
@@ -492,6 +576,25 @@ const styles = EStyleSheet.create({
   calendarIcon: {
     width: '23rem',
     height: '23rem',
+  },
+  taskFieldDocPickView: {
+    backgroundColor: colors.projectBgColor,
+    borderRadius: 5,
+    marginTop: '0rem',
+    marginBottom: '7rem',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: '12rem',
+    marginHorizontal: '20rem',
+    paddingVertical: '6rem',
+  },
+  gallaryIcon: {
+    width: '24rem',
+    height: '24rem',
+  },
+  cross: {
+    width: '7rem',
+    height: '7rem',
   },
 });
 
