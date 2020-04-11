@@ -8,6 +8,7 @@ import ProjectsSearchScreen from '../screens/App/Projects/ProjectsSearchScreen';
 import icons from '../assest/icons/icons';
 
 import {TouchableOpacity, Image} from 'react-native';
+import TasksScreen from '../screens/App/Tasks/TasksScreen';
 
 export const ProjectsStackNavigator = createStackNavigator(
   {
@@ -20,6 +21,21 @@ export const ProjectsStackNavigator = createStackNavigator(
             navigation={navigation}
             title="Projects"
             onPress={() => navigation.openDrawer()}
+          />
+        ),
+      }),
+    },
+    TasksScreen: {
+      screen: TasksScreen,
+      navigationOptions: ({navigation}) => ({
+        header: (
+          <Header
+            title={
+              navigation.state.params
+                ? navigation.state.params.projDetails.projName
+                : ''
+            }
+            onPress={() => navigation.pop()}
           />
         ),
       }),

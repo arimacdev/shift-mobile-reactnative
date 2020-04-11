@@ -107,6 +107,10 @@ class UsersScreen extends Component {
        this.fetchData();
     });
    
+  }
+
+  onBackPress() {
+    this.props.navigation.goBack();
 }
 
   render() {
@@ -116,12 +120,6 @@ class UsersScreen extends Component {
     
     return (
       <View style={styles.backgroundImage}>
-        <Header
-        addButton={true}
-        title='User'
-        onPress={() => this.onBackPress()}
-        screen={'userList'}
-      />
         <FlatList
           style={styles.flalList}
           data={users}

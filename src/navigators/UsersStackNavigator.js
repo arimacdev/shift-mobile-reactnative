@@ -11,7 +11,12 @@ export const UsersStackNavigator = createStackNavigator(
     UsersScreen: {
       screen: UsersScreen,
       navigationOptions: ({navigation}) => ({
-        header: null
+        header: <Header
+              addButton={true}
+              title='User'
+              screen={'userList'}
+              onPress={() => navigation.navigate('Projects')}
+          />,
       }),
     },
     ViewUserScreen: {
