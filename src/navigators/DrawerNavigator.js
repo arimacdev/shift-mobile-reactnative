@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Dimensions } from 'react-native';
+import { View, Dimensions,Image } from 'react-native';
 import { createDrawerNavigator } from 'react-navigation-drawer';
 import { Icon } from 'native-base';
 import EStyleSheet from 'react-native-extended-stylesheet';
@@ -27,7 +27,10 @@ export const DrawerNavigator = createDrawerNavigator(
             navigationOptions: {
                 drawerLabel: 'Projects ',
                 drawerIcon: ({ tintColor }) => (
-                    <Icon name={'folder'} type={'Feather'} style={{ fontSize: EStyleSheet.value('22rem'), color: '#FFFFFF' }} />
+                    <Image
+                        source={require('../asserts/img/drawer_projects.png')}
+                        style={{ width:  EStyleSheet.value('25rem'),height:EStyleSheet.value('25rem')}}
+                    />
                 ),
             }
         },
@@ -38,7 +41,10 @@ export const DrawerNavigator = createDrawerNavigator(
                 header: null,
                 drawerLabel: 'Users ',
                 drawerIcon: ({ tintColor }) => (
-                    <Icon name={'monitor'} type={'Feather'} style={{ fontSize: EStyleSheet.value('22rem'), color: '#FFFFFF' }} />
+                    <Image
+                        source={require('../asserts/img/drawer_users.png')}
+                        style={{ width:  EStyleSheet.value('25rem'),height:EStyleSheet.value('25rem')}}
+                    />
                 ),
             }),
         },
@@ -57,6 +63,7 @@ export const DrawerNavigator = createDrawerNavigator(
             itemsContainerStyle: {
                 marginVertical: 0,
                 fontFamily: 'CircularStd-Black',
+                fontSize: 19
             },
             iconContainerStyle: {
                 opacity: 1

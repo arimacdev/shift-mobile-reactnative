@@ -9,7 +9,7 @@ const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
 import FadeIn from 'react-native-fade-in-image';
 import Loader from '../../../components/Loader';
-
+import Header from '../../../components/Header';
 
 class UsersScreen extends Component {
   constructor(props) {
@@ -42,7 +42,9 @@ class UsersScreen extends Component {
   }
 
   fetchData() {
-    this.props.getAllUsers()
+    this.setState({ users: [],allUsers:[]}, function() {
+      this.props.getAllUsers()
+    });
   }
 
   userIcon = function (item) {
@@ -101,7 +103,7 @@ class UsersScreen extends Component {
   }
 
   onRefresh() {
-    this.setState({ isFetching: true,}, function() {
+    this.setState({ isFetching: true,users: [],allUsers:[]}, function() {
        this.fetchData();
     });
    
@@ -114,6 +116,12 @@ class UsersScreen extends Component {
     
     return (
       <View style={styles.backgroundImage}>
+        <Header
+        addButton={true}
+        title='User'
+        onPress={() => this.onBackPress()}
+        screen={'userList'}
+      />
         <FlatList
           style={styles.flalList}
           data={users}

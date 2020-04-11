@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
-import { View, Text, Dimensions, TouchableOpacity, SafeAreaView, Platform, StatusBar } from 'react-native';
+import { View, Text, Dimensions, TouchableOpacity, SafeAreaView, Platform, StatusBar,Image } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { Icon } from 'native-base';
 import { connect } from 'react-redux';
 import colors from '../config/colors';
 import * as actions from '../redux/actions';
+import NavigationService from '../services/NavigationService';
+
 
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({ $rem: entireScreenWidth / 380 });
@@ -15,8 +17,19 @@ class Header extends Component {
         super(props);
         this.state = {};
     }
+
+    navigateTo (screen) {
+        console.log(screen);
+        switch (screen) {
+            case 'userList':
+                NavigationService.navigate('AddUserScreen'); 
+                break;
+           
+          }
+    }
+
     render() {
-        const { onPress, isHome, title,style = {}, search=false } = this.props;
+        const { onPress, isHome, title,style,addButton,screen = {} } = this.props;
         // console.log('PPPP',this.props)
         return (
             <SafeAreaView style={{ backgroundColor: colors.primary }}>
@@ -26,7 +39,10 @@ class Header extends Component {
                         <View style={styles.header}>
                             <View style={styles.menuIconContatiner}>
                                 <TouchableOpacity activeOpacity={0.6} onPress={onPress}>
-                                    <Icon name={'menu'} style={styles.icon} type={'SimpleLineIcons'} />
+                                <Image
+                                    source={require('../asserts/img/drawer.png')}
+                                    style={styles.icon}
+                                />
                                 </TouchableOpacity>
                             </View>
                             <View style={styles.leftContainer}>
@@ -52,8 +68,15 @@ class Header extends Component {
                                 <Icon name={search ? 'ios-close' : 'ios-arrow-round-back'} style={styles.iconBack} type={'Ionicons'} />
                                 </TouchableOpacity>
                             </View>
-                            <View style={styles.leftContainerFull}>
+                            <View style={styles.leftContainer}>
                                 <Text style={styles.title}>{title}</Text>
+                            </View>
+                            <View style={styles.rightContainer} >
+                                { addButton &&
+                                    <TouchableOpacity style={{alignItems:'flex-end'}} onPress={() => this.navigateTo(screen)}>
+                                        <Icon name={'plus'} style={styles.iconPlus} type={'Feather'} />
+                                    </TouchableOpacity>
+                                }
                             </View>
                         </View>
                 }
@@ -91,6 +114,7 @@ const styles = EStyleSheet.create({
         justifyContent: 'flex-end',
         alignItems: 'center',
         flexDirection: 'row',
+        marginRight: '5rem'
     },
     nameContainer: {
         justifyContent: 'center',
@@ -130,15 +154,21 @@ const styles = EStyleSheet.create({
         fontWeight: Platform.OS === 'ios' ? '500' : '400',
     },
     icon: {
-        fontSize: '20rem',
-        color: colors.white,
-        fontWeight: '800',
+        width: '28rem',
+        height: '28rem',
+        borderRadius: '10rem',
+        marginLeft : '5rem'
     },
     iconBack: {
         fontSize: '32rem',
         color: colors.white,
         fontWeight: '800',
-    }
+    },
+    iconPlus: {
+        fontSize: '30rem',
+        color: colors.white,
+        fontWeight: '800',
+    },
 });
 
 const mapStateToProps = state => {

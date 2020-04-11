@@ -21,7 +21,8 @@ const colors = {
     projectTaskNameColor : '#576377',
     userListUserNameColor : '#576377',
     userViewHeader : '#040428',
-    userViewData : '#576377'
+    userViewData : '#576377',
+    userAddText : '#576377'
 
 };
 export default colors;
