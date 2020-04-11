@@ -15,5 +15,8 @@ const icons = {
     gallary: require('./gallary.png'),
     cross: require('./cross.png'),
     add: require('./add.png'),
+    search: require('./search.png'),
+    plus: require('./plus.png'),
+    folderWhite: require('./folder_white.png'),
 };
 export default icons;

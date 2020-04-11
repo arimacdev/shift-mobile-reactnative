@@ -30,14 +30,16 @@ class Header extends Component {
                                 </TouchableOpacity>
                             </View>
                             <View style={styles.leftContainer}>
-                                {/* {code hear} */}
-                            </View>
+                                <View style={styles.leftContainerFull}>
+                                        <Text style={styles.title}>{title}</Text>
+                                    </View>
+                                </View>
                             <View style={styles.rightContainer} >
-                            <TouchableOpacity style={{alignItems:'flex-end'}} onPress={() => navigation.navigate('Your Cart')}>
-                                    <Icon name={'menu'} style={styles.icon} type={'SimpleLineIcons'} />
+                                <TouchableOpacity style={{alignItems:'flex-end'}} onPress={() => this.props.navigation.navigate('SearchProject')}>
+                                    <Icon name={'ios-search'} style={[styles.icon,{fontSize: 25}]} type={'Ionicons'} />
                                 </TouchableOpacity>
-                                <TouchableOpacity style={{alignItems:'flex-end'}} onPress={() => navigation.navigate('Your Cart')}>
-                                    <Icon name={'menu'} style={styles.icon} type={'SimpleLineIcons'} />
+                                <TouchableOpacity style={{alignItems:'flex-end',marginLeft:40}} onPress={() => this.props.navigation.navigate('CreateNewProject')}>
+                                    <Icon name={'ios-add'} style={[styles.icon,{fontSize: 35}]} type={'Ionicons'} />
                                 </TouchableOpacity>
                             </View>
                             

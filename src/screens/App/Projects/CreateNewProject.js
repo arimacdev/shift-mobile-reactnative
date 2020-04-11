@@ -42,7 +42,7 @@ let dropData = [
   },
 ];
 
-class AddNewTasksScreen extends Component {
+class CreateNewProject extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -61,6 +61,7 @@ class AddNewTasksScreen extends Component {
       reminder: false,
       files: [],
       notes: '',
+      estimateTime: '',
     };
   }
 
@@ -85,7 +86,7 @@ class AddNewTasksScreen extends Component {
     let newDate = '';
 
     if (this.state.reminder) {
-      newDate = moment(date).format('YYYY/MM/DD');
+      newDate = moment(date).format('Do MMMM YYYY');
     } else {
       newDate = moment(date).format('Do MMMM YYYY');
     }
@@ -103,7 +104,7 @@ class AddNewTasksScreen extends Component {
         this.setState({
           selectedDateReminder: newDate,
           showPicker: false,
-          showTimePicker: true,
+          showTimePicker: false,
           dateReminder: new Date(selectedDate),
         });
       } else {
@@ -268,18 +269,21 @@ class AddNewTasksScreen extends Component {
     }
   }
 
-  onNotesChange(text) {
-    this.setState({notes: text});
+  onEstimateTimeChange(text) {
+    this.setState({estimateTime: text});
   }
 
   render() {
     return (
       <ScrollView style={{marginBottom: 90}}>
-        <View style={[styles.taskFieldView, {marginTop: 30}]}>
+        <View style={styles.titleView}>
+          <Text style={styles.titleText}>You’re about to start a new project</Text>
+        </View>
+        <View style={[styles.taskFieldView, {marginTop: 20}]}>
           <TextInput
             style={[styles.textInput, {width: '95%'}]}
-            placeholder={'Task name'}
-            value={this.state.taskName}
+            placeholder={'Project Name'}
+            value={this.state.password}
             onChangeText={text => this.onTaskNameChange(text)}
           />
         </View>
@@ -297,32 +301,7 @@ class AddNewTasksScreen extends Component {
             overlayStyle={{width: '100%'}}
             pickerStyle={{width: '89%', marginTop: 70, marginLeft: 15}}
             dropdownPosition={0}
-            value={'Assignee'}
-            itemColor={'black'}
-            selectedItemColor={'black'}
-            dropdownOffset={{top: 10}}
-            baseColor={colors.projectBgColor}
-            // renderBase={this.renderBase}
-            renderAccessory={this.renderBase}
-            itemTextStyle={{marginLeft: 15}}
-            itemPadding={10}
-          />
-        </View>
-        <View style={styles.taskFieldView}>
-          <Dropdown
-            style={{paddingLeft: 5}}
-            label=""
-            labelFontSize={0}
-            fontSize={13}
-            data={dropData}
-            textColor={colors.gray}
-            error={''}
-            animationDuration={0.5}
-            containerStyle={{width: '100%'}}
-            overlayStyle={{width: '100%'}}
-            pickerStyle={{width: '89%', marginTop: 70, marginLeft: 15}}
-            dropdownPosition={0}
-            value={'Tasks Status'}
+            value={'Client'}
             itemColor={'black'}
             selectedItemColor={'black'}
             dropdownOffset={{top: 10}}
@@ -340,7 +319,7 @@ class AddNewTasksScreen extends Component {
           <View style={[styles.taskFieldView, {flexDirection: 'row'}]}>
             <Text style={[styles.textInput, {flex: 1}]}>
               {this.state.selectedDate == ''
-                ? 'Due Date'
+                ? 'Project start date'
                 : this.state.selectedDate}
             </Text>
             <Image
@@ -357,7 +336,7 @@ class AddNewTasksScreen extends Component {
           <View style={[styles.taskFieldView, {flexDirection: 'row'}]}>
             <Text style={[styles.textInput, {flex: 1}]}>
               {this.state.selectedDateReminder == ''
-                ? 'Reminder'
+                ? 'Project end date'
                 : this.state.selectedTimeReminder +
                   ' ' +
                   this.state.selectedDateReminder}
@@ -369,49 +348,23 @@ class AddNewTasksScreen extends Component {
             />
           </View>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => this.doumentPicker()}>
-          {this.state.files.length > 0 ? (
-            <View
-              style={[
-                styles.taskFieldDocPickView,
-                {flexDirection: 'row', flexWrap: 'wrap'},
-              ]}>
-              {this.state.files.map(item => {
-                return this.renderDocPickeredView(item);
-              })}
-            </View>
-          ) : (
-            <View style={[styles.taskFieldView, {flexDirection: 'row'}]}>
-              <Image
-                style={[styles.calendarIcon, {marginRight: 10}]}
-                source={icons.upload}
-                resizeMode={'center'}
-              />
-              <Text style={[styles.textInput, {flex: 1}]}>Add files</Text>
-            </View>
-          )}
-        </TouchableOpacity>
-        <View style={[styles.taskFieldView, {height: 160}]}>
+        <View style={styles.taskFieldView}>
           <TextInput
-            style={[
-              styles.textInput,
-              {width: '95%', textAlignVertical: 'top', height: 150},
-            ]}
-            placeholder={'Notes'}
-            value={this.state.notes}
-            multiline={true}
-            onChangeText={text => this.onNotesChange(text)}
+            style={[styles.textInput, {width: '95%'}]}
+            placeholder={'Estimated project timeline'}
+            value={this.state.estimateTime}
+            onChangeText={text => this.onEstimateTimeChange(text)}
           />
         </View>
         <TouchableOpacity onPress={() => {}}>
           <View style={styles.button}>
             <Image
               style={[styles.bottomBarIcon, {marginRight: 15, marginLeft: 10}]}
-              source={icons.taskWhite}
+              source={icons.folderWhite}
               resizeMode={'center'}
             />
             <View style={{flex: 1}}>
-              <Text style={styles.buttonText}>Add new Task</Text>
+              <Text style={styles.buttonText}>Add new Project</Text>
             </View>
 
             <Image
@@ -431,6 +384,14 @@ class AddNewTasksScreen extends Component {
 const styles = EStyleSheet.create({
   backgroundImage: {
     flex: 1,
+  },
+  titleView:{
+    marginTop:'20rem',
+    marginLeft:'20rem'
+  },
+  titleText:{
+    color: colors.gray,
+    fontSize:'14rem'
   },
   taskFieldView: {
     backgroundColor: colors.projectBgColor,
@@ -601,4 +562,4 @@ const mapStateToProps = state => {
 export default connect(
   mapStateToProps,
   actions,
-)(AddNewTasksScreen);
+)(CreateNewProject);
