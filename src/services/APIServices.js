@@ -5,7 +5,8 @@ import {
     GET_MY_TASKS_BY_PROJECT,
 
     GET_ALL_USERS,
-    GET_ALL_USER
+    GET_ALL_USER,
+    CREATE_USER,
 
 } from '../api/API';
 
@@ -44,12 +45,27 @@ function getUserData(userID) {
     }, true,false);
 }
 
+function addUserData(firstName,lastName,userName,email,password,confirmPassword) {
+    return request({
+        url: CREATE_USER,
+        method: 'POST',
+        data: {
+            firstName: firstName,
+            lastName: lastName,
+            userName: userName,
+            email: email,
+            password:password,
+        }
+    }, true,false);
+}
+
 const APIServices = {
     getAllProjectsByUserData,
     getAllTaskInProjectsData,
     getMyTaskInProjectsData,
     getAllUsersData,
-    getUserData
+    getUserData,
+    addUserData,
 };
 
 export default APIServices;

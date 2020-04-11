@@ -11,6 +11,7 @@ import FadeIn from 'react-native-fade-in-image';
 import Loader from '../../../components/Loader';
 import Header from '../../../components/Header';
 import _ from 'lodash';
+import AwesomeAlert from 'react-native-awesome-alerts';
 
 class AddUserScreen extends Component {
   constructor(props) {
@@ -21,15 +22,44 @@ class AddUserScreen extends Component {
       userName : '',
       email : '',
       password : '',
-      confirmPassword : ''
+      confirmPassword : '',
+      showAlert : false,
+      alertTitle : '',
+      alertMsg : '',
     };
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    
-  }
+    if (prevProps.addUserError !== this.props.addUserError
+        && this.props.addUserError && this.props.addUserErrorMessage == '') {
+          this.showAlert("","Error While User Creation");
+    }
+
+    if (prevProps.addUserError !== this.props.addUserError
+        && this.props.addUserError && this.props.addUserErrorMessage != '') {
+          this.showAlert("",this.props.addUserErrorMessage);
+    }
+
+
+    if (prevProps.addUserSuccess !== this.props.addUserSuccess
+        && this.props.addUserSuccess) {
+          this.showAlert("","User Created");
+          this.resetState();
+    }
+}
 
   componentDidMount() {
+  }
+
+  resetState() {
+    this.setState({
+      firstName : '',
+      lastName : '',
+      userName : '',
+      email : '',
+      password : '',
+      confirmPassword : '',
+    })
   }
 
   saveUser() {
@@ -41,40 +71,49 @@ class AddUserScreen extends Component {
     let confirmPassword = this.state.confirmPassword;
 
     if(this.validateUser(firstName,lastName,userName,email,password,confirmPassword)){
-      //this.props.addUser(firstName,lastName,userName,email,password,confirmPassword)
+      this.props.addUser(firstName,lastName,userName,email,password,confirmPassword)
     }
   }
 
   validateUser(firstName,lastName,userName,email,password,confirmPassword) {
     if (!firstName && _.isEmpty(firstName)) {
+      this.showAlert("","Please Enter the First Name");
       return false;
     }
     if (!lastName && _.isEmpty(lastName)) {
+      this.showAlert("","Please Enter the Last Name");
         return false;
     }
     if (!userName && _.isEmpty(userName)) {
+      this.showAlert("","Please Enter the User Name");
       return false;
   }  
     if (!email && _.isEmpty(email)) {
+      this.showAlert("","Please Enter the Email");
       return false;
     } else {
       const validMail = this.validateEmail(email);
       if (!validMail) {
+        this.showAlert("","Please a valid Email");
         return false;
       }
     }
     if (!password && _.isEmpty(password)) {
+        this.showAlert("","Please Enter the Password");
         return false;
     }else {
       const validPassword = this.validatePassword(password);
       if (!validPassword) {
+        this.showAlert("","Please Enter a valid Password");
         return false;
       }
     } 
     if (!confirmPassword && _.isEmpty(confirmPassword)) {
+      this.showAlert("","Please Re-Enter the Password");
       return false;
     }else {
       if (password !== confirmPassword) {
+        this.showAlert("","Please match the Confirm Password");
         return false;
       }
     } 
@@ -93,6 +132,22 @@ class AddUserScreen extends Component {
     return re.test(String(email).toLowerCase());
   }
 
+  hideAlert (){
+    this.setState({
+      showAlert : false,
+      alertTitle : '',
+      alertMsg : '',
+    })
+  }
+
+  showAlert(title,msg){
+    this.setState({
+      showAlert : true,
+      alertTitle : title,
+      alertMsg : msg,
+    })
+  }
+
   render() { 
 
     let firstName = this.state.firstName;
@@ -101,6 +156,9 @@ class AddUserScreen extends Component {
     let email = this.state.email;
     let password = this.state.password;
     let confirmPassword = this.state.confirmPassword;
+    let showAlert = this.state.showAlert;
+    let alertTitle = this.state.alertTitle;
+    let alertMsg = this.state.alertMsg;
 
     return (
       <ScrollView style={{marginBottom: 5}}>
@@ -125,6 +183,7 @@ class AddUserScreen extends Component {
             style={styles.textInput}
             placeholder={'User Name'}
             value={userName}
+            autoCapitalize="none"
             onChangeText={userName => this.setState({userName})}
           />
         </View>
@@ -133,6 +192,7 @@ class AddUserScreen extends Component {
             style={styles.textInput}
             placeholder={'Email'}
             value={email}
+            autoCapitalize="none"
             onChangeText={email => this.setState({email})}
           />
         </View>
@@ -141,6 +201,8 @@ class AddUserScreen extends Component {
             style={styles.textInput}
             placeholder={'Password'}
             value={password}
+            autoCapitalize="none"
+            secureTextEntry={true}
             onChangeText={password => this.setState({password})}
           />
         </View>
@@ -149,6 +211,8 @@ class AddUserScreen extends Component {
             style={styles.textInput}
             placeholder={'Confirm Password'}
             value={confirmPassword}
+            autoCapitalize="none"
+            secureTextEntry={true}
             onChangeText={confirmPassword => this.setState({confirmPassword})}
           />
         </View>
@@ -157,6 +221,24 @@ class AddUserScreen extends Component {
           title="Save"
           color="#841584"
         />
+
+        <AwesomeAlert
+          show={showAlert}
+          showProgress={false}
+          title={alertTitle}
+          message={alertMsg}
+          closeOnTouchOutside={true}
+          closeOnHardwareBackPress={false}
+          showCancelButton={false}
+          showConfirmButton={true}
+          cancelText=""
+          confirmText="OK"
+          confirmButtonColor={colors.primary}
+          onConfirmPressed={() => {
+            this.hideAlert();
+          }}
+        />
+
       </ScrollView>
     );
   }
@@ -186,12 +268,16 @@ const styles = EStyleSheet.create({
     lineHeight: '17rem',
     fontFamily: 'Circular Std Medium',
     textAlign: 'left',
+    width : '100%'
   },
 });
 
 const mapStateToProps = state => {
   return {
-   
+    addUserLoading: state.users.addUserLoading,
+    addUserError : state.users.addUserError,
+    addUserErrorMessage : state.users.addUserErrorMessage,
+    addUserSuccess : state.users.addUserSuccess,
   };
 };
 export default connect(

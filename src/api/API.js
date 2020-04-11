@@ -6,6 +6,7 @@ export const GET_ALL_TASKS_BY_PROJECT = `${PROTOCOL}${HOST}projects/`;
 export const GET_MY_TASKS_BY_PROJECT = `${PROTOCOL}${HOST}projects/`;
 export const GET_ALL_USERS = `${PROTOCOL}${HOST}users`;
 export const GET_ALL_USER = `${PROTOCOL}${HOST}users`;
+export const CREATE_USER = `${PROTOCOL}${HOST}users`;
 
 
 
