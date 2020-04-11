@@ -46,44 +46,7 @@ class AddNewTasksScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: [
-        {
-          taskId: '0001',
-          taskName: 'Home page login',
-          taskStatus: 'Ongoing',
-          taskStatusColor: '#ffc213',
-          taskCompletion: false,
-          taskDate: 'Yesterday',
-          avatr: icons.whiteCircule,
-        },
-        {
-          taskId: '0002',
-          taskName: 'Home page login',
-          taskStatus: 'Ongoing',
-          taskStatusColor: 'red',
-          taskCompletion: false,
-          taskDate: 'Today',
-          avatr: icons.folder,
-        },
-        {
-          taskId: '0003',
-          taskName: 'Home page login',
-          taskStatus: 'Ongoing',
-          taskStatusColor: 'gray',
-          taskCompletion: false,
-          taskDate: '2020/02/03',
-          avatr: icons.folder,
-        },
-        {
-          taskId: '0004',
-          taskName: 'Home page login',
-          taskStatus: 'Ongoing',
-          taskStatusColor: 'gray',
-          taskCompletion: true,
-          taskDate: '2020/01/12',
-          avatr: icons.folder,
-        },
-      ],
+      taskName: '',
       index: 0,
       bottomItemPressColor: colors.darkBlue,
       showPicker: false,
@@ -97,6 +60,7 @@ class AddNewTasksScreen extends Component {
       mode: 'date',
       reminder: false,
       files: [],
+      notes: '',
     };
   }
 
@@ -104,33 +68,8 @@ class AddNewTasksScreen extends Component {
 
   componentDidMount() {}
 
-  renderProjectList(item) {
-    return (
-      <TouchableOpacity
-        onPress={() =>
-          this.props.navigation.navigate('TasksScreen', {taskDetails: item})
-        }>
-        <View style={styles.projectView}>
-          <Image
-            style={styles.completionIcon}
-            source={
-              item.taskCompletion == true
-                ? icons.rightCircule
-                : icons.whiteCircule
-            }
-          />
-          <View style={{flex: 1}}>
-            <Text style={styles.text}>{item.taskName}</Text>
-          </View>
-          <View style={styles.statusView}>
-            <Text style={[styles.textDate, {color: item.taskStatusColor}]}>
-              {item.taskDate}
-            </Text>
-            <Image style={styles.avatarIcon} source={item.avatr} />
-          </View>
-        </View>
-      </TouchableOpacity>
-    );
+  onTaskNameChange(text) {
+    this.setState({taskName: text});
   }
 
   renderBase() {
@@ -143,27 +82,33 @@ class AddNewTasksScreen extends Component {
 
   onChangeDate(event, selectedDate) {
     let date = new Date(selectedDate);
-    // const NewDate = moment(date, 'DD-MM-YYYY')
+    let newDate = '';
 
-    let NewDate =
-      date.getDate() +
-      '/' +
-      parseInt(date.getMonth() + 1) +
-      '/' +
-      date.getFullYear();
+    if (this.state.reminder) {
+      newDate = moment(date).format('YYYY/MM/DD');
+    } else {
+      newDate = moment(date).format('Do MMMM YYYY');
+    }
+
+    // let newDate =
+    //   date.getDate() +
+    //   '/' +
+    //   parseInt(date.getMonth() + 1) +
+    //   '/' +
+    //   date.getFullYear();
 
     // console.log("event.type",event.type)
     if (event.type == 'set') {
       if (this.state.reminder) {
         this.setState({
-          selectedDateReminder: NewDate,
+          selectedDateReminder: newDate,
           showPicker: false,
           showTimePicker: true,
           dateReminder: new Date(selectedDate),
         });
       } else {
         this.setState({
-          selectedDate: NewDate,
+          selectedDate: newDate,
           showPicker: false,
           showTimePicker: false,
           date: new Date(selectedDate),
@@ -176,7 +121,8 @@ class AddNewTasksScreen extends Component {
 
   onChangeTime(event, selectedTime) {
     let time = new Date(selectedTime);
-    let newTime = time.getHours() + ':' + time.getMinutes();
+    let newTime = moment(time).format('hh:mmA');
+    // let newTime = time.getHours() + ':' + time.getMinutes();
 
     if (event.type == 'set') {
       if (this.state.reminder) {
@@ -264,7 +210,7 @@ class AddNewTasksScreen extends Component {
             {item.name.substring(0, 5)}...{item.name.substr(-7)}
           </Text>
           <Text style={{fontSize: 10, marginTop: -2, color: colors.lightgray}}>
-            {moment().format('YYYY/MM/DD')} | {moment().format('HH:mm')}
+            {item.dateTime}
           </Text>
         </View>
 
@@ -294,14 +240,15 @@ class AddNewTasksScreen extends Component {
         type: [DocumentPicker.types.images],
       });
       for (const res of results) {
-        
-        this.onFilesCrossPress(res.uri)
+        this.onFilesCrossPress(res.uri);
 
         await this.state.files.push({
           uri: res.uri,
           type: res.type, // mime type
           name: res.name,
           size: res.size,
+          dateTime:
+            moment().format('YYYY/MM/DD') + ' | ' + moment().format('HH:mm'),
         });
         console.log(
           res.uri,
@@ -321,15 +268,19 @@ class AddNewTasksScreen extends Component {
     }
   }
 
+  onNotesChange(text) {
+    this.setState({notes: text});
+  }
+
   render() {
     return (
       <ScrollView style={{marginBottom: 90}}>
         <View style={[styles.taskFieldView, {marginTop: 30}]}>
           <TextInput
-            style={styles.textInput}
+            style={[styles.textInput, {width: '95%'}]}
             placeholder={'Task name'}
             value={this.state.password}
-            onChangeText={text => this.onPasswordChange(text)}
+            onChangeText={text => this.onTaskNameChange(text)}
           />
         </View>
         <View style={styles.taskFieldView}>
@@ -436,17 +387,40 @@ class AddNewTasksScreen extends Component {
                 source={icons.upload}
                 resizeMode={'center'}
               />
-              <Text style={[styles.textInput, {flex: 1}]}>
-                {this.state.selectedDateReminder == ''
-                  ? 'Add files'
-                  : this.state.selectedTimeReminder +
-                    ' ' +
-                    this.state.selectedDateReminder}
-              </Text>
+              <Text style={[styles.textInput, {flex: 1}]}>Add files</Text>
             </View>
           )}
         </TouchableOpacity>
+        <View style={[styles.taskFieldView, {height: 160}]}>
+          <TextInput
+            style={[
+              styles.textInput,
+              {width: '95%', textAlignVertical: 'top', height: 150},
+            ]}
+            placeholder={'Notes'}
+            value={this.state.notes}
+            multiline={true}
+            onChangeText={text => this.onNotesChange(text)}
+          />
+        </View>
+        <TouchableOpacity onPress={() => {}}>
+          <View style={styles.button}>
+            <Image
+              style={[styles.bottomBarIcon, {marginRight: 15, marginLeft: 10}]}
+              source={icons.taskWhite}
+              resizeMode={'center'}
+            />
+            <View style={{flex: 1}}>
+              <Text style={styles.buttonText}>Add new Task</Text>
+            </View>
 
+            <Image
+              style={[styles.addIcon, {marginRight: 10}]}
+              source={icons.add}
+              resizeMode={'center'}
+            />
+          </View>
+        </TouchableOpacity>
         {this.state.showPicker ? this.renderDatePicker() : null}
         {this.state.showTimePicker ? this.renderTimePicker() : null}
       </ScrollView>
@@ -595,6 +569,29 @@ const styles = EStyleSheet.create({
   cross: {
     width: '7rem',
     height: '7rem',
+  },
+  button: {
+    flexDirection: 'row',
+    backgroundColor: colors.lightBlue,
+    borderRadius: 5,
+    marginTop: '17rem',
+    flexDirection: 'row',
+    alignItems: 'center',
+    // justifyContent: 'center',
+    paddingHorizontal: '12rem',
+    height: '55rem',
+    marginHorizontal: '20rem',
+  },
+  buttonText: {
+    fontSize: '12rem',
+    color: colors.white,
+    lineHeight: '17rem',
+    fontFamily: 'HelveticaNeuel',
+    fontWeight: 'bold',
+  },
+  addIcon: {
+    width: '28rem',
+    height: '28rem',
   },
 });
 

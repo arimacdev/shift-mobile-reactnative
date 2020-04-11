@@ -14,5 +14,6 @@ const icons = {
     upload: require('./upload.png'),
     gallary: require('./gallary.png'),
     cross: require('./cross.png'),
+    add: require('./add.png'),
 };
 export default icons;
