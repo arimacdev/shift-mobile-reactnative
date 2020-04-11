@@ -5,6 +5,7 @@ import { Icon } from 'native-base';
 import EStyleSheet from 'react-native-extended-stylesheet';
 
 import { ProjectsStackNavigator } from '../navigators/ProjectsStackNavigator';
+import { UsersStackNavigator } from '../navigators/UsersStackNavigator';
 import { TasksStackNavigator } from '../navigators/TasksStackNavigator';
 
 import colors from '../config/colors';
@@ -30,17 +31,19 @@ export const DrawerNavigator = createDrawerNavigator(
                 ),
             }
         },
-        Tasks: {
-            screen: TasksStackNavigator,
+        Users: {
+            screen: UsersStackNavigator,
             header: null,
             navigationOptions: ({ navigation }) => ({
                 header: null,
-                drawerLabel: 'Tasks ',
+                drawerLabel: 'Users ',
                 drawerIcon: ({ tintColor }) => (
                     <Icon name={'monitor'} type={'Feather'} style={{ fontSize: EStyleSheet.value('22rem'), color: '#FFFFFF' }} />
                 ),
             }),
         },
+
+
     },
     {
         initialRouteName: 'Projects',

@@ -2,7 +2,9 @@ import request from './ApiCentral';
 import {
     GET_ALL_PROJECTS_BY_USER,
     GET_ALL_TASKS_BY_PROJECT,
-    GET_MY_TASKS_BY_PROJECT
+    GET_MY_TASKS_BY_PROJECT,
+
+    GET_ALL_USERS
 
 } from '../api/API';
 
@@ -27,10 +29,18 @@ function getMyTaskInProjectsData(userID,projectID) {
     }, true,true);
 }
 
+function getAllUsersData() {
+    return request({
+        url: GET_ALL_USERS,
+        method: 'GET'
+    }, true,false);
+}
+
 const APIServices = {
     getAllProjectsByUserData,
     getAllTaskInProjectsData,
-    getMyTaskInProjectsData
+    getMyTaskInProjectsData,
+    getAllUsersData
 };
 
 export default APIServices;
