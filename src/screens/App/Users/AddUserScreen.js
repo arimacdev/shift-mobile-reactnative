@@ -159,6 +159,7 @@ class AddUserScreen extends Component {
     let showAlert = this.state.showAlert;
     let alertTitle = this.state.alertTitle;
     let alertMsg = this.state.alertMsg;
+    let addUserLoading = this.props.addUserLoading;
 
     return (
       <ScrollView style={{marginBottom: 5}}>
@@ -239,6 +240,7 @@ class AddUserScreen extends Component {
           }}
         />
 
+        {addUserLoading && <Loader/>}
       </ScrollView>
     );
   }
