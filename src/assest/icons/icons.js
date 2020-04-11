@@ -18,5 +18,6 @@ const icons = {
     search: require('./search.png'),
     plus: require('./plus.png'),
     folderWhite: require('./folder_white.png'),
+    searchGray: require('./search_gray.png'),
 };
 export default icons;

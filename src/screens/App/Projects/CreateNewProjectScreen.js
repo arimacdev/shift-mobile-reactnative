@@ -42,7 +42,7 @@ let dropData = [
   },
 ];
 
-class CreateNewProject extends Component {
+class CreateNewProjectScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -562,4 +562,4 @@ const mapStateToProps = state => {
 export default connect(
   mapStateToProps,
   actions,
-)(CreateNewProject);
+)(CreateNewProjectScreen);

@@ -16,7 +16,7 @@ class Header extends Component {
         this.state = {};
     }
     render() {
-        const { onPress, isHome, title,style = {} } = this.props;
+        const { onPress, isHome, title,style = {}, search=false } = this.props;
         // console.log('PPPP',this.props)
         return (
             <SafeAreaView style={{ backgroundColor: colors.primary }}>
@@ -35,10 +35,10 @@ class Header extends Component {
                                     </View>
                                 </View>
                             <View style={styles.rightContainer} >
-                                <TouchableOpacity style={{alignItems:'flex-end'}} onPress={() => this.props.navigation.navigate('SearchProject')}>
+                                <TouchableOpacity style={{alignItems:'flex-end'}} onPress={() => this.props.navigation.navigate('ProjectsSearchScreen')}>
                                     <Icon name={'ios-search'} style={[styles.icon,{fontSize: 25}]} type={'Ionicons'} />
                                 </TouchableOpacity>
-                                <TouchableOpacity style={{alignItems:'flex-end',marginLeft:40}} onPress={() => this.props.navigation.navigate('CreateNewProject')}>
+                                <TouchableOpacity style={{alignItems:'flex-end',marginLeft:40}} onPress={() => this.props.navigation.navigate('CreateNewProjectScreen')}>
                                     <Icon name={'ios-add'} style={[styles.icon,{fontSize: 35}]} type={'Ionicons'} />
                                 </TouchableOpacity>
                             </View>
@@ -49,7 +49,7 @@ class Header extends Component {
                         <View style={[style, styles.header]}>
                             <View style={styles.menuIconContatiner}>
                                 <TouchableOpacity activeOpacity={0.6} onPress={onPress}>
-                                    <Icon name={'ios-arrow-round-back'} style={styles.iconBack} type={'Ionicons'} />
+                                <Icon name={search ? 'ios-close' : 'ios-arrow-round-back'} style={styles.iconBack} type={'Ionicons'} />
                                 </TouchableOpacity>
                             </View>
                             <View style={styles.leftContainerFull}>
