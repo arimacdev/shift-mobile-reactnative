@@ -15,48 +15,9 @@ import icons from '../../../assest/icons/icons';
 import EStyleSheet from 'react-native-extended-stylesheet';
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
-import {Dropdown} from 'react-native-material-dropdown';
 import AsyncStorage from '@react-native-community/async-storage';
 import Loader from '../../../components/Loader';
 
-let dropData = [
-  {
-    id: 'Ongoing',
-    value: 'Ongoing',
-  },
-  {
-    id: 'Support',
-    value: 'Support',
-  },
-  {
-    id: 'Finished',
-    value: 'Finished',
-  },
-  {
-    id: 'Presales',
-    value: 'Presales',
-  },
-  {
-    id: 'Presales : Project Discovery',
-    value: 'Presales : Project Discovery',
-  },
-  {
-    id: 'Presales : Quotation Submission',
-    value: 'Presales : Quotation Submission',
-  },
-  {
-    id: 'Presales : Negotiation',
-    value: 'Presales : Negotiation',
-  },
-  {
-    id: 'Presales : Confirmed',
-    value: 'Presales : Confirmed',
-  },
-  {
-    id: 'Presales : Lost',
-    value: 'Presales : Lost',
-  },
-];
 
 class ProjectsSearchScreen extends Component {
   constructor(props) {
@@ -74,12 +35,8 @@ class ProjectsSearchScreen extends Component {
       this.props.projects &&
       this.props.projects.length > 0
     ) {
-      let searchValue = 'ongoing';
-      let filteredData = this.props.projects.filter(function(item) {
-        return item.projectStatus.includes(searchValue);
-      });
       this.setState({
-        projects: filteredData,
+        projects: this.props.projects,
         allProjects: this.props.projects,
       });
     }
@@ -89,43 +46,6 @@ class ProjectsSearchScreen extends Component {
     AsyncStorage.getItem('userID').then(userID => {
       this.props.getAllProjectsByUser(userID);
     });
-  }
-
-  onFilter(key) {
-    let value = key;
-    let searchValue = '';
-    switch (value) {
-      case 'Ongoing':
-        searchValue = 'ongoing';
-        break;
-      case 'Support':
-        searchValue = 'support';
-        break;
-      case 'Finished':
-        searchValue = 'finished';
-        break;
-      case 'Presales : Project Discovery':
-        searchValue = 'presalesPD';
-        break;
-      case 'Presales : Quotation Submission':
-        searchValue = 'preSalesQS';
-        break;
-      case 'Presales : Negotiation':
-        searchValue = 'preSalesN';
-        break;
-      case 'Presales : Confirmed':
-        searchValue = 'preSalesC';
-        break;
-      case 'Presales : Lost':
-        searchValue = 'preSalesL';
-        break;
-    }
-
-    let filteredData = this.state.allProjects.filter(function(item) {
-      return item.projectStatus.includes(searchValue);
-    });
-
-    this.setState({projects: filteredData});
   }
 
   renderProjectList(item) {
@@ -187,7 +107,7 @@ class ProjectsSearchScreen extends Component {
       data.projectName.toLowerCase().includes(text.toLowerCase()),
     );
     if (text == '') {
-      this.setState({allProjects: this.state.allProjects});
+      this.setState({projects: this.state.allProjects});
     } else {
       this.setState({projects: result});
     }
@@ -221,7 +141,7 @@ class ProjectsSearchScreen extends Component {
 const styles = EStyleSheet.create({
   backgroundImage: {
     flex: 1,
-    // backgroundColor: colors.pageBackGroundColor,
+
   },
   projectFilerView: {
     backgroundColor: colors.projectBgColor,

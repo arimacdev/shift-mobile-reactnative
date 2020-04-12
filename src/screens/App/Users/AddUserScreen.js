@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View,ScrollView, Text, Dimensions, TextInput,Button} from 'react-native';
+import {View,ScrollView, Text, Dimensions, TextInput,TouchableOpacity,Image} from 'react-native';
 import {connect} from 'react-redux';
 import * as actions from '../../../redux/actions';
 import colors from '../../../config/colors';
@@ -217,11 +217,25 @@ class AddUserScreen extends Component {
             onChangeText={confirmPassword => this.setState({confirmPassword})}
           />
         </View>
-        <Button
-          onPress={() => this.saveUser()}
-          title="Save"
-          color="#841584"
-        />
+        <TouchableOpacity onPress={() => this.saveUser()}>
+          <View style={styles.button}>
+            <Image
+              style={[styles.bottomBarIcon, {marginRight: 15, marginLeft: 10}]}
+              source={icons.userWhite}
+              resizeMode={'center'}
+            />
+            <View style={{flex: 1}}>
+              <Text style={styles.buttonText}>Add new User</Text>
+            </View>
+
+            <Image
+              style={[styles.addIcon, {marginRight: 10}]}
+              source={icons.add}
+              resizeMode={'center'}
+            />
+          </View>
+        </TouchableOpacity>
+      
 
         <AwesomeAlert
           show={showAlert}
@@ -271,6 +285,33 @@ const styles = EStyleSheet.create({
     fontFamily: 'Circular Std Medium',
     textAlign: 'left',
     width : '100%'
+  },
+  button: {
+    flexDirection: 'row',
+    backgroundColor: colors.lightBlue,
+    borderRadius: 5,
+    marginTop: '17rem',
+    flexDirection: 'row',
+    alignItems: 'center',
+    // justifyContent: 'center',
+    paddingHorizontal: '12rem',
+    height: '55rem',
+    marginHorizontal: '20rem',
+  },
+  buttonText: {
+    fontSize: '12rem',
+    color: colors.white,
+    lineHeight: '17rem',
+    fontFamily: 'Circular Std Medium',
+    fontWeight: 'bold',
+  },
+  bottomBarIcon: {
+    width: '20rem',
+    height: '20rem',
+  },
+  addIcon: {
+    width: '28rem',
+    height: '28rem',
   },
 });
 

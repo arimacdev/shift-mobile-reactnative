@@ -19,5 +19,6 @@ const icons = {
     plus: require('./plus.png'),
     folderWhite: require('./folder_white.png'),
     searchGray: require('./search_gray.png'),
+    userWhite : require('./user_wite.png')
 };
 export default icons;

@@ -29,7 +29,7 @@ class Header extends Component {
     }
 
     render() {
-        const { onPress, isHome, title,style,addButton,screen = {} } = this.props;
+        const { onPress, isHome, title,style,addButton,screen = {},search=false } = this.props;
         // console.log('PPPP',this.props)
         return (
             <SafeAreaView style={{ backgroundColor: colors.primary }}>
@@ -52,10 +52,10 @@ class Header extends Component {
                                 </View>
                             <View style={styles.rightContainer} >
                                 <TouchableOpacity style={{alignItems:'flex-end'}} onPress={() => this.props.navigation.navigate('ProjectsSearchScreen')}>
-                                    <Icon name={'ios-search'} style={[styles.icon,{fontSize: 25}]} type={'Ionicons'} />
+                                    <Icon name={'ios-search'} style={styles.headerButton} type={'Ionicons'} />
                                 </TouchableOpacity>
                                 <TouchableOpacity style={{alignItems:'flex-end',marginLeft:40}} onPress={() => this.props.navigation.navigate('CreateNewProjectScreen')}>
-                                    <Icon name={'ios-add'} style={[styles.icon,{fontSize: 35}]} type={'Ionicons'} />
+                                    <Icon name={'ios-add'} style={styles.headerButton} type={'Ionicons'} />
                                 </TouchableOpacity>
                             </View>
                             
@@ -125,7 +125,8 @@ const styles = EStyleSheet.create({
         color: colors.white,
         fontFamily: 'HelveticaNeueMedium',
         fontWeight: '500',
-        textAlign: 'left'
+        textAlign: 'left',
+        marginLeft : '08rem'
     },
     textName: {
         fontSize: '13rem',
@@ -169,6 +170,11 @@ const styles = EStyleSheet.create({
         color: colors.white,
         fontWeight: '800',
     },
+    headerButton : {
+        fontSize: '30rem',
+        color: colors.white,
+        fontWeight: '800',
+    }
 });
 
 const mapStateToProps = state => {

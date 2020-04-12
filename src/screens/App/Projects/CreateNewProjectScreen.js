@@ -91,14 +91,6 @@ class CreateNewProjectScreen extends Component {
       newDate = moment(date).format('Do MMMM YYYY');
     }
 
-    // let newDate =
-    //   date.getDate() +
-    //   '/' +
-    //   parseInt(date.getMonth() + 1) +
-    //   '/' +
-    //   date.getFullYear();
-
-    // console.log("event.type",event.type)
     if (event.type == 'set') {
       if (this.state.reminder) {
         this.setState({
@@ -116,14 +108,11 @@ class CreateNewProjectScreen extends Component {
         });
       }
     }
-    // event.dismissed
-    // event.set
   }
 
   onChangeTime(event, selectedTime) {
     let time = new Date(selectedTime);
     let newTime = moment(time).format('hh:mmA');
-    // let newTime = time.getHours() + ':' + time.getMinutes();
 
     if (event.type == 'set') {
       if (this.state.reminder) {
@@ -234,48 +223,13 @@ class CreateNewProjectScreen extends Component {
     );
   }
 
-  async doumentPicker() {
-    // Pick multiple files
-    try {
-      const results = await DocumentPicker.pickMultiple({
-        type: [DocumentPicker.types.images],
-      });
-      for (const res of results) {
-        this.onFilesCrossPress(res.uri);
-
-        await this.state.files.push({
-          uri: res.uri,
-          type: res.type, // mime type
-          name: res.name,
-          size: res.size,
-          dateTime:
-            moment().format('YYYY/MM/DD') + ' | ' + moment().format('HH:mm'),
-        });
-        console.log(
-          res.uri,
-          res.type, // mime type
-          res.name,
-          res.size,
-        );
-      }
-      this.setState({files: this.state.files});
-      console.log(this.state.files);
-    } catch (err) {
-      if (DocumentPicker.isCancel(err)) {
-        console.log('file pick error', err);
-      } else {
-        throw err;
-      }
-    }
-  }
-
   onEstimateTimeChange(text) {
     this.setState({estimateTime: text});
   }
 
   render() {
     return (
-      <ScrollView style={{marginBottom: 90}}>
+      <ScrollView style={{marginBottom: EStyleSheet.value('02rem')}}>
         <View style={styles.titleView}>
           <Text style={styles.titleText}>You’re about to start a new project</Text>
         </View>
@@ -547,7 +501,7 @@ const styles = EStyleSheet.create({
     fontSize: '12rem',
     color: colors.white,
     lineHeight: '17rem',
-    fontFamily: 'HelveticaNeuel',
+    fontFamily: 'Circular Std Medium',
     fontWeight: 'bold',
   },
   addIcon: {
