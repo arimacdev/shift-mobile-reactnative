@@ -5,6 +5,7 @@ import Header from '../components/Header';
 import UsersScreen from '../screens/App/Users/UsersScreen';
 import ViewUserScreen from '../screens/App/Users/ViewUserScreen';
 import AddUserScreen from '../screens/App/Users/AddUserScreen';
+import EditUserScreen from '../screens/App/Users/EditUserScreen';
 
 export const UsersStackNavigator = createStackNavigator(
   {
@@ -32,7 +33,16 @@ export const UsersStackNavigator = createStackNavigator(
       screen: AddUserScreen,
       navigationOptions: ({ navigation }) => ({
           header: <Header
-              title='Creat new user'
+              title='Create new user'
+              onPress={() => navigation.pop()}
+          />,
+      }),
+    },
+    EditUserScreen: {
+      screen: EditUserScreen,
+      navigationOptions: ({ navigation }) => ({
+          header: <Header
+              title='Edit user'
               onPress={() => navigation.pop()}
           />,
       }),

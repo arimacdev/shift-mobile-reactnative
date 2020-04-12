@@ -6,7 +6,12 @@ import {
     ADD_USER,
     ADD_USER_SUCCESS,
     ADD_USER_FAILED,
-    ADD_USER_FAILED_MESSAGE
+    ADD_USER_FAILED_MESSAGE,
+
+    EDIT_USER,
+    EDIT_USER_SUCCESS,
+    EDIT_USER_FAILED,
+    EDIT_USER_FAILED_MESSAGE
 } from '../types';
 
 const INITIAL_STATE = {
@@ -17,6 +22,11 @@ const INITIAL_STATE = {
     addUserError : false,
     addUserErrorMessage : '',
     addUserSuccess : false,
+
+    editUserLoading: false,
+    editUserError : false,
+    editUserErrorMessage : '',
+    editUserSuccess : false,
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -36,7 +46,16 @@ export default (state = INITIAL_STATE, action) => {
         case ADD_USER_FAILED:
            return { ...state, addUserLoading: false,addUserSuccess: false,addUserError:true,addUserErrorMessage:''};
         case ADD_USER_FAILED_MESSAGE:
-           return { ...state, addUserLoading: false,addUserSuccess: false,addUserError:true,addUserErrorMessage:action.payload}                
+           return { ...state, addUserLoading: false,addUserSuccess: false,addUserError:true,addUserErrorMessage:action.payload}
+         // edit user    
+        case EDIT_USER:
+            return { ...state, editUserLoading: true,editUserSuccess: false,editUserError:false,editUserErrorMessage:''};
+        case EDIT_USER_SUCCESS:
+           return { ...state, editUserLoading: false,editUserSuccess: true,editUserError:false,editUserErrorMessage:''};
+        case EDIT_USER_FAILED:
+           return { ...state, editUserLoading: false,editUserSuccess: false,editUserError:true,editUserErrorMessage:''};
+        case EDIT_USER_FAILED_MESSAGE:
+           return { ...state, editUserLoading: false,editUserSuccess: false,editUserError:true,editUserErrorMessage:action.payload}                   
         default:
             return state;
     }

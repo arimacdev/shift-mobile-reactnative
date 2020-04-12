@@ -7,6 +7,7 @@ import {
     GET_ALL_USERS,
     GET_ALL_USER,
     CREATE_USER,
+    UPDATE_USER,
 
 } from '../api/API';
 
@@ -59,6 +60,20 @@ function addUserData(firstName,lastName,userName,email,password,confirmPassword)
     }, true,false);
 }
 
+function editUserData(firstName,lastName,userName,email,password,confirmPassword,userID) {
+    return request({
+        url: UPDATE_USER+'/'+userID,
+        method: 'PUT',
+        data: {
+            firstName: firstName,
+            lastName: lastName,
+            userName: userName,
+            email: email,
+            password:password,
+        }
+    }, true,false);
+}
+
 const APIServices = {
     getAllProjectsByUserData,
     getAllTaskInProjectsData,
@@ -66,6 +81,7 @@ const APIServices = {
     getAllUsersData,
     getUserData,
     addUserData,
+    editUserData,
 };
 
 export default APIServices;

@@ -6,7 +6,12 @@ import {
     ADD_USER,
     ADD_USER_SUCCESS,
     ADD_USER_FAILED,
-    ADD_USER_FAILED_MESSAGE
+    ADD_USER_FAILED_MESSAGE,
+
+    EDIT_USER,
+    EDIT_USER_SUCCESS,
+    EDIT_USER_FAILED,
+    EDIT_USER_FAILED_MESSAGE
 
 } from '../types';
 import APIServices from '../../services/APIServices';
@@ -48,6 +53,32 @@ export const addUser =  (firstName,lastName,userName,email,password,confirmPassw
                 });
             }else{
                 dispatch({ type: ADD_USER_FAILED});  
+            }
+           
+        });
+    };
+};
+
+export const editUser =  (firstName,lastName,userName,email,password,confirmPassword,userID) => {
+    return (dispatch) => {
+        dispatch({ type: EDIT_USER });
+        APIServices.editUserData(firstName,lastName,userName,email,password,confirmPassword,userID).then(response => {
+            if(response.message == 'success'){
+                dispatch({ 
+                    type: EDIT_USER_SUCCESS
+                });  
+            }else{
+                dispatch({ type: EDIT_USER_FAILED});  
+            }    
+        }).catch(error => {
+            if(error.status == 500){
+                let errorMsg = JSON.parse(error.data.message).errorMessage
+                dispatch({ 
+                    type: EDIT_USER_FAILED_MESSAGE,
+                    payload : errorMsg
+                });
+            }else{
+                dispatch({ type: EDIT_USER_FAILED});  
             }
            
         });

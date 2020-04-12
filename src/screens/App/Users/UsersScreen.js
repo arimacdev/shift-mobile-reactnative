@@ -82,7 +82,7 @@ class UsersScreen extends Component {
             <Text style={styles.text}>{item.firstName + ' ' + item.lastName}</Text>
           </View>
           <View style={styles.controlView}>
-            <TouchableOpacity >
+            <TouchableOpacity onPress={()=>this.props.navigation.navigate('EditUserScreen',{userItem:item})}>
                 <Image 
                   style={{width: 28, height: 28,borderRadius: 28/ 2 }} 
                   source={require('../../../asserts/img/edit_user.png')}
