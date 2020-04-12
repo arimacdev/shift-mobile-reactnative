@@ -5,7 +5,8 @@ import {
     SafeAreaView,
     ScrollView,
     TouchableOpacity,
-    Platform
+    Platform,
+    Image
 } from 'react-native';
 import { DrawerNavigatorItems } from 'react-navigation-drawer';
 import { Button, Text, Icon } from 'native-base';
@@ -15,6 +16,7 @@ import { connect } from 'react-redux';
 import colors from '../config/colors';
 import NavigationService from '../services/NavigationService';
 import * as actions from '../redux/actions';
+import FadeIn from 'react-native-fade-in-image';
 
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({ $rem: entireScreenWidth / 380 });
@@ -26,15 +28,43 @@ const CustomDrawerContentComponent = props => (
             style={styles.container}
             forceInset={{ top: 'always', horizontal: 'never' }}
         >
-            <TouchableOpacity style={styles.header} onPress={() => { NavigationService.navigate('MyAccount'); }}>
+            <TouchableOpacity style={styles.header}>
                 <View style={styles.headerLeft}>
-                   
+                    { props.loginUser.profileImage ?
+
+                        <FadeIn>
+                            <Image
+                                source={{uri: props.loginUser.profileImage}}
+                                style={{width: 64, height: 64,borderRadius: 64/ 2}} 
+                            />
+                        </FadeIn>
+
+                        :
+                        <Image 
+                            style={{width: 64, height: 64,borderRadius: 64/ 2}} 
+                             source={require('../asserts/img/defult_user.png')}
+                        />
+                    }
                 </View>
                 <View style={styles.headerRight}>
-                    
+                    <View style={{}}>
+                        <Text style={styles.textName}>ARIMAC</Text>
+                    </View>
+                    <View style={{}}>
+                        <Text style={styles.textNameUser}>
+                            {props.loginUser.firstName ? ` ${props.loginUser.firstName}` : ''}
+                            {props.loginUser.lastName ? ` ${props.loginUser.lastName}` : ''}
+                            </Text>
+                    </View>
                 </View>
 
             </TouchableOpacity>
+            <View
+                style={{
+                    borderBottomColor: '#252677',
+                    borderBottomWidth: 1,
+                }}
+            />
             <DrawerNavigatorItems {...props} />
             <TouchableOpacity style={styles.logoutButton} onPress={() => { props.logoutUser(true) }}>
             </TouchableOpacity>
@@ -60,16 +90,22 @@ const styles = EStyleSheet.create({
     headerLeft: {
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
     },
     headerRight: {
         flex: 2
     },
     textName: {
-        color: colors.white,
-        fontFamily: 'HelveticaNeueMedium',
-        fontSize: '16rem',
-        fontWeight: Platform.OS === 'ios' ? '500' : '400',
+        color: '#ffffff',
+        fontFamily: 'CircularStd-Bold',
+        fontSize: 20,
+        fontWeight: '400',
+    },
+    textNameUser : {
+        color: '#ffffff',
+        fontFamily: 'Circular Std Medium',
+        fontSize: 15,
+        fontWeight: '400',
     },
     textEmail: {
         opacity: 0.75,
@@ -100,6 +136,7 @@ const styles = EStyleSheet.create({
 
 const mapStateToProps = state => {
     return {
+        loginUser: state.users.loginUser,
     };
 };
 

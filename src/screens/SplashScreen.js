@@ -16,7 +16,7 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
 import jwtDecode from 'jwt-decode';
-//import jwt from "jsonwebtoken";
+import APIServices from '../services/APIServices'
 
 const config = {
         issuer : 'http://pmtool.devops.arimac.xyz/auth',
@@ -47,13 +47,21 @@ class SplashScreen extends Component {
     }
 
     async checkUserStatus() { 
-        AsyncStorage.getItem('userLoggedIn').then(userLoggedIn => {
-            if (userLoggedIn === 'true') {
-                NavigationService.navigate('App');
-            }else{
-                this.initialUserLogin();
-            }
-        }); 
+      AsyncStorage.getItem('userID').then(userID => {
+          if (userID) {
+            this.fetchDataUserData(userID);
+            //NavigationService.navigate('App');
+          } 
+      });
+    }
+
+    fetchDataUserData(userID) {
+      APIServices.getUserData(userID).then(responseUser => {
+          this.props.UserInfoSuccess(responseUser);
+          NavigationService.navigate('App');
+      }).catch((err) => { 
+      
+      });
     }
 
     async initialUserLogin() {
@@ -66,7 +74,8 @@ class SplashScreen extends Component {
             let decoded = jwtDecode(result.accessToken);
             AsyncStorage.setItem('userID', decoded.userId);
             AsyncStorage.setItem('userLoggedIn', 'true');
-            NavigationService.navigate('App');
+            this.fetchDataUserData( decoded.userId);
+            //NavigationService.navigate('App');
           } catch (error) {
           }
     }
