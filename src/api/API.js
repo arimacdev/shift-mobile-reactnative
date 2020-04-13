@@ -8,7 +8,4 @@ export const GET_ALL_USERS = `${PROTOCOL}${HOST}users`;
 export const GET_ALL_USER = `${PROTOCOL}${HOST}users`;
 export const CREATE_USER = `${PROTOCOL}${HOST}users`;
 export const UPDATE_USER = `${PROTOCOL}${HOST}users`;
-
-
-
-
+export const ADD_PROJECT = `${PROTOCOL}${HOST}projects`;

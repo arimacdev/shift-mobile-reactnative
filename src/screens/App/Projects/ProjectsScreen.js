@@ -10,7 +10,7 @@ EStyleSheet.build({$rem: entireScreenWidth / 380});
 import { Dropdown } from 'react-native-material-dropdown';
 import AsyncStorage from '@react-native-community/async-storage';
 import Loader from '../../../components/Loader';
-
+import { NavigationEvents } from 'react-navigation';
 
 let dropData = [
     {
@@ -74,9 +74,6 @@ class ProjectsScreen extends Component {
   }
 
   componentDidMount() {
-    AsyncStorage.getItem('userID').then(userID => {
-      this.props.getAllProjectsByUser(userID)
-    });
   }
 
   onFilter(key) {
@@ -168,11 +165,20 @@ class ProjectsScreen extends Component {
       )
   }
 
+  loadProjects () {
+    AsyncStorage.getItem('userID').then(userID => {
+      this.props.getAllProjectsByUser(userID)
+    });
+  }
+
   render() {
     let projects = this.state.projects;
     let projectsLoading = this.state.projectsLoading;
     return (
       <View style={styles.backgroundImage}>
+        <NavigationEvents
+                onWillFocus={(payload) => this.loadProjects(payload)}
+                />
         <View style={styles.projectFilerView}>
         <Dropdown
         // style={{}}

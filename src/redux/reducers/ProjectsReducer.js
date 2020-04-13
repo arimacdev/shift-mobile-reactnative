@@ -9,7 +9,12 @@ import {
 
     GET_MY_TASK_BY_PROJECT,
     GET_MY_TASK_BY_PROJECT_SUCCESS,
-    GET_MY_TASK_BY_PROJECT_FAILED
+    GET_MY_TASK_BY_PROJECT_FAILED,
+
+    ADD_PROJECT,
+    ADD_PROJECT_SUCCESS,
+    ADD_PROJECT_FAILED,
+
 } from '../types';
 
 const INITIAL_STATE = {
@@ -20,7 +25,11 @@ const INITIAL_STATE = {
     allTaskByProject : [],
 
     myTaskByProjectLoading : false,
-    myTaskByProject : []
+    myTaskByProject : [],
+
+    addProjectLoading: false,
+    addProjectError : false,
+    addProjectrSuccess : false,
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -44,7 +53,22 @@ export default (state = INITIAL_STATE, action) => {
         case GET_MY_TASK_BY_PROJECT_SUCCESS:
             return { ...state, myTaskByProjectLoading: false,myTaskByProject:action.payload.data };
         case GET_MY_TASK_BY_PROJECT_FAILED:
-            return { ...state, myTaskByProjectLoading: false };                 
+            return { ...state, myTaskByProjectLoading: false };   
+        // add project
+        case ADD_PROJECT:
+            return { ...state, addProjectLoading: true,addProjectrSuccess: false,addProjectError:false};
+        case ADD_PROJECT_SUCCESS:
+           let newProject = action.payload.data;
+           //const existingProjects = [...(state.projects)];
+           //existingProjects.push(...(newProject));
+           return { ...state, 
+                addProjectLoading : false,
+                addProjectrSuccess : true,
+                addProjectError : false,
+                //projects :  [...(state.projects)];,
+            };
+        case ADD_PROJECT_FAILED:
+           return { ...state, addProjectLoading: false,addProjectrSuccess: false,addProjectError:true};              
         default:
             return state;
     }

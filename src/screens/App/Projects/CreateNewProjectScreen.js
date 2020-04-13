@@ -20,34 +20,15 @@ import {Dropdown} from 'react-native-material-dropdown';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import DocumentPicker from 'react-native-document-picker';
 import moment from 'moment';
-
-let dropData = [
-  {
-    value: 'Status',
-  },
-  {
-    value: 'Completed',
-  },
-  {
-    value: 'Not started',
-  },
-  {
-    value: 'QA',
-  },
-  {
-    value: 'Unassigned',
-  },
-  {
-    value: 'Assigned',
-  },
-];
+import _ from 'lodash';
+import AwesomeAlert from 'react-native-awesome-alerts';
+import AsyncStorage from '@react-native-community/async-storage';
+import Loader from '../../../components/Loader';
 
 class CreateNewProjectScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      taskName: '',
-      index: 0,
       bottomItemPressColor: colors.darkBlue,
       showPicker: false,
       showTimePicker: false,
@@ -62,16 +43,33 @@ class CreateNewProjectScreen extends Component {
       files: [],
       notes: '',
       estimateTime: '',
+      projectName : '',
+      projectClient : '',
+      projectStartDate : '',
+      projectStartDateValue : '',
+      projectEndDate : '',
+      projectEndDateValue : '',
+      estimateDates : '',
+      showAlert : false,
+      alertTitle : '',
+      alertMsg : '',
     };
   }
 
-  componentDidUpdate(prevProps, prevState, snapshot) {}
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (prevProps.addProjectError !== this.props.addProjectError
+      && this.props.addProjectError) {
+        this.showAlert("","Error While Project Creation");
+    }
+
+    if (prevProps.addProjectrSuccess !== this.props.addProjectrSuccess
+        && this.props.addProjectrSuccess) {
+          this.showAlert("","Project Created");
+          this.props.navigation.goBack();
+    }
+  }
 
   componentDidMount() {}
-
-  onTaskNameChange(text) {
-    this.setState({taskName: text});
-  }
 
   renderBase() {
     return (
@@ -84,43 +82,32 @@ class CreateNewProjectScreen extends Component {
   onChangeDate(event, selectedDate) {
     let date = new Date(selectedDate);
     let newDate = '';
+    let newDateValue = '';
 
     if (this.state.reminder) {
       newDate = moment(date).format('Do MMMM YYYY');
+      newDateValue = moment(date).format('DD MM YYYY');
     } else {
       newDate = moment(date).format('Do MMMM YYYY');
+      newDateValue = moment(date).format('DD MM YYYY');
     }
 
     if (event.type == 'set') {
       if (this.state.reminder) {
         this.setState({
-          selectedDateReminder: newDate,
+          projectEndDate : newDate,
+          projectEndDateValue : newDateValue,
           showPicker: false,
           showTimePicker: false,
           dateReminder: new Date(selectedDate),
         });
       } else {
         this.setState({
-          selectedDate: newDate,
+          projectStartDate : newDate,
+          projectStartDateValue : newDateValue,
           showPicker: false,
           showTimePicker: false,
           date: new Date(selectedDate),
-        });
-      }
-    }
-  }
-
-  onChangeTime(event, selectedTime) {
-    let time = new Date(selectedTime);
-    let newTime = moment(time).format('hh:mmA');
-
-    if (event.type == 'set') {
-      if (this.state.reminder) {
-        this.setState({
-          selectedTimeReminder: newTime,
-          showPicker: false,
-          showTimePicker: false,
-          timeReminder: new Date(selectedTime),
         });
       }
     }
@@ -146,88 +133,117 @@ class CreateNewProjectScreen extends Component {
     );
   }
 
-  renderTimePicker() {
-    return (
-      <DateTimePicker
-        testID="dateTimePicker"
-        timeZoneOffsetInMinutes={0}
-        value={this.state.date}
-        mode={'time'}
-        is24Hour={true}
-        display="default"
-        onChange={(event, selectedDate) =>
-          this.onChangeTime(event, selectedDate)
-        }
-      />
-    );
-  }
-
-  onFilesCrossPress(uri) {
-    let filesArray = this.state.files.filter(item => {
-      return item.uri !== uri;
-    });
-    this.setState({files: filesArray});
-  }
-
-  renderDocPickeredView(item) {
-    return (
-      <View
-        style={{
-          width: 165,
-          height: 50,
-          flexDirection: 'row',
-          backgroundColor: colors.white,
-          borderRadius: 5,
-          marginRight: 5,
-          marginBottom: 5,
-        }}>
-        <View style={{justifyContent: 'center', marginLeft: 10}}>
-          <Image
-            style={styles.gallaryIcon}
-            source={icons.gallary}
-            resizeMode={'center'}
-          />
-        </View>
-
-        <View
-          style={{
-            flexDirection: 'column',
-            marginLeft: 10,
-            justifyContent: 'center',
-            flex: 1,
-          }}>
-          <Text style={{marginTop: -2}}>
-            {item.name.substring(0, 5)}...{item.name.substr(-7)}
-          </Text>
-          <Text style={{fontSize: 10, marginTop: -2, color: colors.lightgray}}>
-            {item.dateTime}
-          </Text>
-        </View>
-
-        <View
-          style={{
-            justifyContent: 'flex-start',
-            marginRight: 4,
-            marginTop: 4,
-            // backgroundColor:'red'
-          }}>
-          <TouchableOpacity onPress={() => this.onFilesCrossPress(item.uri)}>
-            <Image
-              style={styles.cross}
-              source={icons.cross}
-              resizeMode={'center'}
-            />
-          </TouchableOpacity>
-        </View>
-      </View>
-    );
-  }
-
   onEstimateTimeChange(text) {
     this.setState({estimateTime: text});
   }
 
+  saveProject() {
+    let projectName = this.state.projectName;
+    let projectClient = this.state.projectClient;
+    let projectStartDateValue = this.state.projectStartDateValue;
+    let projectEndDateValue = this.state.projectEndDateValue;
+    let projectStartDate = this.state.projectStartDate;
+    let projectEndDate = this.state.projectEndDate;
+
+    if(this.validateProject(projectName,projectClient,projectStartDateValue,projectEndDateValue)){
+      let IsoStartDate = projectStartDateValue ? moment(projectStartDateValue,'DD/MM/YYYY').format('YYYY-MM-DD[T]HH:mm:ss') : '';
+      let IsoSEndDate = projectEndDateValue ? moment(projectEndDateValue,'DD/MM/YYYY').format('YYYY-MM-DD[T]HH:mm:ss') : '';
+      AsyncStorage.getItem('userID').then(userID => {
+        this.props.addproject(projectName,projectClient,IsoStartDate,IsoSEndDate,userID);
+      });
+     
+    }
+  };
+
+  validateProject(projectName,projectClient,projectStartDateValue,projectEndDateValue) {
+    if (!projectName && _.isEmpty(projectName)) {
+      this.showAlert("","Please Enter the Project Name");
+      return false;
+    }
+    if (!projectClient && _.isEmpty(projectClient)) {
+      this.showAlert("","Please Enter the Project Client");
+        return false;
+    }
+
+    if (!projectStartDateValue && _.isEmpty(projectStartDateValue)) {
+      this.showAlert("","Please a Start Date");
+      return false;
+    }
+    if (!projectEndDateValue && _.isEmpty(projectEndDateValue)) {
+      this.showAlert("","Please a Start End");
+        return false;
+    }
+
+    if(projectStartDateValue && !_.isEmpty(projectStartDateValue)){
+      let startDate  = moment(projectStartDateValue, "DD MM YYYY");
+      let today = moment(new Date()).format('DD MM YYYY');
+      let endDate = moment(today, "DD MM YYYY");
+      let totalDates = startDate.diff(endDate, "days");
+      if(totalDates < 0){
+        this.showAlert("","Start date cannot be a past date");
+        return false;
+      }
+    } 
+    if(projectEndDateValue && !_.isEmpty(projectEndDateValue)){
+      let startDate  = moment(projectStartDateValue, "DD MM YYYY");
+      let endDate  = moment(projectEndDateValue, "DD MM YYYY");
+      let totalDates = endDate.diff(startDate, "days");
+      if(totalDates < 0){
+        this.showAlert("","End date should be after start date");
+        return false;
+      }
+    } 
+    return true;
+  };
+
+  hideAlert (){
+    this.setState({
+      showAlert : false,
+      alertTitle : '',
+      alertMsg : '',
+    })
+  }
+
+  showAlert(title,msg){
+    this.setState({
+      showAlert : true,
+      alertTitle : title,
+      alertMsg : msg,
+    })
+  }
+
   render() {
+    let projectName = this.state.projectName;
+    let projectClient = this.state.projectClient;
+    let projectStartDate = this.state.projectStartDate;
+    let projectEndDate = this.state.projectEndDate;
+    let projectStartDateValue = this.state.projectStartDateValue;
+    let projectEndDateValue = this.state.projectEndDateValue;
+    let showAlert = this.state.showAlert;
+    let alertTitle = this.state.alertTitle;
+    let alertMsg = this.state.alertMsg;
+    let addProjectLoading = this.props.addProjectLoading;
+    let estimateDatesText = '';
+    if(projectStartDate && projectEndDate){
+      
+      let startDate  = moment(projectStartDateValue, "DD MM YYYY");
+      let endDate  = moment(projectEndDateValue, "DD MM YYYY");
+      let totalDates = endDate.diff(startDate, "days");
+      if(totalDates > 0){
+        let weeksText = Math.floor((parseInt(totalDates) / 7));
+        let dateText =  Math.floor((parseInt(totalDates) % 7));
+        console.log(weeksText,dateText);
+        estimateDatesText = weeksText.toString() + 'week(s)' + ' ' + dateText.toString() + 'day(s)'
+      }else{
+        estimateDatesText = '0 days'
+      }
+      
+    }else{
+      estimateDatesText = '0 days'
+    }
+
+
+
     return (
       <ScrollView style={{marginBottom: EStyleSheet.value('02rem')}}>
         <View style={styles.titleView}>
@@ -237,33 +253,16 @@ class CreateNewProjectScreen extends Component {
           <TextInput
             style={[styles.textInput, {width: '95%'}]}
             placeholder={'Project Name'}
-            value={this.state.password}
-            onChangeText={text => this.onTaskNameChange(text)}
+            value={projectName}
+            onChangeText={projectName => this.setState({projectName})}
           />
         </View>
-        <View style={styles.taskFieldView}>
-          <Dropdown
-            style={{paddingLeft: 5}}
-            label=""
-            labelFontSize={0}
-            fontSize={13}
-            data={dropData}
-            textColor={colors.gray}
-            error={''}
-            animationDuration={0.5}
-            containerStyle={{width: '100%'}}
-            overlayStyle={{width: '100%'}}
-            pickerStyle={{width: '89%', marginTop: 70, marginLeft: 15}}
-            dropdownPosition={0}
-            value={'Client'}
-            itemColor={'black'}
-            selectedItemColor={'black'}
-            dropdownOffset={{top: 10}}
-            baseColor={colors.projectBgColor}
-            // renderBase={this.renderBase}
-            renderAccessory={this.renderBase}
-            itemTextStyle={{marginLeft: 15}}
-            itemPadding={10}
+        <View style={[styles.taskFieldView]}>
+          <TextInput
+            style={[styles.textInput, {width: '95%'}]}
+            placeholder={'Client'}
+            value={projectClient}
+            onChangeText={projectClient => this.setState({projectClient})}
           />
         </View>
         <TouchableOpacity
@@ -272,9 +271,9 @@ class CreateNewProjectScreen extends Component {
           }>
           <View style={[styles.taskFieldView, {flexDirection: 'row'}]}>
             <Text style={[styles.textInput, {flex: 1}]}>
-              {this.state.selectedDate == ''
+              {projectStartDate == ''
                 ? 'Project start date'
-                : this.state.selectedDate}
+                : projectStartDate}
             </Text>
             <Image
               style={styles.calendarIcon}
@@ -289,11 +288,9 @@ class CreateNewProjectScreen extends Component {
           }>
           <View style={[styles.taskFieldView, {flexDirection: 'row'}]}>
             <Text style={[styles.textInput, {flex: 1}]}>
-              {this.state.selectedDateReminder == ''
+              {projectEndDate == ''
                 ? 'Project end date'
-                : this.state.selectedTimeReminder +
-                  ' ' +
-                  this.state.selectedDateReminder}
+                : projectEndDate}
             </Text>
             <Image
               style={styles.calendarIcon}
@@ -306,11 +303,12 @@ class CreateNewProjectScreen extends Component {
           <TextInput
             style={[styles.textInput, {width: '95%'}]}
             placeholder={'Estimated project timeline'}
-            value={this.state.estimateTime}
-            onChangeText={text => this.onEstimateTimeChange(text)}
+            value={estimateDatesText}
+            onChangeText={estimateDates => this.setState({estimateDatesText})}
+            editable={false}
           />
         </View>
-        <TouchableOpacity onPress={() => {}}>
+        <TouchableOpacity onPress={() => this.saveProject()}>
           <View style={styles.button}>
             <Image
               style={[styles.bottomBarIcon, {marginRight: 15, marginLeft: 10}]}
@@ -329,7 +327,23 @@ class CreateNewProjectScreen extends Component {
           </View>
         </TouchableOpacity>
         {this.state.showPicker ? this.renderDatePicker() : null}
-        {this.state.showTimePicker ? this.renderTimePicker() : null}
+        {addProjectLoading && <Loader/>}
+        <AwesomeAlert
+          show={showAlert}
+          showProgress={false}
+          title={alertTitle}
+          message={alertMsg}
+          closeOnTouchOutside={true}
+          closeOnHardwareBackPress={false}
+          showCancelButton={false}
+          showConfirmButton={true}
+          cancelText=""
+          confirmText="OK"
+          confirmButtonColor={colors.primary}
+          onConfirmPressed={() => {
+            this.hideAlert();
+          }}
+        />
       </ScrollView>
     );
   }
@@ -365,7 +379,7 @@ const styles = EStyleSheet.create({
     color: colors.white,
     textAlign: 'center',
     lineHeight: '17rem',
-    fontFamily: 'HelveticaNeuel',
+    fontFamily: 'Circular Std Medium',
     textAlign: 'center',
     // fontWeight: 'bold',
   },
@@ -385,7 +399,7 @@ const styles = EStyleSheet.create({
     textAlign: 'center',
     fontWeight: 'bold',
     lineHeight: '17rem',
-    fontFamily: 'HelveticaNeuel',
+    fontFamily: 'Circular Std Medium',
     textAlign: 'left',
     marginLeft: '10rem',
   },
@@ -395,7 +409,7 @@ const styles = EStyleSheet.create({
     textAlign: 'center',
     fontWeight: 'bold',
     lineHeight: '17rem',
-    fontFamily: 'HelveticaNeuel',
+    fontFamily: 'Circular Std Medium',
     textAlign: 'left',
     marginLeft: '10rem',
   },
@@ -458,7 +472,7 @@ const styles = EStyleSheet.create({
     color: colors.gray,
     textAlign: 'center',
     lineHeight: '17rem',
-    fontFamily: 'HelveticaNeuel',
+    fontFamily: 'Circular Std Medium',
     textAlign: 'left',
     // width: '95%'
   },
@@ -511,7 +525,11 @@ const styles = EStyleSheet.create({
 });
 
 const mapStateToProps = state => {
-  return {};
+  return {
+    addProjectLoading: state.project.addProjectLoading,
+    addProjectError : state.project.addProjectError,
+    addProjectrSuccess : state.project.addProjectrSuccess,
+  };
 };
 export default connect(
   mapStateToProps,

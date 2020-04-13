@@ -9,6 +9,8 @@ import {
     CREATE_USER,
     UPDATE_USER,
 
+    ADD_PROJECT
+
 } from '../api/API';
 
  function getAllProjectsByUserData(userID) {
@@ -72,6 +74,20 @@ function editUserData(firstName,lastName,userName,email,password,confirmPassword
             password:password,
         }
     }, true,false);
+};
+
+function addprojectData(projectName,projectClient,IsoStartDate,IsoSEndDate,projectOwner) {
+    return request({
+        url: ADD_PROJECT,
+        method: 'POST',
+        data: {
+            projectOwner : projectOwner,
+            projectName : projectName,
+            clientId : projectClient,
+            projectStartDate : IsoStartDate,
+            projectEndDate : IsoSEndDate
+        }
+    }, true,false);
 }
 
 const APIServices = {
@@ -82,6 +98,7 @@ const APIServices = {
     getUserData,
     addUserData,
     editUserData,
+    addprojectData
 };
 
 export default APIServices;

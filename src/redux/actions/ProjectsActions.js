@@ -9,7 +9,11 @@ import {
     
     GET_MY_TASK_BY_PROJECT,
     GET_MY_TASK_BY_PROJECT_SUCCESS,
-    GET_MY_TASK_BY_PROJECT_FAILED
+    GET_MY_TASK_BY_PROJECT_FAILED,
+
+    ADD_PROJECT,
+    ADD_PROJECT_SUCCESS,
+    ADD_PROJECT_FAILED,
 
 } from '../types';
 import APIServices from '../../services/APIServices';
@@ -61,6 +65,23 @@ export const getMyTaskInProjects =  (userID,projectID) => {
             }    
         }).catch(error => {   
             dispatch({ type: GET_MY_TASK_BY_PROJECT_FAILED});  
+        });
+    };
+};
+
+export const addproject =  (projectName,projectClient,IsoStartDate,IsoSEndDate,projectOwner) => {
+    return (dispatch) => {
+        dispatch({ type: ADD_PROJECT });
+        APIServices.addprojectData(projectName,projectClient,IsoStartDate,IsoSEndDate,projectOwner).then(response => {
+            if(response.message == 'success'){
+                dispatch({ 
+                    type: ADD_PROJECT_SUCCESS,
+                    payload: response});  
+            }else{
+                dispatch({ type: ADD_PROJECT_FAILED});  
+            }    
+        }).catch(error => {   
+            dispatch({ type: ADD_PROJECT_FAILED});  
         });
     };
 };
