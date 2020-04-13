@@ -106,15 +106,20 @@ class EditProjectScreen extends Component {
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (prevProps.updateProjectError !== this.props.updateProjectError
-        && this.props.updateProjectError) {
+        && this.props.updateProjectError && this.props.updateProjectErrorMessage == '') {
           this.showAlert("","Error While Project Update");
-      }
+    }
+
+    if (prevProps.updateProjectError !== this.props.updateProjectError
+      && this.props.updateProjectError && this.props.updateProjectErrorMessage != '') {
+        this.showAlert("",this.props.updateProjectErrorMessage);
+    }
   
-      if (prevProps.updateProjectSuccess !== this.props.updateProjectSuccess
+    if (prevProps.updateProjectSuccess !== this.props.updateProjectSuccess
           && this.props.updateProjectSuccess) {
             this.showAlert("","Project Updated");
             this.props.navigation.goBack();
-      }
+    }
   }
 
   async componentDidMount() {
@@ -768,6 +773,7 @@ const mapStateToProps = state => {
     updateProjectLoading: state.project.updateProjectLoading,
     updateProjectError : state.project.updateProjectError,
     updateProjectSuccess : state.project.updateProjectSuccess,
+    updateProjectErrorMessage : state.project.updateProjectErrorMessage,
   };
 };
 export default connect(

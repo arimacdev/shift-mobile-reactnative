@@ -17,7 +17,8 @@ import {
 
     EDIT_PROJECT,
     EDIT_PROJECT_SUCCESS,
-    EDIT_PROJECT_FAILED
+    EDIT_PROJECT_FAILED,
+    EDIT_PROJECT_FAILED_MASSAGE
 
 } from '../types';
 import APIServices from '../../services/APIServices';
@@ -102,8 +103,15 @@ export const updateproject =  (projectID,userID,projectName,projectClient,IsoSta
             }else{
                 dispatch({ type: EDIT_PROJECT_FAILED});  
             }    
-        }).catch(error => {   
-            dispatch({ type: EDIT_PROJECT_FAILED});  
+        }).catch(error => {  
+            if(error.status == 403){
+                let errorMsg = error.data.message;
+                dispatch({ 
+                    type: EDIT_PROJECT_FAILED_MASSAGE,
+                    payload: errorMsg});   
+            }else{
+                dispatch({ type: EDIT_PROJECT_FAILED});  
+            } 
         });
     };
 };

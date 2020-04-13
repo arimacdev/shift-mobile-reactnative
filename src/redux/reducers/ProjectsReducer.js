@@ -17,7 +17,8 @@ import {
 
     EDIT_PROJECT,
     EDIT_PROJECT_SUCCESS,
-    EDIT_PROJECT_FAILED
+    EDIT_PROJECT_FAILED,
+    EDIT_PROJECT_FAILED_MASSAGE,
 
 } from '../types';
 
@@ -38,6 +39,7 @@ const INITIAL_STATE = {
     updateProjectLoading: false,
     updateProjectSuccess : false,
     updateProjectError : false,
+    updateProjectErrorMessage : '',
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -82,17 +84,30 @@ export default (state = INITIAL_STATE, action) => {
             return { ...state, 
                 updateProjectLoading: true,
                 updateProjectSuccess: false,
-                updateProjectError: false};
+                updateProjectError: false,
+                updateProjectErrorMessage : ''
+            };
         case EDIT_PROJECT_SUCCESS:
             return { ...state, 
                 updateProjectLoading: false,
                 updateProjectSuccess: true,
-                updateProjectError: false};
+                updateProjectError: false,
+                updateProjectErrorMessage : ''
+            };
         case EDIT_PROJECT_FAILED:
             return { ...state, 
                 updateProjectLoading: false,
                 updateProjectSuccess: false,
-                updateProjectError: true};                 
+                updateProjectError: true,
+                updateProjectErrorMessage : ''
+            };
+        case EDIT_PROJECT_FAILED_MASSAGE:
+            return { ...state, 
+                updateProjectLoading: false,
+                updateProjectSuccess: false,
+                updateProjectError: true,
+                updateProjectErrorMessage : action.payload
+            };                          
         default:
             return state;
     }
