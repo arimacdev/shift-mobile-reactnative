@@ -98,6 +98,7 @@ class EditProjectScreen extends Component {
       dataLoading : false,
       projectID : '',
       projectStatus : '',
+      projectStatusValue : '',
       startDateChanged : false,
       endDateChanged : false,
     };
@@ -167,6 +168,9 @@ class EditProjectScreen extends Component {
         case 'finished':
               statusValue = 'Finished'
               break;
+        case 'presales':
+              statusValue = 'Presales'
+              break;      
         case 'presalesPD':  
               statusValue = 'Presales : Project Discovery'
               break;
@@ -184,7 +188,8 @@ class EditProjectScreen extends Component {
               break;
       }
       this.setState({
-        projectStatus : statusValue
+        projectStatus : statusValue,
+        projectStatusValue : status,
       })
   }
 
@@ -310,12 +315,13 @@ class EditProjectScreen extends Component {
     let projectEndTime = this.state.projectEndTime;
     let startDateChanged = this.state.startDateChanged;
     let endDateChanged = this.state.endDateChanged;
+    let projectStatusValue = this.state.projectStatusValue;
 
     if(this.validateProject(projectName,projectClient,projectStartDateValue,projectEndDateValue,projectStatus,startDateChanged,endDateChanged)){
       let IsoStartDate = projectStartDateValue ? moment(projectStartDateValue + projectStartTime,'DD/MM/YYYY hh:mmA').format('YYYY-MM-DD[T]HH:mm:ss') : '';
       let IsoSEndDate = projectEndDateValue ? moment(projectEndDateValue + projectEndTime,'DD/MM/YYYY hh:mmA').format('YYYY-MM-DD[T]HH:mm:ss') : '';
       AsyncStorage.getItem('userID').then(userID => {
-        this.props.updateproject(projectID,userID,projectName,projectClient,IsoStartDate,IsoSEndDate,projectStatus);
+        this.props.updateproject(projectID,userID,projectName,projectClient,IsoStartDate,IsoSEndDate,projectStatusValue);
       });
      
     }
@@ -368,6 +374,7 @@ class EditProjectScreen extends Component {
   };
 
   onFilter(key) {
+    console.log("key",key);
     let value = key;
     let searchValue = '';
     switch (value) {
@@ -380,6 +387,9 @@ class EditProjectScreen extends Component {
       case 'Finished':
             searchValue = 'finished'
             break;
+      case 'Presales':  
+            searchValue = 'presales'
+            break;      
       case 'Presales : Project Discovery':  
             searchValue = 'presalesPD'
             break;
@@ -398,7 +408,8 @@ class EditProjectScreen extends Component {
     }
   
   this.setState({
-    projectStatus : key
+    projectStatus : key,
+    projectStatusValue : searchValue,
   });
 }
 

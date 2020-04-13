@@ -90,6 +90,9 @@ class ProjectsScreen extends Component {
       case 'Finished':
             searchValue = 'finished'
             break;
+      case 'Presales':  
+            searchValue = 'presales'
+            break;      
       case 'Presales : Project Discovery':  
             searchValue = 'presalesPD'
             break;
@@ -136,6 +139,8 @@ class ProjectsScreen extends Component {
   colorCode = function (item) {
     let color = '';
     switch (item.projectStatus) {
+      case 'presales':
+            color = '#576377'
       case 'presalesPD':
             color = '#576377'
       case 'preSalesQS':

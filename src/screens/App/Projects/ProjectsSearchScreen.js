@@ -68,6 +68,8 @@ class ProjectsSearchScreen extends Component {
   colorCode = function(item) {
     let color = '';
     switch (item.projectStatus) {
+      case 'presales':
+        color = '#576377'
       case 'presalesPD':
         color = '#576377';
       case 'preSalesQS':
