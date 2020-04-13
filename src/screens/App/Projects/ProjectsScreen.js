@@ -57,6 +57,7 @@ class ProjectsScreen extends Component {
     this.state = {
       projects: [],
       allProjects : [],
+      selectedType : 'Ongoing',
     };
   }
 
@@ -110,7 +111,10 @@ class ProjectsScreen extends Component {
       return item.projectStatus.includes(searchValue);
     });
   
-  this.setState({projects: filteredData});
+  this.setState({
+    projects: filteredData,
+    selectedType : key
+  });
 }
 
   renderProjectList(item) {
@@ -166,6 +170,9 @@ class ProjectsScreen extends Component {
   }
 
   loadProjects () {
+    this.setState({
+      selectedType : 'Ongoing'
+    });
     AsyncStorage.getItem('userID').then(userID => {
       this.props.getAllProjectsByUser(userID)
     });
@@ -174,6 +181,8 @@ class ProjectsScreen extends Component {
   render() {
     let projects = this.state.projects;
     let projectsLoading = this.state.projectsLoading;
+    let selectedType = this.state.selectedType
+
     return (
       <View style={styles.backgroundImage}>
         <NavigationEvents
@@ -192,7 +201,7 @@ class ProjectsScreen extends Component {
         overlayStyle={{width:'100%'}}
         pickerStyle={{width:'89%',marginTop:70, marginLeft:15}}
         dropdownPosition={0}
-        value={'Ongoing'}
+        value={selectedType}
         itemColor={'black'}
         selectedItemColor={'black'}
         dropdownOffset={{top:10}}
