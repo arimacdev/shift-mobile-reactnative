@@ -5,6 +5,7 @@ import Header from '../components/Header';
 import ProjectsScreen from '../screens/App/Projects/ProjectsScreen';
 import CreateNewProjectScreen from '../screens/App/Projects/CreateNewProjectScreen';
 import ProjectsSearchScreen from '../screens/App/Projects/ProjectsSearchScreen';
+import EditProjectScreen from '../screens/App/Projects/EditProjectScreen';
 import icons from '../assest/icons/icons';
 
 import {TouchableOpacity, Image} from 'react-native';
@@ -59,6 +60,17 @@ export const ProjectsStackNavigator = createStackNavigator(
             search={true}
             title={'Search'}
             onPress={() => navigation.navigate('ProjectsScreen')}
+          />
+        ),
+      }),
+    },
+    EditProjectScreen: {
+      screen: EditProjectScreen,
+      navigationOptions: ({navigation}) => ({
+        header: (
+          <Header
+            title={'Edit Project'}
+            onPress={() => navigation.pop()}
           />
         ),
       }),

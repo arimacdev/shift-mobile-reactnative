@@ -15,6 +15,10 @@ import {
     ADD_PROJECT_SUCCESS,
     ADD_PROJECT_FAILED,
 
+    EDIT_PROJECT,
+    EDIT_PROJECT_SUCCESS,
+    EDIT_PROJECT_FAILED
+
 } from '../types';
 import APIServices from '../../services/APIServices';
 
@@ -82,6 +86,24 @@ export const addproject =  (projectName,projectClient,IsoStartDate,IsoSEndDate,p
             }    
         }).catch(error => {   
             dispatch({ type: ADD_PROJECT_FAILED});  
+        });
+    };
+};
+
+export const updateproject =  (projectID,userID,projectName,projectClient,IsoStartDate,IsoSEndDate,projectStatus) => {
+    return (dispatch) => {
+        dispatch({ type: EDIT_PROJECT });
+        APIServices.updateProjectData(projectID,userID,projectName,projectClient,
+            IsoStartDate,IsoSEndDate,projectStatus).then(response => {
+            if(response.message == 'success'){
+                dispatch({ 
+                    type: EDIT_PROJECT_SUCCESS,
+                    payload: response});  
+            }else{
+                dispatch({ type: EDIT_PROJECT_FAILED});  
+            }    
+        }).catch(error => {   
+            dispatch({ type: EDIT_PROJECT_FAILED});  
         });
     };
 };

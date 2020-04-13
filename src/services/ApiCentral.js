@@ -4,14 +4,18 @@ import jwtDecode from 'jwt-decode';
 import { BASE_URL, GET_NEW_TOKENS } from '../api/API';
 import NavigationService from '../services/NavigationService';
 
-const request = async function (options, isHeader,type) {
+const request = async function (options, isHeader,type,isUserID) {
     let authHeader = null;
     let typeHeader = null;
+    let userIDHeder = null;
     if (isHeader) {
         authHeader = `Bearer ${await AsyncStorage.getItem('accessToken')}`;
     }
     if (type) {
         typeHeader = 'project'
+    }
+    if (isUserID) {
+        userIDHeder =  await AsyncStorage.getItem('userID');
     }
     const client = axios.create({
         baseURL: BASE_URL,
@@ -20,6 +24,7 @@ const request = async function (options, isHeader,type) {
             Accept: 'application/json',
             'Content-Type': 'application/json',
             type : typeHeader,
+            user : userIDHeder,
         },
         timeout: 90000,
     });

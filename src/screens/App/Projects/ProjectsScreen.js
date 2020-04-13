@@ -118,8 +118,10 @@ class ProjectsScreen extends Component {
 }
 
   renderProjectList(item) {
+    // TasksScreen
+    //EditProjectScreen
     return (
-    <TouchableOpacity onPress={()=>this.props.navigation.navigate('TasksScreen',{projDetails:item})}>
+    <TouchableOpacity onPress={()=>this.props.navigation.navigate('EditProjectScreen',{projDetails:item})}>  
       <View style={styles.projectView}>
         <Image style={styles.userIcon} source={icons.folder} />
         <View style={{flex:1}}>

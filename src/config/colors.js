@@ -22,7 +22,8 @@ const colors = {
     userListUserNameColor : '#576377',
     userViewHeader : '#040428',
     userViewData : '#576377',
-    userAddText : '#576377'
+    userAddText : '#576377',
+    lightRed  : '#ff6161'
 
 };
 export default colors;

@@ -9,3 +9,5 @@ export const GET_ALL_USER = `${PROTOCOL}${HOST}users`;
 export const CREATE_USER = `${PROTOCOL}${HOST}users`;
 export const UPDATE_USER = `${PROTOCOL}${HOST}users`;
 export const ADD_PROJECT = `${PROTOCOL}${HOST}projects`;
+export const GET_PROJECT = `${PROTOCOL}${HOST}projects`;
+export const UPDATE_PROJECT = `${PROTOCOL}${HOST}projects`;

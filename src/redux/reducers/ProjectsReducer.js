@@ -15,6 +15,10 @@ import {
     ADD_PROJECT_SUCCESS,
     ADD_PROJECT_FAILED,
 
+    EDIT_PROJECT,
+    EDIT_PROJECT_SUCCESS,
+    EDIT_PROJECT_FAILED
+
 } from '../types';
 
 const INITIAL_STATE = {
@@ -30,6 +34,10 @@ const INITIAL_STATE = {
     addProjectLoading: false,
     addProjectError : false,
     addProjectrSuccess : false,
+
+    updateProjectLoading: false,
+    updateProjectSuccess : false,
+    updateProjectError : false,
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -68,7 +76,23 @@ export default (state = INITIAL_STATE, action) => {
                 //projects :  [...(state.projects)];,
             };
         case ADD_PROJECT_FAILED:
-           return { ...state, addProjectLoading: false,addProjectrSuccess: false,addProjectError:true};              
+           return { ...state, addProjectLoading: false,addProjectrSuccess: false,addProjectError:true};
+        // update project
+        case EDIT_PROJECT:
+            return { ...state, 
+                updateProjectLoading: true,
+                updateProjectSuccess: false,
+                updateProjectError: false};
+        case EDIT_PROJECT_SUCCESS:
+            return { ...state, 
+                updateProjectLoading: false,
+                updateProjectSuccess: true,
+                updateProjectError: false};
+        case EDIT_PROJECT_FAILED:
+            return { ...state, 
+                updateProjectLoading: false,
+                updateProjectSuccess: false,
+                updateProjectError: true};                 
         default:
             return state;
     }

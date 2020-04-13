@@ -110,7 +110,7 @@ class AddNewTasksScreen extends Component {
         this.setState({
           selectedDate: newDate,
           showPicker: false,
-          showTimePicker: false,
+          showTimePicker: true,
           date: new Date(selectedDate),
         });
       }
