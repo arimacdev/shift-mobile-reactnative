@@ -38,11 +38,6 @@ const request = async function (options, isHeader,type,isUserID) {
     const onError = function (error) {
         console.log('Request Failed:', error.config);
         if (error.response) {
-            if(error.response.status === 401){
-                console.log("refresh token 403")
-                AsyncStorage.clear();
-                NavigationService.navigate('Auth');
-            }
             console.log('Status:', error.response.status);
             console.log('Data:', error.response.data);
             console.log('Headers:', error.response.headers);

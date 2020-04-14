@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   TextInput,
   ScrollView,
+  Alert
 } from 'react-native';
 import {connect} from 'react-redux';
 import * as actions from '../../../redux/actions';
@@ -118,6 +119,22 @@ class EditProjectScreen extends Component {
     if (prevProps.updateProjectSuccess !== this.props.updateProjectSuccess
           && this.props.updateProjectSuccess) {
             this.showAlert("","Project Updated");
+            this.props.navigation.goBack();
+    }
+    // delete projecr
+    if (prevProps.deleteProjectError !== this.props.deleteProjectError
+      && this.props.deleteProjectError && this.props.deleteProjectErrorMessage == '') {
+        this.showAlert("","Error While Project Deleting the Project");
+    }
+
+    if (prevProps.deleteProjectError !== this.props.deleteProjectError
+      && this.props.deleteProjectError && this.props.deleteProjectErrorMessage != '') {
+        this.showAlert("",this.props.deleteProjectErrorMessage);
+    }
+
+    if (prevProps.deleteProjectSuccess !== this.props.deleteProjectSuccess
+          && this.props.deleteProjectSuccess) {
+            this.showAlert("","Project Deleted");
             this.props.navigation.goBack();
     }
   }
@@ -305,9 +322,21 @@ class EditProjectScreen extends Component {
   }
 
   reomoveProject (){
+    Alert.alert(
+			'Delete Project',
+			'Are you sure to Delete the Project',
+			[
+			  {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+			  {text: 'Ok', onPress: () =>this.reomoveProjectSuccess()},
+			],
+			{ cancelable: false }
+		  );
+  };
+
+  reomoveProjectSuccess = () => {
     let projectID = this.state.projectID;
     this.props.deleteProject(projectID);
-  }
+	}
 
   saveProject() {
     let projectID = this.state.projectID;
@@ -447,6 +476,7 @@ class EditProjectScreen extends Component {
     let dataLoading = this.props.dataLoading;
     let projectStatus = this.state.projectStatus
     let updateProjectLoading = this.state.updateProjectLoading;
+    let deleteProjectErrorMessage = this.state.deleteProjectErrorMessage;
     
     return (
       <ScrollView style={{marginBottom: EStyleSheet.value('02rem')}}>
@@ -560,6 +590,7 @@ class EditProjectScreen extends Component {
         {this.state.showTimePicker ? this.renderTimePicker() : null}
         {dataLoading && <Loader/>}
         {updateProjectLoading && <Loader/>}
+        {deleteProjectErrorMessage && <Loader/>}
         <AwesomeAlert
           show={showAlert}
           showProgress={false}
@@ -596,12 +627,10 @@ const styles = EStyleSheet.create({
   taskFieldView: {
     backgroundColor: colors.projectBgColor,
     borderRadius: 5,
-    // width: '330rem',
     marginTop: '0rem',
     marginBottom: '7rem',
     flexDirection: 'row',
     alignItems: 'center',
-    // justifyContent: 'center',
     paddingHorizontal: '12rem',
     height: '60rem',
     marginHorizontal: '20rem',
@@ -613,7 +642,6 @@ const styles = EStyleSheet.create({
     lineHeight: '17rem',
     fontFamily: 'Circular Std Medium',
     textAlign: 'center',
-    // fontWeight: 'bold',
   },
   projectView: {
     backgroundColor: colors.projectBgColor,
@@ -651,13 +679,8 @@ const styles = EStyleSheet.create({
     marginLeft: 10,
   },
   statusView: {
-    // backgroundColor: colors.gray,
-    // width:'5rem',
-    // height:'60rem',
     alignItems: 'center',
     flexDirection: 'row',
-    // borderTopRightRadius: 5,
-    // borderBottomRightRadius: 5,
   },
   dropIcon: {
     width: '13rem',
@@ -774,6 +797,10 @@ const mapStateToProps = state => {
     updateProjectError : state.project.updateProjectError,
     updateProjectSuccess : state.project.updateProjectSuccess,
     updateProjectErrorMessage : state.project.updateProjectErrorMessage,
+    deleteProjectLoading: state.project.deleteProjectLoading,
+    deleteProjectError : state.project.deleteProjectError,
+    deleteProjectSuccess : state.project.deleteProjectSuccess,
+    deleteProjectErrorMessage : state.project.deleteProjectErrorMessage,
   };
 };
 export default connect(

@@ -11,7 +11,8 @@ import {
 
     ADD_PROJECT,
     GET_PROJECT,
-    UPDATE_PROJECT
+    UPDATE_PROJECT,
+    DELETE_PROJECT
 
 } from '../api/API';
 
@@ -114,6 +115,13 @@ function updateProjectData(projectID,userID,projectName,projectClient,IsoStartDa
     }, true,false,false);
 };
 
+function deleteProjectData(projectID) {
+    return request({
+        url: DELETE_PROJECT+'/'+projectID,
+        method: 'DELETE'
+    }, true,false,true);
+}
+
 const APIServices = {
     getAllProjectsByUserData,
     getAllTaskInProjectsData,
@@ -125,6 +133,7 @@ const APIServices = {
     addprojectData,
     getProjectData,
     updateProjectData,
+    deleteProjectData
 };
 
 export default APIServices;

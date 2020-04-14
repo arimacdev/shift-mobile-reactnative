@@ -20,6 +20,11 @@ import {
     EDIT_PROJECT_FAILED,
     EDIT_PROJECT_FAILED_MASSAGE,
 
+    DELETE_PROJECT,
+    DELETE_PROJECT_SUCCESS,
+    DELETE_PROJECT_FAILED,
+    DELETE_PROJECT_FAILED_MASSAGE
+
 } from '../types';
 
 const INITIAL_STATE = {
@@ -40,6 +45,11 @@ const INITIAL_STATE = {
     updateProjectSuccess : false,
     updateProjectError : false,
     updateProjectErrorMessage : '',
+
+    deleteProjectLoading: false,
+    deleteProjectSuccess : false,
+    deleteProjectError : false,
+    deleteProjectErrorMessage : '',
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -107,7 +117,36 @@ export default (state = INITIAL_STATE, action) => {
                 updateProjectSuccess: false,
                 updateProjectError: true,
                 updateProjectErrorMessage : action.payload
-            };                          
+            };
+        // delete project
+        case DELETE_PROJECT:
+            return { ...state, 
+                deleteProjectLoading: true,
+                deleteProjectSuccess: false,
+                deleteProjectError: false,
+                deleteProjectErrorMessage : ''
+            };
+        case DELETE_PROJECT_SUCCESS:
+            return { ...state, 
+                deleteProjectLoading: false,
+                deleteProjectSuccess: true,
+                deleteProjectError: false,
+                deleteProjectErrorMessage : ''
+            };
+        case DELETE_PROJECT_FAILED:
+            return { ...state, 
+                deleteProjectLoading: false,
+                deleteProjectSuccess: false,
+                deleteProjectError: true,
+                deleteProjectErrorMessage : ''
+            };
+        case DELETE_PROJECT_FAILED_MASSAGE:
+            return { ...state, 
+                deleteProjectLoading: false,
+                deleteProjectSuccess: false,
+                deleteProjectError: true,
+                deleteProjectErrorMessage : action.payload
+            };                               
         default:
             return state;
     }

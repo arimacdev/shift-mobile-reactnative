@@ -18,7 +18,12 @@ import {
     EDIT_PROJECT,
     EDIT_PROJECT_SUCCESS,
     EDIT_PROJECT_FAILED,
-    EDIT_PROJECT_FAILED_MASSAGE
+    EDIT_PROJECT_FAILED_MASSAGE,
+
+    DELETE_PROJECT,
+    DELETE_PROJECT_SUCCESS,
+    DELETE_PROJECT_FAILED,
+    DELETE_PROJECT_FAILED_MASSAGE
 
 } from '../types';
 import APIServices from '../../services/APIServices';
@@ -111,6 +116,30 @@ export const updateproject =  (projectID,userID,projectName,projectClient,IsoSta
                     payload: errorMsg});   
             }else{
                 dispatch({ type: EDIT_PROJECT_FAILED});  
+            } 
+        });
+    };
+};
+
+export const deleteProject =  (projectID) => {
+    return (dispatch) => {
+        dispatch({ type: DELETE_PROJECT });
+        APIServices.deleteProjectData(projectID).then(response => {
+            if(response.message == 'success'){
+                dispatch({ 
+                    type: DELETE_PROJECT_SUCCESS,
+                    payload: response});  
+            }else{
+                dispatch({ type: DELETE_PROJECT_FAILED});  
+            }    
+        }).catch(error => {  
+            if(error.status == 401){
+                let errorMsg = error.data.message;
+                dispatch({ 
+                    type: DELETE_PROJECT_FAILED_MASSAGE,
+                    payload: errorMsg});   
+            }else{
+                dispatch({ type: DELETE_PROJECT_FAILED});  
             } 
         });
     };
