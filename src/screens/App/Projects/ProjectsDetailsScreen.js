@@ -36,6 +36,10 @@ class ProjectsDetailsScreen extends Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
+    if(prevProps.isActive !== this.props.isActive
+      && this.props.isActive){
+        this.fetchData();
+    }
   }
 
   async componentDidMount() {

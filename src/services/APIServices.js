@@ -27,14 +27,15 @@ import {
 
 function getAllTaskInProjectsData(userID,projectID) {
     return request({
-        url: GET_ALL_TASKS_BY_PROJECT + projectID + '/tasks/user?userId='+userID,
+        url: GET_MY_TASKS_BY_PROJECT + projectID + '/tasks?userId='+userID,
         method: 'GET'
     }, true,true,false);
 }
 
+
 function getMyTaskInProjectsData(userID,projectID) {
     return request({
-        url: GET_MY_TASKS_BY_PROJECT + projectID + '/tasks?userId='+userID,
+        url: GET_ALL_TASKS_BY_PROJECT + projectID + '/tasks/user?userId='+userID,
         method: 'GET'
     }, true,true,false);
 }

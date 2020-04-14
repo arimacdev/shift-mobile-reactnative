@@ -89,10 +89,26 @@ class TasksTabScreen extends Component {
       bottomItemPressColor: colors.darkBlue,
       selectedProjectID: 0,
       isActive: this.props.isActive,
+      selectedTypeAllTasks : 'Pending',
+      selectedTypeMyTasks : 'Pending',
     };
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
+
+    if(prevProps.isActive !== this.props.isActive
+      && this.props.isActive){
+        let selectedProjectID = this.props.selectedProjectID;
+        this.setState(
+            {
+              selectedProjectID: selectedProjectID,
+            },
+            () => {
+              this.getAllTaskInProject();
+            },
+        );
+    }
+
     // all tasks
     if (
       prevProps.allTaskByProjectLoading !==
@@ -133,19 +149,19 @@ class TasksTabScreen extends Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
-    let selectedProjectID = this.props.selectedProjectID;
-    if (this.props.isActive !== nextProps.isActive) {
-      this.setState(
-        {
-          selectedProjectID: selectedProjectID,
-        },
-        () => {
-          this.getAllTaskInProject();
-        },
-      );
-    }
-  }
+  // componentWillReceiveProps(nextProps) {
+  //   let selectedProjectID = this.props.selectedProjectID;
+  //   if (this.props.isActive !== nextProps.isActive) {
+  //     this.setState(
+  //       {
+  //         selectedProjectID: selectedProjectID,
+  //       },
+  //       () => {
+  //         this.getAllTaskInProject();
+  //       },
+  //     );
+  //   }
+  // }
 
   componentDidMount() {
     let selectedProjectID = this.props.selectedProjectID;
@@ -161,6 +177,9 @@ class TasksTabScreen extends Component {
   }
 
   async getAllTaskInProject() {
+    this.setState({
+      selectedTypeAllTasks : 'Pending',
+    });
     let selectedProjectID = this.state.selectedProjectID;
     AsyncStorage.getItem('userID').then(userID => {
       this.props.getAllTaskInProjects(userID, selectedProjectID);
@@ -168,6 +187,9 @@ class TasksTabScreen extends Component {
   }
 
   async getMyTaskInProject() {
+    this.setState({
+      selectedTypeMyTasks : 'Pending'
+    })
     let selectedProjectID = this.state.selectedProjectID;
     AsyncStorage.getItem('userID').then(userID => {
       this.props.getMyTaskInProjects(userID, selectedProjectID);
@@ -352,7 +374,10 @@ class TasksTabScreen extends Component {
     let filteredData = this.state.allDataAllTaks.filter(function(item) {
       return item.taskStatus.includes(searchValue);
     });
-    this.setState({filterdDataAllTaks: filteredData});
+    this.setState({
+      filterdDataAllTaks: filteredData,
+      selectedTypeAllTasks : key
+    });
   }
 
   onFilterMyTasks(key) {
@@ -385,7 +410,10 @@ class TasksTabScreen extends Component {
     let filteredData = this.state.allDataMyTasks.filter(function(item) {
       return item.taskStatus.includes(searchValue);
     });
-    this.setState({filterdDataMyTasks: filteredData});
+    this.setState({
+      filterdDataMyTasks: filteredData,
+      selectedTypeMyTasks : key
+    });
   }
 
   render() {
@@ -394,6 +422,8 @@ class TasksTabScreen extends Component {
     let filterdDataMyTasks = this.state.filterdDataMyTasks;
     let allTaskByProjectLoading = this.props.allTaskByProjectLoading;
     let myTaskByProjectLoading = this.props.myTaskByProjectLoading;
+    let selectedTypeAllTasks = this.state.selectedTypeAllTasks
+    let selectedTypeMyTasks = this.state.selectedTypeMyTasks;
 
     return (
       <View style={styles.backgroundImage}>
@@ -413,7 +443,7 @@ class TasksTabScreen extends Component {
                   overlayStyle={{width: '100%'}}
                   pickerStyle={{width: '89%', marginTop: 70, marginLeft: 15}}
                   dropdownPosition={0}
-                  value={'Pending'}
+                  value={selectedTypeAllTasks}
                   itemColor={'black'}
                   selectedItemColor={'black'}
                   dropdownOffset={{top: 10}}
@@ -440,7 +470,7 @@ class TasksTabScreen extends Component {
                   overlayStyle={{width: '100%'}}
                   pickerStyle={{width: '89%', marginTop: 70, marginLeft: 15}}
                   dropdownPosition={0}
-                  value={'Pending'}
+                  value={selectedTypeMyTasks}
                   itemColor={'black'}
                   selectedItemColor={'black'}
                   dropdownOffset={{top: 10}}
