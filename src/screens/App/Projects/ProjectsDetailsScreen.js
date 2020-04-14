@@ -169,7 +169,14 @@ class ProjectsDetailsScreen extends Component {
               <Text style={styles.textProjCompany}>REDD Digital Pty Ltd.</Text>
             </View>
             <View>
-              <Image style={styles.editIcon} source={icons.editUser} />
+              <TouchableOpacity
+                onPress={() =>
+                  this.props.navigation.navigate('EditProjectScreen', {
+                    projDetails: this.props.projDetails,
+                  })
+                }>
+                <Image style={styles.editIcon} source={icons.editUser} />
+              </TouchableOpacity>
             </View>
           </View>
           <View style={styles.border} />

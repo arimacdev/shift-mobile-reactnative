@@ -90,6 +90,7 @@ class TasksTabScreen extends Component {
       index: 0,
       bottomItemPressColor: colors.darkBlue,
       selectedProjectID : 0 ,
+      isActive:this.props.isActive
     };
   }
 
@@ -123,6 +124,18 @@ class TasksTabScreen extends Component {
       });
   }
   }
+
+  // componentWillReceiveProps(nextProps){
+  //   debugger
+  //   let selectedProjectID = this.props.selectedProjectID;
+  //   if(this.props.isActive !== nextProps.isActive){
+  //     this.setState({
+  //       selectedProjectID : selectedProjectID,
+  //     }, () => {
+  //         this.getAllTaskInProject();
+  //     });
+  //   }
+  // }
 
   componentDidMount() {
       let selectedProjectID = this.props.selectedProjectID;

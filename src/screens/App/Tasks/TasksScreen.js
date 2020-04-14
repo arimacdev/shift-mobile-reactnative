@@ -57,11 +57,14 @@ class TasksScreen extends Component {
   renderScene(route) {
     const {navigation: {state: {params}}} = this.props;
     let projectId = params.projDetails.projectId;
+    const isActive = this.state.routes.indexOf(route.route) === this.state.index
     switch (route.route.key) {
       case 'tasks':
-        return <Tasks selectedProjectID={projectId}/>;
+        return <Tasks selectedProjectID={projectId} isActive={isActive}/>;
       case 'projects':
-        return <Projects selectedProjectID={projectId}/>;
+        return <Projects projDetails={params.projDetails} navigation={this.props.navigation} isActive={isActive}/>;
+      default:
+        return null;
     }
   }
 
