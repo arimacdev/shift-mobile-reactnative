@@ -569,7 +569,7 @@ class EditProjectScreen extends Component {
 
             <Image
               style={[styles.addIcon, {marginRight: 10}]}
-              source={icons.add}
+              source={icons.addGreen}
               resizeMode={'center'}
             />
           </View>
@@ -584,6 +584,11 @@ class EditProjectScreen extends Component {
             <View style={{flex: 1}}>
               <Text style={styles.buttonText}>Delete Project</Text>
             </View>
+            <Image
+              style={[styles.addIcon, {marginRight: 10}]}
+              source={icons.deleteWhite}
+              resizeMode={'center'}
+            />
           </View>
         </TouchableOpacity>
         {this.state.showPicker ? this.renderDatePicker() : null}

@@ -26,5 +26,7 @@ const icons = {
     clockWhite: require('./clock_white.png'),
     userWhiteProj: require('./user_white.png'),
     rightWhite: require('./right_white.png'),
+    deleteWhite: require('./delete_white.png'),
+    addGreen: require('./add_green.png'),
 };
 export default icons;
