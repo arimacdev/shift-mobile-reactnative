@@ -137,6 +137,10 @@ class PeopleScreen extends Component {
         NavigationService.navigate('AddPeopleScreen', {});
     }
 
+    goToEditPeople = (item) => {
+        NavigationService.navigate('EditPeople', {userItem: item});
+    }
+
     userIcon = function (item) {
         let userImage = item.profileImage
         if(userImage){
@@ -170,7 +174,7 @@ class PeopleScreen extends Component {
                         <Text style={styles.subText}>{item.firstName + ' ' + item.lastName}</Text>
                     </View>
                     <View style={styles.controlView}>
-                        <TouchableOpacity onPress={() => this.props.navigation.navigate('EditUserScreen', { userItem: item })}>
+                        <TouchableOpacity onPress={() => this.goToEditPeople(item)}>
                             <Image
                                 style={{ width: 28, height: 28, borderRadius: 28 / 2 }}
                                 source={require('../../../asserts/img/edit_user.png')}
