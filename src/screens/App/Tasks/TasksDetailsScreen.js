@@ -15,23 +15,25 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
 import {Dropdown} from 'react-native-material-dropdown';
-import AddNewTasksScreen from '../Tasks/AddNewTasksScreen';
+import AddNewTasksScreen from './AddNewTasksScreen'
 import AsyncStorage from '@react-native-community/async-storage';
 import Loader from '../../../components/Loader';
-import moment from 'moment';
+import moment from "moment";
 import FadeIn from 'react-native-fade-in-image';
-import {SkypeIndicator} from 'react-native-indicators';
+import {
+  SkypeIndicator,
+} from 'react-native-indicators';
 
 const Placeholder = () => (
   <View style={styles.landing}>
-    <SkypeIndicator color={colors.primary} />
+    <SkypeIndicator color={colors.primary}/>
   </View>
 );
 
 let dropData = [
   {
-    id: 'Pending',
-    value: 'Pending',
+      id: 'Pending',
+      value: 'Pending',
   },
   {
     id: 'Implementing',
@@ -57,7 +59,7 @@ let dropData = [
     id: 'Closed',
     value: 'Closed',
   },
-];
+]
 
 let bottomData = [
   {
@@ -77,178 +79,133 @@ let bottomData = [
   },
 ];
 
-class TasksTabScreen extends Component {
+class TasksDetailsScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
       filterdDataAllTaks: [],
-      allDataAllTaks: [],
+      allDataAllTaks:[],
       filterdDataMyTasks: [],
-      allDataMyTasks: [],
+      allDataMyTasks:[],
       index: 0,
       bottomItemPressColor: colors.darkBlue,
-      selectedProjectID: 0,
-      isActive: this.props.isActive,
-      selectedTypeAllTasks : 'Pending',
-      selectedTypeMyTasks : 'Pending',
+      selectedProjectID : 0 ,
+      isActive:this.props.isActive
     };
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
 
-    if(prevProps.isActive !== this.props.isActive
-      && this.props.isActive){
-        let selectedProjectID = this.props.selectedProjectID;
-        this.setState(
-            {
-              selectedProjectID: selectedProjectID,
-            },
-            () => {
-              this.getAllTaskInProject();
-            },
-        );
-    }
-
     // all tasks
-    if (
-      prevProps.allTaskByProjectLoading !==
-        this.props.allTaskByProjectLoading &&
-      this.props.allTaskByProject &&
-      this.props.allTaskByProject.length > 0
-    ) {
-      let searchValueAllTask = 'pending';
-      let filteredDataAllTask = this.props.allTaskByProject.filter(function(
-        item,
-      ) {
-        return item.taskStatus.includes(searchValueAllTask);
-      });
-
-      this.setState({
-        filterdDataAllTaks: filteredDataAllTask,
-        allDataAllTaks: this.props.allTaskByProject,
-      });
+    if (prevProps.allTaskByProjectLoading !== this.props.allTaskByProjectLoading && this.props.allTaskByProject && this.props.allTaskByProject.length > 0) {
+      
+        let searchValueAllTask = 'pending';
+        let filteredDataAllTask = this.props.allTaskByProject.filter(function (item) {
+          return item.taskStatus.includes(searchValueAllTask);
+        });
+        
+        this.setState({
+          filterdDataAllTaks :  filteredDataAllTask,
+          allDataAllTaks : this.props.allTaskByProject,
+        });
     }
 
     // my task
-    if (
-      prevProps.myTaskByProjectLoading !== this.props.myTaskByProjectLoading &&
-      this.props.myTaskByProject &&
-      this.props.myTaskByProject.length > 0
-    ) {
+    if (prevProps.myTaskByProjectLoading !== this.props.myTaskByProjectLoading && this.props.myTaskByProject && this.props.myTaskByProject.length > 0) {
+      
       let searchValueMyTask = 'pending';
-      let filteredDataMyTask = this.props.myTaskByProject.filter(function(
-        item,
-      ) {
+      let filteredDataMyTask = this.props.myTaskByProject.filter(function (item) {
         return item.taskStatus.includes(searchValueMyTask);
       });
-
+      
       this.setState({
-        filterdDataMyTasks: filteredDataMyTask,
-        allDataMyTasks: this.props.myTaskByProject,
+        filterdDataMyTasks :  filteredDataMyTask,
+        allDataMyTasks : this.props.myTaskByProject,
       });
-    }
+  }
   }
 
-  // componentWillReceiveProps(nextProps) {
-  //   let selectedProjectID = this.props.selectedProjectID;
-  //   if (this.props.isActive !== nextProps.isActive) {
-  //     this.setState(
-  //       {
-  //         selectedProjectID: selectedProjectID,
-  //       },
-  //       () => {
-  //         this.getAllTaskInProject();
-  //       },
-  //     );
-  //   }
-  // }
-
   componentDidMount() {
-    let selectedProjectID = this.props.selectedProjectID;
+      let selectedProjectID = this.props.selectedProjectID;
 
-    this.setState(
-      {
-        selectedProjectID: selectedProjectID,
-      },
-      () => {
-        this.getAllTaskInProject();
-      },
-    );
+      this.setState({
+        selectedProjectID : selectedProjectID,
+      }, () => {
+          this.getAllTaskInProject();
+      });
   }
 
   async getAllTaskInProject() {
-    this.setState({
-      selectedTypeAllTasks : 'Pending',
-    });
     let selectedProjectID = this.state.selectedProjectID;
     AsyncStorage.getItem('userID').then(userID => {
-      this.props.getAllTaskInProjects(userID, selectedProjectID);
+      this.props.getAllTaskInProjects(userID,selectedProjectID)
     });
   }
 
   async getMyTaskInProject() {
-    this.setState({
-      selectedTypeMyTasks : 'Pending'
-    })
     let selectedProjectID = this.state.selectedProjectID;
     AsyncStorage.getItem('userID').then(userID => {
-      this.props.getMyTaskInProjects(userID, selectedProjectID);
+      this.props.getMyTaskInProjects(userID,selectedProjectID)
     });
   }
 
-  dateView = function(item) {
+  dateView = function (item) {
     let date = item.taskDueDateAt;
     let currentTime = moment().format();
     let dateText = '';
     let color = '';
 
     let taskStatus = item.taskStatus;
-    if (taskStatus == 'closed') {
-      // task complete
-      dateText = moment(date).format('DD/MM/YYYY');
-      color = '#36DD5B';
-    } else {
-      if (moment(date).isAfter(currentTime)) {
+    if(taskStatus == 'closed'){
+        // task complete 
         dateText = moment(date).format('DD/MM/YYYY');
-        color = '#0C0C5A';
-      } else {
-        dateText = moment(date).format('DD/MM/YYYY');
-        color = '#ff6161';
-      }
+        color = '#36DD5B';
+    }else{
+        if(moment(date).isAfter(currentTime)){
+          dateText = moment(date).format('DD/MM/YYYY');
+          color = '#0C0C5A';
+        }else{
+          dateText = moment(date).format('DD/MM/YYYY');
+          color = '#ff6161';
+        }
     }
 
-    return <Text style={[styles.textDate, {color: color}]}>{dateText}</Text>;
+    return (
+      <Text style={[styles.textDate, {color: color}]}>
+              {dateText}
+      </Text>
+    );
   };
 
-  userImage = function(item) {
-    let userImage = item.taskAssigneeProfileImage;
+  userImage = function (item) {
 
-    if (userImage) {
+    let userImage = item.taskAssigneeProfileImage
+
+    if(userImage){
       return (
-        <FadeIn>
-          <Image
-            source={{uri: userImage}}
-            style={{width: 24, height: 24, borderRadius: 24 / 2}}
-          />
-        </FadeIn>
+          <FadeIn>
+              <Image
+                  source={{uri: userImage}}
+                  style={{width: 24, height: 24,borderRadius: 24/ 2}} 
+                />
+          </FadeIn>
       );
-    } else {
+  }else{
       return (
-        <Image
-          style={{width: 24, height: 24, borderRadius: 24 / 2}}
+        <Image 
+          style={{width: 24, height: 24,borderRadius: 24/ 2}} 
           source={require('../../../asserts/img/defult_user.png')}
         />
       );
-    }
+  }
+
   };
 
   renderProjectList(item) {
     return (
       <TouchableOpacity
         onPress={() =>
-          this.props.navigation.navigate('TasksDetailsScreen', {
-            taskDetails: item,
-          })
+          this.props.navigation.navigate('TasksScreen', {taskDetails: item})
         }>
         <View style={styles.projectView}>
           <Image
@@ -263,8 +220,8 @@ class TasksTabScreen extends Component {
             <Text style={styles.text}>{item.taskName}</Text>
           </View>
           <View style={styles.statusView}>
-            {this.dateView(item)}
-            {this.userImage(item)}
+              {this.dateView(item)}
+              {this.userImage(item)}
           </View>
         </View>
       </TouchableOpacity>
@@ -282,15 +239,15 @@ class TasksTabScreen extends Component {
   onBottomItemPress(index) {
     // let color;
     this.setState({index: index});
-    switch (index) {
-      case 0:
-        // All tasks
-        this.getAllTaskInProject();
-        break;
-      case 1:
-        // my tasks
-        this.getMyTaskInProject();
-        break;
+      switch (index) {
+        case 0:
+            // All tasks
+            this.getAllTaskInProject();
+            break;
+        case 1 : 
+            // my tasks
+            this.getMyTaskInProject();
+            break    
     }
   }
 
@@ -344,40 +301,37 @@ class TasksTabScreen extends Component {
   }
 
   onFilterAllTasks(key) {
-    let value = key;
-    let searchValue = '';
-    let index = this.state.index;
-    switch (value) {
-      case 'Pending':
-        searchValue = 'pending';
-        break;
-      case 'Implementing':
-        searchValue = 'implementing';
-        break;
-      case 'QA':
-        searchValue = 'qa';
-        break;
-      case 'Ready to Deploy':
-        searchValue = 'readyToDeploy';
-        break;
-      case 'Re-Opened':
-        searchValue = 'reOpened';
-        break;
-      case 'Deployed':
-        searchValue = 'deployed';
-        break;
-      case 'Closed':
-        searchValue = 'closed';
-        break;
-    }
+      let value = key;
+      let searchValue = '';
+      let index = this.state.index;
+      switch (value) {
+        case 'Pending':
+              searchValue = 'pending'
+              break;
+        case 'Implementing':
+              searchValue = 'implementing'
+              break;
+        case 'QA':
+              searchValue = 'qa'
+              break;
+        case 'Ready to Deploy':  
+              searchValue = 'readyToDeploy'
+              break;
+        case 'Re-Opened':
+              searchValue = 'reOpened'
+              break;
+        case 'Deployed':
+              searchValue = 'deployed'
+              break;
+        case 'Closed':
+              searchValue = 'closed'
+              break;
+      }
 
-    let filteredData = this.state.allDataAllTaks.filter(function(item) {
-      return item.taskStatus.includes(searchValue);
-    });
-    this.setState({
-      filterdDataAllTaks: filteredData,
-      selectedTypeAllTasks : key
-    });
+      let filteredData = this.state.allDataAllTaks.filter(function (item) {
+        return item.taskStatus.includes(searchValue);
+      });
+      this.setState({filterdDataAllTaks: filteredData});  
   }
 
   onFilterMyTasks(key) {
@@ -386,105 +340,95 @@ class TasksTabScreen extends Component {
     let index = this.state.index;
     switch (value) {
       case 'Pending':
-        searchValue = 'pending';
-        break;
+            searchValue = 'pending'
+            break;
       case 'Implementing':
-        searchValue = 'implementing';
-        break;
+            searchValue = 'implementing'
+            break;
       case 'QA':
-        searchValue = 'qa';
-        break;
-      case 'Ready to Deploy':
-        searchValue = 'readyToDeploy';
-        break;
+            searchValue = 'qa'
+            break;
+      case 'Ready to Deploy':  
+            searchValue = 'readyToDeploy'
+            break;
       case 'Re-Opened':
-        searchValue = 'reOpened';
-        break;
+            searchValue = 'reOpened'
+            break;
       case 'Deployed':
-        searchValue = 'deployed';
-        break;
+            searchValue = 'deployed'
+            break;
       case 'Closed':
-        searchValue = 'closed';
-        break;
+            searchValue = 'closed'
+            break;
     }
-    let filteredData = this.state.allDataMyTasks.filter(function(item) {
+    let filteredData = this.state.allDataMyTasks.filter(function (item) {
       return item.taskStatus.includes(searchValue);
     });
-    this.setState({
-      filterdDataMyTasks: filteredData,
-      selectedTypeMyTasks : key
-    });
-  }
+    this.setState({filterdDataMyTasks: filteredData});  
+}
 
   render() {
     let index = this.state.index;
-    let filterdDataAllTaks = this.state.filterdDataAllTaks;
+    let filterdDataAllTaks = this.state.filterdDataAllTaks; 
     let filterdDataMyTasks = this.state.filterdDataMyTasks;
     let allTaskByProjectLoading = this.props.allTaskByProjectLoading;
     let myTaskByProjectLoading = this.props.myTaskByProjectLoading;
-    let selectedTypeAllTasks = this.state.selectedTypeAllTasks
-    let selectedTypeMyTasks = this.state.selectedTypeMyTasks;
 
     return (
       <View style={styles.backgroundImage}>
         {this.state.index !== 2 ? (
           <View>
             <View style={styles.projectFilerView}>
-              {index == 0 ? (
-                <Dropdown
-                  // style={{}}
-                  label=""
-                  labelFontSize={0}
-                  data={dropData}
-                  textColor={colors.dropDownText}
-                  error={''}
-                  animationDuration={0.5}
-                  containerStyle={{width: '100%'}}
-                  overlayStyle={{width: '100%'}}
-                  pickerStyle={{width: '89%', marginTop: 70, marginLeft: 15}}
-                  dropdownPosition={0}
-                  value={selectedTypeAllTasks}
-                  itemColor={'black'}
-                  selectedItemColor={'black'}
-                  dropdownOffset={{top: 10}}
-                  baseColor={colors.projectBgColor}
-                  // renderBase={this.renderBase}
-                  renderAccessory={this.renderBase}
-                  itemTextStyle={{
-                    marginLeft: 15,
-                    fontFamily: 'CircularStd-Book',
-                  }}
-                  itemPadding={10}
-                  onChangeText={value => this.onFilterAllTasks(value)}
-                />
-              ) : (
-                <Dropdown
-                  // style={{}}
-                  label=""
-                  labelFontSize={0}
-                  data={dropData}
-                  textColor={colors.dropDownText}
-                  error={''}
-                  animationDuration={0.5}
-                  containerStyle={{width: '100%'}}
-                  overlayStyle={{width: '100%'}}
-                  pickerStyle={{width: '89%', marginTop: 70, marginLeft: 15}}
-                  dropdownPosition={0}
-                  value={selectedTypeMyTasks}
-                  itemColor={'black'}
-                  selectedItemColor={'black'}
-                  dropdownOffset={{top: 10}}
-                  baseColor={colors.projectBgColor}
-                  // renderBase={this.renderBase}
-                  renderAccessory={this.renderBase}
-                  itemTextStyle={{
-                    marginLeft: 15,
-                    fontFamily: 'CircularStd-Book',
-                  }}
-                  itemPadding={10}
-                  onChangeText={value => this.onFilterMyTasks(value)}
-                />
-              )}
+              { index == 0 ? 
+                  <Dropdown
+                    // style={{}}
+                    label=""
+                    labelFontSize={0}
+                    data={dropData}
+                    textColor={colors.dropDownText}
+                    error={''}
+                    animationDuration={0.5}
+                    containerStyle={{width: '100%'}}
+                    overlayStyle={{width: '100%'}}
+                    pickerStyle={{width: '89%', marginTop: 70, marginLeft: 15}}
+                    dropdownPosition={0}
+                    value={'Pending'}
+                    itemColor={'black'}
+                    selectedItemColor={'black'}
+                    dropdownOffset={{top: 10}}
+                    baseColor={colors.projectBgColor}
+                    // renderBase={this.renderBase}
+                    renderAccessory={this.renderBase}
+                    itemTextStyle={{marginLeft: 15,fontFamily: 'CircularStd-Book'}}
+                    itemPadding={10}
+                    onChangeText={(value => this.onFilterAllTasks(value))}
+                  />
+                :  
+                  <Dropdown
+                      // style={{}}
+                      label=""
+                      labelFontSize={0}
+                      data={dropData}
+                      textColor={colors.dropDownText}
+                      error={''}
+                      animationDuration={0.5}
+                      containerStyle={{width: '100%'}}
+                      overlayStyle={{width: '100%'}}
+                      pickerStyle={{width: '89%', marginTop: 70, marginLeft: 15}}
+                      dropdownPosition={0}
+                      value={'Pending'}
+                      itemColor={'black'}
+                      selectedItemColor={'black'}
+                      dropdownOffset={{top: 10}}
+                      baseColor={colors.projectBgColor}
+                      // renderBase={this.renderBase}
+                      renderAccessory={this.renderBase}
+                      itemTextStyle={{marginLeft: 15,fontFamily: 'CircularStd-Book'}}
+                      itemPadding={10}
+                      onChangeText={(value => this.onFilterMyTasks(value))}
+                    />
+              }
+              
             </View>
             <FlatList
               style={{marginBottom: EStyleSheet.value('160rem')}}
@@ -495,13 +439,13 @@ class TasksTabScreen extends Component {
           </View>
         ) : (
           <View>
-            <AddNewTasksScreen />
+            <AddNewTasksScreen/>
           </View>
         )}
 
         {this.renderBottomBar()}
-        {allTaskByProjectLoading && <Loader />}
-        {myTaskByProjectLoading && <Loader />}
+        {allTaskByProjectLoading && <Loader/>}
+        {myTaskByProjectLoading && <Loader/>}
       </View>
     );
   }
@@ -553,7 +497,7 @@ const styles = EStyleSheet.create({
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
     marginLeft: '10rem',
-    fontWeight: '400',
+    fontWeight: '400'
   },
   textDate: {
     fontFamily: 'Circular Std Book',
@@ -564,7 +508,7 @@ const styles = EStyleSheet.create({
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
     marginLeft: '10rem',
-    marginRight: '5rem',
+    marginRight : '5rem'
   },
   avatarIcon: {
     width: '20rem',
@@ -621,21 +565,19 @@ const styles = EStyleSheet.create({
     height: '20rem',
   },
   landing: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+    flex: 1, alignItems: 'center', justifyContent: 'center' 
+},
 });
 
 const mapStateToProps = state => {
   return {
-    allTaskByProjectLoading: state.project.allTaskByProjectLoading,
-    allTaskByProject: state.project.allTaskByProject,
-    myTaskByProjectLoading: state.project.myTaskByProjectLoading,
-    myTaskByProject: state.project.myTaskByProject,
+    allTaskByProjectLoading : state.project.allTaskByProjectLoading,
+    allTaskByProject : state.project.allTaskByProject,
+    myTaskByProjectLoading : state.project.myTaskByProjectLoading,
+    myTaskByProject : state.project.myTaskByProject,
   };
 };
 export default connect(
   mapStateToProps,
   actions,
-)(TasksTabScreen);
+)(TasksDetailsScreen);

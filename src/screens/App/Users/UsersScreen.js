@@ -10,6 +10,7 @@ EStyleSheet.build({$rem: entireScreenWidth / 380});
 import FadeIn from 'react-native-fade-in-image';
 import Loader from '../../../components/Loader';
 import Header from '../../../components/Header';
+import { NavigationEvents } from 'react-navigation';
 
 class UsersScreen extends Component {
   constructor(props) {
@@ -111,7 +112,13 @@ class UsersScreen extends Component {
 
   onBackPress() {
     this.props.navigation.goBack();
-}
+  }
+
+  loadUsers () {
+    this.setState({ users: [],allUsers:[]}, function() {
+      this.props.getAllUsers()
+    });
+  }
 
   render() {
     let users = this.state.users;
@@ -120,6 +127,9 @@ class UsersScreen extends Component {
     
     return (
       <View style={styles.backgroundImage}>
+        <NavigationEvents
+                onWillFocus={(payload) => this.loadUsers(payload)}
+                />
         <FlatList
           style={styles.flalList}
           data={users}

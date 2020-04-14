@@ -24,6 +24,7 @@ import _ from 'lodash';
 import AwesomeAlert from 'react-native-awesome-alerts';
 import AsyncStorage from '@react-native-community/async-storage';
 import Loader from '../../../components/Loader';
+import NavigationService from '../../../services/NavigationService';
 
 class CreateNewProjectScreen extends Component {
   constructor(props) {
@@ -67,7 +68,7 @@ class CreateNewProjectScreen extends Component {
     if (prevProps.addProjectrSuccess !== this.props.addProjectrSuccess
         && this.props.addProjectrSuccess) {
           this.showAlert("","Project Created");
-          this.props.navigation.goBack();
+          NavigationService.navigate('ProjectsScreen');
     }
   }
 

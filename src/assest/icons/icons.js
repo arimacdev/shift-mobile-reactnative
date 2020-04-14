@@ -20,6 +20,14 @@ const icons = {
     plus: require('./plus.png'),
     folderWhite: require('./folder_white.png'),
     searchGray: require('./search_gray.png'),
-    userWhite : require('./user_wite.png')
+    userWhite : require('./user_wite.png'),
+    editUser: require('../../asserts/img/edit_user.png'),
+    calenderWhite: require('./calender_white.png'),
+    warningWhite: require('./warning_white.png'),
+    clockWhite: require('./clock_white.png'),
+    userWhiteProj: require('./user_white.png'),
+    rightWhite: require('./right_white.png'),
+    deleteWhite: require('./delete_white.png'),
+    addGreen: require('./add_green.png'),
 };
 export default icons;

@@ -7,7 +7,7 @@ const colors = {
     drawerInactiveItems : '#4D4F85',
     pageBackGroundColor : '#E5E5E5',
     darkBlue:'#1a0070',
-    lightBlue: '#38afff',
+    lightBlue: '#0bafff',
     lightgray: '#D3D3D3',
     lighterGray: '#e5e5e5',
     gray:'#6e6e6e',
@@ -23,7 +23,10 @@ const colors = {
     userViewHeader : '#040428',
     userViewData : '#576377',
     userAddText : '#576377',
-    lightRed  : '#ff6161'
+    lightRed  : '#ff6161',
+    projDetails:'#DDE0E4',
+    projDetailsProjectName : '#080848',
+    projectDetailsDate:'#0bafff'
 
 };
 export default colors;

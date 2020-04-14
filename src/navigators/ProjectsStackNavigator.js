@@ -11,6 +11,7 @@ import icons from '../assest/icons/icons';
 
 import {TouchableOpacity, Image} from 'react-native';
 import TasksScreen from '../screens/App/Tasks/TasksScreen';
+import TasksDetailsScreen from '../screens/App/Tasks/TasksDetailsScreen';
 
 export const ProjectsStackNavigator = createStackNavigator(
   {

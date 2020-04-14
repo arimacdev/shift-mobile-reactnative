@@ -57,6 +57,7 @@ class TasksScreen extends Component {
   renderScene(route) {
     const {navigation: {state: {params}}} = this.props;
     let projectId = params.projDetails.projectId;
+    const isActive = this.state.routes.indexOf(route.route) === this.state.index
     switch (route.route.key) {
       case 'tasks':
         return <Tasks selectedProjectID={projectId}/>;
@@ -68,6 +69,7 @@ class TasksScreen extends Component {
   render() {
     return (
       <TabView
+        lazy
         navigationState={{index: this.state.index, routes: this.state.routes}}
         renderScene={route => this.renderScene(route)}
         onIndexChange={index => this.setState({index})}

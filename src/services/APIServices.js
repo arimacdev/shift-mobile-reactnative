@@ -12,7 +12,9 @@ import {
     ADD_PROJECT,
     GET_PROJECT,
     UPDATE_PROJECT,
-    DELETE_PROJECT
+    DELETE_PROJECT,
+
+    GET_PROJECT_DETAILS_TASK
 
 } from '../api/API';
 
@@ -25,14 +27,15 @@ import {
 
 function getAllTaskInProjectsData(userID,projectID) {
     return request({
-        url: GET_ALL_TASKS_BY_PROJECT + projectID + '/tasks/user?userId='+userID,
+        url: GET_MY_TASKS_BY_PROJECT + projectID + '/tasks?userId='+userID,
         method: 'GET'
     }, true,true,false);
 }
 
+
 function getMyTaskInProjectsData(userID,projectID) {
     return request({
-        url: GET_MY_TASKS_BY_PROJECT + projectID + '/tasks?userId='+userID,
+        url: GET_ALL_TASKS_BY_PROJECT + projectID + '/tasks/user?userId='+userID,
         method: 'GET'
     }, true,true,false);
 }
@@ -122,6 +125,13 @@ function deleteProjectData(projectID) {
     }, true,false,true);
 }
 
+function getProjectTaskDetails(projectID) {
+    return request({
+        url: GET_PROJECT_DETAILS_TASK+'/'+projectID+'/tasks/completion',
+        method: 'GET'
+    }, true,false,true);
+}
+
 const APIServices = {
     getAllProjectsByUserData,
     getAllTaskInProjectsData,
@@ -133,7 +143,8 @@ const APIServices = {
     addprojectData,
     getProjectData,
     updateProjectData,
-    deleteProjectData
+    deleteProjectData,
+    getProjectTaskDetails
 };
 
 export default APIServices;

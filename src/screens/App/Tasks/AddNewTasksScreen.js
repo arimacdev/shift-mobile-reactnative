@@ -110,7 +110,7 @@ class AddNewTasksScreen extends Component {
         this.setState({
           selectedDate: newDate,
           showPicker: false,
-          showTimePicker: true,
+          showTimePicker: false,
           date: new Date(selectedDate),
         });
       }
@@ -133,6 +133,11 @@ class AddNewTasksScreen extends Component {
           timeReminder: new Date(selectedTime),
         });
       }
+    } else {
+      this.setState({
+        showPicker: false,
+        showTimePicker: false,
+      });
     }
   }
 
@@ -161,12 +166,12 @@ class AddNewTasksScreen extends Component {
       <DateTimePicker
         testID="dateTimePicker"
         timeZoneOffsetInMinutes={0}
-        value={this.state.date}
+        value={this.state.timeReminder}
         mode={'time'}
         is24Hour={true}
         display="default"
-        onChange={(event, selectedDate) =>
-          this.onChangeTime(event, selectedDate)
+        onChange={(event, selectedTime) =>
+          this.onChangeTime(event, selectedTime)
         }
       />
     );
