@@ -141,7 +141,7 @@ class EditProjectScreen extends Component {
 
   async componentDidMount() {
     const {navigation: {state: {params}}} = this.props;
-    let projectId = params.projDetails.projectId;
+    let projectId = params.projDetails;
     this.setState({dataLoading:true});
     projectData = await APIServices.getProjectData(projectId);
     if(projectData.message == 'success'){

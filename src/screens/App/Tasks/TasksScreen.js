@@ -71,6 +71,7 @@ class TasksScreen extends Component {
   render() {
     return (
       <TabView
+        lazy
         navigationState={{index: this.state.index, routes: this.state.routes}}
         renderScene={route => this.renderScene(route)}
         onIndexChange={index => this.setState({index})}

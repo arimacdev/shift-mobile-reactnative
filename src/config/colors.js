@@ -24,7 +24,9 @@ const colors = {
     userViewData : '#576377',
     userAddText : '#576377',
     lightRed  : '#ff6161',
-    projDetails:'#DDE0E4'
+    projDetails:'#DDE0E4',
+    projDetailsProjectName : '#080848',
+    projectDetailsDate:'#0bafff'
 
 };
 export default colors;

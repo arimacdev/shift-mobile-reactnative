@@ -15,91 +15,213 @@ import icons from '../../../assest/icons/icons';
 import EStyleSheet from 'react-native-extended-stylesheet';
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
-import {Dropdown} from 'react-native-material-dropdown';
-import AsyncStorage from '@react-native-community/async-storage';
+import APIServices from '../../../services/APIServices';
+import NavigationService from '../../../services/NavigationService';
 import Loader from '../../../components/Loader';
 import {NavigationEvents} from 'react-navigation';
-
-let projDetails = [
-  {
-    text: 'Project start date',
-    details: '2020 Jan 01',
-  },
-  {
-    text: 'Project end date',
-    details: '2020 Jan 14',
-  },
-  {
-    text: 'Estimated project timeline',
-    details: '2 weeks',
-  },
-  {
-    text: 'Actual time for now',
-    details: '1 week 2 days',
-  },
-];
-
-let projOuterDetails = [
-  {
-    text: '10',
-    details: 'Due today',
-    icon: icons.calenderWhite,
-    color: '#ffb129',
-  },
-  {
-    text: '12',
-    details: 'Overdue',
-    icon: icons.warningWhite,
-    color: '#e65c62',
-  },
-  {
-    text: '236',
-    details: 'left',
-    icon: icons.clockWhite,
-    color: '#704cf1',
-  },
-  {
-    text: '12',
-    details: 'Assigned to you',
-    icon: icons.userWhiteProj,
-    color: '#67d2e0',
-  },
-  {
-    text: '236',
-    details: 'Completed',
-    icon: icons.rightWhite,
-    color: '#6fcd17',
-  },
-];
+import moment from 'moment';
 
 class ProjectsDetailsScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      projects: [],
-      allProjects: [],
-      selectedType: 'Ongoing',
+      dataLoading : false,
+      projectDatesDetails : [],
+      projectTaskDetails : [],
+      projectName : '',
+      projectClient : '',
+      projectStatus : '',
+      projectID: '',
     };
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    if (
-      prevProps.projectsLoading !== this.props.projectsLoading &&
-      this.props.projects &&
-      this.props.projects.length > 0
-    ) {
-      let searchValue = 'ongoing';
-      let filteredData = this.props.projects.filter(function(item) {
-        return item.projectStatus.includes(searchValue);
-      });
-      this.setState({
-        projects: filteredData,
-        allProjects: this.props.projects,
-      });
+  }
+
+  async componentDidMount() {
+    this.fetchData();
+  }
+
+  async fetchData (){
+
+    let selectedProjectID = this.props.selectedProjectID;
+    this.setState({dataLoading:true});
+    projectTaskDetailsData = await APIServices.getProjectTaskDetails(selectedProjectID);
+    if(projectTaskDetailsData.message == 'success'){
+      this.setProjectTaskData(projectTaskDetailsData.data);
+      projectData = await APIServices.getProjectData(selectedProjectID);
+      if(projectData.message == 'success'){
+        this.setProjectData(projectData.data);
+        this.setState({dataLoading:false});
+      }else{
+        this.setState({dataLoading:false});
+      }  
+    }else{
+      this.setState({dataLoading:false});
     }
   }
 
-  componentDidMount() {}
+  setProjectTaskData(data){
+     //set projectTaskData to state
+     let taskData = [];
+     // today due task
+     taskData.push({
+       text: data.tasksDueToday.toString(),
+       details: 'Due today',
+       icon: icons.calenderWhite,
+       color: '#ffb129',
+     }),
+
+     // Overdue task
+     taskData.push({
+       text: data.tasksOverDue.toString(),
+       details: 'Overdue',
+       icon: icons.warningWhite,
+       color: '#e65c62',
+     }),
+
+     // left task
+     taskData.push({
+       text: data.tasksLeft.toString(),
+       details: 'Left',
+       icon: icons.clockWhite,
+       color: '#704cf1',
+     }),
+
+     // today due task
+     taskData.push({
+       text: data.tasksAssigned.toString(),
+       details: 'Assigned to you',
+       icon: icons.userWhiteProj,
+       color: '#67d2e0',
+     }),
+
+     // Completed task
+     taskData.push({
+       text: data.tasksCompleted.toString(),
+       details: 'Completed',
+       icon: icons.rightWhite,
+       color: '#6fcd17',
+     }),
+
+     this.setState({
+       projectTaskDetails : taskData
+     });
+  }
+
+  setProjectData(data){
+    this.setState({
+      projectName : data.projectName,
+      projectClient : data.clientId,
+      projectID  : data.projectId
+    });
+    this.setProjectStatus(data.projectStatus)
+    this.setProjectsDatesView(data);
+  }
+
+  setProjectStatus(status){
+    let statusValue = '';
+    switch (status) {
+        case 'ongoing':
+              statusValue = 'Ongoing'
+              break;
+        case 'support':
+              statusValue = 'Support'
+              break;
+        case 'finished':
+              statusValue = 'Finished'
+              break;
+        case 'presales':
+              statusValue = 'Presales'
+              break;      
+        case 'presalesPD':  
+              statusValue = 'Presales : Project Discovery'
+              break;
+        case 'preSalesQS':
+              statusValue = 'Presales : Quotation Submission'
+              break;
+        case 'preSalesN':
+              statusValue = 'Presales : Negotiation'
+              break;
+        case 'preSalesC':
+              statusValue = 'Presales : Confirmed'
+              break;
+        case 'preSalesL' : 
+              statusValue = 'Presales : Lost'
+              break;
+      }
+      this.setState({
+        projectStatus : statusValue
+      })
+  }
+
+  setProjectsDatesView(data){
+    //set project dates to state
+    let projectsDatesArray = [];
+    let startDate = data.projectStartDate;
+    let startNewDate = '';
+    let startNewDateValue = '';
+    let endDate = data.projectEndDate;
+    let endNewDate = '';
+    let endNewDateValue = '';
+    let todayValue = '';
+    let datesTextEsstimated = '';
+    let datesTextAcctual = '';
+
+    startNewDate = moment.parseZone(startDate).format('Do MMMM YYYY');
+    startNewDateValue = moment.parseZone(startDate).format('DD MM YYYY');
+
+    endNewDate = moment.parseZone(endDate).format('Do MMMM YYYY');
+    endNewDateValue = moment.parseZone(endDate).format('DD MM YYYY');
+
+    todayValue =  moment.parseZone(new Date()).format('DD MM YYYY');
+
+    let startDateMomentValue  = moment(startNewDateValue, "DD MM YYYY");
+    let endDateMomentValue  = moment(endNewDateValue, "DD MM YYYY");
+    let todatMomentValue  = moment(todayValue, "DD MM YYYY");
+
+    let totalDatesEsstimated = endDateMomentValue.diff(startDateMomentValue, "days");
+    if(totalDatesEsstimated > 0){
+      let weeksTextEsstimated = Math.floor((parseInt(totalDatesEsstimated) / 7));
+      let dateTextEsstimated =  Math.floor((parseInt(totalDatesEsstimated) % 7));
+      datesTextEsstimated = weeksTextEsstimated.toString() + 'week(s)' + ' ' + dateTextEsstimated.toString() + 'day(s)'
+    }else{
+      datesTextEsstimated = '0 days'
+    }
+
+    let totalDatesAcctual = todatMomentValue.diff(startDateMomentValue, "days");
+    if(totalDatesAcctual > 0){
+      let weeksTextAcctual = Math.floor((parseInt(totalDatesAcctual) / 7));
+      let dateTextAcctual =  Math.floor((parseInt(totalDatesAcctual) % 7));
+      datesTextAcctual = weeksTextAcctual.toString() + 'week(s)' + ' ' + dateTextAcctual.toString() + 'day(s)'
+    }else{
+      datesTextAcctual = '0 days'
+    }
+
+    projectsDatesArray.push(
+      {
+      text: 'Project start date',
+      details: startNewDate,
+      },
+      {
+        text: 'Project end date',
+        details: endNewDate,
+      },
+      {
+        text: 'Estimated project timeline',
+        details: datesTextEsstimated,
+      },
+      {
+        text: 'Estimated project timeline',
+        details: datesTextAcctual,
+      },
+    );
+
+    this.setState({
+      projectDatesDetails : projectsDatesArray
+    });
+
+  }
 
   renderInnerList(item) {
     return (
@@ -111,20 +233,21 @@ class ProjectsDetailsScreen extends Component {
   }
 
   renderOuterList(item, index) {
+    let projectTaskDetails = this.state.projectTaskDetails;
     return (
       <View
         style={[
           styles.projectOuterView,
           {
             flex:
-              index == projOuterDetails.length - 1 &&
-              (projOuterDetails.length - 1) % 2 == 0
+              index == projectTaskDetails.length - 1 &&
+              (projectTaskDetails.length - 1) % 2 == 0
                 ? 0.5
                 : 1,
 
             marginRight:
-              index == projOuterDetails.length - 1 &&
-              (projOuterDetails.length - 1) % 2 == 0
+              index == projectTaskDetails.length - 1 &&
+              (projectTaskDetails.length - 1) % 2 == 0
                 ? 20
                 : 3,
             backgroundColor: item.color,
@@ -145,36 +268,35 @@ class ProjectsDetailsScreen extends Component {
     );
   }
 
-  loadProjects() {
-    this.setState({
-      selectedType: 'Ongoing',
-    });
-    AsyncStorage.getItem('userID').then(userID => {
-      this.props.getAllProjectsByUser(userID);
-    });
+  async tabOpen() {
+    this.fetchData();
+  }
+
+  navigateToEditProject(){
+    let projectID = this.state.projectID;
+    //props.navigation.navigate('EditProjectScreen',{projDetails:projectID});
+    NavigationService.navigate('EditProjectScreen', { projDetails: projectID });
   }
 
   render() {
-    let projects = this.state.projects;
-    let projectsLoading = this.state.projectsLoading;
-    let selectedType = this.state.selectedType;
+    let projectDatesDetails = this.state.projectDatesDetails;
+    let projectTaskDetails = this.state.projectTaskDetails;
+    let projectName = this.state.projectName
+    let projectClient = this.state.projectClient;
+    let projectStatus = this.state.projectStatus;
+    let dataLoading = this.state.dataLoading;
 
     return (
       <ScrollView style={styles.container}>
-        <NavigationEvents onWillFocus={payload => this.loadProjects(payload)} />
+        <NavigationEvents onWillFocus={payload => this.tabOpen(payload)} />
         <View style={styles.projectDetailsView}>
           <View style={styles.projDetailsInnerView}>
             <View style={{flex: 1}}>
-              <Text style={styles.textProjName}>REDD MRI</Text>
-              <Text style={styles.textProjCompany}>REDD Digital Pty Ltd.</Text>
+              <Text style={styles.textProjName}>{projectName}</Text>
+              <Text style={styles.textProjCompany}>{projectClient}</Text>
             </View>
             <View>
-              <TouchableOpacity
-                onPress={() =>
-                  this.props.navigation.navigate('EditProjectScreen', {
-                    projDetails: this.props.projDetails,
-                  })
-                }>
+              <TouchableOpacity onPress={()=>this.navigateToEditProject()}>
                 <Image style={styles.editIcon} source={icons.editUser} />
               </TouchableOpacity>
             </View>
@@ -183,7 +305,7 @@ class ProjectsDetailsScreen extends Component {
           <View style={styles.projectDetailsInnerView}>
             <View style={styles.projectDetailsHeadding}>
               <Text style={styles.projectDetailsHeaddingText}>
-                Project ongoing
+                {projectStatus}
               </Text>
             </View>
             <View
@@ -196,7 +318,7 @@ class ProjectsDetailsScreen extends Component {
           </View>
           <FlatList
             style={styles.projectInnerFlatList}
-            data={projDetails}
+            data={projectDatesDetails}
             numColumns={2}
             renderItem={({item}) => this.renderInnerList(item)}
             keyExtractor={item => item.projId}
@@ -204,12 +326,12 @@ class ProjectsDetailsScreen extends Component {
         </View>
         <FlatList
           style={styles.projectOuterFlatList}
-          data={projOuterDetails}
+          data={projectTaskDetails}
           numColumns={2}
           renderItem={({item, index}) => this.renderOuterList(item, index)}
           keyExtractor={item => item.projId}
         />
-        {projectsLoading && <Loader />}
+        {dataLoading && <Loader/>}
       </ScrollView>
     );
   }
@@ -227,10 +349,10 @@ const styles = EStyleSheet.create({
     marginHorizontal: '20rem',
   },
   textProjName: {
-    fontSize: '25rem',
-    color: colors.darkBlue,
-    fontFamily: 'CircularStd-Medium',
-    fontWeight: 'bold',
+    fontSize: '20rem',
+    color: colors.projDetailsProjectName,
+    fontFamily: 'CircularStd-Bold',
+    fontWeight: '400',
   },
   projDetailsInnerView: {
     flexDirection: 'row',
@@ -239,9 +361,10 @@ const styles = EStyleSheet.create({
     paddingHorizontal: '20rem',
   },
   textProjCompany: {
-    fontSize: '14rem',
-    color: colors.projectText,
-    fontFamily: 'CircularStd-Medium',
+    fontSize: '12rem',
+    color: colors.loginGray,
+    fontFamily: 'CircularStd-Book',
+    fontWeight: '400',
     textAlign: 'left',
   },
   userIcon: {
@@ -278,6 +401,9 @@ const styles = EStyleSheet.create({
   },
   projectDetailsHeaddingText: {
     color: colors.white,
+    fontFamily: 'CircularStd-Medium',
+    fontSize: '11rem',
+    fontWeight: '400',
   },
   outerListIcon: {
     width: '30rem',
@@ -295,11 +421,15 @@ const styles = EStyleSheet.create({
   projectInnerText: {
     marginBottom: '3rem',
     fontSize: '10rem',
+    color : colors.loginGray,
+    fontFamily: 'CircularStd-Bold',
+    fontWeight: '400'
   },
   projectInnerDetailText: {
-    color: colors.lightBlue,
+    color: colors.projectDetailsDate,
     fontSize: '10rem',
-    fontFamily: 'CircularStd-Medium',
+    fontFamily: 'CircularStd-Book',
+    fontWeight: '400'
   },
   projectOuterView: {
     backgroundColor: colors.projDetails,
@@ -316,13 +446,15 @@ const styles = EStyleSheet.create({
   projectOuterText: {
     color: colors.white,
     marginBottom: '-5rem',
-    fontSize: '28rem',
-    fontWeight: 'bold',
-    fontFamily: 'CircularStd-Medium',
+    fontSize: '24rem',
+    fontWeight: '400',
+    fontFamily: 'CircularStd-Bold',
   },
   projectOuterDetailsText: {
     color: colors.white,
     fontSize: '13rem',
+    fontWeight: '400',
+    fontFamily: 'CircularStd-Book',
   },
   border: {
     borderWidth: '0.5rem',
