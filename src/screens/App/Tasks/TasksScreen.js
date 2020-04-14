@@ -62,7 +62,7 @@ class TasksScreen extends Component {
       case 'tasks':
         return <Tasks selectedProjectID={projectId} navigation={this.props.navigation} isActive={isActive}/>;
       case 'projects':
-        return <Projects projDetails={params.projDetails} navigation={this.props.navigation} isActive={isActive}/>;
+        return <Projects selectedProjectID={projectId} navigation={this.props.navigation} isActive={isActive}/>;
       default:
         return null;
     }
