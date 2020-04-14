@@ -14,6 +14,7 @@ const icons = {
     upload: require('./upload.png'),
     gallary: require('./gallary.png'),
     cross: require('./cross.png'),
+    delete: require('./delete.png'),
     add: require('./add.png'),
     search: require('./search.png'),
     plus: require('./plus.png'),

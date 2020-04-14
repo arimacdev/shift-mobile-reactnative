@@ -6,6 +6,7 @@ import ProjectsScreen from '../screens/App/Projects/ProjectsScreen';
 import CreateNewProjectScreen from '../screens/App/Projects/CreateNewProjectScreen';
 import ProjectsSearchScreen from '../screens/App/Projects/ProjectsSearchScreen';
 import EditProjectScreen from '../screens/App/Projects/EditProjectScreen';
+import AddPeopleScreen from '../screens/App/People/AddPeopleScreen';
 import icons from '../assest/icons/icons';
 
 import {TouchableOpacity, Image} from 'react-native';
@@ -70,6 +71,17 @@ export const ProjectsStackNavigator = createStackNavigator(
         header: (
           <Header
             title={'Edit Project'}
+            onPress={() => navigation.pop()}
+          />
+        ),
+      }),
+    },
+    AddPeopleScreen: {
+      screen: AddPeopleScreen,
+      navigationOptions: ({navigation}) => ({
+        header: (
+          <Header
+            title={'Add People'}
             onPress={() => navigation.pop()}
           />
         ),
