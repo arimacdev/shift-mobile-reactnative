@@ -14,7 +14,8 @@ import {
     UPDATE_PROJECT,
     DELETE_PROJECT,
 
-    GET_PROJECT_DETAILS_TASK
+    GET_PROJECT_DETAILS_TASK,
+    GET_PROJECT_PEOPLE
 
 } from '../api/API';
 
@@ -130,6 +131,13 @@ function getProjectTaskDetails(projectID) {
         url: GET_PROJECT_DETAILS_TASK+'/'+projectID+'/tasks/completion',
         method: 'GET'
     }, true,false,true);
+};
+
+function getProjectPeopleData(projectID,userID) {
+    return request({
+        url: GET_PROJECT_PEOPLE+'/'+projectID+'/tasks/'+userID+'/completion/details',
+        method: 'GET'
+    }, true,true,true);
 }
 
 const APIServices = {
@@ -144,7 +152,8 @@ const APIServices = {
     getProjectData,
     updateProjectData,
     deleteProjectData,
-    getProjectTaskDetails
+    getProjectTaskDetails,
+    getProjectPeopleData
 };
 
 export default APIServices;

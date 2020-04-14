@@ -12,6 +12,7 @@ import {connect} from 'react-redux';
 import * as actions from '../../../redux/actions';
 import colors from '../../../config/colors';
 import Tasks from './TasksTabScreen';
+import Projects from '../Projects/ProjectsDetailsScreen';
 import PeopleScreen from '../People/PeopleScreen';
 import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
 import EStyleSheet from 'react-native-extended-stylesheet';
@@ -60,9 +61,11 @@ class TasksScreen extends Component {
     const isActive = this.state.routes.indexOf(route.route) === this.state.index
     switch (route.route.key) {
       case 'tasks':
-        return <Tasks selectedProjectID={projectId}/>;
+        return <Tasks selectedProjectID={projectId} navigation={this.props.navigation} isActive={isActive}/>;
+      case 'projects':
+        return <Projects selectedProjectID={projectId} navigation={this.props.navigation} isActive={isActive}/>;
       case 'prople':
-        return <PeopleScreen/>;
+        return <PeopleScreen selectedProjectID={projectId} navigation={this.props.navigation} isActive={isActive}/>;
     }
   }
 
