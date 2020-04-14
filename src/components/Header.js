@@ -68,7 +68,7 @@ class Header extends Component {
                                 <Icon name={search ? 'ios-close' : 'ios-arrow-round-back'} style={styles.iconBack} type={'Ionicons'} />
                                 </TouchableOpacity>
                             </View>
-                            <View style={styles.leftContainer}>
+                            <View style={[styles.leftContainer,{flex: 0.7}]}>
                                 <Text style={styles.title}>{title}</Text>
                             </View>
                             <View style={styles.rightContainer} >
