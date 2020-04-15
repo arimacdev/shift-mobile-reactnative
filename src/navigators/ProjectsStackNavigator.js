@@ -16,6 +16,7 @@ import TasksDetailsScreen from '../screens/App/Tasks/TasksDetailsScreen';
 import AssigneeScreen from '../screens/App/Tasks/AssigneeScreen';
 import SubTaskScreen from '../screens/App/Tasks/SubTaskScreen';
 import FilesScreen from '../screens/App/Tasks/FilesScreen';
+import ChatScreen from '../screens/App/Tasks/ChatScreen';
 
 export const ProjectsStackNavigator = createStackNavigator(
   {
@@ -151,6 +152,18 @@ export const ProjectsStackNavigator = createStackNavigator(
           <Header
             navigation={navigation}
             title={'Files'}
+            onPress={() => navigation.goBack()}
+          />
+        ),
+      }),
+    },
+    ChatScreen: {
+      screen: ChatScreen,
+      navigationOptions: ({navigation}) => ({
+        header: (
+          <Header
+            navigation={navigation}
+            title={'Chat'}
             onPress={() => navigation.goBack()}
           />
         ),
