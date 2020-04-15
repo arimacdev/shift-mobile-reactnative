@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import colors from '../config/colors';
 import * as actions from '../redux/actions';
 import NavigationService from '../services/NavigationService';
+import icons from '../assest/icons/icons';
 
 
 const entireScreenWidth = Dimensions.get('window').width;
@@ -29,7 +30,7 @@ class Header extends Component {
     }
 
     render() {
-        const { onPress, isHome, title,style,addButton,screen = {},search=false } = this.props;
+        const { onPress, isHome, title,style,addButton,screen = {},search=false , isTasks=false} = this.props;
         // console.log('PPPP',this.props)
         return (
             <SafeAreaView style={{ backgroundColor: colors.primary }}>
@@ -60,7 +61,43 @@ class Header extends Component {
                             </View>
                             
                         </View>
-
+                        :
+                        isTasks ?
+                        <View style={styles.header}>
+                            <View style={styles.menuIconContatiner}>
+                                <TouchableOpacity activeOpacity={0.6} onPress={onPress}>
+                                <Icon name={'ios-arrow-round-back'} style={styles.iconBack} type={'Ionicons'} />
+                                </TouchableOpacity>
+                            </View>
+                            <View style={[styles.leftContainer,{flexDirection:'row'}]}>
+                                <TouchableOpacity activeOpacity={0.6} onPress={onPress}>
+                                    <Image
+                                        source={icons.whiteCircule}
+                                        style={styles.icon}
+                                    />
+                                </TouchableOpacity>
+                                <View style={styles.leftContainerFull}>
+                                        <Text style={styles.title}>{title}</Text>
+                                    </View>
+                                </View>
+                            <View style={styles.rightContainer} >
+                                <TouchableOpacity style={{alignItems:'flex-end'}} onPress={() => this.props.navigation.navigate('ProjectsSearchScreen')}>
+                                    <Image
+                                        source={icons.editWhite}
+                                        style={styles.iconEdit}
+                                        resizeMode={'contain'}
+                                    />
+                                </TouchableOpacity>
+                                <TouchableOpacity style={{alignItems:'flex-end',marginLeft:20}} onPress={() => this.props.navigation.navigate('CreateNewProjectScreen')}>
+                                    <Image
+                                        source={icons.deleteWhite}
+                                        style={styles.iconEdit}
+                                        resizeMode={'contain'}
+                                    />
+                                </TouchableOpacity>
+                            </View>
+                            
+                        </View>
                         :
                         <View style={[style, styles.header]}>
                             <View style={styles.menuIconContatiner}>
@@ -174,7 +211,13 @@ const styles = EStyleSheet.create({
         fontSize: '30rem',
         color: colors.white,
         fontWeight: '800',
-    }
+    },
+    iconEdit: {
+        width: '20rem',
+        height: '20rem',
+        // borderRadius: '10rem',
+        marginLeft : '5rem'
+    },
 });
 
 const mapStateToProps = state => {

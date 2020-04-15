@@ -29,5 +29,15 @@ const icons = {
     rightWhite: require('./right_white.png'),
     deleteWhite: require('./delete_white.png'),
     addGreen: require('./add_green.png'),
+    editWhite: require('./edit_white.png'),
+    taskUser: require('./task_user.png'),
+    subTask: require('./sub_task.png'),
+    calendarBlue: require('./calendar_blue.png'),
+    clockOrange: require('./clock_orange.png'),
+    noteRed: require('./note_red.png'),
+    fileOrange: require('./file_orange.png'),
+    chatBrown: require('./chat_brown.png'),
+    forwordGray: require('./forword_gray.png'),
+    closeRounded: require('./close_rounded.png'),
 };
 export default icons;

@@ -13,6 +13,7 @@ import icons from '../assest/icons/icons';
 import {TouchableOpacity, Image} from 'react-native';
 import TasksScreen from '../screens/App/Tasks/TasksScreen';
 import TasksDetailsScreen from '../screens/App/Tasks/TasksDetailsScreen';
+import AssigneeScreen from '../screens/App/Tasks/AssigneeScreen';
 
 export const ProjectsStackNavigator = createStackNavigator(
   {
@@ -36,7 +37,7 @@ export const ProjectsStackNavigator = createStackNavigator(
           <Header
             title={
               navigation.state.params
-                ? navigation.state.params.projDetails.projName
+                ? navigation.state.params.projDetails.projectName
                 : ''
             }
             onPress={() => navigation.pop()}
@@ -96,6 +97,25 @@ export const ProjectsStackNavigator = createStackNavigator(
           <Header
             title={'Edit People'}
             onPress={() => navigation.pop()}
+            isTasks={true}
+            title={
+              navigation.state.params
+                ? navigation.state.params.taskDetails.taskName
+                : ''
+            }
+            onPress={() => navigation.goBack()}
+          />
+        ),
+      }),
+    },
+    AssigneeScreen: {
+      screen: AssigneeScreen,
+      navigationOptions: ({navigation}) => ({
+        header: (
+          <Header
+            search={true}
+            title={'Edit Assignee'}
+            onPress={() => navigation.goBack()}
           />
         ),
       }),
