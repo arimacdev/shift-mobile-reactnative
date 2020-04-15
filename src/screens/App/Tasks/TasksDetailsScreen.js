@@ -17,13 +17,13 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
 import {Dropdown} from 'react-native-material-dropdown';
-import AddNewTasksScreen from './AddNewTasksScreen';
 import AsyncStorage from '@react-native-community/async-storage';
 import Loader from '../../../components/Loader';
 import moment from 'moment';
 import FadeIn from 'react-native-fade-in-image';
 import {SkypeIndicator} from 'react-native-indicators';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import APIServices from '../../../services/APIServices';
 
 const Placeholder = () => (
   <View style={styles.landing}>
@@ -62,24 +62,6 @@ let dropData = [
   },
 ];
 
-let bottomData = [
-  {
-    value: 'All tasks',
-    bottomBarColor: colors.darkBlue,
-    bottomBarIcon: icons.taskDark,
-  },
-  {
-    value: 'My tasks',
-    bottomBarColor: colors.lightGreen,
-    bottomBarIcon: icons.taskGreen,
-  },
-  {
-    value: 'Add new tasks',
-    bottomBarColor: colors.lightBlue,
-    bottomBarIcon: icons.taskBlue,
-  },
-];
-
 let taskData = [
   {
     id: 10,
@@ -101,13 +83,13 @@ let taskData = [
   },
   {
     id: 2,
-    name: 'Set Due',
+    name: 'Due on',
     icon: icons.calendarBlue,
     renderImage: false,
   },
   {
     id: 3,
-    name: 'Remind On',
+    name: 'Remind on',
     icon: icons.clockOrange,
     renderImage: false,
   },
@@ -123,33 +105,23 @@ let taskData = [
     icon: icons.fileOrange,
     renderImage: true,
   },
-  {
-    id: 6,
-    name: 'Chat',
-    icon: icons.chatBrown,
-    renderImage: true,
-  },
 ];
 
 class TasksDetailsScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      filterdDataAllTaks: [],
-      allDataAllTaks: [],
-      filterdDataMyTasks: [],
-      allDataMyTasks: [],
-      index: 0,
       bottomItemPressColor: colors.darkBlue,
-      selectedProjectID: 0,
+      selectedProjectID: '',
+      selectedProjectTaskID : '',
       isActive: this.props.isActive,
       name: '',
       duedate: '',
+      duedateValue: '',
       remindDate: '',
-
+      remindDateValue: '',
       showPicker: false,
       showTimePicker: false,
-      // selectedDate: '',
       date: new Date(),
       selectedDateReminder: '',
       selectedTimeReminder: '',
@@ -158,77 +130,92 @@ class TasksDetailsScreen extends Component {
       mode: 'date',
       reminder: false,
       taskName: '',
+      taskStatus : 'Pending',
+      dataLoading : false,
+      reminderTime : '',
+      dueTime : '',
     };
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    // all tasks
-    if (
-      prevProps.allTaskByProjectLoading !==
-        this.props.allTaskByProjectLoading &&
-      this.props.allTaskByProject &&
-      this.props.allTaskByProject.length > 0
-    ) {
-      let searchValueAllTask = 'pending';
-      let filteredDataAllTask = this.props.allTaskByProject.filter(function(
-        item,
-      ) {
-        return item.taskStatus.includes(searchValueAllTask);
-      });
-
-      this.setState({
-        filterdDataAllTaks: filteredDataAllTask,
-        allDataAllTaks: this.props.allTaskByProject,
-      });
-    }
-
-    // my task
-    if (
-      prevProps.myTaskByProjectLoading !== this.props.myTaskByProjectLoading &&
-      this.props.myTaskByProject &&
-      this.props.myTaskByProject.length > 0
-    ) {
-      let searchValueMyTask = 'pending';
-      let filteredDataMyTask = this.props.myTaskByProject.filter(function(
-        item,
-      ) {
-        return item.taskStatus.includes(searchValueMyTask);
-      });
-
-      this.setState({
-        filterdDataMyTasks: filteredDataMyTask,
-        allDataMyTasks: this.props.myTaskByProject,
-      });
-    }
   }
 
   componentDidMount() {
-    let selectedProjectID = this.props.selectedProjectID;
-    let {taskDetails} = this.props.navigation.state.params;
+    const {navigation: {state: {params}}} = this.props;
+    let selectedProjectID = params.selectedProjectID;
+    let selectedProjectTaskID = params.taskDetails.taskId;
+    this.setState({
+      selectedProjectID: selectedProjectID,
+      selectedProjectTaskID : selectedProjectTaskID,
+    });
 
-    this.setState(
-      {
-        selectedProjectID: selectedProjectID,
-        taskName:taskDetails.taskName
-      },
-      () => {
-        this.getAllTaskInProject();
-      },
-    );
+    this.fetchData(selectedProjectID,selectedProjectTaskID);
   }
 
-  async getAllTaskInProject() {
-    let selectedProjectID = this.state.selectedProjectID;
-    AsyncStorage.getItem('userID').then(userID => {
-      this.props.getAllTaskInProjects(userID, selectedProjectID);
-    });
+  async fetchData(selectedProjectID,selectedProjectTaskID) {
+    this.setState({dataLoading:true});
+    taskResult = await APIServices.getProjecTaskData(selectedProjectID,selectedProjectTaskID);
+    if(taskResult.message == 'success'){
+        this.setTaskName(taskResult);
+        this.setTaskStatus(taskResult);
+        this.setDueDate(taskResult);
+        this.setReminderDate(taskResult);
+        this.setState({dataLoading:false}); 
+    }else{
+        this.setState({dataLoading:false});
+    }
   }
 
-  async getMyTaskInProject() {
-    let selectedProjectID = this.state.selectedProjectID;
-    AsyncStorage.getItem('userID').then(userID => {
-      this.props.getMyTaskInProjects(userID, selectedProjectID);
-    });
+  setTaskName (taskResult){
+    this.setState({taskName : taskResult.data.taskName});
+  }
+
+  setTaskStatus (taskResult){
+    let statusValue = '';
+    switch (taskResult.data.taskStatus) {
+        case 'pending':
+              statusValue = 'Pending'
+              break;
+        case 'implementing':
+              statusValue = 'Implementing'
+              break;
+        case 'qa':
+              statusValue = 'QA'
+              break;
+        case 'readyToDeploy':
+              statusValue = 'Ready to Deploy'
+              break;      
+        case 'reOpened':  
+              statusValue = 'Re-Opened'
+              break;
+        case 'deployed':
+              statusValue = 'Deployed'
+              break;
+        case 'closed':
+              statusValue = 'Closed'
+              break;
+      }
+      this.setState({
+        taskStatus : statusValue
+      })
+  }
+
+  setDueDate(taskResult){
+    let taskDueDate = moment.parseZone(taskResult.data.taskDueDateAt).format('Do MMMM YYYY');
+    if(taskDueDate != 'Invalid date'){
+      this.setState({
+        duedate : 'Due on ' + taskDueDate
+      })
+    }
+  }
+
+  setReminderDate (taskResult){
+    let taskReminderDate = moment.parseZone(taskResult.data.taskReminderAt).format('Do MMMM YYYY');
+    if(taskReminderDate != 'Invalid date'){
+      this.setState({
+        remindDate : 'Remind on ' + taskReminderDate,
+      })
+    }
   }
 
   dateView = function(item) {
@@ -258,28 +245,31 @@ class TasksDetailsScreen extends Component {
   onChangeDate(event, selectedDate) {
     let date = new Date(selectedDate);
     let newDate = '';
+    let newDateValue = '';
 
-    // if (this.state.reminder) {
-    //   newDate = moment(date).format('Do MMMM YYYY');
-    // } else {
-    //   newDate = moment(date).format('Do MMMM YYYY');
-    // }
-
-    newDate = moment(date).format('Do MMMM YYYY');
+    if (this.state.reminder) {
+      newDate = moment(date).format('Do MMMM YYYY');
+      newDateValue = moment(date).format('DD MM YYYY');
+    } else {
+      newDate = moment(date).format('Do MMMM YYYY');
+      newDateValue = moment(date).format('DD MM YYYY');
+    }
 
     if (event.type == 'set') {
       if (this.state.reminder) {
         this.setState({
           remindDate: 'Due on ' + newDate,
+          remindDateValue : newDateValue,
           showPicker: false,
-          showTimePicker: false,
+          showTimePicker: true,
           dateReminder: new Date(selectedDate),
         });
       } else {
         this.setState({
-          duedate: 'Due on ' + newDate,
+          duedate: 'Remind On ' + newDate,
+          duedateValue : newDateValue,
           showPicker: false,
-          showTimePicker: false,
+          showTimePicker: true,
           date: new Date(selectedDate),
         });
       }
@@ -292,18 +282,26 @@ class TasksDetailsScreen extends Component {
 
     if (event.type == 'set') {
       if (this.state.reminder) {
+        // reminder time
         this.setState({
+          reminderTime : newTime,
           selectedTimeReminder: newTime,
           showPicker: false,
           showTimePicker: false,
           timeReminder: new Date(selectedTime),
         });
+        this.changeTaskReminderDate();
+      }else {
+        // due time
+        this.setState({
+          dueTime : newTime,
+          selectedTimeReminder: newTime,
+          showPicker: false,
+          showTimePicker: false,
+          timeReminder: new Date(selectedTime),
+        });
+        this.changeTaskDueDate();
       }
-    } else {
-      this.setState({
-        showPicker: false,
-        showTimePicker: false,
-      });
     }
   }
 
@@ -372,11 +370,7 @@ class TasksDetailsScreen extends Component {
         (this.state.remindDate != '' && item.id == 3)
       ) {
         return (
-          <TouchableOpacity onPress={() => this.clearDates(item.id)}>
-            <Image
-              style={{width: 24, height: 24, borderRadius: 24 / 2}}
-              source={icons.closeRounded}
-            />
+          <TouchableOpacity >
           </TouchableOpacity>
         );
       }
@@ -453,12 +447,13 @@ class TasksDetailsScreen extends Component {
                 flex: 1,
                 marginLeft: 5,
                 color:
-                  value !== '' ? colors.darkBlue : colors.projectTaskNameColor,
+                  value !== '' ? colors.darkBlue : colors.darkBlue,
               },
             ]}
             placeholder={item.name}
             value={this.state.taskName}
             onChangeText={text => this.onTaskNameChange(text)}
+            onSubmitEditing={() => this.onTaskNameChangeSubmit(this.state.taskName)}
           />
         ) : (
           <Text
@@ -503,74 +498,9 @@ class TasksDetailsScreen extends Component {
     );
   }
 
-  onBottomItemPress(index) {
-    // let color;
-    this.setState({index: index});
-    switch (index) {
-      case 0:
-        // All tasks
-        this.getAllTaskInProject();
-        break;
-      case 1:
-        // my tasks
-        this.getMyTaskInProject();
-        break;
-    }
-  }
-
-  renderBottomBar() {
-    return (
-      <View style={styles.bottomBarContainer}>
-        <View style={styles.bottomBarInnerContainer}>
-          {bottomData.map((item, index) => {
-            return (
-              <View style={styles.bottomItemView}>
-                <TouchableOpacity
-                  style={[
-                    styles.bottomItemTouch,
-                    {
-                      backgroundColor:
-                        index == this.state.index
-                          ? item.bottomBarColor
-                          : colors.projectBgColor,
-                    },
-                  ]}
-                  onPress={() => this.onBottomItemPress(index)}>
-                  <Image
-                    style={styles.bottomBarIcon}
-                    source={
-                      index == this.state.index
-                        ? icons.taskWhite
-                        : item.bottomBarIcon
-                    }
-                  />
-                  <Text
-                    style={{
-                      marginTop: 10,
-                      fontSize: 12,
-                      color:
-                        index == this.state.index
-                          ? colors.white
-                          : item.bottomBarColor,
-                    }}>
-                    {item.value}
-                  </Text>
-                </TouchableOpacity>
-                {index !== bottomData.length - 1 ? (
-                  <View style={styles.horizontalLine} />
-                ) : null}
-              </View>
-            );
-          })}
-        </View>
-      </View>
-    );
-  }
-
-  onFilterAllTasks(key) {
+  onFilterTasksStatus(key) {
     let value = key;
     let searchValue = '';
-    let index = this.state.index;
     switch (value) {
       case 'Pending':
         searchValue = 'pending';
@@ -594,60 +524,79 @@ class TasksDetailsScreen extends Component {
         searchValue = 'closed';
         break;
     }
-
-    let filteredData = this.state.allDataAllTaks.filter(function(item) {
-      return item.taskStatus.includes(searchValue);
-    });
-    this.setState({filterdDataAllTaks: filteredData});
+    
+    this.changeTaskStatus(key,searchValue);
   }
 
-  onFilterMyTasks(key) {
-    let value = key;
-    let searchValue = '';
-    let index = this.state.index;
-    switch (value) {
-      case 'Pending':
-        searchValue = 'pending';
-        break;
-      case 'Implementing':
-        searchValue = 'implementing';
-        break;
-      case 'QA':
-        searchValue = 'qa';
-        break;
-      case 'Ready to Deploy':
-        searchValue = 'readyToDeploy';
-        break;
-      case 'Re-Opened':
-        searchValue = 'reOpened';
-        break;
-      case 'Deployed':
-        searchValue = 'deployed';
-        break;
-      case 'Closed':
-        searchValue = 'closed';
-        break;
+  // change status of task API
+  async changeTaskStatus(key,searchValue){
+      this.setState({dataLoading:true});
+      let projectID = this.state.selectedProjectID;
+      let taskID = this.state.selectedProjectTaskID;
+      resultData = await APIServices.updateTaskStatusData(projectID,taskID,searchValue);
+      if(resultData.message == 'success'){
+        this.setState({dataLoading:false,taskStatus : key});
+      }else{
+        this.setState({dataLoading:false});
+      }
+  }
+
+  // change name of task API
+  async onTaskNameChangeSubmit(text){
+    this.setState({dataLoading:true});
+    let projectID = this.state.selectedProjectID;
+    let taskID = this.state.selectedProjectTaskID;
+    resultData = await APIServices.updateTaskNameData(projectID,taskID,text);
+    if(resultData.message == 'success'){
+      this.setState({dataLoading:false});
+    }else{
+      this.setState({dataLoading:false});
     }
-    let filteredData = this.state.allDataMyTasks.filter(function(item) {
-      return item.taskStatus.includes(searchValue);
-    });
-    this.setState({filterdDataMyTasks: filteredData});
   }
+
+  async changeTaskDueDate(){
+      let duedateValue = this.state.duedateValue;
+      let dueTime = this.state.dueTime;
+      let projectID = this.state.selectedProjectID;
+      let taskID = this.state.selectedProjectTaskID;
+
+      let IsoDueDate = duedateValue ?
+      moment(duedateValue + dueTime,'DD/MM/YYYY hh:mmA').format('YYYY-MM-DD[T]HH:mm:ss') : '';
+
+      resultData = await APIServices.updateTaskDueDateData(projectID,taskID,IsoDueDate);
+      if(resultData.message == 'success'){
+        this.setState({dataLoading:false});
+      }else{
+        this.setState({dataLoading:false});
+      }
+  };
+
+  async changeTaskReminderDate(){
+      let remindDateValue = this.state.remindDateValue;
+      let reminderTime = this.state.reminderTime;
+      let projectID = this.state.selectedProjectID;
+      let taskID = this.state.selectedProjectTaskID;
+
+      let IsoReminderDate = remindDateValue ?
+      moment(remindDateValue + reminderTime,'DD/MM/YYYY hh:mmA').format('YYYY-MM-DD[T]HH:mm:ss') : '';
+
+      resultData = await APIServices.updateTaskReminderDateData(projectID,taskID,IsoReminderDate);
+      if(resultData.message == 'success'){
+        this.setState({dataLoading:false});
+      }else{
+        this.setState({dataLoading:false});
+      }
+  };
 
   render() {
-    let index = this.state.index;
-    let filterdDataAllTaks = this.state.filterdDataAllTaks;
-    let filterdDataMyTasks = this.state.filterdDataMyTasks;
-    let allTaskByProjectLoading = this.props.allTaskByProjectLoading;
-    let myTaskByProjectLoading = this.props.myTaskByProjectLoading;
+    let taskStatus = this.state.taskStatus;
+    let dataLoading = this.state.dataLoading;
 
     return (
       <ScrollView style={styles.backgroundImage}>
-        {this.state.index !== 2 ? (
           <View>
             <View style={styles.projectFilerView}>
-              {index == 0 ? (
-                <Dropdown
+            <Dropdown
                   // style={{}}
                   label=""
                   labelFontSize={0}
@@ -659,52 +608,22 @@ class TasksDetailsScreen extends Component {
                   overlayStyle={{width: '100%'}}
                   pickerStyle={{width: '89%', marginTop: 70, marginLeft: 15}}
                   dropdownPosition={0}
-                  value={'Implemanting'}
+                  value={taskStatus}
                   itemColor={'black'}
                   selectedItemColor={'black'}
                   dropdownOffset={{top: 10}}
                   baseColor={colors.lightBlue}
-                  // renderBase={this.renderBase}
                   renderAccessory={this.renderBase}
                   itemTextStyle={{
                     marginLeft: 15,
                     fontFamily: 'CircularStd-Book',
                   }}
                   itemPadding={10}
-                  onChangeText={value => this.onFilterAllTasks(value)}
+                  onChangeText={value => this.onFilterTasksStatus(value)}
                 />
-              ) : (
-                <Dropdown
-                  // style={{}}
-                  label=""
-                  labelFontSize={0}
-                  data={dropData}
-                  textColor={colors.dropDownText}
-                  error={''}
-                  animationDuration={0.5}
-                  containerStyle={{width: '100%'}}
-                  overlayStyle={{width: '100%'}}
-                  pickerStyle={{width: '89%', marginTop: 70, marginLeft: 15}}
-                  dropdownPosition={0}
-                  value={'Pending'}
-                  itemColor={'black'}
-                  selectedItemColor={'black'}
-                  dropdownOffset={{top: 10}}
-                  baseColor={colors.projectBgColor}
-                  // renderBase={this.renderBase}
-                  renderAccessory={this.renderBase}
-                  itemTextStyle={{
-                    marginLeft: 15,
-                    fontFamily: 'CircularStd-Book',
-                  }}
-                  itemPadding={10}
-                  onChangeText={value => this.onFilterMyTasks(value)}
-                />
-              )}
             </View>
             <FlatList
-              // style={{marginBottom: EStyleSheet.value('160rem')}}
-              data={index == 0 ? taskData : filterdDataMyTasks}
+              data={taskData}
               renderItem={({item}) => this.renderProjectList(item)}
               keyExtractor={item => item.taskId}
             />
@@ -732,15 +651,7 @@ class TasksDetailsScreen extends Component {
             {this.state.showPicker ? this.renderDatePicker() : null}
             {this.state.showTimePicker ? this.renderTimePicker() : null}
           </View>
-        ) : (
-          <View>
-            <AddNewTasksScreen />
-          </View>
-        )}
-
-        {/* {this.renderBottomBar()} */}
-        {allTaskByProjectLoading && <Loader />}
-        {myTaskByProjectLoading && <Loader />}
+          {dataLoading && <Loader/>}
       </ScrollView>
     );
   }
@@ -749,17 +660,14 @@ class TasksDetailsScreen extends Component {
 const styles = EStyleSheet.create({
   backgroundImage: {
     flex: 1,
-    // backgroundColor: colors.pageBackGroundColor,
   },
   projectFilerView: {
     backgroundColor: colors.lightBlue,
     borderRadius: 5,
-    // width: '330rem',
     marginTop: '17rem',
     marginBottom: '12rem',
     flexDirection: 'row',
     alignItems: 'center',
-    // justifyContent: 'center',
     paddingHorizontal: '12rem',
     height: '45rem',
     marginHorizontal: '20rem',
@@ -771,7 +679,6 @@ const styles = EStyleSheet.create({
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'center',
-    // fontWeight: 'bold',
   },
   projectView: {
     backgroundColor: colors.projectBgColor,
@@ -811,13 +718,8 @@ const styles = EStyleSheet.create({
     marginLeft: 10,
   },
   statusView: {
-    // backgroundColor: colors.gray,
-    // width:'5rem',
-    // height:'60rem',
     alignItems: 'center',
     flexDirection: 'row',
-    // borderTopRightRadius: 5,
-    // borderBottomRightRadius: 5,
   },
   dropIcon: {
     width: '13rem',
@@ -873,7 +775,6 @@ const styles = EStyleSheet.create({
     marginBottom: '30rem',
     flexDirection: 'row',
     alignItems: 'center',
-    // justifyContent: 'center',
     paddingHorizontal: '12rem',
     height: '55rem',
     marginHorizontal: '20rem',
@@ -893,10 +794,6 @@ const styles = EStyleSheet.create({
 
 const mapStateToProps = state => {
   return {
-    allTaskByProjectLoading: state.project.allTaskByProjectLoading,
-    allTaskByProject: state.project.allTaskByProject,
-    myTaskByProjectLoading: state.project.myTaskByProjectLoading,
-    myTaskByProject: state.project.myTaskByProject,
   };
 };
 export default connect(

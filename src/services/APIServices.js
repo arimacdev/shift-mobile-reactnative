@@ -20,7 +20,9 @@ import {
     GET_ALL_USERS_BY_PROJECT_ID,
     ADD_PEOPLE_TO_PROJECT,
     ADD_TASK_TO_PROJECT,
-    ADD_FILE_TO_TASK
+    ADD_FILE_TO_TASK,
+    GET_TASK_IN_PROJECT,
+    UPDATE_PROJECT_TASK
 
 } from '../api/API';
 
@@ -172,6 +174,57 @@ function getAllUsersByProjectId(projectID) {
     }, true, true, true);
 }
 
+function getProjecTaskData(projectID,selectedProjectTaskID) {
+    return request({
+        url: GET_TASK_IN_PROJECT+'/'+projectID +'/tasks/'+selectedProjectTaskID,
+        method: 'GET'
+    }, true,false,true);
+};
+
+function updateTaskNameData(projectID,taskID,text) {
+    return request({
+        url: UPDATE_PROJECT_TASK +'/'+projectID+'/tasks/'+taskID,
+        method: 'PUT',
+        data: {
+            taskName : text,
+            taskType: "project"
+        }
+    }, true,false,true);
+};
+
+function updateTaskStatusData(projectID,taskID,searchValue) {
+    return request({
+        url: UPDATE_PROJECT_TASK +'/'+projectID+'/tasks/'+taskID,
+        method: 'PUT',
+        data: {
+            taskStatus : searchValue,
+            taskType: "project"
+        }
+    }, true,false,true);
+};
+
+function updateTaskDueDateData(projectID,taskID,dueDate) {
+    return request({
+        url: UPDATE_PROJECT_TASK +'/'+projectID+'/tasks/'+taskID,
+        method: 'PUT',
+        data: {
+            taskDueDate : dueDate,
+            taskType: "project"
+        }
+    }, true,false,true);
+};
+
+function updateTaskReminderDateData(projectID,taskID,reminderDate) {
+    return request({
+        url: UPDATE_PROJECT_TASK +'/'+projectID+'/tasks/'+taskID,
+        method: 'PUT',
+        data: {
+            taskRemindOnDate : reminderDate,
+            taskType: "project"
+        }
+    }, true,false,true);
+};
+
 function addTaskToProjectData(taskName, initiator, assigneeId, selectedStatus, dueDate, selectedDateReminder, notes, selectedProjectID) {
     console.log(selectedProjectID, 'selectedProjectIDselectedProjectID')
     return request({
@@ -227,7 +280,12 @@ const APIServices = {
     getActiveUsers,
     addUserToProjectData,
     addTaskToProjectData,
-    addFileToTask
+    addFileToTask,
+    getProjecTaskData,
+    updateTaskNameData,
+    updateTaskStatusData,
+    updateTaskDueDateData,
+    updateTaskReminderDateData
 };
 
 export default APIServices;

@@ -21,6 +21,7 @@ import Loader from '../../../components/Loader';
 import moment from 'moment';
 import FadeIn from 'react-native-fade-in-image';
 import {SkypeIndicator} from 'react-native-indicators';
+import {NavigationEvents} from 'react-navigation';
 
 const Placeholder = () => (
   <View style={styles.landing}>
@@ -180,16 +181,16 @@ class TasksTabScreen extends Component {
   // }
 
   componentDidMount() {
-    let selectedProjectID = this.props.selectedProjectID;
+    // let selectedProjectID = this.props.selectedProjectID;
 
-    this.setState(
-      {
-        selectedProjectID: selectedProjectID,
-      },
-      () => {
-        this.getAllTaskInProject();
-      },
-    );
+    // this.setState(
+    //   {
+    //     selectedProjectID: selectedProjectID,
+    //   },
+    //   () => {
+    //     this.getAllTaskInProject();
+    //   },
+    // );
   }
 
   async getAllTaskInProject() {
@@ -219,18 +220,21 @@ class TasksTabScreen extends Component {
     let color = '';
 
     let taskStatus = item.taskStatus;
-    if (taskStatus == 'closed') {
+    if (taskStatus == 'closed' && date) {
       // task complete
       dateText = moment(date).format('DD/MM/YYYY');
       color = '#36DD5B';
-    } else {
-      if (moment(date).isAfter(currentTime)) {
-        dateText = moment(date).format('DD/MM/YYYY');
-        color = '#0C0C5A';
-      } else {
-        dateText = moment(date).format('DD/MM/YYYY');
-        color = '#ff6161';
-      }
+    } else if(taskStatus != 'closed' && date) {
+        if (moment(date).isAfter(currentTime)) {
+          dateText = moment(date).format('DD/MM/YYYY');
+          color = '#0C0C5A';
+        } else {
+          dateText = moment(date).format('DD/MM/YYYY');
+          color = '#ff6161';
+       }
+    }else{
+      dateText = 'Add Due Date';
+      color = '#000000';
     }
 
     return <Text style={[styles.textDate, {color: color}]}>{dateText}</Text>;
@@ -259,11 +263,13 @@ class TasksTabScreen extends Component {
   };
 
   renderProjectList(item) {
+    let selectedProjectID = this.state.selectedProjectID;
     return (
       <TouchableOpacity
         onPress={() =>
           this.props.navigation.navigate('TasksDetailsScreen', {
-            taskDetails: item,
+            taskDetails : item,
+            selectedProjectID : selectedProjectID
           })
         }>
         <View style={styles.projectView}>
@@ -432,6 +438,18 @@ class TasksTabScreen extends Component {
     });
   }
 
+  async tabOpenTaskTab() {
+    let selectedProjectID = this.props.selectedProjectID;
+    this.setState(
+      {
+        selectedProjectID: selectedProjectID,
+      },
+      () => {
+        this.getAllTaskInProject();
+      },
+    );
+}
+
   render() {
     let index = this.state.index;
     let filterdDataAllTaks = this.state.filterdDataAllTaks;
@@ -443,6 +461,7 @@ class TasksTabScreen extends Component {
 
     return (
       <View style={styles.backgroundImage}>
+         <NavigationEvents onWillFocus={payload => this.tabOpenTaskTab(payload)} />
         {this.state.index !== 2 ? (
           <View>
             <View style={styles.projectFilerView}>

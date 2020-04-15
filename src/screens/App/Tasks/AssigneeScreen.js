@@ -17,6 +17,8 @@ const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
 import AsyncStorage from '@react-native-community/async-storage';
 import Loader from '../../../components/Loader';
+import FadeIn from 'react-native-fade-in-image';
+
 
 class AssigneeScreen extends Component {
   constructor(props) {
@@ -53,6 +55,31 @@ class AssigneeScreen extends Component {
     navigation.goBack();
   }
 
+  userImage = function(item) {
+    let userImage = 'https://i.pinimg.com/236x/5e/48/1b/5e481b8fa99c5f0ebc319b93f3c6e076--tiaras-singer.jpg';
+    // let userImage = item.taskAssigneeProfileImage;
+
+    if (userImage) {
+      return (
+        <FadeIn>
+          <Image
+            source={{uri: userImage}}
+            style={styles.userIcon}
+            resizeMode="contain"
+          />
+        </FadeIn>
+      );
+    } else {
+      return (
+        <Image
+          style={styles.userIcon}
+          source={require('../../../asserts/img/defult_user.png')}
+          resizeMode="contain"
+        />
+      );
+    }
+  };
+
   renderProjectList(item) {
     return (
       <TouchableOpacity onPress={() => this.onSelectUser(item.projectName)}>
@@ -66,14 +93,7 @@ class AssigneeScreen extends Component {
                   : '',
             },
           ]}>
-          <Image
-            style={styles.userIcon}
-            source={{
-              uri:
-                'https://i.pinimg.com/236x/5e/48/1b/5e481b8fa99c5f0ebc319b93f3c6e076--tiaras-singer.jpg',
-            }}
-            resizeMode="contain"
-          />
+          {this.userImage()}
           <View style={{flex: 1}}>
             <Text style={styles.text}>{item.projectName}</Text>
           </View>
