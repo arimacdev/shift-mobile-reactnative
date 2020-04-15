@@ -14,123 +14,82 @@ import * as actions from '../../../redux/actions';
 import colors from '../../../config/colors';
 import icons from '../../../assest/icons/icons';
 import NavigationService from '../../../services/NavigationService';
-// import Tasks from './TasksTabScreen';
-import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
+import APIServices from '../../../services/APIServices';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import FadeIn from 'react-native-fade-in-image';
 import * as Progress from 'react-native-progress';
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({ $rem: entireScreenWidth / 380 });
-
+import AsyncStorage from '@react-native-community/async-storage';
+import Loader from '../../../components/Loader';
+import {NavigationEvents} from 'react-navigation';
 const initialLayout = { width: entireScreenWidth };
 
 class PeopleScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            owner: [
-                {
-                    userId: "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
-                    idpUserId: "5421cabf-32cb-48c9-9820-35e723bd6e13",
-                    firstName: "Naveen",
-                    lastName: "Perera",
-                    role: 'Project Owner',
-                    email: "naveenperera@gmail.com",
-                    userName: "5421cabf-32cb-48c9-9820-35e723bd6e13",
-                    profileImage: "https://arimac-pmtool.s3-ap-southeast-1.amazonaws.com/profileImage_1584904875259_image_4.jpg",
-                    totalTask: 25,
-                    completed: 3,
-                    progress: 0.5
-                }
-            ],
-            admins: [
-                {
-                    userId: "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
-                    idpUserId: "5421cabf-32cb-48c9-9820-35e723bd6e13",
-                    firstName: "Naveen",
-                    lastName: "Perera",
-                    role: 'Project Manager',
-                    email: "naveenperera@gmail.com",
-                    userName: "5421cabf-32cb-48c9-9820-35e723bd6e13",
-                    profileImage: "https://arimac-pmtool.s3-ap-southeast-1.amazonaws.com/profileImage_1584904875259_image_4.jpg",
-                    totalTask: 25,
-                    completed: 3,
-                    progress: 0.2
-                },
-                {
-                    userId: "06794c0f-3216-4298-9809-bcd03f7b6ad0",
-                    idpUserId: "963518f3-ee88-4068-b7de-fe0e54451f96",
-                    firstName: "Nalin",
-                    lastName: "Perera",
-                    role: 'Project Manager',
-                    email: "nalin@getnada.com",
-                    userName: "963518f3-ee88-4068-b7de-fe0e54451f96",
-                    profileImage: null,
-                    totalTask: 25,
-                    completed: 3,
-                    progress: 0.9
-                },
-            ],
-            users: [
-                {
-                    userId: "06794c0f-3216-4298-9809-bcd03f7b6ad0",
-                    idpUserId: "963518f3-ee88-4068-b7de-fe0e54451f96",
-                    firstName: "Nalin",
-                    lastName: "Perera",
-                    role: 'Developer',
-                    email: "nalin@getnada.com",
-                    userName: "963518f3-ee88-4068-b7de-fe0e54451f96",
-                    profileImage: null,
-                    totalTask: 25,
-                    completed: 3,
-                    progress: 1
-                },
-                {
-                    userId: "06794c0f-3216-4298-9809-bcd03f7b6ad0",
-                    idpUserId: "963518f3-ee88-4068-b7de-fe0e54451f96",
-                    firstName: "Nalin",
-                    lastName: "Perera",
-                    role: 'Developer',
-                    email: "nalin@getnada.com",
-                    userName: "963518f3-ee88-4068-b7de-fe0e54451f96",
-                    profileImage: null,
-                    totalTask: 25,
-                    completed: 3,
-                    progress: 0.2
-                },
-                {
-                    userId: "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
-                    idpUserId: "5421cabf-32cb-48c9-9820-35e723bd6e13",
-                    firstName: "Naveen",
-                    lastName: "Perera",
-                    role: 'Developer',
-                    email: "naveenperera@gmail.com",
-                    userName: "5421cabf-32cb-48c9-9820-35e723bd6e13",
-                    profileImage: "https://arimac-pmtool.s3-ap-southeast-1.amazonaws.com/profileImage_1584904875259_image_4.jpg",
-                    totalTask: 25,
-                    completed: 3,
-                    progress: 0.1
-                },
-                {
-                    userId: "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
-                    idpUserId: "5421cabf-32cb-48c9-9820-35e723bd6e13",
-                    firstName: "Naveen",
-                    lastName: "Perera",
-                    role: 'Developer',
-                    email: "naveenperera@gmail.com",
-                    userName: "5421cabf-32cb-48c9-9820-35e723bd6e13",
-                    profileImage: "https://arimac-pmtool.s3-ap-southeast-1.amazonaws.com/profileImage_1584904875259_image_4.jpg",
-                    totalTask: 25,
-                    completed: 3,
-                    progress: 0.7
-                }
-            ],
+            owner: [],
+            admins: [],
+            users: [],
+            dataLoading : false,
         };
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) { }
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if(prevProps.isActive !== this.props.isActive
+          && this.props.isActive){
+            AsyncStorage.getItem('userID').then(userID => {
+                if (userID) {
+                    this.fetchData(userID);
+                } 
+            });
+        }
+    }
 
     componentDidMount() {
+        AsyncStorage.getItem('userID').then(userID => {
+            if (userID) {
+                this.fetchData(userID);
+            } 
+        });
+    }
+
+    async fetchData(userID){
+        let selectedProjectID = this.props.selectedProjectID;
+        this.setState({dataLoading:true});
+        projectPeopleData = await APIServices.getProjectPeopleData(selectedProjectID,userID);
+        if(projectPeopleData.message == 'success'){
+            let ownerArray = [];
+            let adminsArray = [];
+            let usersArray = [];
+            ownerArray =  projectPeopleData.data.filter(function(obj) {
+                return obj.projectRoleId == 1;
+            });
+            adminsArray =  projectPeopleData.data.filter(function(obj) {
+                return obj.projectRoleId == 2;
+            });
+            usersArray =  projectPeopleData.data.filter(function(obj) {
+                return obj.projectRoleId == 3;
+            });
+
+            this.setState({
+                owner : ownerArray,
+                admins : adminsArray,
+                users : usersArray,
+                dataLoading:false
+            });
+        }else{
+            this.setState({dataLoading:false});
+        }
+    }
+
+    async tabOpen() {
+        AsyncStorage.getItem('userID').then(userID => {
+            if (userID) {
+                this.fetchData(userID);
+            } 
+        });
     }
 
     goToAddPeople = () => {
@@ -142,7 +101,7 @@ class PeopleScreen extends Component {
     }
 
     userIcon = function (item) {
-        let userImage = item.profileImage
+        let userImage = item.assigneeProfileImage
         if(userImage){
           return (
               <FadeIn>
@@ -162,16 +121,16 @@ class PeopleScreen extends Component {
         }
     };
 
-
-
     renderPeopleList(item) {
+        let progress = (item.tasksCompleted/item.totalTasks);
         return (
             <TouchableOpacity style={styles.mainContainer} onPress={() => this.props.navigation.navigate('ViewUserScreen', { userItem: item })}>
+                <NavigationEvents onWillFocus={payload => this.tabOpen(payload)} />
                 <View style={styles.userView}>
                     {this.userIcon(item)}
                     <View style={{ flex: 1 }}>
-                        <Text style={styles.text}>{item.role}</Text>
-                        <Text style={styles.subText}>{item.firstName + ' ' + item.lastName}</Text>
+                        <Text style={styles.text}>{item.projectJobRoleName}</Text>
+                        <Text style={styles.subText}>{item.assigneeFirstName + ' ' + item.assigneeLastName}</Text>
                     </View>
                     <View style={styles.controlView}>
                         <TouchableOpacity onPress={() => this.goToEditPeople(item)}>
@@ -187,30 +146,30 @@ class PeopleScreen extends Component {
                                 source={require('../../../asserts/img/bin.png')}
                             />
                         </TouchableOpacity>
-
                     </View>
                 </View>
-                <Text style={styles.subText}>{item.completed + ' / ' + item.totalTask + ' Tasks Completed'}</Text>
+                <Text style={styles.subText}>{item.tasksCompleted + ' / ' + item.totalTasks + ' Tasks Completed'}</Text>
                 <View style={styles.progressBarContainer}>
-                    <Progress.Bar progress={item.progress} 
-                width={null}
-                animated={true}
-                color={colors.lightGreen}
-                unfilledColor={colors.lightRed}
-                borderWidth={0}
-                height={14}
-                borderRadius={10}
+                    <Progress.Bar 
+                        progress={progress} 
+                        width={null}
+                        animated={true}
+                        color={colors.lightGreen}
+                        unfilledColor={colors.lightRed}
+                        borderWidth={0}
+                        height={14}
+                        borderRadius={10}
                 />
-                </View>
-                
+                </View>    
             </TouchableOpacity>
         );
     }
 
-
-
-
     render() {
+        let dataLoading = this.state.dataLoading;
+        let owner = this.state.owner;
+        let admins = this.state.admins;
+        let users = this.state.users;
         return (
             <View>
                 <TouchableOpacity onPress={() => this.goToAddPeople()}>
@@ -261,6 +220,7 @@ class PeopleScreen extends Component {
                         // refreshing={isFetching}
                     />
                 </ScrollView>
+                {dataLoading && <Loader/>}
             </View>
         );
     }
@@ -283,7 +243,6 @@ const styles = EStyleSheet.create({
         marginTop: '17rem',
         flexDirection: 'row',
         alignItems: 'center',
-        // justifyContent: 'center',
         paddingHorizontal: '12rem',
         height: '55rem',
         marginHorizontal: '20rem',
@@ -307,11 +266,9 @@ const styles = EStyleSheet.create({
         backgroundColor: colors.projectBgColor,
         borderRadius: 5,
         height: '60rem',
-        // marginTop: '7rem',
         flexDirection: 'row',
         alignItems: 'center',
         paddingHorizontal: '12rem',
-        // marginHorizontal: '20rem',
       },
       userIcon: {
         width: '45rem',
@@ -348,7 +305,7 @@ const styles = EStyleSheet.create({
       subTitle: {
         marginHorizontal: '20rem',
         fontSize: '16rem',
-        color: 'black',
+        color: colors.projDetailsProjectName,
         fontFamily: 'CircularStd-Medium',
         textAlign: 'left',
         top: '12rem',
