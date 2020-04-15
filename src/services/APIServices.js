@@ -19,6 +19,8 @@ import {
 
     GET_ALL_USERS_BY_PROJECT_ID,
     ADD_PEOPLE_TO_PROJECT,
+    GET_TASK_IN_PROJECT,
+    UPDATE_PROJECT_TASK
 
 } from '../api/API';
 
@@ -168,7 +170,58 @@ function getAllUsersByProjectId(projectID) {
         url: GET_ALL_USERS_BY_PROJECT_ID+'/'+projectID,
         method: 'GET'
     }, true,true,true);
-}
+};
+
+function getProjecTaskData(projectID,selectedProjectTaskID) {
+    return request({
+        url: GET_TASK_IN_PROJECT+'/'+projectID +'/tasks/'+selectedProjectTaskID,
+        method: 'GET'
+    }, true,false,true);
+};
+
+function updateTaskNameData(projectID,taskID,text) {
+    return request({
+        url: UPDATE_PROJECT_TASK +'/'+projectID+'/tasks/'+taskID,
+        method: 'PUT',
+        data: {
+            taskName : text,
+            taskType: "project"
+        }
+    }, true,false,true);
+};
+
+function updateTaskStatusData(projectID,taskID,searchValue) {
+    return request({
+        url: UPDATE_PROJECT_TASK +'/'+projectID+'/tasks/'+taskID,
+        method: 'PUT',
+        data: {
+            taskStatus : searchValue,
+            taskType: "project"
+        }
+    }, true,false,true);
+};
+
+function updateTaskDueDateData(projectID,taskID,dueDate) {
+    return request({
+        url: UPDATE_PROJECT_TASK +'/'+projectID+'/tasks/'+taskID,
+        method: 'PUT',
+        data: {
+            taskDueDate : dueDate,
+            taskType: "project"
+        }
+    }, true,false,true);
+};
+
+function updateTaskReminderDateData(projectID,taskID,reminderDate) {
+    return request({
+        url: UPDATE_PROJECT_TASK +'/'+projectID+'/tasks/'+taskID,
+        method: 'PUT',
+        data: {
+            taskRemindOnDate : reminderDate,
+            taskType: "project"
+        }
+    }, true,false,true);
+};
 
 const APIServices = {
     getAllProjectsByUserData,
@@ -186,7 +239,12 @@ const APIServices = {
     getProjectPeopleData,
     getAllUsersByProjectId,
     getActiveUsers,
-    addUserToProjectData
+    addUserToProjectData,
+    getProjecTaskData,
+    updateTaskNameData,
+    updateTaskStatusData,
+    updateTaskDueDateData,
+    updateTaskReminderDateData
 };
 
 export default APIServices;

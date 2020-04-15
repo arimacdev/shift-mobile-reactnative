@@ -259,11 +259,13 @@ class TasksTabScreen extends Component {
   };
 
   renderProjectList(item) {
+    let selectedProjectID = this.state.selectedProjectID;
     return (
       <TouchableOpacity
         onPress={() =>
           this.props.navigation.navigate('TasksDetailsScreen', {
-            taskDetails: item,
+            taskDetails : item,
+            selectedProjectID : selectedProjectID
           })
         }>
         <View style={styles.projectView}>
