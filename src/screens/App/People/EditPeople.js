@@ -35,9 +35,13 @@ class EditPeople extends Component {
 
     componentDidUpdate(prevProps, prevState, snapshot) { }
 
-    componentDidMount() { 
-        const {navigation: {state: {params}}} = this.props;
+    componentDidMount() {
+        const { navigation: { state: { params } } } = this.props;
         let peopleID = params.userItem;
+        this.setState({
+            role: peopleID.role,
+            name: peopleID.firstName + ' ' + peopleID.lastName
+        })
         console.log(peopleID)
     }
 
@@ -57,34 +61,47 @@ class EditPeople extends Component {
     render() {
         return (
             <ScrollView style={styles.container}>
-                <View style={[styles.taskFieldView, { marginTop: 30 }]}>
-                    <TextInput
-                        style={[styles.textInput, { width: '95%' }]}
-                        placeholder={'Type a name to add'}
-                        value={this.state.name}
-                        onChangeText={text => this.onPeopleNameChange(text)}
-                    />
-                </View>
-                <View style={[styles.taskFieldView]}>
-                    <TextInput
-                        style={[styles.textInput, { width: '95%' }]}
-                        placeholder={'Role'}
-                        value={this.state.role}
-                        onChangeText={text => this.onPeopleNameChange(text)}
-                    />
-                </View>
-                <View style={styles.checkBoxContainer}>
-                    <View style={{ flex: 1 }}>
-                        <RoundCheckbox
-                            size={18}
-                            checked={this.state.isSelected}
-                            backgroundColor={colors.lightGreen}
-                            onValueChange={(newValue) => this.toggleCheckBox(newValue)}
-                            borderColor={'gray'}
-                        />
+                <View style={styles.topContainer}>
+                    <View style={styles.editableLable}>
+                        <View style={{ flex: 1 }}>
+                            <Text style={styles.boxText}>Update the Role and Admin for</Text>
+                        </View>
+                        <View style={{ flex: 1 }}>
+                            <TextInput
+                                style={[styles.boxTextInput, { width: '100%' }]}
+                                placeholder={this.state.name}
+                                value={this.state.name}
+                                editable={false}
+                                onChangeText={text => this.onPeopleNameChange(text)}
+                            />
+                        </View>
                     </View>
-                    <View style={styles.CheckBoxLableContainer}>
-                        <Text style={styles.checkBoxText}>Add as a Admin</Text>
+                    <View style={styles.editableLable}>
+                        <View style={{ flex: 1 }}>
+                            <Text style={styles.boxText}>Role</Text>
+                        </View>
+                        <View style={{ flex: 1 }}>
+                            <TextInput
+                                style={[styles.boxTextInput, { width: '100%' }]}
+                                placeholder={this.state.role}
+                                value={this.state.role}
+                                onChangeText={text => this.onPeopleNameChange(text)}
+                            />
+                        </View>
+                    </View>
+                    <View style={styles.checkBoxContainer}>
+                        <View style={{ flex: 1 }}>
+                            <RoundCheckbox
+                                size={18}
+                                checked={this.state.isSelected}
+                                backgroundColor={colors.lightGreen}
+                                onValueChange={(newValue) => this.toggleCheckBox(newValue)}
+                                borderColor={'gray'}
+                            />
+                        </View>
+                        <View style={styles.CheckBoxLableContainer}>
+                            <Text style={styles.checkBoxText}>Add as a Admin</Text>
+                        </View>
                     </View>
                 </View>
                 <View style={styles.bottomButtonContainer}>
@@ -132,9 +149,12 @@ class EditPeople extends Component {
 
 const styles = EStyleSheet.create({
 
-    container: { 
-        flex: 1, 
-        flexDirection: 'column' 
+    container: {
+        flex: 1,
+        flexDirection: 'column',
+    },
+    topContainer: {
+        marginTop: '20rem'
     },
     taskFieldView: {
         backgroundColor: colors.projectBgColor,
@@ -162,6 +182,16 @@ const styles = EStyleSheet.create({
         textAlign: 'left',
         // width: '95%'
     },
+    boxTextInput: {
+        fontSize: '12rem',
+        color: colors.gray,
+        textAlign: 'center',
+        lineHeight: '17rem',
+        fontFamily: 'HelveticaNeuel',
+        textAlign: 'left',
+        bottom: '5rem'
+        // width: '95%'
+    },
     checkBoxText: {
         fontSize: '12rem',
         color: colors.gray,
@@ -169,6 +199,18 @@ const styles = EStyleSheet.create({
         lineHeight: '17rem',
         fontFamily: 'HelveticaNeuel',
         textAlign: 'left',
+        // width: '95%'
+    },
+    boxText: {
+        fontSize: '12rem',
+        color: 'black',
+        textAlign: 'center',
+        // lineHeight: '10rem',
+        fontWeight: 'bold',
+        fontFamily: 'HelveticaNeuel',
+        textAlign: 'left',
+        paddingTop: '20rem',
+        marginHorizontal: '4rem',
         // width: '95%'
     },
     button: {
@@ -219,6 +261,20 @@ const styles = EStyleSheet.create({
     CheckBoxLableContainer: {
         flex: 4,
         right: '40rem'
+    },
+    editableLable: {
+        flex: 1,
+        flexDirection: 'column',
+        backgroundColor: colors.projectBgColor,
+        borderRadius: 5,
+        // width: '330rem',
+        marginTop: '0rem',
+        marginBottom: '7rem',
+        // alignItems: 'center',
+        // justifyContent: 'center',
+        paddingHorizontal: '12rem',
+        height: '70rem',
+        marginHorizontal: '20rem',
     }
 });
 
