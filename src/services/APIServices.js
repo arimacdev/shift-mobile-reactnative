@@ -15,7 +15,9 @@ import {
     DELETE_PROJECT,
 
     GET_PROJECT_DETAILS_TASK,
-    GET_PROJECT_PEOPLE
+    GET_PROJECT_PEOPLE,
+
+    GET_ALL_USERS_BY_PROJECT_ID
 
 } from '../api/API';
 
@@ -140,6 +142,13 @@ function getProjectPeopleData(projectID,userID) {
     }, true,true,true);
 }
 
+function getAllUsersByProjectId(projectID) {
+    return request({
+        url: GET_ALL_USERS_BY_PROJECT_ID+'/'+projectID,
+        method: 'GET'
+    }, true,true,true);
+}
+
 const APIServices = {
     getAllProjectsByUserData,
     getAllTaskInProjectsData,
@@ -153,7 +162,8 @@ const APIServices = {
     updateProjectData,
     deleteProjectData,
     getProjectTaskDetails,
-    getProjectPeopleData
+    getProjectPeopleData,
+    getAllUsersByProjectId
 };
 
 export default APIServices;

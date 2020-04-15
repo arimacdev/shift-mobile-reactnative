@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   View,
   FlatList,
@@ -9,14 +9,15 @@ import {
   TextInput,
   ScrollView,
 } from 'react-native';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import * as actions from '../../../redux/actions';
 import colors from '../../../config/colors';
 import icons from '../../../assest/icons/icons';
+import APIServices from '../../../services/APIServices';
 import EStyleSheet from 'react-native-extended-stylesheet';
 const entireScreenWidth = Dimensions.get('window').width;
-EStyleSheet.build({$rem: entireScreenWidth / 380});
-import {Dropdown} from 'react-native-material-dropdown';
+EStyleSheet.build({ $rem: entireScreenWidth / 380 });
+import { Dropdown } from 'react-native-material-dropdown';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import DocumentPicker from 'react-native-document-picker';
 import moment from 'moment';
@@ -61,20 +62,57 @@ class AddNewTasksScreen extends Component {
       reminder: false,
       files: [],
       notes: '',
+      dropPeopleData: []
     };
   }
 
-  componentDidUpdate(prevProps, prevState, snapshot) {}
+  componentDidUpdate(prevProps, prevState, snapshot) { }
 
-  componentDidMount() {}
+  async componentDidMount() {
+    const { navigation: { state: { params } } } = this.props;
+    let selectedProjectID = this.props.selectedProjectID;
+    console.log('props.....',this.props.navigation.state.params.projDetails.projectId)
+    console.log('props.....2222',this.props.selectedProjectID)
+
+
+    projectPeopleData = await APIServices.getAllUsersByProjectId(this.props.selectedProjectID);
+        if(projectPeopleData.message == 'success'){
+            console.log(projectPeopleData.data)
+            this.setState({ dropPeopleData: projectPeopleData.data})
+            // let ownerArray = [];
+            // let adminsArray = [];
+            // let usersArray = [];
+            // ownerArray =  projectPeopleData.data.filter(function(obj) {
+            //     return obj.projectRoleId == 1;
+            // });
+            // adminsArray =  projectPeopleData.data.filter(function(obj) {
+            //     return obj.projectRoleId == 2;
+            // });
+            // usersArray =  projectPeopleData.data.filter(function(obj) {
+            //     return obj.projectRoleId == 3;
+            // });
+
+            // this.setState({
+            //     owner : ownerArray,
+            //     admins : adminsArray,
+            //     users : usersArray,
+            //     dataLoading:false
+            // });
+        }else{
+            this.setState({dataLoading:false});
+        }
+
+
+
+  }
 
   onTaskNameChange(text) {
-    this.setState({taskName: text});
+    this.setState({ taskName: text });
   }
 
   renderBase() {
     return (
-      <View style={{justifyContent: 'center', flex: 1}}>
+      <View style={{ justifyContent: 'center', flex: 1 }}>
         <Image style={styles.dropIcon} source={icons.arrowDark} />
       </View>
     );
@@ -181,7 +219,7 @@ class AddNewTasksScreen extends Component {
     let filesArray = this.state.files.filter(item => {
       return item.uri !== uri;
     });
-    this.setState({files: filesArray});
+    this.setState({ files: filesArray });
   }
 
   renderDocPickeredView(item) {
@@ -196,7 +234,7 @@ class AddNewTasksScreen extends Component {
           marginRight: 5,
           marginBottom: 5,
         }}>
-        <View style={{justifyContent: 'center', marginLeft: 10}}>
+        <View style={{ justifyContent: 'center', marginLeft: 10 }}>
           <Image
             style={styles.gallaryIcon}
             source={icons.gallary}
@@ -211,10 +249,10 @@ class AddNewTasksScreen extends Component {
             justifyContent: 'center',
             flex: 1,
           }}>
-          <Text style={{marginTop: -2}}>
+          <Text style={{ marginTop: -2 }}>
             {item.name.substring(0, 5)}...{item.name.substr(-7)}
           </Text>
-          <Text style={{fontSize: 10, marginTop: -2, color: colors.lightgray}}>
+          <Text style={{ fontSize: 10, marginTop: -2, color: colors.lightgray }}>
             {item.dateTime}
           </Text>
         </View>
@@ -262,7 +300,7 @@ class AddNewTasksScreen extends Component {
           res.size,
         );
       }
-      this.setState({files: this.state.files});
+      this.setState({ files: this.state.files });
       console.log(this.state.files);
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
@@ -274,15 +312,15 @@ class AddNewTasksScreen extends Component {
   }
 
   onNotesChange(text) {
-    this.setState({notes: text});
+    this.setState({ notes: text });
   }
 
   render() {
     return (
-      <ScrollView style={{marginBottom: 90}}>
-        <View style={[styles.taskFieldView, {marginTop: 30}]}>
+      <ScrollView style={{ marginBottom: 90 }}>
+        <View style={[styles.taskFieldView, { marginTop: 30 }]}>
           <TextInput
-            style={[styles.textInput, {width: '95%'}]}
+            style={[styles.textInput, { width: '95%' }]}
             placeholder={'Task name'}
             value={this.state.taskName}
             onChangeText={text => this.onTaskNameChange(text)}
@@ -290,32 +328,32 @@ class AddNewTasksScreen extends Component {
         </View>
         <View style={styles.taskFieldView}>
           <Dropdown
-            style={{paddingLeft: 5}}
+            style={{ paddingLeft: 5 }}
             label=""
             labelFontSize={0}
             fontSize={13}
-            data={dropData}
+            data={this.state.dropPeopleData}
             textColor={colors.gray}
             error={''}
             animationDuration={0.5}
-            containerStyle={{width: '100%'}}
-            overlayStyle={{width: '100%'}}
-            pickerStyle={{width: '89%', marginTop: 70, marginLeft: 15}}
+            containerStyle={{ width: '100%' }}
+            overlayStyle={{ width: '100%' }}
+            pickerStyle={{ width: '89%', marginTop: 70, marginLeft: 15 }}
             dropdownPosition={0}
             value={'Assignee'}
             itemColor={'black'}
             selectedItemColor={'black'}
-            dropdownOffset={{top: 10}}
+            dropdownOffset={{ top: 10 }}
             baseColor={colors.projectBgColor}
             // renderBase={this.renderBase}
             renderAccessory={this.renderBase}
-            itemTextStyle={{marginLeft: 15}}
+            itemTextStyle={{ marginLeft: 15 }}
             itemPadding={10}
           />
         </View>
         <View style={styles.taskFieldView}>
           <Dropdown
-            style={{paddingLeft: 5}}
+            style={{ paddingLeft: 5 }}
             label=""
             labelFontSize={0}
             fontSize={13}
@@ -323,27 +361,27 @@ class AddNewTasksScreen extends Component {
             textColor={colors.gray}
             error={''}
             animationDuration={0.5}
-            containerStyle={{width: '100%'}}
-            overlayStyle={{width: '100%'}}
-            pickerStyle={{width: '89%', marginTop: 70, marginLeft: 15}}
+            containerStyle={{ width: '100%' }}
+            overlayStyle={{ width: '100%' }}
+            pickerStyle={{ width: '89%', marginTop: 70, marginLeft: 15 }}
             dropdownPosition={0}
             value={'Tasks Status'}
             itemColor={'black'}
             selectedItemColor={'black'}
-            dropdownOffset={{top: 10}}
+            dropdownOffset={{ top: 10 }}
             baseColor={colors.projectBgColor}
             // renderBase={this.renderBase}
             renderAccessory={this.renderBase}
-            itemTextStyle={{marginLeft: 15}}
+            itemTextStyle={{ marginLeft: 15 }}
             itemPadding={10}
           />
         </View>
         <TouchableOpacity
           onPress={() =>
-            this.setState({showPicker: true, reminder: false, mode: 'date'})
+            this.setState({ showPicker: true, reminder: false, mode: 'date' })
           }>
-          <View style={[styles.taskFieldView, {flexDirection: 'row'}]}>
-            <Text style={[styles.textInput, {flex: 1}]}>
+          <View style={[styles.taskFieldView, { flexDirection: 'row' }]}>
+            <Text style={[styles.textInput, { flex: 1 }]}>
               {this.state.selectedDate == ''
                 ? 'Due Date'
                 : this.state.selectedDate}
@@ -357,15 +395,15 @@ class AddNewTasksScreen extends Component {
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() =>
-            this.setState({showPicker: true, reminder: true, mode: 'date'})
+            this.setState({ showPicker: true, reminder: true, mode: 'date' })
           }>
-          <View style={[styles.taskFieldView, {flexDirection: 'row'}]}>
-            <Text style={[styles.textInput, {flex: 1}]}>
+          <View style={[styles.taskFieldView, { flexDirection: 'row' }]}>
+            <Text style={[styles.textInput, { flex: 1 }]}>
               {this.state.selectedDateReminder == ''
                 ? 'Reminder'
                 : this.state.selectedTimeReminder +
-                  ' ' +
-                  this.state.selectedDateReminder}
+                ' ' +
+                this.state.selectedDateReminder}
             </Text>
             <Image
               style={styles.calendarIcon}
@@ -379,28 +417,28 @@ class AddNewTasksScreen extends Component {
             <View
               style={[
                 styles.taskFieldDocPickView,
-                {flexDirection: 'row', flexWrap: 'wrap'},
+                { flexDirection: 'row', flexWrap: 'wrap' },
               ]}>
               {this.state.files.map(item => {
                 return this.renderDocPickeredView(item);
               })}
             </View>
           ) : (
-            <View style={[styles.taskFieldView, {flexDirection: 'row'}]}>
-              <Image
-                style={[styles.calendarIcon, {marginRight: 10}]}
-                source={icons.upload}
-                resizeMode={'center'}
-              />
-              <Text style={[styles.textInput, {flex: 1}]}>Add files</Text>
-            </View>
-          )}
+              <View style={[styles.taskFieldView, { flexDirection: 'row' }]}>
+                <Image
+                  style={[styles.calendarIcon, { marginRight: 10 }]}
+                  source={icons.upload}
+                  resizeMode={'center'}
+                />
+                <Text style={[styles.textInput, { flex: 1 }]}>Add files</Text>
+              </View>
+            )}
         </TouchableOpacity>
-        <View style={[styles.taskFieldView, {height: 160}]}>
+        <View style={[styles.taskFieldView, { height: 160 }]}>
           <TextInput
             style={[
               styles.textInput,
-              {width: '95%', textAlignVertical: 'top', height: 150},
+              { width: '95%', textAlignVertical: 'top', height: 150 },
             ]}
             placeholder={'Notes'}
             value={this.state.notes}
@@ -408,19 +446,19 @@ class AddNewTasksScreen extends Component {
             onChangeText={text => this.onNotesChange(text)}
           />
         </View>
-        <TouchableOpacity onPress={() => {}}>
+        <TouchableOpacity onPress={() => { }}>
           <View style={styles.button}>
             <Image
-              style={[styles.bottomBarIcon, {marginRight: 15, marginLeft: 10}]}
+              style={[styles.bottomBarIcon, { marginRight: 15, marginLeft: 10 }]}
               source={icons.taskWhite}
               resizeMode={'center'}
             />
-            <View style={{flex: 1}}>
+            <View style={{ flex: 1 }}>
               <Text style={styles.buttonText}>Add new Task</Text>
             </View>
 
             <Image
-              style={[styles.addIcon, {marginRight: 10}]}
+              style={[styles.addIcon, { marginRight: 10 }]}
               source={icons.add}
               resizeMode={'center'}
             />

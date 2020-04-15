@@ -495,7 +495,7 @@ class TasksTabScreen extends Component {
           </View>
         ) : (
           <View>
-            <AddNewTasksScreen />
+            <AddNewTasksScreen navigation={this.props.navigation}  selectedProjectID={this.state.selectedProjectID} />
           </View>
         )}
 
