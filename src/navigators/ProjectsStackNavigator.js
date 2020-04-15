@@ -96,13 +96,6 @@ export const ProjectsStackNavigator = createStackNavigator(
         header: (
           <Header
             title={'Edit People'}
-            onPress={() => navigation.pop()}
-            isTasks={true}
-            title={
-              navigation.state.params
-                ? navigation.state.params.taskDetails.taskName
-                : ''
-            }
             onPress={() => navigation.goBack()}
           />
         ),
@@ -115,6 +108,23 @@ export const ProjectsStackNavigator = createStackNavigator(
           <Header
             search={true}
             title={'Edit Assignee'}
+            onPress={() => navigation.goBack()}
+          />
+        ),
+      }),
+    },
+    TasksDetailsScreen: {
+      screen: TasksDetailsScreen,
+      navigationOptions: ({navigation}) => ({
+        header: (
+          <Header
+            isTasks={false}
+            navigation={navigation}
+            title={'Task Details'
+              // navigation.state.params
+              //   ? navigation.state.params.taskDetails.taskName
+              //   : ''
+            }
             onPress={() => navigation.goBack()}
           />
         ),

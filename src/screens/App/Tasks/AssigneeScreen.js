@@ -18,7 +18,6 @@ EStyleSheet.build({$rem: entireScreenWidth / 380});
 import AsyncStorage from '@react-native-community/async-storage';
 import Loader from '../../../components/Loader';
 
-
 class AssigneeScreen extends Component {
   constructor(props) {
     super(props);
@@ -48,14 +47,33 @@ class AssigneeScreen extends Component {
     });
   }
 
+  onSelectUser(userName) {
+    const { navigation } = this.props;
+    navigation.state.params.onSelectUser(userName);
+    navigation.goBack();
+  }
+
   renderProjectList(item) {
     return (
-      <TouchableOpacity
-        onPress={() =>
-          this.props.navigation.navigate('TasksScreen', {projDetails: item})
-        }>
-        <View style={styles.projectView}>
-          <Image style={styles.userIcon} source={icons.folder} />
+      <TouchableOpacity onPress={() => this.onSelectUser(item.projectName)}>
+        <View
+          style={[
+            styles.projectView,
+            {
+              backgroundColor:
+                item.projectName == this.props.userName
+                  ? colors.projectBgColor
+                  : '',
+            },
+          ]}>
+          <Image
+            style={styles.userIcon}
+            source={{
+              uri:
+                'https://i.pinimg.com/236x/5e/48/1b/5e481b8fa99c5f0ebc319b93f3c6e076--tiaras-singer.jpg',
+            }}
+            resizeMode="contain"
+          />
           <View style={{flex: 1}}>
             <Text style={styles.text}>{item.projectName}</Text>
           </View>
@@ -69,7 +87,7 @@ class AssigneeScreen extends Component {
     let color = '';
     switch (item.projectStatus) {
       case 'presales':
-        color = '#576377'
+        color = '#576377';
       case 'presalesPD':
         color = '#576377';
       case 'preSalesQS':
@@ -143,7 +161,6 @@ class AssigneeScreen extends Component {
 const styles = EStyleSheet.create({
   backgroundImage: {
     flex: 1,
-
   },
   projectFilerView: {
     backgroundColor: colors.projectBgColor,
@@ -167,17 +184,15 @@ const styles = EStyleSheet.create({
     // fontWeight: 'bold',
   },
   projectView: {
-    // backgroundColor: colors.projectBgColor,
-    // borderRadius: 5,
-    height: '60rem',
-    // marginTop: '7rem',
+    height: '70rem',
     flexDirection: 'row',
     alignItems: 'center',
-    paddingLeft: '12rem',
     marginHorizontal: '20rem',
+    borderBottomWidth: 1,
+    borderBottomColor: colors.lighterGray,
   },
   text: {
-    fontSize: '14rem',
+    fontSize: '12rem',
     color: colors.projectText,
     textAlign: 'center',
     fontWeight: 'bold',
@@ -187,8 +202,9 @@ const styles = EStyleSheet.create({
     marginLeft: '10rem',
   },
   userIcon: {
-    width: '20rem',
-    height: '20rem',
+    width: '50rem',
+    height: '50rem',
+    borderRadius: 120 / 2,
   },
   statusView: {
     backgroundColor: colors.gray,

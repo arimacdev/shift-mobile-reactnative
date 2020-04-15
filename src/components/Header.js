@@ -69,7 +69,7 @@ class Header extends Component {
                                 <Icon name={'ios-arrow-round-back'} style={styles.iconBack} type={'Ionicons'} />
                                 </TouchableOpacity>
                             </View>
-                            <View style={[styles.leftContainer,{flexDirection:'row'}]}>
+                            <View style={[styles.leftContainer,{flexDirection:'row',flex:1}]}>
                                 <TouchableOpacity activeOpacity={0.6} onPress={onPress}>
                                     <Image
                                         source={icons.whiteCircule}
@@ -77,10 +77,10 @@ class Header extends Component {
                                     />
                                 </TouchableOpacity>
                                 <View style={styles.leftContainerFull}>
-                                        <Text style={styles.title}>{title}</Text>
+                                        <Text numberOfLines={1} style={styles.title}>{title}</Text>
                                     </View>
                                 </View>
-                            <View style={styles.rightContainer} >
+                            <View style={[styles.rightContainer,{flex: 0}]} >
                                 <TouchableOpacity style={{alignItems:'flex-end'}} onPress={() => this.props.navigation.navigate('ProjectsSearchScreen')}>
                                     <Image
                                         source={icons.editWhite}

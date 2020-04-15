@@ -6,6 +6,8 @@ import {
   Dimensions,
   Image,
   TouchableOpacity,
+  TextInput,
+  ScrollView,
 } from 'react-native';
 import {connect} from 'react-redux';
 import * as actions from '../../../redux/actions';
@@ -22,7 +24,6 @@ import moment from 'moment';
 import FadeIn from 'react-native-fade-in-image';
 import {SkypeIndicator} from 'react-native-indicators';
 import DateTimePicker from '@react-native-community/datetimepicker';
-
 
 const Placeholder = () => (
   <View style={styles.landing}>
@@ -80,6 +81,12 @@ let bottomData = [
 ];
 
 let taskData = [
+  {
+    id: 10,
+    name: 'Task Name',
+    icon: icons.taskDark,
+    renderImage: false,
+  },
   {
     id: 0,
     name: 'Name',
@@ -150,6 +157,7 @@ class TasksDetailsScreen extends Component {
       timeReminder: new Date(),
       mode: 'date',
       reminder: false,
+      taskName: '',
     };
   }
 
@@ -196,10 +204,12 @@ class TasksDetailsScreen extends Component {
 
   componentDidMount() {
     let selectedProjectID = this.props.selectedProjectID;
+    let {taskDetails} = this.props.navigation.state.params;
 
     this.setState(
       {
         selectedProjectID: selectedProjectID,
+        taskName:taskDetails.taskName
       },
       () => {
         this.getAllTaskInProject();
@@ -260,14 +270,14 @@ class TasksDetailsScreen extends Component {
     if (event.type == 'set') {
       if (this.state.reminder) {
         this.setState({
-          remindDate: 'Due on '+newDate,
+          remindDate: 'Due on ' + newDate,
           showPicker: false,
           showTimePicker: false,
           dateReminder: new Date(selectedDate),
         });
       } else {
         this.setState({
-          duedate: 'Due on '+newDate,
+          duedate: 'Due on ' + newDate,
           showPicker: false,
           showTimePicker: false,
           date: new Date(selectedDate),
@@ -373,20 +383,32 @@ class TasksDetailsScreen extends Component {
     }
   };
 
+  onSelectUser(name) {
+    this.setState({name: name});
+  }
+
+  onTaskNameChange(text) {
+    this.setState({taskName: text});
+  }
+
   onItemPress(item) {
     switch (item.id) {
+      case 10:
+        break;
       case 0:
-        this.props.navigation.navigate('AssigneeScreen');
-        // this.setState({name: 'sdssssssssss'});
+        this.props.navigation.navigate('AssigneeScreen', {
+          userName: '',
+          onSelectUser: name => this.onSelectUser(name),
+        });
         break;
       case 1:
         this.props.navigation.navigate('SubTaskScreen');
         break;
       case 2:
-        this.setState({showPicker:true, reminder:false});
+        this.setState({showPicker: true, reminder: false});
         break;
       case 3:
-        this.setState({showPicker:true, reminder:true});
+        this.setState({showPicker: true, reminder: true});
         break;
       case 4:
         this.props.navigation.navigate('NotesScreen');
@@ -405,6 +427,9 @@ class TasksDetailsScreen extends Component {
   renderDetails(item) {
     let value = '';
     switch (item.id) {
+      case 10:
+        value = this.state.taskName;
+        break;
       case 0:
         value = this.state.name;
         break;
@@ -420,7 +445,33 @@ class TasksDetailsScreen extends Component {
 
     return (
       <View style={{flex: 1}}>
-        <Text style={styles.text}>{value !== '' ? value : item.name}</Text>
+        {item.id == 10 ? (
+          <TextInput
+            style={[
+              styles.text,
+              {
+                flex: 1,
+                marginLeft: 5,
+                color:
+                  value !== '' ? colors.darkBlue : colors.projectTaskNameColor,
+              },
+            ]}
+            placeholder={item.name}
+            value={this.state.taskName}
+            onChangeText={text => this.onTaskNameChange(text)}
+          />
+        ) : (
+          <Text
+            style={[
+              styles.text,
+              {
+                color:
+                  value !== '' ? colors.darkBlue : colors.projectTaskNameColor,
+              },
+            ]}>
+            {value !== '' ? value : item.name}
+          </Text>
+        )}
       </View>
     );
   }
@@ -591,7 +642,7 @@ class TasksDetailsScreen extends Component {
     let myTaskByProjectLoading = this.props.myTaskByProjectLoading;
 
     return (
-      <View style={styles.backgroundImage}>
+      <ScrollView style={styles.backgroundImage}>
         {this.state.index !== 2 ? (
           <View>
             <View style={styles.projectFilerView}>
@@ -652,11 +703,32 @@ class TasksDetailsScreen extends Component {
               )}
             </View>
             <FlatList
-              style={{marginBottom: EStyleSheet.value('160rem')}}
+              // style={{marginBottom: EStyleSheet.value('160rem')}}
               data={index == 0 ? taskData : filterdDataMyTasks}
               renderItem={({item}) => this.renderProjectList(item)}
               keyExtractor={item => item.taskId}
             />
+            <TouchableOpacity onPress={() => this.deleteTask()}>
+              <View style={styles.buttonDelete}>
+                <Image
+                  style={[
+                    styles.bottomBarIcon,
+                    {marginRight: 15, marginLeft: 10},
+                  ]}
+                  source={icons.taskWhite}
+                  resizeMode={'center'}
+                />
+                <View style={{flex: 1}}>
+                  <Text style={styles.buttonText}>Delete Task</Text>
+                </View>
+
+                <Image
+                  style={[styles.deleteIcon, {marginRight: 10}]}
+                  source={icons.deleteWhite}
+                  resizeMode={'center'}
+                />
+              </View>
+            </TouchableOpacity>
             {this.state.showPicker ? this.renderDatePicker() : null}
             {this.state.showTimePicker ? this.renderTimePicker() : null}
           </View>
@@ -666,10 +738,10 @@ class TasksDetailsScreen extends Component {
           </View>
         )}
 
-        {this.renderBottomBar()}
+        {/* {this.renderBottomBar()} */}
         {allTaskByProjectLoading && <Loader />}
         {myTaskByProjectLoading && <Loader />}
-      </View>
+      </ScrollView>
     );
   }
 }
@@ -792,6 +864,30 @@ const styles = EStyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  buttonDelete: {
+    flexDirection: 'row',
+    backgroundColor: colors.lightRed,
+    borderRadius: 5,
+    marginTop: '40rem',
+    marginBottom: '30rem',
+    flexDirection: 'row',
+    alignItems: 'center',
+    // justifyContent: 'center',
+    paddingHorizontal: '12rem',
+    height: '55rem',
+    marginHorizontal: '20rem',
+  },
+  buttonText: {
+    fontSize: '12rem',
+    color: colors.white,
+    lineHeight: '17rem',
+    fontFamily: 'HelveticaNeuel',
+    fontWeight: 'bold',
+  },
+  deleteIcon: {
+    width: '28rem',
+    height: '28rem',
   },
 });
 
