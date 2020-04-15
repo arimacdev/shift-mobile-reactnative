@@ -19,46 +19,48 @@ import {
 
     GET_ALL_USERS_BY_PROJECT_ID,
     ADD_PEOPLE_TO_PROJECT,
+    ADD_TASK_TO_PROJECT,
+    ADD_FILE_TO_TASK
 
 } from '../api/API';
 
- function getAllProjectsByUserData(userID) {
+function getAllProjectsByUserData(userID) {
     return request({
-        url: GET_ALL_PROJECTS_BY_USER + 'userId='+userID,
+        url: GET_ALL_PROJECTS_BY_USER + 'userId=' + userID,
         method: 'GET'
-    }, true,false,false);
+    }, true, false, false);
 }
 
-function getAllTaskInProjectsData(userID,projectID) {
+function getAllTaskInProjectsData(userID, projectID) {
     return request({
-        url: GET_MY_TASKS_BY_PROJECT + projectID + '/tasks?userId='+userID,
+        url: GET_MY_TASKS_BY_PROJECT + projectID + '/tasks?userId=' + userID,
         method: 'GET'
-    }, true,true,false);
+    }, true, true, false);
 }
 
 
-function getMyTaskInProjectsData(userID,projectID) {
+function getMyTaskInProjectsData(userID, projectID) {
     return request({
-        url: GET_ALL_TASKS_BY_PROJECT + projectID + '/tasks/user?userId='+userID,
+        url: GET_ALL_TASKS_BY_PROJECT + projectID + '/tasks/user?userId=' + userID,
         method: 'GET'
-    }, true,true,false);
+    }, true, true, false);
 }
 
 function getAllUsersData() {
     return request({
         url: GET_ALL_USERS,
         method: 'GET'
-    }, true,false,false);
+    }, true, false, false);
 }
 
 function getUserData(userID) {
     return request({
-        url: GET_ALL_USER+'/'+userID,
+        url: GET_ALL_USER + '/' + userID,
         method: 'GET'
-    }, true,false,false);
+    }, true, false, false);
 }
 
-function addUserData(firstName,lastName,userName,email,password,confirmPassword) {
+function addUserData(firstName, lastName, userName, email, password, confirmPassword) {
     return request({
         url: CREATE_USER,
         method: 'POST',
@@ -67,108 +69,145 @@ function addUserData(firstName,lastName,userName,email,password,confirmPassword)
             lastName: lastName,
             userName: userName,
             email: email,
-            password:password,
+            password: password,
         }
-    }, true,false,false);
+    }, true, false, false);
 }
 
-function editUserData(firstName,lastName,userName,email,password,confirmPassword,userID) {
+function editUserData(firstName, lastName, userName, email, password, confirmPassword, userID) {
     return request({
-        url: UPDATE_USER+'/'+userID,
+        url: UPDATE_USER + '/' + userID,
         method: 'PUT',
         data: {
             firstName: firstName,
             lastName: lastName,
             userName: userName,
             email: email,
-            password:password,
+            password: password,
         }
-    }, true,false,false);
+    }, true, false, false);
 };
 
-function addprojectData(projectName,projectClient,IsoStartDate,IsoSEndDate,projectOwner) {
+function addprojectData(projectName, projectClient, IsoStartDate, IsoSEndDate, projectOwner) {
     return request({
         url: ADD_PROJECT,
         method: 'POST',
         data: {
-            projectOwner : projectOwner,
-            projectName : projectName,
-            clientId : projectClient,
-            projectStartDate : IsoStartDate,
-            projectEndDate : IsoSEndDate
+            projectOwner: projectOwner,
+            projectName: projectName,
+            clientId: projectClient,
+            projectStartDate: IsoStartDate,
+            projectEndDate: IsoSEndDate
         }
-    }, true,false,false);
+    }, true, false, false);
 }
 
 function getProjectData(projectID) {
     return request({
-        url: GET_PROJECT+'/'+projectID,
+        url: GET_PROJECT + '/' + projectID,
         method: 'GET'
-    }, true,false,true);
+    }, true, false, true);
 }
 
-function updateProjectData(projectID,userID,projectName,projectClient,IsoStartDate,IsoSEndDate,projectStatus) {
+function updateProjectData(projectID, userID, projectName, projectClient, IsoStartDate, IsoSEndDate, projectStatus) {
     return request({
-        url: UPDATE_PROJECT +'/'+projectID,
+        url: UPDATE_PROJECT + '/' + projectID,
         method: 'PUT',
         data: {
-            modifierId : userID,
-            projectName : projectName,
-            clientId : projectClient,
-            projectStatus : projectStatus,
-            projectStartDate : IsoStartDate,
-            projectEndDate : IsoSEndDate
+            modifierId: userID,
+            projectName: projectName,
+            clientId: projectClient,
+            projectStatus: projectStatus,
+            projectStartDate: IsoStartDate,
+            projectEndDate: IsoSEndDate
         }
-    }, true,false,false);
+    }, true, false, false);
 };
 
 function deleteProjectData(projectID) {
     return request({
-        url: DELETE_PROJECT+'/'+projectID,
+        url: DELETE_PROJECT + '/' + projectID,
         method: 'DELETE'
-    }, true,false,true);
+    }, true, false, true);
 }
 
 function getProjectTaskDetails(projectID) {
     return request({
-        url: GET_PROJECT_DETAILS_TASK+'/'+projectID+'/tasks/completion',
+        url: GET_PROJECT_DETAILS_TASK + '/' + projectID + '/tasks/completion',
         method: 'GET'
-    }, true,false,true);
+    }, true, false, true);
 };
 
-function getProjectPeopleData(projectID,userID) {
+function getProjectPeopleData(projectID, userID) {
     return request({
-        url: GET_PROJECT_PEOPLE+'/'+projectID+'/tasks/'+userID+'/completion/details',
+        url: GET_PROJECT_PEOPLE + '/' + projectID + '/tasks/' + userID + '/completion/details',
         method: 'GET'
-    }, true,true,true);
+    }, true, true, true);
 };
 
 function getActiveUsers() {
     return request({
         url: GET_ALL_USERS,
         method: 'GET'
-    }, true,false,false);
+    }, true, false, false);
 };
 
-function addUserToProjectData(assignerId,userID,role,assigneeProjectRole,projectID) {
+function addUserToProjectData(assignerId, userID, role, assigneeProjectRole, projectID) {
     return request({
-        url: ADD_PEOPLE_TO_PROJECT +'/'+projectID + '/users',
+        url: ADD_PEOPLE_TO_PROJECT + '/' + projectID + '/users',
         method: 'POST',
         data: {
             assignerId: assignerId,
             assigneeId: userID,
             assigneeJobRole: role,
-            assigneeProjectRole:assigneeProjectRole,
+            assigneeProjectRole: assigneeProjectRole,
         }
-    }, true,false,false);
+    }, true, false, false);
 };
 
 function getAllUsersByProjectId(projectID) {
     return request({
-        url: GET_ALL_USERS_BY_PROJECT_ID+'/'+projectID,
+        url: GET_ALL_USERS_BY_PROJECT_ID + '/' + projectID,
         method: 'GET'
-    }, true,true,true);
+    }, true, true, true);
 }
+
+function addTaskToProjectData(taskName, initiator, assigneeId, selectedStatus, dueDate, selectedDateReminder, notes, selectedProjectID) {
+    console.log(selectedProjectID, 'selectedProjectIDselectedProjectID')
+    return request({
+        url: ADD_TASK_TO_PROJECT + '/' + selectedProjectID + '/tasks',
+        method: 'POST',
+        data: {
+            taskName: taskName,
+            projectId: selectedProjectID,
+            taskInitiator: initiator,
+            taskAssignee: assigneeId,
+            taskDueDate: dueDate,
+            taskRemindOnDate: selectedDateReminder,
+            taskType: "project",
+            taskNotes: notes
+        }
+    }, true, false, false);
+};
+
+function addFileToTask(file, taskId, selectedProjectID) {
+
+    const file1 = {
+        uri: file[0].uri,
+        name: 'image-pmtool'+ new Date().getTime(),
+        type: file[0].type,
+    };
+    const formData = new FormData();
+    formData.append('taskType', "project");
+    formData.append('type', "profileImage");
+    formData.append('files', file1);
+    return request({
+        url: ADD_FILE_TO_TASK + '/' + selectedProjectID + '/tasks/' + taskId + '/upload',
+        method: 'POST',
+        data: formData
+    }, true, false, true);
+};
+
 
 const APIServices = {
     getAllProjectsByUserData,
@@ -186,7 +225,9 @@ const APIServices = {
     getProjectPeopleData,
     getAllUsersByProjectId,
     getActiveUsers,
-    addUserToProjectData
+    addUserToProjectData,
+    addTaskToProjectData,
+    addFileToTask
 };
 
 export default APIServices;

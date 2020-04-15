@@ -28,7 +28,17 @@ import {
     ADD_PEOPLE_TO_PROJECT,
     ADD_PEOPLE_TO_PROJECT_SUCCESS,
     ADD_PEOPLE_TO_PROJECT_FAILED,
-    ADD_PEOPLE_TO_PROJECT_FAILED_MASSAGE
+    ADD_PEOPLE_TO_PROJECT_FAILED_MASSAGE,
+
+    ADD_TASK_TO_PROJECT,
+    ADD_TASK_TO_PROJECT_SUCCESS,
+    ADD_TASK_TO_PROJECT_FAILED,
+    ADD_TASK_TO_PROJECT_FAILED_MASSAGE,
+
+    ADD_FILE_TO_TASK,
+    ADD_FILE_TO_TASK_SUCCESS,
+    ADD_FILE_TO_TASK_FAILED,
+    ADD_FILE_TO_TASK_FAILED_MASSAGE
 
 } from '../types';
 import APIServices from '../../services/APIServices';
@@ -174,6 +184,66 @@ export const addUserToProject =  (assignerId,userID,role,assigneeProjectRole,pro
                     payload: errorMsg});   
             }else{
                 dispatch({ type: ADD_PEOPLE_TO_PROJECT_FAILED});  
+            } 
+        });
+    };
+};
+
+export const addTaskToProject =  (taskName, initiator, assigneeId, selectedStatus, dueDate, selectedDateReminder, notes, selectedProjectID) => {
+    console.log(selectedProjectID,'selectedProjectIDselectedProjectID')   
+    return (dispatch) => {
+        dispatch({ type: ADD_TASK_TO_PROJECT });
+        APIServices.addTaskToProjectData(taskName, initiator, assigneeId, selectedStatus, dueDate, selectedDateReminder, notes, selectedProjectID).then(response => {
+            if(response.message == 'success'){
+                dispatch({ 
+                    type: ADD_TASK_TO_PROJECT_SUCCESS,
+                    payload: response});  
+            }else{
+                dispatch({ type: ADD_TASK_TO_PROJECT_FAILED});  
+            }    
+        }).catch(error => {  
+            if(error.status == 403){
+                let errorMsg = error.data.message;
+                dispatch({ 
+                    type: ADD_TASK_TO_PROJECT_FAILED_MASSAGE,
+                    payload: errorMsg});   
+            }else if(error.status == 400){
+                let errorMsg = error.data.message;
+                dispatch({ 
+                    type: ADD_TASK_TO_PROJECT_FAILED_MASSAGE,
+                    payload: errorMsg});   
+            }else{
+                dispatch({ type: ADD_TASK_TO_PROJECT_FAILED});  
+            } 
+        });
+    };
+};
+
+export const addFileToTask =  (file, taskId, selectedProjectID) => {
+    console.log(file[0].uri, taskId, selectedProjectID,'file, taskId, selectedProjectID')   
+    return (dispatch) => {
+        dispatch({ type: ADD_FILE_TO_TASK });
+        APIServices.addFileToTask(file, taskId, selectedProjectID).then(response => {
+            if(response.message == 'success'){
+                dispatch({ 
+                    type: ADD_FILE_TO_TASK_SUCCESS,
+                    payload: response});  
+            }else{
+                dispatch({ type: ADD_FILE_TO_TASK_FAILED});  
+            }    
+        }).catch(error => {  
+            if(error.status == 403){
+                let errorMsg = error.data.message;
+                dispatch({ 
+                    type: ADD_FILE_TO_TASK_FAILED_MASSAGE,
+                    payload: errorMsg});   
+            }else if(error.status == 400){
+                let errorMsg = error.data.message;
+                dispatch({ 
+                    type: ADD_FILE_TO_TASK_FAILED_MASSAGE,
+                    payload: errorMsg});   
+            }else{
+                dispatch({ type: ADD_FILE_TO_TASK_FAILED});  
             } 
         });
     };

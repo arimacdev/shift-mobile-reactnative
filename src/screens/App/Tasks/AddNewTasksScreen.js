@@ -16,8 +16,11 @@ import icons from '../../../assest/icons/icons';
 import APIServices from '../../../services/APIServices';
 import EStyleSheet from 'react-native-extended-stylesheet';
 const entireScreenWidth = Dimensions.get('window').width;
+import AsyncStorage from '@react-native-community/async-storage';
 EStyleSheet.build({ $rem: entireScreenWidth / 380 });
 import { Dropdown } from 'react-native-material-dropdown';
+import AwesomeAlert from 'react-native-awesome-alerts';
+import _ from 'lodash';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import DocumentPicker from 'react-native-document-picker';
 import moment from 'moment';
@@ -62,48 +65,55 @@ class AddNewTasksScreen extends Component {
       reminder: false,
       files: [],
       notes: '',
-      dropPeopleData: []
+      dropPeopleData: [],
+      selectedAssignee: 'Assignee',
+      selectedStatus: 'Status',
+      initiator: null,
+      assigneeId: null,
+      showAlert: false,
+      alertTitle: '',
+      alertMsg: '',
     };
   }
 
-  componentDidUpdate(prevProps, prevState, snapshot) { }
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (prevProps.addTaskToProjectError !== this.props.addTaskToProjectError
+      && this.props.addTaskToProjectError && this.props.addTaskToProjectErrorMessage == '') {
+      this.showAlert("", "Error While creating Task");
+    }
+
+    if (prevProps.addTaskToProjectError !== this.props.addTaskToProjectError
+      && this.props.addTaskToProjectError && this.props.addTaskToProjectErrorMessage != '') {
+      this.showAlert("", this.props.addTaskToProjectErrorMessage);
+    }
+
+    if (prevProps.addTaskToProjectSuccess !== this.props.addTaskToProjectSuccess
+      && this.props.addTaskToProjectSuccess) {
+      const taskID = this.props.taskId.data.taskId;
+      this.uploadFiles(this.state.files, taskID)
+    }
+  }
 
   async componentDidMount() {
     const { navigation: { state: { params } } } = this.props;
-    let selectedProjectID = this.props.selectedProjectID;
-    console.log('props.....',this.props.navigation.state.params.projDetails.projectId)
-    console.log('props.....2222',this.props.selectedProjectID)
-
-
-    projectPeopleData = await APIServices.getAllUsersByProjectId(this.props.selectedProjectID);
-        if(projectPeopleData.message == 'success'){
-            console.log(projectPeopleData.data)
-            this.setState({ dropPeopleData: projectPeopleData.data})
-            // let ownerArray = [];
-            // let adminsArray = [];
-            // let usersArray = [];
-            // ownerArray =  projectPeopleData.data.filter(function(obj) {
-            //     return obj.projectRoleId == 1;
-            // });
-            // adminsArray =  projectPeopleData.data.filter(function(obj) {
-            //     return obj.projectRoleId == 2;
-            // });
-            // usersArray =  projectPeopleData.data.filter(function(obj) {
-            //     return obj.projectRoleId == 3;
-            // });
-
-            // this.setState({
-            //     owner : ownerArray,
-            //     admins : adminsArray,
-            //     users : usersArray,
-            //     dataLoading:false
-            // });
-        }else{
-            this.setState({dataLoading:false});
+    const activeUsers = await APIServices.getAllUsersByProjectId(this.props.selectedProjectID);
+    if (activeUsers.message == 'success') {
+      let userList = [];
+      for (let i = 0; i < activeUsers.data.length; i++) {
+        if (activeUsers.data[i].firstName && activeUsers.data[i].lastName) {
+          userList.push({
+            id: activeUsers.data[i].userId,
+            value: activeUsers.data[i].firstName + ' ' + activeUsers.data[i].lastName,
+          });
         }
-
-
-
+      }
+      this.setState({
+        dropPeopleData: userList,
+        // dataLoading : false
+      })
+    } else {
+      this.setState({ dataLoading: false });
+    }
   }
 
   onTaskNameChange(text) {
@@ -216,10 +226,17 @@ class AddNewTasksScreen extends Component {
   }
 
   onFilesCrossPress(uri) {
-    let filesArray = this.state.files.filter(item => {
-      return item.uri !== uri;
-    });
-    this.setState({ files: filesArray });
+    this.setState(
+      {
+        files: [],
+      },
+      () => {
+        let filesArray = this.state.files.filter(item => {
+          return item.uri !== uri;
+        });
+        this.setState({ files: filesArray });
+      },
+    );
   }
 
   renderDocPickeredView(item) {
@@ -315,7 +332,70 @@ class AddNewTasksScreen extends Component {
     this.setState({ notes: text });
   }
 
+  selectAssignee = (value) => {
+    this.setState({ selectedAssignee: value })
+    for (let i = 0; i < this.state.dropPeopleData.length; i++) {
+      if (value == this.state.dropPeopleData[i].value) {
+        this.setState({ assigneeId: this.state.dropPeopleData[i].id })
+      }
+    }
+  }
+
+  selectStatus = (value) => {
+    this.setState({ selectedStatus: value })
+  }
+
+  async addNewTask() {
+    await AsyncStorage.getItem('userID').then(userID => {
+      if (userID) {
+        this.setState({ initiator: userID })
+      }
+    });
+    let taskName = this.state.taskName;
+    let initiator = this.state.initiator;
+    let assigneeId = this.state.assigneeId;
+    let selectedStatus = this.state.selectedStatus;
+    let selectedDateReminder = this.state.selectedDateReminder;
+    let notes = this.state.notes;
+    let dueDate = this.state.selectedDate;
+    if (this.validateData(taskName)) {
+      this.props.addTaskToProject(taskName, initiator, assigneeId, selectedStatus, dueDate, selectedDateReminder, notes, this.props.selectedProjectID);
+    }
+  }
+
+  uploadFiles(file, taskId) {
+    console.log(file, taskId, 'fileeeeeeeeeeee')
+    this.props.addFileToTask(file, taskId, this.props.selectedProjectID);
+  }
+
+  validateData(taskName) {
+    if (!taskName && _.isEmpty(taskName)) {
+      this.showAlert("", "Please enter a name for the task");
+      return false;
+    }
+    return true;
+  }
+
+  hideAlert() {
+    this.setState({
+      showAlert: false,
+      alertTitle: '',
+      alertMsg: '',
+    })
+  }
+
+  showAlert(title, msg) {
+    this.setState({
+      showAlert: true,
+      alertTitle: title,
+      alertMsg: msg,
+    })
+  }
+
   render() {
+    let showAlert = this.state.showAlert;
+    let alertTitle = this.state.alertTitle;
+    let alertMsg = this.state.alertMsg;
     return (
       <ScrollView style={{ marginBottom: 90 }}>
         <View style={[styles.taskFieldView, { marginTop: 30 }]}>
@@ -340,9 +420,11 @@ class AddNewTasksScreen extends Component {
             overlayStyle={{ width: '100%' }}
             pickerStyle={{ width: '89%', marginTop: 70, marginLeft: 15 }}
             dropdownPosition={0}
-            value={'Assignee'}
+            value={this.state.selectedAssignee}
             itemColor={'black'}
             selectedItemColor={'black'}
+            onChangeText={(value) => this.selectAssignee(value)}
+            // onChangeText={(value)=>{this.selectAssignee(item.name, value)}}
             dropdownOffset={{ top: 10 }}
             baseColor={colors.projectBgColor}
             // renderBase={this.renderBase}
@@ -365,11 +447,12 @@ class AddNewTasksScreen extends Component {
             overlayStyle={{ width: '100%' }}
             pickerStyle={{ width: '89%', marginTop: 70, marginLeft: 15 }}
             dropdownPosition={0}
-            value={'Tasks Status'}
+            value={this.state.selectedStatus}
             itemColor={'black'}
             selectedItemColor={'black'}
             dropdownOffset={{ top: 10 }}
             baseColor={colors.projectBgColor}
+            onChangeText={value => this.selectStatus(value)}
             // renderBase={this.renderBase}
             renderAccessory={this.renderBase}
             itemTextStyle={{ marginLeft: 15 }}
@@ -446,7 +529,7 @@ class AddNewTasksScreen extends Component {
             onChangeText={text => this.onNotesChange(text)}
           />
         </View>
-        <TouchableOpacity onPress={() => { }}>
+        <TouchableOpacity onPress={() => this.addNewTask()}>
           <View style={styles.button}>
             <Image
               style={[styles.bottomBarIcon, { marginRight: 15, marginLeft: 10 }]}
@@ -466,6 +549,22 @@ class AddNewTasksScreen extends Component {
         </TouchableOpacity>
         {this.state.showPicker ? this.renderDatePicker() : null}
         {this.state.showTimePicker ? this.renderTimePicker() : null}
+        <AwesomeAlert
+          show={showAlert}
+          showProgress={false}
+          title={alertTitle}
+          message={alertMsg}
+          closeOnTouchOutside={true}
+          closeOnHardwareBackPress={false}
+          showCancelButton={false}
+          showConfirmButton={true}
+          cancelText=""
+          confirmText="OK"
+          confirmButtonColor={colors.primary}
+          onConfirmPressed={() => {
+            this.hideAlert();
+          }}
+        />
       </ScrollView>
     );
   }
@@ -639,7 +738,13 @@ const styles = EStyleSheet.create({
 });
 
 const mapStateToProps = state => {
-  return {};
+  return {
+    addTaskToProjectLoading: state.project.addTaskToProjectLoading,
+    addTaskToProjectError: state.project.addTaskToProjectError,
+    addTaskToProjectSuccess: state.project.addTaskToProjectSuccess,
+    addTaskToProjectErrorMessage: state.project.addTaskToProjectErrorMessage,
+    taskId: state.project.taskId,
+  };
 };
 export default connect(
   mapStateToProps,

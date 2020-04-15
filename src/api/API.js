@@ -15,6 +15,8 @@ export const DELETE_PROJECT = `${PROTOCOL}${HOST}projects`;
 export const GET_PROJECT_DETAILS_TASK = `${PROTOCOL}${HOST}projects`;
 export const GET_PROJECT_PEOPLE = `${PROTOCOL}${HOST}projects`;
 export const ADD_PEOPLE_TO_PROJECT = `${PROTOCOL}${HOST}projects`;
+export const ADD_TASK_TO_PROJECT = `${PROTOCOL}${HOST}projects`;
+export const ADD_FILE_TO_TASK = `${PROTOCOL}${HOST}projects`;
 
 export const GET_ALL_USERS_BY_PROJECT_ID = `${PROTOCOL}${HOST}users/project`;
 

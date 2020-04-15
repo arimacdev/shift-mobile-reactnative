@@ -28,164 +28,225 @@ import {
     ADD_PEOPLE_TO_PROJECT,
     ADD_PEOPLE_TO_PROJECT_SUCCESS,
     ADD_PEOPLE_TO_PROJECT_FAILED,
-    ADD_PEOPLE_TO_PROJECT_FAILED_MASSAGE
+    ADD_PEOPLE_TO_PROJECT_FAILED_MASSAGE,
+
+    ADD_TASK_TO_PROJECT,
+    ADD_TASK_TO_PROJECT_SUCCESS,
+    ADD_TASK_TO_PROJECT_FAILED,
+    ADD_TASK_TO_PROJECT_FAILED_MASSAGE
 
 } from '../types';
 
 const INITIAL_STATE = {
-    projectsLoading :  false,
-    projects : [],
+    projectsLoading: false,
+    projects: [],
 
-    allTaskByProjectLoading : false,
-    allTaskByProject : [],
+    allTaskByProjectLoading: false,
+    allTaskByProject: [],
 
-    myTaskByProjectLoading : false,
-    myTaskByProject : [],
+    myTaskByProjectLoading: false,
+    myTaskByProject: [],
 
     addProjectLoading: false,
-    addProjectError : false,
-    addProjectrSuccess : false,
+    addProjectError: false,
+    addProjectrSuccess: false,
 
     updateProjectLoading: false,
-    updateProjectSuccess : false,
-    updateProjectError : false,
-    updateProjectErrorMessage : '',
+    updateProjectSuccess: false,
+    updateProjectError: false,
+    updateProjectErrorMessage: '',
 
     deleteProjectLoading: false,
-    deleteProjectSuccess : false,
-    deleteProjectError : false,
-    deleteProjectErrorMessage : '',
+    deleteProjectSuccess: false,
+    deleteProjectError: false,
+    deleteProjectErrorMessage: '',
 
     addPeopleProjectLoading: false,
-    addPeopleProjectSuccess : false,
-    addPeopleProjectError : false,
-    addPeopleProjectErrorMessage : '',
+    addPeopleProjectSuccess: false,
+    addPeopleProjectError: false,
+    addPeopleProjectErrorMessage: '',
+
+    addTaskToProjectLoading: false,
+    addTaskToProjectSuccess: false,
+    addTaskToProjectError: false,
+    addTaskToProjectErrorMessage: '',
+    taskId: null
 };
 
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
         case GET_ALL_PROJECTS_BY_USER:
-            return { ...state, projectsLoading: true};
+            return { ...state, projectsLoading: true };
         case GET_ALL_PROJECTS_BY_USER_SUCCESS:
-            return { ...state, projectsLoading: false,projects:action.payload.data };
+            return { ...state, projectsLoading: false, projects: action.payload.data };
         case GET_ALL_PROJECTS_BY_USER_FAILED:
             return { ...state, projectsLoading: false };
         // all tasks by project
-         case GET_ALL_TASK_BY_PROJECT:
-            return { ...state, allTaskByProjectLoading: true};
+        case GET_ALL_TASK_BY_PROJECT:
+            return { ...state, allTaskByProjectLoading: true };
         case GET_ALL_TASK_BY_PROJECT_SUCCESS:
-            return { ...state, allTaskByProjectLoading: false,allTaskByProject:action.payload.data };
+            return { ...state, allTaskByProjectLoading: false, allTaskByProject: action.payload.data };
         case GET_ALL_TASK_BY_PROJECT_FAILED:
             return { ...state, allTaskByProjectLoading: false };
         // my tasks by project
         case GET_MY_TASK_BY_PROJECT:
-            return { ...state, myTaskByProjectLoading: true};
+            return { ...state, myTaskByProjectLoading: true };
         case GET_MY_TASK_BY_PROJECT_SUCCESS:
-            return { ...state, myTaskByProjectLoading: false,myTaskByProject:action.payload.data };
+            return { ...state, myTaskByProjectLoading: false, myTaskByProject: action.payload.data };
         case GET_MY_TASK_BY_PROJECT_FAILED:
-            return { ...state, myTaskByProjectLoading: false };   
+            return { ...state, myTaskByProjectLoading: false };
         // add project
         case ADD_PROJECT:
-            return { ...state, addProjectLoading: true,addProjectrSuccess: false,addProjectError:false};
+            return { ...state, addProjectLoading: true, addProjectrSuccess: false, addProjectError: false };
         case ADD_PROJECT_SUCCESS:
-           let newProject = action.payload.data;
-           //const existingProjects = [...(state.projects)];
-           //existingProjects.push(...(newProject));
-           return { ...state, 
-                addProjectLoading : false,
-                addProjectrSuccess : true,
-                addProjectError : false,
+            let newProject = action.payload.data;
+            //const existingProjects = [...(state.projects)];
+            //existingProjects.push(...(newProject));
+            return {
+                ...state,
+                addProjectLoading: false,
+                addProjectrSuccess: true,
+                addProjectError: false,
                 //projects :  [...(state.projects)];,
             };
         case ADD_PROJECT_FAILED:
-           return { ...state, addProjectLoading: false,addProjectrSuccess: false,addProjectError:true};
+            return { ...state, addProjectLoading: false, addProjectrSuccess: false, addProjectError: true };
         // update project
         case EDIT_PROJECT:
-            return { ...state, 
+            return {
+                ...state,
                 updateProjectLoading: true,
                 updateProjectSuccess: false,
                 updateProjectError: false,
-                updateProjectErrorMessage : ''
+                updateProjectErrorMessage: ''
             };
         case EDIT_PROJECT_SUCCESS:
-            return { ...state, 
+            return {
+                ...state,
                 updateProjectLoading: false,
                 updateProjectSuccess: true,
                 updateProjectError: false,
-                updateProjectErrorMessage : ''
+                updateProjectErrorMessage: ''
             };
         case EDIT_PROJECT_FAILED:
-            return { ...state, 
+            return {
+                ...state,
                 updateProjectLoading: false,
                 updateProjectSuccess: false,
                 updateProjectError: true,
-                updateProjectErrorMessage : ''
+                updateProjectErrorMessage: ''
             };
         case EDIT_PROJECT_FAILED_MASSAGE:
-            return { ...state, 
+            return {
+                ...state,
                 updateProjectLoading: false,
                 updateProjectSuccess: false,
                 updateProjectError: true,
-                updateProjectErrorMessage : action.payload
+                updateProjectErrorMessage: action.payload
             };
         // delete project
         case DELETE_PROJECT:
-            return { ...state, 
+            return {
+                ...state,
                 deleteProjectLoading: true,
                 deleteProjectSuccess: false,
                 deleteProjectError: false,
-                deleteProjectErrorMessage : ''
+                deleteProjectErrorMessage: ''
             };
         case DELETE_PROJECT_SUCCESS:
-            return { ...state, 
+            return {
+                ...state,
                 deleteProjectLoading: false,
                 deleteProjectSuccess: true,
                 deleteProjectError: false,
-                deleteProjectErrorMessage : ''
+                deleteProjectErrorMessage: ''
             };
         case DELETE_PROJECT_FAILED:
-            return { ...state, 
+            return {
+                ...state,
                 deleteProjectLoading: false,
                 deleteProjectSuccess: false,
                 deleteProjectError: true,
-                deleteProjectErrorMessage : ''
+                deleteProjectErrorMessage: ''
             };
         case DELETE_PROJECT_FAILED_MASSAGE:
-            return { ...state, 
+            return {
+                ...state,
                 deleteProjectLoading: false,
                 deleteProjectSuccess: false,
                 deleteProjectError: true,
-                deleteProjectErrorMessage : action.payload
+                deleteProjectErrorMessage: action.payload
             };
         // add people to project    
         case ADD_PEOPLE_TO_PROJECT:
-                return { ...state, 
-                    addPeopleProjectLoading: true,
-                    addPeopleProjectSuccess: false,
-                    addPeopleProjectError: false,
-                    addPeopleProjectErrorMessage : ''
-                };
+            return {
+                ...state,
+                addPeopleProjectLoading: true,
+                addPeopleProjectSuccess: false,
+                addPeopleProjectError: false,
+                addPeopleProjectErrorMessage: ''
+            };
         case ADD_PEOPLE_TO_PROJECT_SUCCESS:
-                return { ...state, 
-                    addPeopleProjectLoading: false,
-                    addPeopleProjectSuccess: true,
-                    addPeopleProjectError: false,
-                    addPeopleProjectErrorMessage : ''
-                };
+            return {
+                ...state,
+                addPeopleProjectLoading: false,
+                addPeopleProjectSuccess: true,
+                addPeopleProjectError: false,
+                addPeopleProjectErrorMessage: ''
+            };
         case ADD_PEOPLE_TO_PROJECT_FAILED:
-                return { ...state, 
-                    addPeopleProjectLoading: false,
-                    addPeopleProjectSuccess: false,
-                    addPeopleProjectError: true,
-                    addPeopleProjectErrorMessage : ''
-                };
+            return {
+                ...state,
+                addPeopleProjectLoading: false,
+                addPeopleProjectSuccess: false,
+                addPeopleProjectError: true,
+                addPeopleProjectErrorMessage: ''
+            };
         case ADD_PEOPLE_TO_PROJECT_FAILED_MASSAGE:
-                return { ...state, 
-                    addPeopleProjectLoading: false,
-                    addPeopleProjectSuccess: false,
-                    addPeopleProjectError: true,
-                    addPeopleProjectErrorMessage : action.payload
-                };                                     
+            return {
+                ...state,
+                addPeopleProjectLoading: false,
+                addPeopleProjectSuccess: false,
+                addPeopleProjectError: true,
+                addPeopleProjectErrorMessage: action.payload
+            };
+        // add task to project    
+        case ADD_TASK_TO_PROJECT:
+            return {
+                ...state,
+                addTaskToProjectLoading: true,
+                addTaskToProjectSuccess: false,
+                addTaskToProjectError: false,
+                addTaskToProjectErrorMessage: '',
+                taskId: null
+            };
+        case ADD_TASK_TO_PROJECT_SUCCESS:
+            return {
+                ...state,
+                addTaskToProjectLoading: false,
+                addTaskToProjectSuccess: true,
+                addTaskToProjectError: false,
+                addTaskToProjectErrorMessage: '',
+                taskId: action.payload
+            };
+        case ADD_TASK_TO_PROJECT_FAILED:
+            return {
+                ...state,
+                addTaskToProjectLoading: false,
+                addTaskToProjectSuccess: false,
+                addTaskToProjectError: true,
+                addTaskToProjectErrorMessage: '',
+                taskId: null
+            };
+        case ADD_TASK_TO_PROJECT_FAILED_MASSAGE:
+            return {
+                ...state,
+                addTaskToProjectLoading: false,
+                addTaskToProjectSuccess: false,
+                addTaskToProjectError: true,
+                addTaskToProjectErrorMessage: action.payload,
+                taskId: null
+            };
         default:
             return state;
     }
