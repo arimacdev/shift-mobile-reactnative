@@ -129,6 +129,14 @@ class TasksTabScreen extends Component {
       });
     }
 
+    if (prevProps.allTaskByProjectLoading !== this.props.allTaskByProjectLoading
+       && this.props.allTaskByProject && this.props.allTaskByProject.length == 0) {
+      this.setState({
+          filterdDataAllTaks : this.props.allTaskByProject,
+          allDataAllTaks : this.props.allTaskByProject,
+      });
+    }
+
     // my task
     if (
       prevProps.myTaskByProjectLoading !== this.props.myTaskByProjectLoading &&
@@ -147,6 +155,14 @@ class TasksTabScreen extends Component {
         allDataMyTasks: this.props.myTaskByProject,
       });
     }
+
+    if (prevProps.myTaskByProjectLoading !== this.props.myTaskByProjectLoading
+      && this.props.myTaskByProject && this.props.myTaskByProject.length == 0) {
+     this.setState({
+        filterdDataMyTasks : this.props.myTaskByProject,
+        allDataMyTasks : this.props.myTaskByProject,
+     });
+   }
   }
 
   // componentWillReceiveProps(nextProps) {
