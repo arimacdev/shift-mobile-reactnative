@@ -93,7 +93,7 @@ class PeopleScreen extends Component {
     }
 
     goToAddPeople = () => {
-        NavigationService.navigate('AddPeopleScreen', {});
+        NavigationService.navigate('AddPeopleScreen', {projectItem:  this.props.selectedProjectID});
     }
 
     goToEditPeople = (item) => {
@@ -122,7 +122,10 @@ class PeopleScreen extends Component {
     };
 
     renderPeopleList(item) {
-        let progress = (item.tasksCompleted/item.totalTasks);
+        let progress = 0
+        if(item.totalTasks > 0){
+            progress = (item.tasksCompleted/item.totalTasks);
+        } 
         return (
             <TouchableOpacity style={styles.mainContainer} onPress={() => this.props.navigation.navigate('ViewUserScreen', { userItem: item })}>
                 <NavigationEvents onWillFocus={payload => this.tabOpen(payload)} />
@@ -176,7 +179,7 @@ class PeopleScreen extends Component {
                     <View style={styles.button}>
                         <Image
                             style={[styles.bottomBarIcon, { marginRight: 15, marginLeft: 10 }]}
-                            source={icons.taskWhite}
+                            source={icons.userWhite}
                             resizeMode={'center'}
                         />
                         <View style={{ flex: 1 }}>

@@ -17,7 +17,8 @@ import {
     GET_PROJECT_DETAILS_TASK,
     GET_PROJECT_PEOPLE,
 
-    GET_ALL_USERS_BY_PROJECT_ID
+    GET_ALL_USERS_BY_PROJECT_ID,
+    ADD_PEOPLE_TO_PROJECT,
 
 } from '../api/API';
 
@@ -140,7 +141,27 @@ function getProjectPeopleData(projectID,userID) {
         url: GET_PROJECT_PEOPLE+'/'+projectID+'/tasks/'+userID+'/completion/details',
         method: 'GET'
     }, true,true,true);
-}
+};
+
+function getActiveUsers() {
+    return request({
+        url: GET_ALL_USERS,
+        method: 'GET'
+    }, true,false,false);
+};
+
+function addUserToProjectData(assignerId,userID,role,assigneeProjectRole,projectID) {
+    return request({
+        url: ADD_PEOPLE_TO_PROJECT +'/'+projectID + '/users',
+        method: 'POST',
+        data: {
+            assignerId: assignerId,
+            assigneeId: userID,
+            assigneeJobRole: role,
+            assigneeProjectRole:assigneeProjectRole,
+        }
+    }, true,false,false);
+};
 
 function getAllUsersByProjectId(projectID) {
     return request({
@@ -163,7 +184,9 @@ const APIServices = {
     deleteProjectData,
     getProjectTaskDetails,
     getProjectPeopleData,
-    getAllUsersByProjectId
+    getAllUsersByProjectId,
+    getActiveUsers,
+    addUserToProjectData
 };
 
 export default APIServices;

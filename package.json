@@ -32,6 +32,7 @@
     "react-native-gesture-handler": "^1.6.1",
     "react-native-indicators": "^0.16.0",
     "react-native-material-dropdown": "^0.11.1",
+    "react-native-modal-filter-picker": "^2.0.0",
     "react-native-progress": "^4.1.2",
     "react-native-reanimated": "^1.2.0",
     "react-native-screens": "^2.3.0",

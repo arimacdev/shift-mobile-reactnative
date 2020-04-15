@@ -23,7 +23,12 @@ import {
     DELETE_PROJECT,
     DELETE_PROJECT_SUCCESS,
     DELETE_PROJECT_FAILED,
-    DELETE_PROJECT_FAILED_MASSAGE
+    DELETE_PROJECT_FAILED_MASSAGE,
+
+    ADD_PEOPLE_TO_PROJECT,
+    ADD_PEOPLE_TO_PROJECT_SUCCESS,
+    ADD_PEOPLE_TO_PROJECT_FAILED,
+    ADD_PEOPLE_TO_PROJECT_FAILED_MASSAGE
 
 } from '../types';
 
@@ -50,6 +55,11 @@ const INITIAL_STATE = {
     deleteProjectSuccess : false,
     deleteProjectError : false,
     deleteProjectErrorMessage : '',
+
+    addPeopleProjectLoading: false,
+    addPeopleProjectSuccess : false,
+    addPeopleProjectError : false,
+    addPeopleProjectErrorMessage : '',
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -146,7 +156,36 @@ export default (state = INITIAL_STATE, action) => {
                 deleteProjectSuccess: false,
                 deleteProjectError: true,
                 deleteProjectErrorMessage : action.payload
-            };                               
+            };
+        // add people to project    
+        case ADD_PEOPLE_TO_PROJECT:
+                return { ...state, 
+                    addPeopleProjectLoading: true,
+                    addPeopleProjectSuccess: false,
+                    addPeopleProjectError: false,
+                    addPeopleProjectErrorMessage : ''
+                };
+        case ADD_PEOPLE_TO_PROJECT_SUCCESS:
+                return { ...state, 
+                    addPeopleProjectLoading: false,
+                    addPeopleProjectSuccess: true,
+                    addPeopleProjectError: false,
+                    addPeopleProjectErrorMessage : ''
+                };
+        case ADD_PEOPLE_TO_PROJECT_FAILED:
+                return { ...state, 
+                    addPeopleProjectLoading: false,
+                    addPeopleProjectSuccess: false,
+                    addPeopleProjectError: true,
+                    addPeopleProjectErrorMessage : ''
+                };
+        case ADD_PEOPLE_TO_PROJECT_FAILED_MASSAGE:
+                return { ...state, 
+                    addPeopleProjectLoading: false,
+                    addPeopleProjectSuccess: false,
+                    addPeopleProjectError: true,
+                    addPeopleProjectErrorMessage : action.payload
+                };                                     
         default:
             return state;
     }

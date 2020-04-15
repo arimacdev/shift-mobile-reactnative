@@ -23,7 +23,12 @@ import {
     DELETE_PROJECT,
     DELETE_PROJECT_SUCCESS,
     DELETE_PROJECT_FAILED,
-    DELETE_PROJECT_FAILED_MASSAGE
+    DELETE_PROJECT_FAILED_MASSAGE,
+
+    ADD_PEOPLE_TO_PROJECT,
+    ADD_PEOPLE_TO_PROJECT_SUCCESS,
+    ADD_PEOPLE_TO_PROJECT_FAILED,
+    ADD_PEOPLE_TO_PROJECT_FAILED_MASSAGE
 
 } from '../types';
 import APIServices from '../../services/APIServices';
@@ -140,6 +145,35 @@ export const deleteProject =  (projectID) => {
                     payload: errorMsg});   
             }else{
                 dispatch({ type: DELETE_PROJECT_FAILED});  
+            } 
+        });
+    };
+};
+
+export const addUserToProject =  (assignerId,userID,role,assigneeProjectRole,projectID) => {
+    return (dispatch) => {
+        dispatch({ type: ADD_PEOPLE_TO_PROJECT });
+        APIServices.addUserToProjectData(assignerId,userID,role,assigneeProjectRole,projectID).then(response => {
+            if(response.message == 'success'){
+                dispatch({ 
+                    type: ADD_PEOPLE_TO_PROJECT_SUCCESS,
+                    payload: response});  
+            }else{
+                dispatch({ type: ADD_PEOPLE_TO_PROJECT_FAILED});  
+            }    
+        }).catch(error => {  
+            if(error.status == 403){
+                let errorMsg = error.data.message;
+                dispatch({ 
+                    type: ADD_PEOPLE_TO_PROJECT_FAILED_MASSAGE,
+                    payload: errorMsg});   
+            }else if(error.status == 400){
+                let errorMsg = error.data.message;
+                dispatch({ 
+                    type: ADD_PEOPLE_TO_PROJECT_FAILED_MASSAGE,
+                    payload: errorMsg});   
+            }else{
+                dispatch({ type: ADD_PEOPLE_TO_PROJECT_FAILED});  
             } 
         });
     };

@@ -26,7 +26,8 @@ const colors = {
     lightRed  : '#ff6161',
     projDetails:'#DDE0E4',
     projDetailsProjectName : '#080848',
-    projectDetailsDate:'#0bafff'
+    projectDetailsDate:'#0bafff',
+    textPlaceHolderColor : '#b9b9b9'
 
 };
 export default colors;

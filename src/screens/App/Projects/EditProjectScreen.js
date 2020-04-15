@@ -121,7 +121,7 @@ class EditProjectScreen extends Component {
             this.showAlert("","Project Updated");
             this.props.navigation.goBack();
     }
-    // delete projecr
+    // delete project
     if (prevProps.deleteProjectError !== this.props.deleteProjectError
       && this.props.deleteProjectError && this.props.deleteProjectErrorMessage == '') {
         this.showAlert("","Error While Project Deleting the Project");

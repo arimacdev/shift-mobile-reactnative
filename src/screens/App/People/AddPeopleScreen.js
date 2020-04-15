@@ -16,11 +16,12 @@ import icons from '../../../assest/icons/icons';
 import EStyleSheet from 'react-native-extended-stylesheet';
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({ $rem: entireScreenWidth / 380 });
-import { Dropdown } from 'react-native-material-dropdown';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import DocumentPicker from 'react-native-document-picker';
+import ModalFilterPicker from 'react-native-modal-filter-picker'
 import RoundCheckbox from 'rn-round-checkbox';
-import moment from 'moment';
+import APIServices from '../../../services/APIServices';
+import AwesomeAlert from 'react-native-awesome-alerts';
+import _ from 'lodash';
+import AsyncStorage from '@react-native-community/async-storage';
 
 class AddPeopleScreen extends Component {
     constructor(props) {
@@ -28,13 +29,67 @@ class AddPeopleScreen extends Component {
         this.state = {
             name: '',
             role: '',
-            isSelected: true
+            isSelected: false,
+            visiblePeopleModal : false,
+            activeUsers : [],
+            userName : 'Type a name to add',
+            userID : '',
+            dataLoading : false,
+            showAlert : false,
+            alertTitle : '',
+            alertMsg : '',
+            projectID : ''
         };
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) { }
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (prevProps.addPeopleProjectError !== this.props.addPeopleProjectError
+            && this.props.addPeopleProjectError && this.props.addPeopleProjectErrorMessage == '') {
+              this.showAlert("","Error While adding User");
+        }
+    
+        if (prevProps.addPeopleProjectError !== this.props.addPeopleProjectError
+          && this.props.addPeopleProjectError && this.props.addPeopleProjectErrorMessage != '') {
+            this.showAlert("",this.props.addPeopleProjectErrorMessage);
+        }
+      
+        if (prevProps.addPeopleProjectSuccess !== this.props.addPeopleProjectSuccess
+              && this.props.addPeopleProjectSuccess) {
+                this.showAlert("","User Added");
+                this.props.navigation.goBack();
+        }
+    }
 
-    componentDidMount() { }
+    componentDidMount() {
+        const {navigation: {state: {params}}} = this.props;
+        let projectID = params.projectItem;
+        this.setState({projectID:projectID})
+        this.getActiveUsers()
+
+    }
+
+    async getActiveUsers () {
+        this.setState({dataLoading:true});
+        activeUsers = await APIServices.getActiveUsers();
+        if(activeUsers.message == 'success'){
+            let userList =[];
+            for(let i=0 ; i < activeUsers.data.length; i++){
+                if(activeUsers.data[i].firstName && activeUsers.data[i].lastName){
+                    userList.push({
+                        key : activeUsers.data[i].userId,
+                        label: activeUsers.data[i].firstName + ' ' + activeUsers.data[i].lastName,
+                    });
+                }   
+        }
+        this.setState({
+            activeUsers : userList,
+            dataLoading : false
+        })
+        }else{
+            console.log("error");
+            this.setState({dataLoading:false});
+        }
+    }
 
     onPeopleNameChange(text) {
         this.setState({ name: text });
@@ -49,23 +104,103 @@ class AddPeopleScreen extends Component {
         console.log(newValue)
     }
 
+    onSelectUser = (picked) => {
+        this.setState({
+            visiblePeopleModal : false,
+            userName : picked.label,
+            userID : picked.key,
+        })
+    }
+
+    onCancelUser = () => {
+        this.setState({
+            visiblePeopleModal : false
+        })
+    }
+
+    itemNameClick = () => {
+        this.setState({
+            visiblePeopleModal : true,
+        })
+    }
+
+    saveUser (){
+        let userID= this.state.userID;
+        let role= this.state.role;
+        let isSelected= this.state.isSelected;
+        let assigneeProjectRole = 0;
+        let projectID = this.state.projectID;
+
+        if(isSelected){
+            assigneeProjectRole = 2
+        }else{
+            assigneeProjectRole = 3
+        }
+
+        if(this.validateUser(userID,role)){
+            AsyncStorage.getItem('userID').then(assignerId => {
+                if (assignerId) {
+                  this.props.addUserToProject(assignerId,userID,role,assigneeProjectRole,projectID);
+                } 
+            });
+        }
+    }
+
+    validateUser(userID,role) {
+        if (!userID && _.isEmpty(userID)) {
+          this.showAlert("","Please Select a User");
+          return false;
+        }
+
+        if (!role && _.isEmpty(role)) {
+            this.showAlert("","Please Add a Role");
+            return false;
+          }
+
+        return true;
+    }
+
+    hideAlert (){
+        this.setState({
+          showAlert : false,
+          alertTitle : '',
+          alertMsg : '',
+        })
+    }
+    
+    showAlert(title,msg){
+        this.setState({
+          showAlert : true,
+          alertTitle : title,
+          alertMsg : msg,
+        })
+    }
+
     render() {
+        let visiblePeopleModal = this.state.visiblePeopleModal;
+        let activeUsers = this.state.activeUsers;
+        let userName = this.state.userName;
+        let userID = this.state.userID;
+        let role = this.state.role;
+        let showAlert = this.state.showAlert;
+        let alertTitle = this.state.alertTitle;
+        let alertMsg = this.state.alertMsg;
+
         return (
             <ScrollView style={styles.container}>
                 <View style={[styles.taskFieldView, { marginTop: 30 }]}>
-                    <TextInput
-                        style={[styles.textInput, { width: '95%' }]}
-                        placeholder={'Type a name to add'}
-                        value={this.state.name}
-                        onChangeText={text => this.onPeopleNameChange(text)}
-                    />
+                    <Text 
+                        onPress={() => this.itemNameClick()}
+                        style={userID == '' ? styles.inputsTextDefualt : styles.inputsText}>{userName}
+                    </Text>
                 </View>
                 <View style={[styles.taskFieldView]}>
                     <TextInput
                         style={[styles.textInput, { width: '95%' }]}
                         placeholder={'Role'}
-                        value={this.state.role}
-                        onChangeText={text => this.onPeopleNameChange(text)}
+                        value={role}
+                        placeholderTextColor = {colors.placeholder}
+                        onChangeText={role => this.setState({role})}
                     />
                 </View>
                 <View style={styles.checkBoxContainer}>
@@ -83,7 +218,7 @@ class AddPeopleScreen extends Component {
                     </View>
                 </View>
                 <View style={styles.bottomButtonContainer}>
-                    <TouchableOpacity onPress={() => this.saveProject()}>
+                    <TouchableOpacity onPress={() => this.saveUser()}>
                         <View style={styles.button}>
                             <Image
                                 style={[styles.bottomBarIcon, { marginRight: 15, marginLeft: 10 }]}
@@ -101,7 +236,7 @@ class AddPeopleScreen extends Component {
                             />
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => this.saveProject()}>
+                    <TouchableOpacity onPress={() => this.cancelUserSave()}>
                         <View style={styles.buttonDelete}>
                             <Image
                                 style={[styles.bottomBarIcon, { marginRight: 15, marginLeft: 10 }]}
@@ -120,6 +255,33 @@ class AddPeopleScreen extends Component {
                         </View>
                     </TouchableOpacity>
                 </View>
+                <ModalFilterPicker
+                    visible={visiblePeopleModal}
+                    keyboardShouldPersistTaps='handled'
+                    onSelect={this.onSelectUser}
+                    onCancel={this.onCancelUser}
+                    options={activeUsers}
+                    cancelButtonStyle = {styles.modelCancel}
+                    cancelButtonTextStyle = {styles.modelCancelText}
+                    title={'Select a User'}
+                    titleTextStyle ={styles.titleTextStyle}
+                />
+                <AwesomeAlert
+                    show={showAlert}
+                    showProgress={false}
+                    title={alertTitle}
+                    message={alertMsg}
+                    closeOnTouchOutside={true}
+                    closeOnHardwareBackPress={false}
+                    showCancelButton={false}
+                    showConfirmButton={true}
+                    cancelText=""
+                    confirmText="OK"
+                    confirmButtonColor={colors.primary}
+                    onConfirmPressed={() => {
+                        this.hideAlert();
+                    }}
+                />
             </ScrollView>
         );
     }
@@ -134,12 +296,10 @@ const styles = EStyleSheet.create({
     taskFieldView: {
         backgroundColor: colors.projectBgColor,
         borderRadius: 5,
-        // width: '330rem',
         marginTop: '0rem',
         marginBottom: '7rem',
         flexDirection: 'row',
         alignItems: 'center',
-        // justifyContent: 'center',
         paddingHorizontal: '12rem',
         height: '60rem',
         marginHorizontal: '20rem',
@@ -153,18 +313,16 @@ const styles = EStyleSheet.create({
         color: colors.gray,
         textAlign: 'center',
         lineHeight: '17rem',
-        fontFamily: 'HelveticaNeuel',
+        fontFamily: 'CircularStd-Medium',
         textAlign: 'left',
-        // width: '95%'
     },
     checkBoxText: {
         fontSize: '12rem',
         color: colors.gray,
         textAlign: 'center',
         lineHeight: '17rem',
-        fontFamily: 'HelveticaNeuel',
+        fontFamily: 'CircularStd-Medium',
         textAlign: 'left',
-        // width: '95%'
     },
     button: {
         flexDirection: 'row',
@@ -173,7 +331,6 @@ const styles = EStyleSheet.create({
         marginTop: '17rem',
         flexDirection: 'row',
         alignItems: 'center',
-        // justifyContent: 'center',
         paddingHorizontal: '12rem',
         height: '55rem',
         marginHorizontal: '20rem',
@@ -183,9 +340,9 @@ const styles = EStyleSheet.create({
         backgroundColor: colors.lightRed,
         borderRadius: 5,
         marginTop: '10rem',
+        marginBottom : '5rem',
         flexDirection: 'row',
         alignItems: 'center',
-        // justifyContent: 'center',
         paddingHorizontal: '12rem',
         height: '55rem',
         marginHorizontal: '20rem',
@@ -194,7 +351,7 @@ const styles = EStyleSheet.create({
         fontSize: '12rem',
         color: colors.white,
         lineHeight: '17rem',
-        fontFamily: 'HelveticaNeuel',
+        fontFamily: 'CircularStd-Medium',
         fontWeight: 'bold',
     },
     addIcon: {
@@ -214,11 +371,52 @@ const styles = EStyleSheet.create({
     CheckBoxLableContainer: {
         flex: 4,
         right: '40rem'
-    }
+    },
+    modelCancel : {
+        backgroundColor: colors.primary, 
+        borderRadius: 3,
+        height : 36,
+        width:136,
+        justifyContent: 'center', 
+        alignItems: 'center',
+      },
+      modelCancelText : {
+        color: colors.white,
+        fontFamily: 'CircularStd-Medium',
+        fontWeight: '400',
+      },
+      titleTextStyle : {
+        marginTop: '20rem',
+        color: colors.white,
+        fontFamily: 'CircularStd-Medium',
+        marginBottom: '10rem',
+        fontSize : '16rem'
+     },
+     inputsText :{
+        fontFamily: 'Product Sans',
+        height: 45,
+        flex: 1,
+        marginTop : '28rem',
+        color : colors.gray,
+        textAlign: 'left',
+    },
+    inputsTextDefualt :{
+        fontFamily: 'CircularStd-Medium',
+        height: 45,
+        flex: 1,
+        marginTop : '28rem',
+        color : colors.textPlaceHolderColor,
+        textAlign: 'left',
+    },
 });
 
 const mapStateToProps = state => {
-    return {};
+    return {
+        addPeopleProjectLoading: state.project.addPeopleProjectLoading,
+        addPeopleProjectError : state.project.addPeopleProjectError,
+        addPeopleProjectSuccess : state.project.addPeopleProjectSuccess,
+        addPeopleProjectErrorMessage : state.project.addPeopleProjectErrorMessage,
+    };
 };
 export default connect(
     mapStateToProps,
