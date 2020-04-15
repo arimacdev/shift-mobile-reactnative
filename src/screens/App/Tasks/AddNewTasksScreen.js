@@ -216,10 +216,17 @@ class AddNewTasksScreen extends Component {
   }
 
   onFilesCrossPress(uri) {
-    let filesArray = this.state.files.filter(item => {
-      return item.uri !== uri;
-    });
-    this.setState({ files: filesArray });
+    this.setState(
+      {
+        files: [],
+      },
+      () => {
+        let filesArray = this.state.files.filter(item => {
+          return item.uri !== uri;
+        });
+        this.setState({ files: filesArray });
+      },
+  );
   }
 
   renderDocPickeredView(item) {
