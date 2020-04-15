@@ -39,5 +39,7 @@ const icons = {
     chatBrown: require('./chat_brown.png'),
     forwordGray: require('./forword_gray.png'),
     closeRounded: require('./close_rounded.png'),
+    deleteRoundRed: require('./delete_round_red.png'),
+    editRoundWhite: require('./edit_round_white.png'),
 };
 export default icons;

@@ -147,7 +147,7 @@ class UsersScreen extends Component {
 const styles = EStyleSheet.create({
   backgroundImage: {
     flex: 1,
-     backgroundColor: colors.pageBackGroundColor,
+    //  backgroundColor: colors.pageBackGroundColor,
   },
   userView: {
     backgroundColor: colors.projectBgColor,

@@ -14,6 +14,7 @@ import {TouchableOpacity, Image} from 'react-native';
 import TasksScreen from '../screens/App/Tasks/TasksScreen';
 import TasksDetailsScreen from '../screens/App/Tasks/TasksDetailsScreen';
 import AssigneeScreen from '../screens/App/Tasks/AssigneeScreen';
+import SubTaskScreen from '../screens/App/Tasks/SubTaskScreen';
 
 export const ProjectsStackNavigator = createStackNavigator(
   {
@@ -125,6 +126,18 @@ export const ProjectsStackNavigator = createStackNavigator(
               //   ? navigation.state.params.taskDetails.taskName
               //   : ''
             }
+            onPress={() => navigation.goBack()}
+          />
+        ),
+      }),
+    },
+    SubTaskScreen: {
+      screen: SubTaskScreen,
+      navigationOptions: ({navigation}) => ({
+        header: (
+          <Header
+            navigation={navigation}
+            title={'Sub tasks'}
             onPress={() => navigation.goBack()}
           />
         ),
