@@ -38,7 +38,12 @@ import {
     ADD_FILE_TO_TASK,
     ADD_FILE_TO_TASK_SUCCESS,
     ADD_FILE_TO_TASK_FAILED,
-    ADD_FILE_TO_TASK_FAILED_MASSAGE
+    ADD_FILE_TO_TASK_FAILED_MASSAGE,
+
+    DELETE_TASK,
+    DELETE_TASK_SUCCESS,
+    DELETE_TASK_FAILED,
+    DELETE_TASK_FAILED_MASSAGE,
 
 } from '../types';
 import APIServices from '../../services/APIServices';
@@ -220,7 +225,7 @@ export const addTaskToProject =  (taskName, initiator, assigneeId, selectedStatu
 };
 
 export const addFileToTask =  (file, taskId, selectedProjectID) => {
-    console.log(file[0].uri, taskId, selectedProjectID,'file, taskId, selectedProjectID')   
+    // console.log(file[0].uri, taskId, selectedProjectID,'file, taskId, selectedProjectID')   
     return (dispatch) => {
         dispatch({ type: ADD_FILE_TO_TASK });
         APIServices.addFileToTask(file, taskId, selectedProjectID).then(response => {
@@ -244,6 +249,36 @@ export const addFileToTask =  (file, taskId, selectedProjectID) => {
                     payload: errorMsg});   
             }else{
                 dispatch({ type: ADD_FILE_TO_TASK_FAILED});  
+            } 
+        });
+    };
+};
+
+export const deleteTask =  (selectedProjectID, taskId, taskName, initiator) => {
+    return (dispatch) => {
+        dispatch({ type: DELETE_TASK });
+        APIServices.deleteSingleTask(selectedProjectID, taskId, taskName, initiator).then(response => {
+            if(response.message == 'success'){
+                dispatch({ 
+                    type: DELETE_TASK_SUCCESS,
+                    payload: response});  
+            }else{
+                dispatch({ type: DELETE_TASK_FAILED});  
+            }    
+        }).catch(error => {  
+            if(error.status == 401){
+                let errorMsg = error.data.message;
+                dispatch({ 
+                    type: DELETE_TASK_FAILED_MASSAGE,
+                    payload: errorMsg});   
+            } else if (error.status == 403) {
+                let errorMsg = error.data.message;
+                dispatch({ 
+                    type: DELETE_TASK_FAILED_MASSAGE,
+                    payload: errorMsg});   
+            }
+            else{
+                dispatch({ type: DELETE_TASK_FAILED});  
             } 
         });
     };

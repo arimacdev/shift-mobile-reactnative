@@ -22,7 +22,8 @@ import {
     ADD_TASK_TO_PROJECT,
     ADD_FILE_TO_TASK,
     GET_TASK_IN_PROJECT,
-    UPDATE_PROJECT_TASK
+    UPDATE_PROJECT_TASK,
+    DELETE_TASK
 
 } from '../api/API';
 
@@ -261,6 +262,19 @@ function addFileToTask(file, taskId, selectedProjectID) {
     }, true, false, true);
 };
 
+function deleteSingleTask(selectedProjectID, taskId, taskName, initiator) {
+    return request({
+        url: DELETE_TASK + '/' + selectedProjectID + '/tasks/' + taskId,
+        method: 'DELETE',
+        data: {
+            taskName: taskName,
+            projectId: selectedProjectID,
+            taskInitiator: initiator,
+            taskType: "project",
+        }
+    }, true, true, true);
+}
+
 
 const APIServices = {
     getAllProjectsByUserData,
@@ -285,7 +299,8 @@ const APIServices = {
     updateTaskNameData,
     updateTaskStatusData,
     updateTaskDueDateData,
-    updateTaskReminderDateData
+    updateTaskReminderDateData,
+    deleteSingleTask
 };
 
 export default APIServices;

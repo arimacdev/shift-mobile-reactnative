@@ -33,7 +33,12 @@ import {
     ADD_TASK_TO_PROJECT,
     ADD_TASK_TO_PROJECT_SUCCESS,
     ADD_TASK_TO_PROJECT_FAILED,
-    ADD_TASK_TO_PROJECT_FAILED_MASSAGE
+    ADD_TASK_TO_PROJECT_FAILED_MASSAGE,
+
+    DELETE_TASK,
+    DELETE_TASK_SUCCESS,
+    DELETE_TASK_FAILED,
+    DELETE_TASK_FAILED_MASSAGE,
 
 } from '../types';
 
@@ -70,7 +75,12 @@ const INITIAL_STATE = {
     addTaskToProjectSuccess: false,
     addTaskToProjectError: false,
     addTaskToProjectErrorMessage: '',
-    taskId: null
+    taskId: null,
+
+    deleteTaskLoading: false,
+    deleteTaskSuccess: false,
+    deleteTaskError: false,
+    deleteTaskErrorMessage: '',
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -246,6 +256,39 @@ export default (state = INITIAL_STATE, action) => {
                 addTaskToProjectError: true,
                 addTaskToProjectErrorMessage: action.payload,
                 taskId: null
+            };
+             // delete task
+        case DELETE_TASK:
+            return {
+                ...state,
+                deleteTaskLoading: true,
+                deleteTaskSuccess: false,
+                deleteTaskError: false,
+                deleteTaskErrorMessage: ''
+            };
+        case DELETE_TASK_SUCCESS:
+            return {
+                ...state,
+                deleteTaskLoading: false,
+                deleteTaskSuccess: true,
+                deleteTaskError: false,
+                deleteTaskErrorMessage: ''
+            };
+        case DELETE_TASK_FAILED:
+            return {
+                ...state,
+                deleteTaskLoading: false,
+                deleteTaskSuccess: false,
+                deleteTaskError: true,
+                deleteTaskErrorMessage: ''
+            };
+        case DELETE_TASK_FAILED_MASSAGE:
+            return {
+                ...state,
+                deleteTaskLoading: false,
+                deleteTaskSuccess: false,
+                deleteTaskError: true,
+                deleteTaskErrorMessage: action.payload
             };
         default:
             return state;

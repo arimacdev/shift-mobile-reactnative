@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   TextInput,
   ScrollView,
+  Alert
 } from 'react-native';
 import { connect } from 'react-redux';
 import * as actions from '../../../redux/actions';
@@ -90,7 +91,16 @@ class AddNewTasksScreen extends Component {
     if (prevProps.addTaskToProjectSuccess !== this.props.addTaskToProjectSuccess
       && this.props.addTaskToProjectSuccess) {
       const taskID = this.props.taskId.data.taskId;
-      this.uploadFiles(this.state.files, taskID)
+
+      Alert.alert(
+        "Success",
+        "Task Added",
+        [
+          { text: "OK", onPress: () => this.props.navigation.goBack() }
+        ],
+        { cancelable: false }
+      );
+      //this.uploadFiles(this.state.files, taskID)
     }
   }
 
