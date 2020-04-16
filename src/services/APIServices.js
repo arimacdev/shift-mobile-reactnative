@@ -250,7 +250,8 @@ function updateTaskNoteData(projectID,taskID,note) {
 };
 
 function addTaskToProjectData(taskName, initiator, assigneeId, selectedStatus, dueDate, selectedDateReminder, notes, selectedProjectID) {
-    console.log(selectedProjectID, 'selectedProjectIDselectedProjectID')
+    console.log(dueDate, 'dueDate')
+    console.log(selectedDateReminder, 'selectedDateReminder')
     return request({
         url: ADD_TASK_TO_PROJECT + '/' + selectedProjectID + '/tasks',
         method: 'POST',
