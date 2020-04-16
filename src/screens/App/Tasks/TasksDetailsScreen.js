@@ -420,7 +420,10 @@ class TasksDetailsScreen extends Component {
         });
         break;
       case 1:
-        this.props.navigation.navigate('SubTaskScreen');
+        this.props.navigation.navigate('SubTaskScreen', {
+          selectedProjectID: this.state.selectedProjectID,
+          selectedProjectTaskID: this.state.selectedProjectTaskID,
+        });
         break;
       case 2:
         this.setState({showPicker: true, reminder: false});

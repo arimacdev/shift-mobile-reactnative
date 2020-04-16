@@ -22,7 +22,8 @@ import {
     ADD_TASK_TO_PROJECT,
     ADD_FILE_TO_TASK,
     GET_TASK_IN_PROJECT,
-    UPDATE_PROJECT_TASK
+    UPDATE_PROJECT_TASK,
+    GET_ALL_SUB_TASKS
 
 } from '../api/API';
 
@@ -296,6 +297,12 @@ function updateSlackNotificationStatus(userID, email, value) {
     }, true, false, false);
 };
 
+function getSubTaskData(projectID,taskID,userID) {
+    return request({
+        url: GET_ALL_SUB_TASKS + '/' + projectID + '/tasks/' + taskID + '/subtask?userId=' + userID,
+        method: 'GET'
+    }, true, true, false);
+}
 
 const APIServices = {
     getAllProjectsByUserData,
@@ -323,7 +330,8 @@ const APIServices = {
     updateTaskReminderDateData,
     updateTaskAssigneeData,
     updateTaskNoteData,
-    updateSlackNotificationStatus
+    updateSlackNotificationStatus,
+    getSubTaskData,
 };
 
 export default APIServices;

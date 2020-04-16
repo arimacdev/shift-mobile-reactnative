@@ -17,76 +17,73 @@ EStyleSheet.build({$rem: entireScreenWidth / 380});
 import FadeIn from 'react-native-fade-in-image';
 import Loader from '../../../components/Loader';
 import Header from '../../../components/Header';
-import {NavigationEvents} from 'react-navigation';
+import APIServices from '../../../services/APIServices'
+import AsyncStorage from '@react-native-community/async-storage';
+import RoundCheckbox from 'rn-round-checkbox';
 
 class SubTasksScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      users: [],
-      allUsers: [],
-      isFetching: false,
+      selectedProjectID : '',
+      selectedProjectTaskID: '',
+      userID : '',
+      subTasks : [],
     };
   }
 
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    if (
-      prevProps.usersLoading !== this.props.usersLoading &&
-      this.props.users &&
-      this.props.users.length > 0
-    ) {
-      this.setState({
-        users: this.props.users,
-        allUsers: this.props.users,
-      });
-    }
-
-    if (this.state.isFetching) {
-      this.setState({
-        isFetching: false,
-      });
-    }
-  }
 
   componentDidMount() {
-    this.fetchData();
-  }
-
-  fetchData() {
-    this.setState({users: [], allUsers: []}, function() {
-      this.props.getAllUsers();
+    AsyncStorage.getItem('userID').then(userID => {
+      if (userID) {
+        const {navigation: {state: {params}}} = this.props;
+        let selectedProjectID = params.selectedProjectID
+        let selectedProjectTaskID = params.selectedProjectTaskID
+        this.setState({
+          selectedProjectID : selectedProjectID,
+          selectedProjectTaskID : selectedProjectTaskID,
+          userID : userID}, function() {
+          this.fetchData(userID);
+        });
+      } 
     });
   }
 
-  renderUserListList(item) {
+  async fetchData(userID) {
+    let selectedProjectID = this.state.selectedProjectID
+    let selectedProjectTaskID = this.state.selectedProjectTaskID
+    this.setState({dataLoading:true});
+    subTaskData = await APIServices.getSubTaskData(selectedProjectID,selectedProjectTaskID,userID);
+    if(subTaskData.message == 'success'){
+      this.setState({
+         subTasks : subTaskData.data,
+         dataLoading:false
+      });
+    }else{
+      this.setState({dataLoading:false});
+    }
+  }
+
+  renderSubTaskListList(item) {
     return (
-      <TouchableOpacity
-        onPress={() =>
-          this.props.navigation.navigate('ViewUserScreen', {userItem: item})
-        }>
-        <View style={styles.userView}>
+      <TouchableOpacity>
+        <View style={styles.subTaskView}>
           <Image
-            source={item.taskComplete ? icons.rightCircule : icons.whiteCircule}
+            source={item.subtaskStatus? icons.rightCircule : icons.whiteCircule}
             style={styles.taskStateIcon}
           />
           <View style={{flex: 1}}>
             <Text style={styles.text}>
-              {item.firstName + ' ' + item.lastName}
+              {item.subtaskName}
             </Text>
           </View>
           <View style={styles.controlView}>
-            <TouchableOpacity
-              onPress={() =>
-                this.props.navigation.navigate('EditUserScreen', {
-                  userItem: item,
-                })
-              }>
-              <Image
-                style={styles.editDeleteIcon}
-                source={icons.editRoundWhite}
-              />
+            <TouchableOpacity>
+                <Image 
+                  style={{width: 28, height: 28,borderRadius: 28/ 2 }} 
+                  source={require('../../../asserts/img/edit_user.png')}
+                />
             </TouchableOpacity>
-
             <TouchableOpacity style={{marginLeft: EStyleSheet.value('20rem')}}>
               <Image
                 style={styles.editDeleteIcon}
@@ -99,37 +96,25 @@ class SubTasksScreen extends Component {
     );
   }
 
-  onRefresh() {
-    this.setState({isFetching: true, users: [], allUsers: []}, function() {
-      this.fetchData();
-    });
-  }
+  
 
   onBackPress() {
     this.props.navigation.goBack();
   }
 
-  loadUsers() {
-    this.setState({users: [], allUsers: []}, function() {
-      this.props.getAllUsers();
-    });
-  }
+  
 
   render() {
-    let users = this.state.users;
-    let isFetching = this.state.isFetching;
-    let usersLoading = this.props.usersLoading;
+    let subTasks = this.state.subTasks;
+    let dataLoading = this.props.dataLoading;
 
     return (
       <View style={styles.container}>
-        <NavigationEvents onWillFocus={payload => this.loadUsers(payload)} />
         <FlatList
           style={styles.flalList}
-          data={users}
-          renderItem={({item}) => this.renderUserListList(item)}
-          keyExtractor={item => item.projId}
-          onRefresh={() => this.onRefresh()}
-          refreshing={isFetching}
+          data={subTasks}
+          renderItem={({item}) => this.renderSubTaskListList(item)}
+          keyExtractor={item => item.subtaskId}
         />
         <TouchableOpacity onPress={() => {}}>
           <View style={styles.button}>
@@ -139,7 +124,7 @@ class SubTasksScreen extends Component {
               resizeMode={'center'}
             />
             <View style={{flex: 1}}>
-              <Text style={styles.buttonText}>Add new Task</Text>
+              <Text style={styles.buttonText}>Add new Sub Task</Text>
             </View>
 
             <Image
@@ -149,7 +134,7 @@ class SubTasksScreen extends Component {
             />
           </View>
         </TouchableOpacity>
-        {usersLoading && <Loader />}
+        {dataLoading && <Loader />}
       </View>
     );
   }
@@ -159,7 +144,7 @@ const styles = EStyleSheet.create({
   container: {
     flex: 1,
   },
-  userView: {
+  subTaskView: {
     backgroundColor: colors.projectBgColor,
     borderRadius: 5,
     height: '60rem',
@@ -188,8 +173,8 @@ const styles = EStyleSheet.create({
     marginBottom: '0rem',
   },
   taskStateIcon: {
-    width: 45,
-    height: 45,
+    width: '30rem',
+    height: '30rem',
   },
   editDeleteIcon: {
     width: 25,
@@ -230,8 +215,6 @@ const styles = EStyleSheet.create({
 
 const mapStateToProps = state => {
   return {
-    usersLoading: state.users.usersLoading,
-    users: state.users.users,
   };
 };
 export default connect(
