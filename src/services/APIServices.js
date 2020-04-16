@@ -283,6 +283,19 @@ function addFileToTask(file, taskId, selectedProjectID) {
     }, true, false, true);
 };
 
+function updateSlackNotificationStatus(userID, email, value) {
+    return request({
+        url: UPDATE_USER + '/' + userID + '/slack/status',
+        method: 'PUT',
+        data: {
+            slackAssignerId: userID,
+            slackAssigneeId: userID,
+            assigneeSlackId: email,
+            notificationStatus: value
+        }
+    }, true, false, false);
+};
+
 
 const APIServices = {
     getAllProjectsByUserData,
@@ -309,7 +322,8 @@ const APIServices = {
     updateTaskDueDateData,
     updateTaskReminderDateData,
     updateTaskAssigneeData,
-    updateTaskNoteData
+    updateTaskNoteData,
+    updateSlackNotificationStatus
 };
 
 export default APIServices;

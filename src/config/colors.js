@@ -27,7 +27,9 @@ const colors = {
     projDetails:'#DDE0E4',
     projDetailsProjectName : '#080848',
     projectDetailsDate:'#0bafff',
-    textPlaceHolderColor : '#b9b9b9'
+    textPlaceHolderColor : '#b9b9b9',
+    switchOnBgColor:'#b6d3f1',
+    switchColor:'#1976d2'
 
 };
 export default colors;

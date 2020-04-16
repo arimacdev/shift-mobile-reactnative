@@ -18,6 +18,7 @@ import SubTaskScreen from '../screens/App/Tasks/SubTaskScreen';
 import FilesScreen from '../screens/App/Tasks/FilesScreen';
 import ChatScreen from '../screens/App/Tasks/ChatScreen';
 import NotesScreen from '../screens/App/Tasks/NotesScreen';
+import ViewProfileScreen from '../screens/App/Profile/ViewProfileScreen';
 
 export const ProjectsStackNavigator = createStackNavigator(
   {
@@ -177,6 +178,18 @@ export const ProjectsStackNavigator = createStackNavigator(
           <Header
             navigation={navigation}
             title={'Notes'}
+            onPress={() => navigation.goBack()}
+          />
+        ),
+      }),
+    },
+    ViewProfileScreen: {
+      screen: ViewProfileScreen,
+      navigationOptions: ({navigation}) => ({
+        header: (
+          <Header
+            navigation={navigation}
+            title={'Profile'}
             onPress={() => navigation.goBack()}
           />
         ),
