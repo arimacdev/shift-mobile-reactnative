@@ -391,7 +391,7 @@ class TasksDetailsScreen extends Component {
         break;
       case 0:
         this.props.navigation.navigate('AssigneeScreen', {
-          userName: '',
+          userName: this.state.name,
           onSelectUser: name => this.onSelectUser(name),
         });
         break;

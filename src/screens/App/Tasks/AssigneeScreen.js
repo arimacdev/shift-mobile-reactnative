@@ -19,45 +19,56 @@ import AsyncStorage from '@react-native-community/async-storage';
 import Loader from '../../../components/Loader';
 import FadeIn from 'react-native-fade-in-image';
 
-
 class AssigneeScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      projects: [],
-      allProjects: [],
+      users: [],
+      allUsers: [],
+      isFetching: false,
       searchText: '',
     };
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (
-      prevProps.projectsLoading !== this.props.projectsLoading &&
-      this.props.projects &&
-      this.props.projects.length > 0
+      prevProps.usersLoading !== this.props.usersLoading &&
+      this.props.users &&
+      this.props.users.length > 0
     ) {
       this.setState({
-        projects: this.props.projects,
-        allProjects: this.props.projects,
+        users: this.props.users,
+        allUsers: this.props.users,
+      });
+    }
+
+    if (this.state.isFetching) {
+      this.setState({
+        isFetching: false,
       });
     }
   }
 
   componentDidMount() {
-    AsyncStorage.getItem('userID').then(userID => {
-      this.props.getAllProjectsByUser(userID);
+    this.fetchData()
+  }
+
+  fetchData() {
+    this.setState({ users: [],allUsers:[]}, function() {
+      this.props.getAllUsers()
     });
   }
 
   onSelectUser(userName) {
-    const { navigation } = this.props;
+    const {navigation} = this.props;
     navigation.state.params.onSelectUser(userName);
     navigation.goBack();
   }
 
   userImage = function(item) {
-    let userImage = 'https://i.pinimg.com/236x/5e/48/1b/5e481b8fa99c5f0ebc319b93f3c6e076--tiaras-singer.jpg';
-    // let userImage = item.taskAssigneeProfileImage;
+    // let userImage =
+    //   'https://i.pinimg.com/236x/5e/48/1b/5e481b8fa99c5f0ebc319b93f3c6e076--tiaras-singer.jpg';
+      let userImage = item.profileImage
 
     if (userImage) {
       return (
@@ -65,7 +76,6 @@ class AssigneeScreen extends Component {
           <Image
             source={{uri: userImage}}
             style={styles.userIcon}
-            resizeMode="contain"
           />
         </FadeIn>
       );
@@ -81,21 +91,22 @@ class AssigneeScreen extends Component {
   };
 
   renderProjectList(item) {
+    const {navigation} = this.props;
     return (
-      <TouchableOpacity onPress={() => this.onSelectUser(item.projectName)}>
+      <TouchableOpacity onPress={() => this.onSelectUser(item.firstName+" "+item.lastName)}>
         <View
           style={[
             styles.projectView,
             {
               backgroundColor:
-                item.projectName == this.props.userName
+              item.firstName+" "+item.lastName ==  navigation.state.params.userName
                   ? colors.projectBgColor
                   : '',
             },
           ]}>
-          {this.userImage()}
+          {this.userImage(item)}
           <View style={{flex: 1}}>
-            <Text style={styles.text}>{item.projectName}</Text>
+            <Text style={styles.text}>{item.firstName + ' ' + item.lastName}</Text>
           </View>
           {/* {this.colorCode(item)} */}
         </View>
@@ -103,59 +114,36 @@ class AssigneeScreen extends Component {
     );
   }
 
-  colorCode = function(item) {
-    let color = '';
-    switch (item.projectStatus) {
-      case 'presales':
-        color = '#576377';
-      case 'presalesPD':
-        color = '#576377';
-      case 'preSalesQS':
-        color = '#576377';
-      case 'preSalesN':
-        color = '#576377';
-      case 'preSalesC':
-        color = '#576377';
-        break;
-      case 'preSalesL':
-        color = '#FF6363';
-        break;
-      case 'ongoing':
-        color = '#5E98F0';
-        break;
-      case 'support':
-        color = '#FFA800';
-        break;
-      case 'finished':
-        color = '#36DD5B';
-        break;
-    }
-    return <View style={[styles.statusView, {backgroundColor: color}]} />;
-  };
+  onRefresh() {
+    this.setState({ isFetching: true,users: [],allUsers:[]}, function() {
+       this.fetchData();
+    });
+   
+  }
 
-  renderBase() {
-    return (
-      <View style={{justifyContent: 'center', flex: 1}}>
-        <Image style={styles.dropIcon} source={icons.arrow} />
-      </View>
-    );
+  loadUsers () {
+    this.setState({ users: [],allUsers:[]}, function() {
+      this.props.getAllUsers()
+    });
   }
 
   onSearchTextChange(text) {
     this.setState({searchText: text});
-    let result = this.state.allProjects.filter(data =>
-      data.projectName.toLowerCase().includes(text.toLowerCase()),
+    let result = this.state.allUsers.filter(data =>
+      data.firstName.toLowerCase().includes(text.toLowerCase()) || data.lastName.toLowerCase().includes(text.toLowerCase()),
     );
     if (text == '') {
-      this.setState({projects: this.state.allProjects});
+      this.setState({users: this.state.allUsers});
     } else {
-      this.setState({projects: result});
+      this.setState({users: result});
     }
   }
 
   render() {
-    let projects = this.state.projects;
-    let projectsLoading = this.state.projectsLoading;
+    let users = this.state.users;
+    let isFetching = this.state.isFetching;
+    let usersLoading = this.props.usersLoading;
+
     return (
       <View style={styles.backgroundImage}>
         <View style={styles.projectFilerView}>
@@ -168,11 +156,13 @@ class AssigneeScreen extends Component {
           />
         </View>
         <FlatList
-          data={projects}
+          data={users}
           renderItem={({item}) => this.renderProjectList(item)}
           keyExtractor={item => item.projId}
+          onRefresh={() => this.onRefresh()}
+          refreshing={isFetching}
         />
-        {projectsLoading && <Loader />}
+        {usersLoading && <Loader />}
       </View>
     );
   }
@@ -255,8 +245,8 @@ const styles = EStyleSheet.create({
 
 const mapStateToProps = state => {
   return {
-    projectsLoading: state.project.projectsLoading,
-    projects: state.project.projects,
+    usersLoading : state.users.usersLoading,
+    users : state.users.users
   };
 };
 export default connect(
