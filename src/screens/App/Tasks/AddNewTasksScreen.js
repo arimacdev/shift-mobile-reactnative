@@ -169,7 +169,7 @@ class AddNewTasksScreen extends Component {
         this.setState({
           selectedDate: newDate,
           showPicker: false,
-          showTimePicker: false,
+          showTimePicker: true,
           date: new Date(selectedDate),
         });
       }
@@ -370,8 +370,6 @@ class AddNewTasksScreen extends Component {
     let selectedTimeReminder = this.state.selectedTimeReminder;
     let notes = this.state.notes;
     let dueDate = this.state.selectedDate;
-
-
     if (this.validateData(taskName)) {
       this.props.addTaskToProject(taskName, initiator, assigneeId, selectedStatus, dueDate, selectedDateReminder, notes, this.props.selectedProjectID);
     }
