@@ -58,6 +58,8 @@ class AddNewTasksScreen extends Component {
       showTimePicker: false,
       selectedDate: '',
       date: new Date(),
+      selectedTime:'',
+      time:new Date(),
       selectedDateReminder: '',
       selectedTimeReminder: '',
       dateReminder: new Date(),
@@ -144,7 +146,7 @@ class AddNewTasksScreen extends Component {
     let newDate = '';
 
     if (this.state.reminder) {
-      newDate = moment(date).format('YYYY/MM/DD');
+      newDate = moment(date).format('Do MMMM YYYY');
     } else {
       newDate = moment(date).format('Do MMMM YYYY');
     }
@@ -191,6 +193,13 @@ class AddNewTasksScreen extends Component {
           showTimePicker: false,
           timeReminder: new Date(selectedTime),
         });
+      } else {
+        this.setState({
+          selectedTime: newTime,
+          showPicker: false,
+          showTimePicker: false,
+          time: new Date(selectedTime),
+        });
       }
     } else {
       this.setState({
@@ -225,7 +234,8 @@ class AddNewTasksScreen extends Component {
       <DateTimePicker
         testID="dateTimePicker"
         timeZoneOffsetInMinutes={0}
-        value={this.state.timeReminder}
+        value={this.state.reminder == true
+          ? this.state.timeReminder : this.state.time}
         mode={'time'}
         is24Hour={true}
         display="default"
@@ -479,7 +489,7 @@ class AddNewTasksScreen extends Component {
             <Text style={[styles.textInput, { flex: 1 }]}>
               {this.state.selectedDate == ''
                 ? 'Due Date'
-                : this.state.selectedDate}
+                : this.state.selectedTime+" "+this.state.selectedDate}
             </Text>
             <Image
               style={styles.calendarIcon}
