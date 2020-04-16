@@ -89,13 +89,20 @@ class AddEditSubTaskScreen extends Component {
         this.showAlert("","Please Enter the Sub Task Name");
       }else{
           this.setState({dataLoading:true});
-          resultObj = await APIServices.updateSubTask(userID,projectID,taskID,subTaskID,subTaskName,isSelected);
-          if(resultObj.message == 'success'){
-            this.setState({dataLoading:false});
-            this.props.navigation.goBack();
-          }else{
-            this.setState({dataLoading:false});
-            this.showAlert("","Error");
+          try {
+              resultObj = await APIServices.updateSubTask(userID,projectID,taskID,subTaskID,subTaskName,isSelected);
+              if(resultObj.message == 'success'){
+                this.setState({dataLoading:false});
+                this.props.navigation.goBack();
+              }else{
+                this.setState({dataLoading:false});
+                this.showAlert("","Error");
+              }
+          }catch(e) {
+            if(e.status == 401){
+              this.setState({dataLoading:false});
+              this.showAlert("",e.data.message);
+            }
           }
       }
   }
@@ -110,13 +117,20 @@ class AddEditSubTaskScreen extends Component {
         this.showAlert("","Please Enter the Sub Task Name");
       }else{
           this.setState({dataLoading:true});
-          resultObj = await APIServices.addSubTask(userID,projectID,taskID,subTaskName);
-          if(resultObj.message == 'success'){
-            this.setState({dataLoading:false});
-            this.props.navigation.goBack();
-          }else{
-            this.setState({dataLoading:false});
-            this.showAlert("","Error");
+          try {
+              resultObj = await APIServices.addSubTask(userID,projectID,taskID,subTaskName);
+              if(resultObj.message == 'success'){
+                this.setState({dataLoading:false});
+                this.props.navigation.goBack();
+              }else{
+                this.setState({dataLoading:false});
+                this.showAlert("","Error");
+              }
+          }catch(e) {
+            if(e.status == 401){
+              this.setState({dataLoading:false});
+              this.showAlert("",e.data.message);
+            }
           }
       }
   }

@@ -20,6 +20,7 @@ import Header from '../../../components/Header';
 import APIServices from '../../../services/APIServices'
 import AsyncStorage from '@react-native-community/async-storage';
 import {NavigationEvents} from 'react-navigation';
+import AwesomeAlert from 'react-native-awesome-alerts';
 
 class SubTasksScreen extends Component {
   constructor(props) {
@@ -29,6 +30,9 @@ class SubTasksScreen extends Component {
       selectedProjectTaskID: '',
       userID : '',
       subTasks : [],
+      showAlert : false,
+      alertTitle : '',
+      alertMsg : '',
     };
   }
 
@@ -69,13 +73,22 @@ class SubTasksScreen extends Component {
       let selectedProjectTaskID = this.state.selectedProjectTaskID;
       let userID = this.state.userID;
       this.setState({dataLoading:true});
-      resultObj = await APIServices.deleteSubTask(selectedProjectID,selectedProjectTaskID,item.subtaskId);
-      if(resultObj.message == 'success'){
-        this.setState({dataLoading:false});
-        this.fetchData(userID);
-      }else{
-        this.setState({dataLoading:false});
+      try {
+        resultObj = await APIServices.deleteSubTask(selectedProjectID,selectedProjectTaskID,item.subtaskId);
+        if(resultObj.message == 'success'){
+          this.setState({dataLoading:false});
+          this.fetchData(userID);
+        }else{
+          this.setState({dataLoading:false});
+        }
       }
+      catch(e) {
+        if(e.status == 401){
+          this.setState({dataLoading:false});
+          this.showAlert("",e.data.message);
+        }
+      }
+      
   }
 
   editSubTask(item){
@@ -144,9 +157,29 @@ class SubTasksScreen extends Component {
     this.props.navigation.goBack();
   }
 
+  hideAlert (){
+    this.setState({
+      showAlert : false,
+      alertTitle : '',
+      alertMsg : '',
+    })
+  }
+
+  showAlert(title,msg){
+    this.setState({
+      showAlert : true,
+      alertTitle : title,
+      alertMsg : msg,
+    })
+  }
+
   render() {
     let subTasks = this.state.subTasks;
     let dataLoading = this.props.dataLoading;
+    let showAlert = this.state.showAlert;
+    let alertTitle = this.state.alertTitle;
+    let alertMsg = this.state.alertMsg;
+
 
     return (
       <View style={styles.container}>
@@ -174,6 +207,22 @@ class SubTasksScreen extends Component {
             />
           </View>
         </TouchableOpacity>
+        <AwesomeAlert
+          show={showAlert}
+          showProgress={false}
+          title={alertTitle}
+          message={alertMsg}
+          closeOnTouchOutside={true}
+          closeOnHardwareBackPress={false}
+          showCancelButton={false}
+          showConfirmButton={true}
+          cancelText=""
+          confirmText="OK"
+          confirmButtonColor={colors.primary}
+          onConfirmPressed={() => {
+            this.hideAlert();
+          }}
+        />
         {dataLoading && <Loader />}
       </View>
     );
