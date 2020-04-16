@@ -134,6 +134,7 @@ class TasksDetailsScreen extends Component {
       dataLoading : false,
       reminderTime : '',
       dueTime : '',
+      //activeUsers : {},
     };
   }
 
@@ -158,6 +159,7 @@ class TasksDetailsScreen extends Component {
     if(taskResult.message == 'success'){
         this.setTaskName(taskResult);
         this.setTaskStatus(taskResult);
+        this.setTaskUserName(taskResult);
         this.setDueDate(taskResult);
         this.setReminderDate(taskResult);
         this.setState({dataLoading:false}); 
@@ -198,6 +200,19 @@ class TasksDetailsScreen extends Component {
       this.setState({
         taskStatus : statusValue
       })
+  }
+
+  async setTaskUserName (taskResult){
+    let projectID = this.state.selectedProjectID;
+    let userID = taskResult.data.taskAssignee;
+    let activeUsers = await APIServices.getAllUsersByProjectId(projectID);
+    if (activeUsers.message == 'success' && userID) {
+      const result = activeUsers.data.find( ({ userId }) => userId === userID );
+      this.setState({
+        name: result.firstName + ' '  + result.lastName,
+        //activeUsers : activeUsers.data,
+      });
+    }
   }
 
   setDueDate(taskResult){
