@@ -50,12 +50,12 @@ class AssigneeScreen extends Component {
   }
 
   componentDidMount() {
-    this.fetchData()
+    this.fetchData();
   }
 
   fetchData() {
-    this.setState({ users: [],allUsers:[]}, function() {
-      this.props.getAllUsers()
+    this.setState({users: [], allUsers: []}, function() {
+      this.props.getAllUsers();
     });
   }
 
@@ -68,15 +68,12 @@ class AssigneeScreen extends Component {
   userImage = function(item) {
     // let userImage =
     //   'https://i.pinimg.com/236x/5e/48/1b/5e481b8fa99c5f0ebc319b93f3c6e076--tiaras-singer.jpg';
-      let userImage = item.profileImage
+    let userImage = item.profileImage;
 
     if (userImage) {
       return (
         <FadeIn>
-          <Image
-            source={{uri: userImage}}
-            style={styles.userIcon}
-          />
+          <Image source={{uri: userImage}} style={styles.userIcon} />
         </FadeIn>
       );
     } else {
@@ -93,20 +90,24 @@ class AssigneeScreen extends Component {
   renderProjectList(item) {
     const {navigation} = this.props;
     return (
-      <TouchableOpacity onPress={() => this.onSelectUser(item.firstName+" "+item.lastName)}>
+      <TouchableOpacity
+        onPress={() => this.onSelectUser(item.firstName + ' ' + item.lastName)}>
         <View
           style={[
             styles.projectView,
             {
               backgroundColor:
-              item.firstName+" "+item.lastName ==  navigation.state.params.userName
+                item.firstName + ' ' + item.lastName ==
+                navigation.state.params.userName
                   ? colors.projectBgColor
                   : '',
             },
           ]}>
           {this.userImage(item)}
           <View style={{flex: 1}}>
-            <Text style={styles.text}>{item.firstName + ' ' + item.lastName}</Text>
+            <Text style={styles.text}>
+              {item.firstName + ' ' + item.lastName}
+            </Text>
           </View>
           {/* {this.colorCode(item)} */}
         </View>
@@ -115,22 +116,23 @@ class AssigneeScreen extends Component {
   }
 
   onRefresh() {
-    this.setState({ isFetching: true,users: [],allUsers:[]}, function() {
-       this.fetchData();
+    this.setState({isFetching: true, users: [], allUsers: []}, function() {
+      this.fetchData();
     });
-   
   }
 
-  loadUsers () {
-    this.setState({ users: [],allUsers:[]}, function() {
-      this.props.getAllUsers()
+  loadUsers() {
+    this.setState({users: [], allUsers: []}, function() {
+      this.props.getAllUsers();
     });
   }
 
   onSearchTextChange(text) {
     this.setState({searchText: text});
-    let result = this.state.allUsers.filter(data =>
-      data.firstName.toLowerCase().includes(text.toLowerCase()) || data.lastName.toLowerCase().includes(text.toLowerCase()),
+    let result = this.state.allUsers.filter(
+      data =>
+        data.firstName.toLowerCase().includes(text.toLowerCase()) ||
+        data.lastName.toLowerCase().includes(text.toLowerCase()),
     );
     if (text == '') {
       this.setState({users: this.state.allUsers});
@@ -245,8 +247,8 @@ const styles = EStyleSheet.create({
 
 const mapStateToProps = state => {
   return {
-    usersLoading : state.users.usersLoading,
-    users : state.users.users
+    usersLoading: state.users.usersLoading,
+    users: state.users.users,
   };
 };
 export default connect(
