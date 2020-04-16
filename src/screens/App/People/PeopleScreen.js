@@ -127,7 +127,7 @@ class PeopleScreen extends Component {
             progress = (item.tasksCompleted/item.totalTasks);
         } 
         return (
-            <TouchableOpacity style={styles.mainContainer} onPress={() => this.props.navigation.navigate('ViewUserScreen', { userItem: item })}>
+            <TouchableOpacity style={styles.mainContainer}>
                 <NavigationEvents onWillFocus={payload => this.tabOpen(payload)} />
                 <View style={styles.userView}>
                     {this.userIcon(item)}
