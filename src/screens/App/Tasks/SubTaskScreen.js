@@ -19,7 +19,7 @@ import Loader from '../../../components/Loader';
 import Header from '../../../components/Header';
 import APIServices from '../../../services/APIServices'
 import AsyncStorage from '@react-native-community/async-storage';
-import RoundCheckbox from 'rn-round-checkbox';
+import {NavigationEvents} from 'react-navigation';
 
 class SubTasksScreen extends Component {
   constructor(props) {
@@ -50,24 +50,65 @@ class SubTasksScreen extends Component {
   }
 
   async fetchData(userID) {
-    let selectedProjectID = this.state.selectedProjectID
-    let selectedProjectTaskID = this.state.selectedProjectTaskID
-    this.setState({dataLoading:true});
-    subTaskData = await APIServices.getSubTaskData(selectedProjectID,selectedProjectTaskID,userID);
-    if(subTaskData.message == 'success'){
-      this.setState({
-         subTasks : subTaskData.data,
-         dataLoading:false
-      });
-    }else{
-      this.setState({dataLoading:false});
-    }
+      let selectedProjectID = this.state.selectedProjectID
+      let selectedProjectTaskID = this.state.selectedProjectTaskID
+      this.setState({dataLoading:true});
+      subTaskData = await APIServices.getSubTaskData(selectedProjectID,selectedProjectTaskID,userID);
+      if(subTaskData.message == 'success'){
+        this.setState({
+          subTasks : subTaskData.data,
+          dataLoading:false
+        });
+      }else{
+        this.setState({dataLoading:false});
+      }
+  }
+
+  async deleteSubTask(item){
+      let selectedProjectID = this.state.selectedProjectID;
+      let selectedProjectTaskID = this.state.selectedProjectTaskID;
+      let userID = this.state.userID;
+      this.setState({dataLoading:true});
+      resultObj = await APIServices.deleteSubTask(selectedProjectID,selectedProjectTaskID,item.subtaskId);
+      if(resultObj.message == 'success'){
+        this.setState({dataLoading:false});
+        this.fetchData(userID);
+      }else{
+        this.setState({dataLoading:false});
+      }
+  }
+
+  editSubTask(item){
+    let selectedProjectID = this.state.selectedProjectID;
+    let selectedProjectTaskID = this.state.selectedProjectTaskID;
+    this.props.navigation.navigate('AddEditSubTaskScreen', {
+      item: item,
+      projectID : selectedProjectID,
+      taskID : selectedProjectTaskID,
+      screenType : 'edit'
+    });
+  }
+
+  addSubTask(){
+    let selectedProjectID = this.state.selectedProjectID;
+    let selectedProjectTaskID = this.state.selectedProjectTaskID;
+    this.props.navigation.navigate('AddEditSubTaskScreen', {
+      item: {},
+      projectID : selectedProjectID,
+      taskID : selectedProjectTaskID,
+      screenType : 'add'
+    });
+  }
+
+  loadSubtasks(){
+    let userID = this.state.userID;
+    this.fetchData(userID);
   }
 
   renderSubTaskListList(item) {
     return (
-      <TouchableOpacity>
         <View style={styles.subTaskView}>
+          <NavigationEvents onWillFocus={payload => this.loadSubtasks(payload)} />
           <Image
             source={item.subtaskStatus? icons.rightCircule : icons.whiteCircule}
             style={styles.taskStateIcon}
@@ -78,13 +119,16 @@ class SubTasksScreen extends Component {
             </Text>
           </View>
           <View style={styles.controlView}>
-            <TouchableOpacity>
+            <TouchableOpacity 
+                onPress={() => this.editSubTask(item)}>
                 <Image 
                   style={{width: 28, height: 28,borderRadius: 28/ 2 }} 
                   source={require('../../../asserts/img/edit_user.png')}
                 />
             </TouchableOpacity>
-            <TouchableOpacity style={{marginLeft: EStyleSheet.value('20rem')}}>
+            <TouchableOpacity 
+                  onPress={() => this.deleteSubTask(item)}
+                  style={{marginLeft: EStyleSheet.value('20rem')}}>
               <Image
                 style={styles.editDeleteIcon}
                 source={icons.deleteRoundRed}
@@ -92,17 +136,13 @@ class SubTasksScreen extends Component {
             </TouchableOpacity>
           </View>
         </View>
-      </TouchableOpacity>
     );
   }
 
-  
 
   onBackPress() {
     this.props.navigation.goBack();
   }
-
-  
 
   render() {
     let subTasks = this.state.subTasks;
@@ -116,7 +156,7 @@ class SubTasksScreen extends Component {
           renderItem={({item}) => this.renderSubTaskListList(item)}
           keyExtractor={item => item.subtaskId}
         />
-        <TouchableOpacity onPress={() => {}}>
+        <TouchableOpacity onPress={() => this.addSubTask()}>
           <View style={styles.button}>
             <Image
               style={styles.bottomBarIcon}

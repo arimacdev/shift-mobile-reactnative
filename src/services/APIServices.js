@@ -23,7 +23,10 @@ import {
     ADD_FILE_TO_TASK,
     GET_TASK_IN_PROJECT,
     UPDATE_PROJECT_TASK,
-    GET_ALL_SUB_TASKS
+    GET_ALL_SUB_TASKS,
+    DELETE_SUB_TASK,
+    ADD_SUB_TASK,
+    UPDATE_SUB_TASK
 
 } from '../api/API';
 
@@ -304,6 +307,41 @@ function getSubTaskData(projectID,taskID,userID) {
     }, true, true, false);
 }
 
+function deleteSubTask(projectID,taskID,subtaskId) {
+    return request({
+        url: DELETE_SUB_TASK + '/' + projectID + '/tasks/' + taskID + '/subtask/' + subtaskId,
+        method: 'DELETE'
+    }, true, true, true);
+};
+
+function addSubTask(userID,projectID,taskID,subTaskName) {
+    return request({
+        url: ADD_SUB_TASK + '/' + projectID + '/tasks/' + taskID + '/subtask',
+        method: 'POST',
+        data : {
+            taskId : taskID,
+            subtaskName : subTaskName,
+            subTaskCreator: userID,
+            taskType: "project"
+        
+        }
+    }, true, false, false);
+};
+
+function updateSubTask(userID,projectID,taskID,subTaskID,subTaskName,isSelected) {
+    return request({
+        url: UPDATE_SUB_TASK + '/' + projectID + '/tasks/' + taskID + '/subtask/' + subTaskID,
+        method: 'PUT',
+        data : {
+            subtaskName : subTaskName,//
+            subtaskStatus : isSelected,//
+            subTaskEditor: userID,//
+            taskType: "project"
+        
+        }
+    }, true, false, true);
+};
+
 const APIServices = {
     getAllProjectsByUserData,
     getAllTaskInProjectsData,
@@ -332,6 +370,9 @@ const APIServices = {
     updateTaskNoteData,
     updateSlackNotificationStatus,
     getSubTaskData,
+    deleteSubTask,
+    addSubTask,
+    updateSubTask
 };
 
 export default APIServices;
