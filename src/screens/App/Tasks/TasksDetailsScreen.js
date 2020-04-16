@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   TextInput,
   ScrollView,
+  Alert
 } from 'react-native';
 import {connect} from 'react-redux';
 import * as actions from '../../../redux/actions';
@@ -24,6 +25,7 @@ import FadeIn from 'react-native-fade-in-image';
 import {SkypeIndicator} from 'react-native-indicators';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import APIServices from '../../../services/APIServices';
+import AwesomeAlert from 'react-native-awesome-alerts';
 
 const Placeholder = () => (
   <View style={styles.landing}>
@@ -134,11 +136,38 @@ class TasksDetailsScreen extends Component {
       dataLoading : false,
       reminderTime : '',
       dueTime : '',
+      projectTaskInitiator: '',
+      showAlert : false,
+      alertTitle : '',
+      alertMsg : '',
       note : '',
     };
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
+    if (prevProps.deleteTaskError !== this.props.deleteTaskError
+      && this.props.deleteTaskError && this.props.deleteTaskErrorMessage == '') {
+      this.showAlert("", this.props.deleteTaskErrorMessage);
+    }
+
+    if (prevProps.deleteTaskError !== this.props.deleteTaskError
+      && this.props.deleteTaskError && this.props.deleteTaskErrorMessage != '') {
+      this.showAlert("", this.props.deleteTaskErrorMessage);
+    }
+
+    if (prevProps.deleteTaskSuccess !== this.props.deleteTaskSuccess
+      && this.props.deleteTaskSuccess) {
+        Alert.alert(
+          "Success",
+          "Task Deleted",
+          [
+            { text: "OK", onPress: () => this.props.navigation.goBack() }
+          ],
+          { cancelable: false }
+        );
+      // const taskID = this.props.taskId.data.taskId;
+      // this.uploadFiles(this.state.files, taskID)
+    }
   }
 
   componentDidMount() {
@@ -157,6 +186,7 @@ class TasksDetailsScreen extends Component {
     this.setState({dataLoading:true});
     taskResult = await APIServices.getProjecTaskData(selectedProjectID,selectedProjectTaskID);
     if(taskResult.message == 'success'){
+        this.setTaskInitiator(taskResult);
         this.setTaskName(taskResult);
         this.setTaskStatus(taskResult);
         this.setTaskUserName(taskResult);
@@ -169,9 +199,29 @@ class TasksDetailsScreen extends Component {
     }
   }
 
+  setTaskInitiator (taskResult){
+    this.setState({projectTaskInitiator : taskResult.data.taskInitiator});
+  }
+
   setTaskName (taskResult){
     this.setState({taskName : taskResult.data.taskName});
   }
+
+  hideAlert (){
+    this.setState({
+      showAlert : false,
+      alertTitle : '',
+      alertMsg : '',
+    })
+}
+
+showAlert(title,msg){
+    this.setState({
+      showAlert : true,
+      alertTitle : title,
+      alertMsg : msg,
+    })
+}
 
   setTaskStatus (taskResult){
     let statusValue = '';
@@ -645,10 +695,20 @@ class TasksDetailsScreen extends Component {
       }
   };
 
+  deleteTask() {
+    let projectID = this.state.selectedProjectID;
+    let taskID = this.state.selectedProjectTaskID;
+    let tskInitiator = this.state.projectTaskInitiator;
+    let taskName = this.state.taskName;
+    this.props.deleteTask(projectID, taskID, taskName, tskInitiator)
+  }
+
   render() {
     let taskStatus = this.state.taskStatus;
     let dataLoading = this.state.dataLoading;
-
+    let showAlert = this.state.showAlert;
+    let alertTitle = this.state.alertTitle;
+    let alertMsg = this.state.alertMsg;
     return (
       <ScrollView style={styles.backgroundImage}>
           <View>
@@ -709,6 +769,22 @@ class TasksDetailsScreen extends Component {
             {this.state.showTimePicker ? this.renderTimePicker() : null}
           </View>
           {dataLoading && <Loader/>}
+          <AwesomeAlert
+                    show={showAlert}
+                    showProgress={false}
+                    title={alertTitle}
+                    message={alertMsg}
+                    closeOnTouchOutside={true}
+                    closeOnHardwareBackPress={false}
+                    showCancelButton={false}
+                    showConfirmButton={true}
+                    cancelText=""
+                    confirmText="OK"
+                    confirmButtonColor={colors.primary}
+                    onConfirmPressed={() => {
+                        this.hideAlert();
+                    }}
+                />
       </ScrollView>
     );
   }
@@ -851,6 +927,10 @@ const styles = EStyleSheet.create({
 
 const mapStateToProps = state => {
   return {
+    deleteTaskLoading: state.project.deleteTaskLoading,
+    deleteTaskSuccess: state.project.deleteTaskSuccess, 
+    deleteTaskError: state.project.deleteTaskError,
+    deleteTaskErrorMessage: state.project.deleteTaskErrorMessage
   };
 };
 export default connect(

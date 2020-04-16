@@ -26,8 +26,8 @@ import {
     GET_ALL_SUB_TASKS,
     DELETE_SUB_TASK,
     ADD_SUB_TASK,
-    UPDATE_SUB_TASK
-
+    UPDATE_SUB_TASK,
+    DELETE_TASK,
 } from '../api/API';
 
 function getAllProjectsByUserData(userID) {
@@ -252,7 +252,8 @@ function updateTaskNoteData(projectID,taskID,note) {
 };
 
 function addTaskToProjectData(taskName, initiator, assigneeId, selectedStatus, dueDate, selectedDateReminder, notes, selectedProjectID) {
-    console.log(selectedProjectID, 'selectedProjectIDselectedProjectID')
+    console.log(dueDate, 'dueDate')
+    console.log(selectedDateReminder, 'selectedDateReminder')
     return request({
         url: ADD_TASK_TO_PROJECT + '/' + selectedProjectID + '/tasks',
         method: 'POST',
@@ -286,6 +287,19 @@ function addFileToTask(file, taskId, selectedProjectID) {
         data: formData
     }, true, false, true);
 };
+
+function deleteSingleTask(selectedProjectID, taskId, taskName, initiator) {
+    return request({
+        url: DELETE_TASK + '/' + selectedProjectID + '/tasks/' + taskId,
+        method: 'DELETE',
+        data: {
+            taskName: taskName,
+            projectId: selectedProjectID,
+            taskInitiator: initiator,
+            taskType: "project",
+        }
+    }, true, true, true);
+}
 
 function updateSlackNotificationStatus(userID, email, value) {
     return request({
@@ -366,6 +380,7 @@ const APIServices = {
     updateTaskStatusData,
     updateTaskDueDateData,
     updateTaskReminderDateData,
+    deleteSingleTask,
     updateTaskAssigneeData,
     updateTaskNoteData,
     updateSlackNotificationStatus,

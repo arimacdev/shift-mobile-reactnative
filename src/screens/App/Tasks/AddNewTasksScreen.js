@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   TextInput,
   ScrollView,
+  Alert
 } from 'react-native';
 import { connect } from 'react-redux';
 import * as actions from '../../../redux/actions';
@@ -57,6 +58,8 @@ class AddNewTasksScreen extends Component {
       showTimePicker: false,
       selectedDate: '',
       date: new Date(),
+      selectedTime:'',
+      time:new Date(),
       selectedDateReminder: '',
       selectedTimeReminder: '',
       dateReminder: new Date(),
@@ -73,6 +76,7 @@ class AddNewTasksScreen extends Component {
       showAlert: false,
       alertTitle: '',
       alertMsg: '',
+      reminderTime : '',
     };
   }
 
@@ -90,7 +94,16 @@ class AddNewTasksScreen extends Component {
     if (prevProps.addTaskToProjectSuccess !== this.props.addTaskToProjectSuccess
       && this.props.addTaskToProjectSuccess) {
       const taskID = this.props.taskId.data.taskId;
-      this.uploadFiles(this.state.files, taskID)
+
+      Alert.alert(
+        "Success",
+        "Task Added",
+        [
+          { text: "OK", onPress: () => this.props.navigation.goBack() }
+        ],
+        { cancelable: false }
+      );
+      //this.uploadFiles(this.state.files, taskID)
     }
   }
 
@@ -133,7 +146,7 @@ class AddNewTasksScreen extends Component {
     let newDate = '';
 
     if (this.state.reminder) {
-      newDate = moment(date).format('YYYY/MM/DD');
+      newDate = moment(date).format('Do MMMM YYYY');
     } else {
       newDate = moment(date).format('Do MMMM YYYY');
     }
@@ -158,7 +171,7 @@ class AddNewTasksScreen extends Component {
         this.setState({
           selectedDate: newDate,
           showPicker: false,
-          showTimePicker: false,
+          showTimePicker: true,
           date: new Date(selectedDate),
         });
       }
@@ -179,6 +192,13 @@ class AddNewTasksScreen extends Component {
           showPicker: false,
           showTimePicker: false,
           timeReminder: new Date(selectedTime),
+        });
+      } else {
+        this.setState({
+          selectedTime: newTime,
+          showPicker: false,
+          showTimePicker: false,
+          time: new Date(selectedTime),
         });
       }
     } else {
@@ -214,7 +234,8 @@ class AddNewTasksScreen extends Component {
       <DateTimePicker
         testID="dateTimePicker"
         timeZoneOffsetInMinutes={0}
-        value={this.state.timeReminder}
+        value={this.state.reminder == true
+          ? this.state.timeReminder : this.state.time}
         mode={'time'}
         is24Hour={true}
         display="default"
@@ -356,6 +377,7 @@ class AddNewTasksScreen extends Component {
     let assigneeId = this.state.assigneeId;
     let selectedStatus = this.state.selectedStatus;
     let selectedDateReminder = this.state.selectedDateReminder;
+    let selectedTimeReminder = this.state.selectedTimeReminder;
     let notes = this.state.notes;
     let dueDate = this.state.selectedDate;
     if (this.validateData(taskName)) {
@@ -467,7 +489,7 @@ class AddNewTasksScreen extends Component {
             <Text style={[styles.textInput, { flex: 1 }]}>
               {this.state.selectedDate == ''
                 ? 'Due Date'
-                : this.state.selectedDate}
+                : this.state.selectedTime+" "+this.state.selectedDate}
             </Text>
             <Image
               style={styles.calendarIcon}
