@@ -77,6 +77,8 @@ class AddNewTasksScreen extends Component {
       alertTitle: '',
       alertMsg: '',
       reminderTime : '',
+      selectedDateValue: '',
+      selectedDateReminderValue: ''
     };
   }
 
@@ -144,25 +146,20 @@ class AddNewTasksScreen extends Component {
   onChangeDate(event, selectedDate) {
     let date = new Date(selectedDate);
     let newDate = '';
+    let newDateValue = '';
 
     if (this.state.reminder) {
       newDate = moment(date).format('Do MMMM YYYY');
+      newDateValue = moment(date).format('DD MM YYYY');
     } else {
       newDate = moment(date).format('Do MMMM YYYY');
+      newDateValue = moment(date).format('DD MM YYYY');
     }
-
-    // let newDate =
-    //   date.getDate() +
-    //   '/' +
-    //   parseInt(date.getMonth() + 1) +
-    //   '/' +
-    //   date.getFullYear();
-
-    // console.log("event.type",event.type)
     if (event.type == 'set') {
       if (this.state.reminder) {
         this.setState({
           selectedDateReminder: newDate,
+          selectedDateReminderValue: newDateValue,
           showPicker: false,
           showTimePicker: true,
           dateReminder: new Date(selectedDate),
@@ -170,6 +167,7 @@ class AddNewTasksScreen extends Component {
       } else {
         this.setState({
           selectedDate: newDate,
+          selectedDateValue: newDateValue,
           showPicker: false,
           showTimePicker: true,
           date: new Date(selectedDate),
@@ -376,12 +374,18 @@ class AddNewTasksScreen extends Component {
     let initiator = this.state.initiator;
     let assigneeId = this.state.assigneeId;
     let selectedStatus = this.state.selectedStatus;
-    let selectedDateReminder = this.state.selectedDateReminder;
+    let selectedDateReminder = this.state.selectedDateReminderValue;
     let selectedTimeReminder = this.state.selectedTimeReminder;
     let notes = this.state.notes;
-    let dueDate = this.state.selectedDate;
+    let dueDate = this.state.selectedDateValue;
+    let dueTime = this.state.selectedTime;
+
+    let IsoDueDate = dueDate ?
+    moment(dueDate + dueTime,'DD/MM/YYYY hh:mmA').format('YYYY-MM-DD[T]HH:mm:ss') : '';
+    let IsoReminderDate = selectedDateReminder ?
+    moment(selectedDateReminder + selectedTimeReminder,'DD/MM/YYYY hh:mmA').format('YYYY-MM-DD[T]HH:mm:ss') : '';
     if (this.validateData(taskName)) {
-      this.props.addTaskToProject(taskName, initiator, assigneeId, selectedStatus, dueDate, selectedDateReminder, notes, this.props.selectedProjectID);
+      this.props.addTaskToProject(taskName, initiator, assigneeId, selectedStatus, IsoDueDate, IsoReminderDate, notes, this.props.selectedProjectID);
     }
   }
 
