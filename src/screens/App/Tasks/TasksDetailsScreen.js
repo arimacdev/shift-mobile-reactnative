@@ -392,8 +392,8 @@ class TasksDetailsScreen extends Component {
     }
   };
 
-  onSelectUser(name) {
-    this.setState({name: name});
+  onSelectUser(name,userID) {
+    this.changeTaskAssignee(name,userID);
   }
 
   onTaskNameChange(text) {
@@ -406,8 +406,8 @@ class TasksDetailsScreen extends Component {
         break;
       case 0:
         this.props.navigation.navigate('AssigneeScreen', {
-          userName: this.state.name,
-          onSelectUser: name => this.onSelectUser(name),
+          selectedProjectID: this.state.selectedProjectID,
+          onSelectUser: (name,id) => this.onSelectUser(name,id),
         });
         break;
       case 1:
@@ -542,6 +542,19 @@ class TasksDetailsScreen extends Component {
     
     this.changeTaskStatus(key,searchValue);
   }
+
+  // change assignee of task API
+  async changeTaskAssignee(name,userID){
+    this.setState({dataLoading:true});
+    let projectID = this.state.selectedProjectID;
+    let taskID = this.state.selectedProjectTaskID;
+    resultData = await APIServices.updateTaskAssigneeData(projectID,taskID,userID);
+    if(resultData.message == 'success'){
+      this.setState({dataLoading:false,name: name});
+    }else{
+      this.setState({dataLoading:false});
+    }
+}
 
   // change status of task API
   async changeTaskStatus(key,searchValue){

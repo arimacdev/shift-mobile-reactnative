@@ -18,6 +18,7 @@ EStyleSheet.build({$rem: entireScreenWidth / 380});
 import AsyncStorage from '@react-native-community/async-storage';
 import Loader from '../../../components/Loader';
 import FadeIn from 'react-native-fade-in-image';
+import APIServices from '../../../services/APIServices';
 
 class AssigneeScreen extends Component {
   constructor(props) {
@@ -27,47 +28,40 @@ class AssigneeScreen extends Component {
       allUsers: [],
       isFetching: false,
       searchText: '',
+      selectedProjectID : '',
     };
   }
 
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    if (
-      prevProps.usersLoading !== this.props.usersLoading &&
-      this.props.users &&
-      this.props.users.length > 0
-    ) {
-      this.setState({
-        users: this.props.users,
-        allUsers: this.props.users,
-      });
-    }
-
-    if (this.state.isFetching) {
-      this.setState({
-        isFetching: false,
-      });
-    }
-  }
 
   componentDidMount() {
-    this.fetchData();
-  }
-
-  fetchData() {
-    this.setState({users: [], allUsers: []}, function() {
-      this.props.getAllUsers();
+    const {navigation: {state: {params}}} = this.props;
+    let selectedProjectID = params.selectedProjectID
+    this.setState({selectedProjectID : selectedProjectID}, function() {
+      this.fetchData();
     });
   }
 
-  onSelectUser(userName) {
+  async fetchData() {
+      let selectedProjectID = this.state.selectedProjectID;
+      const activeUsers = await APIServices.getAllUsersByProjectId(selectedProjectID);
+      if (activeUsers.message == 'success') {
+          this.setState({
+            users: activeUsers.data,
+            allUsers: activeUsers.data,
+            dataLoading : false
+          })
+      } else {
+          this.setState({ dataLoading: false });
+      }
+  }
+
+  onSelectUser(userName,userID) {
     const {navigation} = this.props;
-    navigation.state.params.onSelectUser(userName);
+    navigation.state.params.onSelectUser(userName,userID);
     navigation.goBack();
   }
 
   userImage = function(item) {
-    // let userImage =
-    //   'https://i.pinimg.com/236x/5e/48/1b/5e481b8fa99c5f0ebc319b93f3c6e076--tiaras-singer.jpg';
     let userImage = item.profileImage;
 
     if (userImage) {
@@ -87,11 +81,11 @@ class AssigneeScreen extends Component {
     }
   };
 
-  renderProjectList(item) {
+  renderUserList(item) {
     const {navigation} = this.props;
     return (
       <TouchableOpacity
-        onPress={() => this.onSelectUser(item.firstName + ' ' + item.lastName)}>
+        onPress={() => this.onSelectUser(item.firstName + ' ' + item.lastName,item.userId)}>
         <View
           style={[
             styles.projectView,
@@ -115,17 +109,11 @@ class AssigneeScreen extends Component {
     );
   }
 
-  onRefresh() {
-    this.setState({isFetching: true, users: [], allUsers: []}, function() {
-      this.fetchData();
-    });
-  }
-
-  loadUsers() {
-    this.setState({users: [], allUsers: []}, function() {
-      this.props.getAllUsers();
-    });
-  }
+  // onRefresh() {
+  //   this.setState({isFetching: true, users: [], allUsers: []}, function() {
+  //     this.fetchData();
+  //   });
+  // }
 
   onSearchTextChange(text) {
     this.setState({searchText: text});
@@ -144,7 +132,7 @@ class AssigneeScreen extends Component {
   render() {
     let users = this.state.users;
     let isFetching = this.state.isFetching;
-    let usersLoading = this.props.usersLoading;
+    let dataLoading = this.state.dataLoading;
 
     return (
       <View style={styles.backgroundImage}>
@@ -159,12 +147,12 @@ class AssigneeScreen extends Component {
         </View>
         <FlatList
           data={users}
-          renderItem={({item}) => this.renderProjectList(item)}
+          renderItem={({item}) => this.renderUserList(item)}
           keyExtractor={item => item.projId}
-          onRefresh={() => this.onRefresh()}
-          refreshing={isFetching}
+          //onRefresh={() => this.onRefresh()}
+          //refreshing={isFetching}
         />
-        {usersLoading && <Loader />}
+        {dataLoading && <Loader />}
       </View>
     );
   }
@@ -247,8 +235,6 @@ const styles = EStyleSheet.create({
 
 const mapStateToProps = state => {
   return {
-    usersLoading: state.users.usersLoading,
-    users: state.users.users,
   };
 };
 export default connect(
