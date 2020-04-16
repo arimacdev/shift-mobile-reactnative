@@ -41,5 +41,7 @@ const icons = {
     closeRounded: require('./close_rounded.png'),
     deleteRoundRed: require('./delete_round_red.png'),
     editRoundWhite: require('./edit_round_white.png'),
+    forwordGreen: require('./forword_green.png'),
+    editRoundedBlue: require('./edit_rounded_blue.png'),
 };
 export default icons;

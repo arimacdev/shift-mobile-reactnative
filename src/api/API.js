@@ -22,6 +22,7 @@ export const GET_ALL_USERS_BY_PROJECT_ID = `${PROTOCOL}${HOST}users/project`;
 export const GET_TASK_IN_PROJECT = `${PROTOCOL}${HOST}projects`;
 export const UPDATE_PROJECT_TASK = `${PROTOCOL}${HOST}projects`;
 export const DELETE_TASK = `${PROTOCOL}${HOST}projects`;
+export const GET_ALL_SUB_TASKS = `${PROTOCOL}${HOST}projects`;
 
 
 

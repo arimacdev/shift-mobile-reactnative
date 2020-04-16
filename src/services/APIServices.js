@@ -23,7 +23,8 @@ import {
     ADD_FILE_TO_TASK,
     GET_TASK_IN_PROJECT,
     UPDATE_PROJECT_TASK,
-    DELETE_TASK
+    DELETE_TASK,
+    GET_ALL_SUB_TASKS
 
 } from '../api/API';
 
@@ -226,6 +227,28 @@ function updateTaskReminderDateData(projectID,taskID,reminderDate) {
     }, true,false,true);
 };
 
+function updateTaskAssigneeData(projectID,taskID,userID) {
+    return request({
+        url: UPDATE_PROJECT_TASK +'/'+projectID+'/tasks/'+taskID,
+        method: 'PUT',
+        data: {
+            taskAssignee : userID,
+            taskType: "project"
+        }
+    }, true,false,true);
+};
+
+function updateTaskNoteData(projectID,taskID,note) {
+    return request({
+        url: UPDATE_PROJECT_TASK +'/'+projectID+'/tasks/'+taskID,
+        method: 'PUT',
+        data: {
+            taskNotes : note,
+            taskType: "project"
+        }
+    }, true,false,true);
+};
+
 function addTaskToProjectData(taskName, initiator, assigneeId, selectedStatus, dueDate, selectedDateReminder, notes, selectedProjectID) {
     console.log(selectedProjectID, 'selectedProjectIDselectedProjectID')
     return request({
@@ -275,6 +298,25 @@ function deleteSingleTask(selectedProjectID, taskId, taskName, initiator) {
     }, true, true, true);
 }
 
+function updateSlackNotificationStatus(userID, email, value) {
+    return request({
+        url: UPDATE_USER + '/' + userID + '/slack/status',
+        method: 'PUT',
+        data: {
+            slackAssignerId: userID,
+            slackAssigneeId: userID,
+            assigneeSlackId: email,
+            notificationStatus: value
+        }
+    }, true, false, false);
+};
+
+function getSubTaskData(projectID,taskID,userID) {
+    return request({
+        url: GET_ALL_SUB_TASKS + '/' + projectID + '/tasks/' + taskID + '/subtask?userId=' + userID,
+        method: 'GET'
+    }, true, true, false);
+}
 
 const APIServices = {
     getAllProjectsByUserData,
@@ -300,7 +342,11 @@ const APIServices = {
     updateTaskStatusData,
     updateTaskDueDateData,
     updateTaskReminderDateData,
-    deleteSingleTask
+    deleteSingleTask,
+    updateTaskAssigneeData,
+    updateTaskNoteData,
+    updateSlackNotificationStatus,
+    getSubTaskData,
 };
 
 export default APIServices;

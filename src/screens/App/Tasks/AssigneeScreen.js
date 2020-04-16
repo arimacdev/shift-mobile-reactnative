@@ -18,55 +18,56 @@ EStyleSheet.build({$rem: entireScreenWidth / 380});
 import AsyncStorage from '@react-native-community/async-storage';
 import Loader from '../../../components/Loader';
 import FadeIn from 'react-native-fade-in-image';
-
+import APIServices from '../../../services/APIServices';
 
 class AssigneeScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      projects: [],
-      allProjects: [],
+      users: [],
+      allUsers: [],
+      isFetching: false,
       searchText: '',
+      selectedProjectID : '',
     };
   }
 
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    if (
-      prevProps.projectsLoading !== this.props.projectsLoading &&
-      this.props.projects &&
-      this.props.projects.length > 0
-    ) {
-      this.setState({
-        projects: this.props.projects,
-        allProjects: this.props.projects,
-      });
-    }
-  }
 
   componentDidMount() {
-    AsyncStorage.getItem('userID').then(userID => {
-      this.props.getAllProjectsByUser(userID);
+    const {navigation: {state: {params}}} = this.props;
+    let selectedProjectID = params.selectedProjectID
+    this.setState({selectedProjectID : selectedProjectID}, function() {
+      this.fetchData();
     });
   }
 
-  onSelectUser(userName) {
-    const { navigation } = this.props;
-    navigation.state.params.onSelectUser(userName);
+  async fetchData() {
+      let selectedProjectID = this.state.selectedProjectID;
+      const activeUsers = await APIServices.getAllUsersByProjectId(selectedProjectID);
+      if (activeUsers.message == 'success') {
+          this.setState({
+            users: activeUsers.data,
+            allUsers: activeUsers.data,
+            dataLoading : false
+          })
+      } else {
+          this.setState({ dataLoading: false });
+      }
+  }
+
+  onSelectUser(userName,userID) {
+    const {navigation} = this.props;
+    navigation.state.params.onSelectUser(userName,userID);
     navigation.goBack();
   }
 
   userImage = function(item) {
-    let userImage = 'https://i.pinimg.com/236x/5e/48/1b/5e481b8fa99c5f0ebc319b93f3c6e076--tiaras-singer.jpg';
-    // let userImage = item.taskAssigneeProfileImage;
+    let userImage = item.profileImage;
 
     if (userImage) {
       return (
         <FadeIn>
-          <Image
-            source={{uri: userImage}}
-            style={styles.userIcon}
-            resizeMode="contain"
-          />
+          <Image source={{uri: userImage}} style={styles.userIcon} />
         </FadeIn>
       );
     } else {
@@ -80,22 +81,27 @@ class AssigneeScreen extends Component {
     }
   };
 
-  renderProjectList(item) {
+  renderUserList(item) {
+    const {navigation} = this.props;
     return (
-      <TouchableOpacity onPress={() => this.onSelectUser(item.projectName)}>
+      <TouchableOpacity
+        onPress={() => this.onSelectUser(item.firstName + ' ' + item.lastName,item.userId)}>
         <View
           style={[
             styles.projectView,
             {
               backgroundColor:
-                item.projectName == this.props.userName
+                item.firstName + ' ' + item.lastName ==
+                navigation.state.params.userName
                   ? colors.projectBgColor
                   : '',
             },
           ]}>
-          {this.userImage()}
+          {this.userImage(item)}
           <View style={{flex: 1}}>
-            <Text style={styles.text}>{item.projectName}</Text>
+            <Text style={styles.text}>
+              {item.firstName + ' ' + item.lastName}
+            </Text>
           </View>
           {/* {this.colorCode(item)} */}
         </View>
@@ -103,59 +109,31 @@ class AssigneeScreen extends Component {
     );
   }
 
-  colorCode = function(item) {
-    let color = '';
-    switch (item.projectStatus) {
-      case 'presales':
-        color = '#576377';
-      case 'presalesPD':
-        color = '#576377';
-      case 'preSalesQS':
-        color = '#576377';
-      case 'preSalesN':
-        color = '#576377';
-      case 'preSalesC':
-        color = '#576377';
-        break;
-      case 'preSalesL':
-        color = '#FF6363';
-        break;
-      case 'ongoing':
-        color = '#5E98F0';
-        break;
-      case 'support':
-        color = '#FFA800';
-        break;
-      case 'finished':
-        color = '#36DD5B';
-        break;
-    }
-    return <View style={[styles.statusView, {backgroundColor: color}]} />;
-  };
-
-  renderBase() {
-    return (
-      <View style={{justifyContent: 'center', flex: 1}}>
-        <Image style={styles.dropIcon} source={icons.arrow} />
-      </View>
-    );
-  }
+  // onRefresh() {
+  //   this.setState({isFetching: true, users: [], allUsers: []}, function() {
+  //     this.fetchData();
+  //   });
+  // }
 
   onSearchTextChange(text) {
     this.setState({searchText: text});
-    let result = this.state.allProjects.filter(data =>
-      data.projectName.toLowerCase().includes(text.toLowerCase()),
+    let result = this.state.allUsers.filter(
+      data =>
+        data.firstName.toLowerCase().includes(text.toLowerCase()) ||
+        data.lastName.toLowerCase().includes(text.toLowerCase()),
     );
     if (text == '') {
-      this.setState({projects: this.state.allProjects});
+      this.setState({users: this.state.allUsers});
     } else {
-      this.setState({projects: result});
+      this.setState({users: result});
     }
   }
 
   render() {
-    let projects = this.state.projects;
-    let projectsLoading = this.state.projectsLoading;
+    let users = this.state.users;
+    let isFetching = this.state.isFetching;
+    let dataLoading = this.state.dataLoading;
+
     return (
       <View style={styles.backgroundImage}>
         <View style={styles.projectFilerView}>
@@ -168,11 +146,13 @@ class AssigneeScreen extends Component {
           />
         </View>
         <FlatList
-          data={projects}
-          renderItem={({item}) => this.renderProjectList(item)}
+          data={users}
+          renderItem={({item}) => this.renderUserList(item)}
           keyExtractor={item => item.projId}
+          //onRefresh={() => this.onRefresh()}
+          //refreshing={isFetching}
         />
-        {projectsLoading && <Loader />}
+        {dataLoading && <Loader />}
       </View>
     );
   }
@@ -255,8 +235,6 @@ const styles = EStyleSheet.create({
 
 const mapStateToProps = state => {
   return {
-    projectsLoading: state.project.projectsLoading,
-    projects: state.project.projects,
   };
 };
 export default connect(

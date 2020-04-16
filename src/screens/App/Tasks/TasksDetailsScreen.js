@@ -140,6 +140,7 @@ class TasksDetailsScreen extends Component {
       showAlert : false,
       alertTitle : '',
       alertMsg : '',
+      note : '',
     };
   }
 
@@ -188,8 +189,10 @@ class TasksDetailsScreen extends Component {
         this.setTaskInitiator(taskResult);
         this.setTaskName(taskResult);
         this.setTaskStatus(taskResult);
+        this.setTaskUserName(taskResult);
         this.setDueDate(taskResult);
         this.setReminderDate(taskResult);
+        this.setTaskNote(taskResult);
         this.setState({dataLoading:false}); 
     }else{
         this.setState({dataLoading:false});
@@ -250,6 +253,19 @@ showAlert(title,msg){
       })
   }
 
+  async setTaskUserName (taskResult){
+    let projectID = this.state.selectedProjectID;
+    let userID = taskResult.data.taskAssignee;
+    let activeUsers = await APIServices.getAllUsersByProjectId(projectID);
+    if (activeUsers.message == 'success' && userID) {
+      const result = activeUsers.data.find( ({ userId }) => userId === userID );
+      this.setState({
+        name: result.firstName + ' '  + result.lastName,
+        //activeUsers : activeUsers.data,
+      });
+    }
+  }
+
   setDueDate(taskResult){
     let taskDueDate = moment.parseZone(taskResult.data.taskDueDateAt).format('Do MMMM YYYY');
     if(taskDueDate != 'Invalid date'){
@@ -266,6 +282,10 @@ showAlert(title,msg){
         remindDate : 'Remind on ' + taskReminderDate,
       })
     }
+  }
+
+  setTaskNote (taskResult){
+    this.setState({note : taskResult.data.taskNote});
   }
 
   dateView = function(item) {
@@ -427,8 +447,12 @@ showAlert(title,msg){
     }
   };
 
-  onSelectUser(name) {
-    this.setState({name: name});
+  onSelectUser(name,userID) {
+    this.changeTaskAssignee(name,userID);
+  }
+
+  onUpdateNote(note) {
+    this.changeTaskNote(note);
   }
 
   onTaskNameChange(text) {
@@ -441,12 +465,15 @@ showAlert(title,msg){
         break;
       case 0:
         this.props.navigation.navigate('AssigneeScreen', {
-          userName: '',
-          onSelectUser: name => this.onSelectUser(name),
+          selectedProjectID: this.state.selectedProjectID,
+          onSelectUser: (name,id) => this.onSelectUser(name,id),
         });
         break;
       case 1:
-        this.props.navigation.navigate('SubTaskScreen');
+        this.props.navigation.navigate('SubTaskScreen', {
+          selectedProjectID: this.state.selectedProjectID,
+          selectedProjectTaskID: this.state.selectedProjectTaskID,
+        });
         break;
       case 2:
         this.setState({showPicker: true, reminder: false});
@@ -455,7 +482,10 @@ showAlert(title,msg){
         this.setState({showPicker: true, reminder: true});
         break;
       case 4:
-        this.props.navigation.navigate('NotesScreen');
+        this.props.navigation.navigate('NotesScreen',{
+          note: this.state.note,
+          onUpdateNote: (note) => this.onUpdateNote(note),
+        });
         break;
       case 5:
         this.props.navigation.navigate('FilesScreen');
@@ -576,6 +606,33 @@ showAlert(title,msg){
     }
     
     this.changeTaskStatus(key,searchValue);
+  }
+
+  
+  // change note of task API
+  async changeTaskNote(note){
+    this.setState({dataLoading:true});
+    let projectID = this.state.selectedProjectID;
+    let taskID = this.state.selectedProjectTaskID;
+    resultData = await APIServices.updateTaskNoteData(projectID,taskID,note);
+    if(resultData.message == 'success'){
+      this.setState({dataLoading:false,note: note});
+    }else{
+      this.setState({dataLoading:false});
+    }
+}
+
+  // change assignee of task API
+  async changeTaskAssignee(name,userID){
+      this.setState({dataLoading:true});
+      let projectID = this.state.selectedProjectID;
+      let taskID = this.state.selectedProjectTaskID;
+      resultData = await APIServices.updateTaskAssigneeData(projectID,taskID,userID);
+      if(resultData.message == 'success'){
+        this.setState({dataLoading:false,name: name});
+      }else{
+        this.setState({dataLoading:false});
+      }
   }
 
   // change status of task API
