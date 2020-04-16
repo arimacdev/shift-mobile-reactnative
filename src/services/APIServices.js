@@ -236,6 +236,17 @@ function updateTaskAssigneeData(projectID,taskID,userID) {
     }, true,false,true);
 };
 
+function updateTaskNoteData(projectID,taskID,note) {
+    return request({
+        url: UPDATE_PROJECT_TASK +'/'+projectID+'/tasks/'+taskID,
+        method: 'PUT',
+        data: {
+            taskNotes : note,
+            taskType: "project"
+        }
+    }, true,false,true);
+};
+
 function addTaskToProjectData(taskName, initiator, assigneeId, selectedStatus, dueDate, selectedDateReminder, notes, selectedProjectID) {
     console.log(selectedProjectID, 'selectedProjectIDselectedProjectID')
     return request({
@@ -297,7 +308,8 @@ const APIServices = {
     updateTaskStatusData,
     updateTaskDueDateData,
     updateTaskReminderDateData,
-    updateTaskAssigneeData
+    updateTaskAssigneeData,
+    updateTaskNoteData
 };
 
 export default APIServices;

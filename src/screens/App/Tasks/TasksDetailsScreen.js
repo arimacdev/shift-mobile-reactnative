@@ -134,7 +134,7 @@ class TasksDetailsScreen extends Component {
       dataLoading : false,
       reminderTime : '',
       dueTime : '',
-      //activeUsers : {},
+      note : '',
     };
   }
 
@@ -162,6 +162,7 @@ class TasksDetailsScreen extends Component {
         this.setTaskUserName(taskResult);
         this.setDueDate(taskResult);
         this.setReminderDate(taskResult);
+        this.setTaskNote(taskResult);
         this.setState({dataLoading:false}); 
     }else{
         this.setState({dataLoading:false});
@@ -231,6 +232,10 @@ class TasksDetailsScreen extends Component {
         remindDate : 'Remind on ' + taskReminderDate,
       })
     }
+  }
+
+  setTaskNote (taskResult){
+    this.setState({note : taskResult.data.taskNote});
   }
 
   dateView = function(item) {
@@ -396,6 +401,10 @@ class TasksDetailsScreen extends Component {
     this.changeTaskAssignee(name,userID);
   }
 
+  onUpdateNote(note) {
+    this.changeTaskNote(note);
+  }
+
   onTaskNameChange(text) {
     this.setState({taskName: text});
   }
@@ -420,7 +429,10 @@ class TasksDetailsScreen extends Component {
         this.setState({showPicker: true, reminder: true});
         break;
       case 4:
-        this.props.navigation.navigate('NotesScreen');
+        this.props.navigation.navigate('NotesScreen',{
+          note: this.state.note,
+          onUpdateNote: (note) => this.onUpdateNote(note),
+        });
         break;
       case 5:
         this.props.navigation.navigate('FilesScreen');
@@ -543,18 +555,32 @@ class TasksDetailsScreen extends Component {
     this.changeTaskStatus(key,searchValue);
   }
 
-  // change assignee of task API
-  async changeTaskAssignee(name,userID){
+  
+  // change note of task API
+  async changeTaskNote(note){
     this.setState({dataLoading:true});
     let projectID = this.state.selectedProjectID;
     let taskID = this.state.selectedProjectTaskID;
-    resultData = await APIServices.updateTaskAssigneeData(projectID,taskID,userID);
+    resultData = await APIServices.updateTaskNoteData(projectID,taskID,note);
     if(resultData.message == 'success'){
-      this.setState({dataLoading:false,name: name});
+      this.setState({dataLoading:false,note: note});
     }else{
       this.setState({dataLoading:false});
     }
 }
+
+  // change assignee of task API
+  async changeTaskAssignee(name,userID){
+      this.setState({dataLoading:true});
+      let projectID = this.state.selectedProjectID;
+      let taskID = this.state.selectedProjectTaskID;
+      resultData = await APIServices.updateTaskAssigneeData(projectID,taskID,userID);
+      if(resultData.message == 'success'){
+        this.setState({dataLoading:false,name: name});
+      }else{
+        this.setState({dataLoading:false});
+      }
+  }
 
   // change status of task API
   async changeTaskStatus(key,searchValue){
