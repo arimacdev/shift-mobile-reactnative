@@ -74,6 +74,7 @@ class AddNewTasksScreen extends Component {
       showAlert: false,
       alertTitle: '',
       alertMsg: '',
+      reminderTime : '',
     };
   }
 
@@ -366,10 +367,17 @@ class AddNewTasksScreen extends Component {
     let assigneeId = this.state.assigneeId;
     let selectedStatus = this.state.selectedStatus;
     let selectedDateReminder = this.state.selectedDateReminder;
+    let selectedTimeReminder = this.state.selectedTimeReminder;
+    let IsoReminderDate = selectedDateReminder ?
+    moment(selectedDateReminder + selectedTimeReminder,'DD/MM/YYYY hh:mmA').format('YYYY-MM-DD[T]HH:mm:ss') : '';
     let notes = this.state.notes;
     let dueDate = this.state.selectedDate;
+    let IsoDueDate = dueDate ?
+    moment(dueDate,'DD/MM/YYYY').format('YYYY-MM-DD') : '';
+
+
     if (this.validateData(taskName)) {
-      this.props.addTaskToProject(taskName, initiator, assigneeId, selectedStatus, dueDate, selectedDateReminder, notes, this.props.selectedProjectID);
+      this.props.addTaskToProject(taskName, initiator, assigneeId, selectedStatus, IsoDueDate, IsoReminderDate, notes, this.props.selectedProjectID);
     }
   }
 
