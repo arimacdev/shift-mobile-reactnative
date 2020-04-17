@@ -37,8 +37,7 @@ class TasksScreen extends Component {
 
   componentDidUpdate(prevProps, prevState, snapshot) {}
 
-  componentDidMount() {
-  }
+  componentDidMount() {}
 
   renderTabBar(props) {
     return (
@@ -48,7 +47,7 @@ class TasksScreen extends Component {
         style={styles.tabBarStyle}
         tabStyle={{width: 120}}
         scrollEnabled={true}
-        labelStyle={{fontWeight:'bold'}}
+        labelStyle={{fontWeight: 'bold'}}
         activeColor={colors.darkBlue}
         inactiveColor={'gray'}
       />
@@ -56,16 +55,39 @@ class TasksScreen extends Component {
   }
 
   renderScene(route) {
-    const {navigation: {state: {params}}} = this.props;
+    const {
+      navigation: {
+        state: {params},
+      },
+    } = this.props;
     let projectId = params.projDetails.projectId;
-    const isActive = this.state.routes.indexOf(route.route) === this.state.index
+    const isActive =
+      this.state.routes.indexOf(route.route) === this.state.index;
     switch (route.route.key) {
       case 'tasks':
-        return <Tasks selectedProjectID={projectId} navigation={this.props.navigation} isActive={isActive}/>;
+        return (
+          <Tasks
+            selectedProjectID={projectId}
+            navigation={this.props.navigation}
+            isActive={isActive}
+          />
+        );
       case 'projects':
-        return <Projects selectedProjectID={projectId} navigation={this.props.navigation} isActive={isActive}/>;
+        return (
+          <Projects
+            selectedProjectID={projectId}
+            navigation={this.props.navigation}
+            isActive={isActive}
+          />
+        );
       case 'prople':
-        return <PeopleScreen selectedProjectID={projectId} navigation={this.props.navigation} isActive={isActive}/>;
+        return (
+          <PeopleScreen
+            selectedProjectID={projectId}
+            navigation={this.props.navigation}
+            isActive={isActive}
+          />
+        );
     }
   }
 
@@ -94,11 +116,11 @@ const styles = EStyleSheet.create({
     width: '65rem',
     marginLeft: '23rem',
   },
-  tabBarStyle:{
+  tabBarStyle: {
     backgroundColor: 'white',
     height: '60rem',
     alignItems: 'center',
-  }
+  },
 });
 
 const mapStateToProps = state => {
