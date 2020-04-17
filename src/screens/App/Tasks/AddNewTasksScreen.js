@@ -28,6 +28,9 @@ import moment from 'moment';
 
 let dropData = [
   {
+    value: 'Open',
+  },
+  {
     value: 'Pending',
   },
   {
@@ -60,8 +63,8 @@ class AddNewTasksScreen extends Component {
       showTimePicker: false,
       selectedDate: '',
       date: new Date(),
-      selectedTime:'',
-      time:new Date(),
+      selectedTime: '',
+      time: new Date(),
       selectedDateReminder: '',
       selectedTimeReminder: '',
       dateReminder: new Date(),
@@ -74,11 +77,11 @@ class AddNewTasksScreen extends Component {
       selectedAssignee: 'Assignee',
       selectedStatus: 'Status',
       initiator: null,
-      assigneeId: null,
+      assigneeId: '',
       showAlert: false,
       alertTitle: '',
       alertMsg: '',
-      reminderTime : '',
+      reminderTime: '',
       selectedDateValue: '',
       selectedDateReminderValue: ''
     };
@@ -377,6 +380,35 @@ class AddNewTasksScreen extends Component {
     let initiator = this.state.initiator;
     let assigneeId = this.state.assigneeId;
     let selectedStatus = this.state.selectedStatus;
+    let selectedStatusEnum = null;
+    if (selectedStatus != '') {
+      switch (selectedStatus) {
+        case 'Open':
+          selectedStatusEnum = 'open';
+          break;
+        case 'Pending':
+          selectedStatusEnum = 'pending';
+          break;
+        case 'Implementing':
+          selectedStatusEnum = 'implementing';
+          break;
+        case 'QA':
+          selectedStatusEnum = 'qa';
+          break;
+        case 'Ready to Deploy':
+          selectedStatusEnum = 'readyToDeploy';
+          break;
+        case 'Re-Opened':
+          selectedStatusEnum = 'reOpened';
+          break;
+        case 'Deployed':
+          selectedStatusEnum = 'deployed';
+          break;
+        case 'Closed':
+          selectedStatusEnum = 'closed';
+          break;
+      }
+    }
     let selectedDateReminder = this.state.selectedDateReminderValue;
     let selectedTimeReminder = this.state.selectedTimeReminder;
     let notes = this.state.notes;
@@ -384,11 +416,11 @@ class AddNewTasksScreen extends Component {
     let dueTime = this.state.selectedTime;
 
     let IsoDueDate = dueDate ?
-    moment(dueDate + dueTime,'DD/MM/YYYY hh:mmA').format('YYYY-MM-DD[T]HH:mm:ss') : '';
+      moment(dueDate + dueTime, 'DD/MM/YYYY hh:mmA').format('YYYY-MM-DD[T]HH:mm:ss') : '';
     let IsoReminderDate = selectedDateReminder ?
-    moment(selectedDateReminder + selectedTimeReminder,'DD/MM/YYYY hh:mmA').format('YYYY-MM-DD[T]HH:mm:ss') : '';
+      moment(selectedDateReminder + selectedTimeReminder, 'DD/MM/YYYY hh:mmA').format('YYYY-MM-DD[T]HH:mm:ss') : '';
     if (this.validateData(taskName, assigneeId)) {
-      this.props.addTaskToProject(taskName, initiator, assigneeId, selectedStatus, IsoDueDate, IsoReminderDate, notes, this.props.selectedProjectID);
+      this.props.addTaskToProject(taskName, initiator, assigneeId, selectedStatusEnum, IsoDueDate, IsoReminderDate, notes, this.props.selectedProjectID);
     }
   }
 
@@ -500,7 +532,7 @@ class AddNewTasksScreen extends Component {
             <Text style={[styles.textInput, { flex: 1 }]}>
               {this.state.selectedDate == ''
                 ? 'Due Date'
-                : this.state.selectedTime+" "+this.state.selectedDate}
+                : this.state.selectedTime + " " + this.state.selectedDate}
             </Text>
             <Image
               style={styles.calendarIcon}

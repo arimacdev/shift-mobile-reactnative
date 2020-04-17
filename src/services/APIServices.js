@@ -265,7 +265,8 @@ function addTaskToProjectData(taskName, initiator, assigneeId, selectedStatus, d
             taskDueDate: dueDate,
             taskRemindOnDate: selectedDateReminder,
             taskType: "project",
-            taskNotes: notes
+            taskNotes: notes,
+            taskStatus: selectedStatus
         }
     }, true, false, false,false);
 };

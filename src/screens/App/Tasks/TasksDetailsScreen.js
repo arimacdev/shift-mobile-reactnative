@@ -700,7 +700,20 @@ showAlert(title,msg){
     let taskID = this.state.selectedProjectTaskID;
     let tskInitiator = this.state.projectTaskInitiator;
     let taskName = this.state.taskName;
-    this.props.deleteTask(projectID, taskID, taskName, tskInitiator)
+
+    Alert.alert(
+      "Confirm",
+      "Delete this task?",
+      [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel"
+        },
+        { text: "OK", onPress: () => this.props.deleteTask(projectID, taskID, taskName, tskInitiator) }
+      ],
+      { cancelable: false }
+    );
   }
 
   render() {
