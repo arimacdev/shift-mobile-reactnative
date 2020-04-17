@@ -95,15 +95,16 @@ class AddNewTasksScreen extends Component {
       && this.props.addTaskToProjectSuccess) {
       const taskID = this.props.taskId.data.taskId;
 
-      // Alert.alert(
-      //   "Success",
-      //   "Task Added",
-      //   [
-      //     { text: "OK", onPress: () => this.props.navigation.goBack() }
-      //   ],
-      //   { cancelable: false }
-      // );
-      this.uploadFiles(this.state.files, taskID)
+      Alert.alert(
+        "Success",
+        "Task Added",
+        [
+          { text: "OK", onPress: () => this.props.navigation.goBack() }
+        ],
+        { cancelable: false }
+      );
+      //this.uploadFiles(this.state.files, taskID)
+      // this.uploadFiles(this.state.files, 'b6ba3dcf-4494-4bb5-80dc-17376c628187')
     }
   }
 
