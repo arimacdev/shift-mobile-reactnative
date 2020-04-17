@@ -90,24 +90,22 @@ class TasksTabScreen extends Component {
       bottomItemPressColor: colors.darkBlue,
       selectedProjectID: 0,
       isActive: this.props.isActive,
-      selectedTypeAllTasks : 'Pending',
-      selectedTypeMyTasks : 'Pending',
+      selectedTypeAllTasks: 'Pending',
+      selectedTypeMyTasks: 'Pending',
     };
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-
-    if(prevProps.isActive !== this.props.isActive
-      && this.props.isActive){
-        let selectedProjectID = this.props.selectedProjectID;
-        this.setState(
-            {
-              selectedProjectID: selectedProjectID,
-            },
-            () => {
-              this.getAllTaskInProject();
-            },
-        );
+    if (prevProps.isActive !== this.props.isActive && this.props.isActive) {
+      let selectedProjectID = this.props.selectedProjectID;
+      this.setState(
+        {
+          selectedProjectID: selectedProjectID,
+        },
+        () => {
+          this.getAllTaskInProject();
+        },
+      );
     }
 
     // all tasks
@@ -130,11 +128,15 @@ class TasksTabScreen extends Component {
       });
     }
 
-    if (prevProps.allTaskByProjectLoading !== this.props.allTaskByProjectLoading
-       && this.props.allTaskByProject && this.props.allTaskByProject.length == 0) {
+    if (
+      prevProps.allTaskByProjectLoading !==
+        this.props.allTaskByProjectLoading &&
+      this.props.allTaskByProject &&
+      this.props.allTaskByProject.length == 0
+    ) {
       this.setState({
-          filterdDataAllTaks : this.props.allTaskByProject,
-          allDataAllTaks : this.props.allTaskByProject,
+        filterdDataAllTaks: this.props.allTaskByProject,
+        allDataAllTaks: this.props.allTaskByProject,
       });
     }
 
@@ -157,13 +159,16 @@ class TasksTabScreen extends Component {
       });
     }
 
-    if (prevProps.myTaskByProjectLoading !== this.props.myTaskByProjectLoading
-      && this.props.myTaskByProject && this.props.myTaskByProject.length == 0) {
-     this.setState({
-        filterdDataMyTasks : this.props.myTaskByProject,
-        allDataMyTasks : this.props.myTaskByProject,
-     });
-   }
+    if (
+      prevProps.myTaskByProjectLoading !== this.props.myTaskByProjectLoading &&
+      this.props.myTaskByProject &&
+      this.props.myTaskByProject.length == 0
+    ) {
+      this.setState({
+        filterdDataMyTasks: this.props.myTaskByProject,
+        allDataMyTasks: this.props.myTaskByProject,
+      });
+    }
   }
 
   // componentWillReceiveProps(nextProps) {
@@ -182,7 +187,6 @@ class TasksTabScreen extends Component {
 
   componentDidMount() {
     // let selectedProjectID = this.props.selectedProjectID;
-
     // this.setState(
     //   {
     //     selectedProjectID: selectedProjectID,
@@ -195,7 +199,7 @@ class TasksTabScreen extends Component {
 
   async getAllTaskInProject() {
     this.setState({
-      selectedTypeAllTasks : 'Pending',
+      selectedTypeAllTasks: 'Pending',
     });
     let selectedProjectID = this.state.selectedProjectID;
     AsyncStorage.getItem('userID').then(userID => {
@@ -205,8 +209,8 @@ class TasksTabScreen extends Component {
 
   async getMyTaskInProject() {
     this.setState({
-      selectedTypeMyTasks : 'Pending'
-    })
+      selectedTypeMyTasks: 'Pending',
+    });
     let selectedProjectID = this.state.selectedProjectID;
     AsyncStorage.getItem('userID').then(userID => {
       this.props.getMyTaskInProjects(userID, selectedProjectID);
@@ -224,15 +228,15 @@ class TasksTabScreen extends Component {
       // task complete
       dateText = moment(date).format('DD/MM/YYYY');
       color = '#36DD5B';
-    } else if(taskStatus != 'closed' && date) {
-        if (moment(date).isAfter(currentTime)) {
-          dateText = moment(date).format('DD/MM/YYYY');
-          color = '#0C0C5A';
-        } else {
-          dateText = moment(date).format('DD/MM/YYYY');
-          color = '#ff6161';
-       }
-    }else{
+    } else if (taskStatus != 'closed' && date) {
+      if (moment(date).isAfter(currentTime)) {
+        dateText = moment(date).format('DD/MM/YYYY');
+        color = '#0C0C5A';
+      } else {
+        dateText = moment(date).format('DD/MM/YYYY');
+        color = '#ff6161';
+      }
+    } else {
       dateText = 'Add Due Date';
       color = '#000000';
     }
@@ -268,8 +272,8 @@ class TasksTabScreen extends Component {
       <TouchableOpacity
         onPress={() =>
           this.props.navigation.navigate('TasksDetailsScreen', {
-            taskDetails : item,
-            selectedProjectID : selectedProjectID
+            taskDetails: item,
+            selectedProjectID: selectedProjectID,
           })
         }>
         <View style={styles.projectView}>
@@ -398,7 +402,7 @@ class TasksTabScreen extends Component {
     });
     this.setState({
       filterdDataAllTaks: filteredData,
-      selectedTypeAllTasks : key
+      selectedTypeAllTasks: key,
     });
   }
 
@@ -434,7 +438,7 @@ class TasksTabScreen extends Component {
     });
     this.setState({
       filterdDataMyTasks: filteredData,
-      selectedTypeMyTasks : key
+      selectedTypeMyTasks: key,
     });
   }
 
@@ -448,7 +452,7 @@ class TasksTabScreen extends Component {
         this.getAllTaskInProject();
       },
     );
-}
+  }
 
   render() {
     let index = this.state.index;
@@ -456,12 +460,14 @@ class TasksTabScreen extends Component {
     let filterdDataMyTasks = this.state.filterdDataMyTasks;
     let allTaskByProjectLoading = this.props.allTaskByProjectLoading;
     let myTaskByProjectLoading = this.props.myTaskByProjectLoading;
-    let selectedTypeAllTasks = this.state.selectedTypeAllTasks
+    let selectedTypeAllTasks = this.state.selectedTypeAllTasks;
     let selectedTypeMyTasks = this.state.selectedTypeMyTasks;
 
     return (
       <View style={styles.backgroundImage}>
-         <NavigationEvents onWillFocus={payload => this.tabOpenTaskTab(payload)} />
+        <NavigationEvents
+          onWillFocus={payload => this.tabOpenTaskTab(payload)}
+        />
         {this.state.index !== 2 ? (
           <View>
             <View style={styles.projectFilerView}>
@@ -530,7 +536,10 @@ class TasksTabScreen extends Component {
           </View>
         ) : (
           <View>
-            <AddNewTasksScreen navigation={this.props.navigation}  selectedProjectID={this.state.selectedProjectID} />
+            <AddNewTasksScreen
+              navigation={this.props.navigation}
+              selectedProjectID={this.state.selectedProjectID}
+            />
           </View>
         )}
 
