@@ -105,7 +105,7 @@ class EditPeople extends Component {
                     </View>
                 </View>
                 <View style={styles.bottomButtonContainer}>
-                    <TouchableOpacity onPress={() => this.saveProject()}>
+                    <TouchableOpacity>
                         <View style={styles.button}>
                             <Image
                                 style={[styles.bottomBarIcon, { marginRight: 15, marginLeft: 10 }]}
@@ -123,7 +123,7 @@ class EditPeople extends Component {
                             />
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => this.saveProject()}>
+                    <TouchableOpacity>
                         <View style={styles.buttonDelete}>
                             <Image
                                 style={[styles.bottomBarIcon, { marginRight: 15, marginLeft: 10 }]}

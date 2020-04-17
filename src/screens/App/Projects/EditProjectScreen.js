@@ -26,6 +26,7 @@ import AwesomeAlert from 'react-native-awesome-alerts';
 import AsyncStorage from '@react-native-community/async-storage';
 import Loader from '../../../components/Loader';
 import APIServices from '../../../services/APIServices';
+import NavigationService from '../../../services/NavigationService';
 
 let dropData = [
     {
@@ -135,7 +136,7 @@ class EditProjectScreen extends Component {
     if (prevProps.deleteProjectSuccess !== this.props.deleteProjectSuccess
           && this.props.deleteProjectSuccess) {
             this.showAlert("","Project Deleted");
-            this.props.navigation.goBack();
+            NavigationService.navigate('ProjectsScreen');
     }
   }
 

@@ -23,7 +23,9 @@ export const GET_TASK_IN_PROJECT = `${PROTOCOL}${HOST}projects`;
 export const UPDATE_PROJECT_TASK = `${PROTOCOL}${HOST}projects`;
 export const DELETE_TASK = `${PROTOCOL}${HOST}projects`;
 export const GET_ALL_SUB_TASKS = `${PROTOCOL}${HOST}projects`;
-
+export const DELETE_SUB_TASK = `${PROTOCOL}${HOST}projects`;
+export const ADD_SUB_TASK = `${PROTOCOL}${HOST}projects`;
+export const UPDATE_SUB_TASK = `${PROTOCOL}${HOST}projects`;
 
 
 

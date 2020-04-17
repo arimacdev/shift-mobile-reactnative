@@ -108,6 +108,7 @@ class AddNewTasksScreen extends Component {
         { cancelable: false }
       );
       //this.uploadFiles(this.state.files, taskID)
+      // this.uploadFiles(this.state.files, 'b6ba3dcf-4494-4bb5-80dc-17376c628187')
     }
   }
 
