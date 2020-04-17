@@ -4,10 +4,11 @@ import jwtDecode from 'jwt-decode';
 import { BASE_URL, GET_NEW_TOKENS } from '../api/API';
 import NavigationService from '../services/NavigationService';
 
-const request = async function (options, isHeader,type,isUserID,customeHeaderImageUpload) {
+const request = async function (options, isHeader,type,isUserID,customeHeaderImageUpload,taskType) {
     let authHeader = null;
     let typeHeader = null;
     let userIDHeder = null;
+    let taskTypeHeder = null;
     let headers = {};
 
     if (isHeader) {
@@ -19,12 +20,17 @@ const request = async function (options, isHeader,type,isUserID,customeHeaderIma
     if (isUserID) {
         userIDHeder =  await AsyncStorage.getItem('userID');
     }
+    if (taskType) {
+        taskTypeHeder =  'project';
+    }
 
     if(customeHeaderImageUpload){
         headers =  {
             Authorization: authHeader,
             'Content-Type': 'multipart/form-data',
+            type : typeHeader,
             user : userIDHeder,
+            taskType : taskTypeHeder,
         }
     }else{
         headers =  {
@@ -33,6 +39,7 @@ const request = async function (options, isHeader,type,isUserID,customeHeaderIma
             'Content-Type': 'application/json',
             type : typeHeader,
             user : userIDHeder,
+            taskType : taskTypeHeder,
         }
     }
 
