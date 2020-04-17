@@ -34,14 +34,14 @@ function getAllProjectsByUserData(userID) {
     return request({
         url: GET_ALL_PROJECTS_BY_USER + 'userId=' + userID,
         method: 'GET'
-    }, true, false, false);
+    }, true, false, false,false);
 }
 
 function getAllTaskInProjectsData(userID, projectID) {
     return request({
         url: GET_MY_TASKS_BY_PROJECT + projectID + '/tasks?userId=' + userID,
         method: 'GET'
-    }, true, true, false);
+    }, true, true, false,false);
 }
 
 
@@ -49,21 +49,21 @@ function getMyTaskInProjectsData(userID, projectID) {
     return request({
         url: GET_ALL_TASKS_BY_PROJECT + projectID + '/tasks/user?userId=' + userID,
         method: 'GET'
-    }, true, true, false);
+    }, true, true, false,false);
 }
 
 function getAllUsersData() {
     return request({
         url: GET_ALL_USERS,
         method: 'GET'
-    }, true, false, false);
+    }, true, false, false,false);
 }
 
 function getUserData(userID) {
     return request({
         url: GET_ALL_USER + '/' + userID,
         method: 'GET'
-    }, true, false, false);
+    }, true, false, false,false);
 }
 
 function addUserData(firstName, lastName, userName, email, password, confirmPassword) {
@@ -77,7 +77,7 @@ function addUserData(firstName, lastName, userName, email, password, confirmPass
             email: email,
             password: password,
         }
-    }, true, false, false);
+    }, true, false, false,false);
 }
 
 function editUserData(firstName, lastName, userName, email, password, confirmPassword, userID) {
@@ -91,7 +91,7 @@ function editUserData(firstName, lastName, userName, email, password, confirmPas
             email: email,
             password: password,
         }
-    }, true, false, false);
+    }, true, false, false,false);
 };
 
 function addprojectData(projectName, projectClient, IsoStartDate, IsoSEndDate, projectOwner) {
@@ -105,14 +105,14 @@ function addprojectData(projectName, projectClient, IsoStartDate, IsoSEndDate, p
             projectStartDate: IsoStartDate,
             projectEndDate: IsoSEndDate
         }
-    }, true, false, false);
+    }, true, false, false,false);
 }
 
 function getProjectData(projectID) {
     return request({
         url: GET_PROJECT + '/' + projectID,
         method: 'GET'
-    }, true, false, true);
+    }, true, false, true,false);
 }
 
 function updateProjectData(projectID, userID, projectName, projectClient, IsoStartDate, IsoSEndDate, projectStatus) {
@@ -127,35 +127,35 @@ function updateProjectData(projectID, userID, projectName, projectClient, IsoSta
             projectStartDate: IsoStartDate,
             projectEndDate: IsoSEndDate
         }
-    }, true, false, false);
+    }, true, false, false,false);
 };
 
 function deleteProjectData(projectID) {
     return request({
         url: DELETE_PROJECT + '/' + projectID,
         method: 'DELETE'
-    }, true, false, true);
+    }, true, false, true,false);
 }
 
 function getProjectTaskDetails(projectID) {
     return request({
         url: GET_PROJECT_DETAILS_TASK + '/' + projectID + '/tasks/completion',
         method: 'GET'
-    }, true, false, true);
+    }, true, false, true,false);
 };
 
 function getProjectPeopleData(projectID, userID) {
     return request({
         url: GET_PROJECT_PEOPLE + '/' + projectID + '/tasks/' + userID + '/completion/details',
         method: 'GET'
-    }, true, true, true);
+    }, true, true, true,false);
 };
 
 function getActiveUsers() {
     return request({
         url: GET_ALL_USERS,
         method: 'GET'
-    }, true, false, false);
+    }, true, false, false,false);
 };
 
 function addUserToProjectData(assignerId, userID, role, assigneeProjectRole, projectID) {
@@ -168,21 +168,21 @@ function addUserToProjectData(assignerId, userID, role, assigneeProjectRole, pro
             assigneeJobRole: role,
             assigneeProjectRole: assigneeProjectRole,
         }
-    }, true, false, false);
+    }, true, false, false,false);
 };
 
 function getAllUsersByProjectId(projectID) {
     return request({
         url: GET_ALL_USERS_BY_PROJECT_ID + '/' + projectID,
         method: 'GET'
-    }, true, true, true);
+    }, true, true, true,false);
 }
 
 function getProjecTaskData(projectID,selectedProjectTaskID) {
     return request({
         url: GET_TASK_IN_PROJECT+'/'+projectID +'/tasks/'+selectedProjectTaskID,
         method: 'GET'
-    }, true,false,true);
+    }, true,false,true,false);
 };
 
 function updateTaskNameData(projectID,taskID,text) {
@@ -193,7 +193,7 @@ function updateTaskNameData(projectID,taskID,text) {
             taskName : text,
             taskType: "project"
         }
-    }, true,false,true);
+    }, true,false,true,false);
 };
 
 function updateTaskStatusData(projectID,taskID,searchValue) {
@@ -204,7 +204,7 @@ function updateTaskStatusData(projectID,taskID,searchValue) {
             taskStatus : searchValue,
             taskType: "project"
         }
-    }, true,false,true);
+    }, true,false,true,false);
 };
 
 function updateTaskDueDateData(projectID,taskID,dueDate) {
@@ -215,7 +215,7 @@ function updateTaskDueDateData(projectID,taskID,dueDate) {
             taskDueDate : dueDate,
             taskType: "project"
         }
-    }, true,false,true);
+    }, true,false,true,false);
 };
 
 function updateTaskReminderDateData(projectID,taskID,reminderDate) {
@@ -226,7 +226,7 @@ function updateTaskReminderDateData(projectID,taskID,reminderDate) {
             taskRemindOnDate : reminderDate,
             taskType: "project"
         }
-    }, true,false,true);
+    }, true,false,true,false);
 };
 
 function updateTaskAssigneeData(projectID,taskID,userID) {
@@ -237,7 +237,7 @@ function updateTaskAssigneeData(projectID,taskID,userID) {
             taskAssignee : userID,
             taskType: "project"
         }
-    }, true,false,true);
+    }, true,false,true,false);
 };
 
 function updateTaskNoteData(projectID,taskID,note) {
@@ -248,7 +248,7 @@ function updateTaskNoteData(projectID,taskID,note) {
             taskNotes : note,
             taskType: "project"
         }
-    }, true,false,true);
+    }, true,false,true,false);
 };
 
 function addTaskToProjectData(taskName, initiator, assigneeId, selectedStatus, dueDate, selectedDateReminder, notes, selectedProjectID) {
@@ -267,7 +267,7 @@ function addTaskToProjectData(taskName, initiator, assigneeId, selectedStatus, d
             taskType: "project",
             taskNotes: notes
         }
-    }, true, false, false);
+    }, true, false, false,false);
 };
 
 function addFileToTask(file, taskId, selectedProjectID) {
@@ -279,13 +279,13 @@ function addFileToTask(file, taskId, selectedProjectID) {
     };
     const formData = new FormData();
     formData.append('taskType', "project");
-    formData.append('type', "profileImage");
+    formData.append('type', "taskFile");
     formData.append('files', file1);
     return request({
         url: ADD_FILE_TO_TASK + '/' + selectedProjectID + '/tasks/' + taskId + '/upload',
         method: 'POST',
         data: formData
-    }, true, false, true);
+    }, true, false, true,true);
 };
 
 function deleteSingleTask(selectedProjectID, taskId, taskName, initiator) {
@@ -298,7 +298,7 @@ function deleteSingleTask(selectedProjectID, taskId, taskName, initiator) {
             taskInitiator: initiator,
             taskType: "project",
         }
-    }, true, true, true);
+    }, true, true, true,false);
 }
 
 function updateSlackNotificationStatus(userID, email, value) {
@@ -311,21 +311,21 @@ function updateSlackNotificationStatus(userID, email, value) {
             assigneeSlackId: email,
             notificationStatus: value
         }
-    }, true, false, false);
+    }, true, false, false,false);
 };
 
 function getSubTaskData(projectID,taskID,userID) {
     return request({
         url: GET_ALL_SUB_TASKS + '/' + projectID + '/tasks/' + taskID + '/subtask?userId=' + userID,
         method: 'GET'
-    }, true, true, false);
+    }, true, true, false,false);
 }
 
 function deleteSubTask(projectID,taskID,subtaskId) {
     return request({
         url: DELETE_SUB_TASK + '/' + projectID + '/tasks/' + taskID + '/subtask/' + subtaskId,
         method: 'DELETE'
-    }, true, true, true);
+    }, true, true, true,false);
 };
 
 function addSubTask(userID,projectID,taskID,subTaskName) {
@@ -339,7 +339,7 @@ function addSubTask(userID,projectID,taskID,subTaskName) {
             taskType: "project"
         
         }
-    }, true, false, false);
+    }, true, false, false,false);
 };
 
 function updateSubTask(userID,projectID,taskID,subTaskID,subTaskName,isSelected) {
@@ -353,7 +353,7 @@ function updateSubTask(userID,projectID,taskID,subTaskID,subTaskName,isSelected)
             taskType: "project"
         
         }
-    }, true, false, true);
+    }, true, false, true,false);
 };
 
 const APIServices = {
