@@ -28,6 +28,9 @@ import {
     ADD_SUB_TASK,
     UPDATE_SUB_TASK,
     DELETE_TASK,
+    GET_FILES_IN_TASK,
+    DELETE_FILE_IN_TASK
+
 } from '../api/API';
 
 function getAllProjectsByUserData(userID) {
@@ -357,6 +360,20 @@ function updateSubTask(userID,projectID,taskID,subTaskID,subTaskName,isSelected)
     }, true, false, true,false);
 };
 
+function getFilesInTaskData(projectID,taskID,userID) {
+    return request({
+        url: GET_FILES_IN_TASK + '/' + projectID + '/tasks/' + taskID + '/files' ,
+        method: 'GET',
+    }, true, true, true,false);
+};
+
+function deleteFileInTaskData(projectID,taskID,taskFileId) {
+    return request({
+        url: DELETE_FILE_IN_TASK + '/' + projectID + '/tasks/' + taskID + '/upload/' + taskFileId,
+        method: 'DELETE'
+    }, true, true, true,false);
+};
+
 const APIServices = {
     getAllProjectsByUserData,
     getAllTaskInProjectsData,
@@ -388,7 +405,9 @@ const APIServices = {
     getSubTaskData,
     deleteSubTask,
     addSubTask,
-    updateSubTask
+    updateSubTask,
+    getFilesInTaskData,
+    deleteFileInTaskData
 };
 
 export default APIServices;

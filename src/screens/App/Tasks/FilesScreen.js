@@ -16,130 +16,136 @@ const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
 import FadeIn from 'react-native-fade-in-image';
 import Loader from '../../../components/Loader';
-import Header from '../../../components/Header';
-import {NavigationEvents} from 'react-navigation';
+import AsyncStorage from '@react-native-community/async-storage';
+import APIServices from '../../../services/APIServices';
+import moment from 'moment';
+
 
 class FilesScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      users: [],
-      allUsers: [],
-      isFetching: false,
+      files: [],
+      dataLoading : false,
+      projectID : '',
+      taskID : '',
+      userID : '',
+      addedUser : '',
     };
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    if (
-      prevProps.usersLoading !== this.props.usersLoading &&
-      this.props.users &&
-      this.props.users.length > 0
-    ) {
-      this.setState({
-        users: this.props.users,
-        allUsers: this.props.users,
-      });
-    }
-
-    if (this.state.isFetching) {
-      this.setState({
-        isFetching: false,
-      });
-    }
   }
 
   componentDidMount() {
-    this.fetchData();
-  }
-
-  fetchData() {
-    this.setState({users: [], allUsers: []}, function() {
-      this.props.getAllUsers();
+    AsyncStorage.getItem('userID').then(userID => {
+      if (userID) {
+        const {navigation: {state: {params}}} = this.props;
+        let projectID = params.projectID
+        let taskID = params.taskID
+        this.setState({
+          projectID : projectID,
+          taskID : taskID,
+          userID : userID}, function() {
+          this.fetchData(userID);
+        });
+      } 
     });
   }
 
-  userImage = function(item) {
-    let userImage = 'https://i.pinimg.com/originals/3d/40/6a/3d406aa185eb1845276ecf3a8c963fce.jpg';
-    // let userImage = item.taskAssigneeProfileImage;
+  async fetchData(userID) {
+      let projectID = this.state.projectID
+      let taskID = this.state.taskID
+      this.setState({dataLoading:true});
+      filesData = await APIServices.getFilesInTaskData(projectID,taskID,userID);
+      if(filesData.message == 'success'){
+        this.setState({files : filesData.data,dataLoading:false});
+      }else{
+        this.setState({dataLoading:false});
+      }
+  }
 
-    if (userImage) {
-      return (
-        <FadeIn>
-          <Image
-            source={{uri: userImage}}
-            style={styles.userIcon}
-          />
-        </FadeIn>
-      );
-    } else {
-      return (
-        <Image
-        style={styles.userIcon}
-          source={require('../../../asserts/img/defult_user.png')}
-        />
-      );
+  async deleteFile(item){
+    let projectID = this.state.projectID;
+    let taskID = this.state.taskID;
+    let userID = this.state.userID;
+    let taskFileId = item.taskFileId;
+
+    this.setState({dataLoading:true});
+    try {
+      resultObj = await APIServices.deleteFileInTaskData(projectID,taskID,taskFileId);
+      if(resultObj.message == 'success'){
+        this.setState({dataLoading:false});
+        this.fetchData(userID);
+      }else{
+        this.setState({dataLoading:false});
+      }
     }
-  };
+    catch(e) {
+      if(e.status == 401){
+        this.setState({dataLoading:false});
+        this.showAlert("",e.data.message);
+      }
+    }
+    
+}
 
   renderUserListList(item) {
+    // let fileDateText = '';
+    // let fileDate = moment.parseZone(item.taskFileDate).format('Do MMMM YYYY');
+    // let fileTimeText = '';
+    // let fileTime = moment.parseZone(item.taskFileDate).format('hh:mmA');
+    // if(fileDate != 'Invalid date'){
+    //   fileDateText = fileDate;
+    //   fileTimeText = fileTime
+    // }else{
+    //   fileDateText = '';
+    // }
     return (
-      <TouchableOpacity
-        onPress={() =>
-          this.props.navigation.navigate('ViewUserScreen', {userItem: item})
-        }>
+      <TouchableOpacity>
         <View style={styles.filesView}>
           <Image source={icons.gallary} style={styles.taskStateIcon} />
           <View style={{flex: 1}}>
             <Text style={styles.text}>
-              {/* {item.firstName} */}
-              Abs.jpg
+              {item.taskFileName}
             </Text>
             <Text style={styles.textDate}>
-              {/* {item.firstName} */}
-              2020/02/20 | 10:00 am by Indika Vijesooriya 
             </Text>
           </View>
           <View style={styles.controlView}>
-            {this.userImage()}
+            <TouchableOpacity 
+              onPress={() => this.deleteFile(item)}
+              style={{marginLeft: EStyleSheet.value('24rem')}}>
+                  <Image 
+                    style={{width: 28, height: 28,borderRadius: 28/ 2 }} 
+                    source={require('../../../asserts/img/bin.png')}
+                  />
+              </TouchableOpacity>
           </View>
         </View>
       </TouchableOpacity>
     );
   }
 
-  onRefresh() {
-    this.setState({isFetching: true, users: [], allUsers: []}, function() {
-      this.fetchData();
-    });
-  }
+  
 
   onBackPress() {
     this.props.navigation.goBack();
   }
 
-  loadUsers() {
-    this.setState({users: [], allUsers: []}, function() {
-      this.props.getAllUsers();
-    });
-  }
-
   render() {
-    let users = this.state.users;
-    let isFetching = this.state.isFetching;
-    let usersLoading = this.props.usersLoading;
+    let files = this.state.files;
+    let dataLoading = this.state.dataLoading;
 
     return (
       <View style={styles.container}>
-        <NavigationEvents onWillFocus={payload => this.loadUsers(payload)} />
         <FlatList
           style={styles.flalList}
-          data={users}
+          data={files}
           renderItem={({item}) => this.renderUserListList(item)}
           keyExtractor={item => item.projId}
-          onRefresh={() => this.onRefresh()}
-          refreshing={isFetching}
         />
-        {usersLoading && <Loader />}
+        {dataLoading && <Loader />}
       </View>
     );
   }

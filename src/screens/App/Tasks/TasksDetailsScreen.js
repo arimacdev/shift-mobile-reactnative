@@ -488,7 +488,10 @@ showAlert(title,msg){
         });
         break;
       case 5:
-        this.props.navigation.navigate('FilesScreen');
+        this.props.navigation.navigate('FilesScreen', {
+          projectID: this.state.selectedProjectID,
+          taskID: this.state.selectedProjectTaskID,
+        });
         break;
       case 6:
         this.props.navigation.navigate('ChatScreen');
