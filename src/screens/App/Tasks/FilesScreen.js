@@ -19,6 +19,7 @@ import Loader from '../../../components/Loader';
 import AsyncStorage from '@react-native-community/async-storage';
 import APIServices from '../../../services/APIServices';
 import moment from 'moment';
+import AwesomeAlert from 'react-native-awesome-alerts';
 
 
 class FilesScreen extends Component {
@@ -31,6 +32,9 @@ class FilesScreen extends Component {
       taskID : '',
       userID : '',
       addedUser : '',
+      showAlert : false,
+      alertTitle : '',
+      alertMsg : '',
     };
   }
 
@@ -131,11 +135,29 @@ class FilesScreen extends Component {
 
   onBackPress() {
     this.props.navigation.goBack();
+  };
+
+  hideAlert (){
+    this.setState({
+      showAlert : false,
+      alertTitle : '',
+      alertMsg : '',
+    })
   }
 
+  showAlert(title,msg){
+    this.setState({
+      showAlert : true,
+      alertTitle : title,
+      alertMsg : msg,
+    })
+  }
   render() {
     let files = this.state.files;
     let dataLoading = this.state.dataLoading;
+    let showAlert = this.state.showAlert;
+    let alertTitle = this.state.alertTitle;
+    let alertMsg = this.state.alertMsg;
 
     return (
       <View style={styles.container}>
@@ -146,6 +168,22 @@ class FilesScreen extends Component {
           keyExtractor={item => item.projId}
         />
         {dataLoading && <Loader />}
+        <AwesomeAlert
+          show={showAlert}
+          showProgress={false}
+          title={alertTitle}
+          message={alertMsg}
+          closeOnTouchOutside={true}
+          closeOnHardwareBackPress={false}
+          showCancelButton={false}
+          showConfirmButton={true}
+          cancelText=""
+          confirmText="OK"
+          confirmButtonColor={colors.primary}
+          onConfirmPressed={() => {
+            this.hideAlert();
+          }}
+        />
       </View>
     );
   }
