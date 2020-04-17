@@ -43,7 +43,7 @@ class AddUserScreen extends Component {
 
     if (prevProps.addUserSuccess !== this.props.addUserSuccess
         && this.props.addUserSuccess) {
-          this.showAlert("","User Created");
+          this.showAlert("","User created successfully");
           this.resetState();
     }
 }
@@ -77,29 +77,29 @@ class AddUserScreen extends Component {
 
   validateUser(firstName,lastName,userName,email,password,confirmPassword) {
     if (!firstName && _.isEmpty(firstName)) {
-      this.showAlert("","Please Enter the First Name");
+      this.showAlert("","Please enter the first name");
       return false;
     }
     if (!lastName && _.isEmpty(lastName)) {
-      this.showAlert("","Please Enter the Last Name");
+      this.showAlert("","Please enter the last name");
         return false;
     }
     if (!userName && _.isEmpty(userName)) {
-      this.showAlert("","Please Enter the User Name");
+      this.showAlert("","Please enter the user name");
       return false;
   }  
     if (!email && _.isEmpty(email)) {
-      this.showAlert("","Please Enter the Email");
+      this.showAlert("","Please enter the email");
       return false;
     } else {
       const validMail = this.validateEmail(email);
       if (!validMail) {
-        this.showAlert("","Please a valid Email");
+        this.showAlert("","Email address format should be validated");
         return false;
       }
     }
     if (!password && _.isEmpty(password)) {
-        this.showAlert("","Please Enter the Password");
+        this.showAlert("","Please enter the password");
         return false;
     }else {
       const validPassword = this.validatePassword(password);
@@ -109,11 +109,11 @@ class AddUserScreen extends Component {
       }
     } 
     if (!confirmPassword && _.isEmpty(confirmPassword)) {
-      this.showAlert("","Please Re-Enter the Password");
+      this.showAlert("","Please confirm the password");
       return false;
     }else {
       if (password !== confirmPassword) {
-        this.showAlert("","Please match the Confirm Password");
+        this.showAlert("","Entered passwords dosent match");
         return false;
       }
     } 

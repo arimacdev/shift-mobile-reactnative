@@ -153,7 +153,7 @@ class AddPeopleScreen extends Component {
         }
 
         if (!role && _.isEmpty(role)) {
-            this.showAlert("","Please Add a Role");
+            this.showAlert("","Please enter the role of the project");
             return false;
           }
 

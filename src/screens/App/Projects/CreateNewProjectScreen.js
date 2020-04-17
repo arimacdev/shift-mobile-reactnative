@@ -202,20 +202,20 @@ class CreateNewProjectScreen extends Component {
 
   validateProject(projectName,projectClient,projectStartDateValue,projectEndDateValue) {
     if (!projectName && _.isEmpty(projectName)) {
-      this.showAlert("","Please Enter the Project Name");
+      this.showAlert("","Please enter the project name");
       return false;
     }
     if (!projectClient && _.isEmpty(projectClient)) {
-      this.showAlert("","Please Enter the Project Client");
+      this.showAlert("","Please enter the client name");
         return false;
     }
 
     if (!projectStartDateValue && _.isEmpty(projectStartDateValue)) {
-      this.showAlert("","Please a Start Date");
+      this.showAlert("","Please enter the project start date");
       return false;
     }
     if (!projectEndDateValue && _.isEmpty(projectEndDateValue)) {
-      this.showAlert("","Please a Start End");
+      this.showAlert("","Please enter the project end date");
         return false;
     }
 

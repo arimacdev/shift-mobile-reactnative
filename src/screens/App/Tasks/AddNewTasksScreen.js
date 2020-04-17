@@ -28,25 +28,27 @@ import moment from 'moment';
 
 let dropData = [
   {
-    value: 'Status',
+    value: 'Pending',
   },
   {
-    value: 'Completed',
-  },
-  {
-    value: 'Not started',
+    value: 'Implementing',
   },
   {
     value: 'QA',
   },
   {
-    value: 'Unassigned',
+    value: 'Ready to Deploy',
   },
   {
-    value: 'Assigned',
+    value: 'Reopen',
+  },
+  {
+    value: 'Deployed',
+  },
+  {
+    value: 'Close',
   },
 ];
-
 class AddNewTasksScreen extends Component {
   constructor(props) {
     super(props);
@@ -384,7 +386,7 @@ class AddNewTasksScreen extends Component {
     moment(dueDate + dueTime,'DD/MM/YYYY hh:mmA').format('YYYY-MM-DD[T]HH:mm:ss') : '';
     let IsoReminderDate = selectedDateReminder ?
     moment(selectedDateReminder + selectedTimeReminder,'DD/MM/YYYY hh:mmA').format('YYYY-MM-DD[T]HH:mm:ss') : '';
-    if (this.validateData(taskName)) {
+    if (this.validateData(taskName, assigneeId)) {
       this.props.addTaskToProject(taskName, initiator, assigneeId, selectedStatus, IsoDueDate, IsoReminderDate, notes, this.props.selectedProjectID);
     }
   }
@@ -394,11 +396,15 @@ class AddNewTasksScreen extends Component {
     this.props.addFileToTask(file, taskId, this.props.selectedProjectID);
   }
 
-  validateData(taskName) {
+  validateData(taskName, assigneeId) {
     if (!taskName && _.isEmpty(taskName)) {
       this.showAlert("", "Please enter a name for the task");
       return false;
     }
+    // if (!assigneeId && _.isEmpty(assigneeId)) {
+    //   this.showAlert("", "Please select a assignee");
+    //   return false;
+    // }
     return true;
   }
 
