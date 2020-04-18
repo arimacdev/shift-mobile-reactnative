@@ -28,45 +28,81 @@ import {
     ADD_SUB_TASK,
     UPDATE_SUB_TASK,
     DELETE_TASK,
-} from '../api/API';
+    GET_FILES_IN_TASK,
+    DELETE_FILE_IN_TASK
 
-function getAllProjectsByUserData(userID) {
+} from '../api/API';
+import AsyncStorage from '@react-native-community/async-storage';
+
+async function getAllProjectsByUserData(userID) {
+    let userIDHeder = null;
+    userIDHeder =  await AsyncStorage.getItem('userID');
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+    };
+
     return request({
         url: GET_ALL_PROJECTS_BY_USER + 'userId=' + userID,
         method: 'GET'
-    }, true, false, false,false);
+    }, true, headers);
+}
+
+function getUserData(userID) {
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+    };
+    
+    return request({
+        url: GET_ALL_USER + '/' + userID,
+        method: 'GET'
+    }, true, headers);
 }
 
 function getAllTaskInProjectsData(userID, projectID) {
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        type : 'project',
+    };
+
     return request({
         url: GET_MY_TASKS_BY_PROJECT + projectID + '/tasks?userId=' + userID,
         method: 'GET'
-    }, true, true, false,false);
+    }, true, headers);
 }
 
 
 function getMyTaskInProjectsData(userID, projectID) {
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        type : 'project',
+    };
     return request({
         url: GET_ALL_TASKS_BY_PROJECT + projectID + '/tasks/user?userId=' + userID,
         method: 'GET'
-    }, true, true, false,false);
+    }, true, headers);
 }
 
 function getAllUsersData() {
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+    };
+
     return request({
         url: GET_ALL_USERS,
         method: 'GET'
-    }, true, false, false,false);
-}
-
-function getUserData(userID) {
-    return request({
-        url: GET_ALL_USER + '/' + userID,
-        method: 'GET'
-    }, true, false, false,false);
+    }, true, headers);
 }
 
 function addUserData(firstName, lastName, userName, email, password, confirmPassword) {
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+    };
     return request({
         url: CREATE_USER,
         method: 'POST',
@@ -77,10 +113,14 @@ function addUserData(firstName, lastName, userName, email, password, confirmPass
             email: email,
             password: password,
         }
-    }, true, false, false,false);
+    }, true, headers);
 }
 
 function editUserData(firstName, lastName, userName, email, password, confirmPassword, userID) {
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+    };
     return request({
         url: UPDATE_USER + '/' + userID,
         method: 'PUT',
@@ -91,10 +131,14 @@ function editUserData(firstName, lastName, userName, email, password, confirmPas
             email: email,
             password: password,
         }
-    }, true, false, false,false);
+    }, true, headers);
 };
 
 function addprojectData(projectName, projectClient, IsoStartDate, IsoSEndDate, projectOwner) {
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+    };
     return request({
         url: ADD_PROJECT,
         method: 'POST',
@@ -105,17 +149,31 @@ function addprojectData(projectName, projectClient, IsoStartDate, IsoSEndDate, p
             projectStartDate: IsoStartDate,
             projectEndDate: IsoSEndDate
         }
-    }, true, false, false,false);
+    }, true,headers);
 }
 
-function getProjectData(projectID) {
+async function getProjectData(projectID) {
+    let userIDHeder = null;
+    userIDHeder =  await AsyncStorage.getItem('userID');
+    
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        user : userIDHeder,
+    };
     return request({
         url: GET_PROJECT + '/' + projectID,
         method: 'GET'
-    }, true, false, true,false);
+    }, true,headers);
 }
 
 function updateProjectData(projectID, userID, projectName, projectClient, IsoStartDate, IsoSEndDate, projectStatus) {
+
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+    };
+
     return request({
         url: UPDATE_PROJECT + '/' + projectID,
         method: 'PUT',
@@ -127,38 +185,76 @@ function updateProjectData(projectID, userID, projectName, projectClient, IsoSta
             projectStartDate: IsoStartDate,
             projectEndDate: IsoSEndDate
         }
-    }, true, false, false,false);
+    }, true, headers);
 };
 
-function deleteProjectData(projectID) {
+async function deleteProjectData(projectID) {
+    let userIDHeder = null;
+    userIDHeder =  await AsyncStorage.getItem('userID');
+
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        user : userIDHeder,
+    };
+
     return request({
         url: DELETE_PROJECT + '/' + projectID,
         method: 'DELETE'
-    }, true, false, true,false);
+    }, true, headers);
 }
 
-function getProjectTaskDetails(projectID) {
+async function getProjectTaskDetails(projectID) {
+    let userIDHeder = null;
+    userIDHeder =  await AsyncStorage.getItem('userID');
+    
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        user : userIDHeder,
+    };
+
     return request({
         url: GET_PROJECT_DETAILS_TASK + '/' + projectID + '/tasks/completion',
         method: 'GET'
-    }, true, false, true,false);
+    }, true,headers);
 };
 
-function getProjectPeopleData(projectID, userID) {
+async function getProjectPeopleData(projectID, userID) {
+
+    let userIDHeder = null;
+    userIDHeder =  await AsyncStorage.getItem('userID');
+    
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        user : userIDHeder,
+        type : 'project',
+    };
+
     return request({
         url: GET_PROJECT_PEOPLE + '/' + projectID + '/tasks/' + userID + '/completion/details',
         method: 'GET'
-    }, true, true, true,false);
+    }, true, headers);
 };
 
 function getActiveUsers() {
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+    };
     return request({
         url: GET_ALL_USERS,
         method: 'GET'
-    }, true, false, false,false);
+    }, true, headers);
 };
 
 function addUserToProjectData(assignerId, userID, role, assigneeProjectRole, projectID) {
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+    };
+
     return request({
         url: ADD_PEOPLE_TO_PROJECT + '/' + projectID + '/users',
         method: 'POST',
@@ -168,24 +264,51 @@ function addUserToProjectData(assignerId, userID, role, assigneeProjectRole, pro
             assigneeJobRole: role,
             assigneeProjectRole: assigneeProjectRole,
         }
-    }, true, false, false,false);
+    }, true, headers);
 };
 
-function getAllUsersByProjectId(projectID) {
+async function getAllUsersByProjectId(projectID) {
+    let userIDHeder = null;
+    userIDHeder =  await AsyncStorage.getItem('userID');
+    
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        user : userIDHeder,
+        type : 'project',
+    };
+
     return request({
         url: GET_ALL_USERS_BY_PROJECT_ID + '/' + projectID,
         method: 'GET'
-    }, true, true, true,false);
+    }, true, headers);
 }
 
-function getProjecTaskData(projectID,selectedProjectTaskID) {
+async function getProjecTaskData(projectID,selectedProjectTaskID) {
+    let userIDHeder = null;
+    userIDHeder =  await AsyncStorage.getItem('userID');
+    
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        user : userIDHeder,
+    };
     return request({
         url: GET_TASK_IN_PROJECT+'/'+projectID +'/tasks/'+selectedProjectTaskID,
         method: 'GET'
-    }, true,false,true,false);
+    }, true,headers);
 };
 
-function updateTaskNameData(projectID,taskID,text) {
+async function updateTaskNameData(projectID,taskID,text) {
+    let userIDHeder = null;
+    userIDHeder =  await AsyncStorage.getItem('userID');
+    
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        user : userIDHeder,
+    };
+
     return request({
         url: UPDATE_PROJECT_TASK +'/'+projectID+'/tasks/'+taskID,
         method: 'PUT',
@@ -193,10 +316,20 @@ function updateTaskNameData(projectID,taskID,text) {
             taskName : text,
             taskType: "project"
         }
-    }, true,false,true,false);
+    }, true,headers);
 };
 
-function updateTaskStatusData(projectID,taskID,searchValue) {
+async function updateTaskStatusData(projectID,taskID,searchValue) {
+
+    let userIDHeder = null;
+    userIDHeder =  await AsyncStorage.getItem('userID');
+    
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        user : userIDHeder,
+    };
+
     return request({
         url: UPDATE_PROJECT_TASK +'/'+projectID+'/tasks/'+taskID,
         method: 'PUT',
@@ -204,10 +337,20 @@ function updateTaskStatusData(projectID,taskID,searchValue) {
             taskStatus : searchValue,
             taskType: "project"
         }
-    }, true,false,true,false);
+    }, true,headers);
 };
 
-function updateTaskDueDateData(projectID,taskID,dueDate) {
+async function updateTaskDueDateData(projectID,taskID,dueDate) {
+
+    let userIDHeder = null;
+    userIDHeder =  await AsyncStorage.getItem('userID');
+    
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        user : userIDHeder,
+    };
+
     return request({
         url: UPDATE_PROJECT_TASK +'/'+projectID+'/tasks/'+taskID,
         method: 'PUT',
@@ -215,10 +358,19 @@ function updateTaskDueDateData(projectID,taskID,dueDate) {
             taskDueDate : dueDate,
             taskType: "project"
         }
-    }, true,false,true,false);
+    }, true,headers);
 };
 
-function updateTaskReminderDateData(projectID,taskID,reminderDate) {
+async function updateTaskReminderDateData(projectID,taskID,reminderDate) {
+    let userIDHeder = null;
+    userIDHeder =  await AsyncStorage.getItem('userID');
+    
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        user : userIDHeder,
+    };
+
     return request({
         url: UPDATE_PROJECT_TASK +'/'+projectID+'/tasks/'+taskID,
         method: 'PUT',
@@ -226,10 +378,19 @@ function updateTaskReminderDateData(projectID,taskID,reminderDate) {
             taskRemindOnDate : reminderDate,
             taskType: "project"
         }
-    }, true,false,true,false);
+    }, true,headers);
 };
 
-function updateTaskAssigneeData(projectID,taskID,userID) {
+async function updateTaskAssigneeData(projectID,taskID,userID) {
+    let userIDHeder = null;
+    userIDHeder =  await AsyncStorage.getItem('userID');
+    
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        user : userIDHeder,
+    };
+
     return request({
         url: UPDATE_PROJECT_TASK +'/'+projectID+'/tasks/'+taskID,
         method: 'PUT',
@@ -237,10 +398,20 @@ function updateTaskAssigneeData(projectID,taskID,userID) {
             taskAssignee : userID,
             taskType: "project"
         }
-    }, true,false,true,false);
+    }, true,headers);
 };
 
-function updateTaskNoteData(projectID,taskID,note) {
+async function updateTaskNoteData(projectID,taskID,note) {
+
+    let userIDHeder = null;
+    userIDHeder =  await AsyncStorage.getItem('userID');
+    
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        user : userIDHeder,
+    };
+
     return request({
         url: UPDATE_PROJECT_TASK +'/'+projectID+'/tasks/'+taskID,
         method: 'PUT',
@@ -248,10 +419,16 @@ function updateTaskNoteData(projectID,taskID,note) {
             taskNotes : note,
             taskType: "project"
         }
-    }, true,false,true,false);
+    }, true,headers);
 };
 
 function addTaskToProjectData(taskName, initiator, assigneeId, selectedStatus, dueDate, selectedDateReminder, notes, selectedProjectID) {
+    
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+    };
+
     console.log(dueDate, 'dueDate')
     console.log(selectedDateReminder, 'selectedDateReminder')
     return request({
@@ -268,10 +445,19 @@ function addTaskToProjectData(taskName, initiator, assigneeId, selectedStatus, d
             taskNotes: notes,
             taskStatus: selectedStatus
         }
-    }, true, false, false,false);
+    }, true, headers);
 };
 
-function addFileToTask(file, taskId, selectedProjectID) {
+async function addFileToTask(file, taskId, selectedProjectID) {
+
+    let userIDHeder = null;
+    userIDHeder =  await AsyncStorage.getItem('userID');
+    
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'multipart/form-data',
+        user : userIDHeder,
+    };
 
     const file1 = {
         uri: file[0].uri,
@@ -286,10 +472,21 @@ function addFileToTask(file, taskId, selectedProjectID) {
         url: ADD_FILE_TO_TASK + '/' + selectedProjectID + '/tasks/' + taskId + '/upload',
         method: 'POST',
         data: formData
-    }, true, false, true,true);
+    }, true, headers);
 };
 
-function deleteSingleTask(selectedProjectID, taskId, taskName, initiator) {
+async function deleteSingleTask(selectedProjectID, taskId, taskName, initiator) {
+
+    let userIDHeder = null;
+    userIDHeder =  await AsyncStorage.getItem('userID');
+    
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        user : userIDHeder,
+        type: "project"
+    };
+
     return request({
         url: DELETE_TASK + '/' + selectedProjectID + '/tasks/' + taskId,
         method: 'DELETE',
@@ -299,10 +496,16 @@ function deleteSingleTask(selectedProjectID, taskId, taskName, initiator) {
             taskInitiator: initiator,
             taskType: "project",
         }
-    }, true, true, true,false);
+    }, true, headers);
 }
 
 function updateSlackNotificationStatus(userID, email, value) {
+
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+    };
+
     return request({
         url: UPDATE_USER + '/' + userID + '/slack/status',
         method: 'PUT',
@@ -312,24 +515,47 @@ function updateSlackNotificationStatus(userID, email, value) {
             assigneeSlackId: email,
             notificationStatus: value
         }
-    }, true, false, false,false);
+    }, true, headers);
 };
 
 function getSubTaskData(projectID,taskID,userID) {
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        type : 'project',
+    };
+
     return request({
         url: GET_ALL_SUB_TASKS + '/' + projectID + '/tasks/' + taskID + '/subtask?userId=' + userID,
         method: 'GET'
-    }, true, true, false,false);
+    }, true, headers);
 }
 
-function deleteSubTask(projectID,taskID,subtaskId) {
+async function deleteSubTask(projectID,taskID,subtaskId) {
+
+    let userIDHeder = null;
+    userIDHeder =  await AsyncStorage.getItem('userID');
+    
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        user : userIDHeder,
+        type: "project"
+    };
+
     return request({
         url: DELETE_SUB_TASK + '/' + projectID + '/tasks/' + taskID + '/subtask/' + subtaskId,
         method: 'DELETE'
-    }, true, true, true,false);
+    }, true, headers);
 };
 
 function addSubTask(userID,projectID,taskID,subTaskName) {
+
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+    };
+
     return request({
         url: ADD_SUB_TASK + '/' + projectID + '/tasks/' + taskID + '/subtask',
         method: 'POST',
@@ -340,10 +566,20 @@ function addSubTask(userID,projectID,taskID,subTaskName) {
             taskType: "project"
         
         }
-    }, true, false, false,false);
+    }, true, headers);
 };
 
-function updateSubTask(userID,projectID,taskID,subTaskID,subTaskName,isSelected) {
+async function updateSubTask(userID,projectID,taskID,subTaskID,subTaskName,isSelected) {
+
+    let userIDHeder = null;
+    userIDHeder =  await AsyncStorage.getItem('userID');
+
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        user : userIDHeder,
+    };
+
     return request({
         url: UPDATE_SUB_TASK + '/' + projectID + '/tasks/' + taskID + '/subtask/' + subTaskID,
         method: 'PUT',
@@ -354,15 +590,51 @@ function updateSubTask(userID,projectID,taskID,subTaskID,subTaskName,isSelected)
             taskType: "project"
         
         }
-    }, true, false, true,false);
+    }, true, headers);
+};
+
+async function getFilesInTaskData(projectID,taskID,userID) {
+
+    let userIDHeder = null;
+    userIDHeder =  await AsyncStorage.getItem('userID');
+    
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        user : userIDHeder,
+        type: "project"
+    };
+
+    return request({
+        url: GET_FILES_IN_TASK + '/' + projectID + '/tasks/' + taskID + '/files' ,
+        method: 'GET',
+    }, true, headers);
+};
+
+async function deleteFileInTaskData(projectID,taskID,taskFileId) {
+
+    let userIDHeder = null;
+    userIDHeder =  await AsyncStorage.getItem('userID');
+    
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        user : userIDHeder,
+        taskType : "project"
+    };
+
+    return request({
+        url: DELETE_FILE_IN_TASK + '/' + projectID + '/tasks/' + taskID + '/upload/' + taskFileId,
+        method: 'DELETE'
+    }, true, headers);
 };
 
 const APIServices = {
     getAllProjectsByUserData,
+    getUserData,
     getAllTaskInProjectsData,
     getMyTaskInProjectsData,
     getAllUsersData,
-    getUserData,
     addUserData,
     editUserData,
     addprojectData,
@@ -388,7 +660,9 @@ const APIServices = {
     getSubTaskData,
     deleteSubTask,
     addSubTask,
-    updateSubTask
+    updateSubTask,
+    getFilesInTaskData,
+    deleteFileInTaskData
 };
 
 export default APIServices;
