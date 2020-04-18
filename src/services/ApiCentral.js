@@ -27,6 +27,7 @@ const request = async function (options, isHeader,type,isUserID,customeHeaderIma
     if(customeHeaderImageUpload){
         headers =  {
             Authorization: authHeader,
+            Accept: 'application/json',
             'Content-Type': 'multipart/form-data',
             type : typeHeader,
             user : userIDHeder,
