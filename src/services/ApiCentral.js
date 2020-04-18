@@ -4,47 +4,14 @@ import jwtDecode from 'jwt-decode';
 import { BASE_URL, GET_NEW_TOKENS } from '../api/API';
 import NavigationService from '../services/NavigationService';
 
-const request = async function (options, isHeader,type,isUserID,customeHeaderImageUpload,taskType) {
+const request = async function (options, isHeader,headers) {
     let authHeader = null;
-    let typeHeader = null;
-    let userIDHeder = null;
-    let taskTypeHeder = null;
-    let headers = {};
 
     if (isHeader) {
         authHeader = `Bearer ${await AsyncStorage.getItem('accessToken')}`;
+        headers.Authorization = authHeader;
     }
-    if (type) {
-        typeHeader = 'project'
-    }
-    if (isUserID) {
-        userIDHeder =  await AsyncStorage.getItem('userID');
-    }
-    if (taskType) {
-        taskTypeHeder =  'project';
-    }
-
-    if(customeHeaderImageUpload){
-        headers =  {
-            Authorization: authHeader,
-            Accept: 'application/json',
-            'Content-Type': 'multipart/form-data',
-            type : typeHeader,
-            user : userIDHeder,
-            taskType : taskTypeHeder,
-        }
-    }else{
-        headers =  {
-            Authorization: authHeader,
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            type : typeHeader,
-            user : userIDHeder,
-            taskType : taskTypeHeder,
-        }
-    }
-
-
+    
     const client = axios.create({
         baseURL: BASE_URL,
         headers: headers,
