@@ -25,6 +25,7 @@ import _ from 'lodash';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import DocumentPicker from 'react-native-document-picker';
 import moment from 'moment';
+import Loader from '../../../components/Loader';
 
 let dropData = [
   {
@@ -110,7 +111,11 @@ class AddNewTasksScreen extends Component {
         ],
         { cancelable: false }
       );
-      //this.uploadFiles(this.state.files, taskID)
+
+      let files = this.state.files;
+      if(files && files.length > 0){
+        this.uploadFiles(this.state.files, taskID)
+      }
       // this.uploadFiles(this.state.files, 'b6ba3dcf-4494-4bb5-80dc-17376c628187')
     }
   }
@@ -328,7 +333,11 @@ class AddNewTasksScreen extends Component {
     // Pick multiple files
     try {
       const results = await DocumentPicker.pickMultiple({
-        type: [DocumentPicker.types.images],
+        type: [
+          DocumentPicker.types.images,
+          DocumentPicker.types.plainText,
+          DocumentPicker.types.pdf
+        ],
       });
       for (const res of results) {
         this.onFilesCrossPress(res.uri);
@@ -467,6 +476,9 @@ class AddNewTasksScreen extends Component {
     let showAlert = this.state.showAlert;
     let alertTitle = this.state.alertTitle;
     let alertMsg = this.state.alertMsg;
+    let addFileTaskLoading = this.state.addFileTaskLoading;
+    let addTaskToProjectLoading = this.state.addTaskToProjectLoading;
+
     return (
       <ScrollView style={{ marginBottom: 90 }}>
         <View style={[styles.taskFieldView, { marginTop: 30 }]}>
@@ -620,6 +632,8 @@ class AddNewTasksScreen extends Component {
         </TouchableOpacity>
         {this.state.showPicker ? this.renderDatePicker() : null}
         {this.state.showTimePicker ? this.renderTimePicker() : null}
+        {addTaskToProjectLoading && <Loader />}
+        {addFileTaskLoading && <Loader />}
         <AwesomeAlert
           show={showAlert}
           showProgress={false}
@@ -815,6 +829,7 @@ const mapStateToProps = state => {
     addTaskToProjectSuccess: state.project.addTaskToProjectSuccess,
     addTaskToProjectErrorMessage: state.project.addTaskToProjectErrorMessage,
     taskId: state.project.taskId,
+    addFileTaskLoading : state.project.addFileTaskLoading,
   };
 };
 export default connect(

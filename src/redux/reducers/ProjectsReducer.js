@@ -40,6 +40,11 @@ import {
     DELETE_TASK_FAILED,
     DELETE_TASK_FAILED_MASSAGE,
 
+    ADD_FILE_TO_TASK,
+    ADD_FILE_TO_TASK_SUCCESS,
+    ADD_FILE_TO_TASK_FAILED,
+    ADD_FILE_TO_TASK_FAILED_MASSAGE
+
 } from '../types';
 
 const INITIAL_STATE = {
@@ -81,6 +86,11 @@ const INITIAL_STATE = {
     deleteTaskSuccess: false,
     deleteTaskError: false,
     deleteTaskErrorMessage: '',
+
+    addFileTaskLoading: false,
+    addFileTaskSuccess: false,
+    addFileTaskError: false,
+    addFileeTaskErrorMessage: '',
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -290,6 +300,31 @@ export default (state = INITIAL_STATE, action) => {
                 deleteTaskError: true,
                 deleteTaskErrorMessage: action.payload
             };
+        // Add file to task
+        case ADD_FILE_TO_TASK:
+            return {
+                ...state,
+                addFileTaskLoading: true,
+                addFileTaskSuccess: false,
+            };
+        case ADD_FILE_TO_TASK_SUCCESS:
+            return {
+                ...state,
+                addFileTaskLoading: false,
+                addFileTaskSuccess : true,
+            };
+        case ADD_FILE_TO_TASK_FAILED_MASSAGE:
+            return {
+                ...state,
+                addFileTaskLoading: false,
+                addFileTaskSuccess: false,
+            };
+        case ADD_FILE_TO_TASK_FAILED:
+            return {
+                ...state,
+                addFileTaskLoading: false,
+                addFileTaskSuccess: false,
+            };    
         default:
             return state;
     }

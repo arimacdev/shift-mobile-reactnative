@@ -457,7 +457,7 @@ async function addFileToTask(file, taskId, selectedProjectID) {
     
     let headers =  {
         Accept: 'application/json',
-        'Content-Type': 'multipart/form-data',
+        'content-type': 'multipart/form-data',
         user : userIDHeder,
     };
 
@@ -466,7 +466,7 @@ async function addFileToTask(file, taskId, selectedProjectID) {
         name: 'image-pmtool'+ new Date().getTime(),
         type: file[0].type,
     };
-    const formData = new FormData();
+    const formData = new FormData(); 
     formData.append('taskType', "project");
     formData.append('type', "taskFile");
     formData.append('files', file1);

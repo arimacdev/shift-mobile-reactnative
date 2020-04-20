@@ -20,6 +20,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import APIServices from '../../../services/APIServices';
 import moment from 'moment';
 import AwesomeAlert from 'react-native-awesome-alerts';
+import DocumentPicker from 'react-native-document-picker';
 
 
 class FilesScreen extends Component {
@@ -39,6 +40,11 @@ class FilesScreen extends Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
+    if (prevProps.addFileTaskSuccess !== this.props.addFileTaskSuccess
+      && this.props.addFileTaskSuccess) {
+        let userID = this.state.userID;
+        this.fetchData(userID);
+      }
   }
 
   componentDidMount() {
@@ -151,23 +157,105 @@ class FilesScreen extends Component {
       alertTitle : title,
       alertMsg : msg,
     })
+  };
+
+  async doumentPicker() {
+    // Pick multiple files
+    try {
+      const results = await DocumentPicker.pickMultiple({
+        type: [
+          DocumentPicker.types.images,
+          DocumentPicker.types.plainText,
+          DocumentPicker.types.pdf
+        ],
+      });
+      for (const res of results) {
+        this.onFilesCrossPress(res.uri);
+
+        await this.state.files.push({
+          uri: res.uri,
+          type: res.type, // mime type
+          name: res.name,
+          size: res.size,
+          dateTime:
+            moment().format('YYYY/MM/DD') + ' | ' + moment().format('HH:mm'),
+        });
+
+        this.uploadFiles(this.state.files)
+        
+      }
+      this.setState({ files: this.state.files });
+      console.log(this.state.files);
+    } catch (err) {
+      if (DocumentPicker.isCancel(err)) {
+        console.log('file pick error', err);
+      } else {
+        throw err;
+      }
+    }
   }
+
+  onFilesCrossPress(uri) {
+    this.setState(
+      {
+        files: [],
+      },
+      () => {
+        let filesArray = this.state.files.filter(item => {
+          return item.uri !== uri;
+        });
+        this.setState({ files: filesArray });
+      },
+    );
+  }
+
+  uploadFiles(file) {
+    let projectID = this.state.projectID
+    let taskID = this.state.taskID
+    this.props.addFileToTask(file, taskID, projectID);
+  }
+
   render() {
     let files = this.state.files;
     let dataLoading = this.state.dataLoading;
     let showAlert = this.state.showAlert;
     let alertTitle = this.state.alertTitle;
     let alertMsg = this.state.alertMsg;
-
+    let addFileTaskLoading = this.props.addFileTaskLoading;
     return (
       <View style={styles.container}>
-        <FlatList
-          style={styles.flalList}
-          data={files}
-          renderItem={({item}) => this.renderUserListList(item)}
-          keyExtractor={item => item.projId}
-        />
+        <View flex={8}>
+          <FlatList
+            style={styles.flalList}
+            data={files}
+            renderItem={({item}) => this.renderUserListList(item)}
+            keyExtractor={item => item.projId}
+          />
+        </View>
+        <View flex={1}>
+          <TouchableOpacity
+            style={{}} 
+            onPress={() => this.doumentPicker()}>
+            <View style={styles.button}>
+              <Image
+                style={styles.bottomBarIcon}
+                source={icons.taskWhite}
+                resizeMode={'center'}
+              />
+              <View style={{flex: 1}}>
+                <Text style={styles.buttonText}>{'Add File'}</Text>
+              </View>
+
+              <Image
+                style={styles.addIcon}
+                source={icons.add}
+                resizeMode={'center'}
+              />
+            </View>
+          </TouchableOpacity>
+        </View>
         {dataLoading && <Loader />}
+        {addFileTaskLoading && <Loader />}
         <AwesomeAlert
           show={showAlert}
           showProgress={false}
@@ -230,7 +318,6 @@ const styles = EStyleSheet.create({
   },
   flalList: {
     marginTop: '20rem',
-    marginBottom: '10rem',
   },
   taskStateIcon: {
     width: '25rem',
@@ -244,8 +331,6 @@ const styles = EStyleSheet.create({
     flexDirection: 'row',
     backgroundColor: colors.lightBlue,
     borderRadius: 5,
-    marginTop: '17rem',
-    marginBottom: '17rem',
     flexDirection: 'row',
     alignItems: 'center',
     // justifyContent: 'center',
@@ -282,6 +367,8 @@ const mapStateToProps = state => {
   return {
     usersLoading: state.users.usersLoading,
     users: state.users.users,
+    addFileTaskLoading : state.project.addFileTaskLoading,
+    addFileTaskSuccess  : state.project.addFileTaskSuccess,
   };
 };
 export default connect(
