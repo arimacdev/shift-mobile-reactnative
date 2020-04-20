@@ -31,7 +31,8 @@ import {
     GET_FILES_IN_TASK,
     DELETE_FILE_IN_TASK,
     ADD_SLACK_ID,
-    GET_WORKLOAD_WITH_COMPLETION
+    GET_WORKLOAD_WITH_COMPLETION,
+    UPDATE_PEOPLE_PROJECT
 
 } from '../api/API';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -635,10 +636,6 @@ async function addSlackID(userID, authedUserID) {
     let userIDHeder = null;
     userIDHeder =  await AsyncStorage.getItem('userID');
     
-    let headers =  {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-    };
 
     return request({
         url: ADD_SLACK_ID +'/'+ userIDHeder + '/slack',
@@ -665,6 +662,26 @@ async function getWorkloadWithCompletion(userID) {
         url: GET_WORKLOAD_WITH_COMPLETION + '/workload',
         method: 'GET',
     }, true,headers);
+};
+    
+async function updateRolePeopleData(isSelected,role,userType,projectID,assignerId) {
+
+    let userIDHeder = null;
+    userID =  await AsyncStorage.getItem('userID');
+
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+    };
+    return request({
+        url: UPDATE_PEOPLE_PROJECT + '/' + projectID + '/users/' + userID,
+        method: 'PUT',
+        data: {
+            assignerId : assignerId,
+            assigneeJobRole : role,
+            userType : userType
+        }
+    }, true, headers);
 };
 
 async function getWorkloadWithAssignTasksCompletion(userID, from, to) {
@@ -723,7 +740,8 @@ const APIServices = {
     deleteFileInTaskData,
     addSlackID,
     getWorkloadWithCompletion,
-    getWorkloadWithAssignTasksCompletion
+    getWorkloadWithAssignTasksCompletion,
+    updateRolePeopleData,
 };
 
 export default APIServices;

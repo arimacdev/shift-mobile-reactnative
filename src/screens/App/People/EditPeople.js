@@ -20,8 +20,9 @@ import { Dropdown } from 'react-native-material-dropdown';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import DocumentPicker from 'react-native-document-picker';
 import RoundCheckbox from 'rn-round-checkbox';
-import moment from 'moment';
-import PeopleScreen from './PeopleScreen';
+import _ from 'lodash';
+import AwesomeAlert from 'react-native-awesome-alerts';
+import APIServices from '../../../services/APIServices'
 
 class EditPeople extends Component {
     constructor(props) {
@@ -29,7 +30,14 @@ class EditPeople extends Component {
         this.state = {
             name: '',
             role: '',
-            isSelected: true
+            isSelected: true,
+            dataLoading : false,
+            assigneeProjectRole : 0,
+            projectID : '',
+            userID : '',
+            showAlert : false,
+            alertTitle : '',
+            alertMsg : '',
         };
     }
 
@@ -37,12 +45,33 @@ class EditPeople extends Component {
 
     componentDidMount() {
         const { navigation: { state: { params } } } = this.props;
-        let peopleID = params.userItem;
+        let peopleData = params.userItem;
         this.setState({
-            role: peopleID.role,
-            name: peopleID.firstName + ' ' + peopleID.lastName
-        })
-        console.log(peopleID)
+            role: peopleData.projectJobRoleName,
+            name: peopleData.assigneeFirstName + ' ' + peopleData.assigneeLastName,
+            userID : peopleData.assigneeId,
+            projectID : peopleData.projectId,
+        });
+
+        if(peopleData.projectRoleId == 1 ){
+            // project owner
+            this.setState({
+                isSelected: true,
+                assigneeProjectRole : 1,
+            });
+        }else if(peopleData.projectRoleId == 2){
+            // project admins
+            this.setState({
+                isSelected: true,
+                assigneeProjectRole : 2,
+            });
+        }else if(peopleData.projectRoleId == 3){
+            // project users
+            this.setState({
+                isSelected: false,
+                assigneeProjectRole : 3,
+            });
+        }
     }
 
     onPeopleNameChange(text) {
@@ -54,11 +83,75 @@ class EditPeople extends Component {
     }
 
     toggleCheckBox(newValue) {
-        this.setState({ isSelected: !this.state.isSelected });
-        console.log(newValue)
+        let assigneeProjectRole = this.state.assigneeProjectRole;
+        if(assigneeProjectRole !== 1){
+            this.setState({ isSelected: !this.state.isSelected });
+            console.log(newValue)
+        }
+        
+    }
+
+    hideAlert (){
+        this.setState({
+          showAlert : false,
+          alertTitle : '',
+          alertMsg : '',
+        })
+    }
+    
+    showAlert(title,msg){
+        this.setState({
+          showAlert : true,
+          alertTitle : title,
+          alertMsg : msg,
+        })
+    }
+
+    async editUser () {
+        let isSelected = this.state.isSelected;
+        let role = this.state.role;
+        let projectID = this.state.projectID;
+        let userID = this.state.userID;
+        let userType = 0;
+
+        if(isSelected){
+            userType = 2;
+        }else{
+            userType = 3;
+        }
+        
+  
+        if(!role && _.isEmpty(role)){
+          this.showAlert("","Please Enter the Role Name");
+        }else{
+            this.setState({dataLoading:true});
+            try {
+                resultObj = await APIServices.updateRolePeopleData(isSelected,role,userType,projectID,userID);
+                if(resultObj.message == 'success'){
+                  this.setState({dataLoading:false});
+                  this.props.navigation.goBack();
+                }else{
+                  this.setState({dataLoading:false});
+                  this.showAlert("","Error");
+                }
+            }catch(e) {
+              if(e.status == 403){
+                this.setState({dataLoading:false});
+                this.showAlert("",e.data.message);
+              }
+            }
+        }
+    }
+
+    cancelUser (){
+        this.props.navigation.goBack();
     }
 
     render() {
+        let assigneeProjectRole = this.state.assigneeProjectRole;
+        let showAlert = this.state.showAlert;
+        let alertTitle = this.state.alertTitle;
+        let alertMsg = this.state.alertMsg;
         return (
             <ScrollView style={styles.container}>
                 <View style={styles.topContainer}>
@@ -85,7 +178,7 @@ class EditPeople extends Component {
                                 style={[styles.boxTextInput, { width: '100%' }]}
                                 placeholder={this.state.role}
                                 value={this.state.role}
-                                onChangeText={text => this.onPeopleNameChange(text)}
+                                onChangeText={text => this.onRoleChange(text)}
                             />
                         </View>
                     </View>
@@ -105,7 +198,7 @@ class EditPeople extends Component {
                     </View>
                 </View>
                 <View style={styles.bottomButtonContainer}>
-                    <TouchableOpacity>
+                    <TouchableOpacity  onPress={() => this.editUser()}>
                         <View style={styles.button}>
                             <Image
                                 style={[styles.bottomBarIcon, { marginRight: 15, marginLeft: 10 }]}
@@ -123,7 +216,7 @@ class EditPeople extends Component {
                             />
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity>
+                    <TouchableOpacity  onPress={() => this.cancelUser()}>
                         <View style={styles.buttonDelete}>
                             <Image
                                 style={[styles.bottomBarIcon, { marginRight: 15, marginLeft: 10 }]}
@@ -142,6 +235,22 @@ class EditPeople extends Component {
                         </View>
                     </TouchableOpacity>
                 </View>
+                <AwesomeAlert
+                    show={showAlert}
+                    showProgress={false}
+                    title={alertTitle}
+                    message={alertMsg}
+                    closeOnTouchOutside={true}
+                    closeOnHardwareBackPress={false}
+                    showCancelButton={false}
+                    showConfirmButton={true}
+                    cancelText=""
+                    confirmText="OK"
+                    confirmButtonColor={colors.primary}
+                    onConfirmPressed={() => {
+                        this.hideAlert();
+                    }}
+                />
             </ScrollView>
         );
     }
