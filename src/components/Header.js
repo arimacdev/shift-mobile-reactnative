@@ -30,7 +30,7 @@ class Header extends Component {
     }
 
     render() {
-        const { onPress, isHome, title,style,addButton,screen = {},search=false , isTasks=false} = this.props;
+        const { onPress, isHome, title,style,addButton,screen = {},search=false , isTasks=false, isUser=false} = this.props;
         // console.log('PPPP',this.props)
         return (
             <SafeAreaView style={{ backgroundColor: colors.primary }}>
@@ -52,10 +52,10 @@ class Header extends Component {
                                     </View>
                                 </View>
                             <View style={styles.rightContainer} >
-                                <TouchableOpacity style={{alignItems:'flex-end'}} onPress={() => this.props.navigation.navigate('ProjectsSearchScreen')}>
+                                <TouchableOpacity style={{alignItems:'flex-end'}} onPress={() => this.props.navigation.navigate(isUser ? 'SearchUserScreen' : 'ProjectsSearchScreen')}>
                                     <Icon name={'ios-search'} style={styles.headerButton} type={'Ionicons'} />
                                 </TouchableOpacity>
-                                <TouchableOpacity style={{alignItems:'flex-end',marginLeft:40}} onPress={() => this.props.navigation.navigate('CreateNewProjectScreen')}>
+                                <TouchableOpacity style={{alignItems:'flex-end',marginLeft:40}} onPress={() => this.props.navigation.navigate(isUser ? 'AddUserScreen' : 'CreateNewProjectScreen')}>
                                     <Icon name={'ios-add'} style={styles.headerButton} type={'Ionicons'} />
                                 </TouchableOpacity>
                             </View>
@@ -65,7 +65,7 @@ class Header extends Component {
                         isTasks ?
                         <View style={styles.header}>
                             <View style={styles.menuIconContatiner}>
-                                <TouchableOpacity activeOpacity={0.6} onPress={onPress}>
+                                <TouchableOpacity activeOpacity={0.6} onPress={onPress} hitSlop={{top: 20, bottom: 20, left: 50, right: 50}}>
                                 <Icon name={'ios-arrow-round-back'} style={styles.iconBack} type={'Ionicons'} />
                                 </TouchableOpacity>
                             </View>
@@ -81,14 +81,14 @@ class Header extends Component {
                                     </View>
                                 </View>
                             <View style={[styles.rightContainer,{flex: 0}]} >
-                                <TouchableOpacity style={{alignItems:'flex-end'}} onPress={() => this.props.navigation.navigate('ProjectsSearchScreen')}>
+                                <TouchableOpacity style={{alignItems:'flex-end'}} onPress={() => this.props.navigation.navigate('ProjectsSearchScreen')} hitSlop={{top: 20, bottom: 20, left: 50, right: 50}}>
                                     <Image
                                         source={icons.editWhite}
                                         style={styles.iconEdit}
                                         resizeMode={'contain'}
                                     />
                                 </TouchableOpacity>
-                                <TouchableOpacity style={{alignItems:'flex-end',marginLeft:20}} onPress={() => this.props.navigation.navigate('CreateNewProjectScreen')}>
+                                <TouchableOpacity style={{alignItems:'flex-end',marginLeft:20}} onPress={() => this.props.navigation.navigate('CreateNewProjectScreen')} hitSlop={{top: 20, bottom: 20, left: 50, right: 50}}>
                                     <Image
                                         source={icons.deleteWhite}
                                         style={styles.iconEdit}
@@ -101,7 +101,7 @@ class Header extends Component {
                         :
                         <View style={[style, styles.header]}>
                             <View style={styles.menuIconContatiner}>
-                                <TouchableOpacity activeOpacity={0.6} onPress={onPress}>
+                                <TouchableOpacity activeOpacity={0.6} onPress={onPress} hitSlop={{top: 20, bottom: 20, left: 50, right: 50}}>
                                 <Icon name={search ? 'ios-close' : 'ios-arrow-round-back'} style={styles.iconBack} type={'Ionicons'} />
                                 </TouchableOpacity>
                             </View>

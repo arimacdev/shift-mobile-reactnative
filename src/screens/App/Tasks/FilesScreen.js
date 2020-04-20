@@ -106,7 +106,7 @@ class FilesScreen extends Component {
     //   fileDateText = '';
     // }
     return (
-      <TouchableOpacity>
+      <TouchableOpacity onPress={()=>this.props.navigation.navigate('FilesView',{filesData:item})}>
         <View style={styles.filesView}>
           <Image source={icons.gallary} style={styles.taskStateIcon} />
           <View style={{flex: 1}}>

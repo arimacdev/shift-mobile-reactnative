@@ -6,6 +6,7 @@ import UsersScreen from '../screens/App/Users/UsersScreen';
 import ViewUserScreen from '../screens/App/Users/ViewUserScreen';
 import AddUserScreen from '../screens/App/Users/AddUserScreen';
 import EditUserScreen from '../screens/App/Users/EditUserScreen';
+import SearchUserScreen from '../screens/App/Users/SearchUserScreen';
 
 export const UsersStackNavigator = createStackNavigator(
   {
@@ -13,10 +14,12 @@ export const UsersStackNavigator = createStackNavigator(
       screen: UsersScreen,
       navigationOptions: ({navigation}) => ({
         header: <Header
-              addButton={true}
+              isHome
+              isUser
+              navigation={navigation}
               title='User'
               screen={'userList'}
-              onPress={() => navigation.navigate('Projects')}
+              onPress={() => navigation.openDrawer()}
           />,
       }),
     },
@@ -43,6 +46,16 @@ export const UsersStackNavigator = createStackNavigator(
       navigationOptions: ({ navigation }) => ({
           header: <Header
               title='Edit user'
+              onPress={() => navigation.pop()}
+          />,
+      }),
+    },
+    SearchUserScreen: {
+      screen: SearchUserScreen,
+      navigationOptions: ({ navigation }) => ({
+          header: <Header
+              title='Search User'
+              navigation={navigation}
               onPress={() => navigation.pop()}
           />,
       }),

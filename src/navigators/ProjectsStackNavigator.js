@@ -20,6 +20,7 @@ import ChatScreen from '../screens/App/Tasks/ChatScreen';
 import NotesScreen from '../screens/App/Tasks/NotesScreen';
 import ViewProfileScreen from '../screens/App/Profile/ViewProfileScreen';
 import AddEditSubTaskScreen from '../screens/App/Tasks/AddEditSubTaskScreen';
+import FilesView from '../screens/App/Tasks/FilesView';
 
 export const ProjectsStackNavigator = createStackNavigator(
   {
@@ -203,6 +204,18 @@ export const ProjectsStackNavigator = createStackNavigator(
           <Header
             navigation={navigation}
             title={'Sub Task'}
+            onPress={() => navigation.goBack()}
+          />
+        ),
+      }),
+    },
+    FilesView: {
+      screen: FilesView,
+      navigationOptions: ({navigation}) => ({
+        header: (
+          <Header
+            navigation={navigation}
+            title={'Files Viewer'}
             onPress={() => navigation.goBack()}
           />
         ),
