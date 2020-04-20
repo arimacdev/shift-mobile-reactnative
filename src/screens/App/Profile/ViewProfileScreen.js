@@ -19,6 +19,20 @@ import FadeIn from 'react-native-fade-in-image';
 import Loader from '../../../components/Loader';
 import APIServices from '../../../services/APIServices';
 import {TextInput} from 'react-native-gesture-handler';
+import { authorize } from 'react-native-app-auth';
+import strings from '../../../config/strings';
+
+const config = {
+  clientId: strings.slack.clientId, // found under App Credentials
+  clientSecret: strings.slack.clientSecret, // found under App Credentials
+  scopes: ['incoming-webhook,chat:write'], // choose any of the scopes set up in step 1
+  redirectUrl: 'http://io.identityserver.demo:/oauthSlackredirect', // set up in step 2
+  serviceConfiguration: {
+    authorizationEndpoint: 'https://slack.com/oauth/v2/authorize',
+    tokenEndpoint: 'https://slack.com/api/oauth.v2.access',
+  },
+  dangerouslyAllowInsecureHttpRequests: true
+};
 
 class ViewProfileScreen extends Component {
   constructor(props) {
@@ -106,8 +120,10 @@ class ViewProfileScreen extends Component {
     }
   }
 
-  onEditPress() {
+  async onEditPress() {
     this.setState({editEnabled: true});
+    const result = await authorize(config);
+    console.log("sssssssssssssssssss",result);
   }
 
   onProfileImageClick() {}
