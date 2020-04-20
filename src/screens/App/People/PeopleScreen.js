@@ -97,7 +97,8 @@ class PeopleScreen extends Component {
     }
 
     goToEditPeople = (item) => {
-        NavigationService.navigate('EditPeople', {userItem: item});
+        NavigationService.navigate('EditPeople', {
+            userItem: item});
     }
 
     userIcon = function (item) {
