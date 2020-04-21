@@ -67,12 +67,17 @@ const CustomDrawerContentComponent = props => (
         }}
       />
       <DrawerNavigatorItems {...props} />
-      <TouchableOpacity
-        style={styles.logoutButton}
-        onPress={() => {
-          props.logoutUser(true);
-        }}
-      />
+      {/* projects */}
+      {props.loginUserType == 'SUPER_ADMIN' &&
+        <TouchableOpacity style={styles.custtomButton} onPress={() => {  NavigationService.navigate('UsersScreen'); }}>
+          <Image
+            source={require('../asserts/img/drawer_users.png')}
+            style={{ width:  EStyleSheet.value('25rem'),height:EStyleSheet.value('25rem')}}
+          />
+          <Text style={styles.text}>Users</Text>
+        </TouchableOpacity>
+      }
+     
     </SafeAreaView>
   </ScrollView>
 );
@@ -127,7 +132,7 @@ const styles = EStyleSheet.create({
     fontWeight: 'bold',
     marginLeft: 34,
   },
-  logoutButton: {
+  custtomButton: {
     flexDirection: 'row',
     paddingHorizontal: 18,
     marginTop: 10,
@@ -142,6 +147,7 @@ const styles = EStyleSheet.create({
 const mapStateToProps = state => {
   return {
     loginUser: state.users.loginUser,
+    loginUserType: state.users.loginUserType,
   };
 };
 

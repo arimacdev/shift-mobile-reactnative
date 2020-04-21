@@ -41,13 +41,8 @@ export const DrawerNavigator = createDrawerNavigator(
             header: null,
             navigationOptions: ({ navigation }) => ({
                 header: null,
-                drawerLabel: 'Users ',
-                drawerIcon: ({ tintColor }) => (
-                    <Image
-                        source={require('../asserts/img/drawer_users.png')}
-                        style={{ width:  EStyleSheet.value('25rem'),height:EStyleSheet.value('25rem')}}
-                    />
-                ),
+                drawerLabel:  () => null,
+                drawerIcon:  () => null
             }),
         },
         Workload: {
