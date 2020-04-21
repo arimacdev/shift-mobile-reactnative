@@ -298,7 +298,7 @@ const styles = EStyleSheet.create({
     color: colors.userAddText,
     textAlign: 'center',
     lineHeight: '17rem',
-    fontFamily: 'Circular Std Medium',
+    fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
     width : '100%'
   },
@@ -318,7 +318,7 @@ const styles = EStyleSheet.create({
     fontSize: '12rem',
     color: colors.white,
     lineHeight: '17rem',
-    fontFamily: 'Circular Std Medium',
+    fontFamily: 'CircularStd-Medium',
     fontWeight: 'bold',
   },
   bottomBarIcon: {

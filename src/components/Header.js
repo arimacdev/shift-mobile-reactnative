@@ -160,7 +160,7 @@ const styles = EStyleSheet.create({
     title: {
         fontSize: '20rem',
         color: colors.white,
-        fontFamily: 'HelveticaNeueMedium',
+        fontFamily: 'CircularStd-Medium',
         fontWeight: '500',
         textAlign: 'left',
         marginLeft : '08rem'
@@ -169,7 +169,7 @@ const styles = EStyleSheet.create({
         fontSize: '13rem',
         color: colors.white,
         marginRight: '4rem',
-        fontFamily: 'HelveticaNeueMedium',
+        fontFamily: 'CircularStd-Medium',
         fontWeight: Platform.OS === 'ios' ? '500' : '400',
     },
     thumbnail: {
@@ -188,7 +188,7 @@ const styles = EStyleSheet.create({
         color: colors.white,
         marginRight: '4rem',
         opacity: 0.69,
-        fontFamily: 'HelveticaNeueMedium',
+        fontFamily: 'CircularStd-Medium',
         fontWeight: Platform.OS === 'ios' ? '500' : '400',
     },
     icon: {
