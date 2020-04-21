@@ -674,12 +674,12 @@ async function updateRolePeopleData(isSelected,role,userType,projectID,assignerI
         'Content-Type': 'application/json',
     };
     return request({
-        url: UPDATE_PEOPLE_PROJECT + '/' + projectID + '/users/' + userID,
+        url: UPDATE_PEOPLE_PROJECT + '/' + projectID + '/users/' + assignerId,
         method: 'PUT',
         data: {
-            assignerId : assignerId,
+            assignerId : userID,
             assigneeJobRole : role,
-            userType : userType
+            assigneeProjectRole : userType
         }
     }, true, headers);
 };
