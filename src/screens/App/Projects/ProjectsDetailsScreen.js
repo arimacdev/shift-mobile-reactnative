@@ -216,7 +216,7 @@ class ProjectsDetailsScreen extends Component {
         details: datesTextEsstimated,
       },
       {
-        text: 'Estimated project timeline',
+        text: 'Actual time for now',
         details: datesTextAcctual,
       },
     );
