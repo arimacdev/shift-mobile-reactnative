@@ -7,65 +7,21 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		00E356F31AD99517003FC87E /* arimacPmToolTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* arimacPmToolTests.m */; };
-		1116204C34F447DABF37DF1C /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A83FCF156C2C448689025385 /* FontAwesome.ttf */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		174ED6C5AE4E4DF98CEBD1F7 /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CC9C3F7174CB40358A5632FC /* Feather.ttf */; };
-		1FA8F3E51DF50FD59C10169A /* libPods-arimacPmTool.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C4D25AD3FFE1437C3D16034C /* libPods-arimacPmTool.a */; };
-		278EE121A0934B72ABE2E44D /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CCF1F370FAAB42E3AFB7D2A6 /* Ionicons.ttf */; };
-		2D02E4BC1E0B4A80006451C7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
-		2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
-		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		2DCD954D1E0B4F2C00145EB5 /* arimacPmToolTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* arimacPmToolTests.m */; };
-		38261FEE47274AC593E151A1 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 97F360D706BD46A596F2474C /* Octicons.ttf */; };
-		3893DA5C2F1A44F0B10BDAD0 /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 09D12559A2A242A0A1278F52 /* EvilIcons.ttf */; };
-		416B2EB5DA0A4B51AD40AFC6 /* Roboto_medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 97506BB4070E4B8482A14FCC /* Roboto_medium.ttf */; };
-		59FBC864AF8548E9927BB72B /* FontAwesome5_Brands.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 41906698AD594367BC495CDB /* FontAwesome5_Brands.ttf */; };
-		68F80ABCA70AE8D61A697B3C /* libPods-arimacPmTool-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DAFD43B5495F64546A5B7624 /* libPods-arimacPmTool-tvOS.a */; };
-		72B31944913ACA9EB34824B1 /* libPods-arimacPmTool-arimacPmToolTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A6268588E4E0947B15757903 /* libPods-arimacPmTool-arimacPmToolTests.a */; };
-		7376C0D268124F10AD476C99 /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0142976D34E44F0196583625 /* Foundation.ttf */; };
-		76FC7BF70AA54AE4B6707C09 /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9AF8A31977154BB3A077A08C /* Entypo.ttf */; };
-		79CB47C223544EC58923A823 /* AntDesign.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2B8CC5E4757C4D548ED3CE22 /* AntDesign.ttf */; };
-		8680688F387B4BF7876C152F /* Fontisto.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F10FC00C37B54EA7A8091287 /* Fontisto.ttf */; };
-		959C92663A5545E98C075234 /* Roboto.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DFF14BBF1DF94372B5AC9151 /* Roboto.ttf */; };
-		997FAE7AB20B4257B734250E /* rubicon-icon-font.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7CD89E1545844861A6E938CE /* rubicon-icon-font.ttf */; };
-		A02BD59CCA6C4DF48446F44B /* FontAwesome5_Solid.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E84CF1D5F8D74499A37F35FD /* FontAwesome5_Solid.ttf */; };
-		A276C4FA9BFA4A48B8AF0A07 /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 11271671054A4D8D98E9E1BF /* SimpleLineIcons.ttf */; };
-		C5391ABF9BAED5693B83DDFF /* libPods-arimacPmTool-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ECF9684CA79665E9EE6F261D /* libPods-arimacPmTool-tvOSTests.a */; };
-		DCC1211539F248049F036763 /* FontAwesome5_Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2A68490C2AAD4B78AAA00D70 /* FontAwesome5_Regular.ttf */; };
-		E6201A0500B54444B7E4A60D /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CF5A84CC0D6C479EB895ED20 /* Zocial.ttf */; };
-		F721F8181B2542F4B7089E77 /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E06201482B974AF49DDC935E /* MaterialCommunityIcons.ttf */; };
-		F77A1E151C514EA7B5BD39C7 /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6CD2FD90BCA144088CB013B3 /* MaterialIcons.ttf */; };
+		A00B200FA07E184C7546A8BA /* libPods-arimacPmTool.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 84488E1DD923BFDC167FE0C0 /* libPods-arimacPmTool.a */; };
+		CECB8775244F3BC400A463C2 /* CircularStd-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CECB8771244F3BC400A463C2 /* CircularStd-Black.ttf */; };
+		CECB8776244F3BC400A463C2 /* CircularStd-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CECB8772244F3BC400A463C2 /* CircularStd-Bold.ttf */; };
+		CECB8777244F3BC400A463C2 /* CircularStd-Book.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CECB8773244F3BC400A463C2 /* CircularStd-Book.ttf */; };
+		CECB8778244F3BC400A463C2 /* CircularStd-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CECB8774244F3BC400A463C2 /* CircularStd-Medium.ttf */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		00E356F41AD99517003FC87E /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 13B07F861A680F5B00A75B9A;
-			remoteInfo = arimacPmTool;
-		};
-		2D02E4911E0B4A5D006451C7 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 2D02E47A1E0B4A5D006451C7;
-			remoteInfo = "arimacPmTool-tvOS";
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		008F07F21AC5B25A0029DE68 /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = main.jsbundle; sourceTree = "<group>"; };
-		00E356EE1AD99517003FC87E /* arimacPmToolTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = arimacPmToolTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		00E356F21AD99517003FC87E /* arimacPmToolTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = arimacPmToolTests.m; sourceTree = "<group>"; };
 		0142976D34E44F0196583625 /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/native-base/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
 		09D12559A2A242A0A1278F52 /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/native-base/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
-		0B3B801F4396FC04C9710F81 /* Pods-arimacPmTool-arimacPmToolTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-arimacPmTool-arimacPmToolTests.debug.xcconfig"; path = "Target Support Files/Pods-arimacPmTool-arimacPmToolTests/Pods-arimacPmTool-arimacPmToolTests.debug.xcconfig"; sourceTree = "<group>"; };
 		11271671054A4D8D98E9E1BF /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = "../node_modules/native-base/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* arimacPmTool.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = arimacPmTool.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = arimacPmTool/AppDelegate.h; sourceTree = "<group>"; };
@@ -76,90 +32,47 @@
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = arimacPmTool/main.m; sourceTree = "<group>"; };
 		2A68490C2AAD4B78AAA00D70 /* FontAwesome5_Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Regular.ttf; path = "../node_modules/native-base/Fonts/FontAwesome5_Regular.ttf"; sourceTree = "<group>"; };
 		2B8CC5E4757C4D548ED3CE22 /* AntDesign.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = AntDesign.ttf; path = "../node_modules/native-base/Fonts/AntDesign.ttf"; sourceTree = "<group>"; };
-		2D02E47B1E0B4A5D006451C7 /* arimacPmTool-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "arimacPmTool-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		2D02E4901E0B4A5D006451C7 /* arimacPmTool-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "arimacPmTool-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		41906698AD594367BC495CDB /* FontAwesome5_Brands.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Brands.ttf; path = "../node_modules/native-base/Fonts/FontAwesome5_Brands.ttf"; sourceTree = "<group>"; };
-		4D1FB6E68241511E96B6C13D /* Pods-arimacPmTool-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-arimacPmTool-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-arimacPmTool-tvOS/Pods-arimacPmTool-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
-		53477371CD957FDD4B86A1B1 /* Pods-arimacPmTool-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-arimacPmTool-tvOS.release.xcconfig"; path = "Target Support Files/Pods-arimacPmTool-tvOS/Pods-arimacPmTool-tvOS.release.xcconfig"; sourceTree = "<group>"; };
-		5C3BC011EA191FBD0FB93BEB /* Pods-arimacPmTool-arimacPmToolTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-arimacPmTool-arimacPmToolTests.release.xcconfig"; path = "Target Support Files/Pods-arimacPmTool-arimacPmToolTests/Pods-arimacPmTool-arimacPmToolTests.release.xcconfig"; sourceTree = "<group>"; };
 		6CD2FD90BCA144088CB013B3 /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/native-base/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
 		7CD89E1545844861A6E938CE /* rubicon-icon-font.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "rubicon-icon-font.ttf"; path = "../node_modules/native-base/Fonts/rubicon-icon-font.ttf"; sourceTree = "<group>"; };
+		84488E1DD923BFDC167FE0C0 /* libPods-arimacPmTool.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-arimacPmTool.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		97506BB4070E4B8482A14FCC /* Roboto_medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Roboto_medium.ttf; path = "../node_modules/native-base/Fonts/Roboto_medium.ttf"; sourceTree = "<group>"; };
 		97F360D706BD46A596F2474C /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/native-base/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
 		9AF8A31977154BB3A077A08C /* Entypo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Entypo.ttf; path = "../node_modules/native-base/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
-		A6268588E4E0947B15757903 /* libPods-arimacPmTool-arimacPmToolTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-arimacPmTool-arimacPmToolTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9B18B0C1DFF28E32C96099FA /* Pods-arimacPmTool.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-arimacPmTool.release.xcconfig"; path = "Target Support Files/Pods-arimacPmTool/Pods-arimacPmTool.release.xcconfig"; sourceTree = "<group>"; };
 		A83FCF156C2C448689025385 /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/native-base/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
-		AC37F6E7E0E75E82B49F7FCB /* Pods-arimacPmTool.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-arimacPmTool.release.xcconfig"; path = "Target Support Files/Pods-arimacPmTool/Pods-arimacPmTool.release.xcconfig"; sourceTree = "<group>"; };
-		C4D25AD3FFE1437C3D16034C /* libPods-arimacPmTool.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-arimacPmTool.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CC9C3F7174CB40358A5632FC /* Feather.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Feather.ttf; path = "../node_modules/native-base/Fonts/Feather.ttf"; sourceTree = "<group>"; };
 		CCF1F370FAAB42E3AFB7D2A6 /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/native-base/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
+		CE61A35C244EDB0C006E3B9C /* libAppAuth.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libAppAuth.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		CE61A35E244EDCF7006E3B9C /* libAppAuth.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libAppAuth.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		CECB8753244F366800A463C2 /* Product Sans.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Product Sans.ttf"; path = "fonts/Product Sans.ttf"; sourceTree = "<group>"; };
+		CECB8771244F3BC400A463C2 /* CircularStd-Black.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "CircularStd-Black.ttf"; path = "fonts/CircularStd-Black.ttf"; sourceTree = "<group>"; };
+		CECB8772244F3BC400A463C2 /* CircularStd-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "CircularStd-Bold.ttf"; path = "fonts/CircularStd-Bold.ttf"; sourceTree = "<group>"; };
+		CECB8773244F3BC400A463C2 /* CircularStd-Book.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "CircularStd-Book.ttf"; path = "fonts/CircularStd-Book.ttf"; sourceTree = "<group>"; };
+		CECB8774244F3BC400A463C2 /* CircularStd-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "CircularStd-Medium.ttf"; path = "fonts/CircularStd-Medium.ttf"; sourceTree = "<group>"; };
+		CEFE81B2244DDDE000563981 /* libAppAuth.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libAppAuth.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		CF5A84CC0D6C479EB895ED20 /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/native-base/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
-		D1298F7FD6E47FDC591B9F02 /* Pods-arimacPmTool.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-arimacPmTool.debug.xcconfig"; path = "Target Support Files/Pods-arimacPmTool/Pods-arimacPmTool.debug.xcconfig"; sourceTree = "<group>"; };
-		D6A7062E79AFB52ACEB7677A /* Pods-arimacPmTool-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-arimacPmTool-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-arimacPmTool-tvOSTests/Pods-arimacPmTool-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
-		D7A4AB6D22B16B00297F85D8 /* Pods-arimacPmTool-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-arimacPmTool-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-arimacPmTool-tvOSTests/Pods-arimacPmTool-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
-		DAFD43B5495F64546A5B7624 /* libPods-arimacPmTool-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-arimacPmTool-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D7DBC06EA513BE22128207FF /* Pods-arimacPmTool.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-arimacPmTool.debug.xcconfig"; path = "Target Support Files/Pods-arimacPmTool/Pods-arimacPmTool.debug.xcconfig"; sourceTree = "<group>"; };
 		DFF14BBF1DF94372B5AC9151 /* Roboto.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Roboto.ttf; path = "../node_modules/native-base/Fonts/Roboto.ttf"; sourceTree = "<group>"; };
 		E06201482B974AF49DDC935E /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialCommunityIcons.ttf; path = "../node_modules/native-base/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
 		E84CF1D5F8D74499A37F35FD /* FontAwesome5_Solid.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Solid.ttf; path = "../node_modules/native-base/Fonts/FontAwesome5_Solid.ttf"; sourceTree = "<group>"; };
-		ECF9684CA79665E9EE6F261D /* libPods-arimacPmTool-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-arimacPmTool-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
 		F10FC00C37B54EA7A8091287 /* Fontisto.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Fontisto.ttf; path = "../node_modules/native-base/Fonts/Fontisto.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		00E356EB1AD99517003FC87E /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				72B31944913ACA9EB34824B1 /* libPods-arimacPmTool-arimacPmToolTests.a in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		13B07F8C1A680F5B00A75B9A /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1FA8F3E51DF50FD59C10169A /* libPods-arimacPmTool.a in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		2D02E4781E0B4A5D006451C7 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				68F80ABCA70AE8D61A697B3C /* libPods-arimacPmTool-tvOS.a in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		2D02E48D1E0B4A5D006451C7 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				C5391ABF9BAED5693B83DDFF /* libPods-arimacPmTool-tvOSTests.a in Frameworks */,
+				A00B200FA07E184C7546A8BA /* libPods-arimacPmTool.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		00E356EF1AD99517003FC87E /* arimacPmToolTests */ = {
-			isa = PBXGroup;
-			children = (
-				00E356F21AD99517003FC87E /* arimacPmToolTests.m */,
-				00E356F01AD99517003FC87E /* Supporting Files */,
-			);
-			path = arimacPmToolTests;
-			sourceTree = "<group>";
-		};
-		00E356F01AD99517003FC87E /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				00E356F11AD99517003FC87E /* Info.plist */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
 		13B07FAE1A68108700A75B9A /* arimacPmTool */ = {
 			isa = PBXGroup;
 			children = (
@@ -167,7 +80,6 @@
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
-				13B07FB61A68108700A75B9A /* Info.plist */,
 				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
 				13B07FB71A68108700A75B9A /* main.m */,
 			);
@@ -177,12 +89,12 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				CE61A35E244EDCF7006E3B9C /* libAppAuth.a */,
+				CE61A35C244EDB0C006E3B9C /* libAppAuth.a */,
+				CEFE81B2244DDDE000563981 /* libAppAuth.a */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				ED2971642150620600B7C4FE /* JavaScriptCore.framework */,
-				C4D25AD3FFE1437C3D16034C /* libPods-arimacPmTool.a */,
-				A6268588E4E0947B15757903 /* libPods-arimacPmTool-arimacPmToolTests.a */,
-				DAFD43B5495F64546A5B7624 /* libPods-arimacPmTool-tvOS.a */,
-				ECF9684CA79665E9EE6F261D /* libPods-arimacPmTool-tvOSTests.a */,
+				84488E1DD923BFDC167FE0C0 /* libPods-arimacPmTool.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -197,9 +109,12 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				CECB8771244F3BC400A463C2 /* CircularStd-Black.ttf */,
+				CECB8772244F3BC400A463C2 /* CircularStd-Bold.ttf */,
+				CECB8773244F3BC400A463C2 /* CircularStd-Book.ttf */,
+				CECB8774244F3BC400A463C2 /* CircularStd-Medium.ttf */,
 				13B07FAE1A68108700A75B9A /* arimacPmTool */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
-				00E356EF1AD99517003FC87E /* arimacPmToolTests */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				F091D458B8384C54B560C434 /* Resources */,
@@ -214,9 +129,6 @@
 			isa = PBXGroup;
 			children = (
 				13B07F961A680F5B00A75B9A /* arimacPmTool.app */,
-				00E356EE1AD99517003FC87E /* arimacPmToolTests.xctest */,
-				2D02E47B1E0B4A5D006451C7 /* arimacPmTool-tvOS.app */,
-				2D02E4901E0B4A5D006451C7 /* arimacPmTool-tvOSTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -224,14 +136,8 @@
 		9BAE4DB8D3D607D6EFB828B1 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				D1298F7FD6E47FDC591B9F02 /* Pods-arimacPmTool.debug.xcconfig */,
-				AC37F6E7E0E75E82B49F7FCB /* Pods-arimacPmTool.release.xcconfig */,
-				0B3B801F4396FC04C9710F81 /* Pods-arimacPmTool-arimacPmToolTests.debug.xcconfig */,
-				5C3BC011EA191FBD0FB93BEB /* Pods-arimacPmTool-arimacPmToolTests.release.xcconfig */,
-				4D1FB6E68241511E96B6C13D /* Pods-arimacPmTool-tvOS.debug.xcconfig */,
-				53477371CD957FDD4B86A1B1 /* Pods-arimacPmTool-tvOS.release.xcconfig */,
-				D7A4AB6D22B16B00297F85D8 /* Pods-arimacPmTool-tvOSTests.debug.xcconfig */,
-				D6A7062E79AFB52ACEB7677A /* Pods-arimacPmTool-tvOSTests.release.xcconfig */,
+				D7DBC06EA513BE22128207FF /* Pods-arimacPmTool.debug.xcconfig */,
+				9B18B0C1DFF28E32C96099FA /* Pods-arimacPmTool.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -240,7 +146,9 @@
 			isa = PBXGroup;
 			children = (
 				2B8CC5E4757C4D548ED3CE22 /* AntDesign.ttf */,
+				13B07FB61A68108700A75B9A /* Info.plist */,
 				9AF8A31977154BB3A077A08C /* Entypo.ttf */,
+				CECB8753244F366800A463C2 /* Product Sans.ttf */,
 				09D12559A2A242A0A1278F52 /* EvilIcons.ttf */,
 				CC9C3F7174CB40358A5632FC /* Feather.ttf */,
 				A83FCF156C2C448689025385 /* FontAwesome.ttf */,
@@ -265,37 +173,17 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		00E356ED1AD99517003FC87E /* arimacPmToolTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "arimacPmToolTests" */;
-			buildPhases = (
-				5CBE375062AAF8DB57623491 /* [CP] Check Pods Manifest.lock */,
-				00E356EA1AD99517003FC87E /* Sources */,
-				00E356EB1AD99517003FC87E /* Frameworks */,
-				00E356EC1AD99517003FC87E /* Resources */,
-				A3CC26091552E905BD6AB27C /* [CP] Copy Pods Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				00E356F51AD99517003FC87E /* PBXTargetDependency */,
-			);
-			name = arimacPmToolTests;
-			productName = arimacPmToolTests;
-			productReference = 00E356EE1AD99517003FC87E /* arimacPmToolTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 		13B07F861A680F5B00A75B9A /* arimacPmTool */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "arimacPmTool" */;
 			buildPhases = (
-				2E91C56A9BDFFFC781520BB3 /* [CP] Check Pods Manifest.lock */,
+				437DC8F1B2D40FEE4ACD896D /* [CP] Check Pods Manifest.lock */,
 				FD10A7F022414F080027D42C /* Start Packager */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				B643465683567A171A4E506D /* [CP] Copy Pods Resources */,
+				6738CC5AB536DCCE9E563101 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -306,45 +194,6 @@
 			productReference = 13B07F961A680F5B00A75B9A /* arimacPmTool.app */;
 			productType = "com.apple.product-type.application";
 		};
-		2D02E47A1E0B4A5D006451C7 /* arimacPmTool-tvOS */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 2D02E4BA1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "arimacPmTool-tvOS" */;
-			buildPhases = (
-				DA9732ABAF81F1B963AF1BB7 /* [CP] Check Pods Manifest.lock */,
-				FD10A7F122414F3F0027D42C /* Start Packager */,
-				2D02E4771E0B4A5D006451C7 /* Sources */,
-				2D02E4781E0B4A5D006451C7 /* Frameworks */,
-				2D02E4791E0B4A5D006451C7 /* Resources */,
-				2D02E4CB1E0B4B27006451C7 /* Bundle React Native Code And Images */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = "arimacPmTool-tvOS";
-			productName = "arimacPmTool-tvOS";
-			productReference = 2D02E47B1E0B4A5D006451C7 /* arimacPmTool-tvOS.app */;
-			productType = "com.apple.product-type.application";
-		};
-		2D02E48F1E0B4A5D006451C7 /* arimacPmTool-tvOSTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 2D02E4BB1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "arimacPmTool-tvOSTests" */;
-			buildPhases = (
-				B1F998253A5DB0DACA97CD34 /* [CP] Check Pods Manifest.lock */,
-				2D02E48C1E0B4A5D006451C7 /* Sources */,
-				2D02E48D1E0B4A5D006451C7 /* Frameworks */,
-				2D02E48E1E0B4A5D006451C7 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				2D02E4921E0B4A5D006451C7 /* PBXTargetDependency */,
-			);
-			name = "arimacPmTool-tvOSTests";
-			productName = "arimacPmTool-tvOSTests";
-			productReference = 2D02E4901E0B4A5D006451C7 /* arimacPmTool-tvOSTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -353,21 +202,9 @@
 			attributes = {
 				LastUpgradeCheck = 1130;
 				TargetAttributes = {
-					00E356ED1AD99517003FC87E = {
-						CreatedOnToolsVersion = 6.2;
-						TestTargetID = 13B07F861A680F5B00A75B9A;
-					};
 					13B07F861A680F5B00A75B9A = {
+						DevelopmentTeam = 2DM2ML5VBH;
 						LastSwiftMigration = 1120;
-					};
-					2D02E47A1E0B4A5D006451C7 = {
-						CreatedOnToolsVersion = 8.2.1;
-						ProvisioningStyle = Automatic;
-					};
-					2D02E48F1E0B4A5D006451C7 = {
-						CreatedOnToolsVersion = 8.2.1;
-						ProvisioningStyle = Automatic;
-						TestTargetID = 2D02E47A1E0B4A5D006451C7;
 					};
 				};
 			};
@@ -385,61 +222,21 @@
 			projectRoot = "";
 			targets = (
 				13B07F861A680F5B00A75B9A /* arimacPmTool */,
-				00E356ED1AD99517003FC87E /* arimacPmToolTests */,
-				2D02E47A1E0B4A5D006451C7 /* arimacPmTool-tvOS */,
-				2D02E48F1E0B4A5D006451C7 /* arimacPmTool-tvOSTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		00E356EC1AD99517003FC87E /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		13B07F8E1A680F5B00A75B9A /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CECB8778244F3BC400A463C2 /* CircularStd-Medium.ttf in Resources */,
+				CECB8777244F3BC400A463C2 /* CircularStd-Book.ttf in Resources */,
+				CECB8775244F3BC400A463C2 /* CircularStd-Black.ttf in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				CECB8776244F3BC400A463C2 /* CircularStd-Bold.ttf in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
-				79CB47C223544EC58923A823 /* AntDesign.ttf in Resources */,
-				76FC7BF70AA54AE4B6707C09 /* Entypo.ttf in Resources */,
-				3893DA5C2F1A44F0B10BDAD0 /* EvilIcons.ttf in Resources */,
-				174ED6C5AE4E4DF98CEBD1F7 /* Feather.ttf in Resources */,
-				1116204C34F447DABF37DF1C /* FontAwesome.ttf in Resources */,
-				59FBC864AF8548E9927BB72B /* FontAwesome5_Brands.ttf in Resources */,
-				DCC1211539F248049F036763 /* FontAwesome5_Regular.ttf in Resources */,
-				A02BD59CCA6C4DF48446F44B /* FontAwesome5_Solid.ttf in Resources */,
-				8680688F387B4BF7876C152F /* Fontisto.ttf in Resources */,
-				7376C0D268124F10AD476C99 /* Foundation.ttf in Resources */,
-				278EE121A0934B72ABE2E44D /* Ionicons.ttf in Resources */,
-				F721F8181B2542F4B7089E77 /* MaterialCommunityIcons.ttf in Resources */,
-				F77A1E151C514EA7B5BD39C7 /* MaterialIcons.ttf in Resources */,
-				38261FEE47274AC593E151A1 /* Octicons.ttf in Resources */,
-				416B2EB5DA0A4B51AD40AFC6 /* Roboto_medium.ttf in Resources */,
-				959C92663A5545E98C075234 /* Roboto.ttf in Resources */,
-				997FAE7AB20B4257B734250E /* rubicon-icon-font.ttf in Resources */,
-				A276C4FA9BFA4A48B8AF0A07 /* SimpleLineIcons.ttf in Resources */,
-				E6201A0500B54444B7E4A60D /* Zocial.ttf in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		2D02E4791E0B4A5D006451C7 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		2D02E48E1E0B4A5D006451C7 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -458,23 +255,9 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
+			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
 		};
-		2D02E4CB1E0B4B27006451C7 /* Bundle React Native Code And Images */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Bundle React Native Code And Images";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
-		};
-		2E91C56A9BDFFFC781520BB3 /* [CP] Check Pods Manifest.lock */ = {
+		437DC8F1B2D40FEE4ACD896D /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -496,99 +279,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		5CBE375062AAF8DB57623491 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-arimacPmTool-arimacPmToolTests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		A3CC26091552E905BD6AB27C /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-arimacPmTool-arimacPmToolTests/Pods-arimacPmTool-arimacPmToolTests-resources.sh",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Entypo.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Feather.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Brands.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Regular.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Solid.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Fontisto.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Foundation.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Octicons.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Zocial.ttf",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AntDesign.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Entypo.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/EvilIcons.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Feather.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FontAwesome.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FontAwesome5_Brands.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FontAwesome5_Regular.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FontAwesome5_Solid.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Fontisto.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Foundation.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Ionicons.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MaterialCommunityIcons.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MaterialIcons.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Octicons.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/SimpleLineIcons.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Zocial.ttf",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-arimacPmTool-arimacPmToolTests/Pods-arimacPmTool-arimacPmToolTests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		B1F998253A5DB0DACA97CD34 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-arimacPmTool-tvOSTests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		B643465683567A171A4E506D /* [CP] Copy Pods Resources */ = {
+		6738CC5AB536DCCE9E563101 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -636,48 +327,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-arimacPmTool/Pods-arimacPmTool-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		DA9732ABAF81F1B963AF1BB7 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-arimacPmTool-tvOS-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
 		FD10A7F022414F080027D42C /* Start Packager */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "Start Packager";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "export RCT_METRO_PORT=\"${RCT_METRO_PORT:=8081}\"\necho \"export RCT_METRO_PORT=${RCT_METRO_PORT}\" > \"${SRCROOT}/../node_modules/react-native/scripts/.packager.env\"\nif [ -z \"${RCT_NO_LAUNCH_PACKAGER+xxx}\" ] ; then\n  if nc -w 5 -z localhost ${RCT_METRO_PORT} ; then\n    if ! curl -s \"http://localhost:${RCT_METRO_PORT}/status\" | grep -q \"packager-status:running\" ; then\n      echo \"Port ${RCT_METRO_PORT} already in use, packager is either not running or not running correctly\"\n      exit 2\n    fi\n  else\n    open \"$SRCROOT/../node_modules/react-native/scripts/launchPackager.command\" || echo \"Can't start packager automatically\"\n  fi\nfi\n";
-			showEnvVarsInLog = 0;
-		};
-		FD10A7F122414F3F0027D42C /* Start Packager */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -699,14 +349,6 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		00E356EA1AD99517003FC87E /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				00E356F31AD99517003FC87E /* arimacPmToolTests.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		13B07F871A680F5B00A75B9A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -716,37 +358,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		2D02E4771E0B4A5D006451C7 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */,
-				2D02E4BC1E0B4A80006451C7 /* AppDelegate.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		2D02E48C1E0B4A5D006451C7 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				2DCD954D1E0B4F2C00145EB5 /* arimacPmToolTests.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		00E356F51AD99517003FC87E /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 13B07F861A680F5B00A75B9A /* arimacPmTool */;
-			targetProxy = 00E356F41AD99517003FC87E /* PBXContainerItemProxy */;
-		};
-		2D02E4921E0B4A5D006451C7 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 2D02E47A1E0B4A5D006451C7 /* arimacPmTool-tvOS */;
-			targetProxy = 2D02E4911E0B4A5D006451C7 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		13B07FB11A68108700A75B9A /* LaunchScreen.xib */ = {
@@ -761,69 +373,68 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		00E356F61AD99517003FC87E /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 0B3B801F4396FC04C9710F81 /* Pods-arimacPmTool-arimacPmToolTests.debug.xcconfig */;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = arimacPmToolTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				OTHER_LDFLAGS = (
-					"-ObjC",
-					"-lc++",
-					"$(inherited)",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/arimacPmTool.app/arimacPmTool";
-			};
-			name = Debug;
-		};
-		00E356F71AD99517003FC87E /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5C3BC011EA191FBD0FB93BEB /* Pods-arimacPmTool-arimacPmToolTests.release.xcconfig */;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				COPY_PHASE_STRIP = NO;
-				INFOPLIST_FILE = arimacPmToolTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				OTHER_LDFLAGS = (
-					"-ObjC",
-					"-lc++",
-					"$(inherited)",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/arimacPmTool.app/arimacPmTool";
-			};
-			name = Release;
-		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D1298F7FD6E47FDC591B9F02 /* Pods-arimacPmTool.debug.xcconfig */;
+			baseConfigurationReference = D7DBC06EA513BE22128207FF /* Pods-arimacPmTool.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 2DM2ML5VBH;
 				ENABLE_BITCODE = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
 					"FB_SONARKIT_ENABLED=1",
 				);
 				INFOPLIST_FILE = arimacPmTool/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				OTHER_LDFLAGS = (
+				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"-ObjC",
-					"-lc++",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/AppAuth\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/CocoaAsyncSocket\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/DoubleConversion\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FBReactNativeSpec\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/Flipper\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/Flipper-DoubleConversion\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/Flipper-Folly\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/Flipper-Glog\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/Flipper-PeerTalk\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/Flipper-RSocket\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FlipperKit\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/Folly\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RCTTypeSafety\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RNCAsyncStorage\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RNDateTimePicker\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RNGestureHandler\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RNReanimated\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RNScreens\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RNVectorIcons\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-Core\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-CoreModules\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-RCTAnimation\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-RCTBlob\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-RCTImage\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-RCTLinking\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-RCTNetwork\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-RCTSettings\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-RCTText\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-RCTVibration\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-cxxreact\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-jsi\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-jsiexecutor\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-jsinspector\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/ReactCommon\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/Yoga\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/YogaKit\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/glog\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/react-native-app-auth\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/react-native-document-picker\"",
+					"\"${PODS_ROOT}/CocoaLibEvent/lib\"",
+					"\"${PODS_ROOT}/OpenSSL-Universal/ios/lib\"",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				OTHER_LDFLAGS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.arimac.arimacPmTool;
 				PRODUCT_NAME = arimacPmTool;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -833,132 +444,63 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = AC37F6E7E0E75E82B49F7FCB /* Pods-arimacPmTool.release.xcconfig */;
+			baseConfigurationReference = 9B18B0C1DFF28E32C96099FA /* Pods-arimacPmTool.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 2DM2ML5VBH;
 				INFOPLIST_FILE = arimacPmTool/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				OTHER_LDFLAGS = (
+				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"-ObjC",
-					"-lc++",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/AppAuth\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/CocoaAsyncSocket\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/DoubleConversion\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FBReactNativeSpec\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/Flipper\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/Flipper-DoubleConversion\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/Flipper-Folly\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/Flipper-Glog\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/Flipper-PeerTalk\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/Flipper-RSocket\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/Folly\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RCTTypeSafety\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RNCAsyncStorage\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RNDateTimePicker\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RNGestureHandler\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RNReanimated\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RNScreens\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RNVectorIcons\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-Core\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-CoreModules\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-RCTAnimation\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-RCTBlob\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-RCTImage\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-RCTLinking\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-RCTNetwork\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-RCTSettings\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-RCTText\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-RCTVibration\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-cxxreact\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-jsi\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-jsiexecutor\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-jsinspector\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/ReactCommon\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/Yoga\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/YogaKit\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/glog\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/react-native-app-auth\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/react-native-document-picker\"",
+					"\"${PODS_ROOT}/CocoaLibEvent/lib\"",
+					"\"${PODS_ROOT}/OpenSSL-Universal/ios/lib\"",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				OTHER_LDFLAGS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.arimac.arimacPmTool;
 				PRODUCT_NAME = arimacPmTool;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
-			};
-			name = Release;
-		};
-		2D02E4971E0B4A5E006451C7 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4D1FB6E68241511E96B6C13D /* Pods-arimacPmTool-tvOS.debug.xcconfig */;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				ENABLE_TESTABILITY = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				INFOPLIST_FILE = "arimacPmTool-tvOS/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					"-ObjC",
-					"-lc++",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.arimacPmTool-tvOS";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = appletvos;
-				TARGETED_DEVICE_FAMILY = 3;
-				TVOS_DEPLOYMENT_TARGET = 9.2;
-			};
-			name = Debug;
-		};
-		2D02E4981E0B4A5E006451C7 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 53477371CD957FDD4B86A1B1 /* Pods-arimacPmTool-tvOS.release.xcconfig */;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				GCC_NO_COMMON_BLOCKS = YES;
-				INFOPLIST_FILE = "arimacPmTool-tvOS/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					"-ObjC",
-					"-lc++",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.arimacPmTool-tvOS";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = appletvos;
-				TARGETED_DEVICE_FAMILY = 3;
-				TVOS_DEPLOYMENT_TARGET = 9.2;
-			};
-			name = Release;
-		};
-		2D02E4991E0B4A5E006451C7 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = D7A4AB6D22B16B00297F85D8 /* Pods-arimacPmTool-tvOSTests.debug.xcconfig */;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				ENABLE_TESTABILITY = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				INFOPLIST_FILE = "arimacPmTool-tvOSTests/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					"-ObjC",
-					"-lc++",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.arimacPmTool-tvOSTests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = appletvos;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/arimacPmTool-tvOS.app/arimacPmTool-tvOS";
-				TVOS_DEPLOYMENT_TARGET = 10.1;
-			};
-			name = Debug;
-		};
-		2D02E49A1E0B4A5E006451C7 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = D6A7062E79AFB52ACEB7677A /* Pods-arimacPmTool-tvOSTests.release.xcconfig */;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				GCC_NO_COMMON_BLOCKS = YES;
-				INFOPLIST_FILE = "arimacPmTool-tvOSTests/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					"-ObjC",
-					"-lc++",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.arimacPmTool-tvOSTests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = appletvos;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/arimacPmTool-tvOS.app/arimacPmTool-tvOS";
-				TVOS_DEPLOYMENT_TARGET = 10.1;
 			};
 			name = Release;
 		};
@@ -1070,6 +612,7 @@
 					"\"$(inherited)\"",
 				);
 				MTL_ENABLE_DEBUG_INFO = NO;
+				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -1078,38 +621,11 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "arimacPmToolTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				00E356F61AD99517003FC87E /* Debug */,
-				00E356F71AD99517003FC87E /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "arimacPmTool" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				13B07F941A680F5B00A75B9A /* Debug */,
 				13B07F951A680F5B00A75B9A /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		2D02E4BA1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "arimacPmTool-tvOS" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				2D02E4971E0B4A5E006451C7 /* Debug */,
-				2D02E4981E0B4A5E006451C7 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		2D02E4BB1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "arimacPmTool-tvOSTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				2D02E4991E0B4A5E006451C7 /* Debug */,
-				2D02E49A1E0B4A5E006451C7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
