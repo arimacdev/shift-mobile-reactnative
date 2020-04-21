@@ -286,11 +286,11 @@ const styles = EStyleSheet.create({
         fontFamily: 'CircularStd-Medium',
         textAlign: 'left',
         marginLeft: '10rem',
-        fontWeight: '400'
+        fontWeight: '600'
       },
       subText: {
         fontSize: '10rem',
-        color: 'gray',
+        color: '#b9b9b9',
         textAlign: 'center',
         lineHeight: '17rem',
         fontFamily: 'CircularStd-Medium',
