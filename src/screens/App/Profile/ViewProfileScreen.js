@@ -26,7 +26,7 @@ const config = {
   clientId: strings.slack.clientId, // found under App Credentials
   clientSecret: strings.slack.clientSecret, // found under App Credentials
   scopes: ['incoming-webhook,chat:write'], // choose any of the scopes set up in step 1
-  redirectUrl: 'http://io.identityserver.demo:/oauthSlackredirect', // set up in step 2
+  redirectUrl: 'http://pmTool.com/oauth', // set up in step 2
   serviceConfiguration: {
     authorizationEndpoint: 'https://slack.com/oauth/v2/authorize',
     tokenEndpoint: 'https://slack.com/api/oauth.v2.access',

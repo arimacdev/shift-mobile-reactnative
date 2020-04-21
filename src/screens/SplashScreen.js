@@ -19,10 +19,10 @@ import jwtDecode from 'jwt-decode';
 import APIServices from '../services/APIServices'
 
 const config = {
-        issuer : 'http://pmtool.devops.arimac.xyz/auth',
+        issuer : 'https://pmtool.devops.arimac.xyz/auth',
         serviceConfiguration  : {
-            authorizationEndpoint : 'http://pmtool.devops.arimac.xyz/auth/realms/pm-tool/protocol/openid-connect/auth',
-            tokenEndpoint  : 'http://pmtool.devops.arimac.xyz/auth/realms/pm-tool/protocol/openid-connect/token',
+            authorizationEndpoint : 'https://pmtool.devops.arimac.xyz/auth/realms/pm-tool/protocol/openid-connect/auth',
+            tokenEndpoint  : 'https://pmtool.devops.arimac.xyz/auth/realms/pm-tool/protocol/openid-connect/token',
         },
         clientId : 'pmtool-frontend',
         redirectUrl  : 'io.identityserver.demo:/oauthredirect',
