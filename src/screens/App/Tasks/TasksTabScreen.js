@@ -35,6 +35,10 @@ let dropData = [
     value: 'Pending',
   },
   {
+    id: 'Open',
+    value: 'Open',
+  },
+  {
     id: 'Implementing',
     value: 'Implementing',
   },
@@ -394,6 +398,8 @@ class TasksTabScreen extends Component {
         break;
       case 'Closed':
         searchValue = 'closed';
+      case 'Open' : 
+          searchValue = 'open';  
         break;
     }
 
@@ -431,6 +437,8 @@ class TasksTabScreen extends Component {
         break;
       case 'Closed':
         searchValue = 'closed';
+      case 'Open' : 
+        searchValue = 'open';  
         break;
     }
     let filteredData = this.state.allDataMyTasks.filter(function(item) {
