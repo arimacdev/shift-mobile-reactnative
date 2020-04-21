@@ -141,7 +141,7 @@ const styles = EStyleSheet.create({
         marginHorizontal: '20rem',
       },
       textBottom : {
-        fontFamily: 'Circular Std Medium',
+        fontFamily: 'CircularStd-Medium',
         fontSize: '12rem',
         fontWeight: '400',
         color: colors.userViewData,
