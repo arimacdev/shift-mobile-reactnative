@@ -57,13 +57,13 @@ class ProjectsScreen extends Component {
     this.state = {
       projects: [],
       allProjects : [],
-      selectedType : 'Ongoing',
+      selectedType : 'Presales',
     };
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (prevProps.projectsLoading !== this.props.projectsLoading && this.props.projects && this.props.projects.length > 0) {
-      let searchValue = 'ongoing';
+      let searchValue = 'presales';
       let filteredData = this.props.projects.filter(function (item) {
         return item.projectStatus.includes(searchValue);
       });
@@ -178,7 +178,7 @@ class ProjectsScreen extends Component {
 
   loadProjects () {
     this.setState({
-      selectedType : 'Ongoing'
+      selectedType : 'Presales'
     });
     AsyncStorage.getItem('userID').then(userID => {
       this.props.getAllProjectsByUser(userID)
