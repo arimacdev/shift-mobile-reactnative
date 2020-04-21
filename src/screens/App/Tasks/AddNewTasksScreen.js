@@ -106,13 +106,19 @@ class AddNewTasksScreen extends Component {
         "Success",
         "Task Added",
         [
-          { text: "OK", onPress: () => this.props.navigation.goBack() }
+          { text: "OK", onPress: () => this.onSuccess("sssssssssssssssssssss") }
         ],
         { cancelable: false }
       );
       //this.uploadFiles(this.state.files, taskID)
       // this.uploadFiles(this.state.files, 'b6ba3dcf-4494-4bb5-80dc-17376c628187')
     }
+  }
+
+  onSuccess(text) {
+    const {navigation} = this.props;
+    navigation.state.params.onSuccess(text);
+    navigation.goBack();
   }
 
   async componentDidMount() {

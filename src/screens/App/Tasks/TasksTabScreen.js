@@ -454,6 +454,10 @@ class TasksTabScreen extends Component {
     );
   }
 
+  onSuccess(text){
+    console.log("ddddddddddddddddddddd",text);
+  }
+
   render() {
     let index = this.state.index;
     let filterdDataAllTaks = this.state.filterdDataAllTaks;
@@ -539,6 +543,7 @@ class TasksTabScreen extends Component {
             <AddNewTasksScreen
               navigation={this.props.navigation}
               selectedProjectID={this.state.selectedProjectID}
+              onSuccess={(text)=>this.onSuccess.bind(text)}
             />
           </View>
         )}
