@@ -20,6 +20,17 @@
 	<string>1.0</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>com.arimac.arimacPmTool</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>io.identityserver.demo</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>1</string>
 	<key>LSRequiresIPhoneOS</key>
@@ -41,6 +52,10 @@
 	<string/>
 	<key>UIAppFonts</key>
 	<array>
+		<string>CircularStd-Medium</string>
+		<string>CircularStd-Book.ttf</string>
+		<string>CircularStd-Black.ttf</string>
+		<string>CircularStd-Bold.ttf</string>
 		<string>AntDesign.ttf</string>
 		<string>Entypo.ttf</string>
 		<string>EvilIcons.ttf</string>
