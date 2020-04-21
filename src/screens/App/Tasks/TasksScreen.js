@@ -30,7 +30,7 @@ class TasksScreen extends Component {
         {key: 'tasks', title: 'Tasks'},
         {key: 'board', title: 'Board'},
         {key: 'prople', title: 'People'},
-        {key: 'projects', title: 'Projects'},
+        {key: 'projects', title: 'Project'},
       ],
     };
   }
