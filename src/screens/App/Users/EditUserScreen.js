@@ -112,7 +112,7 @@ class EditUserScreen extends Component {
       }
     }
     if (!password && _.isEmpty(password)) {
-        this.showAlert("","Please Enter the Password");
+        this.showAlert("","Please enter the password");
         return false;
     }else {
       const validPassword = this.validatePassword(password);
@@ -122,7 +122,7 @@ class EditUserScreen extends Component {
       }
     } 
     if (!confirmPassword && _.isEmpty(confirmPassword)) {
-      this.showAlert("","Please Re-Enter the Password");
+      this.showAlert("","Please confirm the password");
       return false;
     }else {
       if (password !== confirmPassword) {
