@@ -49,15 +49,20 @@ class SplashScreen extends Component {
     async checkUserStatus() { 
       AsyncStorage.getItem('userID').then(userID => {
           if (userID) {
-            this.fetchDataUserData(userID);
-            //NavigationService.navigate('App');
+         AsyncStorage.getItem('userType').then(userType => {
+              if (userType) {
+                this.fetchDataUserData(userID,userType);
+                //NavigationService.navigate('App');
+              } 
+            });
           } 
       });
     }
 
-    fetchDataUserData(userID) {
+    fetchDataUserData(userID,userType) {
       APIServices.getUserData(userID).then(responseUser => {
           this.props.UserInfoSuccess(responseUser);
+          this.props.UserType(userType);
           NavigationService.navigate('App');
       }).catch((err) => { 
       
@@ -74,7 +79,9 @@ class SplashScreen extends Component {
             let decoded = jwtDecode(result.accessToken);
             AsyncStorage.setItem('userID', decoded.userId);
             AsyncStorage.setItem('userLoggedIn', 'true');
-            this.fetchDataUserData( decoded.userId);
+            let userType = decoded.realm_access.roles[0] ? decoded.realm_access.roles[0] :'';
+            AsyncStorage.setItem('userType', userType);
+            this.fetchDataUserData( decoded.userId,userType);
             //NavigationService.navigate('App');
           } catch (error) {
           }

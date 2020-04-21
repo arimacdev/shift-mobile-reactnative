@@ -14,6 +14,7 @@ import {
     EDIT_USER_FAILED_MESSAGE,
 
     USER_DATA_SUCCESS,
+    USER_TYPE_DATA_SUCCESS
 
 } from '../types';
 import APIServices from '../../services/APIServices';
@@ -90,6 +91,13 @@ export const editUser =  (firstName,lastName,userName,email,password,confirmPass
 export const UserInfoSuccess = (data) => {
     return {
         type: USER_DATA_SUCCESS,
+        payload : data,
+    };
+};
+
+export const UserType = (data) => {
+    return {
+        type: USER_TYPE_DATA_SUCCESS,
         payload : data,
     };
 };

@@ -13,7 +13,9 @@ import {
     EDIT_USER_FAILED,
     EDIT_USER_FAILED_MESSAGE,
 
-    USER_DATA_SUCCESS
+    USER_DATA_SUCCESS,
+    USER_TYPE_DATA_SUCCESS,
+
 } from '../types';
 
 const INITIAL_STATE = {
@@ -31,6 +33,7 @@ const INITIAL_STATE = {
     editUserSuccess : false,
 
     loginUser : {},
+    loginUserType : '',
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -62,7 +65,9 @@ export default (state = INITIAL_STATE, action) => {
            return { ...state, editUserLoading: false,editUserSuccess: false,editUserError:true,editUserErrorMessage:action.payload}
         //login user details
         case USER_DATA_SUCCESS : 
-            return {...state,loginUser: action.payload.data}                       
+            return {...state,loginUser: action.payload.data} 
+        case USER_TYPE_DATA_SUCCESS : 
+            return {...state,loginUserType: action.payload}                          
         default:
             return state;
     }
