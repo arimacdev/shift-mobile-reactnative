@@ -143,23 +143,23 @@ const styles = EStyleSheet.create({
   },
   textNameUser: {
     color: '#ffffff',
-    fontFamily: 'Circular Std Medium',
+    fontFamily: 'CircularStd-Medium',
     fontSize: 15,
     fontWeight: '400',
   },
   textEmail: {
     opacity: 0.75,
     color: 'rgba(255, 255, 255, 0.5)',
-    fontFamily: 'HelveticaNeuelight',
+    fontFamily: 'CircularStd-Medium',
     fontSize: '15rem',
     fontWeight: Platform.OS === 'ios' ? '500' : '400',
   },
   text: {
     opacity: 0.5,
     color: '#ffffff',
-    fontFamily: 'CircularStd-Book',
-    fontSize: 19,
-    fontWeight: '400',
+    fontFamily: 'CircularStd-Medium',
+    fontSize: 14.5,
+    fontWeight: 'bold',
     marginLeft: 34,
   },
   custtomButton: {
