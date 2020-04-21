@@ -30,7 +30,8 @@ import {
     DELETE_TASK,
     GET_FILES_IN_TASK,
     DELETE_FILE_IN_TASK,
-    ADD_SLACK_ID
+    ADD_SLACK_ID,
+    GET_WORKLOAD_WITH_COMPLETION
 
 } from '../api/API';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -650,6 +651,23 @@ async function addSlackID(userID, authedUserID) {
     }, true,headers);
 };
 
+async function getWorkloadWithCompletion(userID) {
+    let userIDHeder = null;
+    userIDHeder =  await AsyncStorage.getItem('userID');
+    
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        user : userIDHeder,
+    };
+
+    return request({
+        url: GET_WORKLOAD_WITH_COMPLETION + '/workload',
+        method: 'GET',
+    }, true,headers);
+};
+
+
 const APIServices = {
     getAllProjectsByUserData,
     getUserData,
@@ -684,7 +702,8 @@ const APIServices = {
     updateSubTask,
     getFilesInTaskData,
     deleteFileInTaskData,
-    addSlackID
+    addSlackID,
+    getWorkloadWithCompletion
 };
 
 export default APIServices;

@@ -45,5 +45,6 @@ const icons = {
     editRoundedBlue: require('./edit_rounded_blue.png'),
     slackIcon: require('./slack_icon.png'),
     slackLogo: require('./slack_logo.png'),
+    workloadIcon: require('./work_load_icon.png'),
 };
 export default icons;

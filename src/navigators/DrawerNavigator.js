@@ -11,6 +11,8 @@ import { TasksStackNavigator } from '../navigators/TasksStackNavigator';
 import colors from '../config/colors';
 import Header from '../components/Header';
 import CustomDrawerContentComponent from '../components/CustomDrawerMenu';
+import { WorkloadStackNavigator } from './WorkloadStackNavigator';
+import icons from '../assest/icons/icons';
 
 
 const entireScreenWidth = Dimensions.get('window').width;
@@ -48,7 +50,20 @@ export const DrawerNavigator = createDrawerNavigator(
                 ),
             }),
         },
-
+        Workload: {
+            screen: WorkloadStackNavigator,
+            header: null,
+            navigationOptions: ({ navigation }) => ({
+                header: null,
+                drawerLabel: 'Workload ',
+                drawerIcon: ({ tintColor }) => (
+                    <Image
+                        source={icons.workloadIcon}
+                        style={{ width:  EStyleSheet.value('25rem'),height:EStyleSheet.value('25rem')}}
+                    />
+                ),
+            }),
+        },
 
     },
     {

@@ -31,6 +31,8 @@ export const DELETE_FILE_IN_TASK = `${PROTOCOL}${HOST}projects`;
 
 export const ADD_SLACK_ID = `${PROTOCOL}${HOST}users`;
 
+export const GET_WORKLOAD_WITH_COMPLETION = `${PROTOCOL}${HOST}projects/tasks/users`
+
 
 
 
