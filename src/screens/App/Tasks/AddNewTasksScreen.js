@@ -105,7 +105,7 @@ class AddNewTasksScreen extends Component {
 
       Alert.alert(
         "Success",
-        "Task Added",
+        "Successfully completed",
         [
           { text: "OK", onPress: () => this.onSuccess("sssssssssssssssssssss") }
         ],
