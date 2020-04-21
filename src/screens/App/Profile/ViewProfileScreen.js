@@ -19,19 +19,19 @@ import FadeIn from 'react-native-fade-in-image';
 import Loader from '../../../components/Loader';
 import APIServices from '../../../services/APIServices';
 import {TextInput} from 'react-native-gesture-handler';
-import { authorize } from 'react-native-app-auth';
+import {authorize} from 'react-native-app-auth';
 import strings from '../../../config/strings';
 
 const config = {
   clientId: strings.slack.clientId, // found under App Credentials
   clientSecret: strings.slack.clientSecret, // found under App Credentials
   scopes: ['incoming-webhook,chat:write'], // choose any of the scopes set up in step 1
-  redirectUrl: 'http://pmTool.com/oauth', // set up in step 2
+  redirectUrl: 'io.identityserver.demo://oauthSlackredirect', // set up in step 2
   serviceConfiguration: {
     authorizationEndpoint: 'https://slack.com/oauth/v2/authorize',
     tokenEndpoint: 'https://slack.com/api/oauth.v2.access',
   },
-  dangerouslyAllowInsecureHttpRequests: true
+  dangerouslyAllowInsecureHttpRequests: true,
 };
 
 class ViewProfileScreen extends Component {
@@ -122,8 +122,6 @@ class ViewProfileScreen extends Component {
 
   async onEditPress() {
     this.setState({editEnabled: true});
-    const result = await authorize(config);
-    console.log("sssssssssssssssssss",result);
   }
 
   onProfileImageClick() {}
@@ -150,6 +148,28 @@ class ViewProfileScreen extends Component {
 
   onConfirmPasswordChange(text) {
     this.setState({userConfirmPassword: text});
+  }
+
+  async onSlackButtonPress() {
+    const {
+      navigation: {
+        state: {params},
+      },
+    } = this.props;
+    let profile = params.profile;
+    let userID = profile.userId;
+
+    try {
+      const result = await authorize(config);
+      var obj = result.tokenAdditionalParameters.authed_user;
+      const authedUser = JSON.parse(obj);
+
+      APIServices.addSlackID(userID, authedUser.id);
+
+      console.log('authed user ID', authedUser.id);
+    } catch (error) {
+      console.log('slack connet error', error);
+    }
   }
 
   // toggleSwitch = value => {
@@ -248,11 +268,42 @@ class ViewProfileScreen extends Component {
               onChangeText={text => this.onConfirmPasswordChange(text)}
             />
           </View>
-          <View style={[styles.taskFieldView]}>
+          <TouchableOpacity onPress={() => this.onSlackButtonPress()}>
+            <View
+              style={[
+                styles.taskFieldView,
+                {backgroundColor: colors.slackBgColor},
+              ]}>
+              <Image
+                style={styles.slackLogo}
+                source={icons.slackLogo}
+                resizeMode={'contain'}
+              />
+              <Text style={[styles.textBottom, {color: colors.white}]}>
+                Connect your app with Slack
+              </Text>
+            </View>
+          </TouchableOpacity>
+          <View
+            style={[
+              styles.slackView,
+              {
+                backgroundColor: colors.white,
+                borderColor: colors.lighterGray,
+                borderWidth: 1,
+              },
+            ]}>
+            <Image
+              style={styles.slackIcon}
+              source={icons.slackIcon}
+              resizeMode={'contain'}
+            />
             <Text style={styles.textBottom}>Enable Slack Notifications</Text>
             <Switch
               // style={{marginTop: 30}}
-              onValueChange={(value)=>this.updateSlackNotificationStatus(userEmail,value)}
+              onValueChange={value =>
+                this.updateSlackNotificationStatus(userEmail, value)
+              }
               value={notification}
               disabled={userSlackId == ''}
               trackColor={colors.switchOnBgColor}
@@ -310,6 +361,19 @@ const styles = EStyleSheet.create({
     height: '56rem',
     marginHorizontal: '20rem',
   },
+  slackView: {
+    backgroundColor: colors.white,
+    borderColor: colors.lighterGray,
+    borderWidth: 1,
+    borderRadius: '5rem',
+    marginTop: '0rem',
+    marginBottom: '7rem',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: '12rem',
+    height: '56rem',
+    marginHorizontal: '20rem',
+  },
   textBottom: {
     flex: 1,
     fontFamily: 'Circular Std Medium',
@@ -320,6 +384,16 @@ const styles = EStyleSheet.create({
   editIcon: {
     width: '30rem',
     height: '30rem',
+  },
+  slackLogo: {
+    width: '90rem',
+    height: '60rem',
+    marginRight: '15rem',
+  },
+  slackIcon: {
+    width: '21rem',
+    height: '21rem',
+    marginRight: '15rem',
   },
   editView: {
     position: 'absolute',

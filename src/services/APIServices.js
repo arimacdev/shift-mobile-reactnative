@@ -29,7 +29,8 @@ import {
     UPDATE_SUB_TASK,
     DELETE_TASK,
     GET_FILES_IN_TASK,
-    DELETE_FILE_IN_TASK
+    DELETE_FILE_IN_TASK,
+    ADD_SLACK_ID
 
 } from '../api/API';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -629,6 +630,26 @@ async function deleteFileInTaskData(projectID,taskID,taskFileId) {
     }, true, headers);
 };
 
+async function addSlackID(userID, authedUserID) {
+    let userIDHeder = null;
+    userIDHeder =  await AsyncStorage.getItem('userID');
+    
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+    };
+
+    return request({
+        url: ADD_SLACK_ID +'/'+ userIDHeder + '/slack',
+        method: 'PUT',
+        data: {
+            slackAssignerId: userID,
+            slackAssigneeId: userID,
+            assigneeSlackId: authedUserID
+        }
+    }, true,headers);
+};
+
 const APIServices = {
     getAllProjectsByUserData,
     getUserData,
@@ -662,7 +683,8 @@ const APIServices = {
     addSubTask,
     updateSubTask,
     getFilesInTaskData,
-    deleteFileInTaskData
+    deleteFileInTaskData,
+    addSlackID
 };
 
 export default APIServices;

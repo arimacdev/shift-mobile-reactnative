@@ -29,6 +29,8 @@ export const UPDATE_SUB_TASK = `${PROTOCOL}${HOST}projects`;
 export const GET_FILES_IN_TASK = `${PROTOCOL}${HOST}projects`;
 export const DELETE_FILE_IN_TASK = `${PROTOCOL}${HOST}projects`;
 
+export const ADD_SLACK_ID = `${PROTOCOL}${HOST}users`;
+
 
 
 

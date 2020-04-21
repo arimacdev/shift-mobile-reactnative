@@ -29,7 +29,8 @@ const colors = {
     projectDetailsDate:'#0bafff',
     textPlaceHolderColor : '#b9b9b9',
     switchOnBgColor:'#b6d3f1',
-    switchColor:'#1976d2'
+    switchColor:'#1976d2',
+    slackBgColor:'#4a154b'
 
 };
 export default colors;
