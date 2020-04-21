@@ -127,7 +127,7 @@ class FilesScreen extends Component {
               onPress={() => this.deleteFile(item)}
               style={{marginLeft: EStyleSheet.value('24rem')}}>
                   <Image 
-                    style={{width: 28, height: 28,borderRadius: 28/ 2 }} 
+                    style={{width: 40, height: 40,borderRadius: 40/ 2 }} 
                     source={require('../../../asserts/img/bin.png')}
                   />
               </TouchableOpacity>
