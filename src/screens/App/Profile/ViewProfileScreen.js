@@ -376,7 +376,7 @@ const styles = EStyleSheet.create({
   },
   textBottom: {
     flex: 1,
-    fontFamily: 'Circular Std Medium',
+    fontFamily: 'CircularStd-Medium',
     fontSize: '12rem',
     fontWeight: '400',
     color: colors.userViewData,

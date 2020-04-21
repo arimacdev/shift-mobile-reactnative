@@ -223,7 +223,7 @@ const styles = EStyleSheet.create({
     color: colors.gray,
     textAlign: 'center',
     lineHeight: '17rem',
-    fontFamily: 'HelveticaNeuel',
+    fontFamily: 'CircularStd-Book',
     textAlign: 'left',
     marginLeft: '7rem',
   },

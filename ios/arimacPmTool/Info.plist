@@ -49,10 +49,10 @@
 		</dict>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string/>
+	<string></string>
 	<key>UIAppFonts</key>
 	<array>
-		<string>CircularStd-Medium</string>
+		<string>CircularStd-Medium.ttf</string>
 		<string>CircularStd-Book.ttf</string>
 		<string>CircularStd-Black.ttf</string>
 		<string>CircularStd-Bold.ttf</string>
