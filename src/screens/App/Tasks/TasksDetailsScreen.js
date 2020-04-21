@@ -328,7 +328,7 @@ showAlert(title,msg){
     if (event.type == 'set') {
       if (this.state.reminder) {
         this.setState({
-          remindDate: 'Due on ' + newDate,
+          remindDate: 'Remind on ' + newDate,
           remindDateValue : newDateValue,
           showPicker: false,
           showTimePicker: true,
@@ -336,7 +336,7 @@ showAlert(title,msg){
         });
       } else {
         this.setState({
-          duedate: 'Remind On ' + newDate,
+          duedate: 'Due On ' + newDate,
           duedateValue : newDateValue,
           showPicker: false,
           showTimePicker: true,

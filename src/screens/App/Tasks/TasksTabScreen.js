@@ -55,8 +55,8 @@ let dropData = [
     value: 'Ready to Deploy',
   },
   {
-    id: 'Re-Opened',
-    value: 'Re-Opened',
+    id: 'Reopened',
+    value: 'Reopened',
   },
   {
     id: 'Deployed',
@@ -397,7 +397,7 @@ class TasksTabScreen extends Component {
       case 'Ready to Deploy':
         searchValue = 'readyToDeploy';
         break;
-      case 'Re-Opened':
+      case 'Reopened':
         searchValue = 'reOpened';
         break;
       case 'Deployed':
@@ -440,7 +440,7 @@ class TasksTabScreen extends Component {
       case 'Ready to Deploy':
         searchValue = 'readyToDeploy';
         break;
-      case 'Re-Opened':
+      case 'Reopened':
         searchValue = 'reOpened';
         break;
       case 'Deployed':
