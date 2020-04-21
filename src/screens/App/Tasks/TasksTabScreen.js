@@ -31,6 +31,10 @@ const Placeholder = () => (
 
 let dropData = [
   {
+    id: 'All',
+    value: 'All',
+  },
+  {
     id: 'Pending',
     value: 'Pending',
   },
@@ -94,8 +98,8 @@ class TasksTabScreen extends Component {
       bottomItemPressColor: colors.darkBlue,
       selectedProjectID: 0,
       isActive: this.props.isActive,
-      selectedTypeAllTasks: 'Pending',
-      selectedTypeMyTasks: 'Pending',
+      selectedTypeAllTasks: 'All',
+      selectedTypeMyTasks: 'All',
     };
   }
 
@@ -119,7 +123,7 @@ class TasksTabScreen extends Component {
       this.props.allTaskByProject &&
       this.props.allTaskByProject.length > 0
     ) {
-      let searchValueAllTask = 'pending';
+      let searchValueAllTask = '';
       let filteredDataAllTask = this.props.allTaskByProject.filter(function(
         item,
       ) {
@@ -150,7 +154,7 @@ class TasksTabScreen extends Component {
       this.props.myTaskByProject &&
       this.props.myTaskByProject.length > 0
     ) {
-      let searchValueMyTask = 'pending';
+      let searchValueMyTask = '';
       let filteredDataMyTask = this.props.myTaskByProject.filter(function(
         item,
       ) {
@@ -203,7 +207,7 @@ class TasksTabScreen extends Component {
 
   async getAllTaskInProject() {
     this.setState({
-      selectedTypeAllTasks: 'Pending',
+      selectedTypeAllTasks: 'All',
     });
     let selectedProjectID = this.state.selectedProjectID;
     AsyncStorage.getItem('userID').then(userID => {
@@ -213,7 +217,7 @@ class TasksTabScreen extends Component {
 
   async getMyTaskInProject() {
     this.setState({
-      selectedTypeMyTasks: 'Pending',
+      selectedTypeMyTasks: 'All',
     });
     let selectedProjectID = this.state.selectedProjectID;
     AsyncStorage.getItem('userID').then(userID => {
@@ -378,6 +382,9 @@ class TasksTabScreen extends Component {
     let searchValue = '';
     let index = this.state.index;
     switch (value) {
+      case 'All':
+        searchValue = '';
+        break;
       case 'Pending':
         searchValue = 'pending';
         break;
@@ -398,6 +405,7 @@ class TasksTabScreen extends Component {
         break;
       case 'Closed':
         searchValue = 'closed';
+        break;
       case 'Open' : 
           searchValue = 'open';  
         break;
@@ -417,6 +425,9 @@ class TasksTabScreen extends Component {
     let searchValue = '';
     let index = this.state.index;
     switch (value) {
+      case 'All':
+        searchValue = '';
+        break;
       case 'Pending':
         searchValue = 'pending';
         break;
@@ -437,6 +448,7 @@ class TasksTabScreen extends Component {
         break;
       case 'Closed':
         searchValue = 'closed';
+        break;
       case 'Open' : 
         searchValue = 'open';  
         break;
