@@ -1,4 +1,5 @@
 platform :ios, '9.0'
+# use_frameworks!
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
 
 def add_flipper_pods!
@@ -18,6 +19,24 @@ def flipper_post_install(installer)
         config.build_settings['SWIFT_VERSION'] = '4.1'
       end
     end
+  end
+end
+
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+
+    # The following is needed to ensure the "archive" step works in XCode.
+    # It removes React & Yoga from the Pods project, as it is already included in the main project.
+    # Without this, you'd see errors when you archive like:
+    # "Multiple commands produce ... libReact.a"
+    # "Multiple commands produce ... libyoga.a"
+
+    targets_to_ignore = %w(React yoga)
+    
+    if targets_to_ignore.include? target.name
+      target.remove_from_project
+    end
+
   end
 end
 
@@ -53,16 +72,11 @@ target 'arimacPmTool' do
   pod 'DoubleConversion', :podspec => '../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec'
   pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec'
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
-
+ 
   pod 'RNGestureHandler', :path => '../node_modules/react-native-gesture-handler'
   pod 'AppAuth'
   
   pod 'react-native-document-picker', :path => '../node_modules/react-native-document-picker'
-
-  target 'arimacPmToolTests' do
-    inherit! :complete
-    # Pods for testing
-  end
 
   use_native_modules!
 
@@ -71,16 +85,7 @@ target 'arimacPmTool' do
   # Note that if you have use_frameworks! enabled, Flipper will not work and
   # you should disable these next few lines.
   add_flipper_pods!
-  post_install do |installer|
-    flipper_post_install(installer)
-  end
-end
-
-target 'arimacPmTool-tvOS' do
-  # Pods for arimacPmTool-tvOS
-
-  target 'arimacPmTool-tvOSTests' do
-    inherit! :search_paths
-    # Pods for testing
-  end
+  # post_install do |installer|
+  #   flipper_post_install(installer)
+  # end
 end
