@@ -116,9 +116,9 @@ class AddNewTasksScreen extends Component {
   }
 
   onSuccess(text) {
-    const {navigation} = this.props;
-    navigation.state.params.onSuccess(text);
-    navigation.goBack();
+    // const {navigation} = this.props;
+    this.props.onSuccess(text);
+    // navigation.goBack();
   }
 
   async componentDidMount() {

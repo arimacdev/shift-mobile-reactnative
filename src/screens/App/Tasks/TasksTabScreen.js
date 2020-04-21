@@ -543,7 +543,7 @@ class TasksTabScreen extends Component {
             <AddNewTasksScreen
               navigation={this.props.navigation}
               selectedProjectID={this.state.selectedProjectID}
-              onSuccess={(text)=>this.onSuccess.bind(text)}
+              onSuccess={(text)=>this.onSuccess(text)}
             />
           </View>
         )}
