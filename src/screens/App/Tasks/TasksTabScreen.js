@@ -455,7 +455,8 @@ class TasksTabScreen extends Component {
   }
 
   onSuccess(text){
-    console.log("ddddddddddddddddddddd",text);
+    this.setState({index: 0});
+    this.getAllTaskInProject();
   }
 
   render() {
