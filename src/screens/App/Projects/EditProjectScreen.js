@@ -325,7 +325,7 @@ class EditProjectScreen extends Component {
   reomoveProject (){
     Alert.alert(
 			'Delete Project',
-			'Are you sure to Delete the Project',
+			'Are you sure you want to delete this project',
 			[
 			  {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
 			  {text: 'Ok', onPress: () =>this.reomoveProjectSuccess()},
