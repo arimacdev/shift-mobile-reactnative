@@ -41,7 +41,7 @@ let dropData = [
     value: 'Ready to Deploy',
   },
   {
-    value: 'Reopen',
+    value: 'Reopened',
   },
   {
     value: 'Deployed',
@@ -410,7 +410,7 @@ class AddNewTasksScreen extends Component {
         case 'Ready to Deploy':
           selectedStatusEnum = 'readyToDeploy';
           break;
-        case 'ReOpened':
+        case 'Reopened':
           selectedStatusEnum = 'reOpened';
           break;
         case 'Deployed':
