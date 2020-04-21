@@ -1112,7 +1112,7 @@ const styles = EStyleSheet.create({
     fontSize: '12rem',
     color: colors.white,
     lineHeight: '17rem',
-    fontFamily: 'HelveticaNeuel',
+    fontFamily: 'CircularStd-Book',
     fontWeight: 'bold',
   },
   deleteIcon: {
