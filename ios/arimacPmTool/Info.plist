@@ -48,8 +48,14 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>&apos;PM Tool&apos; will use your location to send push notifications</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>&apos;PM Tool&apos; would like access to your current locatoin to send push 		notifications</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>&apos;PM Tool&apos; would like access to your photo gallery to upload files to tasks</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>&apos;PM Tool&apos; would like access to your photo gallery to upload files to tasks</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>CircularStd-Medium.ttf</string>
