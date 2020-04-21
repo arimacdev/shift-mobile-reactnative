@@ -29,9 +29,6 @@ import Loader from '../../../components/Loader';
 
 let dropData = [
   {
-    value: 'Open',
-  },
-  {
     value: 'Pending',
   },
   {
@@ -413,7 +410,7 @@ class AddNewTasksScreen extends Component {
         case 'Ready to Deploy':
           selectedStatusEnum = 'readyToDeploy';
           break;
-        case 'Re-Opened':
+        case 'ReOpened':
           selectedStatusEnum = 'reOpened';
           break;
         case 'Deployed':

@@ -39,10 +39,6 @@ let dropData = [
     value: 'Pending',
   },
   {
-    id: 'Open',
-    value: 'Open',
-  },
-  {
     id: 'Implementing',
     value: 'Implementing',
   },

@@ -140,27 +140,27 @@ class ProjectsScreen extends Component {
     let color = '';
     switch (item.projectStatus) {
       case 'presales':
-            color = '#576377'
+            color = '#ff7043'
       case 'presalesPD':
-            color = '#576377'
+            color = '#ff7043'
       case 'preSalesQS':
-            color = '#576377'
+            color = '#ff7043'
       case 'preSalesN':
-            color = '#576377'
+            color = '#ff7043'
       case 'preSalesC':  
-            color = '#576377'    
+            color = '#ff7043'    
           break;
       case 'preSalesL':
-          color = '#FF6363' 
+          color = '#ff7043' 
           break;
       case 'ongoing':
-          color = '#5E98F0' 
+          color = '#ffc212' 
           break;
       case 'support':
-          color = '#FFA800'   
+          color = '#ed5ed1'   
           break;
       case 'finished' : 
-          color = '#36DD5B' 
+          color = '#0bafff' 
           break    
   }
     return (
