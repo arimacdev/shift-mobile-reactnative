@@ -107,13 +107,19 @@ class WorkloadScreen extends Component {
     }
   };
 
+  navigateToWorkloadTabScreen(item) {
+    this.props.navigation.navigate('WorkloadTabScreen', {workloadTaskDetails: item});
+  }
+
   renderPeopleList(item) {
     let progress = 0;
     if (item.totalTasks > 0) {
       progress = item.tasksCompleted / item.totalTasks;
     }
     return (
-      <TouchableOpacity style={styles.mainContainer}>
+      <TouchableOpacity
+        style={styles.mainContainer}
+        onPress={() => this.navigateToWorkloadTabScreen(item)}>
         <NavigationEvents onWillFocus={payload => this.tabOpen(payload)} />
         <View style={styles.userView}>
           {this.userIcon(item)}
@@ -183,14 +189,14 @@ class WorkloadScreen extends Component {
         </TouchableOpacity> */}
 
         {/* <ScrollView style={styles.subContainer}> */}
-          <FlatList
-            style={styles.flalList}
-            data={this.state.workload}
-            renderItem={({item}) => this.renderPeopleList(item)}
-            keyExtractor={item => item.projId}
-            // onRefresh={() => this.onRefresh()}
-            // refreshing={isFetching}
-          />
+        <FlatList
+          style={styles.flalList}
+          data={this.state.workload}
+          renderItem={({item}) => this.renderPeopleList(item)}
+          keyExtractor={item => item.projId}
+          // onRefresh={() => this.onRefresh()}
+          // refreshing={isFetching}
+        />
         {/* </ScrollView> */}
         {dataLoading && <Loader />}
       </View>

@@ -667,6 +667,25 @@ async function getWorkloadWithCompletion(userID) {
     }, true,headers);
 };
 
+async function getWorkloadWithAssignTasksCompletion(userID, from, to) {
+    let userIDHeder = null;
+    userIDHeder =  await AsyncStorage.getItem('userID');
+    
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        user : userID,
+        from : from,
+        to   : to
+    };
+
+    return request({
+        url: GET_WORKLOAD_WITH_COMPLETION + '/' + userID +'/workload',
+        method: 'GET',
+    }, true,headers);
+};
+
+
 
 const APIServices = {
     getAllProjectsByUserData,

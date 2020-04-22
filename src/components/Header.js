@@ -30,7 +30,7 @@ class Header extends Component {
     }
 
     render() {
-        const { onPress, isHome, title,style,addButton,screen = {},search=false , isTasks=false, isUser=false} = this.props;
+        const { onPress, isHome, title,style,addButton,screen = {},search=false , isTasks=false, isUser=false, isWorkload=false} = this.props;
         // console.log('PPPP',this.props)
         return (
             <SafeAreaView style={{ backgroundColor: colors.primary }}>
@@ -48,17 +48,25 @@ class Header extends Component {
                             </View>
                             <View style={styles.leftContainer}>
                                 <View style={styles.leftContainerFull}>
-                                        <Text style={styles.title}>{title}</Text>
-                                    </View>
+                                    <Text style={styles.title}>{title}</Text>
                                 </View>
-                            <View style={styles.rightContainer} >
-                                <TouchableOpacity style={{alignItems:'flex-end'}} onPress={() => this.props.navigation.navigate(isUser ? 'SearchUserScreen' : 'ProjectsSearchScreen')}>
-                                    <Icon name={'ios-search'} style={styles.headerButton} type={'Ionicons'} />
-                                </TouchableOpacity>
-                                <TouchableOpacity style={{alignItems:'flex-end',marginLeft:40}} onPress={() => this.props.navigation.navigate(isUser ? 'AddUserScreen' : 'CreateNewProjectScreen')}>
-                                    <Icon name={'ios-add'} style={styles.headerButton} type={'Ionicons'} />
-                                </TouchableOpacity>
                             </View>
+                            {isWorkload ? 
+                                <View style={styles.rightContainer} >
+                                    <TouchableOpacity style={{alignItems:'flex-end'}} onPress={() => this.props.navigation.navigate('WorkloadSearchScreen')}>
+                                        <Icon name={'ios-search'} style={styles.headerButton} type={'Ionicons'} />
+                                    </TouchableOpacity>
+                                </View>
+                                :
+                                <View style={styles.rightContainer} >
+                                    <TouchableOpacity style={{alignItems:'flex-end'}} onPress={() => this.props.navigation.navigate(isUser ? 'SearchUserScreen' : 'ProjectsSearchScreen')}>
+                                        <Icon name={'ios-search'} style={styles.headerButton} type={'Ionicons'} />
+                                    </TouchableOpacity>
+                                    <TouchableOpacity style={{alignItems:'flex-end',marginLeft:40}} onPress={() => this.props.navigation.navigate(isUser ? 'AddUserScreen' : 'CreateNewProjectScreen')}>
+                                        <Icon name={'ios-add'} style={styles.headerButton} type={'Ionicons'} />
+                                    </TouchableOpacity>
+                                </View>
+                            }
                             
                         </View>
                         :
