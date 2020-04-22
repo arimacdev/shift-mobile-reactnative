@@ -12,6 +12,8 @@ export const TasksStackNavigator = createStackNavigator(
         header: (
           <Header
             isHome
+            isSearch = {true}
+            searchNavigation = {'tasksScreen'}
             navigation={navigation}
             title="Tasks"
             onPress={() => navigation.openDrawer()}
