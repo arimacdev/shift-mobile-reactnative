@@ -102,7 +102,7 @@ class AddNewTasksScreen extends Component {
 
       Alert.alert(
         "Success",
-        "Task Added",
+        "Task successfully added",
         [
           { text: "OK", onPress: () => this.onSuccess("sssssssssssssssssssss") }
         ],
@@ -431,7 +431,7 @@ class AddNewTasksScreen extends Component {
       moment(dueDate + dueTime, 'DD/MM/YYYY hh:mmA').format('YYYY-MM-DD[T]HH:mm:ss') : '';
     let IsoReminderDate = selectedDateReminder ?
       moment(selectedDateReminder + selectedTimeReminder, 'DD/MM/YYYY hh:mmA').format('YYYY-MM-DD[T]HH:mm:ss') : '';
-    if (this.validateData(taskName, assigneeId)) {
+    if (this.validateData(taskName, assigneeId,selectedDateReminder,dueDate)) {
       this.props.addTaskToProject(taskName, initiator, assigneeId, selectedStatusEnum, IsoDueDate, IsoReminderDate, notes, this.props.selectedProjectID);
     }
   }
@@ -441,15 +441,20 @@ class AddNewTasksScreen extends Component {
     this.props.addFileToTask(file, taskId, this.props.selectedProjectID);
   }
 
-  validateData(taskName, assigneeId) {
+  validateData(taskName, assigneeId,selectedDateReminder,dueDate) {
+    let momentDue = moment(dueDate, 'DD-MM-YYYY').format("YYYY-MM-DD");
+    let momentReminder = moment(selectedDateReminder, 'DD-MM-YYYY').format("YYYY-MM-DD");
+
     if (!taskName && _.isEmpty(taskName)) {
       this.showAlert("", "Please enter a name for the task");
       return false;
     }
-    // if (!assigneeId && _.isEmpty(assigneeId)) {
-    //   this.showAlert("", "Please select a assignee");
-    //   return false;
-    // }
+    if (selectedDateReminder && !_.isEmpty(selectedDateReminder)) {
+        if (!(moment(momentDue).isSameOrAfter(momentReminder, 'day'))) { 
+          this.showAlert("", "Reminder date must be earlier than Due date");
+          return false;
+        }
+    }
     return true;
   }
 
@@ -473,8 +478,8 @@ class AddNewTasksScreen extends Component {
     let showAlert = this.state.showAlert;
     let alertTitle = this.state.alertTitle;
     let alertMsg = this.state.alertMsg;
-    let addFileTaskLoading = this.state.addFileTaskLoading;
-    let addTaskToProjectLoading = this.state.addTaskToProjectLoading;
+    let addFileTaskLoading = this.props.addFileTaskLoading;
+    let addTaskToProjectLoading = this.props.addTaskToProjectLoading;
 
     return (
       <ScrollView style={{ marginBottom: 90 }}>

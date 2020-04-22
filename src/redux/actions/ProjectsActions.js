@@ -187,6 +187,11 @@ export const addUserToProject =  (assignerId,userID,role,assigneeProjectRole,pro
                 dispatch({ 
                     type: ADD_PEOPLE_TO_PROJECT_FAILED_MASSAGE,
                     payload: errorMsg});   
+            }else if(error.status == 401){
+                let errorMsg = error.data.message;
+                dispatch({ 
+                    type: ADD_PEOPLE_TO_PROJECT_FAILED_MASSAGE,
+                    payload: errorMsg});   
             }else{
                 dispatch({ type: ADD_PEOPLE_TO_PROJECT_FAILED});  
             } 

@@ -230,14 +230,14 @@ class TasksTabScreen extends Component {
     let taskStatus = item.taskStatus;
     if (taskStatus == 'closed' && date) {
       // task complete
-      dateText = moment(date).format('DD/MM/YYYY');
+      dateText = moment(date).format('YYYY-MM-DD');
       color = '#36DD5B';
     } else if (taskStatus != 'closed' && date) {
       if (moment(date).isAfter(currentTime)) {
-        dateText = moment(date).format('DD/MM/YYYY');
+        dateText = moment(date).format('YYYY-MM-DD');
         color = '#0C0C5A';
       } else {
-        dateText = moment(date).format('DD/MM/YYYY');
+        dateText = moment(date).format('YYYY-MM-DD');
         color = '#ff6161';
       }
     } else {
