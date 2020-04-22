@@ -139,19 +139,19 @@ class ProjectsDetailsScreen extends Component {
               statusValue = 'Presales'
               break;      
         case 'presalesPD':  
-              statusValue = 'Presales : Project Discovery'
+              statusValue = 'Project Discovery'
               break;
         case 'preSalesQS':
-              statusValue = 'Presales : Quotation Submission'
+              statusValue = 'Quotation Submission'
               break;
         case 'preSalesN':
-              statusValue = 'Presales : Negotiation'
+              statusValue = 'Negotiation'
               break;
         case 'preSalesC':
-              statusValue = 'Presales : Confirmed'
+              statusValue = 'Confirmed'
               break;
         case 'preSalesL' : 
-              statusValue = 'Presales : Lost'
+              statusValue = 'Lost'
               break;
       }
       this.setState({
@@ -188,7 +188,7 @@ class ProjectsDetailsScreen extends Component {
     if(totalDatesEsstimated > 0){
       let weeksTextEsstimated = Math.floor((parseInt(totalDatesEsstimated) / 7));
       let dateTextEsstimated =  Math.floor((parseInt(totalDatesEsstimated) % 7));
-      datesTextEsstimated = weeksTextEsstimated.toString() + 'week(s)' + ' ' + dateTextEsstimated.toString() + 'day(s)'
+      datesTextEsstimated = weeksTextEsstimated.toString() + ' week(s)' + ' ' + dateTextEsstimated.toString() + ' day(s)'
     }else{
       datesTextEsstimated = '0 days'
     }
@@ -197,7 +197,7 @@ class ProjectsDetailsScreen extends Component {
     if(totalDatesAcctual > 0){
       let weeksTextAcctual = Math.floor((parseInt(totalDatesAcctual) / 7));
       let dateTextAcctual =  Math.floor((parseInt(totalDatesAcctual) % 7));
-      datesTextAcctual = weeksTextAcctual.toString() + 'week(s)' + ' ' + dateTextAcctual.toString() + 'day(s)'
+      datesTextAcctual = weeksTextAcctual.toString() + ' week(s)' + ' ' + dateTextAcctual.toString() + ' day(s)'
     }else{
       datesTextAcctual = '0 days'
     }

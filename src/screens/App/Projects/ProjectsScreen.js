@@ -11,6 +11,7 @@ import { Dropdown } from 'react-native-material-dropdown';
 import AsyncStorage from '@react-native-community/async-storage';
 import Loader from '../../../components/Loader';
 import { NavigationEvents } from 'react-navigation';
+import { Icon } from 'native-base';
 
 let dropData = [
     {
@@ -126,7 +127,7 @@ class ProjectsScreen extends Component {
     return (
     <TouchableOpacity onPress={()=>this.props.navigation.navigate('TasksScreen',{projDetails:item})}>  
       <View style={styles.projectView}>
-        <Image style={styles.userIcon} source={icons.folder} />
+        {this.folderIcon(item)}
         <View style={{flex:1}}>
             <Text style={styles.text}>{item.projectName}</Text>
         </View>
@@ -134,6 +135,39 @@ class ProjectsScreen extends Component {
       </View>
       </TouchableOpacity>
     );
+  }
+
+  folderIcon = function (item) {
+    let color = '';
+    switch (item.projectStatus) {
+      case 'presales':
+            color = '#ff7043'
+      case 'presalesPD':
+            color = '#ff7043'
+      case 'preSalesQS':
+            color = '#ff7043'
+      case 'preSalesN':
+            color = '#ff7043'
+      case 'preSalesC':  
+            color = '#ff7043'    
+          break;
+      case 'preSalesL':
+          color = '#ff7043' 
+          break;
+      case 'ongoing':
+          color = '#ffc212' 
+          break;
+      case 'support':
+          color = '#ed5ed1'   
+          break;
+      case 'finished' : 
+          color = '#0bafff' 
+          break    
+  }
+    return (
+      <Icon name={'folder'} type={'Feather'} style={{ fontSize: EStyleSheet.value('22rem'), color: color, }} />
+    );
+   
   }
 
   colorCode = function (item) {

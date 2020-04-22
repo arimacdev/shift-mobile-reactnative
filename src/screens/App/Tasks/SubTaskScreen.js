@@ -6,6 +6,7 @@ import {
   Dimensions,
   Image,
   TouchableOpacity,
+  Alert
 } from 'react-native';
 import {connect} from 'react-redux';
 import * as actions from '../../../redux/actions';
@@ -91,6 +92,18 @@ class SubTasksScreen extends Component {
       
   }
 
+  deleteSubTaskAlert (item){
+    Alert.alert(
+			'Delete Sub task',
+			'Are you sure you want to delete this Sub task',
+			[
+			  {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+			  {text: 'Ok', onPress: () =>this.deleteSubTask(item)},
+			],
+			{ cancelable: false }
+		  );
+  }
+
   editSubTask(item){
     let selectedProjectID = this.state.selectedProjectID;
     let selectedProjectTaskID = this.state.selectedProjectTaskID;
@@ -140,7 +153,7 @@ class SubTasksScreen extends Component {
                 />
             </TouchableOpacity>
             <TouchableOpacity 
-                  onPress={() => this.deleteSubTask(item)}
+                  onPress={() => this.deleteSubTaskAlert(item)}
                   style={{marginLeft: EStyleSheet.value('20rem')}}>
               <Image
                 style={styles.editDeleteIcon}
@@ -175,7 +188,7 @@ class SubTasksScreen extends Component {
 
   render() {
     let subTasks = this.state.subTasks;
-    let dataLoading = this.props.dataLoading;
+    let dataLoading = this.state.dataLoading;
     let showAlert = this.state.showAlert;
     let alertTitle = this.state.alertTitle;
     let alertMsg = this.state.alertMsg;

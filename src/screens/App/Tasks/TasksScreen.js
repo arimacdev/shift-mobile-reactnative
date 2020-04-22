@@ -50,6 +50,7 @@ class TasksScreen extends Component {
         labelStyle={{fontWeight: 'bold'},{fontFamily: 'CircularStd-Medium'}}
         activeColor={colors.darkBlue}
         inactiveColor={'gray'}
+        getLabelText={({ route }) => route.title}
       />
     );
   }
