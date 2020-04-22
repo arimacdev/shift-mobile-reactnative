@@ -45,18 +45,22 @@ export const DrawerNavigator = createDrawerNavigator(
                 drawerIcon:  () => null
             }),
         },
+        DrawerTask: {
+            screen: TasksStackNavigator,
+            header: null,
+            navigationOptions: ({ navigation }) => ({
+                header: null,
+                drawerLabel:  () => null,
+                drawerIcon:  () => null
+            }),
+        },
         Workload: {
             screen: WorkloadStackNavigator,
             header: null,
             navigationOptions: ({ navigation }) => ({
                 header: null,
-                drawerLabel: 'Workload ',
-                drawerIcon: ({ tintColor }) => (
-                    <Image
-                        source={icons.workloadIcon}
-                        style={{ width:  EStyleSheet.value('25rem'),height:EStyleSheet.value('25rem')}}
-                    />
-                ),
+                drawerLabel:  () => null,
+                drawerIcon:  () => null
             }),
         },
 

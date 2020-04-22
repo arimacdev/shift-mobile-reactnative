@@ -67,9 +67,29 @@ const CustomDrawerContentComponent = props => (
         }}
       />
       <DrawerNavigatorItems {...props} />
-      {/* projects */}
+      {/* DrawerTasksScreen */}
+      {true &&
+        <TouchableOpacity style={styles.custtomButton} onPress={() => {  NavigationService.navigate('DrawerTasksScreen'); }}>
+          <Image
+            source={require('../asserts/img/drawer_tasks.png')}
+            style={{ width:  EStyleSheet.value('25rem'),height:EStyleSheet.value('25rem')}}
+          />
+          <Text style={styles.text}>Tasks</Text>
+        </TouchableOpacity>
+      }
+      {/* WorkLoad */}
+      {true &&
+        <TouchableOpacity style={styles.custtomButton1} onPress={() => {  NavigationService.navigate('WorkloadScreen'); }}>
+          <Image
+            source={require('../asserts/img/drawer_workload.png')}
+            style={{ width:  EStyleSheet.value('25rem'),height:EStyleSheet.value('25rem')}}
+          />
+          <Text style={styles.text}>Workload</Text>
+        </TouchableOpacity>
+      }
+      {/* UsersScreen */}
       {props.loginUserType == 'SUPER_ADMIN' &&
-        <TouchableOpacity style={styles.custtomButton} onPress={() => {  NavigationService.navigate('UsersScreen'); }}>
+        <TouchableOpacity style={styles.custtomButton1} onPress={() => {  NavigationService.navigate('UsersScreen'); }}>
           <Image
             source={require('../asserts/img/drawer_users.png')}
             style={{ width:  EStyleSheet.value('25rem'),height:EStyleSheet.value('25rem')}}
@@ -77,6 +97,7 @@ const CustomDrawerContentComponent = props => (
           <Text style={styles.text}>Users</Text>
         </TouchableOpacity>
       }
+      
      
     </SafeAreaView>
   </ScrollView>
@@ -135,7 +156,12 @@ const styles = EStyleSheet.create({
   custtomButton: {
     flexDirection: 'row',
     paddingHorizontal: 18,
-    marginTop: 10,
+    marginTop: 15,
+  },
+  custtomButton1: {
+    flexDirection: 'row',
+    paddingHorizontal: 18,
+    marginTop: 22,
   },
   iconBack: {
     fontSize: '32rem',

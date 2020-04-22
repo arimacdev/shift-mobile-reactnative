@@ -2,43 +2,25 @@ import React from 'react';
 import {createStackNavigator} from 'react-navigation-stack';
 
 import Header from '../components/Header';
-import TasksScreen from '../screens/App/Tasks/TasksScreen';
-import TasksDetailsScreen from '../screens/App/Tasks/TasksDetailsScreen';
+import DrawerTasksScreen from '../screens/App/TaskDrawer/DrawerTasksScreen';
 
 export const TasksStackNavigator = createStackNavigator(
   {
-    TasksScreen: {
-      screen: TasksScreen,
+    DrawerTasksScreen: {
+      screen: DrawerTasksScreen,
       navigationOptions: ({navigation}) => ({
         header: (
           <Header
-            title={
-              navigation.state.params
-                ? navigation.state.params.projDetails.projName
-                : ''
-            }
-            onPress={() => navigation.navigate('Projects')}
-          />
-        ),
-      }),
-    },
-    TasksDetailsScreen: {
-      screen: TasksDetailsScreen,
-      navigationOptions: ({navigation}) => ({
-        header: (
-          <Header
-            title={
-              navigation.state.params
-                ? navigation.state.params.projDetails.projName
-                : ''
-            }
-            onPress={() => navigation.navigate('Projects')}
+            isHome
+            navigation={navigation}
+            title="Tasks"
+            onPress={() => navigation.openDrawer()}
           />
         ),
       }),
     },
   },
   {
-    initialRouteName: 'TasksScreen',
+    initialRouteName: 'DrawerTasksScreen',
   },
 );
