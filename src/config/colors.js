@@ -30,7 +30,8 @@ const colors = {
     textPlaceHolderColor : '#b9b9b9',
     switchOnBgColor:'#b6d3f1',
     switchColor:'#1976d2',
-    slackBgColor:'#4a154b'
+    slackBgColor:'#4a154b',
+    noTasksColor:'#acacac'
 
 };
 export default colors;

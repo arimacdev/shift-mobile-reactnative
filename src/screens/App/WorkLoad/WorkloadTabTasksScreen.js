@@ -23,9 +23,10 @@ import moment from 'moment';
 import FadeIn from 'react-native-fade-in-image';
 import {SkypeIndicator} from 'react-native-indicators';
 import {NavigationEvents} from 'react-navigation';
-import Collapsible from 'react-native-collapsible';
 import APIServices from '../../../services/APIServices';
 import Accordion from 'react-native-collapsible/Accordion';
+import * as Animatable from 'react-native-animatable';
+import Collapsible from '../../../components/CollapsibleView';
 
 const Placeholder = () => (
   <View style={styles.landing}>
@@ -146,6 +147,7 @@ class WorkloadTabTasksScreen extends Component {
   }
 
   async getAllWorkloadTasks(selectedUserId, from, to) {
+    this.setState({dataLoading: true});
     let workloadTasks = await APIServices.getWorkloadWithAssignTasksCompletion(
       selectedUserId,
       from,
@@ -234,21 +236,70 @@ class WorkloadTabTasksScreen extends Component {
   };
 
   _renderHeader = (section, index) => {
-    return (
-      <View
+    return section.total == 0 ? (
+      <TouchableOpacity>
+        <Animatable.View
+          duration={400}
+          style={[
+            styles.header,
+            {
+              backgroundColor:
+                section.total == 0 ? colors.noTasksColor : colors.darkBlue,
+              borderBottomEndRadius:
+                index == this.state.activeSections[0] ? 0 : 5,
+              borderBottomStartRadius:
+                index == this.state.activeSections[0] ? 0 : 5,
+            },
+          ]}>
+          <View style={{flex: 1}}>
+            <Text style={styles.headerText}>
+              {section.projectName} - {section.completed}/{section.total}
+            </Text>
+          </View>
+
+          <Image
+            style={styles.dropIcon}
+            source={
+              index == this.state.activeSections[0]
+                ? icons.arrowDown
+                : section.total == 0
+                ? icons.arrowUpGray
+                : icons.arrowUp
+            }
+          />
+        </Animatable.View>
+      </TouchableOpacity>
+    ) : (
+      <Animatable.View
+        duration={400}
         style={[
           styles.header,
           {
+            backgroundColor:
+              section.total == 0 ? colors.noTasksColor : colors.darkBlue,
             borderBottomEndRadius:
               index == this.state.activeSections[0] ? 0 : 5,
             borderBottomStartRadius:
               index == this.state.activeSections[0] ? 0 : 5,
           },
         ]}>
-        <Text style={styles.headerText}>
-          {section.projectName} - {section.completed}/{section.total}
-        </Text>
-      </View>
+        <View style={{flex: 1}}>
+          <Text style={styles.headerText}>
+            {section.projectName} - {section.completed}/{section.total}
+          </Text>
+        </View>
+
+        <Image
+          style={styles.dropIcon}
+          source={
+            index == this.state.activeSections[0]
+              ? icons.arrowDown
+              : section.total == 0
+              ? icons.arrowUpGray
+              : icons.arrowUp
+          }
+        />
+      </Animatable.View>
     );
   };
 
@@ -258,9 +309,11 @@ class WorkloadTabTasksScreen extends Component {
   //   });
   // };
 
-  _renderContent(item) {
+  _renderContent(item, isActive) {
     return (
-      <View
+      <Animatable.View
+        animation={isActive ? 'bounceIn' : undefined}
+        duration={400}
         style={styles.flatListView}
         onStartShouldSetResponderCapture={() => {
           this.setState({enableScrollViewScroll: false});
@@ -283,7 +336,7 @@ class WorkloadTabTasksScreen extends Component {
           renderItem={({item, index}) => this.renderProjectList(item, index)}
           keyExtractor={item => item.taskId}
         />
-      </View>
+      </Animatable.View>
     );
   }
 
@@ -408,6 +461,13 @@ class WorkloadTabTasksScreen extends Component {
     console.log('ddddddddddddddddddddd', text);
   }
 
+  renderCollaps(item) {
+    console.log('ddddddddddddddddddddd', item.item);
+    return (
+      <Collapsible title={item.item.projectName} data={item.item.taskList} />
+    );
+  }
+
   render() {
     let dataLoading = this.state.dataLoading;
     // let filterdDataMyTasks = this.state.filterdDataMyTasks;
@@ -437,6 +497,14 @@ class WorkloadTabTasksScreen extends Component {
             onChange={this._updateSections}
           />
         </ScrollView>
+
+        {/* <FlatList
+          style={styles.flatListStyle}
+          data={this.state.workloadTasks}
+          renderItem={(item) => this.renderCollaps(item)}
+          keyExtractor={item => item.taskId}
+        /> */}
+
         {dataLoading && <Loader />}
       </View>
     );
@@ -517,8 +585,8 @@ const styles = EStyleSheet.create({
     // borderBottomRightRadius: 5,
   },
   dropIcon: {
-    width: '13rem',
-    height: '13rem',
+    width: '20rem',
+    height: '20rem',
   },
   completionIcon: {
     width: '40rem',
@@ -574,12 +642,13 @@ const styles = EStyleSheet.create({
     marginBottom: 20,
   },
   header: {
-    backgroundColor: colors.darkBlue,
     padding: 20,
     marginHorizontal: 20,
     marginTop: 10,
     borderTopStartRadius: 5,
     borderTopEndRadius: 5,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   headerText: {
     textAlign: 'left',
@@ -628,13 +697,13 @@ const styles = EStyleSheet.create({
     marginBottom: '10rem',
     marginTop: '10rem',
   },
-  flatListView:{
+  flatListView: {
     height: 300,
     marginHorizontal: 20,
     borderBottomEndRadius: 5,
     borderBottomStartRadius: 5,
-    backgroundColor:colors.projectBgColor
-  }
+    backgroundColor: colors.projectBgColor,
+  },
 });
 
 const mapStateToProps = state => {
