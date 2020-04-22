@@ -30,6 +30,10 @@ export const ProjectsStackNavigator = createStackNavigator(
         header: (
           <Header
             isHome
+            isSearch = {true}
+            searchNavigation = {'projectScreen'}
+            isAddNew = {true}
+            addNewNavigation = {'projectScreen'}
             navigation={navigation}
             title="Projects"
             onPress={() => navigation.openDrawer()}

@@ -16,6 +16,10 @@ export const UsersStackNavigator = createStackNavigator(
         header: <Header
               isHome
               isUser
+              isSearch = {true}
+              searchNavigation = {'userScreen'}
+              isAddNew = {true}
+              addNewNavigation = {'userScreen'}
               navigation={navigation}
               title='User'
               screen={'userList'}
