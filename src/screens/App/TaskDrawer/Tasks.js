@@ -92,12 +92,19 @@ class Tasks extends Component {
       selectedTypeAllTasks: 'All',
     });
     let selectedTaskGroupId = this.state.selectedTaskGroupId;
-    AsyncStorage.getItem('userID').then(userID => {
-      this.props.getAllTaskInProjects(userID, selectedProjectID);
-    });
   }
 
-
+  async tabOpenTaskTab() {
+    let selectedTaskGroupId = this.props.selectedTaskGroupId;
+    this.setState(
+      {
+        selectedTaskGroupId: selectedTaskGroupId,
+      },
+      () => {
+        this.getAllTaskInProject();
+      },
+    );
+  }
 
   dateView = function(item) {
     let date = item.taskDueDateAt;
@@ -230,20 +237,6 @@ class Tasks extends Component {
       selectedTypeAllTasks: key,
     });
   }
-
-  async tabOpenTaskTab() {
-    let selectedTaskGroupId = this.props.selectedTaskGroupId;
-    this.setState(
-      {
-        selectedTaskGroupId: selectedTaskGroupId,
-      },
-      () => {
-        this.getAllTaskInProject();
-      },
-    );
-  }
-
-
 
   render() {
     let filterdDataAllTaks = this.state.filterdDataAllTaks;
