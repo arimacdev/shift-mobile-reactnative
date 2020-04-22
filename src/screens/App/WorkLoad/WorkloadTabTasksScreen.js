@@ -346,6 +346,7 @@ class WorkloadTabTasksScreen extends Component {
 
   renderProjectList(item, index) {
     return (
+      <TouchableOpacity>
       <View style={styles.projectView}>
         <Image
           style={styles.completionIcon}
@@ -361,6 +362,7 @@ class WorkloadTabTasksScreen extends Component {
           {/* {this.userImage(item)} */}
         </View>
       </View>
+      </TouchableOpacity>
     );
   }
 
