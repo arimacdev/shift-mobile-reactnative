@@ -314,23 +314,14 @@ class WorkloadTabTasksScreen extends Component {
       <Animatable.View
         animation={isActive ? 'bounceIn' : undefined}
         duration={400}
-        style={styles.flatListView}
-        onStartShouldSetResponderCapture={() => {
-          this.setState({enableScrollViewScroll: false});
-          if (
-            this._myScroll.contentOffset === 0 &&
-            this.state.enableScrollViewScroll === false
-          ) {
-            this.setState({enableScrollViewScroll: true});
-          }
-        }}>
+        style={styles.flatListView}>
         <FlatList
           style={styles.flatListStyle}
           //   onTouchStart={() => {
-          //     this.onEnableScroll( false );
+          //     this.setState({enableScrollViewScroll:false})
           //  }}
           //  onMomentumScrollEnd={() => {
-          //     this.onEnableScroll( true );
+          //   this.setState({enableScrollViewScroll:true})
           //  }}
           data={item}
           renderItem={({item, index}) => this.renderProjectList(item, index)}
@@ -342,26 +333,43 @@ class WorkloadTabTasksScreen extends Component {
 
   _updateSections = activeSections => {
     this.setState({activeSections});
+    if (!activeSections.length == 0) {
+      let fy = activeSections * 70;
+      this._myScroll.scrollTo({x: 0, y: fy, animated: true});
+    }
   };
+
+  // _updateSections = activeSections => {
+  //   this.setState({activeSections});
+
+  //   let activeSectionPostion = activeSections[0];
+  //   let px = activeSectionPostion.x ? activeSectionPostion.x - 50 : 150;
+  //   console.log('dddddddddddddddddd', activeSectionPostion.x);
+  //   setTimeout(() => {
+  //     this._myScroll.scrollTo(px, 0, true);
+  //   }, 50);
+  // };
 
   renderProjectList(item, index) {
     return (
       <TouchableOpacity>
-      <View style={styles.projectView}>
-        <Image
-          style={styles.completionIcon}
-          source={
-            item.taskStatus == 'closed' ? icons.rightCircule : icons.circuleGray
-          }
-        />
-        <View style={{flex: 1}}>
-          <Text style={styles.text}>{item.taskName}</Text>
+        <View style={styles.projectView}>
+          <Image
+            style={styles.completionIcon}
+            source={
+              item.taskStatus == 'closed'
+                ? icons.rightCircule
+                : icons.circuleGray
+            }
+          />
+          <View style={{flex: 1}}>
+            <Text style={styles.text}>{item.taskName}</Text>
+          </View>
+          <View style={styles.statusView}>
+            {this.dateView(item)}
+            {/* {this.userImage(item)} */}
+          </View>
         </View>
-        <View style={styles.statusView}>
-          {this.dateView(item)}
-          {/* {this.userImage(item)} */}
-        </View>
-      </View>
       </TouchableOpacity>
     );
   }
@@ -477,16 +485,17 @@ class WorkloadTabTasksScreen extends Component {
     return (
       <View
         style={styles.backgroundImage}
-        onStartShouldSetResponderCapture={() => {
-          this.setState({enableScrollViewScroll: true});
-        }}>
+        // onStartShouldSetResponderCapture={() => {
+        //   this.setState({enableScrollViewScroll: true});
+        // }}
+      >
         <NavigationEvents
           onWillFocus={() =>
             this.getAllWorkloadTasks(this.props.selectedUserId, 'all', 'all')
           }
         />
         <ScrollView
-          scrollEnabled={this.state.enableScrollViewScroll}
+          // scrollEnabled={this.state.enableScrollViewScroll}
           ref={myScroll => (this._myScroll = myScroll)}>
           <Accordion
             underlayColor={colors.white}
@@ -700,7 +709,7 @@ const styles = EStyleSheet.create({
     marginTop: '10rem',
   },
   flatListView: {
-    height: 300,
+    // height: 300,
     marginHorizontal: 20,
     borderBottomEndRadius: 5,
     borderBottomStartRadius: 5,
