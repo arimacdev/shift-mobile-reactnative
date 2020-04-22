@@ -31,7 +31,8 @@ const colors = {
     switchOnBgColor:'#b6d3f1',
     switchColor:'#1976d2',
     slackBgColor:'#4a154b',
-    noTasksColor:'#acacac'
+    noTasksColor:'#acacac',
+    taskBorderColor:'#0bafff',
 
 };
 export default colors;

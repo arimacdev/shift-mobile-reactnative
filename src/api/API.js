@@ -35,6 +35,10 @@ export const ADD_SLACK_ID = `${PROTOCOL}${HOST}users`;
 
 export const GET_WORKLOAD_WITH_COMPLETION = `${PROTOCOL}${HOST}projects/tasks/users`
 
+export const GET_GROUP_TASK_DATA = `${PROTOCOL}${HOST}taskgroup`;
+export const ADD_GROUP_TASK_DATA = `${PROTOCOL}${HOST}taskgroup`
+
+
 
 
 

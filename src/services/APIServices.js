@@ -32,7 +32,9 @@ import {
     DELETE_FILE_IN_TASK,
     ADD_SLACK_ID,
     GET_WORKLOAD_WITH_COMPLETION,
-    UPDATE_PEOPLE_PROJECT
+    UPDATE_PEOPLE_PROJECT,
+    GET_GROUP_TASK_DATA,
+    ADD_GROUP_TASK_DATA
 
 } from '../api/API';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -704,6 +706,43 @@ async function getWorkloadWithAssignTasksCompletion(userID, from, to) {
 
 
 
+
+
+async function getGroupTaskData() {
+    let userIDHeder = null;
+    userIDHeder =  await AsyncStorage.getItem('userID');
+    
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        user : userIDHeder,
+    };
+    return request({
+        url: GET_GROUP_TASK_DATA ,
+        method: 'GET',
+    }, true,headers);
+};
+
+async function addGroupTaskData(groupName) {
+
+    let taskGroupCreator = null;
+    taskGroupCreator =  await AsyncStorage.getItem('userID');
+
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+    };
+
+    return request({
+        url: GET_GROUP_TASK_DATA,
+        method: 'POST',
+        data: {
+            taskGroupName: groupName,
+            taskGroupCreator: taskGroupCreator,
+        }
+    }, true, headers);
+};
+
 const APIServices = {
     getAllProjectsByUserData,
     getUserData,
@@ -742,6 +781,8 @@ const APIServices = {
     getWorkloadWithCompletion,
     getWorkloadWithAssignTasksCompletion,
     updateRolePeopleData,
+    getGroupTaskData,
+    addGroupTaskData
 };
 
 export default APIServices;

@@ -11,9 +11,7 @@ import {
 import {connect} from 'react-redux';
 import * as actions from '../../../redux/actions';
 import colors from '../../../config/colors';
-import Tasks from './TasksTabScreen';
-import Projects from '../Projects/ProjectsDetailsScreen';
-import PeopleScreen from '../People/PeopleScreen';
+import Tasks from './Tasks';
 import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
 import EStyleSheet from 'react-native-extended-stylesheet';
 const entireScreenWidth = Dimensions.get('window').width;
@@ -21,16 +19,15 @@ EStyleSheet.build({$rem: entireScreenWidth / 380});
 
 const initialLayout = {width: entireScreenWidth};
 
-class TasksScreen extends Component {
+class TasksTabScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
       index: 0,
       routes: [
         {key: 'tasks', title: 'Tasks'},
-        {key: 'board', title: 'Board'},
-        {key: 'prople', title: 'People'},
-        {key: 'projects', title: 'Project'},
+        {key: 'people', title: 'People'},
+        {key: 'settings', title: 'Settings'},
       ],
     };
   }
@@ -38,6 +35,34 @@ class TasksScreen extends Component {
   componentDidUpdate(prevProps, prevState, snapshot) {}
 
   componentDidMount() {}
+
+
+  renderScene(route) {
+    const {
+      navigation: {
+        state: {params},
+      },
+    } = this.props;
+    let taskGroupId = params.taskDetails.taskGroupId;
+    const isActive =
+      this.state.routes.indexOf(route.route) === this.state.index;
+    switch (route.route.key) {
+      case 'tasks':
+        return (
+          <Tasks
+            selectedTaskGroupId={taskGroupId}
+            navigation={this.props.navigation}
+            isActive={isActive}
+          />
+        );
+    case 'settings':
+        return (
+            <View>
+    
+            </View>
+        );  
+    }
+  }
 
   renderTabBar(props) {
     return (
@@ -52,43 +77,6 @@ class TasksScreen extends Component {
         inactiveColor={'gray'}
       />
     );
-  }
-
-  renderScene(route) {
-    const {
-      navigation: {
-        state: {params},
-      },
-    } = this.props;
-    let projectId = params.projDetails.projectId;
-    const isActive =
-      this.state.routes.indexOf(route.route) === this.state.index;
-    switch (route.route.key) {
-      case 'tasks':
-        return (
-          <Tasks
-            selectedProjectID={projectId}
-            navigation={this.props.navigation}
-            isActive={isActive}
-          />
-        );
-      case 'projects':
-        return (
-          <Projects
-            selectedProjectID={projectId}
-            navigation={this.props.navigation}
-            isActive={isActive}
-          />
-        );
-      case 'prople':
-        return (
-          <PeopleScreen
-            selectedProjectID={projectId}
-            navigation={this.props.navigation}
-            isActive={isActive}
-          />
-        );
-    }
   }
 
   render() {
@@ -119,7 +107,7 @@ const styles = EStyleSheet.create({
   tabBarStyle: {
     backgroundColor: 'white',
     height: '60rem',
-    alignItems: 'center',
+    alignItems: 'flex-start',
   },
 });
 
@@ -129,4 +117,4 @@ const mapStateToProps = state => {
 export default connect(
   mapStateToProps,
   actions,
-)(TasksScreen);
+)(TasksTabScreen);
