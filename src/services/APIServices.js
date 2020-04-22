@@ -674,13 +674,13 @@ async function getWorkloadWithAssignTasksCompletion(userID, from, to) {
     let headers =  {
         Accept: 'application/json',
         'Content-Type': 'application/json',
-        user : userID,
+        user : userIDHeder,
         from : from,
         to   : to
     };
 
     return request({
-        url: GET_WORKLOAD_WITH_COMPLETION + '/' + userID +'/workload',
+        url: GET_WORKLOAD_WITH_COMPLETION + '/' + userIDHeder +'/workload',
         method: 'GET',
     }, true,headers);
 };
@@ -722,7 +722,8 @@ const APIServices = {
     getFilesInTaskData,
     deleteFileInTaskData,
     addSlackID,
-    getWorkloadWithCompletion
+    getWorkloadWithCompletion,
+    getWorkloadWithAssignTasksCompletion
 };
 
 export default APIServices;

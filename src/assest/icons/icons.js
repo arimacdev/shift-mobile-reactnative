@@ -46,5 +46,6 @@ const icons = {
     slackIcon: require('./slack_icon.png'),
     slackLogo: require('./slack_logo.png'),
     workloadIcon: require('./work_load_icon.png'),
+    circuleGray: require('./circule_gray.png'),
 };
 export default icons;

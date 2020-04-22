@@ -65,7 +65,7 @@ class WorkloadTabScreen extends Component {
       case 'tasks':
         return (
           <Tasks
-            selectedProjectID={userId}
+            selectedUserId={userId}
             navigation={this.props.navigation}
             isActive={isActive}
           />

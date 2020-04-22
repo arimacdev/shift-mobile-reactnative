@@ -36,15 +36,15 @@ class WorkloadScreen extends Component {
     };
   }
 
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    if (prevProps.isActive !== this.props.isActive && this.props.isActive) {
-      AsyncStorage.getItem('userID').then(userID => {
-        if (userID) {
-          this.fetchData(userID);
-        }
-      });
-    }
-  }
+//   componentDidUpdate(prevProps, prevState, snapshot) {
+//     if (prevProps.isActive !== this.props.isActive && this.props.isActive) {
+//       AsyncStorage.getItem('userID').then(userID => {
+//         if (userID) {
+//           this.fetchData(userID);
+//         }
+//       });
+//     }
+//   }
 
   componentDidMount() {
     AsyncStorage.getItem('userID').then(userID => {
@@ -120,7 +120,7 @@ class WorkloadScreen extends Component {
       <TouchableOpacity
         style={styles.mainContainer}
         onPress={() => this.navigateToWorkloadTabScreen(item)}>
-        <NavigationEvents onWillFocus={payload => this.tabOpen(payload)} />
+        {/* <NavigationEvents onWillFocus={payload => this.tabOpen(payload)} /> */}
         <View style={styles.userView}>
           {this.userIcon(item)}
           <View style={{flex: 1}}>

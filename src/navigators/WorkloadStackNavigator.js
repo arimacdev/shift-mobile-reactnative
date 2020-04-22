@@ -28,7 +28,7 @@ export const WorkloadStackNavigator = createStackNavigator(
           <Header
             navigation={navigation}
             title="Workload"
-            onPress={() => navigation.openDrawer()}
+            onPress={() => navigation.goBack()}
           />
         ),
       }),

@@ -6,6 +6,7 @@ import {
   Dimensions,
   Image,
   TouchableOpacity,
+  ScrollView,
 } from 'react-native';
 import {connect} from 'react-redux';
 import * as actions from '../../../redux/actions';
@@ -23,6 +24,8 @@ import FadeIn from 'react-native-fade-in-image';
 import {SkypeIndicator} from 'react-native-indicators';
 import {NavigationEvents} from 'react-navigation';
 import Collapsible from 'react-native-collapsible';
+import APIServices from '../../../services/APIServices';
+import Accordion from 'react-native-collapsible/Accordion';
 
 const Placeholder = () => (
   <View style={styles.landing}>
@@ -30,52 +33,14 @@ const Placeholder = () => (
   </View>
 );
 
-let dropData = [
+const SECTIONS = [
   {
-    id: 'Pending',
-    value: 'Pending',
+    title: 'First',
+    content: 'Lorem ipsum...',
   },
   {
-    id: 'Implementing',
-    value: 'Implementing',
-  },
-  {
-    id: 'QA',
-    value: 'QA',
-  },
-  {
-    id: 'Ready to Deploy',
-    value: 'Ready to Deploy',
-  },
-  {
-    id: 'Re-Opened',
-    value: 'Re-Opened',
-  },
-  {
-    id: 'Deployed',
-    value: 'Deployed',
-  },
-  {
-    id: 'Closed',
-    value: 'Closed',
-  },
-];
-
-let bottomData = [
-  {
-    value: 'All tasks',
-    bottomBarColor: colors.darkBlue,
-    bottomBarIcon: icons.taskDark,
-  },
-  {
-    value: 'My tasks',
-    bottomBarColor: colors.lightGreen,
-    bottomBarIcon: icons.taskGreen,
-  },
-  {
-    value: 'Add new tasks',
-    bottomBarColor: colors.lightBlue,
-    bottomBarIcon: icons.taskBlue,
+    title: 'Second',
+    content: 'Lorem ipsum...',
   },
 ];
 
@@ -93,20 +58,28 @@ class WorkloadTabTasksScreen extends Component {
       isActive: this.props.isActive,
       selectedTypeAllTasks: 'Pending',
       selectedTypeMyTasks: 'Pending',
+
+      workloadTasks: [],
+      dataLoading: false,
+      isCollapsed: true,
+      activeSections: [],
+      enableScrollViewScroll: true,
     };
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (prevProps.isActive !== this.props.isActive && this.props.isActive) {
-      let selectedProjectID = this.props.selectedProjectID;
-      this.setState(
-        {
-          selectedProjectID: selectedProjectID,
-        },
-        () => {
-          this.getAllTaskInProject();
-        },
-      );
+      let selectedUserId = this.props.selectedUserId;
+
+      this.getAllWorkloadTasks(selectedUserId, 'all', 'all');
+      // this.setState(
+      //   {
+      //     selectedProjectID: selectedProjectID,//getWorkloadWithAssignTasksCompletion
+      //   },
+      //   () => {
+      //     this.getAllTaskInProject();
+      //   },
+      // );
     }
 
     // all tasks
@@ -172,30 +145,23 @@ class WorkloadTabTasksScreen extends Component {
     }
   }
 
-  // componentWillReceiveProps(nextProps) {
-  //   let selectedProjectID = this.props.selectedProjectID;
-  //   if (this.props.isActive !== nextProps.isActive) {
-  //     this.setState(
-  //       {
-  //         selectedProjectID: selectedProjectID,
-  //       },
-  //       () => {
-  //         this.getAllTaskInProject();
-  //       },
-  //     );
-  //   }
-  // }
-
-  componentDidMount() {
-    // let selectedProjectID = this.props.selectedProjectID;
-    // this.setState(
-    //   {
-    //     selectedProjectID: selectedProjectID,
-    //   },
-    //   () => {
-    //     this.getAllTaskInProject();
-    //   },
-    // );
+  async getAllWorkloadTasks(selectedUserId, from, to) {
+    let workloadTasks = await APIServices.getWorkloadWithAssignTasksCompletion(
+      selectedUserId,
+      from,
+      to,
+    );
+    if (workloadTasks.message == 'success') {
+      // this.setProjectTaskData(projectTaskDetailsData.data);
+      // projectData = await APIServices.getProjectData(selectedProjectID);
+      if (workloadTasks.message == 'success') {
+        this.setState({workloadTasks: workloadTasks.data, dataLoading: false});
+      } else {
+        this.setState({dataLoading: false});
+      }
+    } else {
+      this.setState({dataLoading: false});
+    }
   }
 
   async getAllTaskInProject() {
@@ -219,7 +185,7 @@ class WorkloadTabTasksScreen extends Component {
   }
 
   dateView = function(item) {
-    let date = item.taskDueDateAt;
+    let date = item.dueDate;
     let currentTime = moment().format();
     let dateText = '';
     let color = '';
@@ -267,34 +233,81 @@ class WorkloadTabTasksScreen extends Component {
     }
   };
 
-  renderProjectList(item) {
-    let selectedProjectID = this.state.selectedProjectID;
+  _renderHeader = (section, index) => {
     return (
-      <TouchableOpacity
-        onPress={() =>
-          this.props.navigation.navigate('TasksDetailsScreen', {
-            taskDetails: item,
-            selectedProjectID: selectedProjectID,
-          })
-        }>
-        <View style={styles.projectView}>
-          <Image
-            style={styles.completionIcon}
-            source={
-              item.taskStatus == 'closed'
-                ? icons.rightCircule
-                : icons.whiteCircule
-            }
-          />
-          <View style={{flex: 1}}>
-            <Text style={styles.text}>{item.taskName}</Text>
-          </View>
-          <View style={styles.statusView}>
-            {this.dateView(item)}
-            {this.userImage(item)}
-          </View>
+      <View
+        style={[
+          styles.header,
+          {
+            borderBottomEndRadius:
+              index == this.state.activeSections[0] ? 0 : 5,
+            borderBottomStartRadius:
+              index == this.state.activeSections[0] ? 0 : 5,
+          },
+        ]}>
+        <Text style={styles.headerText}>
+          {section.projectName} - {section.completed}/{section.total}
+        </Text>
+      </View>
+    );
+  };
+
+  // onEnableScroll= (value: boolean) => {
+  //   this.setState({
+  //     enableScrollViewScroll: value,
+  //   });
+  // };
+
+  _renderContent(item) {
+    return (
+      <View
+        style={styles.flatListView}
+        onStartShouldSetResponderCapture={() => {
+          this.setState({enableScrollViewScroll: false});
+          if (
+            this._myScroll.contentOffset === 0 &&
+            this.state.enableScrollViewScroll === false
+          ) {
+            this.setState({enableScrollViewScroll: true});
+          }
+        }}>
+        <FlatList
+          style={styles.flatListStyle}
+          //   onTouchStart={() => {
+          //     this.onEnableScroll( false );
+          //  }}
+          //  onMomentumScrollEnd={() => {
+          //     this.onEnableScroll( true );
+          //  }}
+          data={item}
+          renderItem={({item, index}) => this.renderProjectList(item, index)}
+          keyExtractor={item => item.taskId}
+        />
+      </View>
+    );
+  }
+
+  _updateSections = activeSections => {
+    this.setState({activeSections});
+  };
+
+  renderProjectList(item, index) {
+    return (
+      <View style={styles.projectView}>
+        <Image
+          style={styles.completionIcon}
+          source={
+            item.taskStatus == 'closed' ? icons.rightCircule : icons.circuleGray
+          }
+        />
+        <View style={{flex: 1}}>
+          <Text style={styles.text}>{item.taskName}</Text>
         </View>
-      </TouchableOpacity>
+        <View style={styles.statusView}>
+          {this.dateView(item)}
+          {/* {this.userImage(item)} */}
+        </View>
+      </View>
     );
   }
 
@@ -396,29 +409,35 @@ class WorkloadTabTasksScreen extends Component {
   }
 
   render() {
-    let index = this.state.index;
-    let filterdDataAllTaks = this.state.filterdDataAllTaks;
-    let filterdDataMyTasks = this.state.filterdDataMyTasks;
-    let allTaskByProjectLoading = this.props.allTaskByProjectLoading;
-    let myTaskByProjectLoading = this.props.myTaskByProjectLoading;
-    let selectedTypeAllTasks = this.state.selectedTypeAllTasks;
-    let selectedTypeMyTasks = this.state.selectedTypeMyTasks;
+    let dataLoading = this.state.dataLoading;
+    // let filterdDataMyTasks = this.state.filterdDataMyTasks;
 
     return (
-      <View style={styles.backgroundImage}>
+      <View
+        style={styles.backgroundImage}
+        onStartShouldSetResponderCapture={() => {
+          this.setState({enableScrollViewScroll: true});
+        }}>
         <NavigationEvents
-          onWillFocus={payload => this.tabOpenTaskTab(payload)}
+          onWillFocus={() =>
+            this.getAllWorkloadTasks(this.props.selectedUserId, 'all', 'all')
+          }
         />
-        <View>
-          <FlatList
-            style={{marginBottom: EStyleSheet.value('160rem')}}
-            data={index == 0 ? filterdDataAllTaks : filterdDataMyTasks}
-            renderItem={({item}) => this.renderProjectList(item)}
-            keyExtractor={item => item.taskId}
+        <ScrollView
+          scrollEnabled={this.state.enableScrollViewScroll}
+          ref={myScroll => (this._myScroll = myScroll)}>
+          <Accordion
+            underlayColor={colors.white}
+            sections={this.state.workloadTasks}
+            // sectionContainerStyle={{height:200}}
+            containerStyle={{marginBottom: 20, marginTop: 10}}
+            activeSections={this.state.activeSections}
+            renderHeader={this._renderHeader}
+            renderContent={item => this._renderContent(item.taskList)}
+            onChange={this._updateSections}
           />
-        </View>
-        {allTaskByProjectLoading && <Loader />}
-        {myTaskByProjectLoading && <Loader />}
+        </ScrollView>
+        {dataLoading && <Loader />}
       </View>
     );
   }
@@ -452,10 +471,10 @@ const styles = EStyleSheet.create({
     // fontWeight: 'bold',
   },
   projectView: {
-    backgroundColor: colors.projectBgColor,
+    backgroundColor: colors.white,
     borderRadius: 5,
     height: '60rem',
-    marginTop: '7rem',
+    marginBottom: '7rem',
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: '12rem',
@@ -542,6 +561,80 @@ const styles = EStyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+
+  container: {
+    flex: 1,
+    backgroundColor: '#F5FCFF',
+    paddingTop: 20,
+  },
+  title: {
+    textAlign: 'center',
+    fontSize: 22,
+    fontWeight: '300',
+    marginBottom: 20,
+  },
+  header: {
+    backgroundColor: colors.darkBlue,
+    padding: 20,
+    marginHorizontal: 20,
+    marginTop: 10,
+    borderTopStartRadius: 5,
+    borderTopEndRadius: 5,
+  },
+  headerText: {
+    textAlign: 'left',
+    fontSize: 16,
+    fontWeight: '500',
+    color: colors.white,
+  },
+  content: {
+    padding: 0,
+    backgroundColor: '#fff',
+  },
+  active: {
+    backgroundColor: 'rgba(255,255,255,1)',
+  },
+  inactive: {
+    backgroundColor: 'rgba(245,252,255,1)',
+  },
+  selectors: {
+    marginBottom: 10,
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  selector: {
+    backgroundColor: '#F5FCFF',
+    padding: 10,
+  },
+  activeSelector: {
+    fontWeight: 'bold',
+  },
+  selectTitle: {
+    fontSize: 14,
+    fontWeight: '500',
+    padding: 10,
+  },
+  multipleToggle: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginVertical: 30,
+    alignItems: 'center',
+  },
+  multipleToggle__title: {
+    fontSize: 16,
+    marginRight: 8,
+  },
+  flatListStyle: {
+    marginBottom: '10rem',
+    marginTop: '10rem',
+  },
+  flatListView:{
+    height: 300,
+    marginHorizontal: 20,
+    borderBottomEndRadius: 5,
+    borderBottomStartRadius: 5,
+    backgroundColor:colors.projectBgColor
+  }
 });
 
 const mapStateToProps = state => {
