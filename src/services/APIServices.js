@@ -699,7 +699,7 @@ async function getWorkloadWithAssignTasksCompletion(userID, from, to) {
     };
 
     return request({
-        url: GET_WORKLOAD_WITH_COMPLETION + '/' + userIDHeder +'/workload',
+        url: GET_WORKLOAD_WITH_COMPLETION + '/' + userID +'/workload',
         method: 'GET',
     }, true,headers);
 };

@@ -455,24 +455,12 @@ class WorkloadTabTasksScreen extends Component {
     });
   }
 
-  async tabOpenTaskTab() {
-    let selectedProjectID = this.props.selectedProjectID;
-    this.setState(
-      {
-        selectedProjectID: selectedProjectID,
-      },
-      () => {
-        this.getAllTaskInProject();
-      },
-    );
-  }
-
   onSuccess(text) {
     console.log('ddddddddddddddddddddd', text);
   }
 
   renderCollaps(item) {
-    console.log('ddddddddddddddddddddd', item.item);
+    console.log('item', item.item);
     return (
       <Collapsible title={item.item.projectName} data={item.item.taskList} />
     );
