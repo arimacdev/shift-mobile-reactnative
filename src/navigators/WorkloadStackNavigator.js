@@ -14,6 +14,8 @@ export const WorkloadStackNavigator = createStackNavigator(
           <Header
             isHome
             isWorkload={true}
+            isSearch = {true}
+            searchNavigation = {'workLoadScreen'}
             navigation={navigation}
             title="Workload"
             onPress={() => navigation.openDrawer()}

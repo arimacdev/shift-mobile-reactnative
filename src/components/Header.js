@@ -19,18 +19,36 @@ class Header extends Component {
         this.state = {};
     }
 
-    navigateTo (screen) {
+    navigateToSearch (screen) {
         console.log(screen);
         switch (screen) {
-            case 'userList':
-                NavigationService.navigate('AddUserScreen'); 
+            case 'projectScreen':
+                NavigationService.navigate('ProjectsSearchScreen'); 
                 break;
-           
+            case 'userScreen':
+                NavigationService.navigate('SearchUserScreen'); 
+                break;
+            case 'workLoadScreen':
+                NavigationService.navigate('WorkloadSearchScreen'); 
+                break;            
+          }
+    }
+
+    navigateToAddNew (screen) {
+        switch (screen) {
+            case 'projectScreen':
+                NavigationService.navigate('CreateNewProjectScreen'); 
+                break;
+            case 'userScreen':
+                NavigationService.navigate('AddUserScreen'); 
+                break;    
           }
     }
 
     render() {
-        const { onPress, isHome, title,style,addButton,screen = {},search=false , isTasks=false, isUser=false, isWorkload=false} = this.props;
+        const { onPress, isHome, title,style,addButton,
+            screen = {},search=false , isTasks=false, isUser=false, isWorkload=false,
+            loginUserType,isSearch,searchNavigation,isAddNew,addNewNavigation} = this.props;
         // console.log('PPPP',this.props)
         return (
             <SafeAreaView style={{ backgroundColor: colors.primary }}>
@@ -51,23 +69,20 @@ class Header extends Component {
                                     <Text style={styles.title}>{title}</Text>
                                 </View>
                             </View>
-                            {isWorkload ? 
-                                <View style={styles.rightContainer} >
-                                    <TouchableOpacity style={{alignItems:'flex-end'}} onPress={() => this.props.navigation.navigate('WorkloadSearchScreen')}>
+                            <View style={styles.rightContainer} >
+                                {isSearch &&
+                                    <TouchableOpacity style={{alignItems:'flex-end'}} onPress={() => this.navigateToSearch(searchNavigation)}>
                                         <Icon name={'ios-search'} style={styles.headerButton} type={'Ionicons'} />
                                     </TouchableOpacity>
-                                </View>
-                                :
-                                <View style={styles.rightContainer} >
-                                    <TouchableOpacity style={{alignItems:'flex-end'}} onPress={() => this.props.navigation.navigate(isUser ? 'SearchUserScreen' : 'ProjectsSearchScreen')}>
-                                        <Icon name={'ios-search'} style={styles.headerButton} type={'Ionicons'} />
-                                    </TouchableOpacity>
-                                    <TouchableOpacity style={{alignItems:'flex-end',marginLeft:40}} onPress={() => this.props.navigation.navigate(isUser ? 'AddUserScreen' : 'CreateNewProjectScreen')}>
+                                }
+                                
+                                {loginUserType == 'SUPER_ADMIN' && isAddNew &&
+                                    <TouchableOpacity style={{alignItems:'flex-end',marginLeft:40}} onPress={() => this.navigateToAddNew(addNewNavigation)}>
                                         <Icon name={'ios-add'} style={styles.headerButton} type={'Ionicons'} />
                                     </TouchableOpacity>
-                                </View>
-                            }
-                            
+                                }
+                               
+                            </View>   
                         </View>
                         :
                         isTasks ?
@@ -230,6 +245,7 @@ const styles = EStyleSheet.create({
 
 const mapStateToProps = state => {
     return {
+        loginUserType: state.users.loginUserType,
     };
 };
 
