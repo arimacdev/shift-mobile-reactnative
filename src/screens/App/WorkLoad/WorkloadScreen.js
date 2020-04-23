@@ -36,15 +36,15 @@ class WorkloadScreen extends Component {
     };
   }
 
-//   componentDidUpdate(prevProps, prevState, snapshot) {
-//     if (prevProps.isActive !== this.props.isActive && this.props.isActive) {
-//       AsyncStorage.getItem('userID').then(userID => {
-//         if (userID) {
-//           this.fetchData(userID);
-//         }
-//       });
-//     }
-//   }
+  //   componentDidUpdate(prevProps, prevState, snapshot) {
+  //     if (prevProps.isActive !== this.props.isActive && this.props.isActive) {
+  //       AsyncStorage.getItem('userID').then(userID => {
+  //         if (userID) {
+  //           this.fetchData(userID);
+  //         }
+  //       });
+  //     }
+  //   }
 
   componentDidMount() {
     AsyncStorage.getItem('userID').then(userID => {
@@ -108,7 +108,9 @@ class WorkloadScreen extends Component {
   };
 
   navigateToWorkloadTabScreen(item) {
-    this.props.navigation.navigate('WorkloadTabScreen', {workloadTaskDetails: item});
+    this.props.navigation.navigate('WorkloadTabScreen', {
+      workloadTaskDetails: item,
+    });
   }
 
   renderPeopleList(item) {
@@ -168,7 +170,7 @@ class WorkloadScreen extends Component {
     let dataLoading = this.state.dataLoading;
 
     return (
-      <View>
+      <View style={styles.container}>
         {/* <TouchableOpacity onPress={() => this.goToAddPeople()}>
           <View style={styles.button}>
             <Image
@@ -205,6 +207,9 @@ class WorkloadScreen extends Component {
 }
 
 const styles = EStyleSheet.create({
+  container: {
+    flex: 1,
+  },
   mainContainer: {
     backgroundColor: colors.projectBgColor,
     borderRadius: 5,

@@ -151,7 +151,7 @@ class WorkloadSearchScreen extends Component {
     let dataLoading = this.state.dataLoading;
 
     return (
-      <View>
+      <View style={styles.container}>
         <View style={styles.workloadFilerView}>
           <Image style={styles.searchIcon} source={icons.searchGray} />
           <TextInput
@@ -176,6 +176,9 @@ class WorkloadSearchScreen extends Component {
 }
 
 const styles = EStyleSheet.create({
+  container: {
+    flex: 1,
+  },
   mainContainer: {
     backgroundColor: colors.projectBgColor,
     borderRadius: 5,

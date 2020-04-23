@@ -45,9 +45,13 @@ class Header extends Component {
           }
     }
 
+    openPopup(){
+        
+    }
+
     render() {
         const { onPress, isHome, title,style,addButton,
-            screen = {},search=false , isTasks=false, isUser=false, isWorkload=false,
+            screen = {},search=false , isTasks=false, isUser=false, isWorkload=false, isWorkloadFilter=false,
             loginUserType,isSearch,searchNavigation,isAddNew,addNewNavigation} = this.props;
         // console.log('PPPP',this.props)
         return (
@@ -135,6 +139,11 @@ class Header extends Component {
                                 { addButton &&
                                     <TouchableOpacity style={{alignItems:'flex-end'}} onPress={() => this.navigateTo(screen)}>
                                         <Icon name={'plus'} style={styles.iconPlus} type={'Feather'} />
+                                    </TouchableOpacity>
+                                }
+                                { isWorkloadFilter &&
+                                    <TouchableOpacity style={{alignItems:'flex-end'}} onPress={() => this.openPopup()}>
+                                        <Icon name={'filter'} style={styles.iconFilter} type={'Feather'} />
                                     </TouchableOpacity>
                                 }
                             </View>
@@ -241,6 +250,11 @@ const styles = EStyleSheet.create({
         // borderRadius: '10rem',
         marginLeft : '5rem'
     },
+    iconFilter:{
+        fontSize: '23rem',
+        color: colors.white,
+        fontWeight: '800',
+    }
 });
 
 const mapStateToProps = state => {

@@ -29,6 +29,7 @@ export const WorkloadStackNavigator = createStackNavigator(
       navigationOptions: ({navigation}) => ({
         header: (
           <Header
+            isWorkloadFilter
             navigation={navigation}
             title={
               navigation.state.params
