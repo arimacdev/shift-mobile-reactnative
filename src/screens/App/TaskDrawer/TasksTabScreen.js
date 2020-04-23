@@ -13,6 +13,7 @@ import * as actions from '../../../redux/actions';
 import colors from '../../../config/colors';
 import Tasks from './Tasks';
 import EditTask from './EditTask';
+import PeopleScreen from './PeopleScreen';
 import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
 import EStyleSheet from 'react-native-extended-stylesheet';
 const entireScreenWidth = Dimensions.get('window').width;
@@ -63,7 +64,15 @@ class TasksTabScreen extends Component {
             navigation={this.props.navigation}
             isActive={isActive}
           />
-        );  
+        );
+    case 'people':
+        return (
+          <PeopleScreen
+            selectedTaskGroupId={taskGroupId}
+            navigation={this.props.navigation}
+            isActive={isActive}
+          />
+        );      
     }
   }
 

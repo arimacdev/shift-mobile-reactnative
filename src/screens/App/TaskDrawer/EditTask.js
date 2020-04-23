@@ -118,16 +118,16 @@ class EditTask extends Component {
 
   async getGroupDetails() {
     let selectedTaskGroupId = this.state.selectedTaskGroupId;
-    // this.setState({dataLoading:true});
-    // dataResult = await APIServices.getAllTaskByGroup(selectedTaskGroupId);
-    // if(dataResult.message == 'success'){
-    //   this.setState({
-    //     dataLoading : false,
-    //     groupName : ''
-    //   });   
-    // }else{
-    //   this.setState({dataLoading:false});
-    // }
+    this.setState({dataLoading:true});
+    dataResult = await APIServices.getSingleGroupTaskData(selectedTaskGroupId);
+    if(dataResult.message == 'success'){
+      this.setState({
+        dataLoading : false,
+        groupName : dataResult.data.taskGroupName
+      });   
+    }else{
+      this.setState({dataLoading:false});
+    }
   }
 
   async tabOpen() {

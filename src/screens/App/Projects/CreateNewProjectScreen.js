@@ -292,107 +292,112 @@ class CreateNewProjectScreen extends Component {
 
 
     return (
-      <ScrollView style={{marginBottom: EStyleSheet.value('02rem')}}>
-        <View style={styles.titleView}>
-          <Text style={styles.titleText}>You’re about to start a new project</Text>
-        </View>
-        <View style={[styles.taskFieldView, {marginTop: 20}]}>
-          <TextInput
-            style={[styles.textInput, {width: '95%'}]}
-            placeholder={'Project Name'}
-            value={projectName}
-            onChangeText={projectName => this.setState({projectName})}
-          />
-        </View>
-        <View style={[styles.taskFieldView]}>
-          <TextInput
-            style={[styles.textInput, {width: '95%'}]}
-            placeholder={'Client'}
-            value={projectClient}
-            onChangeText={projectClient => this.setState({projectClient})}
-          />
-        </View>
-        <TouchableOpacity
-          onPress={() =>
-            this.setState({showPicker: true, reminder: false, mode: 'date'})
-          }>
-          <View style={[styles.taskFieldView, {flexDirection: 'row'}]}>
-            <Text style={[styles.textInput, {flex: 1}]}>
-              {projectStartDate == ''
-                ? 'Project start date'
-                : projectStartDate + ' ' +projectStartTime}
-            </Text>
-            <Image
-              style={styles.calendarIcon}
-              source={icons.calendar}
-              resizeMode={'center'}
-            />
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() =>
-            this.setState({showPicker: true, reminder: true, mode: 'date'})
-          }>
-          <View style={[styles.taskFieldView, {flexDirection: 'row'}]}>
-            <Text style={[styles.textInput, {flex: 1}]}>
-              {projectEndDate == ''
-                ? 'Project end date'
-                : projectEndDate+ ' ' +projectEndTime}
-            </Text>
-            <Image
-              style={styles.calendarIcon}
-              source={icons.calendar}
-              resizeMode={'center'}
-            />
-          </View>
-        </TouchableOpacity>
-        <View style={styles.taskFieldView}>
-          <TextInput
-            style={[styles.textInput, {width: '95%'}]}
-            placeholder={'Estimated project timeline'}
-            value={estimateDatesText}
-            onChangeText={estimateDates => this.setState({estimateDatesText})}
-            editable={false}
-          />
-        </View>
-        <TouchableOpacity onPress={() => this.saveProject()}>
-          <View style={styles.button}>
-            <Image
-              style={[styles.bottomBarIcon, {marginRight: 15, marginLeft: 10}]}
-              source={icons.folderWhite}
-              resizeMode={'center'}
-            />
-            <View style={{flex: 1}}>
-              <Text style={styles.buttonText}>Add new Project</Text>
-            </View>
+      <View style={{flex: 1}}>
+            <ScrollView style={{marginBottom: EStyleSheet.value('02rem')}}>
+              <View style={styles.titleView}>
+                <Text style={styles.titleText}>You’re about to start a new project</Text>
+              </View>
+              <View style={[styles.taskFieldView, {marginTop: 20}]}>
+                <TextInput
+                  style={[styles.textInput, {width: '95%'}]}
+                  placeholder={'Project Name'}
+                  value={projectName}
+                  onChangeText={projectName => this.setState({projectName})}
+                />
+              </View>
+              <View style={[styles.taskFieldView]}>
+                <TextInput
+                  style={[styles.textInput, {width: '95%'}]}
+                  placeholder={'Client'}
+                  value={projectClient}
+                  onChangeText={projectClient => this.setState({projectClient})}
+                />
+              </View>
+              <TouchableOpacity
+                onPress={() =>
+                  this.setState({showPicker: true, reminder: false, mode: 'date'})
+                }>
+                <View style={[styles.taskFieldView, {flexDirection: 'row'}]}>
+                  <Text style={[styles.textInput, {flex: 1}]}>
+                    {projectStartDate == ''
+                      ? 'Project start date'
+                      : projectStartDate + ' ' +projectStartTime}
+                  </Text>
+                  <Image
+                    style={styles.calendarIcon}
+                    source={icons.calendar}
+                    resizeMode={'center'}
+                  />
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() =>
+                  this.setState({showPicker: true, reminder: true, mode: 'date'})
+                }>
+                <View style={[styles.taskFieldView, {flexDirection: 'row'}]}>
+                  <Text style={[styles.textInput, {flex: 1}]}>
+                    {projectEndDate == ''
+                      ? 'Project end date'
+                      : projectEndDate+ ' ' +projectEndTime}
+                  </Text>
+                  <Image
+                    style={styles.calendarIcon}
+                    source={icons.calendar}
+                    resizeMode={'center'}
+                  />
+                </View>
+              </TouchableOpacity>
+              <View style={styles.taskFieldView}>
+                <TextInput
+                  style={[styles.textInput, {width: '95%'}]}
+                  placeholder={'Estimated project timeline'}
+                  value={estimateDatesText}
+                  onChangeText={estimateDates => this.setState({estimateDatesText})}
+                  editable={false}
+                />
+              </View>
+              {this.state.showPicker ? this.renderDatePicker() : null}
+              {this.state.showTimePicker ? this.renderTimePicker() : null}   
+          </ScrollView>
+          <View style={styles.bottomContainer}>
+            <TouchableOpacity onPress={() => this.saveProject()}>
+                  <View style={styles.button}>
+                    <Image
+                      style={[styles.bottomBarIcon, {marginRight: 15, marginLeft: 10}]}
+                      source={icons.folderWhite}
+                      resizeMode={'center'}
+                    />
+                    <View style={{flex: 1}}>
+                      <Text style={styles.buttonText}>Add new Project</Text>
+                    </View>
 
-            <Image
-              style={[styles.addIcon, {marginRight: 10}]}
-              source={icons.add}
-              resizeMode={'center'}
-            />
+                    <Image
+                      style={[styles.addIcon, {marginRight: 10}]}
+                      source={icons.add}
+                      resizeMode={'center'}
+                    />
+                  </View>
+                </TouchableOpacity>
           </View>
-        </TouchableOpacity>
-        {this.state.showPicker ? this.renderDatePicker() : null}
-        {this.state.showTimePicker ? this.renderTimePicker() : null}
-        {addProjectLoading && <Loader/>}
-        <AwesomeAlert
-          show={showAlert}
-          showProgress={false}
-          title={alertTitle}
-          message={alertMsg}
-          closeOnTouchOutside={true}
-          closeOnHardwareBackPress={false}
-          showCancelButton={false}
-          showConfirmButton={true}
-          cancelText=""
-          confirmText="OK"
-          confirmButtonColor={colors.primary}
-          onConfirmPressed={() => {
-            this.hideAlert();
-          }}
-        />
-      </ScrollView>
+            {addProjectLoading && <Loader/>}
+            <AwesomeAlert
+                show={showAlert}
+                showProgress={false}
+                title={alertTitle}
+                message={alertMsg}
+                closeOnTouchOutside={true}
+                closeOnHardwareBackPress={false}
+                showCancelButton={false}
+                showConfirmButton={true}
+                cancelText=""
+                confirmText="OK"
+                confirmButtonColor={colors.primary}
+                onConfirmPressed={() => {
+                  this.hideAlert();
+                }}
+              />
+      </View>
+      
     );
   }
 }
@@ -569,6 +574,12 @@ const styles = EStyleSheet.create({
   addIcon: {
     width: '28rem',
     height: '28rem',
+  },
+  bottomContainer: {
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
+    marginBottom: 15,
   },
 });
 

@@ -30,10 +30,13 @@ class Header extends Component {
                 break;
             case 'workLoadScreen':
                 NavigationService.navigate('WorkloadSearchScreen'); 
-                break;            
+                break; 
+            case 'tasksScreen':
+                NavigationService.navigate('SearchGruopTaskScreen'); 
+                break;                
           }
     }
-
+    
     navigateToAddNew (screen) {
         switch (screen) {
             case 'projectScreen':
