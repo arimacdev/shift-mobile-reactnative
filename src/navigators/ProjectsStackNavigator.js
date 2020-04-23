@@ -127,18 +127,7 @@ export const ProjectsStackNavigator = createStackNavigator(
     TasksDetailsScreen: {
       screen: TasksDetailsScreen,
       navigationOptions: ({navigation}) => ({
-        header: (
-          <Header
-            isTasks={false}
-            navigation={navigation}
-            title={'Task Details'
-              // navigation.state.params
-              //   ? navigation.state.params.taskDetails.taskName
-              //   : ''
-            }
-            onPress={() => navigation.goBack()}
-          />
-        ),
+        header: null,
       }),
     },
     SubTaskScreen: {

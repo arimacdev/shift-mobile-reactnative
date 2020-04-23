@@ -52,7 +52,7 @@ class Header extends Component {
     render() {
         const { onPress, isHome, title,style,addButton,
             screen = {},search=false , isTasks=false, isUser=false, isWorkload=false, isWorkloadFilter=false,
-            loginUserType,isSearch,searchNavigation,isAddNew,addNewNavigation} = this.props;
+            loginUserType,isSearch,searchNavigation,isAddNew,addNewNavigation,drawStatus,taskStatus} = this.props;
         // console.log('PPPP',this.props)
         return (
             <SafeAreaView style={{ backgroundColor: colors.primary }}>
@@ -132,7 +132,17 @@ class Header extends Component {
                                 <Icon name={search ? 'ios-close' : 'ios-arrow-round-back'} style={styles.iconBack} type={'Ionicons'} />
                                 </TouchableOpacity>
                             </View>
-                            <View style={[styles.leftContainer,{flex: 0.7}]}>
+                            <View style={[styles.leftContainer,{flex: 0.7},{flexDirection:"row"}]}>
+                                { drawStatus && 
+                                   <Image
+                                   style={styles.completionIcon}
+                                   source={
+                                        taskStatus == 'Closed'
+                                       ? icons.rightCircule
+                                       : icons.whiteCircule
+                                        }
+                                   />
+                                }
                                 <Text style={styles.title}>{title}</Text>
                             </View>
                             <View style={styles.rightContainer} >
@@ -254,7 +264,11 @@ const styles = EStyleSheet.create({
         fontSize: '23rem',
         color: colors.white,
         fontWeight: '800',
-    }
+    },
+    completionIcon: {
+        width: '25rem',
+        height: '25rem',
+      },
 });
 
 const mapStateToProps = state => {

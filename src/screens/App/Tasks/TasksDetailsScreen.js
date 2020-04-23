@@ -26,6 +26,7 @@ import {SkypeIndicator} from 'react-native-indicators';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import APIServices from '../../../services/APIServices';
 import AwesomeAlert from 'react-native-awesome-alerts';
+import Header from '../../../components/Header';
 
 const Placeholder = () => (
   <View style={styles.landing}>
@@ -719,14 +720,26 @@ showAlert(title,msg){
     );
   }
 
+  onBackPress() {
+    this.props.navigation.goBack();
+  }
+
   render() {
     let taskStatus = this.state.taskStatus;
     let dataLoading = this.state.dataLoading;
     let showAlert = this.state.showAlert;
     let alertTitle = this.state.alertTitle;
     let alertMsg = this.state.alertMsg;
+    let taskName = this.state.taskName;
+
     return (
       <ScrollView style={styles.backgroundImage}>
+        <Header
+            title={taskName ? taskName : ''}
+            drawStatus = {true}
+            taskStatus={taskStatus ? taskStatus : ''}
+            onPress={() => this.onBackPress()}
+        />
           <View>
             <View style={styles.projectFilerView}>
             <Dropdown
