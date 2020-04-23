@@ -35,6 +35,7 @@
     "react-native-indicators": "^0.16.0",
     "react-native-material-dropdown": "^0.11.1",
     "react-native-modal-filter-picker": "^2.0.0",
+    "react-native-popup-menu": "^0.15.7",
     "react-native-progress": "^4.1.2",
     "react-native-reanimated": "^1.2.0",
     "react-native-screens": "^2.3.0",

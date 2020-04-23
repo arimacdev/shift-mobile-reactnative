@@ -23,6 +23,8 @@ import AwesomeAlert from 'react-native-awesome-alerts';
 import _ from 'lodash';
 import AsyncStorage from '@react-native-community/async-storage';
 const {height, width} = Dimensions.get('window');
+import {MenuProvider} from 'react-native-popup-menu';
+import PopupMenu from '../../../components/PopupMenu';
 
 class AddPeopleScreen extends Component {
   constructor(props) {
@@ -94,6 +96,7 @@ class AddPeopleScreen extends Component {
               activeUsers.data[i].firstName +
               ' ' +
               activeUsers.data[i].lastName,
+            userImage: activeUsers.data[i].profileImage,
           });
         }
       }
@@ -198,6 +201,71 @@ class AddPeopleScreen extends Component {
     });
   }
 
+  renderMenuTrugger() {
+    return (
+      <View style={[styles.taskFieldView, {marginTop: 30}]}>
+        <Text
+          style={
+            this.props.userID == ''
+              ? styles.inputsTextDefualt
+              : styles.inputsText
+          }>
+          ddddd
+        </Text>
+      </View>
+    );
+  }
+
+  userImage = function(item) {
+    let userImage = item.profileImage;
+
+    if (userImage) {
+      return (
+        <FadeIn>
+          <Image source={{uri: userImage}} style={styles.userIcon} />
+        </FadeIn>
+      );
+    } else {
+      return (
+        <Image
+          style={styles.userIcon}
+          source={require('../../../asserts/img/defult_user.png')}
+          resizeMode="contain"
+        />
+      );
+    }
+  };
+
+  renderUserList(item) {
+    const {navigation} = this.props;
+    return (
+      // <TouchableOpacity
+      //   onPress={() =>
+      //     this.onSelectUser(item.firstName + ' ' + item.lastName, item.userId)
+      //   }>
+        <View
+          style={[
+            styles.projectView,
+            {
+              backgroundColor:
+                item.firstName + ' ' + item.lastName ==
+                navigation.state.params.userName
+                  ? colors.projectBgColor
+                  : '',
+            },
+          ]}>
+          {this.userImage(item)}
+          <View style={{flex: 1}}>
+            <Text style={styles.text}>
+              {item.firstName + ' ' + item.lastName}
+            </Text>
+          </View>
+          {/* {this.colorCode(item)} */}
+        </View>
+      // </TouchableOpacity>
+    );
+  }
+
   render() {
     let visiblePeopleModal = this.state.visiblePeopleModal;
     let activeUsers = this.state.activeUsers;
@@ -209,114 +277,121 @@ class AddPeopleScreen extends Component {
     let alertMsg = this.state.alertMsg;
 
     return (
-      <View style={{flex: 1}}>
-        <ScrollView style={styles.container}>
-          <View style={[styles.taskFieldView, {marginTop: 30}]}>
-            <Text
-              onPress={() => this.itemNameClick()}
-              style={
-                userID == '' ? styles.inputsTextDefualt : styles.inputsText
-              }>
-              {userName}
-            </Text>
-          </View>
-          <View style={[styles.taskFieldView]}>
-            <TextInput
-              style={[styles.textInput, {width: '95%'}]}
-              placeholder={'Role'}
-              value={role}
-              placeholderTextColor={colors.placeholder}
-              onChangeText={role => this.setState({role})}
+      <MenuProvider>
+        <View style={{flex: 1}}>
+          <ScrollView style={styles.container}>
+            <View style={[styles.taskFieldView, {marginTop: 30}]}>
+              <Text
+                onPress={() => this.itemNameClick()}
+                style={
+                  userID == '' ? styles.inputsTextDefualt : styles.inputsText
+                }>
+                {userName}
+              </Text>
+            </View>
+            <View style={[styles.taskFieldView]}>
+              <TextInput
+                style={[styles.textInput, {width: '95%'}]}
+                placeholder={'Role'}
+                value={role}
+                placeholderTextColor={colors.placeholder}
+                onChangeText={role => this.setState({role})}
+              />
+            </View>
+            <View style={styles.checkBoxContainer}>
+              <View style={{flex: 1}}>
+                <RoundCheckbox
+                  size={18}
+                  checked={this.state.isSelected}
+                  backgroundColor={colors.lightGreen}
+                  onValueChange={newValue => this.toggleCheckBox(newValue)}
+                  borderColor={'gray'}
+                />
+              </View>
+              <View style={styles.CheckBoxLableContainer}>
+                <Text style={styles.checkBoxText}>Add as a Admin</Text>
+              </View>
+            </View>
+            <PopupMenu
+              userID={userID}
+              menuTrigger={this.renderMenuTrugger()}
+              menuOptions={(item)=>this.renderUserList(item)}
+              data={this.state.activeUsers}
             />
-          </View>
-          <View style={styles.checkBoxContainer}>
-            <View style={{flex: 1}}>
-              <RoundCheckbox
-                size={18}
-                checked={this.state.isSelected}
-                backgroundColor={colors.lightGreen}
-                onValueChange={newValue => this.toggleCheckBox(newValue)}
-                borderColor={'gray'}
-              />
-            </View>
-            <View style={styles.CheckBoxLableContainer}>
-              <Text style={styles.checkBoxText}>Add as a Admin</Text>
-            </View>
-          </View>
+            {/* <ModalFilterPicker
+              visible={visiblePeopleModal}
+              keyboardShouldPersistTaps="handled"
+              onSelect={this.onSelectUser}
+              onCancel={this.onCancelUser}
+              options={activeUsers}
+              cancelButtonStyle={styles.modelCancel}
+              cancelButtonTextStyle={styles.modelCancelText}
+              title={'Select a User'}
+              titleTextStyle={styles.titleTextStyle}
+            /> */}
+            <AwesomeAlert
+              show={showAlert}
+              showProgress={false}
+              title={alertTitle}
+              message={alertMsg}
+              closeOnTouchOutside={true}
+              closeOnHardwareBackPress={false}
+              showCancelButton={false}
+              showConfirmButton={true}
+              cancelText=""
+              confirmText="OK"
+              confirmButtonColor={colors.primary}
+              onConfirmPressed={() => {
+                this.hideAlert();
+              }}
+            />
+          </ScrollView>
+          <View style={styles.bottomContainer}>
+            <TouchableOpacity onPress={() => this.saveUser()}>
+              <View style={styles.button}>
+                <Image
+                  style={[
+                    styles.bottomBarIcon,
+                    {marginRight: 15, marginLeft: 10},
+                  ]}
+                  source={icons.userWhite}
+                  resizeMode={'center'}
+                />
+                <View style={{flex: 1}}>
+                  <Text style={styles.buttonText}>Save</Text>
+                </View>
 
-          <ModalFilterPicker
-            visible={visiblePeopleModal}
-            keyboardShouldPersistTaps="handled"
-            onSelect={this.onSelectUser}
-            onCancel={this.onCancelUser}
-            options={activeUsers}
-            cancelButtonStyle={styles.modelCancel}
-            cancelButtonTextStyle={styles.modelCancelText}
-            title={'Select a User'}
-            titleTextStyle={styles.titleTextStyle}
-          />
-          <AwesomeAlert
-            show={showAlert}
-            showProgress={false}
-            title={alertTitle}
-            message={alertMsg}
-            closeOnTouchOutside={true}
-            closeOnHardwareBackPress={false}
-            showCancelButton={false}
-            showConfirmButton={true}
-            cancelText=""
-            confirmText="OK"
-            confirmButtonColor={colors.primary}
-            onConfirmPressed={() => {
-              this.hideAlert();
-            }}
-          />
-        </ScrollView>
-        <View style={styles.bottomContainer}>
-          <TouchableOpacity onPress={() => this.saveUser()}>
-            <View style={styles.button}>
-              <Image
-                style={[
-                  styles.bottomBarIcon,
-                  {marginRight: 15, marginLeft: 10},
-                ]}
-                source={icons.userWhite}
-                resizeMode={'center'}
-              />
-              <View style={{flex: 1}}>
-                <Text style={styles.buttonText}>Save</Text>
+                <Image
+                  style={[styles.addIcon, {marginRight: 10}]}
+                  source={icons.addGreen}
+                  resizeMode={'center'}
+                />
               </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => this.cancelUserSave()}>
+              <View style={styles.buttonDelete}>
+                <Image
+                  style={[
+                    styles.bottomBarIcon,
+                    {marginRight: 15, marginLeft: 10},
+                  ]}
+                  source={icons.userWhite}
+                  resizeMode={'center'}
+                />
+                <View style={{flex: 1}}>
+                  <Text style={styles.buttonText}>Cancel</Text>
+                </View>
 
-              <Image
-                style={[styles.addIcon, {marginRight: 10}]}
-                source={icons.addGreen}
-                resizeMode={'center'}
-              />
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => this.cancelUserSave()}>
-            <View style={styles.buttonDelete}>
-              <Image
-                style={[
-                  styles.bottomBarIcon,
-                  {marginRight: 15, marginLeft: 10},
-                ]}
-                source={icons.userWhite}
-                resizeMode={'center'}
-              />
-              <View style={{flex: 1}}>
-                <Text style={styles.buttonText}>Cancel</Text>
+                <Image
+                  style={[styles.addIcon, {marginRight: 10}]}
+                  source={icons.delete}
+                  resizeMode={'center'}
+                />
               </View>
-
-              <Image
-                style={[styles.addIcon, {marginRight: 10}]}
-                source={icons.delete}
-                resizeMode={'center'}
-              />
-            </View>
-          </TouchableOpacity>
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
+      </MenuProvider>
     );
   }
 }
@@ -392,7 +467,7 @@ const styles = EStyleSheet.create({
     width: '28rem',
     height: '28rem',
   },
-  bottomContainer:{
+  bottomContainer: {
     position: 'absolute',
     bottom: 0,
     width: '100%',
@@ -442,6 +517,28 @@ const styles = EStyleSheet.create({
     marginTop: '28rem',
     color: colors.textPlaceHolderColor,
     textAlign: 'left',
+  },
+  userIcon:{
+    width: '45rem',
+    height: '45rem',
+  },
+  projectView: {
+    height: '70rem',
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginHorizontal: '20rem',
+    borderBottomWidth: 1,
+    borderBottomColor: colors.lighterGray,
+  },
+  text: {
+    fontSize: '12rem',
+    color: colors.projectText,
+    textAlign: 'center',
+    fontWeight: 'bold',
+    lineHeight: '17rem',
+    fontFamily: 'CircularStd-Medium',
+    textAlign: 'left',
+    marginLeft: '10rem',
   },
 });
 
