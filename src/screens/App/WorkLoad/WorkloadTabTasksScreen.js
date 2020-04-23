@@ -352,7 +352,12 @@ class WorkloadTabTasksScreen extends Component {
 
   renderProjectList(item, index) {
     return (
-      <TouchableOpacity>
+      <TouchableOpacity
+        onPress={() =>
+          this.props.navigation.navigate('WorkloadTasksDetailsScreen', {
+            workloadTasksDetails: item,
+          })
+        }>
         <View style={styles.projectView}>
           <Image
             style={styles.completionIcon}

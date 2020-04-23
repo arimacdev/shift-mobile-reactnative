@@ -5,6 +5,7 @@ import Header from '../components/Header';
 import WorkloadScreen from '../screens/App/WorkLoad/WorkloadScreen';
 import WorkloadTabScreen from '../screens/App/WorkLoad/WorkloadTabScreen';
 import WorkloadSearchScreen from '../screens/App/WorkLoad/WorkloadSearchScreen';
+import WorkloadTasksDetailsScreen from '../screens/App/WorkLoad/WorkloadTasksDetailsScreen';
 
 export const WorkloadStackNavigator = createStackNavigator(
   {
@@ -50,6 +51,22 @@ export const WorkloadStackNavigator = createStackNavigator(
           <Header
             navigation={navigation}
             title={'Workload Search'}
+            onPress={() => navigation.goBack()}
+          />
+        ),
+      }),
+    },
+    WorkloadTasksDetailsScreen: {
+      screen: WorkloadTasksDetailsScreen,
+      navigationOptions: ({navigation}) => ({
+        header: (
+          <Header
+            navigation={navigation}
+            title={
+              navigation.state.params
+                ? navigation.state.params.workloadTasksDetails.taskName
+                : ''
+            }
             onPress={() => navigation.goBack()}
           />
         ),
