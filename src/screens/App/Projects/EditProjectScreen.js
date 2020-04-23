@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   TextInput,
   ScrollView,
-  Alert
+  Alert,
 } from 'react-native';
 import {connect} from 'react-redux';
 import * as actions from '../../../redux/actions';
@@ -27,45 +27,46 @@ import AsyncStorage from '@react-native-community/async-storage';
 import Loader from '../../../components/Loader';
 import APIServices from '../../../services/APIServices';
 import NavigationService from '../../../services/NavigationService';
+const {height, width} = Dimensions.get('window');
 
 let dropData = [
-    {
-        id: 'Ongoing',
-        value: 'Ongoing',
-    },
-    {
-        id: 'Support',
-        value: 'Support',
-    },
-    {
-        id: 'Finished',
-        value: 'Finished',
-    },
-    {
-      id: 'Presales',
-      value: 'Presales',
-    },
-    {
-      id: 'Presales : Project Discovery',
-      value: 'Presales : Project Discovery',
-    },
-    {
-      id: 'Presales : Quotation Submission',
-      value: 'Presales : Quotation Submission',
-    },
-    {
-      id: 'Presales : Negotiation',
-      value: 'Presales : Negotiation',
-    },
-    {
-      id: 'Presales : Confirmed',
-      value: 'Presales : Confirmed',
-    },
-    {
-      id: 'Presales : Lost',
-      value: 'Presales : Lost',
-    },
-]
+  {
+    id: 'Ongoing',
+    value: 'Ongoing',
+  },
+  {
+    id: 'Support',
+    value: 'Support',
+  },
+  {
+    id: 'Finished',
+    value: 'Finished',
+  },
+  {
+    id: 'Presales',
+    value: 'Presales',
+  },
+  {
+    id: 'Presales : Project Discovery',
+    value: 'Presales : Project Discovery',
+  },
+  {
+    id: 'Presales : Quotation Submission',
+    value: 'Presales : Quotation Submission',
+  },
+  {
+    id: 'Presales : Negotiation',
+    value: 'Presales : Negotiation',
+  },
+  {
+    id: 'Presales : Confirmed',
+    value: 'Presales : Confirmed',
+  },
+  {
+    id: 'Presales : Lost',
+    value: 'Presales : Lost',
+  },
+];
 
 class EditProjectScreen extends Component {
   constructor(props) {
@@ -85,135 +86,157 @@ class EditProjectScreen extends Component {
       files: [],
       notes: '',
       estimateTime: '',
-      projectName : '',
-      projectClient : '',
-      projectStartDate : '',
-      projectStartDateValue : '',
-      projectStartTime : '',
-      projectEndDate : '',
-      projectEndDateValue : '',
-      projectEndTime : '',
-      estimateDates : '',
-      showAlert : false,
-      alertTitle : '',
-      alertMsg : '',
-      dataLoading : false,
-      projectID : '',
-      projectStatus : '',
-      projectStatusValue : '',
-      startDateChanged : false,
-      endDateChanged : false,
+      projectName: '',
+      projectClient: '',
+      projectStartDate: '',
+      projectStartDateValue: '',
+      projectStartTime: '',
+      projectEndDate: '',
+      projectEndDateValue: '',
+      projectEndTime: '',
+      estimateDates: '',
+      showAlert: false,
+      alertTitle: '',
+      alertMsg: '',
+      dataLoading: false,
+      projectID: '',
+      projectStatus: '',
+      projectStatusValue: '',
+      startDateChanged: false,
+      endDateChanged: false,
     };
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    if (prevProps.updateProjectError !== this.props.updateProjectError
-        && this.props.updateProjectError && this.props.updateProjectErrorMessage == '') {
-          this.showAlert("","Error While Project Update");
+    if (
+      prevProps.updateProjectError !== this.props.updateProjectError &&
+      this.props.updateProjectError &&
+      this.props.updateProjectErrorMessage == ''
+    ) {
+      this.showAlert('', 'Error While Project Update');
     }
 
-    if (prevProps.updateProjectError !== this.props.updateProjectError
-      && this.props.updateProjectError && this.props.updateProjectErrorMessage != '') {
-        this.showAlert("",this.props.updateProjectErrorMessage);
+    if (
+      prevProps.updateProjectError !== this.props.updateProjectError &&
+      this.props.updateProjectError &&
+      this.props.updateProjectErrorMessage != ''
+    ) {
+      this.showAlert('', this.props.updateProjectErrorMessage);
     }
-  
-    if (prevProps.updateProjectSuccess !== this.props.updateProjectSuccess
-          && this.props.updateProjectSuccess) {
-            this.showAlert("","Project Updated");
-            this.props.navigation.goBack();
+
+    if (
+      prevProps.updateProjectSuccess !== this.props.updateProjectSuccess &&
+      this.props.updateProjectSuccess
+    ) {
+      this.showAlert('', 'Project Updated');
+      this.props.navigation.goBack();
     }
     // delete project
-    if (prevProps.deleteProjectError !== this.props.deleteProjectError
-      && this.props.deleteProjectError && this.props.deleteProjectErrorMessage == '') {
-        this.showAlert("","Error While Project Deleting the Project");
+    if (
+      prevProps.deleteProjectError !== this.props.deleteProjectError &&
+      this.props.deleteProjectError &&
+      this.props.deleteProjectErrorMessage == ''
+    ) {
+      this.showAlert('', 'Error While Project Deleting the Project');
     }
 
-    if (prevProps.deleteProjectError !== this.props.deleteProjectError
-      && this.props.deleteProjectError && this.props.deleteProjectErrorMessage != '') {
-        this.showAlert("",this.props.deleteProjectErrorMessage);
+    if (
+      prevProps.deleteProjectError !== this.props.deleteProjectError &&
+      this.props.deleteProjectError &&
+      this.props.deleteProjectErrorMessage != ''
+    ) {
+      this.showAlert('', this.props.deleteProjectErrorMessage);
     }
 
-    if (prevProps.deleteProjectSuccess !== this.props.deleteProjectSuccess
-          && this.props.deleteProjectSuccess) {
-            this.showAlert("","Project Deleted");
-            NavigationService.navigate('ProjectsScreen');
+    if (
+      prevProps.deleteProjectSuccess !== this.props.deleteProjectSuccess &&
+      this.props.deleteProjectSuccess
+    ) {
+      this.showAlert('', 'Project Deleted');
+      NavigationService.navigate('ProjectsScreen');
     }
   }
 
   async componentDidMount() {
-    const {navigation: {state: {params}}} = this.props;
+    const {
+      navigation: {
+        state: {params},
+      },
+    } = this.props;
     let projectId = params.projDetails;
-    this.setState({dataLoading:true});
+    this.setState({dataLoading: true});
     projectData = await APIServices.getProjectData(projectId);
-    if(projectData.message == 'success'){
-        await this.setProjectStartDate(projectData.data.projectStartDate);
-        await this.setProjectEndDate(projectData.data.projectEndDate);
-        await this.setProjectStatus(projectData.data.projectStatus);
-        this.setState({
-            projectID : projectData.data.projectId,
-            projectName : projectData.data.projectName,
-            projectClient : projectData.data.clientId,
-            //projectStartDate : startDate,
-            //projectEndDate : endDate,
-            //projectStatus : projectStatus,
-            dataLoading : false,
-        });
-    }else{
-        this.setState({dataLoading:false});
+    if (projectData.message == 'success') {
+      await this.setProjectStartDate(projectData.data.projectStartDate);
+      await this.setProjectEndDate(projectData.data.projectEndDate);
+      await this.setProjectStatus(projectData.data.projectStatus);
+      this.setState({
+        projectID: projectData.data.projectId,
+        projectName: projectData.data.projectName,
+        projectClient: projectData.data.clientId,
+        //projectStartDate : startDate,
+        //projectEndDate : endDate,
+        //projectStatus : projectStatus,
+        dataLoading: false,
+      });
+    } else {
+      this.setState({dataLoading: false});
     }
   }
 
-  setProjectStartDate(selectedDate){
+  setProjectStartDate(selectedDate) {
     this.setState({
-        projectStartDate : moment.parseZone(selectedDate).format('Do MMMM YYYY'),
-        projectStartDateValue :  moment.parseZone(selectedDate).format('DD MM YYYY'),
-        projectStartTime :   moment.parseZone(selectedDate).format('hh:mmA'),
+      projectStartDate: moment.parseZone(selectedDate).format('Do MMMM YYYY'),
+      projectStartDateValue: moment
+        .parseZone(selectedDate)
+        .format('DD MM YYYY'),
+      projectStartTime: moment.parseZone(selectedDate).format('hh:mmA'),
     });
   }
 
-  setProjectEndDate(selectedDate){
+  setProjectEndDate(selectedDate) {
     this.setState({
-        projectEndDate :  moment.parseZone(selectedDate).format('Do MMMM YYYY'),
-        projectEndDateValue :  moment.parseZone(selectedDate).format('DD MM YYYY'),
-        projectEndTime :  moment.parseZone(selectedDate).format('hh:mmA'),
+      projectEndDate: moment.parseZone(selectedDate).format('Do MMMM YYYY'),
+      projectEndDateValue: moment.parseZone(selectedDate).format('DD MM YYYY'),
+      projectEndTime: moment.parseZone(selectedDate).format('hh:mmA'),
     });
   }
 
-  setProjectStatus(status){
+  setProjectStatus(status) {
     let statusValue = '';
     switch (status) {
-        case 'ongoing':
-              statusValue = 'Ongoing'
-              break;
-        case 'support':
-              statusValue = 'Support'
-              break;
-        case 'finished':
-              statusValue = 'Finished'
-              break;
-        case 'presales':
-              statusValue = 'Presales'
-              break;      
-        case 'presalesPD':  
-              statusValue = 'Presales : Project Discovery'
-              break;
-        case 'preSalesQS':
-              statusValue = 'Presales : Quotation Submission'
-              break;
-        case 'preSalesN':
-              statusValue = 'Presales : Negotiation'
-              break;
-        case 'preSalesC':
-              statusValue = 'Presales : Confirmed'
-              break;
-        case 'preSalesL' : 
-              statusValue = 'Presales : Lost'
-              break;
-      }
-      this.setState({
-        projectStatus : statusValue,
-        projectStatusValue : status,
-      })
+      case 'ongoing':
+        statusValue = 'Ongoing';
+        break;
+      case 'support':
+        statusValue = 'Support';
+        break;
+      case 'finished':
+        statusValue = 'Finished';
+        break;
+      case 'presales':
+        statusValue = 'Presales';
+        break;
+      case 'presalesPD':
+        statusValue = 'Presales : Project Discovery';
+        break;
+      case 'preSalesQS':
+        statusValue = 'Presales : Quotation Submission';
+        break;
+      case 'preSalesN':
+        statusValue = 'Presales : Negotiation';
+        break;
+      case 'preSalesC':
+        statusValue = 'Presales : Confirmed';
+        break;
+      case 'preSalesL':
+        statusValue = 'Presales : Lost';
+        break;
+    }
+    this.setState({
+      projectStatus: statusValue,
+      projectStatusValue: status,
+    });
   }
 
   renderBase() {
@@ -240,21 +263,21 @@ class EditProjectScreen extends Component {
     if (event.type == 'set') {
       if (this.state.reminder) {
         this.setState({
-          projectEndDate : newDate,
-          projectEndDateValue : newDateValue,
+          projectEndDate: newDate,
+          projectEndDateValue: newDateValue,
           showPicker: false,
           showTimePicker: true,
           dateReminder: new Date(selectedDate),
-          endDateChanged : true,
+          endDateChanged: true,
         });
       } else {
         this.setState({
-          projectStartDate : newDate,
-          projectStartDateValue : newDateValue,
+          projectStartDate: newDate,
+          projectStartDateValue: newDateValue,
           showPicker: false,
           showTimePicker: true,
           date: new Date(selectedDate),
-          startDateChanged : true,
+          startDateChanged: true,
         });
       }
     }
@@ -268,15 +291,15 @@ class EditProjectScreen extends Component {
     if (event.type == 'set') {
       if (this.state.reminder) {
         this.setState({
-          projectEndTime : newTime,
+          projectEndTime: newTime,
           selectedTimeReminder: newTime,
           showPicker: false,
           showTimePicker: false,
           timeReminder: new Date(selectedTime),
         });
-      }else {
+      } else {
         this.setState({
-          projectStartTime : newTime,
+          projectStartTime: newTime,
           selectedTimeReminder: newTime,
           showPicker: false,
           showTimePicker: false,
@@ -284,7 +307,7 @@ class EditProjectScreen extends Component {
         });
       }
     }
-  };
+  }
 
   renderTimePicker() {
     return (
@@ -322,22 +345,26 @@ class EditProjectScreen extends Component {
     );
   }
 
-  reomoveProject (){
+  reomoveProject() {
     Alert.alert(
-			'Delete Project',
-			'Are you sure you want to delete this project',
-			[
-			  {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
-			  {text: 'Ok', onPress: () =>this.reomoveProjectSuccess()},
-			],
-			{ cancelable: false }
-		  );
-  };
+      'Delete Project',
+      'Are you sure you want to delete this project',
+      [
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+        {text: 'Ok', onPress: () => this.reomoveProjectSuccess()},
+      ],
+      {cancelable: false},
+    );
+  }
 
   reomoveProjectSuccess = () => {
     let projectID = this.state.projectID;
     this.props.deleteProject(projectID);
-	}
+  };
 
   saveProject() {
     let projectID = this.state.projectID;
@@ -352,116 +379,159 @@ class EditProjectScreen extends Component {
     let endDateChanged = this.state.endDateChanged;
     let projectStatusValue = this.state.projectStatusValue;
 
-    if(this.validateProject(projectName,projectClient,projectStartDateValue,projectEndDateValue,projectStatus,startDateChanged,endDateChanged)){
-      let IsoStartDate = projectStartDateValue ? moment(projectStartDateValue + projectStartTime,'DD/MM/YYYY hh:mmA').format('YYYY-MM-DD[T]HH:mm:ss') : '';
-      let IsoSEndDate = projectEndDateValue ? moment(projectEndDateValue + projectEndTime,'DD/MM/YYYY hh:mmA').format('YYYY-MM-DD[T]HH:mm:ss') : '';
+    if (
+      this.validateProject(
+        projectName,
+        projectClient,
+        projectStartDateValue,
+        projectEndDateValue,
+        projectStatus,
+        startDateChanged,
+        endDateChanged,
+      )
+    ) {
+      let IsoStartDate = projectStartDateValue
+        ? moment(
+            projectStartDateValue + projectStartTime,
+            'DD/MM/YYYY hh:mmA',
+          ).format('YYYY-MM-DD[T]HH:mm:ss')
+        : '';
+      let IsoSEndDate = projectEndDateValue
+        ? moment(
+            projectEndDateValue + projectEndTime,
+            'DD/MM/YYYY hh:mmA',
+          ).format('YYYY-MM-DD[T]HH:mm:ss')
+        : '';
       AsyncStorage.getItem('userID').then(userID => {
-        this.props.updateproject(projectID,userID,projectName,projectClient,IsoStartDate,IsoSEndDate,projectStatusValue);
+        this.props.updateproject(
+          projectID,
+          userID,
+          projectName,
+          projectClient,
+          IsoStartDate,
+          IsoSEndDate,
+          projectStatusValue,
+        );
       });
-     
     }
-  };
+  }
 
-  validateProject(projectName,projectClient,projectStartDateValue,projectEndDateValue,projectStatus,startDateChanged,endDateChanged) {
+  validateProject(
+    projectName,
+    projectClient,
+    projectStartDateValue,
+    projectEndDateValue,
+    projectStatus,
+    startDateChanged,
+    endDateChanged,
+  ) {
     if (!projectName && _.isEmpty(projectName)) {
-      this.showAlert("","Please Enter the Project Name");
+      this.showAlert('', 'Please Enter the Project Name');
       return false;
     }
     if (!projectClient && _.isEmpty(projectClient)) {
-      this.showAlert("","Please Enter the Project Client");
-        return false;
+      this.showAlert('', 'Please Enter the Project Client');
+      return false;
     }
 
     if (!projectStatus && _.isEmpty(projectStatus)) {
-        this.showAlert("","Please select the Project Status");
-          return false;
+      this.showAlert('', 'Please select the Project Status');
+      return false;
     }
 
     if (!projectStartDateValue && _.isEmpty(projectStartDateValue)) {
-      this.showAlert("","Please a Start Date");
+      this.showAlert('', 'Please a Start Date');
       return false;
     }
     if (!projectEndDateValue && _.isEmpty(projectEndDateValue)) {
-      this.showAlert("","Please a Start End");
-        return false;
+      this.showAlert('', 'Please a Start End');
+      return false;
     }
 
-    if(projectStartDateValue && !_.isEmpty(projectStartDateValue)  && startDateChanged){
-      let startDate  = moment(projectStartDateValue, "DD MM YYYY");
+    if (
+      projectStartDateValue &&
+      !_.isEmpty(projectStartDateValue) &&
+      startDateChanged
+    ) {
+      let startDate = moment(projectStartDateValue, 'DD MM YYYY');
       let today = moment(new Date()).format('DD MM YYYY');
-      let endDate = moment(today, "DD MM YYYY");
-      let totalDates = startDate.diff(endDate, "days");
-      if(totalDates < 0){
-        this.showAlert("","Start date cannot be a past date");
+      let endDate = moment(today, 'DD MM YYYY');
+      let totalDates = startDate.diff(endDate, 'days');
+      if (totalDates < 0) {
+        this.showAlert('', 'Start date cannot be a past date');
         return false;
       }
-    } 
-    if(projectEndDateValue && !_.isEmpty(projectEndDateValue) && endDateChanged){
-      let startDate  = moment(projectStartDateValue, "DD MM YYYY");
-      let endDate  = moment(projectEndDateValue, "DD MM YYYY");
-      let totalDates = endDate.diff(startDate, "days");
-      if(totalDates < 0){
-        this.showAlert("","End date should be after start date");
+    }
+    if (
+      projectEndDateValue &&
+      !_.isEmpty(projectEndDateValue) &&
+      endDateChanged
+    ) {
+      let startDate = moment(projectStartDateValue, 'DD MM YYYY');
+      let endDate = moment(projectEndDateValue, 'DD MM YYYY');
+      let totalDates = endDate.diff(startDate, 'days');
+      if (totalDates < 0) {
+        this.showAlert('', 'End date should be after start date');
         return false;
       }
-    } 
+    }
     return true;
-  };
+  }
 
   onFilter(key) {
-    console.log("key",key);
+    console.log('key', key);
     let value = key;
     let searchValue = '';
     switch (value) {
       case 'Ongoing':
-            searchValue = 'ongoing'
-            break;
+        searchValue = 'ongoing';
+        break;
       case 'Support':
-            searchValue = 'support'
-            break;
+        searchValue = 'support';
+        break;
       case 'Finished':
-            searchValue = 'finished'
-            break;
-      case 'Presales':  
-            searchValue = 'presales'
-            break;      
-      case 'Presales : Project Discovery':  
-            searchValue = 'presalesPD'
-            break;
+        searchValue = 'finished';
+        break;
+      case 'Presales':
+        searchValue = 'presales';
+        break;
+      case 'Presales : Project Discovery':
+        searchValue = 'presalesPD';
+        break;
       case 'Presales : Quotation Submission':
-            searchValue = 'preSalesQS'
-            break;
+        searchValue = 'preSalesQS';
+        break;
       case 'Presales : Negotiation':
-            searchValue = 'preSalesN'
-            break;
+        searchValue = 'preSalesN';
+        break;
       case 'Presales : Confirmed':
-            searchValue = 'preSalesC'
-            break;
-      case 'Presales : Lost' : 
-            searchValue = 'preSalesL'
-            break;
+        searchValue = 'preSalesC';
+        break;
+      case 'Presales : Lost':
+        searchValue = 'preSalesL';
+        break;
     }
-  
-  this.setState({
-    projectStatus : key,
-    projectStatusValue : searchValue,
-  });
-}
 
-  hideAlert (){
     this.setState({
-      showAlert : false,
-      alertTitle : '',
-      alertMsg : '',
-    })
+      projectStatus: key,
+      projectStatusValue: searchValue,
+    });
   }
 
-  showAlert(title,msg){
+  hideAlert() {
     this.setState({
-      showAlert : true,
-      alertTitle : title,
-      alertMsg : msg,
-    })
+      showAlert: false,
+      alertTitle: '',
+      alertMsg: '',
+    });
+  }
+
+  showAlert(title, msg) {
+    this.setState({
+      showAlert: true,
+      alertTitle: title,
+      alertMsg: msg,
+    });
   }
 
   render() {
@@ -475,145 +545,156 @@ class EditProjectScreen extends Component {
     let projectStartTime = this.state.projectStartTime;
     let projectEndTime = this.state.projectEndTime;
     let dataLoading = this.props.dataLoading;
-    let projectStatus = this.state.projectStatus
+    let projectStatus = this.state.projectStatus;
     let updateProjectLoading = this.state.updateProjectLoading;
     let deleteProjectErrorMessage = this.state.deleteProjectErrorMessage;
-    
-    return (
-      <ScrollView style={{marginBottom: EStyleSheet.value('02rem')}}>
-        <View style={[styles.taskFieldView, {marginTop: 20}]}>
-          <TextInput
-            style={[styles.textInput, {width: '95%'}]}
-            placeholder={'Project Name'}
-            value={projectName}
-            onChangeText={projectName => this.setState({projectName})}
-          />
-        </View>
-        <View style={[styles.taskFieldView]}>
-          <TextInput
-            style={[styles.textInput, {width: '95%'}]}
-            placeholder={'Client'}
-            value={projectClient}
-            onChangeText={projectClient => this.setState({projectClient})}
-          />
-        </View>
-        <View style={styles.taskFieldView}>
-          <Dropdown
-            style={{paddingLeft: 5}}
-            label=""
-            labelFontSize={0}
-            fontSize={13}
-            data={dropData}
-            textColor={colors.gray}
-            error={''}
-            animationDuration={0.5}
-            containerStyle={{width: '100%'}}
-            overlayStyle={{width: '100%'}}
-            pickerStyle={{width: '89%', marginTop: 70, marginLeft: 15}}
-            dropdownPosition={0}
-            value={projectStatus}
-            itemColor={'black'}
-            selectedItemColor={'black'}
-            dropdownOffset={{top: 10}}
-            baseColor={colors.projectBgColor}
-            // renderBase={this.renderBase}
-            renderAccessory={this.renderBase}
-            itemTextStyle={{marginLeft: 15}}
-            itemPadding={10}
-            onChangeText={(value => this.onFilter(value))}
-          />
-        </View>
-        <TouchableOpacity
-          onPress={() =>
-            this.setState({showPicker: true, reminder: false, mode: 'date'})
-          }>
-          <View style={[styles.taskFieldView, {flexDirection: 'row'}]}>
-            <Text style={[styles.textInput, {flex: 1}]}>
-              {projectStartDate == ''
-                ? 'Project start date'
-                : projectStartDate + ' ' + projectStartTime}
-            </Text>
-            <Image
-              style={styles.calendarIcon}
-              source={icons.calendar}
-              resizeMode={'center'}
-            />
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() =>
-            this.setState({showPicker: true, reminder: true, mode: 'date'})
-          }>
-          <View style={[styles.taskFieldView, {flexDirection: 'row'}]}>
-            <Text style={[styles.textInput, {flex: 1}]}>
-              {projectEndDate == ''
-                ? 'Project end date'
-                : projectEndDate + ' ' +projectEndTime}
-            </Text>
-            <Image
-              style={styles.calendarIcon}
-              source={icons.calendar}
-              resizeMode={'center'}
-            />
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => this.saveProject()}>
-          <View style={styles.button}>
-            <Image
-              style={[styles.bottomBarIcon, {marginRight: 15, marginLeft: 10}]}
-              source={icons.folderWhite}
-              resizeMode={'center'}
-            />
-            <View style={{flex: 1}}>
-              <Text style={styles.buttonText}>Save Changes</Text>
-            </View>
 
-            <Image
-              style={[styles.addIcon, {marginRight: 10}]}
-              source={icons.addGreen}
-              resizeMode={'center'}
+    return (
+      <View style={{flex: 1}}>
+        <ScrollView style={styles.scrollView}>
+          <View style={[styles.taskFieldView, {marginTop: 20}]}>
+            <TextInput
+              style={[styles.textInput, {width: '95%'}]}
+              placeholder={'Project Name'}
+              value={projectName}
+              onChangeText={projectName => this.setState({projectName})}
             />
           </View>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => this.reomoveProject()}>
-          <View style={styles.buttonDelete}>
-            <Image
-              style={[styles.bottomBarIcon, {marginRight: 15, marginLeft: 10}]}
-              source={icons.folderWhite}
-              resizeMode={'center'}
+          <View style={[styles.taskFieldView]}>
+            <TextInput
+              style={[styles.textInput, {width: '95%'}]}
+              placeholder={'Client'}
+              value={projectClient}
+              onChangeText={projectClient => this.setState({projectClient})}
             />
-            <View style={{flex: 1}}>
-              <Text style={styles.buttonText}>Delete Project</Text>
+          </View>
+          <View style={styles.taskFieldView}>
+            <Dropdown
+              style={{paddingLeft: 5}}
+              label=""
+              labelFontSize={0}
+              fontSize={13}
+              data={dropData}
+              textColor={colors.gray}
+              error={''}
+              animationDuration={0.5}
+              containerStyle={{width: '100%'}}
+              overlayStyle={{width: '100%'}}
+              pickerStyle={{width: '89%', marginTop: 70, marginLeft: 15}}
+              dropdownPosition={0}
+              value={projectStatus}
+              itemColor={'black'}
+              selectedItemColor={'black'}
+              dropdownOffset={{top: 10}}
+              baseColor={colors.projectBgColor}
+              // renderBase={this.renderBase}
+              renderAccessory={this.renderBase}
+              itemTextStyle={{marginLeft: 15}}
+              itemPadding={10}
+              onChangeText={value => this.onFilter(value)}
+            />
+          </View>
+          <TouchableOpacity
+            onPress={() =>
+              this.setState({showPicker: true, reminder: false, mode: 'date'})
+            }>
+            <View style={[styles.taskFieldView, {flexDirection: 'row'}]}>
+              <Text style={[styles.textInput, {flex: 1}]}>
+                {projectStartDate == ''
+                  ? 'Project start date'
+                  : projectStartDate + ' ' + projectStartTime}
+              </Text>
+              <Image
+                style={styles.calendarIcon}
+                source={icons.calendar}
+                resizeMode={'center'}
+              />
             </View>
-            <Image
-              style={[styles.addIcon, {marginRight: 10}]}
-              source={icons.deleteWhite}
-              resizeMode={'center'}
-            />
-          </View>
-        </TouchableOpacity>
-        {this.state.showPicker ? this.renderDatePicker() : null}
-        {this.state.showTimePicker ? this.renderTimePicker() : null}
-        {dataLoading && <Loader/>}
-        {updateProjectLoading && <Loader/>}
-        {deleteProjectErrorMessage && <Loader/>}
-        <AwesomeAlert
-          show={showAlert}
-          showProgress={false}
-          title={alertTitle}
-          message={alertMsg}
-          closeOnTouchOutside={true}
-          closeOnHardwareBackPress={false}
-          showCancelButton={false}
-          showConfirmButton={true}
-          cancelText=""
-          confirmText="OK"
-          confirmButtonColor={colors.primary}
-          onConfirmPressed={() => {
-            this.hideAlert();
-          }}
-        />
-      </ScrollView>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() =>
+              this.setState({showPicker: true, reminder: true, mode: 'date'})
+            }>
+            <View style={[styles.taskFieldView, {flexDirection: 'row'}]}>
+              <Text style={[styles.textInput, {flex: 1}]}>
+                {projectEndDate == ''
+                  ? 'Project end date'
+                  : projectEndDate + ' ' + projectEndTime}
+              </Text>
+              <Image
+                style={styles.calendarIcon}
+                source={icons.calendar}
+                resizeMode={'center'}
+              />
+            </View>
+          </TouchableOpacity>
+          {this.state.showPicker ? this.renderDatePicker() : null}
+          {this.state.showTimePicker ? this.renderTimePicker() : null}
+          {dataLoading && <Loader />}
+          {updateProjectLoading && <Loader />}
+          {deleteProjectErrorMessage && <Loader />}
+          <AwesomeAlert
+            show={showAlert}
+            showProgress={false}
+            title={alertTitle}
+            message={alertMsg}
+            closeOnTouchOutside={true}
+            closeOnHardwareBackPress={false}
+            showCancelButton={false}
+            showConfirmButton={true}
+            cancelText=""
+            confirmText="OK"
+            confirmButtonColor={colors.primary}
+            onConfirmPressed={() => {
+              this.hideAlert();
+            }}
+          />
+        </ScrollView>
+        <View
+          style={styles.bottomContainer}>
+          <TouchableOpacity onPress={() => this.saveProject()}>
+            <View style={styles.button}>
+              <Image
+                style={[
+                  styles.bottomBarIcon,
+                  {marginRight: 15, marginLeft: 10},
+                ]}
+                source={icons.folderWhite}
+                resizeMode={'center'}
+              />
+              <View style={{flex: 1}}>
+                <Text style={styles.buttonText}>Save Changes</Text>
+              </View>
+
+              <Image
+                style={[styles.addIcon, {marginRight: 10}]}
+                source={icons.addGreen}
+                resizeMode={'center'}
+              />
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => this.reomoveProject()}>
+            <View style={styles.buttonDelete}>
+              <Image
+                style={[
+                  styles.bottomBarIcon,
+                  {marginRight: 15, marginLeft: 10},
+                ]}
+                source={icons.folderWhite}
+                resizeMode={'center'}
+              />
+              <View style={{flex: 1}}>
+                <Text style={styles.buttonText}>Delete Project</Text>
+              </View>
+              <Image
+                style={[styles.addIcon, {marginRight: 10}]}
+                source={icons.deleteWhite}
+                resizeMode={'center'}
+              />
+            </View>
+          </TouchableOpacity>
+        </View>
+      </View>
     );
   }
 }
@@ -622,13 +703,17 @@ const styles = EStyleSheet.create({
   backgroundImage: {
     flex: 1,
   },
-  titleView:{
-    marginTop:'20rem',
-    marginLeft:'20rem'
+  scrollView: {
+    marginBottom: height - 500,
+    flex: 1,
   },
-  titleText:{
+  titleView: {
+    marginTop: '20rem',
+    marginLeft: '20rem',
+  },
+  titleText: {
     color: colors.gray,
-    fontSize:'14rem'
+    fontSize: '14rem',
   },
   taskFieldView: {
     backgroundColor: colors.projectBgColor,
@@ -772,7 +857,7 @@ const styles = EStyleSheet.create({
     height: '55rem',
     marginHorizontal: '20rem',
   },
-  buttonDelete : {
+  buttonDelete: {
     flexDirection: 'row',
     backgroundColor: colors.lightRed,
     borderRadius: 5,
@@ -795,18 +880,24 @@ const styles = EStyleSheet.create({
     width: '28rem',
     height: '28rem',
   },
+  bottomContainer:{
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
+    marginBottom: 15,
+  }
 });
 
 const mapStateToProps = state => {
   return {
     updateProjectLoading: state.project.updateProjectLoading,
-    updateProjectError : state.project.updateProjectError,
-    updateProjectSuccess : state.project.updateProjectSuccess,
-    updateProjectErrorMessage : state.project.updateProjectErrorMessage,
+    updateProjectError: state.project.updateProjectError,
+    updateProjectSuccess: state.project.updateProjectSuccess,
+    updateProjectErrorMessage: state.project.updateProjectErrorMessage,
     deleteProjectLoading: state.project.deleteProjectLoading,
-    deleteProjectError : state.project.deleteProjectError,
-    deleteProjectSuccess : state.project.deleteProjectSuccess,
-    deleteProjectErrorMessage : state.project.deleteProjectErrorMessage,
+    deleteProjectError: state.project.deleteProjectError,
+    deleteProjectSuccess: state.project.deleteProjectSuccess,
+    deleteProjectErrorMessage: state.project.deleteProjectErrorMessage,
   };
 };
 export default connect(
