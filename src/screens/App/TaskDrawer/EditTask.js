@@ -26,7 +26,15 @@ class EditTask extends Component {
   }
 
   componentDidMount() {
-    
+    let selectedTaskGroupId = this.props.selectedTaskGroupId;
+    this.setState(
+      {
+        selectedTaskGroupId: selectedTaskGroupId,
+      },
+      () => {
+        this.getGroupDetails();
+      },
+    );
   };
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -43,31 +51,49 @@ class EditTask extends Component {
     }
   }
 
-
-  async deleteGroup () { 
-      let groupName = this.state.groupName;
-      let taskID = this.state.taskID;
-
-      if(!groupName && _.isEmpty(groupName)){
-        this.showAlert("","Please Enter the Group Name");
-      }else{
-          this.setState({dataLoading:true});
-          try {
-              resultObj = await APIServices.updateSubTask(userID,projectID,taskID,subTaskID,subTaskName,isSelected);
-              if(resultObj.message == 'success'){
-                this.setState({dataLoading:false});
-                this.props.navigation.goBack();
-              }else{
-                this.setState({dataLoading:false});
-                this.showAlert("","Error");
-              }
-          }catch(e) {
-            if(e.status == 401){
+  async renameGroup (){
+    let selectedTaskGroupId = this.state.selectedTaskGroupId;
+    let groupName = this.state.groupName;
+    if(!groupName && _.isEmpty(groupName)){
+      this.showAlert("","Please Enter the Sub Task Name");
+    }else{
+        this.setState({dataLoading:true});
+        try {
+            resultObj = await APIServices.updateGroupTaskData(selectedTaskGroupId,groupName);
+            if(resultObj.message == 'success'){
               this.setState({dataLoading:false});
-              this.showAlert("",e.data.message);
+              this.showAlert("","Successfully Updated");
+            }else{
+              this.setState({dataLoading:false});
+              this.showAlert("","Error");
             }
+        }catch(e) {
+          if(e.status == 401){
+            this.setState({dataLoading:false});
+            this.showAlert("",e.data.message);
           }
+        }
+    }
+  }
+
+
+  async deleteGroupdeleteGroup () { 
+      let selectedTaskGroupId = this.state.selectedTaskGroupId;
+      try {
+        resultObj = await APIServices.deleteGroupTaskData(selectedTaskGroupId);
+        if(resultObj.message == 'success'){
+          this.setState({dataLoading:false});
+          this.props.navigation.goBack();
+        }else{
+          this.setState({dataLoading:false});
+          this.showAlert("","Error");
+        }
+    }catch(e) {
+      if(e.status == 401){
+        this.setState({dataLoading:false});
+        this.showAlert("",e.data.message);
       }
+    }
   }
 
   onChangeTextName(text) {
@@ -148,7 +174,7 @@ class EditTask extends Component {
         <View style={styles.bottomView}>
             <TouchableOpacity
             style={{marginTop:10}} 
-            onPress={() => this.deleteGroup()}>
+            onPress={() => this.deleteGroupdeleteGroup()}>
             <View style={styles.button}>
                 <View style={{flex: 1}}>
                 <Text style={styles.buttonText}>{'Delete list'}</Text>

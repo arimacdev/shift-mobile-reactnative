@@ -27,7 +27,6 @@ class DrawerTasksScreen extends Component {
   }
 
   async componentDidMount() {
-    this.fetchData();
   }
 
   async fetchData() {
@@ -82,6 +81,10 @@ class DrawerTasksScreen extends Component {
     );
   }
 
+  loadData () {
+    this.fetchData();
+  }
+
   render() {
 
     let groupName = this.state.groupName;
@@ -90,6 +93,8 @@ class DrawerTasksScreen extends Component {
     
     return (
       <View style={styles.backgroundImage}>
+         <NavigationEvents
+                onWillFocus={(payload) => this.loadData(payload)}/>
             <TouchableOpacity  onPress={() => this.editUser()}>
               <View style={styles.button}>
                   <Image

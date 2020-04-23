@@ -36,7 +36,9 @@ import {
     GET_GROUP_TASK_DATA,
     ADD_GROUP_TASK_DATA,
     ADD_ALL_TASK_BY_GROUP_DATA,
-    ADD_TASK_TO_GROUP_TASK_DATA
+    ADD_TASK_TO_GROUP_TASK_DATA,
+    DELETE_GROUP_TASK_DATA,
+    UPDATE_GROUP_TASK_DATA
 
 } from '../api/API';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -780,6 +782,41 @@ async function addTaskGroupTaskData(taskName,taskGroupId) {
     }, true, headers);
 };
 
+async function deleteGroupTaskData(selectedTaskGroupId) {
+    let userIDHeder = null;
+    userIDHeder =  await AsyncStorage.getItem('userID');
+
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        user : userIDHeder,
+    };
+
+    return request({
+        url: DELETE_GROUP_TASK_DATA + '/' + selectedTaskGroupId,
+        method: 'DELETE'
+    }, true, headers);
+};
+
+async function updateGroupTaskData(selectedTaskGroupId,groupName) {
+    let user = null;
+    user =  await AsyncStorage.getItem('userID');
+
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+    };
+
+    return request({
+        url: UPDATE_GROUP_TASK_DATA + '/' + selectedTaskGroupId,
+        method: 'PUT',
+        data: {
+            taskGroupName : groupName,
+            taskGroupEditor : user,
+        }
+    }, true, headers);
+};
+
 const APIServices = {
     getAllProjectsByUserData,
     getUserData,
@@ -821,7 +858,9 @@ const APIServices = {
     getGroupTaskData,
     addGroupTaskData,
     getAllTaskByGroup,
-    addTaskGroupTaskData
+    addTaskGroupTaskData,
+    deleteGroupTaskData,
+    updateGroupTaskData
 };
 
 export default APIServices;
