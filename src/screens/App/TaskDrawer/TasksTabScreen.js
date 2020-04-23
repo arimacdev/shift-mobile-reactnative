@@ -12,6 +12,7 @@ import {connect} from 'react-redux';
 import * as actions from '../../../redux/actions';
 import colors from '../../../config/colors';
 import Tasks from './Tasks';
+import EditTask from './EditTask';
 import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
 import EStyleSheet from 'react-native-extended-stylesheet';
 const entireScreenWidth = Dimensions.get('window').width;
@@ -57,9 +58,11 @@ class TasksTabScreen extends Component {
         );
     case 'settings':
         return (
-            <View>
-    
-            </View>
+          <EditTask
+            selectedTaskGroupId={taskGroupId}
+            navigation={this.props.navigation}
+            isActive={isActive}
+          />
         );  
     }
   }

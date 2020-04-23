@@ -34,7 +34,9 @@ import {
     GET_WORKLOAD_WITH_COMPLETION,
     UPDATE_PEOPLE_PROJECT,
     GET_GROUP_TASK_DATA,
-    ADD_GROUP_TASK_DATA
+    ADD_GROUP_TASK_DATA,
+    ADD_ALL_TASK_BY_GROUP_DATA,
+    ADD_TASK_TO_GROUP_TASK_DATA
 
 } from '../api/API';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -704,10 +706,6 @@ async function getWorkloadWithAssignTasksCompletion(userID, from, to) {
     }, true,headers);
 };
 
-
-
-
-
 async function getGroupTaskData() {
     let userIDHeder = null;
     userIDHeder =  await AsyncStorage.getItem('userID');
@@ -734,11 +732,50 @@ async function addGroupTaskData(groupName) {
     };
 
     return request({
-        url: GET_GROUP_TASK_DATA,
+        url: ADD_GROUP_TASK_DATA,
         method: 'POST',
         data: {
             taskGroupName: groupName,
             taskGroupCreator: taskGroupCreator,
+        }
+    }, true, headers);
+};
+
+async function getAllTaskByGroup(selectedTaskGroupId) {
+    let userIDHeder = null;
+    userIDHeder =  await AsyncStorage.getItem('userID');
+    
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        type : 'taskGroup',
+    };
+    return request({
+        url: ADD_ALL_TASK_BY_GROUP_DATA +'/'+selectedTaskGroupId + '/tasks?userId='+userIDHeder,
+        method: 'GET',
+    }, true,headers);
+};
+
+async function addTaskGroupTaskData(taskName,taskGroupId) {
+
+    let taskGroupCreator = null;
+    taskInitiator =  await AsyncStorage.getItem('userID');
+
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+    };
+
+    return request({
+        url: ADD_TASK_TO_GROUP_TASK_DATA + '/' + taskGroupId + '/tasks',
+        method: 'POST',
+        data: {
+            taskName: taskName,
+            projectId: taskGroupId,
+            taskInitiator: taskInitiator,
+            taskDueDate: null,
+            taskRemindOnDate: null,
+            taskType: "taskGroup"
         }
     }, true, headers);
 };
@@ -782,7 +819,9 @@ const APIServices = {
     getWorkloadWithAssignTasksCompletion,
     updateRolePeopleData,
     getGroupTaskData,
-    addGroupTaskData
+    addGroupTaskData,
+    getAllTaskByGroup,
+    addTaskGroupTaskData
 };
 
 export default APIServices;

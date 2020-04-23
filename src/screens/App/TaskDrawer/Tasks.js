@@ -6,6 +6,7 @@ import {
   Dimensions,
   Image,
   TouchableOpacity,
+  TextInput,
 } from 'react-native';
 import {connect} from 'react-redux';
 import * as actions from '../../../redux/actions';
@@ -22,6 +23,7 @@ import moment from 'moment';
 import FadeIn from 'react-native-fade-in-image';
 import {SkypeIndicator} from 'react-native-indicators';
 import {NavigationEvents} from 'react-navigation';
+import APIServices from '../../../services/APIServices';
 
 const Placeholder = () => (
   <View style={styles.landing}>
@@ -35,28 +37,8 @@ let dropData = [
     value: 'All',
   },
   {
-    id: 'Pending',
-    value: 'Pending',
-  },
-  {
-    id: 'Implementing',
-    value: 'Implementing',
-  },
-  {
-    id: 'QA',
-    value: 'QA',
-  },
-  {
-    id: 'Ready to Deploy',
-    value: 'Ready to Deploy',
-  },
-  {
-    id: 'Reopened',
-    value: 'Reopened',
-  },
-  {
-    id: 'Deployed',
-    value: 'Deployed',
+    id: 'Open',
+    value: 'Open',
   },
   {
     id: 'Closed',
@@ -72,26 +54,57 @@ class Tasks extends Component {
       filterdDataAllTaks: [],
       allDataAllTaks: [],
       index: 0,
-      selectedTaskGroupId: 0,
+      selectedTaskGroupId: '',
       isActive: this.props.isActive,
       selectedTypeAllTasks: 'All',
+      dataLoading : false,
+      taskName : ''
     };
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (prevProps.isActive !== this.props.isActive && this.props.isActive) {
       let selectedTaskGroupId = this.props.selectedTaskGroupId;
+      this.setState(
+        {
+          selectedTaskGroupId: selectedTaskGroupId,
+        },
+        () => {
+          this.getAllTaskInGroup();
+        },
+      );
     }
+  }
 
-    
+  async componentDidMount() {
+    let selectedTaskGroupId = this.props.selectedTaskGroupId;
+      this.setState(
+        {
+          selectedTaskGroupId: selectedTaskGroupId,
+        },
+        () => {
+          this.getAllTaskInGroup();
+        },
+      );
   }
 
 
-  async getAllTaskInProject() {
+  async getAllTaskInGroup() {
     this.setState({
       selectedTypeAllTasks: 'All',
     });
     let selectedTaskGroupId = this.state.selectedTaskGroupId;
+    this.setState({dataLoading:true});
+    allTaskData = await APIServices.getAllTaskByGroup(selectedTaskGroupId);
+    if(allTaskData.message == 'success'){
+      this.setState({
+        dataLoading:false,
+        allDataAllTaks:allTaskData.data,
+        filterdDataAllTaks:allTaskData.data
+      });   
+    }else{
+      this.setState({dataLoading:false});
+    }
   }
 
   async tabOpenTaskTab() {
@@ -101,7 +114,7 @@ class Tasks extends Component {
         selectedTaskGroupId: selectedTaskGroupId,
       },
       () => {
-        this.getAllTaskInProject();
+        this.getAllTaskInGroup();
       },
     );
   }
@@ -155,17 +168,10 @@ class Tasks extends Component {
     }
   };
 
-  renderProjectList(item) {
-    let selectedProjectID = this.state.selectedProjectID;
+  renderTaskList(item) {
     return (
-      <TouchableOpacity
-        onPress={() =>
-          this.props.navigation.navigate('TasksDetailsScreen', {
-            taskDetails: item,
-            selectedProjectID: selectedProjectID,
-          })
-        }>
-        <View style={styles.projectView}>
+      <TouchableOpacity>
+        <View style={styles.taskView}>
           <Image
             style={styles.completionIcon}
             source={
@@ -203,24 +209,6 @@ class Tasks extends Component {
       case 'All':
         searchValue = '';
         break;
-      case 'Pending':
-        searchValue = 'pending';
-        break;
-      case 'Implementing':
-        searchValue = 'implementing';
-        break;
-      case 'QA':
-        searchValue = 'qa';
-        break;
-      case 'Ready to Deploy':
-        searchValue = 'readyToDeploy';
-        break;
-      case 'Reopened':
-        searchValue = 'reOpened';
-        break;
-      case 'Deployed':
-        searchValue = 'deployed';
-        break;
       case 'Closed':
         searchValue = 'closed';
         break;
@@ -238,10 +226,32 @@ class Tasks extends Component {
     });
   }
 
+  onNewTaskNameChange(text) {
+    this.setState({ taskName: text });
+  }
+
+  async onNewTaskNameSubmit(text){
+    try {
+      let taskName = this.state.taskName;
+      let selectedTaskGroupId = this.state.selectedTaskGroupId;
+      this.setState({dataLoading:true});
+      newGroupTaskData = await APIServices.addTaskGroupTaskData(taskName,selectedTaskGroupId);
+      if(newGroupTaskData.message == 'success'){
+        this.setState({dataLoading:false,taskName:''});   
+        this.getAllTaskInGroup();
+      }else{
+        this.setState({dataLoading:false});
+      }
+    }catch(e) {
+      this.setState({dataLoading:false});   
+    }
+  }
+
   render() {
     let filterdDataAllTaks = this.state.filterdDataAllTaks;
     let selectedTypeAllTasks = this.state.selectedTypeAllTasks;
-
+    let dataLoading = this.state.dataLoading;
+    let taskName =this.state.taskName
 
     return (
       <View style={styles.backgroundImage}>
@@ -275,13 +285,23 @@ class Tasks extends Component {
                   onChangeText={value => this.onFilterAllTasks(value)}
                 />
             </View>
+            <View style={[styles.addNewFieldView, {flexDirection: 'row'}]}>
+                <TextInput
+                  style={[styles.textInput, {width: '95%'}]}
+                  placeholder={'Add a task'}
+                  value={taskName}
+                  onChangeText={taskName => this.onNewTaskNameChange(taskName)}
+                  onSubmitEditing={() => this.onNewTaskNameSubmit(this.state.taskName)}
+                />
+            </View>
             <FlatList
-              style={{marginBottom: EStyleSheet.value('160rem')}}
+              style={{marginBottom: EStyleSheet.value('80rem')}}
               data={filterdDataAllTaks}
-              renderItem={({item}) => this.renderProjectList(item)}
+              renderItem={({item}) => this.renderTaskList(item)}
               keyExtractor={item => item.taskId}
             />
           </View>
+          {dataLoading && <Loader/>}
       </View>
     );
   }
@@ -314,7 +334,7 @@ const styles = EStyleSheet.create({
     textAlign: 'center',
     // fontWeight: 'bold',
   },
-  projectView: {
+  taskView: {
     backgroundColor: colors.projectBgColor,
     borderRadius: 5,
     height: '60rem',
@@ -404,6 +424,19 @@ const styles = EStyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  addNewFieldView: {
+    backgroundColor: '#e5e9ef',
+    borderRadius: 5,
+    borderWidth: 2,
+    borderColor  : '#e5e9ef',
+    marginTop: '10rem',
+    marginBottom: '0rem',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: '12rem',
+    height: '57rem',
+    marginHorizontal: '20rem',
   },
 });
 

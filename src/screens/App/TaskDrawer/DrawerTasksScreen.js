@@ -53,10 +53,10 @@ class DrawerTasksScreen extends Component {
         this.setState({dataLoading:false,groupName:''});   
         this.fetchData();
       }else{
-        this.setState({nerGroupTaskData:false});
+        this.setState({dataLoading:false});
       }
     }catch(e) {
-      this.setState({nerGroupTaskData:false});   
+      this.setState({dataLoading:false});   
     }
   }
 
@@ -113,7 +113,7 @@ class DrawerTasksScreen extends Component {
                   placeholder={'Add a new group'}
                   value={groupName}
                   onChangeText={groupName => this.onNewGroupNameChange(groupName)}
-                  onSubmitEditing={() => this.onNewGroupNameSubmit(this.state.taskName)}
+                  onSubmitEditing={() => this.onNewGroupNameSubmit(this.state.groupName)}
                 />
             </View>
             <FlatList
