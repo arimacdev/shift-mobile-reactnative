@@ -25,6 +25,8 @@ import AsyncStorage from '@react-native-community/async-storage';
 const {height, width} = Dimensions.get('window');
 import {MenuProvider} from 'react-native-popup-menu';
 import PopupMenu from '../../../components/PopupMenu';
+import FadeIn from 'react-native-fade-in-image';
+
 
 class AddPeopleScreen extends Component {
   constructor(props) {
@@ -123,11 +125,11 @@ class AddPeopleScreen extends Component {
     console.log(newValue);
   }
 
-  onSelectUser = picked => {
+  onSelectUser = item => {
     this.setState({
       visiblePeopleModal: false,
-      userName: picked.label,
-      userID: picked.key,
+      userName: item.label,
+      userID: item.key,
     });
   };
 
@@ -210,14 +212,14 @@ class AddPeopleScreen extends Component {
               ? styles.inputsTextDefualt
               : styles.inputsText
           }>
-          ddddd
+          {this.state.userName}
         </Text>
       </View>
     );
   }
 
   userImage = function(item) {
-    let userImage = item.profileImage;
+    let userImage = item.userImage;
 
     if (userImage) {
       return (
@@ -243,25 +245,25 @@ class AddPeopleScreen extends Component {
       //   onPress={() =>
       //     this.onSelectUser(item.firstName + ' ' + item.lastName, item.userId)
       //   }>
-        <View
-          style={[
-            styles.projectView,
-            {
-              backgroundColor:
-                item.firstName + ' ' + item.lastName ==
-                navigation.state.params.userName
-                  ? colors.projectBgColor
-                  : '',
-            },
-          ]}>
-          {this.userImage(item)}
-          <View style={{flex: 1}}>
-            <Text style={styles.text}>
-              {item.firstName + ' ' + item.lastName}
-            </Text>
-          </View>
-          {/* {this.colorCode(item)} */}
+      <View
+        style={[
+          styles.projectView,
+          {
+            backgroundColor:
+              item.label ==
+              navigation.state.params.userName
+                ? colors.projectBgColor
+                : '',
+          },
+        ]}>
+        {this.userImage(item)}
+        <View style={{flex: 1}}>
+          <Text style={styles.text}>
+            {item.label}
+          </Text>
         </View>
+        {/* {this.colorCode(item)} */}
+      </View>
       // </TouchableOpacity>
     );
   }
@@ -280,15 +282,13 @@ class AddPeopleScreen extends Component {
       <MenuProvider>
         <View style={{flex: 1}}>
           <ScrollView style={styles.container}>
-            <View style={[styles.taskFieldView, {marginTop: 30}]}>
-              <Text
-                onPress={() => this.itemNameClick()}
-                style={
-                  userID == '' ? styles.inputsTextDefualt : styles.inputsText
-                }>
-                {userName}
-              </Text>
-            </View>
+            <PopupMenu
+              userID={userID}
+              menuTrigger={this.renderMenuTrugger()}
+              menuOptions={item => this.renderUserList(item)}
+              data={this.state.activeUsers}
+              onSelect={(item)=>this.onSelectUser(item)}
+            />
             <View style={[styles.taskFieldView]}>
               <TextInput
                 style={[styles.textInput, {width: '95%'}]}
@@ -312,12 +312,6 @@ class AddPeopleScreen extends Component {
                 <Text style={styles.checkBoxText}>Add as a Admin</Text>
               </View>
             </View>
-            <PopupMenu
-              userID={userID}
-              menuTrigger={this.renderMenuTrugger()}
-              menuOptions={(item)=>this.renderUserList(item)}
-              data={this.state.activeUsers}
-            />
             {/* <ModalFilterPicker
               visible={visiblePeopleModal}
               keyboardShouldPersistTaps="handled"
@@ -518,7 +512,7 @@ const styles = EStyleSheet.create({
     color: colors.textPlaceHolderColor,
     textAlign: 'left',
   },
-  userIcon:{
+  userIcon: {
     width: '45rem',
     height: '45rem',
   },

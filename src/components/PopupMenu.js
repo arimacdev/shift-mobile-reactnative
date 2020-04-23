@@ -37,7 +37,7 @@ export default class PopupMenu extends Component {
             <ScrollView style={{maxHeight: 250}}>
               {this.props.data.map(item => {
                 return (
-                  <MenuOption onSelect={() => this.props.onSelect()}>
+                  <MenuOption onSelect={() => this.props.onSelect(item)}>
                     {this.props.menuOptions(item)}
                   </MenuOption>
                 );
