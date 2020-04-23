@@ -95,7 +95,7 @@ class SubTasksScreen extends Component {
   deleteSubTaskAlert (item){
     Alert.alert(
 			'Delete Sub task',
-			'Are you sure you want to delete this Sub task',
+			'You are about to permanently delete this sub task and all of its data. \nIf you are not sure, you can close this pop up.',
 			[
 			  {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
 			  {text: 'Ok', onPress: () =>this.deleteSubTask(item)},
