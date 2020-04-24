@@ -205,7 +205,7 @@ class EditPeople extends Component {
                 />
               </View>
               <View style={styles.CheckBoxLableContainer}>
-                <Text style={styles.checkBoxText}>Add as a Admin</Text>
+                <Text style={styles.checkBoxText}>Add as an Admin</Text>
               </View>
             </View>
           </View>
