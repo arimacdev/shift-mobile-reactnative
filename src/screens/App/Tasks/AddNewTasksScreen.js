@@ -239,6 +239,16 @@ class AddNewTasksScreen extends Component {
     //     showTimePicker: false,
     //   });
     // }
+    this.setState({showPicker: true})
+  };
+
+  hideDatePicker = () => {
+    this.setState({showPicker: false})
+  };
+
+  handleConfirm = date => {
+    console.warn("A date has been picked: ", date);
+    this.hideDatePicker();
   };
 
   onChangeDate(event, selectedDate) {
@@ -304,6 +314,7 @@ class AddNewTasksScreen extends Component {
       });
     }
   }
+  
 
 
 
@@ -320,28 +331,28 @@ class AddNewTasksScreen extends Component {
         </View>
       );
     } else {
-      return (
-        <DateTimePicker
-          testID="dateTimePicker"
-          timeZoneOffsetInMinutes={0}
-          value={
-            this.state.reminder == true
-              ? this.state.dateReminder
-              : this.state.date
-          }
-          mode={this.state.mode}
-          is24Hour={true}
-          display="default"
-          onChange={(event, selectedDate) =>
-            this.onChangeDate(event, selectedDate)
-          }
-        />
-      );
-    }
+    return (
+      <DateTimePicker
+        testID="dateTimePicker"
+        timeZoneOffsetInMinutes={0}
+        value={
+          this.state.reminder == true
+            ? this.state.dateReminder
+            : this.state.date
+        }
+        mode={this.state.mode}
+        is24Hour={true}
+        display="default"
+        onChange={(event, selectedDate) =>
+          this.onChangeDate(event, selectedDate)
+        }
+      />
+    );
+      }
   }
 
   renderTimePicker() {
-    if (Platform.OS == 'ios') {
+    if ( Platform.OS == 'ios' ) {
       return (
         <View>
           <DateTimePickerModal
