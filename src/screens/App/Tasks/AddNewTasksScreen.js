@@ -8,7 +8,9 @@ import {
   TouchableOpacity,
   TextInput,
   ScrollView,
-  Alert
+  Button,
+  Alert,
+  Platform
 } from 'react-native';
 import { connect } from 'react-redux';
 import * as actions from '../../../redux/actions';
@@ -23,6 +25,7 @@ import { Dropdown } from 'react-native-material-dropdown';
 import AwesomeAlert from 'react-native-awesome-alerts';
 import _ from 'lodash';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 import DocumentPicker from 'react-native-document-picker';
 import moment from 'moment';
 import Loader from '../../../components/Loader';
@@ -81,7 +84,7 @@ class AddNewTasksScreen extends Component {
       alertMsg: '',
       reminderTime: '',
       selectedDateValue: '',
-      selectedDateReminderValue: ''
+      selectedDateReminderValue: '',
     };
   }
 
@@ -157,6 +160,19 @@ class AddNewTasksScreen extends Component {
     );
   }
 
+  showDatePicker = () => {
+    this.setState({showPicker: true})
+  };
+
+  hideDatePicker = () => {
+    this.setState({showPicker: false})
+  };
+
+  handleConfirm = date => {
+    console.warn("A date has been picked: ", date);
+    this.hideDatePicker();
+  };
+
   onChangeDate(event, selectedDate) {
     let date = new Date(selectedDate);
     let newDate = '';
@@ -220,8 +236,21 @@ class AddNewTasksScreen extends Component {
       });
     }
   }
+  
 
   renderDatePicker() {
+    if ( Platform.OS == 'ios' ) {
+      return (
+        <View>
+          <DateTimePickerModal
+            isVisible={this.state.showPicker}
+            mode="date"
+            onConfirm={this.handleConfirm}
+            onCancel={this.hideDatePicker}
+          />
+        </View>
+      );
+    } else {
     return (
       <DateTimePicker
         testID="dateTimePicker"
@@ -239,9 +268,22 @@ class AddNewTasksScreen extends Component {
         }
       />
     );
+      }
   }
 
   renderTimePicker() {
+    if ( Platform.OS == 'ios' ) {
+      return (
+        <View>
+          <DateTimePickerModal
+            isVisible={this.state.showTimePicker}
+            mode="time"
+            onConfirm={this.handleConfirm}
+            onCancel={this.hideDatePicker}
+          />
+        </View>
+      );
+    } else {
     return (
       <DateTimePicker
         testID="dateTimePicker"
@@ -256,6 +298,7 @@ class AddNewTasksScreen extends Component {
         }
       />
     );
+      }
   }
 
   onFilesCrossPress(uri) {
