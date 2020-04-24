@@ -130,8 +130,8 @@ class MenuItems extends Component {
             disabled={this.props.disabledOpt}>
             <View style={styles.dropView}>
               <Image
-                style={[styles.dropDownTriangle]}
-                source={icons.rightCircule}
+                style={[styles.filterIcon]}
+                source={icons.filterIcon}
               />
             </View>
           </MenuTrigger>
@@ -181,10 +181,10 @@ const styles = StyleSheet.create({
     marginLeft: 15,
     marginRight: 15,
   },
-  dropDownTriangle: {
-    width: 30,
-    height: 30,
-    marginTop: 5,
+  filterIcon: {
+    width: 23,
+    height: 23,
+    marginTop: 2,
     marginRight: -10,
   },
   dropDownText: {

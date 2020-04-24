@@ -71,101 +71,22 @@ class WorkloadTabTasksScreen extends Component {
     };
   }
 
-  // async componentWillReceiveProps(nextProps){
-  //   if(this.props.from !== nextProps.from){
-  //     // await this.setState({from: this.props.from, to: this.props.to});
-  //     this.getAllWorkloadTasks(
-  //       this.props.selectedUserId,
-  //       this.props.from,
-  //       this.props.to,
-  //     );
-  //   }
-  // }
-
   async componentDidUpdate(prevProps, prevState, snapshot) {
     if (prevProps.isActive !== this.props.isActive && this.props.isActive) {
       let selectedUserId = this.props.selectedUserId;
-
       this.getAllWorkloadTasks(selectedUserId, this.props.from, this.props.to);
-      // this.setState(
-      //   {
-      //     selectedProjectID: selectedProjectID,//getWorkloadWithAssignTasksCompletion
-      //   },
-      //   () => {
-      //     this.getAllTaskInProject();
-      //   },
-      // );
     }
-    console.log('ssssssssssssssss', prevState);
-    if (prevProps.from !== this.props.from || prevProps.to !== this.props.to) {
+    if (
+      prevProps.from !== this.props.from ||
+      prevProps.to !== this.props.to ||
+      prevProps.date !== this.props.date
+    ) {
       await this.setState({from: this.props.from, to: this.props.to});
       this.getAllWorkloadTasks(
         this.props.selectedUserId,
         this.state.from,
         this.state.to,
       );
-    }
-
-    // all tasks
-    if (
-      prevProps.allTaskByProjectLoading !==
-        this.props.allTaskByProjectLoading &&
-      this.props.allTaskByProject &&
-      this.props.allTaskByProject.length > 0
-    ) {
-      let searchValueAllTask = 'pending';
-      let filteredDataAllTask = this.props.allTaskByProject.filter(function(
-        item,
-      ) {
-        return item.taskStatus.includes(searchValueAllTask);
-      });
-
-      this.setState({
-        filterdDataAllTaks: filteredDataAllTask,
-        allDataAllTaks: this.props.allTaskByProject,
-      });
-    }
-
-    if (
-      prevProps.allTaskByProjectLoading !==
-        this.props.allTaskByProjectLoading &&
-      this.props.allTaskByProject &&
-      this.props.allTaskByProject.length == 0
-    ) {
-      this.setState({
-        filterdDataAllTaks: this.props.allTaskByProject,
-        allDataAllTaks: this.props.allTaskByProject,
-      });
-    }
-
-    // my task
-    if (
-      prevProps.myTaskByProjectLoading !== this.props.myTaskByProjectLoading &&
-      this.props.myTaskByProject &&
-      this.props.myTaskByProject.length > 0
-    ) {
-      let searchValueMyTask = 'pending';
-      let filteredDataMyTask = this.props.myTaskByProject.filter(function(
-        item,
-      ) {
-        return item.taskStatus.includes(searchValueMyTask);
-      });
-
-      this.setState({
-        filterdDataMyTasks: filteredDataMyTask,
-        allDataMyTasks: this.props.myTaskByProject,
-      });
-    }
-
-    if (
-      prevProps.myTaskByProjectLoading !== this.props.myTaskByProjectLoading &&
-      this.props.myTaskByProject &&
-      this.props.myTaskByProject.length == 0
-    ) {
-      this.setState({
-        filterdDataMyTasks: this.props.myTaskByProject,
-        allDataMyTasks: this.props.myTaskByProject,
-      });
     }
   }
 

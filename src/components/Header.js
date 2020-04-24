@@ -56,7 +56,7 @@ class Header extends Component {
     render() {
         const { onPress, isHome, title,style,addButton,
             screen = {},search=false , isTasks=false, isUser=false, isWorkload=false, isWorkloadFilter=false,
-            loginUserType,isSearch,searchNavigation,isAddNew,addNewNavigation,drawStatus,taskStatus} = this.props;
+            isCustom=false,loginUserType,isSearch,searchNavigation,isAddNew,addNewNavigation,drawStatus,taskStatus} = this.props;
         // console.log('PPPP',this.props)
         return (
             <SafeAreaView style={{ backgroundColor: colors.primary }}>
@@ -165,6 +165,9 @@ class Header extends Component {
                                         />
                                     </TouchableOpacity>
                                 }
+                                {isCustom && <TouchableOpacity style={{alignItems:'flex-end'}} onPress={() => this.props.onCalendarPress(true)}>
+                                    <Icon name={'calendar'} style={styles.iconCalendar} type={'Feather'} />
+                                </TouchableOpacity>}
                             </View>
                         </View>
                 }
@@ -278,6 +281,12 @@ const styles = EStyleSheet.create({
         width: '25rem',
         height: '25rem',
       },
+    iconCalendar:{
+        fontSize: '25rem',
+        color: colors.white,
+        fontWeight: '800',
+        marginLeft: 10
+    }
 });
 
 const mapStateToProps = state => {

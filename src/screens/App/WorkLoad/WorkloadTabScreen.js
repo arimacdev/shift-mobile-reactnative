@@ -20,11 +20,15 @@ import Header from '../../../components/Header';
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
 import {MenuProvider} from 'react-native-popup-menu';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import moment from 'moment';
 
 const initialLayout = {width: entireScreenWidth};
 const menuItems = [
-  {value: 0, text: 'Due on', color: colors.lightRed},
-  {value: 1, text: 'This week', color: colors.lightGreen},
+  {value: 0, text: 'Due today', color: colors.dueTodayColor},
+  {value: 1, text: 'This Week', color: colors.thisWeekColor},
+  {value: 2, text: 'This Month', color: colors.thosMonthColor},
+  {value: 3, text: 'Custom', color: colors.customColor},
 ];
 class WorkloadTabScreen extends Component {
   constructor(props) {
@@ -35,8 +39,15 @@ class WorkloadTabScreen extends Component {
         {key: 'tasks', title: 'Tasks'},
         {key: 'graphs', title: 'Graphs'},
       ],
-      from:'all',
-      to:'all'
+      from: 'all',
+      to: 'all',
+      date: new Date(),
+      isCustom: false,
+      mode: 'date',
+      fromDate: new Date(),
+      toDate: new Date(),
+      fromDateOpen: false,
+      showPicker:false
     };
   }
 
@@ -77,6 +88,8 @@ class WorkloadTabScreen extends Component {
             isActive={isActive}
             from={this.state.from}
             to={this.state.to}
+            date={this.state.date}
+            isCustom={this.state.isCustom}
           />
         );
       case 'graphs':
@@ -93,11 +106,85 @@ class WorkloadTabScreen extends Component {
   onMenuItemChange(item) {
     switch (item.value) {
       case 0:
-        this.setState({from:'2020-03-30T23:59:00', to:'2020-04-30T23:59:00'})
+        this.setState({
+          isCustom: false,
+          from: '2020-03-30T23:59:00',
+          to: '2020-04-30T23:59:00',
+          date: new Date(),
+        });
+        break;
+      case 3:
+        this.setState({
+          isCustom: true,
+          from: 'all',
+          to: 'all',
+        });
         break;
       default:
         break;
     }
+  }
+
+  onCalendarPress(item) {
+    this.setState({fromDateOpen: item, showPicker:true});
+  }
+
+  onChangeDate(event, selectedDate) {
+    let date = new Date(selectedDate);
+    let newDate = '';
+    let newDateValue = '';
+
+    if (this.state.fromDate) {
+      newDate = moment(date).format('YYYY-MM-DD[T]HH:mm:ss');
+      newDateValue = moment(date).format('YYYY-MM-DD[T]HH:mm:ss');
+    } else {
+      newDate = moment(date).format('YYYY-MM-DD[T]HH:mm:ss');
+      newDateValue = moment(date).format('YYYY-MM-DD[T]HH:mm:ss');
+    }
+    if (event.type == 'set') {
+      if (this.state.fromDateOpen) {
+        this.setState({
+          fromDateOpen: false,
+          from: newDate,
+          selectedDateReminderValue: newDateValue,
+          showPicker: true,
+          // showTimePicker: false,
+          fromDate: new Date(selectedDate),
+          // date:new Date()
+        });
+      } else {
+        this.setState({
+          to: newDate,
+          selectedDateValue: newDateValue,
+          showPicker: false,
+          // showTimePicker: false,
+          toDate: new Date(selectedDate),
+          date:new Date()
+        });
+      }
+    }
+    // event.dismissed
+    // event.set
+  }
+
+  renderDatePicker() {
+    return (
+      <DateTimePicker
+        testID="dateTimePicker"
+        timeZoneOffsetInMinutes={0}
+        value={
+          this.state.fromDateOpen == true
+            ? this.state.fromDate
+            : this.state.toDate
+        }
+        mode={this.state.mode}
+        is24Hour={true}
+        display="default"
+        onChange={(event, selectedDate) =>
+          this.onChangeDate(event, selectedDate)
+        }
+      />
+    );
   }
 
   render() {
@@ -119,6 +206,8 @@ class WorkloadTabScreen extends Component {
             onPress={() => this.props.navigation.goBack()}
             menuItems={menuItems}
             onMenuItemChange={item => this.onMenuItemChange(item)}
+            isCustom={this.state.isCustom}
+            onCalendarPress={item => this.onCalendarPress(item)}
           />
           <TabView
             lazy
@@ -133,6 +222,7 @@ class WorkloadTabScreen extends Component {
             renderTabBar={props => this.renderTabBar(props)}
           />
         </View>
+        {this.state.showPicker ? this.renderDatePicker() : null}
       </MenuProvider>
     );
   }

@@ -51,6 +51,7 @@ const icons = {
     arrowDown: require('./arrow_down.png'),
     arrowUpGray: require('./arrow_up_gray.png'),
     blueAdd : require('./blue_add.png'), 
-    users : require('./users.png'), 
+    users : require('./users.png'),
+    filterIcon : require('./filter_icon.png'),
 };
 export default icons;
