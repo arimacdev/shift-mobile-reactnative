@@ -7,6 +7,7 @@ import {
   Image,
   TouchableOpacity,
   ScrollView,
+  RefreshControl,
 } from 'react-native';
 import {connect} from 'react-redux';
 import * as actions from '../../../redux/actions';
@@ -65,14 +66,27 @@ class WorkloadTabTasksScreen extends Component {
       isCollapsed: true,
       activeSections: [],
       enableScrollViewScroll: true,
+      from: this.props.from,
+      to: this.props.to,
     };
   }
 
-  componentDidUpdate(prevProps, prevState, snapshot) {
+  async componentWillReceiveProps(nextProps){
+    if(this.props.from !== nextProps.from){
+      // await this.setState({from: this.props.from, to: this.props.to});
+      this.getAllWorkloadTasks(
+        this.props.selectedUserId,
+        this.props.from,
+        this.props.to,
+      );
+    }
+  }
+
+  async componentDidUpdate(prevProps, prevState, snapshot) {
     if (prevProps.isActive !== this.props.isActive && this.props.isActive) {
       let selectedUserId = this.props.selectedUserId;
 
-      this.getAllWorkloadTasks(selectedUserId, 'all', 'all');
+      this.getAllWorkloadTasks(selectedUserId, this.props.from, this.props.to);
       // this.setState(
       //   {
       //     selectedProjectID: selectedProjectID,//getWorkloadWithAssignTasksCompletion
@@ -82,6 +96,20 @@ class WorkloadTabTasksScreen extends Component {
       //   },
       // );
     }
+    console.log('ssssssssssssssss', prevState);
+    // if (
+    //   // prevState.from !== this.state.from ||
+    //   // prevState.to !== this.state.to ||
+    //   prevProps.from !== this.props.from ||
+    //   prevProps.to !== this.props.to
+    // ) {
+    //   await this.setState({from: this.props.from, to: this.props.to});
+    //   this.getAllWorkloadTasks(
+    //     this.props.selectedUserId,
+    //     this.state.from,
+    //     this.state.to,
+    //   );
+    // }
 
     // all tasks
     if (
@@ -165,6 +193,15 @@ class WorkloadTabTasksScreen extends Component {
       this.setState({dataLoading: false});
     }
   }
+
+  _onRefresh = async () => {
+    await this.setState({from: 'all', to: 'all'});
+    this.getAllWorkloadTasks(
+      this.props.selectedUserId,
+      this.state.from,
+      this.state.to,
+    );
+  };
 
   async getAllTaskInProject() {
     this.setState({
@@ -488,6 +525,12 @@ class WorkloadTabTasksScreen extends Component {
           }
         />
         <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.dataLoading}
+              onRefresh={this._onRefresh}
+            />
+          }
           // scrollEnabled={this.state.enableScrollViewScroll}
           ref={myScroll => (this._myScroll = myScroll)}>
           <Accordion

@@ -16,11 +16,16 @@ import Projects from '../Projects/ProjectsDetailsScreen';
 import PeopleScreen from '../People/PeopleScreen';
 import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
 import EStyleSheet from 'react-native-extended-stylesheet';
+import Header from '../../../components/Header';
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
+import {MenuProvider} from 'react-native-popup-menu';
 
 const initialLayout = {width: entireScreenWidth};
-
+const menuItems = [
+  {value: 0, text: 'Due on', color: colors.lightRed},
+  {value: 1, text: 'This week', color: colors.lightGreen},
+];
 class WorkloadTabScreen extends Component {
   constructor(props) {
     super(props);
@@ -30,6 +35,8 @@ class WorkloadTabScreen extends Component {
         {key: 'tasks', title: 'Tasks'},
         {key: 'graphs', title: 'Graphs'},
       ],
+      from:'all',
+      to:'all'
     };
   }
 
@@ -68,6 +75,8 @@ class WorkloadTabScreen extends Component {
             selectedUserId={userId}
             navigation={this.props.navigation}
             isActive={isActive}
+            from={this.state.from}
+            to={this.state.to}
           />
         );
       case 'graphs':
@@ -81,16 +90,50 @@ class WorkloadTabScreen extends Component {
     }
   }
 
+  onMenuItemChange(item) {
+    switch (item.value) {
+      case 0:
+        this.setState({from:'2020-03-30T23:59:00', to:'2020-04-30T23:59:00'})
+        break;
+      default:
+        break;
+    }
+  }
+
   render() {
     return (
-      <TabView
-        lazy
-        navigationState={{index: this.state.index, routes: this.state.routes}}
-        renderScene={route => this.renderScene(route)}
-        onIndexChange={index => this.setState({index})}
-        initialLayout={initialLayout}
-        renderTabBar={props => this.renderTabBar(props)}
-      />
+      <MenuProvider>
+        <View style={{flex: 1}}>
+          <Header
+            isWorkloadFilter
+            navigation={this.props.navigation}
+            title={
+              this.props.navigation.state.params
+                ? this.props.navigation.state.params.workloadTaskDetails
+                    .firstName +
+                  ' ' +
+                  this.props.navigation.state.params.workloadTaskDetails
+                    .lastName
+                : ''
+            }
+            onPress={() => this.props.navigation.goBack()}
+            menuItems={menuItems}
+            onMenuItemChange={item => this.onMenuItemChange(item)}
+          />
+          <TabView
+            lazy
+            // style={{flex: 1}}
+            navigationState={{
+              index: this.state.index,
+              routes: this.state.routes,
+            }}
+            renderScene={route => this.renderScene(route)}
+            onIndexChange={index => this.setState({index})}
+            initialLayout={initialLayout}
+            renderTabBar={props => this.renderTabBar(props)}
+          />
+        </View>
+      </MenuProvider>
     );
   }
 }

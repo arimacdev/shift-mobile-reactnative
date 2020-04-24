@@ -7,6 +7,7 @@ import colors from '../config/colors';
 import * as actions from '../redux/actions';
 import NavigationService from '../services/NavigationService';
 import icons from '../assest/icons/icons';
+import MenuItems from './MenuItems';
 
 
 const entireScreenWidth = Dimensions.get('window').width;
@@ -156,7 +157,12 @@ class Header extends Component {
                                 }
                                 { isWorkloadFilter &&
                                     <TouchableOpacity style={{alignItems:'flex-end'}} onPress={() => this.openPopup()}>
-                                        <Icon name={'filter'} style={styles.iconFilter} type={'Feather'} />
+                                        <MenuItems
+                                            // customStyle={styles.menuItems}
+                                            data={this.props.menuItems}
+                                            onChange={item => this.props.onMenuItemChange(item)}
+                                            // disabledOpt={this.props.notificationsList.length <= 0}
+                                        />
                                     </TouchableOpacity>
                                 }
                             </View>

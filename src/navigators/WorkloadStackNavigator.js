@@ -28,20 +28,7 @@ export const WorkloadStackNavigator = createStackNavigator(
     WorkloadTabScreen: {
       screen: WorkloadTabScreen,
       navigationOptions: ({navigation}) => ({
-        header: (
-          <Header
-            isWorkloadFilter
-            navigation={navigation}
-            title={
-              navigation.state.params
-                ? navigation.state.params.workloadTaskDetails.firstName +
-                  ' ' +
-                  navigation.state.params.workloadTaskDetails.lastName
-                : ''
-            }
-            onPress={() => navigation.goBack()}
-          />
-        ),
+        header: null
       }),
     },
     WorkloadSearchScreen: {
