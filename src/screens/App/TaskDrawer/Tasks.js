@@ -169,8 +169,15 @@ class Tasks extends Component {
   };
 
   renderTaskList(item) {
+    let selectedTaskGroupId = this.state.selectedTaskGroupId;
     return (
-      <TouchableOpacity>
+      <TouchableOpacity
+          onPress={() =>
+            this.props.navigation.navigate('GroupTasksDetailsScreen', {
+              taskDetails: item,
+              selectedTaskGroupId: selectedTaskGroupId,
+            })
+          }>
         <View style={styles.taskView}>
           <Image
             style={styles.completionIcon}
