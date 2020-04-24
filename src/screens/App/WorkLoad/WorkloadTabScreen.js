@@ -22,6 +22,7 @@ EStyleSheet.build({$rem: entireScreenWidth / 380});
 import {MenuProvider} from 'react-native-popup-menu';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
+import CalendarPicker from 'react-native-calendar-picker';
 
 const initialLayout = {width: entireScreenWidth};
 const menuItems = [
@@ -47,13 +48,30 @@ class WorkloadTabScreen extends Component {
       fromDate: new Date(),
       toDate: new Date(),
       fromDateOpen: false,
-      showPicker:false
+      showPicker: false,
+
+      selectedStartDate: null,
+      selectedEndDate: null,
     };
+    this.onDateChange = this.onDateChange.bind(this);
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {}
 
   componentDidMount() {}
+
+  onDateChange(date, type) {
+    if (type === 'END_DATE') {
+      this.setState({
+        selectedEndDate: date,
+      });
+    } else {
+      this.setState({
+        selectedStartDate: date,
+        selectedEndDate: null,
+      });
+    }
+  }
 
   renderTabBar(props) {
     return (
@@ -108,8 +126,24 @@ class WorkloadTabScreen extends Component {
       case 0:
         this.setState({
           isCustom: false,
-          from: moment(new Date()).format('YYYY-MM-DD[T]')+'00:00:00',
-          to: moment(new Date()).format('YYYY-MM-DD[T]')+'23:59:59',
+          from: moment(new Date()).format('YYYY-MM-DD[T]') + '00:00:00',
+          to: moment(new Date()).format('YYYY-MM-DD[T]') + '23:59:59',
+          date: new Date(),
+        });
+        break;
+      case 1:
+        this.setState({
+          isCustom: false,
+          from: moment(new Date()).format('YYYY-MM-DD[T]') + '00:00:00',
+          to: moment(new Date()).format('YYYY-MM-DD[T]') + '23:59:59',
+          date: new Date(),
+        });
+        break;
+      case 2:
+        this.setState({
+          isCustom: false,
+          from: moment(new Date()).format('YYYY-MM') + '-01[T]00:00:00',
+          to: moment(new Date()).format('YYYY-MM') + '-31[T]23:59:59',
           date: new Date(),
         });
         break;
@@ -126,7 +160,7 @@ class WorkloadTabScreen extends Component {
   }
 
   onCalendarPress(item) {
-    this.setState({fromDateOpen: item, showPicker:true});
+    this.setState({fromDateOpen: item, showPicker: true});
   }
 
   onChangeDate(event, selectedDate) {
@@ -159,10 +193,10 @@ class WorkloadTabScreen extends Component {
           showPicker: false,
           // showTimePicker: false,
           toDate: new Date(selectedDate),
-          date:new Date()
+          date: new Date(),
         });
       }
-    } else{
+    } else {
       this.setState({
         showPicker: false,
       });
@@ -192,6 +226,12 @@ class WorkloadTabScreen extends Component {
   }
 
   render() {
+    const {selectedStartDate, selectedEndDate} = this.state;
+    const minDate = new Date(); // Today
+    const maxDate = new Date(2500, 1, 1);
+    const startDate = selectedStartDate ? selectedStartDate.toString() : '';
+    const endDate = selectedEndDate ? selectedEndDate.toString() : '';
+
     return (
       <MenuProvider>
         <View style={{flex: 1}}>
@@ -227,6 +267,21 @@ class WorkloadTabScreen extends Component {
           />
         </View>
         {this.state.showPicker ? this.renderDatePicker() : null}
+        {/* <CalendarPicker
+          startFromMonday={true}
+          allowRangeSelection={true}
+          minDate={minDate}
+          maxDate={maxDate}
+          todayBackgroundColor="#f2e6ff"
+          selectedDayColor="#7300e6"
+          selectedDayTextColor="#FFFFFF"
+          onDateChange={this.onDateChange}
+        />
+
+        <View>
+          <Text>SELECTED START DATE:{startDate}</Text>
+          <Text>SELECTED END DATE:{endDate}</Text>
+        </View> */}
       </MenuProvider>
     );
   }
