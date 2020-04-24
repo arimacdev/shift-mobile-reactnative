@@ -43,7 +43,9 @@ import {
     ADD_FILE_TO_TASK,
     ADD_FILE_TO_TASK_SUCCESS,
     ADD_FILE_TO_TASK_FAILED,
-    ADD_FILE_TO_TASK_FAILED_MASSAGE
+    ADD_FILE_TO_TASK_FAILED_MASSAGE,
+
+    MODEL_VISIBLE_CHANGE
 
 } from '../types';
 
@@ -91,6 +93,8 @@ const INITIAL_STATE = {
     addFileTaskSuccess: false,
     addFileTaskError: false,
     addFileeTaskErrorMessage: '',
+
+    addPeopleModelVisible : false,
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -324,7 +328,9 @@ export default (state = INITIAL_STATE, action) => {
                 ...state,
                 addFileTaskLoading: false,
                 addFileTaskSuccess: false,
-            };    
+            };
+        case MODEL_VISIBLE_CHANGE:
+            return { ...state, addPeopleModelVisible: action.payload  };        
         default:
             return state;
     }

@@ -128,13 +128,14 @@ class AddPeopleScreen extends Component {
     console.log(newValue);
   }
 
-  onSelectUser = item => {
+  onSelectUser = async item => {
     this.setState({
       visiblePeopleModal: false,
       userName: item.label,
       userID: item.key,
       popupMenuOpen:false
     });
+    await this.props.addPeopleModal(false);
   };
 
   onCancelUser = () => {
@@ -207,7 +208,8 @@ class AddPeopleScreen extends Component {
     });
   }
 
-  onSearchTextChange(text) {
+  async onSearchTextChange(text) {
+    await this.props.addPeopleModal(true);
     this.setState({userName: text, popupMenuOpen:true});
     let result = this.state.allActiveUsers.filter(
       data =>

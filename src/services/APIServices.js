@@ -890,6 +890,21 @@ async function addNewMyTaskData(taskName) {
     }, true, headers);
 };
 
+async function getGroupSingleTaskData(selectedTaskGroupId,selectedTaskID) {
+    let userIDHeder = null;
+    userIDHeder =  await AsyncStorage.getItem('userID');
+    
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        user : userIDHeder,
+    };
+    return request({
+        url: GET_GROUP_TASK_DATA ,
+        method: 'GET',
+    }, true,headers);
+};
+
 const APIServices = {
     getAllProjectsByUserData,
     getUserData,
@@ -937,7 +952,8 @@ const APIServices = {
     getSingleGroupTaskData,
     getTaskPeopleData,
     getAllTaskByMySelf,
-    addNewMyTaskData
+    addNewMyTaskData,
+    getGroupSingleTaskData
 };
 
 export default APIServices;

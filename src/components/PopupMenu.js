@@ -14,6 +14,8 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
 const {height, width} = Dimensions.get('window');
+import * as actions from '../redux/actions';
+import {connect} from 'react-redux';
 
 import {
   MenuContext,
@@ -23,7 +25,7 @@ import {
   MenuTrigger,
 } from 'react-native-popup-menu';
 
-export default class PopupMenu extends Component {
+class PopupMenu extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -31,15 +33,30 @@ export default class PopupMenu extends Component {
     };
   }
 
-  onBackdropPress() {
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if(prevProps.addPeopleModelVisible !== this.props.addPeopleModelVisible && this.props.addPeopleModelVisible){
+      this.setState({ opened: this.props.addPeopleModelVisible });
+    }
+
+    if(prevProps.addPeopleModelVisible !== this.props.addPeopleModelVisible && !this.props.addPeopleModelVisible){
+      this.setState({ opened: this.props.addPeopleModelVisible });
+    }
+}
+
+  componentDidMount() {
+    this.setState({ opened: this.props.open });
+  }
+
+  async onBackdropPress() {
     this.setState({ opened: false });
+    await this.props.addPeopleModal(false);
   }
 
   render() {
     return (
       //   <MenuContext style={{height:100}} ref={mc => (this.menuContext = mc)}>
       <Menu
-        opened={this.props.open}
+        opened={this.state.opened}
         onBackdropPress={() => this.onBackdropPress()}
         onSelect={value => this.onOptionSelect(value)}>
         <MenuTrigger>{this.props.menuTrigger}</MenuTrigger>
@@ -121,3 +138,13 @@ const styles = EStyleSheet.create({
     textAlign: 'left',
   },
 });
+
+const mapStateToProps = state => {
+  return {
+    addPeopleModelVisible: state.project.addPeopleModelVisible,
+  };
+};
+export default connect(
+  mapStateToProps,
+  actions,
+)(PopupMenu);

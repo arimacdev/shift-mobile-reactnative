@@ -141,7 +141,7 @@ class GroupTasksDetailsScreen extends Component {
 
   async fetchData(selectedTaskGroupId,selectedTaskID) {
     this.setState({dataLoading:true});
-    taskResult = await APIServices.getGroupTaskData(selectedTaskGroupId,selectedTaskID);
+    taskResult = await APIServices.getGroupSingleTaskData(selectedTaskGroupId,selectedTaskID);
     if(taskResult.message == 'success'){
         this.setTaskInitiator(taskResult);
         this.setTaskName(taskResult);
