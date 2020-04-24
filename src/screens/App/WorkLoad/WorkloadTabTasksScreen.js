@@ -71,16 +71,16 @@ class WorkloadTabTasksScreen extends Component {
     };
   }
 
-  async componentWillReceiveProps(nextProps){
-    if(this.props.from !== nextProps.from){
-      // await this.setState({from: this.props.from, to: this.props.to});
-      this.getAllWorkloadTasks(
-        this.props.selectedUserId,
-        this.props.from,
-        this.props.to,
-      );
-    }
-  }
+  // async componentWillReceiveProps(nextProps){
+  //   if(this.props.from !== nextProps.from){
+  //     // await this.setState({from: this.props.from, to: this.props.to});
+  //     this.getAllWorkloadTasks(
+  //       this.props.selectedUserId,
+  //       this.props.from,
+  //       this.props.to,
+  //     );
+  //   }
+  // }
 
   async componentDidUpdate(prevProps, prevState, snapshot) {
     if (prevProps.isActive !== this.props.isActive && this.props.isActive) {
@@ -97,19 +97,14 @@ class WorkloadTabTasksScreen extends Component {
       // );
     }
     console.log('ssssssssssssssss', prevState);
-    // if (
-    //   // prevState.from !== this.state.from ||
-    //   // prevState.to !== this.state.to ||
-    //   prevProps.from !== this.props.from ||
-    //   prevProps.to !== this.props.to
-    // ) {
-    //   await this.setState({from: this.props.from, to: this.props.to});
-    //   this.getAllWorkloadTasks(
-    //     this.props.selectedUserId,
-    //     this.state.from,
-    //     this.state.to,
-    //   );
-    // }
+    if (prevProps.from !== this.props.from || prevProps.to !== this.props.to) {
+      await this.setState({from: this.props.from, to: this.props.to});
+      this.getAllWorkloadTasks(
+        this.props.selectedUserId,
+        this.state.from,
+        this.state.to,
+      );
+    }
 
     // all tasks
     if (
