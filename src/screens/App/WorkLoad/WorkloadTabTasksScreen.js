@@ -437,7 +437,7 @@ class WorkloadTabTasksScreen extends Component {
       >
         <NavigationEvents
           onWillFocus={() =>
-            this.getAllWorkloadTasks(this.props.selectedUserId, 'all', 'all')
+            this.getAllWorkloadTasks(this.props.selectedUserId, this.state.from, this.state.to)
           }
         />
         <ScrollView

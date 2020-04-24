@@ -108,8 +108,8 @@ class WorkloadTabScreen extends Component {
       case 0:
         this.setState({
           isCustom: false,
-          from: '2020-03-30T23:59:00',
-          to: '2020-04-30T23:59:00',
+          from: moment(new Date()).format('YYYY-MM-DD[T]')+'00:00:00',
+          to: moment(new Date()).format('YYYY-MM-DD[T]')+'23:59:59',
           date: new Date(),
         });
         break;
@@ -162,6 +162,10 @@ class WorkloadTabScreen extends Component {
           date:new Date()
         });
       }
+    } else{
+      this.setState({
+        showPicker: false,
+      });
     }
     // event.dismissed
     // event.set
