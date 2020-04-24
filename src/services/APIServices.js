@@ -46,6 +46,7 @@ import {
     ADD_FILE_TO_PROJECT,
     DELETE_PROJECT_FILES,
     GET_PROJECT_FILES,
+    ADD_PEOPLE_TO_TASK_GROUP
 
 } from '../api/API';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -967,6 +968,7 @@ async function uploadFileData(file, selectedProjectID, dispatch) {
 async function getProjectFiles(selectedProjectID) {
     let userIDHeder = null;
     userIDHeder =  await AsyncStorage.getItem('userID');
+  
     
     let headers =  {
         Accept: 'application/json',
@@ -995,6 +997,25 @@ async function deleteProjectFile(selectedProjectID, fileId) {
     }, true, headers);
 };
 
+async function addUserToGroupTask(userID,taskGroupId) {
+    let assignerId = null;
+    assignerId =  await AsyncStorage.getItem('userID');
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+    
+    };
+
+    return request({
+        url: ADD_PEOPLE_TO_TASK_GROUP,
+        method: 'POST',
+        data: {
+            taskGroupId: taskGroupId,
+            taskGroupAssigner: assignerId,
+            taskGroupAssignee: userID,
+        }
+    }, true, headers);
+};
 
 const APIServices = {
     getAllProjectsByUserData,
@@ -1047,7 +1068,8 @@ const APIServices = {
     getGroupSingleTaskData,
     uploadFileData,
     getProjectFiles,
-    deleteProjectFile
+    deleteProjectFile,
+    addUserToGroupTask
 };
 
 export default APIServices;

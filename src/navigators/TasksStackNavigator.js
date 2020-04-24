@@ -7,6 +7,7 @@ import TasksTabScreen from '../screens/App/TaskDrawer/TasksTabScreen';
 import SearchGruopTaskScreen from '../screens/App/TaskDrawer/SearchGruopTaskScreen';
 import MyTasksTabScreen from '../screens/App/TaskDrawer/MyTask/MyTasksTabScreen';
 import GroupTasksDetailsScreen from '../screens/App/TaskDrawer/GroupTasksDetailsScreen';
+import AddPeopleGroupTaskScreen from '../screens/App/TaskDrawer/AddPeopleScreen';
 
 export const TasksStackNavigator = createStackNavigator(
   {
@@ -67,6 +68,17 @@ export const TasksStackNavigator = createStackNavigator(
       screen: GroupTasksDetailsScreen,
       navigationOptions: ({navigation}) => ({
         header: null,
+      }),
+    },
+    AddPeopleGroupTaskScreen: {
+      screen: AddPeopleGroupTaskScreen,
+      navigationOptions: ({navigation}) => ({
+        header: (
+          <Header
+            title={'Add People'}
+            onPress={() => navigation.pop()}
+          />
+        ),
       }),
     },
   },

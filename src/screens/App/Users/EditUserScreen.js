@@ -277,26 +277,6 @@ class EditUserScreen extends Component {
               onChangeText={confirmPassword => this.setState({confirmPassword})}
             />
           </View>
-
-          <AwesomeAlert
-            show={showAlert}
-            showProgress={false}
-            title={alertTitle}
-            message={alertMsg}
-            closeOnTouchOutside={true}
-            closeOnHardwareBackPress={false}
-            showCancelButton={false}
-            showConfirmButton={true}
-            cancelText=""
-            confirmText="OK"
-            confirmButtonColor={colors.primary}
-            onConfirmPressed={() => {
-              this.hideAlert();
-            }}
-          />
-
-          {editUserLoading && <Loader />}
-          {dataLoading && <Loader />}
         </ScrollView>
         <View style={styles.bottomContainer}>
           <TouchableOpacity onPress={() => this.saveUser()}>
@@ -321,6 +301,25 @@ class EditUserScreen extends Component {
             </View>
           </TouchableOpacity>
         </View>
+        <AwesomeAlert
+            show={showAlert}
+            showProgress={false}
+            title={alertTitle}
+            message={alertMsg}
+            closeOnTouchOutside={true}
+            closeOnHardwareBackPress={false}
+            showCancelButton={false}
+            showConfirmButton={true}
+            cancelText=""
+            confirmText="OK"
+            confirmButtonColor={colors.primary}
+            onConfirmPressed={() => {
+              this.hideAlert();
+            }}
+          />
+
+          {editUserLoading && <Loader />}
+          {dataLoading && <Loader />}
       </View>
     );
   }

@@ -75,6 +75,7 @@ class PeopleScreen extends Component {
     }
 
     goToAddPeople = () => {
+        NavigationService.navigate('AddPeopleGroupTaskScreen', {taskItem:  this.props.selectedTaskGroupId});
     }
 
     userIcon = function (item) {

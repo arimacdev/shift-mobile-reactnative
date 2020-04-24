@@ -44,36 +44,12 @@ class AddPeopleScreen extends Component {
       showAlert: false,
       alertTitle: '',
       alertMsg: '',
-      projectID: '',
+      taskItemID: '',
       popupMenuOpen:false
     };
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    if (
-      prevProps.addPeopleProjectError !== this.props.addPeopleProjectError &&
-      this.props.addPeopleProjectError &&
-      this.props.addPeopleProjectErrorMessage == ''
-    ) {
-      this.showAlert('', 'Error While adding User');
-    }
-
-    if (
-      prevProps.addPeopleProjectError !== this.props.addPeopleProjectError &&
-      this.props.addPeopleProjectError &&
-      this.props.addPeopleProjectErrorMessage != ''
-    ) {
-      this.showAlert('', this.props.addPeopleProjectErrorMessage);
-    }
-
-    if (
-      prevProps.addPeopleProjectSuccess !==
-        this.props.addPeopleProjectSuccess &&
-      this.props.addPeopleProjectSuccess
-    ) {
-      this.showAlert('', 'User Added');
-      this.props.navigation.goBack();
-    }
   }
 
   componentDidMount() {
@@ -82,8 +58,8 @@ class AddPeopleScreen extends Component {
         state: {params},
       },
     } = this.props;
-    let projectID = params.projectItem;
-    this.setState({projectID: projectID});
+    let taskItemID = params.taskItem;
+    this.setState({taskItemID: taskItemID});
     this.getActiveUsers();
   }
 
@@ -152,40 +128,35 @@ class AddPeopleScreen extends Component {
 
   saveUser() {
     let userID = this.state.userID;
-    let role = this.state.role;
-    let isSelected = this.state.isSelected;
-    let assigneeProjectRole = 0;
-    let projectID = this.state.projectID;
-
-    if (isSelected) {
-      assigneeProjectRole = 2;
-    } else {
-      assigneeProjectRole = 3;
-    }
-
-    if (this.validateUser(userID, role)) {
-      AsyncStorage.getItem('userID').then(assignerId => {
-        if (assignerId) {
-          this.props.addUserToProject(
-            assignerId,
-            userID,
-            role,
-            assigneeProjectRole,
-            projectID,
-          );
-        }
-      });
+    let taskItemID = this.state.taskItemID;
+    if (this.validateUser(userID)) {
+        this.addUser(userID,taskItemID);
+        //this.props.addUserToGroupTask(userID,taskItemID);
     }
   }
 
-  validateUser(userID, role) {
+  async addUser(userID,taskItemID){
+    this.setState({dataLoading:true});
+    try {
+        resultObj = await APIServices.addUserToGroupTask(userID,taskItemID);
+        if(resultObj.message == 'success'){
+          this.setState({dataLoading:false});
+          this.props.navigation.goBack();
+        }else{
+          this.setState({dataLoading:false});
+          this.showAlert("","Error");
+        }
+    }catch(e) {
+      if(e.status == 400 || e.status == 401 || e.status == 403){
+        this.setState({dataLoading:false});
+        this.showAlert("",e.data.message);
+      }
+    }
+  }
+
+  validateUser(userID) {
     if (!userID && _.isEmpty(userID)) {
       this.showAlert('', 'Please Select a User');
-      return false;
-    }
-
-    if (!role && _.isEmpty(role)) {
-      this.showAlert('', 'Please enter the role of the project');
       return false;
     }
 
@@ -225,15 +196,6 @@ class AddPeopleScreen extends Component {
   renderMenuTrugger() {
     return (
       <View style={[styles.taskFieldView, {marginTop: 30}]}>
-        {/* <Text
-          style={
-            this.props.userID == ''
-              ? styles.inputsTextDefualt
-              : styles.inputsText
-          }>
-          {this.state.userName}
-        </Text> */}
-
         <TextInput
             style={[styles.textInput, {width: '95%'}]}
             placeholder={'Type a name to add'}
@@ -317,40 +279,6 @@ class AddPeopleScreen extends Component {
               onSelect={(item)=>this.onSelectUser(item)}
               open={this.state.popupMenuOpen}
             />
-            <View style={[styles.taskFieldView]}>
-              <TextInput
-                style={[styles.textInput, {width: '95%'}]}
-                placeholder={'Role'}
-                value={role}
-                placeholderTextColor={colors.placeholder}
-                onChangeText={role => this.setState({role})}
-              />
-            </View>
-            <View style={styles.checkBoxContainer}>
-              <View style={{flex: 1}}>
-                <RoundCheckbox
-                  size={18}
-                  checked={this.state.isSelected}
-                  backgroundColor={colors.lightGreen}
-                  onValueChange={newValue => this.toggleCheckBox(newValue)}
-                  borderColor={'gray'}
-                />
-              </View>
-              <View style={styles.CheckBoxLableContainer}>
-                <Text style={styles.checkBoxText}>Add as a Admin</Text>
-              </View>
-            </View>
-            {/* <ModalFilterPicker
-              visible={visiblePeopleModal}
-              keyboardShouldPersistTaps="handled"
-              onSelect={this.onSelectUser}
-              onCancel={this.onCancelUser}
-              options={activeUsers}
-              cancelButtonStyle={styles.modelCancel}
-              cancelButtonTextStyle={styles.modelCancelText}
-              title={'Select a User'}
-              titleTextStyle={styles.titleTextStyle}
-            /> */}
           </ScrollView>
           <View style={styles.bottomContainer}>
             <TouchableOpacity onPress={() => this.saveUser()}>
@@ -567,10 +495,6 @@ const styles = EStyleSheet.create({
 
 const mapStateToProps = state => {
   return {
-    addPeopleProjectLoading: state.project.addPeopleProjectLoading,
-    addPeopleProjectError: state.project.addPeopleProjectError,
-    addPeopleProjectSuccess: state.project.addPeopleProjectSuccess,
-    addPeopleProjectErrorMessage: state.project.addPeopleProjectErrorMessage,
   };
 };
 export default connect(

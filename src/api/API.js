@@ -50,6 +50,7 @@ export const ADD_FILE_TO_PROJECT = `${PROTOCOL}${HOST}projects`;
 export const GET_PROJECT_FILES = `${PROTOCOL}${HOST}projects`;
 export const DELETE_PROJECT_FILES = `${PROTOCOL}${HOST}projects`;
 
+export const ADD_PEOPLE_TO_TASK_GROUP = `${PROTOCOL}${HOST}taskgroup/add`;
 
 
 
