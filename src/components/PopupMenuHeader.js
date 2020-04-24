@@ -23,25 +23,21 @@ import {
   MenuTrigger,
 } from 'react-native-popup-menu';
 
-export default class PopupMenu extends Component {
+export default class PopupMenuHeader extends Component {
   constructor(props) {
     super(props);
     this.state = {
-        opened:false
+      opened: false,
     };
   }
 
   onBackdropPress() {
-    this.setState({ opened: false });
+    this.setState({opened: false});
   }
 
   render() {
     return (
-      //   <MenuContext style={{height:100}} ref={mc => (this.menuContext = mc)}>
-      <Menu
-        opened={this.props.open}
-        onBackdropPress={() => this.onBackdropPress()}
-        onSelect={value => this.onOptionSelect(value)}>
+      <Menu>
         <MenuTrigger>{this.props.menuTrigger}</MenuTrigger>
         <MenuOptions customStyles={optionsStyles}>
           <ScrollView style={{maxHeight: 250}}>
@@ -55,7 +51,6 @@ export default class PopupMenu extends Component {
           </ScrollView>
         </MenuOptions>
       </Menu>
-      //   </MenuContext>
     );
   }
 }
@@ -63,7 +58,7 @@ export default class PopupMenu extends Component {
 const optionsStyles = {
   optionsContainer: {
     marginTop: 40,
-    width: '90%',
+    width: '50%',
     marginLeft: 20,
     // backgroundColor: 'green',
     // padding: 5,

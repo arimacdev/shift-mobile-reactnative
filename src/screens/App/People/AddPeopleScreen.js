@@ -37,13 +37,15 @@ class AddPeopleScreen extends Component {
       isSelected: false,
       visiblePeopleModal: false,
       activeUsers: [],
-      userName: 'Type a name to add',
+      allActiveUsers: [],
+      userName: '',
       userID: '',
       dataLoading: false,
       showAlert: false,
       alertTitle: '',
       alertMsg: '',
       projectID: '',
+      popupMenuOpen:false
     };
   }
 
@@ -87,7 +89,7 @@ class AddPeopleScreen extends Component {
 
   async getActiveUsers() {
     this.setState({dataLoading: true});
-    activeUsers = await APIServices.getActiveUsers();
+    let activeUsers = await APIServices.getActiveUsers();
     if (activeUsers.message == 'success') {
       let userList = [];
       for (let i = 0; i < activeUsers.data.length; i++) {
@@ -104,6 +106,7 @@ class AddPeopleScreen extends Component {
       }
       this.setState({
         activeUsers: userList,
+        allActiveUsers: userList,
         dataLoading: false,
       });
     } else {
@@ -130,6 +133,7 @@ class AddPeopleScreen extends Component {
       visiblePeopleModal: false,
       userName: item.label,
       userID: item.key,
+      popupMenuOpen:false
     });
   };
 
@@ -203,17 +207,38 @@ class AddPeopleScreen extends Component {
     });
   }
 
+  onSearchTextChange(text) {
+    this.setState({userName: text, popupMenuOpen:true});
+    let result = this.state.allActiveUsers.filter(
+      data =>
+        data.label.toLowerCase().includes(text.toLowerCase())
+    );
+    if (text == '') {
+      this.setState({activeUsers: this.state.allActiveUsers});
+    } else {
+      this.setState({activeUsers: result});
+    }
+  }
+
   renderMenuTrugger() {
     return (
       <View style={[styles.taskFieldView, {marginTop: 30}]}>
-        <Text
+        {/* <Text
           style={
             this.props.userID == ''
               ? styles.inputsTextDefualt
               : styles.inputsText
           }>
           {this.state.userName}
-        </Text>
+        </Text> */}
+
+        <TextInput
+            style={[styles.textInput, {width: '95%'}]}
+            placeholder={'Type a name to add'}
+            value={this.state.userName}
+            placeholderTextColor={colors.placeholder}
+            onChangeText={text => this.onSearchTextChange(text)}
+          />
       </View>
     );
   }
@@ -286,8 +311,9 @@ class AddPeopleScreen extends Component {
               userID={userID}
               menuTrigger={this.renderMenuTrugger()}
               menuOptions={item => this.renderUserList(item)}
-              data={this.state.activeUsers}
+              data={activeUsers}
               onSelect={(item)=>this.onSelectUser(item)}
+              open={this.state.popupMenuOpen}
             />
             <View style={[styles.taskFieldView]}>
               <TextInput
@@ -515,6 +541,7 @@ const styles = EStyleSheet.create({
   userIcon: {
     width: '45rem',
     height: '45rem',
+    borderRadius: 90 / 2,
   },
   projectView: {
     height: '70rem',
