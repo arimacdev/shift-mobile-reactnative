@@ -9,11 +9,9 @@ import {
   Dimensions,
 } from 'react-native';
 import {connect} from 'react-redux';
-import * as actions from '../../../redux/actions';
-import colors from '../../../config/colors';
-import Tasks from './Tasks';
-import EditTask from './EditTask';
-import PeopleScreen from './PeopleScreen';
+import * as actions from '../../../../redux/actions';
+import colors from '../../../../config/colors';
+import MyTasks from './MyTasks';
 import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
 import EStyleSheet from 'react-native-extended-stylesheet';
 const entireScreenWidth = Dimensions.get('window').width;
@@ -21,15 +19,13 @@ EStyleSheet.build({$rem: entireScreenWidth / 380});
 
 const initialLayout = {width: entireScreenWidth};
 
-class TasksTabScreen extends Component {
+class MyTasksTabScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
       index: 0,
       routes: [
         {key: 'tasks', title: 'Tasks'},
-        {key: 'people', title: 'People'},
-        {key: 'settings', title: 'Settings'},
       ],
     };
   }
@@ -45,34 +41,17 @@ class TasksTabScreen extends Component {
         state: {params},
       },
     } = this.props;
-    let taskGroupId = params.taskDetails.taskGroupId;
+    //let taskGroupId = params.taskDetails.taskGroupId;
     const isActive =
       this.state.routes.indexOf(route.route) === this.state.index;
     switch (route.route.key) {
       case 'tasks':
         return (
-          <Tasks
-            selectedTaskGroupId={taskGroupId}
+          <MyTasks
             navigation={this.props.navigation}
             isActive={isActive}
           />
-        );
-    case 'settings':
-        return (
-          <EditTask
-            selectedTaskGroupId={taskGroupId}
-            navigation={this.props.navigation}
-            isActive={isActive}
-          />
-        );
-    case 'people':
-        return (
-          <PeopleScreen
-            selectedTaskGroupId={taskGroupId}
-            navigation={this.props.navigation}
-            isActive={isActive}
-          />
-        );      
+        ); 
     }
   }
 
@@ -130,4 +109,4 @@ const mapStateToProps = state => {
 export default connect(
   mapStateToProps,
   actions,
-)(TasksTabScreen);
+)(MyTasksTabScreen);

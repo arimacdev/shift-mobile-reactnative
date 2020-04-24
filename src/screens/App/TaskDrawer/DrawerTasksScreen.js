@@ -95,7 +95,7 @@ class DrawerTasksScreen extends Component {
       <View style={styles.backgroundImage}>
          <NavigationEvents
                 onWillFocus={(payload) => this.loadData(payload)}/>
-            <TouchableOpacity  onPress={() => this.editUser()}>
+            <TouchableOpacity onPress={()=>this.props.navigation.navigate('MyTasksTabScreen')}>
               <View style={styles.button}>
                   <Image
                     style={[styles.bottomBarIcon, { marginRight: 15, marginLeft: 10 }]}

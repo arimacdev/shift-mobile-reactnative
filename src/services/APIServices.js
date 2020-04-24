@@ -40,7 +40,9 @@ import {
     DELETE_GROUP_TASK_DATA,
     UPDATE_GROUP_TASK_DATA,
     GET_SINGLE_GROUP_TASK_DATA,
-    GET_PEOPLE_IN_TASK
+    GET_PEOPLE_IN_TASK,
+    ADD_ALL_TASK_BY_ME_DATA,
+    ADD_TASK_TO_MY_TASK_DATA,
 
 } from '../api/API';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -850,6 +852,44 @@ async function getTaskPeopleData(selectedTaskGroupId) {
     }, true,headers);
 };
 
+async function getAllTaskByMySelf() {
+    let userIDHeder = null;
+    userIDHeder =  await AsyncStorage.getItem('userID');
+    
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        type : 'taskGroup',
+    };
+    return request({
+        url: ADD_ALL_TASK_BY_ME_DATA +'/'+ userIDHeder,
+        method: 'GET',
+    }, true,headers);
+};
+
+async function addNewMyTaskData(taskName) {
+
+    let taskAssignee = null;
+    taskAssignee =  await AsyncStorage.getItem('userID');
+
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+    };
+
+    return request({
+        url: ADD_TASK_TO_MY_TASK_DATA,
+        method: 'POST',
+        data: {
+            taskName: taskName,
+            taskAssignee: taskAssignee,
+            taskDueDate: null,
+            taskRemindOnDate: null,
+            taskType: "personal"
+        }
+    }, true, headers);
+};
+
 const APIServices = {
     getAllProjectsByUserData,
     getUserData,
@@ -895,7 +935,9 @@ const APIServices = {
     deleteGroupTaskData,
     updateGroupTaskData,
     getSingleGroupTaskData,
-    getTaskPeopleData
+    getTaskPeopleData,
+    getAllTaskByMySelf,
+    addNewMyTaskData
 };
 
 export default APIServices;

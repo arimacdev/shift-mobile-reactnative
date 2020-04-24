@@ -9,21 +9,19 @@ import {
   TextInput,
 } from 'react-native';
 import {connect} from 'react-redux';
-import * as actions from '../../../redux/actions';
-import colors from '../../../config/colors';
-import icons from '../../../assest/icons/icons';
+import * as actions from '../../../../redux/actions';
+import colors from '../../../../config/colors';
+import icons from '../../../../assest/icons/icons';
 import EStyleSheet from 'react-native-extended-stylesheet';
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
 import {Dropdown} from 'react-native-material-dropdown';
-import AddNewTasksScreen from '../Tasks/AddNewTasksScreen';
-import AsyncStorage from '@react-native-community/async-storage';
-import Loader from '../../../components/Loader';
+import Loader from '../../../../components/Loader';
 import moment from 'moment';
 import FadeIn from 'react-native-fade-in-image';
 import {SkypeIndicator} from 'react-native-indicators';
 import {NavigationEvents} from 'react-navigation';
-import APIServices from '../../../services/APIServices';
+import APIServices from '../../../../services/APIServices';
 
 const Placeholder = () => (
   <View style={styles.landing}>
@@ -47,14 +45,13 @@ let dropData = [
 ];
 
 
-class Tasks extends Component {
+class MyTasks extends Component {
   constructor(props) {
     super(props);
     this.state = {
       filterdDataAllTaks: [],
       allDataAllTaks: [],
       index: 0,
-      selectedTaskGroupId: '',
       isActive: this.props.isActive,
       selectedTypeAllTasks: 'All',
       dataLoading : false,
@@ -64,43 +61,26 @@ class Tasks extends Component {
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (prevProps.isActive !== this.props.isActive && this.props.isActive) {
-      let selectedTaskGroupId = this.props.selectedTaskGroupId;
-      this.setState(
-        {
-          selectedTaskGroupId: selectedTaskGroupId,
-        },
-        () => {
-          this.getAllTaskInGroup();
-        },
-      );
+      this.getAllTaskInMyTask();
     }
   }
 
   async componentDidMount() {
-    let selectedTaskGroupId = this.props.selectedTaskGroupId;
-      this.setState(
-        {
-          selectedTaskGroupId: selectedTaskGroupId,
-        },
-        () => {
-          this.getAllTaskInGroup();
-        },
-      );
+    this.getAllTaskInMyTask();
   }
 
 
-  async getAllTaskInGroup() {
+  async getAllTaskInMyTask() {
     this.setState({
       selectedTypeAllTasks: 'All',
     });
-    let selectedTaskGroupId = this.state.selectedTaskGroupId;
     this.setState({dataLoading:true});
-    allTaskData = await APIServices.getAllTaskByGroup(selectedTaskGroupId);
-    if(allTaskData.message == 'success'){
+    myTaskData = await APIServices.getAllTaskByMySelf();
+    if(myTaskData.message == 'success'){
       this.setState({
         dataLoading:false,
-        allDataAllTaks:allTaskData.data,
-        filterdDataAllTaks:allTaskData.data
+        allDataAllTaks:myTaskData.data,
+        filterdDataAllTaks:myTaskData.data
       });   
     }else{
       this.setState({dataLoading:false});
@@ -108,15 +88,7 @@ class Tasks extends Component {
   }
 
   async tabOpenTaskTab() {
-    let selectedTaskGroupId = this.props.selectedTaskGroupId;
-    this.setState(
-      {
-        selectedTaskGroupId: selectedTaskGroupId,
-      },
-      () => {
-        this.getAllTaskInGroup();
-      },
-    );
+    this.getAllTaskInMyTask();
   }
 
   dateView = function(item) {
@@ -162,7 +134,7 @@ class Tasks extends Component {
       return (
         <Image
           style={{width: 24, height: 24, borderRadius: 24 / 2}}
-          source={require('../../../asserts/img/defult_user.png')}
+          source={require('../../../../asserts/img/defult_user.png')}
         />
       );
     }
@@ -233,12 +205,11 @@ class Tasks extends Component {
   async onNewTaskNameSubmit(text){
     try {
       let taskName = this.state.taskName;
-      let selectedTaskGroupId = this.state.selectedTaskGroupId;
       this.setState({dataLoading:true});
-      newGroupTaskData = await APIServices.addTaskGroupTaskData(taskName,selectedTaskGroupId);
-      if(newGroupTaskData.message == 'success'){
+      newTaskData = await APIServices.addNewMyTaskData(taskName);
+      if(newTaskData.message == 'success'){
         this.setState({dataLoading:false,taskName:''});   
-        this.getAllTaskInGroup();
+        this.getAllTaskInMyTask();
       }else{
         this.setState({dataLoading:false});
       }
@@ -269,7 +240,7 @@ class Tasks extends Component {
                   animationDuration={0.5}
                   containerStyle={{width: '100%'}}
                   overlayStyle={{width: '100%'}}
-                  pickerStyle={{width: '89%', marginTop: 70, marginLeft: 15}}
+                  pickerStyle={{width: '89%', marginTop: EStyleSheet.value('50rem'), marginLeft: 15}}
                   dropdownPosition={0}
                   value={selectedTypeAllTasks}
                   itemColor={'black'}
@@ -295,7 +266,7 @@ class Tasks extends Component {
                 />
             </View>
             <FlatList
-              style={{marginBottom: EStyleSheet.value('80rem')}}
+              style={{marginBottom: EStyleSheet.value('145rem')}}
               data={filterdDataAllTaks}
               renderItem={({item}) => this.renderTaskList(item)}
               keyExtractor={item => item.taskId}
@@ -310,17 +281,14 @@ class Tasks extends Component {
 const styles = EStyleSheet.create({
   backgroundImage: {
     flex: 1,
-    // backgroundColor: colors.pageBackGroundColor,
   },
   projectFilerView: {
     backgroundColor: colors.projectBgColor,
     borderRadius: 5,
-    // width: '330rem',
     marginTop: '17rem',
     marginBottom: '12rem',
     flexDirection: 'row',
     alignItems: 'center',
-    // justifyContent: 'center',
     paddingHorizontal: '12rem',
     height: '45rem',
     marginHorizontal: '20rem',
@@ -332,7 +300,6 @@ const styles = EStyleSheet.create({
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'center',
-    // fontWeight: 'bold',
   },
   taskView: {
     backgroundColor: colors.projectBgColor,
@@ -372,13 +339,8 @@ const styles = EStyleSheet.create({
     marginLeft: 10,
   },
   statusView: {
-    // backgroundColor: colors.gray,
-    // width:'5rem',
-    // height:'60rem',
     alignItems: 'center',
     flexDirection: 'row',
-    // borderTopRightRadius: 5,
-    // borderBottomRightRadius: 5,
   },
   dropIcon: {
     width: '13rem',
@@ -447,4 +409,4 @@ const mapStateToProps = state => {
 export default connect(
   mapStateToProps,
   actions,
-)(Tasks);
+)(MyTasks);

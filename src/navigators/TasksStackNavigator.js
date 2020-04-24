@@ -5,6 +5,7 @@ import Header from '../components/Header';
 import DrawerTasksScreen from '../screens/App/TaskDrawer/DrawerTasksScreen';
 import TasksTabScreen from '../screens/App/TaskDrawer/TasksTabScreen';
 import SearchGruopTaskScreen from '../screens/App/TaskDrawer/SearchGruopTaskScreen';
+import MyTasksTabScreen from '../screens/App/TaskDrawer/MyTask/MyTasksTabScreen';
 
 export const TasksStackNavigator = createStackNavigator(
   {
@@ -45,6 +46,18 @@ export const TasksStackNavigator = createStackNavigator(
           <Header
             title={'Search'}
             onPress={() => navigation.navigate('DrawerTasksScreen')}
+          />
+        ),
+      }),
+    },
+    MyTasksTabScreen: {
+      screen: MyTasksTabScreen,
+      navigationOptions: ({navigation}) => ({
+        header: (
+          <Header
+            title={ 'My personal Tasks'
+            }
+            onPress={() => navigation.pop()}
           />
         ),
       }),
