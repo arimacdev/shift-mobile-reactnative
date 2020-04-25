@@ -243,12 +243,79 @@ class AddNewTasksScreen extends Component {
   };
 
   hideDatePicker = () => {
-    this.setState({showPicker: false})
+    this.setState({ showPicker: false })
   };
 
-  handleConfirm = date => {
-    console.warn("A date has been picked: ", date);
+  handleDateConfirm = date => {
     this.hideDatePicker();
+    this.setState({ isDateNeedLoading: true })
+    let date1 = new Date(date);
+    let newDate = '';
+    let newDateValue = '';
+    if (this.state.reminder) {
+      newDate = moment(date1).format('Do MMMM YYYY');
+      newDateValue = moment(date1).format('DD MM YYYY');
+    } else {
+      newDate = moment(date1).format('Do MMMM YYYY');
+      newDateValue = moment(date1).format('DD MM YYYY');
+    }
+    if (this.state.reminder) {
+      this.setState({
+        selectedDateReminder: newDate,
+        selectedDateReminderValue: newDateValue,
+        dateReminder: new Date(date1),
+      });
+    } else {
+      this.setState({
+        selectedDate: newDate,
+        selectedDateValue: newDateValue,
+        date: new Date(date1),
+      });
+    }
+    setTimeout(() => {
+      this.setState({
+        isDateNeedLoading: false,
+        showTimePicker: true,
+      })
+    }, 500);
+  };
+
+  showTimePicker = () => {
+    this.setState({ showTimePicker: true })
+  };
+
+  hideTimePicker = () => {
+    this.setState({ showTimePicker: false })
+  };
+
+  handleTimeConfirm = time1 => {
+    console.log(time1, 'time')
+    this.hideTimePicker();
+    let time = new Date(time1);
+    let newTime = moment(time).format('hh:mmA');
+    // let newTime = time.getHours() + ':' + time.getMinutes();
+    // if (event.type == 'set') {
+      if (this.state.reminder) {
+        this.setState({
+          selectedTimeReminder: newTime,
+          showPicker: false,
+          showTimePicker: false,
+          timeReminder: new Date(time1),
+        });
+      } else {
+        this.setState({
+          selectedTime: newTime,
+          showPicker: false,
+          showTimePicker: false,
+          time: new Date(time1),
+        });
+      }
+    // } else {
+    //   this.setState({
+    //     showPicker: false,
+    //     showTimePicker: false,
+    //   });
+    // }
   };
 
   onChangeDate(event, selectedDate) {
@@ -314,7 +381,7 @@ class AddNewTasksScreen extends Component {
       });
     }
   }
-  
+
 
 
 
@@ -331,28 +398,28 @@ class AddNewTasksScreen extends Component {
         </View>
       );
     } else {
-    return (
-      <DateTimePicker
-        testID="dateTimePicker"
-        timeZoneOffsetInMinutes={0}
-        value={
-          this.state.reminder == true
-            ? this.state.dateReminder
-            : this.state.date
-        }
-        mode={this.state.mode}
-        is24Hour={true}
-        display="default"
-        onChange={(event, selectedDate) =>
-          this.onChangeDate(event, selectedDate)
-        }
-      />
-    );
-      }
+      return (
+        <DateTimePicker
+          testID="dateTimePicker"
+          timeZoneOffsetInMinutes={0}
+          value={
+            this.state.reminder == true
+              ? this.state.dateReminder
+              : this.state.date
+          }
+          mode={this.state.mode}
+          is24Hour={true}
+          display="default"
+          onChange={(event, selectedDate) =>
+            this.onChangeDate(event, selectedDate)
+          }
+        />
+      );
+    }
   }
 
   renderTimePicker() {
-    if ( Platform.OS == 'ios' ) {
+    if (Platform.OS == 'ios') {
       return (
         <View>
           <DateTimePickerModal
