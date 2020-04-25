@@ -85,6 +85,7 @@ class AddNewTasksScreen extends Component {
       reminderTime: '',
       selectedDateValue: '',
       selectedDateReminderValue: '',
+      isDateNeedLoading: false
     };
   }
 
@@ -113,7 +114,7 @@ class AddNewTasksScreen extends Component {
       );
 
       let files = this.state.files;
-      if(files && files.length > 0){
+      if (files && files.length > 0) {
         this.uploadFiles(this.state.files, taskID)
       }
       // this.uploadFiles(this.state.files, 'b6ba3dcf-4494-4bb5-80dc-17376c628187')
@@ -161,16 +162,83 @@ class AddNewTasksScreen extends Component {
   }
 
   showDatePicker = () => {
-    this.setState({showPicker: true})
+    this.setState({ showPicker: true })
   };
 
   hideDatePicker = () => {
-    this.setState({showPicker: false})
+    this.setState({ showPicker: false })
   };
 
-  handleConfirm = date => {
-    console.warn("A date has been picked: ", date);
+  handleDateConfirm = date => {
     this.hideDatePicker();
+    this.setState({ isDateNeedLoading: true })
+    let date1 = new Date(date);
+    let newDate = '';
+    let newDateValue = '';
+    if (this.state.reminder) {
+      newDate = moment(date1).format('Do MMMM YYYY');
+      newDateValue = moment(date1).format('DD MM YYYY');
+    } else {
+      newDate = moment(date1).format('Do MMMM YYYY');
+      newDateValue = moment(date1).format('DD MM YYYY');
+    }
+    if (this.state.reminder) {
+      this.setState({
+        selectedDateReminder: newDate,
+        selectedDateReminderValue: newDateValue,
+        dateReminder: new Date(date1),
+      });
+    } else {
+      this.setState({
+        selectedDate: newDate,
+        selectedDateValue: newDateValue,
+        date: new Date(date1),
+      });
+    }
+    setTimeout(() => {
+      this.setState({
+        isDateNeedLoading: false,
+        showTimePicker: true,
+      })
+    }, 500);
+  };
+
+  showTimePicker = () => {
+    this.setState({ showTimePicker: true })
+  };
+
+  hideTimePicker = () => {
+    this.setState({ showTimePicker: false })
+  };
+
+  handleTimeConfirm = time1 => {
+    console.log(time1, 'time')
+    this.hideTimePicker();
+    let time = new Date(time1);
+    let newTime = moment(time).format('hh:mmA');
+    // let newTime = time.getHours() + ':' + time.getMinutes();
+    // if (event.type == 'set') {
+      if (this.state.reminder) {
+        this.setState({
+          selectedTimeReminder: newTime,
+          showPicker: false,
+          showTimePicker: false,
+          timeReminder: new Date(time1),
+        });
+      } else {
+        this.setState({
+          selectedTime: newTime,
+          showPicker: false,
+          showTimePicker: false,
+          time: new Date(time1),
+        });
+      }
+    // } else {
+    //   this.setState({
+    //     showPicker: false,
+    //     showTimePicker: false,
+    //   });
+    // }
   };
 
   onChangeDate(event, selectedDate) {
@@ -236,69 +304,69 @@ class AddNewTasksScreen extends Component {
       });
     }
   }
-  
+
 
   renderDatePicker() {
-    if ( Platform.OS == 'ios' ) {
+    if (Platform.OS == 'ios') {
       return (
         <View>
           <DateTimePickerModal
             isVisible={this.state.showPicker}
             mode="date"
-            onConfirm={this.handleConfirm}
+            onConfirm={this.handleDateConfirm}
             onCancel={this.hideDatePicker}
           />
         </View>
       );
     } else {
-    return (
-      <DateTimePicker
-        testID="dateTimePicker"
-        timeZoneOffsetInMinutes={0}
-        value={
-          this.state.reminder == true
-            ? this.state.dateReminder
-            : this.state.date
-        }
-        mode={this.state.mode}
-        is24Hour={true}
-        display="default"
-        onChange={(event, selectedDate) =>
-          this.onChangeDate(event, selectedDate)
-        }
-      />
-    );
-      }
+      return (
+        <DateTimePicker
+          testID="dateTimePicker"
+          timeZoneOffsetInMinutes={0}
+          value={
+            this.state.reminder == true
+              ? this.state.dateReminder
+              : this.state.date
+          }
+          mode={this.state.mode}
+          is24Hour={true}
+          display="default"
+          onChange={(event, selectedDate) =>
+            this.onChangeDate(event, selectedDate)
+          }
+        />
+      );
+    }
   }
 
   renderTimePicker() {
-    if ( Platform.OS == 'ios' ) {
+    if (Platform.OS == 'ios') {
       return (
         <View>
           <DateTimePickerModal
             isVisible={this.state.showTimePicker}
             mode="time"
-            onConfirm={this.handleConfirm}
-            onCancel={this.hideDatePicker}
+            onConfirm={this.handleTimeConfirm}
+            onCancel={this.hideTimePicker}
           />
         </View>
       );
     } else {
-    return (
-      <DateTimePicker
-        testID="dateTimePicker"
-        timeZoneOffsetInMinutes={0}
-        value={this.state.reminder == true
-          ? this.state.timeReminder : this.state.time}
-        mode={'time'}
-        is24Hour={true}
-        display="default"
-        onChange={(event, selectedTime) =>
-          this.onChangeTime(event, selectedTime)
-        }
-      />
-    );
-      }
+      return (
+        <DateTimePicker
+          testID="dateTimePicker"
+          timeZoneOffsetInMinutes={0}
+          value={this.state.reminder == true
+            ? this.state.timeReminder : this.state.time}
+          mode={'time'}
+          is24Hour={true}
+          display="default"
+          onChange={(event, selectedTime) =>
+            this.onChangeTime(event, selectedTime)
+          }
+        />
+      );
+    }
   }
 
   onFilesCrossPress(uri) {
@@ -474,7 +542,7 @@ class AddNewTasksScreen extends Component {
       moment(dueDate + dueTime, 'DD/MM/YYYY hh:mmA').format('YYYY-MM-DD[T]HH:mm:ss') : '';
     let IsoReminderDate = selectedDateReminder ?
       moment(selectedDateReminder + selectedTimeReminder, 'DD/MM/YYYY hh:mmA').format('YYYY-MM-DD[T]HH:mm:ss') : '';
-    if (this.validateData(taskName, assigneeId,selectedDateReminder,dueDate)) {
+    if (this.validateData(taskName, assigneeId, selectedDateReminder, dueDate)) {
       this.props.addTaskToProject(taskName, initiator, assigneeId, selectedStatusEnum, IsoDueDate, IsoReminderDate, notes, this.props.selectedProjectID);
     }
   }
@@ -484,7 +552,7 @@ class AddNewTasksScreen extends Component {
     this.props.addFileToTask(file, taskId, this.props.selectedProjectID);
   }
 
-  validateData(taskName, assigneeId,selectedDateReminder,dueDate) {
+  validateData(taskName, assigneeId, selectedDateReminder, dueDate) {
     let momentDue = moment(dueDate, 'DD-MM-YYYY').format("YYYY-MM-DD");
     let momentReminder = moment(selectedDateReminder, 'DD-MM-YYYY').format("YYYY-MM-DD");
 
@@ -493,10 +561,10 @@ class AddNewTasksScreen extends Component {
       return false;
     }
     if (selectedDateReminder && !_.isEmpty(selectedDateReminder)) {
-        if (!(moment(momentDue).isSameOrAfter(momentReminder, 'day'))) { 
-          this.showAlert("", "Reminder date must be earlier than Due date");
-          return false;
-        }
+      if (!(moment(momentDue).isSameOrAfter(momentReminder, 'day'))) {
+        this.showAlert("", "Reminder date must be earlier than Due date");
+        return false;
+      }
     }
     return true;
   }
@@ -677,6 +745,7 @@ class AddNewTasksScreen extends Component {
         </TouchableOpacity>
         {this.state.showPicker ? this.renderDatePicker() : null}
         {this.state.showTimePicker ? this.renderTimePicker() : null}
+        {this.state.isDateNeedLoading && <Loader />}
         {addTaskToProjectLoading && <Loader />}
         {addFileTaskLoading && <Loader />}
         <AwesomeAlert
@@ -874,7 +943,7 @@ const mapStateToProps = state => {
     addTaskToProjectSuccess: state.project.addTaskToProjectSuccess,
     addTaskToProjectErrorMessage: state.project.addTaskToProjectErrorMessage,
     taskId: state.project.taskId,
-    addFileTaskLoading : state.project.addFileTaskLoading,
+    addFileTaskLoading: state.project.addFileTaskLoading,
   };
 };
 export default connect(
