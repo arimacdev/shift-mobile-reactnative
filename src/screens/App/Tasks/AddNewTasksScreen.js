@@ -375,7 +375,7 @@ class AddNewTasksScreen extends Component {
       });
     }
   }
-  
+
 
 
 
