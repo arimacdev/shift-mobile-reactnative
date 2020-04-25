@@ -304,7 +304,7 @@ class AddNewTasksScreen extends Component {
       });
     }
   }
-  
+
 
 
   renderDatePicker() {
