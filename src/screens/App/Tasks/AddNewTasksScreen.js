@@ -218,21 +218,21 @@ class AddNewTasksScreen extends Component {
     let newTime = moment(time).format('hh:mmA');
     // let newTime = time.getHours() + ':' + time.getMinutes();
     // if (event.type == 'set') {
-      if (this.state.reminder) {
-        this.setState({
-          selectedTimeReminder: newTime,
-          showPicker: false,
-          showTimePicker: false,
-          timeReminder: new Date(time1),
-        });
-      } else {
-        this.setState({
-          selectedTime: newTime,
-          showPicker: false,
-          showTimePicker: false,
-          time: new Date(time1),
-        });
-      }
+    if (this.state.reminder) {
+      this.setState({
+        selectedTimeReminder: newTime,
+        showPicker: false,
+        showTimePicker: false,
+        timeReminder: new Date(time1),
+      });
+    } else {
+      this.setState({
+        selectedTime: newTime,
+        showPicker: false,
+        showTimePicker: false,
+        time: new Date(time1),
+      });
+    }
     // } else {
     //   this.setState({
     //     showPicker: false,
@@ -739,7 +739,7 @@ class AddNewTasksScreen extends Component {
             <Image
               style={[styles.addIcon, { marginRight: 10 }]}
               source={icons.add}
-              resizeMode={'center'}
+            // resizeMode={'contain'}
             />
           </View>
         </TouchableOpacity>
