@@ -14,6 +14,7 @@ import colors from '../../../config/colors';
 import Tasks from './TasksTabScreen';
 import Projects from '../Projects/ProjectsDetailsScreen';
 import PeopleScreen from '../People/PeopleScreen';
+import FilesScreen from '../Files/ProjectFilesScreen';
 import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
 import EStyleSheet from 'react-native-extended-stylesheet';
 const entireScreenWidth = Dimensions.get('window').width;
@@ -31,6 +32,7 @@ class TasksScreen extends Component {
         {key: 'board', title: 'Board'},
         {key: 'prople', title: 'People'},
         {key: 'projects', title: 'Project'},
+        {key: 'files', title: 'Files'},
       ],
     };
   }
@@ -84,6 +86,14 @@ class TasksScreen extends Component {
       case 'prople':
         return (
           <PeopleScreen
+            selectedProjectID={projectId}
+            navigation={this.props.navigation}
+            isActive={isActive}
+          />
+        );
+      case 'files':
+        return (
+          <FilesScreen
             selectedProjectID={projectId}
             navigation={this.props.navigation}
             isActive={isActive}
