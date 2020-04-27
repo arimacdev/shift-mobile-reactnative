@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Dimensions,
+  BackHandler,
 } from 'react-native';
 import {connect} from 'react-redux';
 import * as actions from '../../../redux/actions';
@@ -25,6 +26,7 @@ import moment from 'moment';
 import CalendarPicker from 'react-native-calendar-picker';
 import Modal from 'react-native-modal';
 const {height, width} = Dimensions.get('window');
+import {Icon} from 'native-base';
 
 const initialLayout = {width: entireScreenWidth};
 const menuItems = [
@@ -56,11 +58,36 @@ class WorkloadTabScreen extends Component {
       selectedEndDate: null,
     };
     this.onDateChange = this.onDateChange.bind(this);
+    this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
+  }
+
+  componentWillMount() {
+    BackHandler.addEventListener(
+      'hardwareBackPress',
+      this.handleBackButtonClick,
+    );
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {}
 
   componentDidMount() {}
+
+  componentWillUnmount() {
+    BackHandler.removeEventListener(
+      'hardwareBackPress',
+      this.handleBackButtonClick,
+    );
+  }
+
+  handleBackButtonClick() {
+    if(this.state.showPicker){
+      this.onCloseModel();
+    } else{
+      this.props.navigation.goBack(null);
+    }
+    
+    return true;
+  }
 
   onDateChange(date, type) {
     if (type === 'END_DATE') {
@@ -249,20 +276,21 @@ class WorkloadTabScreen extends Component {
     const minDate = new Date(); // Today
     const maxDate = new Date(2500, 1, 1);
     const startDate = selectedStartDate
-      ? moment(this.state.selectedStartDate).format('Do MMMM DD') +
-        ' - 00:00:00'
+      ? moment(this.state.selectedStartDate).format('Do MMMM YYYY')
       : 'all';
     const endDate = selectedEndDate
-      ? moment(this.state.selectedEndDate).format('Do MMMM DD') + ' - 23:59:59'
+      ? moment(this.state.selectedEndDate).format('Do MMMM YYYY')
       : 'all';
     return (
       <Modal
         isVisible={this.state.showPicker}
-        style={{backgroundColor: colors.white, height: 100}}
+        style={styles.modalStyle}
         onBackButtonPress={() => this.onCloseModel()}
-        onBackdropPress={() => this.onCloseModel()}>
-        <View style={{flex: 1, margin: 10}}>
-          <View style={{borderColor: colors.lightgray, borderWidth: 1}}>
+        onBackdropPress={() => this.onCloseModel()}
+        onRequestClose={() => this.onCloseModel()}
+        coverScreen={false}>
+        <View style={{margin: 10}}>
+          <View>
             <CalendarPicker
               startFromMonday={true}
               allowRangeSelection={true}
@@ -271,39 +299,41 @@ class WorkloadTabScreen extends Component {
               selectedStartDate={selectedStartDate}
               selectedEndDate={selectedEndDate}
               width={width - 60}
-              todayBackgroundColor="#f2e6ff"
-              selectedDayColor="#7300e6"
-              selectedDayTextColor="#FFFFFF"
+              previousTitle={
+                <Icon name={'arrow-dropleft'} style={styles.iconCalendar} />
+              }
+              nextTitle={
+                <Icon name={'arrow-dropright'} style={styles.iconCalendar} />
+              }
+              todayBackgroundColor={colors.lightBlue}
+              selectedDayColor={colors.selectedRange}
+              selectedDayTextColor={colors.white}
+              weekdays={['M', 'T', 'W', 'T', 'F', 'S', 'S']}
+              textStyle={styles.dateTextStyle}
+              dayLabelsWrapper={{
+                borderBottomWidth: 0,
+                borderTopWidth: 0,
+              }}
+              dayShape={'square'}
               onDateChange={this.onDateChange}
             />
           </View>
-          <View style={{marginTop: 20}}>
-            <Text style={{color: colors.gray, fontSize: 15}}>
-              SELECTED START DATE :
-            </Text>
-            <Text style={{marginBottom: 20}}>{startDate}</Text>
-            <Text style={{color: colors.gray, fontSize: 15}}>
-              SELECTED END DATE :
-            </Text>
+          <View style={styles.selectedDates}>
+            <Text>{startDate}</Text>
+            <Text style={styles.dashText}> - </Text>
             <Text>{endDate}</Text>
           </View>
 
-          <View
-            style={{
-              flex: 1,
-              flexDirection: 'row',
-              alignItems: 'flex-end',
-              justifyContent: 'flex-end',
-              marginBottom: 10,
-              marginRight: 10,
-            }}>
+          <View style={styles.ButtonViewStyle}>
             <TouchableOpacity
-              style={{marginRight: 30}}
+              style={styles.cancelStyle}
               onPress={() => this.onCloseModel()}>
-              <Text style={{fontSize: 16}}>Cancel</Text>
+              <Text style={styles.cancelTextStyle}>Cancel</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.onDateSet()}>
-              <Text style={{fontSize: 16}}>Ok</Text>
+            <TouchableOpacity
+              style={styles.okStyle}
+              onPress={() => this.onDateSet()}>
+              <Text style={styles.saveTextStyle}>Save</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -368,6 +398,64 @@ const styles = EStyleSheet.create({
     backgroundColor: 'white',
     height: '60rem',
     alignItems: 'flex-start',
+  },
+  dateTextStyle: {
+    color: '#000000',
+    fontWeight: 'bold',
+  },
+  selectedDates: {
+    flexDirection: 'row',
+    marginTop: 0,
+    height: 50,
+    backgroundColor: colors.projectBgColor,
+    borderRadius: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginHorizontal: 15,
+  },
+  dashText: {
+    fontSize: 30,
+    color: colors.gray,
+    marginBottom: 5,
+  },
+  ButtonViewStyle: {
+    flexDirection: 'row',
+    marginTop: 10,
+    marginBottom: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginHorizontal: 15,
+  },
+  cancelStyle: {
+    marginRight: 10,
+    backgroundColor: colors.lightRed,
+    borderRadius: 5,
+    paddingHorizontal: 40,
+    paddingVertical: 10,
+    flex: 1,
+    justifyContent: 'center',
+  },
+  okStyle: {
+    backgroundColor: colors.lightGreen,
+    borderRadius: 5,
+    paddingHorizontal: 40,
+    paddingVertical: 10,
+    flex: 1,
+    justifyContent: 'center',
+  },
+  cancelTextStyle: {
+    fontSize: 16,
+    color: colors.white,
+    textAlign: 'center',
+  },
+  saveTextStyle: {
+    fontSize: 16,
+    color: colors.white,
+    textAlign: 'center',
+  },
+  modalStyle: {
+    backgroundColor: colors.white,
+    marginVertical: 100,
   },
 });
 

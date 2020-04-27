@@ -36,7 +36,9 @@ const colors = {
     dueTodayColor:'#ff6363',
     thisWeekColor:'#5acde6',
     thosMonthColor:'#ffa800',
-    customColor:'#5e98f0'
+    customColor:'#5e98f0',
+    black:'#000000',
+    selectedRange:'#7300e6'
 
 };
 export default colors;
