@@ -23,6 +23,8 @@ import {MenuProvider} from 'react-native-popup-menu';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
 import CalendarPicker from 'react-native-calendar-picker';
+import Modal from 'react-native-modal';
+const {height, width} = Dimensions.get('window');
 
 const initialLayout = {width: entireScreenWidth};
 const menuItems = [
@@ -225,13 +227,91 @@ class WorkloadTabScreen extends Component {
     );
   }
 
-  render() {
+  onCloseModel() {
+    this.setState({showPicker: false});
+  }
+
+  onDateSet() {
+    let selectedStartDate =
+      moment(this.state.selectedStartDate).format('YYYY-MM-DD[T]') + '00:00:00';
+    let selectedEndDate =
+      moment(this.state.selectedEndDate).format('YYYY-MM-DD[T]') + '23:59:59';
+
+    this.setState({
+      from: selectedStartDate,
+      to: selectedEndDate,
+      showPicker: false,
+    });
+  }
+
+  renderCalender() {
     const {selectedStartDate, selectedEndDate} = this.state;
     const minDate = new Date(); // Today
     const maxDate = new Date(2500, 1, 1);
-    const startDate = selectedStartDate ? selectedStartDate.toString() : '';
-    const endDate = selectedEndDate ? selectedEndDate.toString() : '';
+    const startDate = selectedStartDate
+      ? moment(this.state.selectedStartDate).format('Do MMMM DD') +
+        ' - 00:00:00'
+      : 'all';
+    const endDate = selectedEndDate
+      ? moment(this.state.selectedEndDate).format('Do MMMM DD') + ' - 23:59:59'
+      : 'all';
+    return (
+      <Modal
+        isVisible={this.state.showPicker}
+        style={{backgroundColor: colors.white, height: 100}}
+        onBackButtonPress={() => this.onCloseModel()}
+        onBackdropPress={() => this.onCloseModel()}>
+        <View style={{flex: 1, margin: 10}}>
+          <View style={{borderColor: colors.lightgray, borderWidth: 1}}>
+            <CalendarPicker
+              startFromMonday={true}
+              allowRangeSelection={true}
+              // minDate={minDate}
+              // maxDate={maxDate}
+              selectedStartDate={selectedStartDate}
+              selectedEndDate={selectedEndDate}
+              width={width - 60}
+              todayBackgroundColor="#f2e6ff"
+              selectedDayColor="#7300e6"
+              selectedDayTextColor="#FFFFFF"
+              onDateChange={this.onDateChange}
+            />
+          </View>
+          <View style={{marginTop: 20}}>
+            <Text style={{color: colors.gray, fontSize: 15}}>
+              SELECTED START DATE :
+            </Text>
+            <Text style={{marginBottom: 20}}>{startDate}</Text>
+            <Text style={{color: colors.gray, fontSize: 15}}>
+              SELECTED END DATE :
+            </Text>
+            <Text>{endDate}</Text>
+          </View>
 
+          <View
+            style={{
+              flex: 1,
+              flexDirection: 'row',
+              alignItems: 'flex-end',
+              justifyContent: 'flex-end',
+              marginBottom: 10,
+              marginRight: 10,
+            }}>
+            <TouchableOpacity
+              style={{marginRight: 30}}
+              onPress={() => this.onCloseModel()}>
+              <Text style={{fontSize: 16}}>Cancel</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => this.onDateSet()}>
+              <Text style={{fontSize: 16}}>Ok</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+    );
+  }
+
+  render() {
     return (
       <MenuProvider>
         <View style={{flex: 1}}>
@@ -266,22 +346,8 @@ class WorkloadTabScreen extends Component {
             renderTabBar={props => this.renderTabBar(props)}
           />
         </View>
-        {this.state.showPicker ? this.renderDatePicker() : null}
-        {/* <CalendarPicker
-          startFromMonday={true}
-          allowRangeSelection={true}
-          minDate={minDate}
-          maxDate={maxDate}
-          todayBackgroundColor="#f2e6ff"
-          selectedDayColor="#7300e6"
-          selectedDayTextColor="#FFFFFF"
-          onDateChange={this.onDateChange}
-        />
-
-        <View>
-          <Text>SELECTED START DATE:{startDate}</Text>
-          <Text>SELECTED END DATE:{endDate}</Text>
-        </View> */}
+        {/* {this.state.showPicker ? this.renderDatePicker() : null} */}
+        {this.renderCalender()}
       </MenuProvider>
     );
   }

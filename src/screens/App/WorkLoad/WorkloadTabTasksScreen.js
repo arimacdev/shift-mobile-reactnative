@@ -28,6 +28,7 @@ import APIServices from '../../../services/APIServices';
 import Accordion from 'react-native-collapsible/Accordion';
 import * as Animatable from 'react-native-animatable';
 import Collapsible from '../../../components/CollapsibleView';
+const {height, width} = Dimensions.get('window');
 
 const Placeholder = () => (
   <View style={styles.landing}>
@@ -68,6 +69,8 @@ class WorkloadTabTasksScreen extends Component {
       enableScrollViewScroll: true,
       from: this.props.from,
       to: this.props.to,
+      noData: '',
+      refresh: false,
     };
   }
 
@@ -91,7 +94,7 @@ class WorkloadTabTasksScreen extends Component {
   }
 
   async getAllWorkloadTasks(selectedUserId, from, to) {
-    this.setState({dataLoading: true});
+    this.setState({dataLoading: true, noData: ''});
     let workloadTasks = await APIServices.getWorkloadWithAssignTasksCompletion(
       selectedUserId,
       from,
@@ -102,6 +105,11 @@ class WorkloadTabTasksScreen extends Component {
       // projectData = await APIServices.getProjectData(selectedProjectID);
       if (workloadTasks.message == 'success') {
         this.setState({workloadTasks: workloadTasks.data, dataLoading: false});
+        if (workloadTasks.data.length > 0) {
+          this.setState({noData: ''});
+        } else {
+          this.setState({noData: 'No data found'});
+        }
       } else {
         this.setState({dataLoading: false});
       }
@@ -111,7 +119,12 @@ class WorkloadTabTasksScreen extends Component {
   }
 
   _onRefresh = async () => {
-    await this.setState({from: 'all', to: 'all'});
+    await this.setState({
+      from: 'all',
+      to: 'all',
+      refresh: false,
+      dataLoading: true,
+    });
     this.getAllWorkloadTasks(
       this.props.selectedUserId,
       this.state.from,
@@ -437,28 +450,47 @@ class WorkloadTabTasksScreen extends Component {
       >
         <NavigationEvents
           onWillFocus={() =>
-            this.getAllWorkloadTasks(this.props.selectedUserId, this.state.from, this.state.to)
+            this.getAllWorkloadTasks(
+              this.props.selectedUserId,
+              this.state.from,
+              this.state.to,
+            )
           }
         />
         <ScrollView
+          style={{flex: 1}}
           refreshControl={
             <RefreshControl
-              refreshing={this.state.dataLoading}
+              refreshing={this.state.refresh}
               onRefresh={this._onRefresh}
             />
           }
           // scrollEnabled={this.state.enableScrollViewScroll}
           ref={myScroll => (this._myScroll = myScroll)}>
-          <Accordion
-            underlayColor={colors.white}
-            sections={this.state.workloadTasks}
-            // sectionContainerStyle={{height:200}}
-            containerStyle={{marginBottom: 20, marginTop: 10}}
-            activeSections={this.state.activeSections}
-            renderHeader={this._renderHeader}
-            renderContent={item => this._renderContent(item.taskList)}
-            onChange={this._updateSections}
-          />
+          {this.state.workloadTasks.length > 0 ? (
+            <Accordion
+              underlayColor={colors.white}
+              sections={this.state.workloadTasks}
+              // sectionContainerStyle={{height:200}}
+              containerStyle={{marginBottom: 20, marginTop: 10}}
+              activeSections={this.state.activeSections}
+              renderHeader={this._renderHeader}
+              renderContent={item => this._renderContent(item.taskList)}
+              onChange={this._updateSections}
+            />
+          ) : (
+            <View
+              style={{
+                flex: 1,
+                height: height - 200,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <Text style={{color: colors.gray, fontSize: 20}}>
+                {this.state.noData}
+              </Text>
+            </View>
+          )}
         </ScrollView>
 
         {/* <FlatList
