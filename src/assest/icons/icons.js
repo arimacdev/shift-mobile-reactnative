@@ -53,5 +53,6 @@ const icons = {
     blueAdd : require('./blue_add.png'), 
     users : require('./users.png'),
     filterIcon : require('./filter_icon.png'),
+    downloadIcon : require('./download_icon.png'),
 };
 export default icons;

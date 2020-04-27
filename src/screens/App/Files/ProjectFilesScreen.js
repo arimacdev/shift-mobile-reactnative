@@ -22,83 +22,118 @@ import moment from 'moment';
 import AwesomeAlert from 'react-native-awesome-alerts';
 import DocumentPicker from 'react-native-document-picker';
 
-
+const a = [
+  {
+    uri: 'res.uri',
+    type: 'res.type', // mime type
+    name: 'aaaaa.jpg',
+    size: 11445,
+    dateTime: moment().format('YYYY/MM/DD') + ' | ' + moment().format('HH:mm'),
+  },
+  {
+    uri: 'res.uri',
+    type: 'res.type', // mime type
+    name: 'ssss.jpg',
+    size: 11445,
+    dateTime: moment().format('YYYY/MM/DD') + ' | ' + moment().format('HH:mm'),
+  },
+  {
+    uri: 'res.uri',
+    type: 'res.type', // mime type
+    name: 'vvvvv.jpg',
+    size: 11445,
+    dateTime: moment().format('YYYY/MM/DD') + ' | ' + moment().format('HH:mm'),
+  },
+];
 class ProjectFilesScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
       files: [],
-      dataLoading : false,
-      projectID : '',
-      taskID : '',
-      userID : '',
-      addedUser : '',
-      showAlert : false,
-      alertTitle : '',
-      alertMsg : '',
+      dataLoading: false,
+      projectID: '',
+      taskID: '',
+      userID: '',
+      addedUser: '',
+      showAlert: false,
+      alertTitle: '',
+      alertMsg: '',
     };
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    if (prevProps.addFileTaskSuccess !== this.props.addFileTaskSuccess
-      && this.props.addFileTaskSuccess) {
-        let userID = this.state.userID;
-        this.fetchData(userID);
-      }
+    if (
+      prevProps.addFileTaskSuccess !== this.props.addFileTaskSuccess &&
+      this.props.addFileTaskSuccess
+    ) {
+      let userID = this.state.userID;
+      this.fetchData(userID);
+    }
   }
 
   componentDidMount() {
-    AsyncStorage.getItem('userID').then(userID => {
-      if (userID) {
-        const {navigation: {state: {params}}} = this.props;
-        let projectID = params.projectID
-        let taskID = params.taskID
-        this.setState({
-          projectID : projectID,
-          taskID : taskID,
-          userID : userID}, function() {
-          this.fetchData(userID);
-        });
-      } 
-    });
+    this.setState({files: a});
+    // AsyncStorage.getItem('userID').then(userID => {
+    //   if (userID) {
+    //     const {
+    //       navigation: {
+    //         state: {params},
+    //       },
+    //     } = this.props;
+    //     let projectID = params.projectID;
+    //     let taskID = params.taskID;
+    //     this.setState(
+    //       {
+    //         projectID: projectID,
+    //         taskID: taskID,
+    //         userID: userID,
+    //       },
+    //       function() {
+    //         this.fetchData(userID);
+    //       },
+    //     );
+    //   }
+    // });
   }
 
   async fetchData(userID) {
-      let projectID = this.state.projectID
-      let taskID = this.state.taskID
-      this.setState({dataLoading:true});
-      filesData = await APIServices.getFilesInTaskData(projectID,taskID,userID);
-      if(filesData.message == 'success'){
-        this.setState({files : filesData.data,dataLoading:false});
-      }else{
-        this.setState({dataLoading:false});
-      }
+    let projectID = this.state.projectID;
+    let taskID = this.state.taskID;
+    this.setState({dataLoading: true});
+    filesData = await APIServices.getFilesInTaskData(projectID, taskID, userID);
+    if (filesData.message == 'success') {
+      this.setState({files: filesData.data, dataLoading: false});
+    } else {
+      this.setState({dataLoading: false});
+    }
   }
 
-  async deleteFile(item){
+  async deleteFile(item) {
     let projectID = this.state.projectID;
     let taskID = this.state.taskID;
     let userID = this.state.userID;
     let taskFileId = item.taskFileId;
 
-    this.setState({dataLoading:true});
+    this.setState({dataLoading: true});
     try {
-      resultObj = await APIServices.deleteFileInTaskData(projectID,taskID,taskFileId);
-      if(resultObj.message == 'success'){
-        this.setState({dataLoading:false});
+      resultObj = await APIServices.deleteFileInTaskData(
+        projectID,
+        taskID,
+        taskFileId,
+      );
+      if (resultObj.message == 'success') {
+        this.setState({dataLoading: false});
         this.fetchData(userID);
-      }else{
-        this.setState({dataLoading:false});
+      } else {
+        this.setState({dataLoading: false});
+      }
+    } catch (e) {
+      if (e.status == 401) {
+        this.setState({dataLoading: false});
+        this.showAlert('', e.data.message);
       }
     }
-    catch(e) {
-      if(e.status == 401){
-        this.setState({dataLoading:false});
-        this.showAlert("",e.data.message);
-      }
-    }
-    
-}
+  }
 
   renderUserListList(item) {
     // let fileDateText = '';
@@ -112,52 +147,58 @@ class ProjectFilesScreen extends Component {
     //   fileDateText = '';
     // }
     return (
-      <TouchableOpacity onPress={()=>this.props.navigation.navigate('FilesView',{filesData:item})}>
+      <TouchableOpacity
+        onPress={() =>
+          this.props.navigation.navigate('FilesView', {filesData: item})
+        }>
         <View style={styles.filesView}>
           <Image source={icons.gallary} style={styles.taskStateIcon} />
           <View style={{flex: 1}}>
-            <Text style={styles.text}>
-              {item.taskFileName}
-            </Text>
-            <Text style={styles.textDate}>
-            </Text>
+            <Text style={styles.text}>{item.name}</Text>
+            <Text style={styles.textDate}>{item.dateTime}</Text>
           </View>
           <View style={styles.controlView}>
-            <TouchableOpacity 
+            <TouchableOpacity
               onPress={() => this.deleteFile(item)}
               style={{marginLeft: EStyleSheet.value('24rem')}}>
-                  <Image 
-                    style={{width: 40, height: 40,borderRadius: 40/ 2 }} 
-                    source={require('../../../asserts/img/bin.png')}
-                  />
-              </TouchableOpacity>
+              <Image
+                style={{width: 30, height: 30}}
+                source={icons.downloadIcon}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => this.deleteFile(item)}
+              style={{marginLeft: EStyleSheet.value('10rem')}}>
+              <Image
+                style={{width: 30, height: 30}}
+                source={icons.deleteRoundRed}
+              />
+            </TouchableOpacity>
           </View>
         </View>
       </TouchableOpacity>
     );
   }
 
-  
-
   onBackPress() {
     this.props.navigation.goBack();
-  };
-
-  hideAlert (){
-    this.setState({
-      showAlert : false,
-      alertTitle : '',
-      alertMsg : '',
-    })
   }
 
-  showAlert(title,msg){
+  hideAlert() {
     this.setState({
-      showAlert : true,
-      alertTitle : title,
-      alertMsg : msg,
-    })
-  };
+      showAlert: false,
+      alertTitle: '',
+      alertMsg: '',
+    });
+  }
+
+  showAlert(title, msg) {
+    this.setState({
+      showAlert: true,
+      alertTitle: title,
+      alertMsg: msg,
+    });
+  }
 
   async doumentPicker() {
     // Pick multiple files
@@ -166,7 +207,7 @@ class ProjectFilesScreen extends Component {
         type: [
           DocumentPicker.types.images,
           DocumentPicker.types.plainText,
-          DocumentPicker.types.pdf
+          DocumentPicker.types.pdf,
         ],
       });
       for (const res of results) {
@@ -181,10 +222,9 @@ class ProjectFilesScreen extends Component {
             moment().format('YYYY/MM/DD') + ' | ' + moment().format('HH:mm'),
         });
 
-        this.uploadFiles(this.state.files)
-        
+        this.uploadFiles(this.state.files);
       }
-      this.setState({ files: this.state.files });
+      this.setState({files: this.state.files});
       console.log(this.state.files);
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
@@ -204,14 +244,14 @@ class ProjectFilesScreen extends Component {
         let filesArray = this.state.files.filter(item => {
           return item.uri !== uri;
         });
-        this.setState({ files: filesArray });
+        this.setState({files: filesArray});
       },
     );
   }
 
   uploadFiles(file) {
-    let projectID = this.state.projectID
-    let taskID = this.state.taskID
+    let projectID = this.state.projectID;
+    let taskID = this.state.taskID;
     this.props.addFileToTask(file, taskID, projectID);
   }
 
@@ -233,9 +273,7 @@ class ProjectFilesScreen extends Component {
           />
         </View>
         <View flex={1}>
-          <TouchableOpacity
-            style={{}} 
-            onPress={() => this.doumentPicker()}>
+          <TouchableOpacity style={{}} onPress={() => this.doumentPicker()}>
             <View style={styles.button}>
               <Image
                 style={styles.bottomBarIcon}
@@ -282,7 +320,7 @@ const styles = EStyleSheet.create({
     flex: 1,
   },
   filesView: {
-    backgroundColor: colors.white,
+    backgroundColor: colors.projectBgColor,
     borderRadius: 5,
     borderWidth: 1,
     borderColor: colors.lighterGray,
@@ -303,7 +341,7 @@ const styles = EStyleSheet.create({
     marginLeft: '10rem',
     fontWeight: '400',
   },
-  textDate:{
+  textDate: {
     fontSize: '10rem',
     color: colors.lightgray,
     textAlign: 'center',
@@ -356,19 +394,19 @@ const styles = EStyleSheet.create({
     marginRight: '15rem',
     marginLeft: '10rem',
   },
-  userIcon:{
+  userIcon: {
     width: '28rem',
     height: '28rem',
     borderRadius: 56 / 2,
-  }
+  },
 });
 
 const mapStateToProps = state => {
   return {
     usersLoading: state.users.usersLoading,
     users: state.users.users,
-    addFileTaskLoading : state.project.addFileTaskLoading,
-    addFileTaskSuccess  : state.project.addFileTaskSuccess,
+    addFileTaskLoading: state.project.addFileTaskLoading,
+    addFileTaskSuccess: state.project.addFileTaskSuccess,
   };
 };
 export default connect(
