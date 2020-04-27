@@ -192,6 +192,7 @@ class TasksDetailsScreen extends Component {
       isFromBoards: false,
       selectedSprint: '',
       previousSprintID : '',
+      isDateNeedLoading: false
     };
   }
 
@@ -926,6 +927,7 @@ class TasksDetailsScreen extends Component {
     let sprints = this.state.sprints;
 
     return (
+<<<<<<< HEAD
       <View style={styles.backgroundImage}>
         <Header
           title={taskName ? taskName : ''}
@@ -1040,6 +1042,85 @@ class TasksDetailsScreen extends Component {
           />
         </ScrollView>
       </View>
+=======
+      <ScrollView style={styles.backgroundImage}>
+        <View>
+          <View style={styles.projectFilerView}>
+            <Dropdown
+              // style={{}}
+              label=""
+              labelFontSize={0}
+              data={dropData}
+              textColor={colors.white}
+              error={''}
+              animationDuration={0.5}
+              containerStyle={{ width: '100%' }}
+              overlayStyle={{ width: '100%' }}
+              pickerStyle={{ width: '89%', marginTop: 70, marginLeft: 15 }}
+              dropdownPosition={0}
+              value={taskStatus}
+              itemColor={'black'}
+              selectedItemColor={'black'}
+              dropdownOffset={{ top: 10 }}
+              baseColor={colors.lightBlue}
+              renderAccessory={this.renderBase}
+              itemTextStyle={{
+                marginLeft: 15,
+                fontFamily: 'CircularStd-Book',
+              }}
+              itemPadding={10}
+              onChangeText={value => this.onFilterTasksStatus(value)}
+            />
+          </View>
+          <FlatList
+            data={taskData}
+            renderItem={({ item }) => this.renderProjectList(item)}
+            keyExtractor={item => item.taskId}
+          />
+          <TouchableOpacity onPress={() => this.deleteTask()}>
+            <View style={styles.buttonDelete}>
+              <Image
+                style={[
+                  styles.bottomBarIcon,
+                  { marginRight: 15, marginLeft: 10 },
+                ]}
+                source={icons.taskWhite}
+                resizeMode={'center'}
+              />
+              <View style={{ flex: 1 }}>
+                <Text style={styles.buttonText}>Delete Task</Text>
+              </View>
+
+              <Image
+                style={[styles.deleteIcon, { marginRight: 10 }]}
+                source={icons.deleteWhite}
+                resizeMode={'center'}
+              />
+            </View>
+          </TouchableOpacity>
+          {this.state.showPicker ? this.renderDatePicker() : null}
+          {this.state.showTimePicker ? this.renderTimePicker() : null}
+          {this.state.isDateNeedLoading && <Loader />}
+        </View>
+        {dataLoading && <Loader />}
+        <AwesomeAlert
+          show={showAlert}
+          showProgress={false}
+          title={alertTitle}
+          message={alertMsg}
+          closeOnTouchOutside={true}
+          closeOnHardwareBackPress={false}
+          showCancelButton={false}
+          showConfirmButton={true}
+          cancelText=""
+          confirmText="OK"
+          confirmButtonColor={colors.primary}
+          onConfirmPressed={() => {
+            this.hideAlert();
+          }}
+        />
+      </ScrollView>
+>>>>>>> Issues fixing.
     );
   }
 }
