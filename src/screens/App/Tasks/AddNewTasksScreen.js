@@ -233,12 +233,6 @@ class AddNewTasksScreen extends Component {
         time: new Date(time1),
       });
     }
-    // } else {
-    //   this.setState({
-    //     showPicker: false,
-    //     showTimePicker: false,
-    //   });
-    // }
     this.setState({showPicker: true})
   };
 
