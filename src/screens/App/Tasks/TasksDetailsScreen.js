@@ -291,6 +291,7 @@ class TasksDetailsScreen extends Component {
       taskTypeList: development,
       taskType: 'Pending',
       sprintName: 'Default',
+      isDateNeedLoading: false
     };
   }
 
