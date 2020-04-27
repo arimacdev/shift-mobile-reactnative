@@ -80,12 +80,11 @@ class WorkloadTabScreen extends Component {
   }
 
   handleBackButtonClick() {
-    if(this.state.showPicker){
+    if (this.state.showPicker) {
       this.onCloseModel();
-    } else{
+    } else {
       this.props.navigation.goBack(null);
     }
-    
     return true;
   }
 
@@ -150,6 +149,36 @@ class WorkloadTabScreen extends Component {
     }
   }
 
+  getWeekDays() {
+    var startOfWeek = moment(new Date())
+      .startOf('isoweek')
+      .toDate();
+    var endOfWeek = moment(new Date())
+      .endOf('isoweek')
+      .toDate();
+    this.setState({
+      isCustom: false,
+      from: moment(startOfWeek).format('YYYY-MM-DD[T]') + '00:00:00',
+      to: moment(endOfWeek).format('YYYY-MM-DD[T]') + '23:59:59',
+      date: new Date(),
+    });
+  }
+
+  getMonthDays() {
+    var startOfMonth = moment(new Date())
+      .startOf('month')
+      .toDate();
+    var endOfMonth = moment(new Date())
+      .endOf('month')
+      .toDate();
+    this.setState({
+      isCustom: false,
+      from: moment(startOfMonth).format('YYYY-MM-DD[T]') + '00:00:00',
+      to: moment(endOfMonth).format('YYYY-MM-DD[T]') + '23:59:59',
+      date: new Date(),
+    });
+  }
+
   onMenuItemChange(item) {
     switch (item.value) {
       case 0:
@@ -161,26 +190,23 @@ class WorkloadTabScreen extends Component {
         });
         break;
       case 1:
-        this.setState({
-          isCustom: false,
-          from: moment(new Date()).format('YYYY-MM-DD[T]') + '00:00:00',
-          to: moment(new Date()).format('YYYY-MM-DD[T]') + '23:59:59',
-          date: new Date(),
-        });
+        this.getWeekDays();
         break;
       case 2:
-        this.setState({
-          isCustom: false,
-          from: moment(new Date()).format('YYYY-MM') + '-01[T]00:00:00',
-          to: moment(new Date()).format('YYYY-MM') + '-31[T]23:59:59',
-          date: new Date(),
-        });
+        this.getMonthDays();
+        // this.setState({
+        //   isCustom: false,
+        //   from: moment(new Date()).format('YYYY-MM') + '-01[T]00:00:00',
+        //   to: moment(new Date()).format('YYYY-MM') + '-31[T]23:59:59',
+        //   date: new Date(),
+        // });
         break;
       case 3:
         this.setState({
           isCustom: true,
           from: 'all',
           to: 'all',
+          date: new Date(),
         });
         break;
       default:
@@ -265,10 +291,30 @@ class WorkloadTabScreen extends Component {
       moment(this.state.selectedEndDate).format('YYYY-MM-DD[T]') + '23:59:59';
 
     this.setState({
-      from: selectedStartDate,
-      to: selectedEndDate,
+      from: selectedStartDate == '' ? 'all' : selectedStartDate,
+      to: selectedEndDate == '' ? 'all' : selectedEndDate,
       showPicker: false,
+      date: new Date(),
     });
+  }
+
+  getButtonDisabledStaus() {
+    if (
+      this.state.selectedStartDate == null ||
+      this.state.selectedEndDate == null
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  onCanclePress() {
+    this.setState({
+      selectedStartDate: this.state.from,
+      selectedEndDate: this.state.to,
+    });
+    this.onCloseModel();
   }
 
   renderCalender() {
@@ -277,10 +323,10 @@ class WorkloadTabScreen extends Component {
     const maxDate = new Date(2500, 1, 1);
     const startDate = selectedStartDate
       ? moment(this.state.selectedStartDate).format('Do MMMM YYYY')
-      : 'all';
+      : 'From';
     const endDate = selectedEndDate
       ? moment(this.state.selectedEndDate).format('Do MMMM YYYY')
-      : 'all';
+      : 'To';
     return (
       <Modal
         isVisible={this.state.showPicker}
@@ -327,11 +373,19 @@ class WorkloadTabScreen extends Component {
           <View style={styles.ButtonViewStyle}>
             <TouchableOpacity
               style={styles.cancelStyle}
-              onPress={() => this.onCloseModel()}>
+              onPress={() => this.onCanclePress()}>
               <Text style={styles.cancelTextStyle}>Cancel</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={styles.okStyle}
+              style={[
+                styles.okStyle,
+                {
+                  backgroundColor: this.getButtonDisabledStaus()
+                    ? colors.lighterGray
+                    : colors.lightGreen,
+                },
+              ]}
+              disabled={this.getButtonDisabledStaus()}
               onPress={() => this.onDateSet()}>
               <Text style={styles.saveTextStyle}>Save</Text>
             </TouchableOpacity>
