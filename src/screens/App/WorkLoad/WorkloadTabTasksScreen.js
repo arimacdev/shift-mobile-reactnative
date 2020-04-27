@@ -94,7 +94,7 @@ class WorkloadTabTasksScreen extends Component {
   }
 
   async getAllWorkloadTasks(selectedUserId, from, to) {
-    this.setState({dataLoading: true, noData: ''});
+    this.setState({dataLoading: true, noData: '', workloadTasks:[]});
     let workloadTasks = await APIServices.getWorkloadWithAssignTasksCompletion(
       selectedUserId,
       from,
@@ -131,26 +131,6 @@ class WorkloadTabTasksScreen extends Component {
       this.state.to,
     );
   };
-
-  async getAllTaskInProject() {
-    this.setState({
-      selectedTypeAllTasks: 'Pending',
-    });
-    let selectedProjectID = this.state.selectedProjectID;
-    AsyncStorage.getItem('userID').then(userID => {
-      this.props.getAllTaskInProjects(userID, selectedProjectID);
-    });
-  }
-
-  async getMyTaskInProject() {
-    this.setState({
-      selectedTypeMyTasks: 'Pending',
-    });
-    let selectedProjectID = this.state.selectedProjectID;
-    AsyncStorage.getItem('userID').then(userID => {
-      this.props.getMyTaskInProjects(userID, selectedProjectID);
-    });
-  }
 
   dateView = function(item) {
     let date = item.dueDate;
@@ -480,12 +460,7 @@ class WorkloadTabTasksScreen extends Component {
             />
           ) : (
             <View
-              style={{
-                flex: 1,
-                height: height - 200,
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
+              style={styles.noDataStyle}>
               <Text style={{color: colors.gray, fontSize: 20}}>
                 {this.state.noData}
               </Text>
@@ -699,6 +674,12 @@ const styles = EStyleSheet.create({
     borderBottomStartRadius: 5,
     backgroundColor: colors.projectBgColor,
   },
+  noDataStyle:{
+    flex: 1,
+    height: height - 200,
+    alignItems: 'center',
+    justifyContent: 'center',
+  }
 });
 
 const mapStateToProps = state => {
