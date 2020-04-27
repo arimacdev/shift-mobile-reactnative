@@ -24,6 +24,7 @@ import moment from 'moment';
 import FadeIn from 'react-native-fade-in-image';
 import { SkypeIndicator } from 'react-native-indicators';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 import APIServices from '../../../services/APIServices';
 import AwesomeAlert from 'react-native-awesome-alerts';
 import Header from '../../../components/Header';
@@ -470,39 +471,65 @@ class TasksDetailsScreen extends Component {
   }
 
   renderDatePicker() {
-    return (
-      <DateTimePicker
-        testID="dateTimePicker"
-        timeZoneOffsetInMinutes={0}
-        value={
-          this.state.reminder == true
-            ? this.state.dateReminder
-            : this.state.date
-        }
-        mode={this.state.mode}
-        is24Hour={true}
-        display="default"
-        onChange={(event, selectedDate) =>
-          this.onChangeDate(event, selectedDate)
-        }
-      />
-    );
+    if (Platform.OS == 'ios') {
+      return (
+        <View>
+          <DateTimePickerModal
+            isVisible={this.state.showPicker}
+            mode="date"
+            onConfirm={this.handleDateConfirm}
+            onCancel={this.hideDatePicker}
+          />
+        </View>
+      );
+    } else {
+      return (
+        <DateTimePicker
+          testID="dateTimePicker"
+          timeZoneOffsetInMinutes={0}
+          value={
+            this.state.reminder == true
+              ? this.state.dateReminder
+              : this.state.date
+          }
+          mode={this.state.mode}
+          is24Hour={true}
+          display="default"
+          onChange={(event, selectedDate) =>
+            this.onChangeDate(event, selectedDate)
+          }
+        />
+      );
+    }
   }
 
   renderTimePicker() {
-    return (
-      <DateTimePicker
-        testID="dateTimePicker"
-        timeZoneOffsetInMinutes={0}
-        value={this.state.timeReminder}
-        mode={'time'}
-        is24Hour={true}
-        display="default"
-        onChange={(event, selectedTime) =>
-          this.onChangeTime(event, selectedTime)
-        }
-      />
-    );
+    if (Platform.OS == 'ios') {
+      return (
+        <View>
+          <DateTimePickerModal
+            isVisible={this.state.showTimePicker}
+            mode="time"
+            onConfirm={this.handleTimeConfirm}
+            onCancel={this.hideTimePicker}
+          />
+        </View>
+      );
+    } else {
+      return (
+        <DateTimePicker
+          testID="dateTimePicker"
+          timeZoneOffsetInMinutes={0}
+          value={this.state.timeReminder}
+          mode={'time'}
+          is24Hour={true}
+          display="default"
+          onChange={(event, selectedTime) =>
+            this.onChangeTime(event, selectedTime)
+          }
+        />
+      );
+    }
   }
 
   clearDates(id) {
