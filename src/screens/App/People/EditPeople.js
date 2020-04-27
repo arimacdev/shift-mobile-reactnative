@@ -17,8 +17,6 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
 import {Dropdown} from 'react-native-material-dropdown';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import DocumentPicker from 'react-native-document-picker';
 import RoundCheckbox from 'rn-round-checkbox';
 import _ from 'lodash';
 import AwesomeAlert from 'react-native-awesome-alerts';

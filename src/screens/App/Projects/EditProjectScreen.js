@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   View,
   FlatList,
@@ -10,15 +10,16 @@ import {
   ScrollView,
   Alert,
 } from 'react-native';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import * as actions from '../../../redux/actions';
 import colors from '../../../config/colors';
 import icons from '../../../assest/icons/icons';
 import EStyleSheet from 'react-native-extended-stylesheet';
 const entireScreenWidth = Dimensions.get('window').width;
-EStyleSheet.build({$rem: entireScreenWidth / 380});
-import {Dropdown} from 'react-native-material-dropdown';
+EStyleSheet.build({ $rem: entireScreenWidth / 380 });
+import { Dropdown } from 'react-native-material-dropdown';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 import DocumentPicker from 'react-native-document-picker';
 import moment from 'moment';
 import _ from 'lodash';
@@ -27,7 +28,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import Loader from '../../../components/Loader';
 import APIServices from '../../../services/APIServices';
 import NavigationService from '../../../services/NavigationService';
-const {height, width} = Dimensions.get('window');
+const { height, width } = Dimensions.get('window');
 
 let dropData = [
   {
@@ -160,11 +161,11 @@ class EditProjectScreen extends Component {
   async componentDidMount() {
     const {
       navigation: {
-        state: {params},
+        state: { params },
       },
     } = this.props;
     let projectId = params.projDetails;
-    this.setState({dataLoading: true});
+    this.setState({ dataLoading: true });
     projectData = await APIServices.getProjectData(projectId);
     if (projectData.message == 'success') {
       await this.setProjectStartDate(projectData.data.projectStartDate);
@@ -180,7 +181,7 @@ class EditProjectScreen extends Component {
         dataLoading: false,
       });
     } else {
-      this.setState({dataLoading: false});
+      this.setState({ dataLoading: false });
     }
   }
 
@@ -241,11 +242,94 @@ class EditProjectScreen extends Component {
 
   renderBase() {
     return (
-      <View style={{justifyContent: 'center', flex: 1}}>
+      <View style={{ justifyContent: 'center', flex: 1 }}>
         <Image style={styles.dropIcon} source={icons.arrowDark} />
       </View>
     );
   }
+
+  showDatePicker = () => {
+    this.setState({ showPicker: true })
+  };
+
+  hideDatePicker = () => {
+    this.setState({ showPicker: false })
+  };
+
+  handleDateConfirm = date => {
+    this.hideDatePicker();
+    this.setState({ isDateNeedLoading: true })
+    let date1 = new Date(date);
+    let newDate = '';
+    let newDateValue = '';
+    if (this.state.reminder) {
+      newDate = moment(date1).format('Do MMMM YYYY');
+      newDateValue = moment(date1).format('DD MM YYYY');
+    } else {
+      newDate = moment(date1).format('Do MMMM YYYY');
+      newDateValue = moment(date1).format('DD MM YYYY');
+    }
+    if (this.state.reminder) {
+      this.setState({
+        projectEndDate: newDate,
+        projectEndDateValue: newDateValue,
+        dateReminder: new Date(date1),
+      });
+    } else {
+      this.setState({
+        projectStartDate: newDate,
+        projectStartDateValue: newDateValue,
+        date: new Date(date1),
+      });
+    }
+    setTimeout(() => {
+      this.setState({
+        isDateNeedLoading: false,
+        showTimePicker: true,
+      })
+    }, 500);
+  };
+
+  showTimePicker = () => {
+    this.setState({ showTimePicker: true })
+  };
+
+  hideTimePicker = () => {
+    this.setState({ showTimePicker: false })
+  };
+
+  handleTimeConfirm = time1 => {
+    console.log(time1, 'time')
+    this.hideTimePicker();
+    let time = new Date(time1);
+    let newTime = moment(time).format('hh:mmA');
+    // let newTime = time.getHours() + ':' + time.getMinutes();
+    // if (event.type == 'set') {
+    if (this.state.reminder) {
+      this.setState({
+        projectEndTime: newTime,
+        selectedTimeReminder: newTime,
+        showPicker: false,
+        showTimePicker: false,
+        timeReminder: new Date(time1),
+      });
+    } else {
+      this.setState({
+        projectStartTime: newTime,
+        selectedTimeReminder: newTime,
+        showPicker: false,
+        showTimePicker: false,
+        time: new Date(time1),
+      });
+    }
+    // } else {
+    //   this.setState({
+    //     showPicker: false,
+    //     showTimePicker: false,
+    //   });
+    // }
+  };
+
 
   onChangeDate(event, selectedDate) {
     let date = new Date(selectedDate);
@@ -310,39 +394,65 @@ class EditProjectScreen extends Component {
   }
 
   renderTimePicker() {
-    return (
-      <DateTimePicker
-        testID="dateTimePicker"
-        timeZoneOffsetInMinutes={0}
-        value={this.state.date}
-        mode={'time'}
-        is24Hour={true}
-        display="default"
-        onChange={(event, selectedDate) =>
-          this.onChangeTime(event, selectedDate)
-        }
-      />
-    );
+    if (Platform.OS == 'ios') {
+      return (
+        <View>
+          <DateTimePickerModal
+            isVisible={this.state.showTimePicker}
+            mode="time"
+            onConfirm={this.handleTimeConfirm}
+            onCancel={this.hideTimePicker}
+          />
+        </View>
+      );
+    } else {
+      return (
+        <DateTimePicker
+          testID="dateTimePicker"
+          timeZoneOffsetInMinutes={0}
+          value={this.state.date}
+          mode={'time'}
+          is24Hour={true}
+          display="default"
+          onChange={(event, selectedDate) =>
+            this.onChangeTime(event, selectedDate)
+          }
+        />
+      );
+    }
   }
 
   renderDatePicker() {
-    return (
-      <DateTimePicker
-        testID="dateTimePicker"
-        timeZoneOffsetInMinutes={0}
-        value={
-          this.state.reminder == true
-            ? this.state.dateReminder
-            : this.state.date
-        }
-        mode={this.state.mode}
-        is24Hour={true}
-        display="default"
-        onChange={(event, selectedDate) =>
-          this.onChangeDate(event, selectedDate)
-        }
-      />
-    );
+    if (Platform.OS == 'ios') {
+      return (
+        <View>
+          <DateTimePickerModal
+            isVisible={this.state.showPicker}
+            mode="date"
+            onConfirm={this.handleDateConfirm}
+            onCancel={this.hideDatePicker}
+          />
+        </View>
+      );
+    } else {
+      return (
+        <DateTimePicker
+          testID="dateTimePicker"
+          timeZoneOffsetInMinutes={0}
+          value={
+            this.state.reminder == true
+              ? this.state.dateReminder
+              : this.state.date
+          }
+          mode={this.state.mode}
+          is24Hour={true}
+          display="default"
+          onChange={(event, selectedDate) =>
+            this.onChangeDate(event, selectedDate)
+          }
+        />
+      );
+    }
   }
 
   reomoveProject() {
@@ -355,9 +465,9 @@ class EditProjectScreen extends Component {
           onPress: () => console.log('Cancel Pressed'),
           style: 'cancel',
         },
-        {text: 'Ok', onPress: () => this.reomoveProjectSuccess()},
+        { text: 'Ok', onPress: () => this.reomoveProjectSuccess() },
       ],
-      {cancelable: false},
+      { cancelable: false },
     );
   }
 
@@ -392,15 +502,15 @@ class EditProjectScreen extends Component {
     ) {
       let IsoStartDate = projectStartDateValue
         ? moment(
-            projectStartDateValue + projectStartTime,
-            'DD/MM/YYYY hh:mmA',
-          ).format('YYYY-MM-DD[T]HH:mm:ss')
+          projectStartDateValue + projectStartTime,
+          'DD/MM/YYYY hh:mmA',
+        ).format('YYYY-MM-DD[T]HH:mm:ss')
         : '';
       let IsoSEndDate = projectEndDateValue
         ? moment(
-            projectEndDateValue + projectEndTime,
-            'DD/MM/YYYY hh:mmA',
-          ).format('YYYY-MM-DD[T]HH:mm:ss')
+          projectEndDateValue + projectEndTime,
+          'DD/MM/YYYY hh:mmA',
+        ).format('YYYY-MM-DD[T]HH:mm:ss')
         : '';
       AsyncStorage.getItem('userID').then(userID => {
         this.props.updateproject(
@@ -550,27 +660,27 @@ class EditProjectScreen extends Component {
     let deleteProjectErrorMessage = this.state.deleteProjectErrorMessage;
 
     return (
-      <View style={{flex: 1}}>
+      <View style={{ flex: 1 }}>
         <ScrollView style={styles.scrollView}>
-          <View style={[styles.taskFieldView, {marginTop: 20}]}>
+          <View style={[styles.taskFieldView, { marginTop: 20 }]}>
             <TextInput
-              style={[styles.textInput, {width: '95%'}]}
+              style={[styles.textInput, { width: '95%' }]}
               placeholder={'Project Name'}
               value={projectName}
-              onChangeText={projectName => this.setState({projectName})}
+              onChangeText={projectName => this.setState({ projectName })}
             />
           </View>
           <View style={[styles.taskFieldView]}>
             <TextInput
-              style={[styles.textInput, {width: '95%'}]}
+              style={[styles.textInput, { width: '95%' }]}
               placeholder={'Client'}
               value={projectClient}
-              onChangeText={projectClient => this.setState({projectClient})}
+              onChangeText={projectClient => this.setState({ projectClient })}
             />
           </View>
           <View style={styles.taskFieldView}>
             <Dropdown
-              style={{paddingLeft: 5}}
+              style={{ paddingLeft: 5 }}
               label=""
               labelFontSize={0}
               fontSize={13}
@@ -578,28 +688,28 @@ class EditProjectScreen extends Component {
               textColor={colors.gray}
               error={''}
               animationDuration={0.5}
-              containerStyle={{width: '100%'}}
-              overlayStyle={{width: '100%'}}
-              pickerStyle={{width: '89%', marginTop: 70, marginLeft: 15}}
+              containerStyle={{ width: '100%' }}
+              overlayStyle={{ width: '100%' }}
+              pickerStyle={{ width: '89%', marginTop: 70, marginLeft: 15 }}
               dropdownPosition={0}
               value={projectStatus}
               itemColor={'black'}
               selectedItemColor={'black'}
-              dropdownOffset={{top: 10}}
+              dropdownOffset={{ top: 10 }}
               baseColor={colors.projectBgColor}
               // renderBase={this.renderBase}
               renderAccessory={this.renderBase}
-              itemTextStyle={{marginLeft: 15}}
+              itemTextStyle={{ marginLeft: 15 }}
               itemPadding={10}
               onChangeText={value => this.onFilter(value)}
             />
           </View>
           <TouchableOpacity
             onPress={() =>
-              this.setState({showPicker: true, reminder: false, mode: 'date'})
+              this.setState({ showPicker: true, reminder: false, mode: 'date' })
             }>
-            <View style={[styles.taskFieldView, {flexDirection: 'row'}]}>
-              <Text style={[styles.textInput, {flex: 1}]}>
+            <View style={[styles.taskFieldView, { flexDirection: 'row' }]}>
+              <Text style={[styles.textInput, { flex: 1 }]}>
                 {projectStartDate == ''
                   ? 'Project start date'
                   : projectStartDate + ' ' + projectStartTime}
@@ -613,10 +723,10 @@ class EditProjectScreen extends Component {
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() =>
-              this.setState({showPicker: true, reminder: true, mode: 'date'})
+              this.setState({ showPicker: true, reminder: true, mode: 'date' })
             }>
-            <View style={[styles.taskFieldView, {flexDirection: 'row'}]}>
-              <Text style={[styles.textInput, {flex: 1}]}>
+            <View style={[styles.taskFieldView, { flexDirection: 'row' }]}>
+              <Text style={[styles.textInput, { flex: 1 }]}>
                 {projectEndDate == ''
                   ? 'Project end date'
                   : projectEndDate + ' ' + projectEndTime}
@@ -630,6 +740,7 @@ class EditProjectScreen extends Component {
           </TouchableOpacity>
           {this.state.showPicker ? this.renderDatePicker() : null}
           {this.state.showTimePicker ? this.renderTimePicker() : null}
+          {this.state.isDateNeedLoading && <Loader />}
           {dataLoading && <Loader />}
           {updateProjectLoading && <Loader />}
           {deleteProjectErrorMessage && <Loader />}
@@ -657,17 +768,17 @@ class EditProjectScreen extends Component {
               <Image
                 style={[
                   styles.bottomBarIcon,
-                  {marginRight: 15, marginLeft: 10},
+                  { marginRight: 15, marginLeft: 10 },
                 ]}
                 source={icons.folderWhite}
                 resizeMode={'center'}
               />
-              <View style={{flex: 1}}>
+              <View style={{ flex: 1 }}>
                 <Text style={styles.buttonText}>Save Changes</Text>
               </View>
 
               <Image
-                style={[styles.addIcon, {marginRight: 10}]}
+                style={[styles.addIcon, { marginRight: 10 }]}
                 source={icons.addGreen}
                 resizeMode={'center'}
               />
@@ -678,16 +789,16 @@ class EditProjectScreen extends Component {
               <Image
                 style={[
                   styles.bottomBarIcon,
-                  {marginRight: 15, marginLeft: 10},
+                  { marginRight: 15, marginLeft: 10 },
                 ]}
                 source={icons.folderWhite}
                 resizeMode={'center'}
               />
-              <View style={{flex: 1}}>
+              <View style={{ flex: 1 }}>
                 <Text style={styles.buttonText}>Delete Project</Text>
               </View>
               <Image
-                style={[styles.addIcon, {marginRight: 10}]}
+                style={[styles.addIcon, { marginRight: 10 }]}
                 source={icons.deleteWhite}
                 resizeMode={'center'}
               />
@@ -880,7 +991,7 @@ const styles = EStyleSheet.create({
     width: '28rem',
     height: '28rem',
   },
-  bottomContainer:{
+  bottomContainer: {
     position: 'absolute',
     bottom: 0,
     width: '100%',
