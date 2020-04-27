@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   View,
   FlatList,
@@ -11,19 +11,19 @@ import {
   Alert,
   PermissionsAndroid,
 } from 'react-native';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import * as actions from '../../../redux/actions';
 import colors from '../../../config/colors';
 import icons from '../../../assest/icons/icons';
 import EStyleSheet from 'react-native-extended-stylesheet';
 const entireScreenWidth = Dimensions.get('window').width;
-EStyleSheet.build({$rem: entireScreenWidth / 380});
-import {Dropdown} from 'react-native-material-dropdown';
+EStyleSheet.build({ $rem: entireScreenWidth / 380 });
+import { Dropdown } from 'react-native-material-dropdown';
 import AsyncStorage from '@react-native-community/async-storage';
 import Loader from '../../../components/Loader';
 import moment from 'moment';
 import FadeIn from 'react-native-fade-in-image';
-import {SkypeIndicator} from 'react-native-indicators';
+import { SkypeIndicator } from 'react-native-indicators';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import APIServices from '../../../services/APIServices';
@@ -759,7 +759,7 @@ class TasksDetailsScreen extends Component {
     this.setState({isParent: taskResult.data.isParent});
   }
 
-  dateView = function(item) {
+  dateView = function (item) {
     let date = item.taskDueDateAt;
     let currentTime = moment().format();
     let dateText = '';
@@ -780,7 +780,91 @@ class TasksDetailsScreen extends Component {
       }
     }
 
-    return <Text style={[styles.textDate, {color: color}]}>{dateText}</Text>;
+    return <Text style={[styles.textDate, { color: color }]}>{dateText}</Text>;
+  };
+
+  showDatePicker = () => {
+    this.setState({ showPicker: true })
+  };
+
+  hideDatePicker = () => {
+    this.setState({ showPicker: false })
+  };
+
+  handleDateConfirm = date => {
+    this.hideDatePicker();
+    this.setState({ isDateNeedLoading: true })
+    let date1 = new Date(date);
+    let newDate = '';
+    let newDateValue = '';
+    if (this.state.reminder) {
+      newDate = moment(date1).format('Do MMMM YYYY');
+      newDateValue = moment(date1).format('DD MM YYYY');
+    } else {
+      newDate = moment(date1).format('Do MMMM YYYY');
+      newDateValue = moment(date1).format('DD MM YYYY');
+    }
+    if (this.state.reminder) {
+      this.setState({
+        remindDate: 'Remind on ' + newDate,
+        remindDateValue: newDateValue,
+        dateReminder: new Date(date1),
+      });
+    } else {
+      this.setState({
+        duedate: 'Due On ' + newDate,
+        duedateValue: newDateValue,
+        date: new Date(date1),
+      });
+    }
+    setTimeout(() => {
+      this.setState({
+        isDateNeedLoading: false,
+        showTimePicker: true,
+      })
+    }, 500);
+  };
+
+  showTimePicker = () => {
+    this.setState({ showTimePicker: true })
+  };
+
+  hideTimePicker = () => {
+    this.setState({ showTimePicker: false })
+  };
+
+  handleTimeConfirm = time1 => {
+    console.log(time1, 'time')
+    this.hideTimePicker();
+    let time = new Date(time1);
+    let newTime = moment(time).format('hh:mmA');
+    // let newTime = time.getHours() + ':' + time.getMinutes();
+    // if (event.type == 'set') {
+    if (this.state.reminder) {
+      this.setState({
+        reminderTime: newTime,
+        selectedTimeReminder: newTime,
+        showPicker: false,
+        showTimePicker: false,
+        timeReminder: new Date(time1),
+      });
+      this.changeTaskReminderDate();
+    } else {
+      this.setState({
+        dueTime: newTime,
+        selectedTimeReminder: newTime,
+        showPicker: false,
+        showTimePicker: false,
+        time: new Date(time1),
+      });
+      this.changeTaskDueDate();
+    }
+    // } else {
+    //   this.setState({
+    //     showPicker: false,
+    //     showTimePicker: false,
+    //   });
+    // }
   };
 
   onChangeDate(event, selectedDate) {
@@ -925,23 +1009,23 @@ class TasksDetailsScreen extends Component {
   clearDates(id) {
     switch (id) {
       case 2:
-        this.setState({duedate: ''});
+        this.setState({ duedate: '' });
         break;
       case 3:
-        this.setState({remindDate: ''});
+        this.setState({ remindDate: '' });
         break;
       default:
         break;
     }
   }
 
-  renderImage = function(item) {
+  renderImage = function (item) {
     if (item.renderImage) {
       return (
         <FadeIn>
           <Image
             source={icons.forwordGray}
-            style={{width: 24, height: 24, borderRadius: 24 / 2}}
+            style={{ width: 24, height: 24, borderRadius: 24 / 2 }}
           />
         </FadeIn>
       );
@@ -964,7 +1048,7 @@ class TasksDetailsScreen extends Component {
   }
 
   onTaskNameChange(text) {
-    this.setState({taskName: text});
+    this.setState({ taskName: text });
   }
 
   onItemPress(item) {
@@ -984,10 +1068,10 @@ class TasksDetailsScreen extends Component {
         });
         break;
       case 2:
-        this.setState({showPicker: true, reminder: false});
+        this.setState({ showPicker: true, reminder: false });
         break;
       case 3:
-        this.setState({showPicker: true, reminder: true});
+        this.setState({ showPicker: true, reminder: true });
         break;
       case 4:
         this.props.navigation.navigate('NotesScreen', {
