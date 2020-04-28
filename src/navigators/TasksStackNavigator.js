@@ -10,6 +10,9 @@ import GroupTasksDetailsScreen from '../screens/App/TaskDrawer/GroupTasksDetails
 import AddPeopleGroupTaskScreen from '../screens/App/TaskDrawer/AddPeopleScreen';
 import GroupTaskNotesScreen from '../screens/App/TaskDrawer/GroupTaskNotesScreen';
 import AssigneeScreenGroupTask from '../screens/App/TaskDrawer/AssigneeScreenGroupTask';
+import MyTasksDetailsScreen from '../screens/App/TaskDrawer/MyTask/MyTasksDetailsScreen';
+import MyTaskNotesScreen from '../screens/App/TaskDrawer/MyTask/MyTaskNotesScreen';
+import MyTasksFilesScreen from '../screens/App/TaskDrawer/MyTask/MyTasksFilesScreen';
 
 export const TasksStackNavigator = createStackNavigator(
   {
@@ -102,6 +105,36 @@ export const TasksStackNavigator = createStackNavigator(
           <Header
             search={true}
             title={'Edit Assignee'}
+            onPress={() => navigation.goBack()}
+          />
+        ),
+      }),
+    },
+    MyTasksDetailsScreen: {
+      screen: MyTasksDetailsScreen,
+      navigationOptions: ({navigation}) => ({
+        header: null,
+      }),
+    },
+    MyTaskNotesScreen: {
+      screen: MyTaskNotesScreen,
+      navigationOptions: ({navigation}) => ({
+        header: (
+          <Header
+            navigation={navigation}
+            title={'Notes'}
+            onPress={() => navigation.goBack()}
+          />
+        ),
+      }),
+    },
+    MyTasksFilesScreen: {
+      screen: MyTasksFilesScreen,
+      navigationOptions: ({navigation}) => ({
+        header: (
+          <Header
+            navigation={navigation}
+            title={'Files'}
             onPress={() => navigation.goBack()}
           />
         ),

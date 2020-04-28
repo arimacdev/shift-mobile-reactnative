@@ -50,6 +50,12 @@ import {
     ADD_PEOPLE_TO_TASK_GROUP,
     GET_GROUP_SINGLE_TASK_DATA,
     UPDATE_GROUP_TASK_SINGLE_TASK,
+    GET_MY_SINGLE_TASK_DATA,
+    UPDATE_MY_SINGLE_TASK_DATA,
+    GET_ALL_PERSONAL_TASK_FILES,
+    DELETE_PERSONAL_TASK_FILE,
+    ADD_FILE_TO_MY_TASK,
+    DELETE_MY_TASK
 
 } from '../api/API';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -1167,6 +1173,193 @@ async function deleteSingleInGroupTaskData(selectedTaskGroupId, taskID) {
     }, true, headers);
 }
 
+async function getMySingleTaskData(selectedTaskID) {
+    let userIDHeder = null;
+    userIDHeder =  await AsyncStorage.getItem('userID');
+    
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        user : userIDHeder
+    };
+    return request({
+        url: GET_MY_SINGLE_TASK_DATA +'/'+ selectedTaskID,
+        method: 'GET',
+    }, true,headers);
+};
+
+async function myTaskUpdateTaskNoteData(selectedTaskID,note) {
+    let userIDHeder = null;
+    userIDHeder =  await AsyncStorage.getItem('userID');
+    
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        user : userIDHeder,
+    };
+
+    return request({
+        url: UPDATE_MY_SINGLE_TASK_DATA +'/'+selectedTaskID,
+        method: 'PUT',
+        data: {
+            taskNotes : note,
+        }
+    }, true,headers);
+};
+
+async function myTaskUpdateTaskStatusData(selectedTaskID,searchValue) {
+    let userIDHeder = null;
+    userIDHeder =  await AsyncStorage.getItem('userID');
+    
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        user : userIDHeder,
+    };
+
+    return request({
+        url: UPDATE_MY_SINGLE_TASK_DATA +'/'+selectedTaskID,
+        method: 'PUT',
+        data: {
+            taskStatus : searchValue,
+        }
+    }, true,headers);
+};
+
+async function myTaskUpdateTaskNameData(selectedTaskID,text) {
+    let userIDHeder = null;
+    userIDHeder =  await AsyncStorage.getItem('userID');
+    
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        user : userIDHeder,
+    };
+
+    return request({
+        url: UPDATE_MY_SINGLE_TASK_DATA +'/'+selectedTaskID,
+        method: 'PUT',
+        data: {
+            taskName : text,
+        }
+    }, true,headers);
+};
+
+async function myTaskUpdateDueDateData(selectedTaskID,IsoDueDate) {
+    let userIDHeder = null;
+    userIDHeder =  await AsyncStorage.getItem('userID');
+    
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        user : userIDHeder,
+    };
+
+    return request({
+        url: UPDATE_MY_SINGLE_TASK_DATA +'/'+selectedTaskID,
+        method: 'PUT',
+        data: {
+            taskDueDate : IsoDueDate,
+        }
+    }, true,headers);
+};
+
+async function myTaskUpdateReminderDateData(selectedTaskID,IsoReminderDate) {
+    let userIDHeder = null;
+    userIDHeder =  await AsyncStorage.getItem('userID');
+    
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        user : userIDHeder,
+    };
+
+    return request({
+        url: UPDATE_MY_SINGLE_TASK_DATA +'/'+selectedTaskID,
+        method: 'PUT',
+        data: {
+            taskRemindOnDate : IsoReminderDate,
+        }
+    }, true,headers);
+};
+
+async function getFilesInMyTaskData(taskID) {
+
+    let userIDHeder = null;
+    userIDHeder =  await AsyncStorage.getItem('userID');
+    
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        user : userIDHeder,
+    };
+
+    return request({
+        url: GET_ALL_PERSONAL_TASK_FILES + '/' + taskID + '/files',
+        method: 'GET',
+    }, true, headers);
+};
+
+async function deleteFileInMyTaskData(taskID,taskFileId) {
+
+    let userIDHeder = null;
+    userIDHeder =  await AsyncStorage.getItem('userID');
+    
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        user : userIDHeder,
+    };
+
+    return request({
+        url: DELETE_PERSONAL_TASK_FILE + '/' + taskID + '/files/' + taskFileId,
+        method: 'DELETE'
+    }, true, headers);
+};
+
+async function addFileToMyTaskData(file, taskId) {
+
+    let userIDHeder = null;
+    userIDHeder =  await AsyncStorage.getItem('userID');
+    
+    let headers =  {
+        Accept: 'application/json',
+        'content-type': 'multipart/form-data',
+        user : userIDHeder,
+    };
+
+    const file1 = {
+        uri: file[0].uri,
+        name: 'image-pmtool'+ new Date().getTime(),
+        type: file[0].type,
+    };
+    const formData = new FormData(); 
+    formData.append('type', "taskFile");
+    formData.append('files', file1);
+    return request({
+        url: ADD_FILE_TO_MY_TASK + '/' +taskId + '/upload' ,
+        method: 'POST',
+        data: formData
+    }, true, headers);
+};
+
+async function deleteSingleInMyTaskData(taskID) {
+
+    let userIDHeder = null;
+    userIDHeder =  await AsyncStorage.getItem('userID');
+    
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        user : userIDHeder,
+    };
+
+    return request({
+        url: DELETE_MY_TASK + '/' + taskID,
+        method: 'DELETE',
+    }, true, headers);
+}
+
 const APIServices = {
     getAllProjectsByUserData,
     getUserData,
@@ -1227,7 +1420,17 @@ const APIServices = {
     groupTaskUpdateDueDateData,
     groupTaskUpdateReminderDateData,
     groupTaskUpdateTaskNoteData,
-    deleteSingleInGroupTaskData
+    deleteSingleInGroupTaskData,
+    getMySingleTaskData,
+    myTaskUpdateTaskNoteData,
+    myTaskUpdateTaskStatusData,
+    myTaskUpdateTaskNameData,
+    myTaskUpdateDueDateData,
+    myTaskUpdateReminderDateData,
+    getFilesInMyTaskData,
+    deleteFileInMyTaskData,
+    addFileToMyTaskData,
+    deleteSingleInMyTaskData
 };
 
 export default APIServices;

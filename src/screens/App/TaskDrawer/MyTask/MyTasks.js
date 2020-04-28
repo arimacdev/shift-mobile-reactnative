@@ -142,7 +142,11 @@ class MyTasks extends Component {
 
   renderTaskList(item) {
     return (
-      <TouchableOpacity>
+      <TouchableOpacity onPress={() =>
+        this.props.navigation.navigate('MyTasksDetailsScreen', {
+          taskDetails: item,
+        })
+      }>
         <View style={styles.taskView}>
           <Image
             style={styles.completionIcon}
