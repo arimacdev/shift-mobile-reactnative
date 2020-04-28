@@ -55,7 +55,9 @@ import {
     GET_ALL_PERSONAL_TASK_FILES,
     DELETE_PERSONAL_TASK_FILE,
     ADD_FILE_TO_MY_TASK,
-    DELETE_MY_TASK
+    DELETE_MY_TASK,
+    GET_ALL_SUB_TASKS_IN_MY_TASK,
+    DELETE_SUB_TASKS_IN_MY_TASK
 
 } from '../api/API';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -1360,6 +1362,39 @@ async function deleteSingleInMyTaskData(taskID) {
     }, true, headers);
 }
 
+async function getMyTaskSubTaskData(selectedTaskID) {
+
+    let userIDHeder = null;
+    userIDHeder =  await AsyncStorage.getItem('userID');
+
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+    };
+
+    return request({
+        url: GET_ALL_SUB_TASKS_IN_MY_TASK + '/' + selectedTaskID + '/subtask?userId='+ userIDHeder,
+        method: 'GET'
+    }, true, headers);
+};
+
+async function myTaskdeleteSubTask(taskID,subtaskId) {
+
+    let userIDHeder = null;
+    userIDHeder =  await AsyncStorage.getItem('userID');
+    
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        user : userIDHeder,
+    };
+
+    return request({
+        url: DELETE_SUB_TASKS_IN_MY_TASK + '/' + taskID + '/subtask/' + subtaskId,
+        method: 'DELETE'
+    }, true, headers);
+};
+
 const APIServices = {
     getAllProjectsByUserData,
     getUserData,
@@ -1430,7 +1465,9 @@ const APIServices = {
     getFilesInMyTaskData,
     deleteFileInMyTaskData,
     addFileToMyTaskData,
-    deleteSingleInMyTaskData
+    deleteSingleInMyTaskData,
+    getMyTaskSubTaskData,
+    myTaskdeleteSubTask
 };
 
 export default APIServices;

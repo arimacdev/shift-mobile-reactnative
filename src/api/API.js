@@ -59,6 +59,12 @@ export const GET_ALL_PERSONAL_TASK_FILES  = `${PROTOCOL}${HOST}non-project/tasks
 export const DELETE_PERSONAL_TASK_FILE  = `${PROTOCOL}${HOST}non-project/tasks/personal`;
 export const ADD_FILE_TO_MY_TASK = `${PROTOCOL}${HOST}personal/tasks`;
 export const DELETE_MY_TASK = `${PROTOCOL}${HOST}non-project/tasks/personal`;
+export const GET_ALL_SUB_TASKS_IN_MY_TASK = `${PROTOCOL}${HOST}non-project/tasks/personal`
+export const DELETE_SUB_TASKS_IN_MY_TASK = `${PROTOCOL}${HOST}non-project/tasks/personal`
+
+
+
+
 
 
 

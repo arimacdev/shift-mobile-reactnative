@@ -13,6 +13,7 @@ import AssigneeScreenGroupTask from '../screens/App/TaskDrawer/AssigneeScreenGro
 import MyTasksDetailsScreen from '../screens/App/TaskDrawer/MyTask/MyTasksDetailsScreen';
 import MyTaskNotesScreen from '../screens/App/TaskDrawer/MyTask/MyTaskNotesScreen';
 import MyTasksFilesScreen from '../screens/App/TaskDrawer/MyTask/MyTasksFilesScreen';
+import MyTaskSubTaskScreen from '../screens/App/TaskDrawer/MyTask/MyTaskSubTaskScreen';
 
 export const TasksStackNavigator = createStackNavigator(
   {
@@ -135,6 +136,18 @@ export const TasksStackNavigator = createStackNavigator(
           <Header
             navigation={navigation}
             title={'Files'}
+            onPress={() => navigation.goBack()}
+          />
+        ),
+      }),
+    },
+    MyTaskSubTaskScreen: {
+      screen: MyTaskSubTaskScreen,
+      navigationOptions: ({navigation}) => ({
+        header: (
+          <Header
+            navigation={navigation}
+            title={'Sub tasks'}
             onPress={() => navigation.goBack()}
           />
         ),

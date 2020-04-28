@@ -425,7 +425,7 @@ showAlert(title,msg){
       case 0:
         break;
       case 1:
-        this.props.navigation.navigate('SubTaskScreen', {
+        this.props.navigation.navigate('MyTaskSubTaskScreen', {
           selectedTaskID: this.state.selectedTaskID,
         });
         break;
