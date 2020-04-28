@@ -44,6 +44,8 @@ import {
     ADD_ALL_TASK_BY_ME_DATA,
     ADD_TASK_TO_MY_TASK_DATA,
     ADD_FILE_TO_PROJECT,
+    DELETE_PROJECT_FILES,
+    GET_PROJECT_FILES,
 
 } from '../api/API';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -962,6 +964,37 @@ async function uploadFileData(file, selectedProjectID, dispatch) {
 //   }
 };
 
+async function getProjectFiles(selectedProjectID) {
+    let userIDHeder = null;
+    userIDHeder =  await AsyncStorage.getItem('userID');
+    
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        user : userIDHeder,
+    };
+    return request({
+        url: GET_PROJECT_FILES +'/'+ selectedProjectID + '/files',
+        method: 'GET',
+    }, true,headers);
+};
+
+async function deleteProjectFile(selectedProjectID, fileId) {
+    let userIDHeder = null;
+    userIDHeder =  await AsyncStorage.getItem('userID');
+
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        user : userIDHeder,
+    };
+
+    return request({
+        url: DELETE_PROJECT_FILES + '/' + selectedProjectID + '/files/' + fileId,
+        method: 'DELETE'
+    }, true, headers);
+};
+
 
 const APIServices = {
     getAllProjectsByUserData,
@@ -1012,7 +1045,9 @@ const APIServices = {
     getAllTaskByMySelf,
     addNewMyTaskData,
     getGroupSingleTaskData,
-    uploadFileData
+    uploadFileData,
+    getProjectFiles,
+    deleteProjectFile
 };
 
 export default APIServices;
