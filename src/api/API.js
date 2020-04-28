@@ -46,6 +46,10 @@ export const GET_PEOPLE_IN_TASK = `${PROTOCOL}${HOST}projects`;
 export const ADD_ALL_TASK_BY_ME_DATA = `${PROTOCOL}${HOST}non-project/tasks/personal`;
 export const ADD_TASK_TO_MY_TASK_DATA = `${PROTOCOL}${HOST}non-project/tasks/personal`;
 
+export const ADD_FILE_TO_PROJECT = `${PROTOCOL}${HOST}projects`;
+export const GET_PROJECT_FILES = `${PROTOCOL}${HOST}projects`;
+export const DELETE_PROJECT_FILES = `${PROTOCOL}${HOST}projects`;
+
 
 
 

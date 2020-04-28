@@ -43,9 +43,11 @@ import {
     GET_PEOPLE_IN_TASK,
     ADD_ALL_TASK_BY_ME_DATA,
     ADD_TASK_TO_MY_TASK_DATA,
+    ADD_FILE_TO_PROJECT,
 
 } from '../api/API';
 import AsyncStorage from '@react-native-community/async-storage';
+import { SET_UPLOAD_PROGRESS } from '../redux/types';
 
 async function getAllProjectsByUserData(userID) {
     let userIDHeder = null;
@@ -906,6 +908,61 @@ async function getGroupSingleTaskData(selectedTaskGroupId,selectedTaskID) {
     }, true,headers);
 };
 
+async function uploadFileData(file, selectedProjectID, dispatch) {
+    let userIDHeder = null;
+    userIDHeder =  await AsyncStorage.getItem('userID');
+    
+    let headers =  {
+        Accept: 'application/json',
+        'content-type': 'multipart/form-data',
+        user : userIDHeder,
+    };
+
+    const file1 = {
+        uri: file[0].uri,
+        name: 'image-pmtool'+ new Date().getTime(),
+        type: file[0].type,
+    };
+    let uri = file[0].uri;
+    const formData = new FormData(); 
+    formData.append('type', "projectFile");
+    formData.append('files', file1);
+    return request({
+        url: ADD_FILE_TO_PROJECT + '/' + selectedProjectID + '/files/upload',
+        method: 'POST',
+        data: formData,
+        onUploadProgress: progress => {
+            const {loaded, total} = progress;
+            const percentageProgress = Math.floor((loaded / total) * 100);
+            dispatch({type: SET_UPLOAD_PROGRESS, payload: {uri, percentageProgress}});
+          },
+    }, true, headers);
+
+//   if (files.length) {
+//     files.forEach(async file => {
+//       const formPayload = new FormData();
+//       formPayload.append('file', file.file);
+//       try {
+//         await axios({
+//           baseURL: 'http://localhost:5000',
+//           url: '/file',
+//           method: 'post',
+//           data: formPayload,
+//           onUploadProgress: progress => {
+//             const {loaded, total} = progress;
+//             const percentageProgress = Math.floor((loaded / total) * 100);
+//             dispatch(setUploadProgress(file.id, percentageProgress));
+//           },
+//         });
+//         dispatch(successUploadFile(file.id));
+//       } catch (error) {
+//         dispatch(failureUploadFile(file.id));
+//       }
+//     });
+//   }
+};
+
+
 const APIServices = {
     getAllProjectsByUserData,
     getUserData,
@@ -954,7 +1011,8 @@ const APIServices = {
     getTaskPeopleData,
     getAllTaskByMySelf,
     addNewMyTaskData,
-    getGroupSingleTaskData
+    getGroupSingleTaskData,
+    uploadFileData
 };
 
 export default APIServices;
