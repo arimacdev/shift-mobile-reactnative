@@ -21,11 +21,10 @@ import * as Progress from 'react-native-progress';
 import { ButtonGroup } from 'react-native-elements';
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({ $rem: entireScreenWidth / 380 });
-import Accordion from 'react-native-collapsible/Accordion';
+import Collapsible from '../../../components/CollapsibleView';
 import AsyncStorage from '@react-native-community/async-storage';
 import Loader from '../../../components/Loader';
 import { NavigationEvents } from 'react-navigation';
-import * as Animatable from 'react-native-animatable';
 const initialLayout = { width: entireScreenWidth };
 
 class OtherBoard extends Component {
@@ -45,147 +44,59 @@ class OtherBoard extends Component {
                     isDeleted: false
                 }
             ],
-
-        activeSections: [],
         };
     }
 
-
+    
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-
+        
     }
 
     componentDidMount() {
-
+        
     }
 
-    _renderHeader = (section, index) => {
-        return section.total == 0 ? (
-          <TouchableOpacity>
-            <Animatable.View
-              duration={400}
-              style={[
-                styles.header,
-                {
-                  backgroundColor:
-                    section.total == 0 ? colors.noTasksColor : colors.darkBlue,
-                  borderBottomEndRadius:
-                    index == this.state.activeSections[0] ? 0 : 5,
-                  borderBottomStartRadius:
-                    index == this.state.activeSections[0] ? 0 : 5,
-                },
-              ]}>
-              <View style={{flex: 1}}>
-                <Text style={styles.headerText}>
-                  {section.projectName} - {section.completed}/{section.total}
-                </Text>
-              </View>
-    
-              <Image
-                style={styles.dropIcon}
-                source={
-                  index == this.state.activeSections[0]
-                    ? icons.arrowDown
-                    : section.total == 0
-                    ? icons.arrowUpGray
-                    : icons.arrowUp
-                }
-              />
-            </Animatable.View>
-          </TouchableOpacity>
-        ) : (
-          <Animatable.View
-            duration={400}
-            style={[
-              styles.header,
-              {
-                backgroundColor:
-                  section.total == 0 ? colors.noTasksColor : colors.darkBlue,
-                borderBottomEndRadius:
-                  index == this.state.activeSections[0] ? 0 : 5,
-                borderBottomStartRadius:
-                  index == this.state.activeSections[0] ? 0 : 5,
-              },
-            ]}>
-            <View style={{flex: 1}}>
-              <Text style={styles.headerText}>
-                {section.projectName} - {section.completed}/{section.total}
-              </Text>
-            </View>
-    
-            <Image
-              style={styles.dropIcon}
-              source={
-                index == this.state.activeSections[0]
-                  ? icons.arrowDown
-                  : section.total == 0
-                  ? icons.arrowUpGray
-                  : icons.arrowUp
-              }
-            />
-          </Animatable.View>
-        );
-      };
-
-      _renderContent(item, isActive) {
-        return (
-          <Animatable.View
-            animation={isActive ? 'bounceIn' : undefined}
-            duration={400}
-            style={styles.flatListView}>
-            <FlatList
-              style={styles.flatListStyle}
-              //   onTouchStart={() => {
-              //     this.setState({enableScrollViewScroll:false})
-              //  }}
-              //  onMomentumScrollEnd={() => {
-              //   this.setState({enableScrollViewScroll:true})
-              //  }}
-              data={item}
-              renderItem={({item, index}) => this.renderProjectList(item, index)}
-              keyExtractor={item => item.taskId}
-            />
-          </Animatable.View>
-        );
-      }
-
     render() {
-
+        
         return (
             <View>
-
+               
                 <View >
                     <TouchableOpacity>
-                        <View style={styles.button}>
-                            <View style={{ flex: 1 }}>
-                                <Text style={styles.buttonText}>New Sprint</Text>
-                            </View>
-                            <Image
-                                style={[styles.addIcon, { marginRight: 10 }]}
-                                source={icons.addGreen}
-                                resizeMode={'center'}
-                            />
+                    <View style={styles.button}>
+                        {/* <Image
+                            style={[styles.bottomBarIcon, { marginRight: 15, marginLeft: 10 }]}
+                            source={icons.userWhite}
+                            resizeMode={'center'}
+                        /> */}
+                        <View style={{ flex: 1 }}>
+                            <Text style={styles.buttonText}>New Sprint</Text>
                         </View>
-                    </TouchableOpacity>
 
-                    <ScrollView style={styles.subContainer}>
-
-                        <Accordion
-                            underlayColor={colors.white}
-                            sections={this.state.sprints}
-                            // sectionContainerStyle={{height:200}}
-                            containerStyle={{ marginBottom: 20, marginTop: 10 }}
-                            activeSections={this.state.activeSections}
-                            renderHeader={this._renderHeader}
-                            renderContent={item => this._renderContent(item.taskList)}
-                            onChange={this._updateSections}
+                        <Image
+                            style={[styles.addIcon, { marginRight: 10 }]}
+                            source={icons.addGreen}
+                            resizeMode={'center'}
                         />
+                    </View>
+                </TouchableOpacity>
 
-                    </ScrollView>
+                <ScrollView style={styles.subContainer}>
+                    
+                    {/* <FlatList
+                        style={styles.flalList}
+                        data={this.state.owner}
+                        renderItem={({ item }) => this.renderPeopleList(item)}
+                        keyExtractor={item => item.projId}
+                        // onRefresh={() => this.onRefresh()}
+                        // refreshing={isFetching}
+                    /> */}
+                   
+                </ScrollView>
 
                 </View>
-
+                
             </View>
 
         );
@@ -193,7 +104,7 @@ class OtherBoard extends Component {
 }
 
 const styles = EStyleSheet.create({
-    button: {
+button: {
         flexDirection: 'row',
         backgroundColor: colors.lightGreen,
         borderRadius: 5,
@@ -217,12 +128,12 @@ const styles = EStyleSheet.create({
     },
     subContainer: {
         marginBottom: '65rem'
-    },
-    flalList: {
+     },
+     flalList : {
         marginTop: '30rem',
         marginBottom: '10rem',
-    },
-    mainContainer: {
+      },
+      mainContainer: {
         backgroundColor: colors.projectBgColor,
         borderRadius: 5,
         marginHorizontal: '20rem',
@@ -235,12 +146,12 @@ const styles = EStyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         paddingHorizontal: '12rem',
-    },
-    userIcon: {
+      },
+      userIcon: {
         width: '45rem',
         height: '45rem',
-    },
-    text: {
+      },
+      text: {
         fontSize: '12rem',
         color: colors.userListUserNameColor,
         textAlign: 'center',
@@ -249,8 +160,8 @@ const styles = EStyleSheet.create({
         textAlign: 'left',
         marginLeft: '10rem',
         fontWeight: '600'
-    },
-    subText: {
+      },
+      subText: {
         fontSize: '10rem',
         color: '#b9b9b9',
         textAlign: 'center',
@@ -259,7 +170,7 @@ const styles = EStyleSheet.create({
         textAlign: 'left',
         marginLeft: '10rem',
         fontWeight: '400'
-    },
+      },
 });
 
 const mapStateToProps = state => {
