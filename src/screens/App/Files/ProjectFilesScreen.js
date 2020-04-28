@@ -6,6 +6,7 @@ import {
   Dimensions,
   Image,
   TouchableOpacity,
+  PermissionsAndroid,
 } from 'react-native';
 import {connect} from 'react-redux';
 import * as actions from '../../../redux/actions';
@@ -90,7 +91,7 @@ class ProjectFilesScreen extends Component {
     }
   }
 
-  actualDownload = (item) => {
+  actualDownload = item => {
     this.setState({
       progress: 0,
       loading: true,
@@ -99,16 +100,13 @@ class ProjectFilesScreen extends Component {
     RNFetchBlob.config({
       // add this option that makes response data to be stored as a file,
       // this is much more performant.
-      path: dirs.DownloadDir + '/path-to-file.png',
+      path: dirs.DownloadDir + '/' + item.projectFileName,
       fileCache: true,
     })
-      .fetch(
-        'GET',
-        'http://www.usa-essays.com/blog/wp-content/uploads/2017/09/sample-5-1024x768.jpg',
-        {
-          //some headers ..
-        },
-      )
+      .fetch('GET', item.projectFileUrl, {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      })
       .progress((received, total) => {
         console.log('progress', received / total);
         this.setState({progress: received / total});
@@ -118,10 +116,9 @@ class ProjectFilesScreen extends Component {
           progress: 100,
           loading: false,
         });
-        ToastAndroid.showWithGravity(
+        this.showAlert(
+          '',
           'Your file has been downloaded to downloads folder!',
-          ToastAndroid.SHORT,
-          ToastAndroid.BOTTOM,
         );
       });
   };
@@ -199,7 +196,7 @@ class ProjectFilesScreen extends Component {
           </View>
           <View style={styles.controlView}>
             <TouchableOpacity
-              onPress={() => this.deleteFile(item)}
+              onPress={() => this.downloadFile(item)}
               style={{marginLeft: EStyleSheet.value('24rem')}}>
               <Image
                 style={{width: 30, height: 30}}
