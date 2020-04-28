@@ -6,6 +6,7 @@ import {
   Dimensions,
   Image,
   TouchableOpacity,
+  PermissionsAndroid,
 } from 'react-native';
 import {connect} from 'react-redux';
 import * as actions from '../../../redux/actions';
@@ -22,6 +23,7 @@ import moment from 'moment';
 import AwesomeAlert from 'react-native-awesome-alerts';
 import DocumentPicker from 'react-native-document-picker';
 import * as Progress from 'react-native-progress';
+import RNFetchBlob from 'rn-fetch-blob';
 
 const a = [
   {
@@ -59,93 +61,128 @@ class ProjectFilesScreen extends Component {
       showAlert: false,
       alertTitle: '',
       alertMsg: '',
+      filesData: [],
+      progress: 0,
+      loading: false,
     };
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    if (
-      prevProps.addFileTaskSuccess !== this.props.addFileTaskSuccess &&
-      this.props.addFileTaskSuccess
-    ) {
-      let userID = this.state.userID;
-      this.fetchData(userID);
-    }
+    // if (
+    //   prevProps.addFileTaskSuccess !== this.props.addFileTaskSuccess &&
+    //   this.props.addFileTaskSuccess
+    // ) {
+    //   let userID = this.state.userID;
+    //   this.fetchData(userID);
+    // }
   }
 
   componentDidMount() {
-    // AsyncStorage.getItem('userID').then(userID => {
-    //   if (userID) {
-    //     const {
-    //       navigation: {
-    //         state: {params},
-    //       },
-    //     } = this.props;
-    //     let projectID = params.projectID;
-    //     let taskID = params.taskID;
-    //     this.setState(
-    //       {
-    //         projectID: projectID,
-    //         taskID: taskID,
-    //         userID: userID,
-    //       },
-    //       function() {
-    //         this.fetchData(userID);
-    //       },
-    //     );
-    //   }
-    // });
+    this.fetchData(this.props.selectedProjectID);
   }
 
-  async fetchData(userID) {
-    let projectID = this.state.projectID;
-    let taskID = this.state.taskID;
+  async fetchData(selectedProjectID) {
     this.setState({dataLoading: true});
-    filesData = await APIServices.getFilesInTaskData(projectID, taskID, userID);
+    filesData = await APIServices.getProjectFiles(selectedProjectID);
     if (filesData.message == 'success') {
-      this.setState({files: filesData.data, dataLoading: false});
+      this.setState({filesData: filesData.data, dataLoading: false});
     } else {
       this.setState({dataLoading: false});
     }
   }
 
-  async deleteFile(item) {
-    let projectID = this.state.projectID;
-    let taskID = this.state.taskID;
-    let userID = this.state.userID;
-    let taskFileId = item.taskFileId;
+  actualDownload = item => {
+    this.setState({
+      progress: 0,
+      loading: true,
+    });
+    let dirs = RNFetchBlob.fs.dirs;
+    RNFetchBlob.config({
+      // add this option that makes response data to be stored as a file,
+      // this is much more performant.
+      path: dirs.DownloadDir + '/' + item.projectFileName,
+      fileCache: true,
+    })
+      .fetch('GET', item.projectFileUrl, {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      })
+      .progress((received, total) => {
+        console.log('progress', received / total);
+        this.setState({progress: received / total});
+      })
+      .then(res => {
+        this.setState({
+          progress: 100,
+          loading: false,
+        });
+        this.showAlert(
+          '',
+          'Your file has been downloaded to downloads folder!',
+        );
+      });
+  };
 
-    this.setState({dataLoading: true});
+  async downloadFile(item) {
     try {
-      resultObj = await APIServices.deleteFileInTaskData(
-        projectID,
-        taskID,
-        taskFileId,
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+        {
+          title: 'Storage Permission',
+          message: 'App needs access to memory to download the file ',
+        },
       );
-      if (resultObj.message == 'success') {
-        this.setState({dataLoading: false});
-        this.fetchData(userID);
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        this.actualDownload(item);
       } else {
-        this.setState({dataLoading: false});
+        Alert.alert(
+          'Permission Denied!',
+          'You need to give storage permission to download the file',
+        );
       }
-    } catch (e) {
-      if (e.status == 401) {
-        this.setState({dataLoading: false});
-        this.showAlert('', e.data.message);
-      }
+    } catch (err) {
+      console.warn(err);
     }
   }
 
+  async deleteFile(item) {
+    let projectID = this.props.selectedProjectID;
+    let projectFileId = item.projectFileId;
+
+    this.setState({dataLoading: true});
+
+    await APIServices.deleteProjectFile(projectID, projectFileId)
+      .then(response => {
+        if (response.message == 'success') {
+          this.setState({dataLoading: false});
+          this.fetchData(this.props.selectedProjectID);
+        } else {
+          this.setState({dataLoading: false});
+        }
+      })
+      .catch(error => {
+        if (e.status == 401) {
+          this.setState({dataLoading: false});
+          this.showAlert('', e.data.message);
+        }
+      });
+  }
+
+  bytesToSize(bytes) {
+    var sizes = ['Bytes', 'Kb', 'MB', 'GB', 'TB'];
+    if (bytes == 0) return '0 Byte';
+    var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+    return Math.round(bytes / Math.pow(1024, i), 2) + '' + sizes[i];
+  }
+
   renderUserListList(item) {
-    // let fileDateText = '';
-    // let fileDate = moment.parseZone(item.taskFileDate).format('Do MMMM YYYY');
-    // let fileTimeText = '';
-    // let fileTime = moment.parseZone(item.taskFileDate).format('hh:mmA');
-    // if(fileDate != 'Invalid date'){
-    //   fileDateText = fileDate;
-    //   fileTimeText = fileTime
-    // }else{
-    //   fileDateText = '';
-    // }
+    let details = '';
+    let size = this.bytesToSize(item.projectFileSize);
+    let date = moment(item.projectFileAddedOn).format('YYYY-MM-DD');
+    let name = 'by ' + item.firstName + ' ' + item.lastName;
+
+    details = size + ' | ' + date + ' ' + name;
+
     return (
       <TouchableOpacity
         onPress={() =>
@@ -154,12 +191,12 @@ class ProjectFilesScreen extends Component {
         <View style={styles.filesView}>
           <Image source={icons.gallary} style={styles.taskStateIcon} />
           <View style={{flex: 1}}>
-            <Text style={styles.text}>{item.name}</Text>
-            <Text style={styles.textDate}>{item.dateTime}</Text>
+            <Text style={styles.text}>{item.projectFileName}</Text>
+            <Text style={styles.textDate}>{details}</Text>
           </View>
           <View style={styles.controlView}>
             <TouchableOpacity
-              onPress={() => this.deleteFile(item)}
+              onPress={() => this.downloadFile(item)}
               style={{marginLeft: EStyleSheet.value('24rem')}}>
               <Image
                 style={{width: 30, height: 30}}
@@ -268,19 +305,19 @@ class ProjectFilesScreen extends Component {
         style={{
           width: '100%',
           height: 50,
-        //   flexDirection: 'row',
-        //   backgroundColor: colors.white,
+          //   flexDirection: 'row',
+          //   backgroundColor: colors.white,
           borderRadius: 5,
           marginRight: 5,
-        //   marginBottom: 5,
-          marginTop:5,
-        //   alignItems:'center',
-          justifyContent:'center'
+          //   marginBottom: 5,
+          marginTop: 5,
+          //   alignItems:'center',
+          justifyContent: 'center',
         }}>
         <Progress.Bar
           progress={0.3}
-        //   indeterminate={true}
-        //   indeterminateAnimationDuration={1000}
+          //   indeterminate={true}
+          //   indeterminateAnimationDuration={1000}
           width={null}
           animated={true}
           color={colors.lightGreen}
@@ -295,7 +332,7 @@ class ProjectFilesScreen extends Component {
   }
 
   render() {
-    let files = this.state.files;
+    let filesData = this.state.filesData;
     let dataLoading = this.state.dataLoading;
     let showAlert = this.state.showAlert;
     let alertTitle = this.state.alertTitle;
@@ -326,7 +363,7 @@ class ProjectFilesScreen extends Component {
         <View flex={8}>
           <FlatList
             style={styles.flalList}
-            data={a}
+            data={filesData}
             renderItem={({item}) => this.renderUserListList(item)}
             keyExtractor={item => item.projId}
           />
@@ -382,7 +419,7 @@ const styles = EStyleSheet.create({
   },
   textDate: {
     fontSize: '10rem',
-    color: colors.lightgray,
+    color: colors.textPlaceHolderColor,
     textAlign: 'center',
     lineHeight: '13rem',
     fontFamily: 'CircularStd-Medium',
@@ -475,21 +512,17 @@ const styles = EStyleSheet.create({
     textAlign: 'left',
     // width: '95%'
   },
-  uploadingText:{
-      marginTop:5,
-      textAlign:'center',
-      fontSize:11,
-      color:colors.darkBlue,
-      fontWeight:'bold'
-  }
+  uploadingText: {
+    marginTop: 5,
+    textAlign: 'center',
+    fontSize: 11,
+    color: colors.darkBlue,
+    fontWeight: 'bold',
+  },
 });
-debugger
+debugger;
 const mapStateToProps = state => {
   return {
-    usersLoading: state.users.usersLoading,
-    users: state.users.users,
-    addFileTaskLoading: state.project.addFileTaskLoading,
-    addFileTaskSuccess: state.project.addFileTaskSuccess,
     fileProgress: state.fileUpload.fileProgress,
   };
 };
