@@ -14,6 +14,7 @@ import MyTasksDetailsScreen from '../screens/App/TaskDrawer/MyTask/MyTasksDetail
 import MyTaskNotesScreen from '../screens/App/TaskDrawer/MyTask/MyTaskNotesScreen';
 import MyTasksFilesScreen from '../screens/App/TaskDrawer/MyTask/MyTasksFilesScreen';
 import MyTaskSubTaskScreen from '../screens/App/TaskDrawer/MyTask/MyTaskSubTaskScreen';
+import MyTaskAddEditSubTaskScreen from '../screens/App/TaskDrawer/MyTask/MyTaskAddEditSubTaskScreen';
 
 export const TasksStackNavigator = createStackNavigator(
   {
@@ -148,6 +149,18 @@ export const TasksStackNavigator = createStackNavigator(
           <Header
             navigation={navigation}
             title={'Sub tasks'}
+            onPress={() => navigation.goBack()}
+          />
+        ),
+      }),
+    },
+    MyTaskAddEditSubTaskScreen: {
+      screen: MyTaskAddEditSubTaskScreen,
+      navigationOptions: ({navigation}) => ({
+        header: (
+          <Header
+            navigation={navigation}
+            title={'Sub Task'}
             onPress={() => navigation.goBack()}
           />
         ),

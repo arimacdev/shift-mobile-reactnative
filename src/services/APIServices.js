@@ -57,7 +57,9 @@ import {
     ADD_FILE_TO_MY_TASK,
     DELETE_MY_TASK,
     GET_ALL_SUB_TASKS_IN_MY_TASK,
-    DELETE_SUB_TASKS_IN_MY_TASK
+    DELETE_SUB_TASKS_IN_MY_TASK,
+    MY_TASK_ADD_SUB_TASK,
+    MY_TASK_UPDATE_SUB_TASK
 
 } from '../api/API';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -1395,6 +1397,50 @@ async function myTaskdeleteSubTask(taskID,subtaskId) {
     }, true, headers);
 };
 
+function myTaskAddSubTask(userID,taskID,subTaskName) {
+
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+    };
+
+    return request({
+        url: MY_TASK_ADD_SUB_TASK + '/' + taskID + '/subtask',
+        method: 'POST',
+        data : {
+            taskId : taskID,
+            subtaskName : subTaskName,
+            subTaskCreator: userID,
+            taskType: "personal"
+        
+        }
+    }, true, headers);
+};
+
+async function myTaskUpdateSubTask(userID,taskID,subTaskID,subTaskName,isSelected) {
+
+    let userIDHeder = null;
+    userIDHeder =  await AsyncStorage.getItem('userID');
+
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        user : userIDHeder,
+    };
+
+    return request({
+        url: MY_TASK_UPDATE_SUB_TASK + '/' + taskID + '/subtask/' + subTaskID,
+        method: 'PUT',
+        data : {
+            subtaskName : subTaskName,//
+            subtaskStatus : isSelected,//
+            subTaskEditor: userID,//
+            taskType: "personal"
+        
+        }
+    }, true, headers);
+};
+
 const APIServices = {
     getAllProjectsByUserData,
     getUserData,
@@ -1467,7 +1513,9 @@ const APIServices = {
     addFileToMyTaskData,
     deleteSingleInMyTaskData,
     getMyTaskSubTaskData,
-    myTaskdeleteSubTask
+    myTaskdeleteSubTask,
+    myTaskAddSubTask,
+    myTaskUpdateSubTask,
 };
 
 export default APIServices;

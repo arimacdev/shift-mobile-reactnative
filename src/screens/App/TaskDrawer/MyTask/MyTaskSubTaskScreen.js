@@ -95,7 +95,7 @@ class MyTaskSubTaskScreen extends Component {
 
   editSubTask(item){
     let selectedTaskID = this.state.selectedTaskID;
-    this.props.navigation.navigate('AddEditSubTaskScreen', {
+    this.props.navigation.navigate('MyTaskAddEditSubTaskScreen', {
       item: item,
       taskID : selectedTaskID,
       screenType : 'edit'
@@ -104,7 +104,7 @@ class MyTaskSubTaskScreen extends Component {
 
   addSubTask(){
     let selectedTaskID = this.state.selectedTaskID;
-    this.props.navigation.navigate('AddEditSubTaskScreen', {
+    this.props.navigation.navigate('MyTaskAddEditSubTaskScreen', {
       item: {},
       taskID : selectedTaskID,
       screenType : 'add'
