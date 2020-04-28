@@ -15,6 +15,7 @@ import Tasks from './TasksTabScreen';
 import Projects from '../Projects/ProjectsDetailsScreen';
 import PeopleScreen from '../People/PeopleScreen';
 import FilesScreen from '../Files/ProjectFilesScreen';
+import Board from '../Board/Board';
 import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
 import EStyleSheet from 'react-native-extended-stylesheet';
 const entireScreenWidth = Dimensions.get('window').width;
@@ -94,6 +95,14 @@ class TasksScreen extends Component {
       case 'files':
         return (
           <FilesScreen
+            selectedProjectID={projectId}
+            navigation={this.props.navigation}
+            isActive={isActive}
+          />
+        );
+      case 'board':
+        return (
+          <Board
             selectedProjectID={projectId}
             navigation={this.props.navigation}
             isActive={isActive}
