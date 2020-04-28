@@ -46,7 +46,10 @@ import {
     ADD_FILE_TO_PROJECT,
     DELETE_PROJECT_FILES,
     GET_PROJECT_FILES,
-    ADD_PEOPLE_TO_TASK_GROUP
+    ADD_PEOPLE_TO_TASK_GROUP,
+    ADD_PEOPLE_TO_TASK_GROUP,
+    GET_GROUP_SINGLE_TASK_DATA,
+    UPDATE_GROUP_TASK_SINGLE_TASK,
 
 } from '../api/API';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -311,6 +314,7 @@ async function getProjecTaskData(projectID,selectedProjectTaskID) {
         'Content-Type': 'application/json',
         type : 'project',
         user : userIDHeder,
+        type : 'project',
     };
     return request({
         url: GET_TASK_IN_PROJECT+'/'+projectID +'/tasks/'+selectedProjectTaskID,
@@ -904,9 +908,10 @@ async function getGroupSingleTaskData(selectedTaskGroupId,selectedTaskID) {
         Accept: 'application/json',
         'Content-Type': 'application/json',
         user : userIDHeder,
+        type : 'taskGroup',
     };
     return request({
-        url: GET_GROUP_TASK_DATA ,
+        url: GET_GROUP_SINGLE_TASK_DATA +'/'+ selectedTaskGroupId + '/tasks/'+ selectedTaskID,
         method: 'GET',
     }, true,headers);
 };
@@ -1017,6 +1022,151 @@ async function addUserToGroupTask(userID,taskGroupId) {
     }, true, headers);
 };
 
+async function groupTaskUpdateTaskNameData(selectedTaskGroupId,selectedTaskID,text) {
+    let userIDHeder = null;
+    userIDHeder =  await AsyncStorage.getItem('userID');
+    
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        user : userIDHeder,
+        type:'taskGroup'
+    };
+
+    return request({
+        url: UPDATE_GROUP_TASK_SINGLE_TASK +'/'+selectedTaskGroupId+'/tasks/'+selectedTaskID,
+        method: 'PUT',
+        data: {
+            taskName : text,
+            taskType: "taskGroup"
+        }
+    }, true,headers);
+};
+
+async function groupTaskUpdateTaskStatusData(selectedTaskGroupId,selectedTaskID,searchValue) {
+    let userIDHeder = null;
+    userIDHeder =  await AsyncStorage.getItem('userID');
+    
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        user : userIDHeder,
+        type:'taskGroup'
+    };
+
+    return request({
+        url: UPDATE_GROUP_TASK_SINGLE_TASK +'/'+selectedTaskGroupId+'/tasks/'+selectedTaskID,
+        method: 'PUT',
+        data: {
+            taskStatus : searchValue,
+            taskType: "taskGroup"
+        }
+    }, true,headers);
+}
+
+async function groupTaskUpdateTaskAssigneeData(selectedTaskGroupId,selectedTaskID,userID) {
+    let userIDHeder = null;
+    userIDHeder =  await AsyncStorage.getItem('userID');
+    
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        user : userIDHeder,
+        type:'taskGroup'
+    };
+
+    return request({
+        url: UPDATE_GROUP_TASK_SINGLE_TASK +'/'+selectedTaskGroupId+'/tasks/'+selectedTaskID,
+        method: 'PUT',
+        data: {
+            taskAssignee : userID,
+            taskType: "taskGroup"
+        }
+    }, true,headers);
+}
+
+async function groupTaskUpdateDueDateData(selectedTaskGroupId,selectedTaskID,IsoDueDate) {
+    let userIDHeder = null;
+    userIDHeder =  await AsyncStorage.getItem('userID');
+    
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        user : userIDHeder,
+        type:'taskGroup'
+    };
+
+    return request({
+        url: UPDATE_GROUP_TASK_SINGLE_TASK +'/'+selectedTaskGroupId+'/tasks/'+selectedTaskID,
+        method: 'PUT',
+        data: {
+            taskDueDate : IsoDueDate,
+            taskType: "taskGroup"
+        }
+    }, true,headers);
+}
+
+async function groupTaskUpdateReminderDateData(selectedTaskGroupId,selectedTaskID,IsoReminderDate) {
+    let userIDHeder = null;
+    userIDHeder =  await AsyncStorage.getItem('userID');
+    
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        user : userIDHeder,
+        type:'taskGroup'
+    };
+
+    return request({
+        url: UPDATE_GROUP_TASK_SINGLE_TASK +'/'+selectedTaskGroupId+'/tasks/'+selectedTaskID,
+        method: 'PUT',
+        data: {
+            taskRemindOnDate : IsoReminderDate,
+            taskType: "taskGroup"
+        }
+    }, true,headers);
+}
+
+
+async function groupTaskUpdateTaskNoteData(selectedTaskGroupId,selectedTaskID,note) {
+    let userIDHeder = null;
+    userIDHeder =  await AsyncStorage.getItem('userID');
+    
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        user : userIDHeder,
+        type:'taskGroup'
+    };
+
+    return request({
+        url: UPDATE_GROUP_TASK_SINGLE_TASK +'/'+selectedTaskGroupId+'/tasks/'+selectedTaskID,
+        method: 'PUT',
+        data: {
+            taskNotes : note,
+            taskType: "taskGroup"
+        }
+    }, true,headers);
+}
+
+async function deleteSingleInGroupTaskData(selectedTaskGroupId, taskID) {
+
+    let userIDHeder = null;
+    userIDHeder =  await AsyncStorage.getItem('userID');
+    
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        user : userIDHeder,
+        type: "taskGroup"
+    };
+
+    return request({
+        url: DELETE_TASK + '/' + selectedTaskGroupId + '/tasks/' + taskID,
+        method: 'DELETE',
+    }, true, headers);
+}
+
 const APIServices = {
     getAllProjectsByUserData,
     getUserData,
@@ -1069,7 +1219,15 @@ const APIServices = {
     uploadFileData,
     getProjectFiles,
     deleteProjectFile,
-    addUserToGroupTask
+    addUserToGroupTask,
+    addUserToGroupTask,
+    groupTaskUpdateTaskNameData,
+    groupTaskUpdateTaskStatusData,
+    groupTaskUpdateTaskAssigneeData,
+    groupTaskUpdateDueDateData,
+    groupTaskUpdateReminderDateData,
+    groupTaskUpdateTaskNoteData,
+    deleteSingleInGroupTaskData
 };
 
 export default APIServices;

@@ -8,6 +8,8 @@ import SearchGruopTaskScreen from '../screens/App/TaskDrawer/SearchGruopTaskScre
 import MyTasksTabScreen from '../screens/App/TaskDrawer/MyTask/MyTasksTabScreen';
 import GroupTasksDetailsScreen from '../screens/App/TaskDrawer/GroupTasksDetailsScreen';
 import AddPeopleGroupTaskScreen from '../screens/App/TaskDrawer/AddPeopleScreen';
+import GroupTaskNotesScreen from '../screens/App/TaskDrawer/GroupTaskNotesScreen';
+import AssigneeScreenGroupTask from '../screens/App/TaskDrawer/AssigneeScreenGroupTask';
 
 export const TasksStackNavigator = createStackNavigator(
   {
@@ -77,6 +79,30 @@ export const TasksStackNavigator = createStackNavigator(
           <Header
             title={'Add People'}
             onPress={() => navigation.pop()}
+          />
+        ),
+      }),
+    },
+    GroupTaskNotesScreen: {
+      screen: GroupTaskNotesScreen,
+      navigationOptions: ({navigation}) => ({
+        header: (
+          <Header
+            navigation={navigation}
+            title={'Notes'}
+            onPress={() => navigation.goBack()}
+          />
+        ),
+      }),
+    },
+    AssigneeScreenGroupTask: {
+      screen: AssigneeScreenGroupTask,
+      navigationOptions: ({navigation}) => ({
+        header: (
+          <Header
+            search={true}
+            title={'Edit Assignee'}
+            onPress={() => navigation.goBack()}
           />
         ),
       }),

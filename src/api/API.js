@@ -51,6 +51,8 @@ export const GET_PROJECT_FILES = `${PROTOCOL}${HOST}projects`;
 export const DELETE_PROJECT_FILES = `${PROTOCOL}${HOST}projects`;
 
 export const ADD_PEOPLE_TO_TASK_GROUP = `${PROTOCOL}${HOST}taskgroup/add`;
+export const GET_GROUP_SINGLE_TASK_DATA  = `${PROTOCOL}${HOST}projects`;
+export const UPDATE_GROUP_TASK_SINGLE_TASK = `${PROTOCOL}${HOST}projects`;
 
 
 

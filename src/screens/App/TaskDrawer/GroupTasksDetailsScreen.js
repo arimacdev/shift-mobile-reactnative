@@ -125,6 +125,27 @@ class GroupTasksDetailsScreen extends Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
+    if (prevProps.deleteSingleTaskInGroupError !== this.props.deleteSingleTaskInGroupError
+      && this.props.deleteSingleTaskInGroupError && this.props.deleteSingleTaskInGroupErrorMessage == '') {
+      this.showAlert("","Error");
+    }
+
+    if (prevProps.deleteSingleTaskInGroupError !== this.props.deleteSingleTaskInGroupError
+      && this.props.deleteSingleTaskInGroupError && this.props.deleteSingleTaskInGroupErrorMessage != '') {
+      this.showAlert("", this.props.deleteTaskErrorMessage);
+    }
+
+    if (prevProps.deleteSingleTaskInGroupSuccess !== this.props.deleteSingleTaskInGroupSuccess
+      && this.props.deleteSingleTaskInGroupSuccess) {
+        Alert.alert(
+          "Success",
+          "Task Deleted",
+          [
+            { text: "OK", onPress: () => this.props.navigation.goBack() }
+          ],
+          { cancelable: false }
+        );
+    }
   }
 
   componentDidMount() {
@@ -198,11 +219,11 @@ showAlert(title,msg){
   async setTaskUserName (taskResult){
     let selectedTaskGroupId = this.state.selectedTaskGroupId;
     let userID = taskResult.data.taskAssignee;
-    let activeUsers = await APIServices.getAllUsersByProjectId(selectedTaskGroupId);
+    let activeUsers = await APIServices.getTaskPeopleData(selectedTaskGroupId);
     if (activeUsers.message == 'success' && userID) {
-      const result = activeUsers.data.find( ({ userId }) => userId === userID );
+      const result = activeUsers.data.find( ({ assigneeId }) => assigneeId === userID );
       this.setState({
-        name: result.firstName + ' '  + result.lastName,
+        name: result.assigneeFirstName + ' '  + result.assigneeLastName,
         //activeUsers : activeUsers.data,
       });
     }
@@ -406,7 +427,7 @@ showAlert(title,msg){
       case 10:
         break;
       case 0:
-        this.props.navigation.navigate('AssigneeScreen', {
+        this.props.navigation.navigate('AssigneeScreenGroupTask', {
             selectedTaskGroupId: this.state.selectedTaskGroupId,
           onSelectUser: (name,id) => this.onSelectUser(name,id),
         });
@@ -424,7 +445,7 @@ showAlert(title,msg){
         this.setState({showPicker: true, reminder: true});
         break;
       case 4:
-        this.props.navigation.navigate('NotesScreen',{
+        this.props.navigation.navigate('GroupTaskNotesScreen',{
           note: this.state.note,
           onUpdateNote: (note) => this.onUpdateNote(note),
         });
@@ -544,7 +565,7 @@ showAlert(title,msg){
     this.setState({dataLoading:true});
     let selectedTaskGroupId = this.state.selectedTaskGroupId;
     let selectedTaskID = this.state.selectedTaskID;
-    resultData = await APIServices.updateTaskNoteData(selectedTaskGroupId,selectedTaskID,note);
+    resultData = await APIServices.groupTaskUpdateTaskNoteData(selectedTaskGroupId,selectedTaskID,note);
     if(resultData.message == 'success'){
       this.setState({dataLoading:false,note: note});
     }else{
@@ -552,12 +573,12 @@ showAlert(title,msg){
     }
 }
 
-  // change assignee of task API
+  // change assignee of task API DONE
   async changeTaskAssignee(name,userID){
       this.setState({dataLoading:true});
       let selectedTaskGroupId = this.state.selectedTaskGroupId;
       let selectedTaskID = this.state.selectedTaskID;
-      resultData = await APIServices.updateTaskAssigneeData(selectedTaskGroupId,selectedTaskID,userID);
+      resultData = await APIServices.groupTaskUpdateTaskAssigneeData(selectedTaskGroupId,selectedTaskID,userID);
       if(resultData.message == 'success'){
         this.setState({dataLoading:false,name: name});
       }else{
@@ -565,12 +586,12 @@ showAlert(title,msg){
       }
   }
 
-  // change status of task API
+  // change status of task API DONE
   async changeTaskStatus(key,searchValue){
       this.setState({dataLoading:true});
       let selectedTaskGroupId = this.state.selectedTaskGroupId;
       let selectedTaskID = this.state.selectedTaskID;
-      resultData = await APIServices.updateTaskStatusData(selectedTaskGroupId,selectedTaskID,searchValue);
+      resultData = await APIServices.groupTaskUpdateTaskStatusData(selectedTaskGroupId,selectedTaskID,searchValue);
       if(resultData.message == 'success'){
         this.setState({dataLoading:false,taskStatus : key});
       }else{
@@ -578,12 +599,12 @@ showAlert(title,msg){
       }
   }
 
-  // change name of task API
+  // change name of task API DONE
   async onTaskNameChangeSubmit(text){
     this.setState({dataLoading:true});
     let selectedTaskGroupId = this.state.selectedTaskGroupId;
     let selectedTaskID = this.state.selectedTaskID;
-    resultData = await APIServices.updateTaskNameData(selectedTaskGroupId,selectedTaskID,text);
+    resultData = await APIServices.groupTaskUpdateTaskNameData(selectedTaskGroupId,selectedTaskID,text);
     if(resultData.message == 'success'){
       this.setState({dataLoading:false});
     }else{
@@ -591,6 +612,7 @@ showAlert(title,msg){
     }
   }
 
+   // change due date of task API DONE
   async changeTaskDueDate(){
       let duedateValue = this.state.duedateValue;
       let dueTime = this.state.dueTime;
@@ -600,7 +622,7 @@ showAlert(title,msg){
       let IsoDueDate = duedateValue ?
       moment(duedateValue + dueTime,'DD/MM/YYYY hh:mmA').format('YYYY-MM-DD[T]HH:mm:ss') : '';
 
-      resultData = await APIServices.updateTaskDueDateData(selectedTaskGroupId,selectedTaskID,IsoDueDate);
+      resultData = await APIServices.groupTaskUpdateDueDateData(selectedTaskGroupId,selectedTaskID,IsoDueDate);
       if(resultData.message == 'success'){
         this.setState({dataLoading:false});
       }else{
@@ -608,6 +630,7 @@ showAlert(title,msg){
       }
   };
 
+  // change reminder date of task API DONE
   async changeTaskReminderDate(){
       let remindDateValue = this.state.remindDateValue;
       let reminderTime = this.state.reminderTime;
@@ -617,7 +640,7 @@ showAlert(title,msg){
       let IsoReminderDate = remindDateValue ?
       moment(remindDateValue + reminderTime,'DD/MM/YYYY hh:mmA').format('YYYY-MM-DD[T]HH:mm:ss') : '';
 
-      resultData = await APIServices.updateTaskReminderDateData(selectedTaskGroupId,selectedTaskID,IsoReminderDate);
+      resultData = await APIServices.groupTaskUpdateReminderDateData(selectedTaskGroupId,selectedTaskID,IsoReminderDate);
       if(resultData.message == 'success'){
         this.setState({dataLoading:false});
       }else{
@@ -626,24 +649,22 @@ showAlert(title,msg){
   };
 
   deleteTask() {
-    // let selectedTaskGroupId = this.state.selectedTaskGroupId;
-    // let taskID = this.state.selectedTaskID;
-    // let tskInitiator = this.state.projectTaskInitiator;
-    // let taskName = this.state.taskName;
+    let selectedTaskGroupId = this.state.selectedTaskGroupId;
+    let taskID = this.state.selectedTaskID;
 
-    // Alert.alert(
-    //   "Delete Task",
-    //   "You're about to permanently delete this task, its comments\n and attachments, and all of its data.\nIf you're not sure, you can close this pop up.",
-    //   [
-    //     {
-    //       text: "Cancel",
-    //       onPress: () => console.log("Cancel Pressed"),
-    //       style: "cancel"
-    //     },
-    //     { text: "Delete", onPress: () => this.props.deleteTask(projectID, taskID, taskName, tskInitiator) }
-    //   ],
-    //   { cancelable: false }
-    // );
+    Alert.alert(
+      "Delete Task",
+      "You're about to permanently delete this task, its comments\n and attachments, and all of its data.\nIf you're not sure, you can close this pop up.",
+      [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel"
+        },
+        { text: "Delete", onPress: () => this.props.deleteTaskInGroupTasks(selectedTaskGroupId, taskID)}
+      ],
+      { cancelable: false }
+    );
   }
 
   onBackPress() {
@@ -725,6 +746,7 @@ showAlert(title,msg){
               {this.state.showTimePicker ? this.renderTimePicker() : null}
             </View>
         {dataLoading && <Loader/>}
+        {this.props.deleteSingleTaskInGroupLoading && <Loader/>}
             <AwesomeAlert
                   show={showAlert}
                   showProgress={false}
@@ -884,6 +906,10 @@ const styles = EStyleSheet.create({
 
 const mapStateToProps = state => {
   return {
+    deleteSingleTaskInGroupLoading: state.tasks.deleteSingleTaskInGroupLoading,
+    deleteSingleTaskInGroupSuccess: state.tasks.deleteSingleTaskInGroupSuccess, 
+    deleteSingleTaskInGroupError: state.tasks.deleteSingleTaskInGroupError,
+    deleteSingleTaskInGroupErrorMessage: state.tasks.deleteSingleTaskInGroupErrorMessage
   };
 };
 export default connect(
