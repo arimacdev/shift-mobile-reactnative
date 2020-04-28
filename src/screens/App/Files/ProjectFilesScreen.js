@@ -21,6 +21,7 @@ import APIServices from '../../../services/APIServices';
 import moment from 'moment';
 import AwesomeAlert from 'react-native-awesome-alerts';
 import DocumentPicker from 'react-native-document-picker';
+import * as Progress from 'react-native-progress';
 
 const a = [
   {
@@ -72,7 +73,6 @@ class ProjectFilesScreen extends Component {
   }
 
   componentDidMount() {
-    this.setState({files: a});
     // AsyncStorage.getItem('userID').then(userID => {
     //   if (userID) {
     //     const {
@@ -221,10 +221,17 @@ class ProjectFilesScreen extends Component {
           dateTime:
             moment().format('YYYY/MM/DD') + ' | ' + moment().format('HH:mm'),
         });
-
-        this.uploadFiles(this.state.files);
+        console.log(
+          res.uri,
+          res.type, // mime type
+          res.name,
+          res.size,
+        );
       }
-      this.setState({files: this.state.files});
+      await this.setState({files: this.state.files});
+      // APIServices.uploadFileData(this.state.files, this.props.selectedProjectID);
+      this.props.uploadFile(this.state.files, this.props.selectedProjectID);
+
       console.log(this.state.files);
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
@@ -255,6 +262,38 @@ class ProjectFilesScreen extends Component {
     this.props.addFileToTask(file, taskID, projectID);
   }
 
+  renderDocPickeredView(item) {
+    return (
+      <View
+        style={{
+          width: '100%',
+          height: 50,
+        //   flexDirection: 'row',
+        //   backgroundColor: colors.white,
+          borderRadius: 5,
+          marginRight: 5,
+        //   marginBottom: 5,
+          marginTop:5,
+        //   alignItems:'center',
+          justifyContent:'center'
+        }}>
+        <Progress.Bar
+          progress={0.3}
+        //   indeterminate={true}
+        //   indeterminateAnimationDuration={1000}
+          width={null}
+          animated={true}
+          color={colors.lightGreen}
+          unfilledColor={colors.lightgray}
+          borderWidth={0}
+          height={20}
+          borderRadius={5}
+        />
+        <Text style={styles.uploadingText}>Uploading 20%</Text>
+      </View>
+    );
+  }
+
   render() {
     let files = this.state.files;
     let dataLoading = this.state.dataLoading;
@@ -264,33 +303,33 @@ class ProjectFilesScreen extends Component {
     let addFileTaskLoading = this.props.addFileTaskLoading;
     return (
       <View style={styles.container}>
+        <TouchableOpacity onPress={() => this.doumentPicker()}>
+          {this.state.files.length > 0 ? (
+            <View
+              style={[
+                styles.taskFieldDocPickView,
+                {flexDirection: 'row', flexWrap: 'wrap'},
+              ]}>
+              {this.renderDocPickeredView()}
+            </View>
+          ) : (
+            <View style={[styles.taskFieldView, {flexDirection: 'row'}]}>
+              <Image
+                style={[styles.calendarIcon, {marginRight: 10}]}
+                source={icons.upload}
+                resizeMode={'center'}
+              />
+              <Text style={[styles.textInput, {flex: 1}]}>Add files</Text>
+            </View>
+          )}
+        </TouchableOpacity>
         <View flex={8}>
           <FlatList
             style={styles.flalList}
-            data={files}
+            data={a}
             renderItem={({item}) => this.renderUserListList(item)}
             keyExtractor={item => item.projId}
           />
-        </View>
-        <View flex={1}>
-          <TouchableOpacity style={{}} onPress={() => this.doumentPicker()}>
-            <View style={styles.button}>
-              <Image
-                style={styles.bottomBarIcon}
-                source={icons.taskWhite}
-                resizeMode={'center'}
-              />
-              <View style={{flex: 1}}>
-                <Text style={styles.buttonText}>{'Add File'}</Text>
-              </View>
-
-              <Image
-                style={styles.addIcon}
-                source={icons.add}
-                resizeMode={'center'}
-              />
-            </View>
-          </TouchableOpacity>
         </View>
         {dataLoading && <Loader />}
         {addFileTaskLoading && <Loader />}
@@ -355,7 +394,7 @@ const styles = EStyleSheet.create({
     flexDirection: 'row',
   },
   flalList: {
-    marginTop: '20rem',
+    marginTop: '10rem',
   },
   taskStateIcon: {
     width: '25rem',
@@ -399,14 +438,59 @@ const styles = EStyleSheet.create({
     height: '28rem',
     borderRadius: 56 / 2,
   },
+  taskFieldDocPickView: {
+    backgroundColor: colors.projectBgColor,
+    borderRadius: 5,
+    marginTop: '20rem',
+    marginBottom: '7rem',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: '12rem',
+    marginHorizontal: '20rem',
+    paddingVertical: '6rem',
+  },
+  taskFieldView: {
+    backgroundColor: colors.projectBgColor,
+    borderRadius: 5,
+    // width: '330rem',
+    marginTop: '20rem',
+    marginBottom: '7rem',
+    flexDirection: 'row',
+    alignItems: 'center',
+    // justifyContent: 'center',
+    paddingHorizontal: '12rem',
+    height: '60rem',
+    marginHorizontal: '20rem',
+  },
+  calendarIcon: {
+    width: '23rem',
+    height: '23rem',
+  },
+  textInput: {
+    fontSize: '12rem',
+    color: colors.gray,
+    textAlign: 'center',
+    lineHeight: '17rem',
+    fontFamily: 'HelveticaNeuel',
+    textAlign: 'left',
+    // width: '95%'
+  },
+  uploadingText:{
+      marginTop:5,
+      textAlign:'center',
+      fontSize:11,
+      color:colors.darkBlue,
+      fontWeight:'bold'
+  }
 });
-
+debugger
 const mapStateToProps = state => {
   return {
     usersLoading: state.users.usersLoading,
     users: state.users.users,
     addFileTaskLoading: state.project.addFileTaskLoading,
     addFileTaskSuccess: state.project.addFileTaskSuccess,
+    fileProgress: state.fileUpload.fileProgress,
   };
 };
 export default connect(
