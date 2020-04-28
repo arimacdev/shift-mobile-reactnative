@@ -30,89 +30,216 @@ class DefaultBoard extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            tasks: [
+                {
+                    taskId: "068d165b-b527-4a5a-81de-4e276e415a2f",
+                    taskName: "Add task iOS bug test.",
+                    projectId: "29371ddb-6679-4d5a-9fc2-6e37f05091e7",
+                    taskAssignee: "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
+                    taskInitiator: "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
+                    taskNote: "",
+                    taskStatus: "pending",
+                    taskCreatedAt: "2020-04-27T07:25:09.000+0000",
+                    taskDueDateAt: null,
+                    taskReminderAt: null,
+                    taskAssigneeProfileImage: "https://arimac-pmtool.s3-ap-southeast-1.amazonaws.com/profileImage_1584904875259_image_4.jpg",
+                    sprintId: "default",
+                    deleted: false
+                },
+                {
+                    taskId: "068d165b-b527-4a5a-81de-4e276e415a2f",
+                    taskName: "Add task iOS bug test.",
+                    projectId: "29371ddb-6679-4d5a-9fc2-6e37f05091e7",
+                    taskAssignee: "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
+                    taskInitiator: "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
+                    taskNote: "",
+                    taskStatus: "closed",
+                    taskCreatedAt: "2020-04-27T07:25:09.000+0000",
+                    taskDueDateAt: null,
+                    taskReminderAt: null,
+                    taskAssigneeProfileImage: "https://arimac-pmtool.s3-ap-southeast-1.amazonaws.com/profileImage_1584904875259_image_4.jpg",
+                    sprintId: "default",
+                    deleted: false
+                },
+                {
+                    taskId: "068d165b-b527-4a5a-81de-4e276e415a2f",
+                    taskName: "Add task iOS bug test.",
+                    projectId: "29371ddb-6679-4d5a-9fc2-6e37f05091e7",
+                    taskAssignee: "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
+                    taskInitiator: "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
+                    taskNote: "",
+                    taskStatus: "pending",
+                    taskCreatedAt: "2020-04-27T07:25:09.000+0000",
+                    taskDueDateAt: null,
+                    taskReminderAt: null,
+                    taskAssigneeProfileImage: "https://arimac-pmtool.s3-ap-southeast-1.amazonaws.com/profileImage_1584904875259_image_4.jpg",
+                    sprintId: "default",
+                    deleted: false
+                },
+                {
+                    taskId: "068d165b-b527-4a5a-81de-4e276e415a2f",
+                    taskName: "Add task iOS bug test.",
+                    projectId: "29371ddb-6679-4d5a-9fc2-6e37f05091e7",
+                    taskAssignee: "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
+                    taskInitiator: "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
+                    taskNote: "",
+                    taskStatus: "pending",
+                    taskCreatedAt: "2020-04-27T07:25:09.000+0000",
+                    taskDueDateAt: null,
+                    taskReminderAt: null,
+                    taskAssigneeProfileImage: "https://arimac-pmtool.s3-ap-southeast-1.amazonaws.com/profileImage_1584904875259_image_4.jpg",
+                    sprintId: "default",
+                    deleted: false
+                },
+                {
+                    taskId: "068d165b-b527-4a5a-81de-4e276e415a2f",
+                    taskName: "Add task iOS bug test.",
+                    projectId: "29371ddb-6679-4d5a-9fc2-6e37f05091e7",
+                    taskAssignee: "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
+                    taskInitiator: "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
+                    taskNote: "",
+                    taskStatus: "pending",
+                    taskCreatedAt: "2020-04-27T07:25:09.000+0000",
+                    taskDueDateAt: null,
+                    taskReminderAt: null,
+                    taskAssigneeProfileImage: "https://arimac-pmtool.s3-ap-southeast-1.amazonaws.com/profileImage_1584904875259_image_4.jpg",
+                    sprintId: "default",
+                    deleted: false
+                },
+                {
+                    taskId: "068d165b-b527-4a5a-81de-4e276e415a2f",
+                    taskName: "Add task iOS bug test.",
+                    projectId: "29371ddb-6679-4d5a-9fc2-6e37f05091e7",
+                    taskAssignee: "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
+                    taskInitiator: "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
+                    taskNote: "",
+                    taskStatus: "closed",
+                    taskCreatedAt: "2020-04-27T07:25:09.000+0000",
+                    taskDueDateAt: null,
+                    taskReminderAt: null,
+                    taskAssigneeProfileImage: "https://arimac-pmtool.s3-ap-southeast-1.amazonaws.com/profileImage_1584904875259_image_4.jpg",
+                    sprintId: "default",
+                    deleted: false
+                },
+            ]
         };
-    }  
+    }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        
+
     }
 
     componentDidMount() {
-        
+
     }
 
+    renderTaskList(item) {
+        return (
+            <TouchableOpacity style={styles.mainContainer}>
+                <NavigationEvents onWillFocus={payload => this.tabOpen(payload)} />
+                <View style={styles.userView}>
+                    {this.userIcon(item)}
+                    <View style={{ flex: 1, bottom: 15 }}>
+                        <Text style={styles.text}>{item.taskName}</Text>
+                        <Text style={styles.subText}>{item.taskId}</Text>
+                    </View>
+                    {this.userImage(item)}
+                </View>
+            </TouchableOpacity>
+        );
+    }
+
+    userImage = function (item) {
+        let userImage = item.taskAssigneeProfileImage;
+        if (userImage) {
+            return (
+                <FadeIn>
+                    <Image
+                        source={{ uri: userImage }}
+                        style={{ width: 24, height: 24, borderRadius: 24 / 2, top: 20 }}
+                    />
+                </FadeIn>
+            );
+        } else {
+            return (
+                <Image
+                    style={{ width: 24, height: 24, borderRadius: 24 / 2, top: 20 }}
+                    source={require('../../../asserts/img/defult_user.png')}
+                />
+            );
+        }
+    };
+
+    userIcon = function (item) {
+        if (item.taskStatus == 'closed') {
+            return (
+                <FadeIn>
+                    <Image
+                        source={require('../../../assest/icons/task_complete.png')}
+                        style={{ width: 40, height: 40, borderRadius: 40 / 2, bottom: 15 }}
+                    />
+                </FadeIn>
+            );
+        } else {
+            return (
+                <Image
+                    style={{ width: 40, height: 40, borderRadius: 40 / 2, backgroundColor: '#edf0f5', bottom: 15 }}
+                />
+            );
+        }
+    };
+
+
     render() {
-        
+
         return (
             <View>
                 <View >
-                <ScrollView style={styles.subContainer}>
-                    
-                    {/* <FlatList
-                        style={styles.flalList}
-                        data={this.state.owner}
-                        renderItem={({ item }) => this.renderPeopleList(item)}
-                        keyExtractor={item => item.projId}
+                    <ScrollView style={styles.subContainer}>
+                        <FlatList
+                            style={styles.flalList}
+                            data={this.state.tasks}
+                            renderItem={({ item }) => this.renderTaskList(item)}
+                            keyExtractor={item => item.projId}
                         // onRefresh={() => this.onRefresh()}
                         // refreshing={isFetching}
-                    /> */}
-                   
-                </ScrollView>
-                </View>  
+                        />
+                    </ScrollView>
+                </View>
             </View>
         );
     }
 }
 
 const styles = EStyleSheet.create({
-button: {
-        flexDirection: 'row',
-        backgroundColor: colors.lightGreen,
-        borderRadius: 5,
-        marginTop: '17rem',
-        flexDirection: 'row',
-        alignItems: 'center',
-        paddingHorizontal: '12rem',
-        height: '55rem',
-        marginHorizontal: '20rem',
-    },
-    buttonText: {
-        fontSize: '12rem',
-        color: colors.white,
-        lineHeight: '17rem',
-        fontFamily: 'HelveticaNeuel',
-        fontWeight: 'bold',
-    },
-    addIcon: {
-        width: '28rem',
-        height: '28rem',
-    },
+
     subContainer: {
-        marginBottom: '65rem'
-     },
-     flalList : {
-        marginTop: '30rem',
-        marginBottom: '10rem',
-      },
-      mainContainer: {
+        marginBottom: '65rem',
         backgroundColor: colors.projectBgColor,
         borderRadius: 5,
         marginHorizontal: '20rem',
-        marginVertical: '7rem',
+        marginTop: '7rem',
+        marginBottom: 200
+    },
+    flalList: {
+        marginTop: '8rem',
+        marginBottom: '4rem',
+    },
+    mainContainer: {
+        backgroundColor: colors.projectBgColor,
+        borderRadius: 5,
+        marginHorizontal: '8rem',
+        marginBottom: '8rem',
     },
     userView: {
-        backgroundColor: colors.projectBgColor,
+        backgroundColor: 'white',
         borderRadius: 5,
-        height: '60rem',
+        height: '80rem',
         flexDirection: 'row',
         alignItems: 'center',
-        paddingHorizontal: '12rem',
-      },
-      userIcon: {
-        width: '45rem',
-        height: '45rem',
-      },
-      text: {
+        paddingHorizontal: '12rem'
+    },
+    text: {
         fontSize: '12rem',
         color: colors.userListUserNameColor,
         textAlign: 'center',
@@ -121,8 +248,8 @@ button: {
         textAlign: 'left',
         marginLeft: '10rem',
         fontWeight: '600'
-      },
-      subText: {
+    },
+    subText: {
         fontSize: '10rem',
         color: '#b9b9b9',
         textAlign: 'center',
@@ -131,7 +258,7 @@ button: {
         textAlign: 'left',
         marginLeft: '10rem',
         fontWeight: '400'
-      },
+    },
 });
 
 const mapStateToProps = state => {
