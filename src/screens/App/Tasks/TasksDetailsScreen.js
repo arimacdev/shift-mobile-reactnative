@@ -189,7 +189,7 @@ class TasksDetailsScreen extends Component {
       note: '',
       sprints: [],
       isFromBoards: false,
-      selectedSprint: 'Sprint'
+      selectedSprint: ''
     };
   }
 
@@ -231,15 +231,18 @@ class TasksDetailsScreen extends Component {
     });
     this.fetchData(selectedProjectID, selectedProjectTaskID);
     if (params.isFromBoards == true) {
-      this.getAllSprintInProject(selectedProjectID)
+      let sprintId =  params.taskDetails.sprintId;
+      this.getAllSprintInProject(selectedProjectID,sprintId)
     }
   }
 
-  async getAllSprintInProject(selectedProjectID) {
+  async getAllSprintInProject(selectedProjectID,sprintId) {
     this.setState({ dataLoading: true });
     sprintData = await APIServices.getAllSprintInProject(selectedProjectID);
     if (sprintData.message == 'success') {
-      this.setState({ dataLoading: false, sprints: sprintData.data });
+      this.setSprintDroupDownData(sprintData.data);
+      this.setSprintDroupDownSelectedValue(sprintData.data,sprintId);
+      this.setState({ dataLoading: false});
     } else {
       this.setState({ dataLoading: false });
     }
@@ -259,6 +262,33 @@ class TasksDetailsScreen extends Component {
       this.setState({ dataLoading: false });
     } else {
       this.setState({ dataLoading: false });
+    }
+  }
+
+  setSprintDroupDownData(sprintData) {
+    let sprintArray = [
+      {
+        id: "Default",
+        value: "Default",
+      }
+    ];
+    for(let i=0 ; i < sprintData.length; i++){
+      sprintArray.push({
+        id: sprintData[i].sprintId,
+        value: sprintData[i].sprintName,
+      });
+    }
+    this.setState({sprints: sprintArray });
+  };
+
+  setSprintDroupDownSelectedValue(sprintData,selectedSprintID) {
+    if(selectedSprintID == "default"){
+      this.setState({selectedSprint: "Default" });
+    }else{
+      let selectedSprint = sprintData.find( ({ sprintId }) => sprintId == selectedSprintID );
+      if(selectedSprint){
+        this.setState({selectedSprint: selectedSprint.sprintName });
+      }
     }
   }
 
@@ -674,6 +704,13 @@ class TasksDetailsScreen extends Component {
     this.changeTaskStatus(key, searchValue);
   }
 
+  onFilterSprintData = (value, index, data) => {
+    const selectedId = data[index].id;
+    let selectedName  = data[index].value;
+    this.setState({selectedSprint: selectedName });
+    //API Call 
+  };
+
 
   // change note of task API
   async changeTaskNote(note) {
@@ -794,6 +831,7 @@ class TasksDetailsScreen extends Component {
     let alertMsg = this.state.alertMsg;
     let taskName = this.state.taskName;
     let selectedSprint = this.state.selectedSprint;
+    let sprints = this.state.sprints;
 
     return (
       <View style={styles.backgroundImage}>
@@ -839,7 +877,7 @@ class TasksDetailsScreen extends Component {
                   // style={{}}
                   label=""
                   labelFontSize={0}
-                  data={dropData}
+                  data={sprints}
                   textColor={colors.white}
                   renderAccessory={() => null}
                   error={''}
@@ -858,12 +896,12 @@ class TasksDetailsScreen extends Component {
                     fontFamily: 'CircularStd-Book',
                   }}
                   itemPadding={10}
-                  onChangeText={value => this.onFilterTasksStatus(value)}
+                  onChangeText={this.onFilterSprintData}
                 />
               </View>
               : null}
             <FlatList
-              data={this.state.isFromBoards ? taskDataWhenParentIsBoard : taskData}
+              data={taskData}
               renderItem={({ item }) => this.renderProjectList(item)}
               keyExtractor={item => item.taskId}
             />

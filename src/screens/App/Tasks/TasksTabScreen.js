@@ -278,6 +278,7 @@ class TasksTabScreen extends Component {
           this.props.navigation.navigate('TasksDetailsScreen', {
             taskDetails: item,
             selectedProjectID: selectedProjectID,
+            isFromBoards: false
           })
         }>
         <View style={styles.projectView}>

@@ -121,7 +121,13 @@ class OtherBoard extends Component {
     renderItemSubTile(data) {
         return (
             <View style={{ flex: 1 }}>
-                 <TouchableOpacity>
+                 <TouchableOpacity onPress={() =>
+                    this.props.navigation.navigate('TasksDetailsScreen', {
+                    taskDetails: data.item,
+                    selectedProjectID: this.props.selectedProjectID,
+                    isFromBoards: true
+                })
+              }>
                 <View style={styles.sub_item}>
                     <View style={{ flex: 1 }}>
                         {this.userIcon(data.item)}
