@@ -6,11 +6,8 @@ import {
   MenuOption,
   MenuTrigger,
 } from 'react-native-popup-menu';
-// import FastImage from 'react-native-fast-image';
 import icons from '../assest/icons/icons';
 import colors from '../config/colors';
-// import {PlainText} from './index';
-// import * as Utils from '../lib/Utils';
 
 const shadow = Platform.select({
   android: {
@@ -106,6 +103,7 @@ class MenuItems extends Component {
         // paddingTop:10,
         marginTop: Platform.OS === 'ios' ? 17 : 35,
         backgroundColor: colors.white,
+        borderRadius: 5,
         ...shadow,
       },
       optionWrapper: {
@@ -144,12 +142,12 @@ class MenuItems extends Component {
                       key={index}
                       value={item}>
                       <View style={styles.menuItemTouchable}>
-                        <View
+                        {item.color !== undefined ? <View
                           style={[
                             styles.menuItemTextView,
                             {backgroundColor: item.color},
                           ]}
-                        />
+                        /> : null}
                         <Text style={styles.menuItemText}>{item.text}</Text>
                       </View>
                     </MenuOption>

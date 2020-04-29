@@ -20,6 +20,7 @@ import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
 import EStyleSheet from 'react-native-extended-stylesheet';
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
+import {MenuProvider} from 'react-native-popup-menu';
 
 const initialLayout = {width: entireScreenWidth};
 
@@ -50,10 +51,10 @@ class TasksScreen extends Component {
         style={styles.tabBarStyle}
         tabStyle={{width: 120}}
         scrollEnabled={true}
-        labelStyle={{fontWeight: 'bold'},{fontFamily: 'CircularStd-Medium'}}
+        labelStyle={({fontWeight: 'bold'}, {fontFamily: 'CircularStd-Medium'})}
         activeColor={colors.darkBlue}
         inactiveColor={'gray'}
-        getLabelText={({ route }) => route.title}
+        getLabelText={({route}) => route.title}
       />
     );
   }
@@ -113,14 +114,16 @@ class TasksScreen extends Component {
 
   render() {
     return (
-      <TabView
-        lazy
-        navigationState={{index: this.state.index, routes: this.state.routes}}
-        renderScene={route => this.renderScene(route)}
-        onIndexChange={index => this.setState({index})}
-        initialLayout={initialLayout}
-        renderTabBar={props => this.renderTabBar(props)}
-      />
+      <MenuProvider style={{flex: 1}}>
+        <TabView
+          lazy
+          navigationState={{index: this.state.index, routes: this.state.routes}}
+          renderScene={route => this.renderScene(route)}
+          onIndexChange={index => this.setState({index})}
+          initialLayout={initialLayout}
+          renderTabBar={props => this.renderTabBar(props)}
+        />
+      </MenuProvider>
     );
   }
 }
