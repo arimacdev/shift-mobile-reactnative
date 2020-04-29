@@ -520,7 +520,6 @@ const styles = EStyleSheet.create({
     fontWeight: 'bold',
   },
 });
-debugger;
 const mapStateToProps = state => {
   return {
     fileProgress: state.fileUpload.fileProgress,

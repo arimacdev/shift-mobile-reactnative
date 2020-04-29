@@ -17,111 +17,18 @@ import NavigationService from '../../../services/NavigationService';
 import APIServices from '../../../services/APIServices';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import FadeIn from 'react-native-fade-in-image';
-import * as Progress from 'react-native-progress';
-import { ButtonGroup } from 'react-native-elements';
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({ $rem: entireScreenWidth / 380 });
-import AsyncStorage from '@react-native-community/async-storage';
 import Loader from '../../../components/Loader';
-import { NavigationEvents } from 'react-navigation';
+import moment from 'moment';
 const initialLayout = { width: entireScreenWidth };
 
 class DefaultBoard extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            tasks: [
-                {
-                    taskId: "068d165b-b527-4a5a-81de-4e276e415a2f",
-                    taskName: "Add task iOS bug test.",
-                    projectId: "29371ddb-6679-4d5a-9fc2-6e37f05091e7",
-                    taskAssignee: "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
-                    taskInitiator: "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
-                    taskNote: "",
-                    taskStatus: "pending",
-                    taskCreatedAt: "2020-04-27T07:25:09.000+0000",
-                    taskDueDateAt: null,
-                    taskReminderAt: null,
-                    taskAssigneeProfileImage: "https://arimac-pmtool.s3-ap-southeast-1.amazonaws.com/profileImage_1584904875259_image_4.jpg",
-                    sprintId: "default",
-                    deleted: false
-                },
-                {
-                    taskId: "068d165b-b527-4a5a-81de-4e276e415a2f",
-                    taskName: "Add task iOS bug test.",
-                    projectId: "29371ddb-6679-4d5a-9fc2-6e37f05091e7",
-                    taskAssignee: "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
-                    taskInitiator: "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
-                    taskNote: "",
-                    taskStatus: "closed",
-                    taskCreatedAt: "2020-04-27T07:25:09.000+0000",
-                    taskDueDateAt: null,
-                    taskReminderAt: null,
-                    taskAssigneeProfileImage: "https://arimac-pmtool.s3-ap-southeast-1.amazonaws.com/profileImage_1584904875259_image_4.jpg",
-                    sprintId: "default",
-                    deleted: false
-                },
-                {
-                    taskId: "068d165b-b527-4a5a-81de-4e276e415a2f",
-                    taskName: "Add task iOS bug test.",
-                    projectId: "29371ddb-6679-4d5a-9fc2-6e37f05091e7",
-                    taskAssignee: "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
-                    taskInitiator: "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
-                    taskNote: "",
-                    taskStatus: "pending",
-                    taskCreatedAt: "2020-04-27T07:25:09.000+0000",
-                    taskDueDateAt: null,
-                    taskReminderAt: null,
-                    taskAssigneeProfileImage: "https://arimac-pmtool.s3-ap-southeast-1.amazonaws.com/profileImage_1584904875259_image_4.jpg",
-                    sprintId: "default",
-                    deleted: false
-                },
-                {
-                    taskId: "068d165b-b527-4a5a-81de-4e276e415a2f",
-                    taskName: "Add task iOS bug test.",
-                    projectId: "29371ddb-6679-4d5a-9fc2-6e37f05091e7",
-                    taskAssignee: "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
-                    taskInitiator: "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
-                    taskNote: "",
-                    taskStatus: "pending",
-                    taskCreatedAt: "2020-04-27T07:25:09.000+0000",
-                    taskDueDateAt: null,
-                    taskReminderAt: null,
-                    taskAssigneeProfileImage: "https://arimac-pmtool.s3-ap-southeast-1.amazonaws.com/profileImage_1584904875259_image_4.jpg",
-                    sprintId: "default",
-                    deleted: false
-                },
-                {
-                    taskId: "068d165b-b527-4a5a-81de-4e276e415a2f",
-                    taskName: "Add task iOS bug test.",
-                    projectId: "29371ddb-6679-4d5a-9fc2-6e37f05091e7",
-                    taskAssignee: "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
-                    taskInitiator: "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
-                    taskNote: "",
-                    taskStatus: "pending",
-                    taskCreatedAt: "2020-04-27T07:25:09.000+0000",
-                    taskDueDateAt: null,
-                    taskReminderAt: null,
-                    taskAssigneeProfileImage: "https://arimac-pmtool.s3-ap-southeast-1.amazonaws.com/profileImage_1584904875259_image_4.jpg",
-                    sprintId: "default",
-                    deleted: false
-                },
-                {
-                    taskId: "068d165b-b527-4a5a-81de-4e276e415a2f",
-                    taskName: "Add task iOS bug test.",
-                    projectId: "29371ddb-6679-4d5a-9fc2-6e37f05091e7",
-                    taskAssignee: "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
-                    taskInitiator: "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
-                    taskNote: "",
-                    taskStatus: "closed",
-                    taskCreatedAt: "2020-04-27T07:25:09.000+0000",
-                    taskDueDateAt: null,
-                    taskReminderAt: null,
-                    taskAssigneeProfileImage: "https://arimac-pmtool.s3-ap-southeast-1.amazonaws.com/profileImage_1584904875259_image_4.jpg",
-                    sprintId: "default",
-                    deleted: false
-                },
-            ]
+            tasks: [],
+            dataLoading : false,
         };
     }
 
@@ -129,19 +36,33 @@ class DefaultBoard extends Component {
 
     }
 
-    componentDidMount() {
+    async componentDidMount() {
+        let selectedProjectID = this.props.selectedProjectID;
+        this.setState({dataLoading:true});
+        taskData = await APIServices.getAllTaskInDefaultBoardData(selectedProjectID);
+        if(taskData.message == 'success'){
+            let dataArray = [];
+            dataArray =  taskData.data.filter(function(obj) {
+                return obj.sprintId == "default";
+            });
 
+            this.setState({
+                tasks : dataArray,
+                dataLoading:false
+            });
+        }else{
+            this.setState({dataLoading:false});
+        }
     }
 
     renderTaskList(item) {
         return (
             <TouchableOpacity style={styles.mainContainer}>
-                <NavigationEvents onWillFocus={payload => this.tabOpen(payload)} />
                 <View style={styles.userView}>
                     {this.userIcon(item)}
                     <View style={{ flex: 1, bottom: 15 }}>
                         <Text style={styles.text}>{item.taskName}</Text>
-                        <Text style={styles.subText}>{item.taskId}</Text>
+                        {this.dateView(item)}
                     </View>
                     {this.userImage(item)}
                 </View>
@@ -189,9 +110,35 @@ class DefaultBoard extends Component {
         }
     };
 
+    dateView = function(item) {
+        let date = item.taskDueDateAt;
+        let currentTime = moment().format();
+        let dateText = '';
+        let color = '';
+    
+        let taskStatus = item.taskStatus;
+        if (taskStatus == 'closed' && date) {
+          // task complete
+          dateText = moment(date).format('YYYY-MM-DD');
+          color = '#36DD5B';
+        } else if (taskStatus != 'closed' && date) {
+          if (moment(date).isAfter(currentTime)) {
+            dateText = moment(date).format('YYYY-MM-DD');
+            color = '#0C0C5A';
+          } else {
+            dateText = moment(date).format('YYYY-MM-DD');
+            color = '#ff6161';
+          }
+        } else {
+          dateText = 'Add Due Date';
+          color = '#000000';
+        }
+        
+        return  <Text style={[styles.subText, {color: color}]}>{dateText}</Text>;
+      };
 
     render() {
-
+        let dataLoading = this.state.dataLoading
         return (
             <View>
                 <View >
@@ -206,6 +153,7 @@ class DefaultBoard extends Component {
                         />
                     </ScrollView>
                 </View>
+                {dataLoading && <Loader/>}
             </View>
         );
     }

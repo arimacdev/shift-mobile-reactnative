@@ -1440,6 +1440,23 @@ async function myTaskUpdateSubTask(userID,taskID,subTaskID,subTaskName,isSelecte
     }, true, headers);
 };
 
+async function getAllTaskInDefaultBoardData(projectID) {
+
+    let userID = null;
+    userID =  await AsyncStorage.getItem('userID');
+
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        type : 'project',
+    };
+
+    return request({
+        url: GET_MY_TASKS_BY_PROJECT + projectID + '/tasks?userId=' + userID,
+        method: 'GET'
+    }, true, headers);
+}
+
 const APIServices = {
     getAllProjectsByUserData,
     getUserData,
@@ -1515,6 +1532,7 @@ const APIServices = {
     myTaskdeleteSubTask,
     myTaskAddSubTask,
     myTaskUpdateSubTask,
+    getAllTaskInDefaultBoardData
 };
 
 export default APIServices;
