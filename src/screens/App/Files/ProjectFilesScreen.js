@@ -24,6 +24,7 @@ import AwesomeAlert from 'react-native-awesome-alerts';
 import DocumentPicker from 'react-native-document-picker';
 import * as Progress from 'react-native-progress';
 import RNFetchBlob from 'rn-fetch-blob';
+import fileTypes from '../../../assest/fileTypes/fileTypes';
 
 const a = [
   {
@@ -64,6 +65,7 @@ class ProjectFilesScreen extends Component {
       filesData: [],
       progress: 0,
       loading: false,
+      isFetching: false,
     };
   }
 
@@ -85,7 +87,11 @@ class ProjectFilesScreen extends Component {
     this.setState({dataLoading: true});
     filesData = await APIServices.getProjectFiles(selectedProjectID);
     if (filesData.message == 'success') {
-      this.setState({filesData: filesData.data, dataLoading: false});
+      this.setState({
+        filesData: filesData.data,
+        dataLoading: false,
+        isFetching: false,
+      });
     } else {
       this.setState({dataLoading: false});
     }
@@ -175,13 +181,51 @@ class ProjectFilesScreen extends Component {
     return Math.round(bytes / Math.pow(1024, i), 2) + '' + sizes[i];
   }
 
+  getTypeIcons(fileName) {
+    let key = fileName.split('.')[1];
+    let imageType = '';
+    switch (key) {
+      case 'excel':
+        imageType = fileTypes.excel;
+        break;
+      case 'jpg':
+        imageType = fileTypes.jpg;
+        break;
+      case 'mp3':
+        imageType = fileTypes.mp3;
+        break;
+      case 'pdf':
+        imageType = fileTypes.pdf;
+        break;
+      case 'png':
+        imageType = fileTypes.png;
+        break;
+      case 'video':
+        imageType = fileTypes.video;
+        break;
+      case 'word':
+        imageType = fileTypes.word;
+        break;
+      default:
+        imageType = fileTypes.default;
+        break;
+    }
+    return imageType;
+  }
+
+  onRefresh() {
+    this.setState({isFetching: false, filesData: []}, function() {
+      this.fetchData(this.props.selectedProjectID);
+    });
+  }
+
   renderUserListList(item) {
     let details = '';
     let size = this.bytesToSize(item.projectFileSize);
     let date = moment(item.projectFileAddedOn).format('YYYY-MM-DD');
-    let name = 'by ' + item.firstName + ' ' + item.lastName;
+    let name = item.firstName + ' ' + item.lastName;
 
-    details = size + ' | ' + date + ' ' + name;
+    details = size + ' | ' + date + ' by ' + name;
 
     return (
       <TouchableOpacity
@@ -189,10 +233,17 @@ class ProjectFilesScreen extends Component {
           this.props.navigation.navigate('FilesView', {filesData: item})
         }>
         <View style={styles.filesView}>
-          <Image source={icons.gallary} style={styles.taskStateIcon} />
+          <Image
+            source={this.getTypeIcons(item.projectFileName)}
+            style={styles.taskStateIcon}
+          />
           <View style={{flex: 1}}>
-            <Text style={styles.text}>{item.projectFileName}</Text>
-            <Text style={styles.textDate}>{details}</Text>
+            <Text style={styles.text} numberOfLines={1}>
+              {item.projectFileName}
+            </Text>
+            <Text style={styles.textDate} numberOfLines={1}>
+              {details}
+            </Text>
           </View>
           <View style={styles.controlView}>
             <TouchableOpacity
@@ -305,13 +356,9 @@ class ProjectFilesScreen extends Component {
         style={{
           width: '100%',
           height: 50,
-          //   flexDirection: 'row',
-          //   backgroundColor: colors.white,
           borderRadius: 5,
           marginRight: 5,
-          //   marginBottom: 5,
           marginTop: 5,
-          //   alignItems:'center',
           justifyContent: 'center',
         }}>
         <Progress.Bar
@@ -338,6 +385,7 @@ class ProjectFilesScreen extends Component {
     let alertTitle = this.state.alertTitle;
     let alertMsg = this.state.alertMsg;
     let addFileTaskLoading = this.props.addFileTaskLoading;
+    let isFetching = this.state.isFetching;
     return (
       <View style={styles.container}>
         <TouchableOpacity onPress={() => this.doumentPicker()}>
@@ -366,6 +414,8 @@ class ProjectFilesScreen extends Component {
             data={filesData}
             renderItem={({item}) => this.renderUserListList(item)}
             keyExtractor={item => item.projId}
+            onRefresh={() => this.onRefresh()}
+            refreshing={isFetching}
           />
         </View>
         {dataLoading && <Loader />}
@@ -404,7 +454,7 @@ const styles = EStyleSheet.create({
     marginTop: '7rem',
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: '12rem',
+    paddingHorizontal: '10rem',
     marginHorizontal: '20rem',
   },
   text: {
@@ -414,7 +464,7 @@ const styles = EStyleSheet.create({
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
-    marginLeft: '10rem',
+    marginLeft: '5rem',
     fontWeight: '400',
   },
   textDate: {
@@ -424,7 +474,7 @@ const styles = EStyleSheet.create({
     lineHeight: '13rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
-    marginLeft: '10rem',
+    marginLeft: '5rem',
   },
   controlView: {
     alignItems: 'center',
@@ -434,8 +484,8 @@ const styles = EStyleSheet.create({
     marginTop: '10rem',
   },
   taskStateIcon: {
-    width: '25rem',
-    height: '25rem',
+    width: '40rem',
+    height: '40rem',
   },
   editDeleteIcon: {
     width: '25rem',
