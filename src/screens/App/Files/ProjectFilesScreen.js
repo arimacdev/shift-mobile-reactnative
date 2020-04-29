@@ -69,15 +69,7 @@ class ProjectFilesScreen extends Component {
     };
   }
 
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    // if (
-    //   prevProps.addFileTaskSuccess !== this.props.addFileTaskSuccess &&
-    //   this.props.addFileTaskSuccess
-    // ) {
-    //   let userID = this.state.userID;
-    //   this.fetchData(userID);
-    // }
-  }
+  componentDidUpdate(prevProps, prevState, snapshot) {}
 
   componentDidMount() {
     this.fetchData(this.props.selectedProjectID);
