@@ -311,8 +311,8 @@ class WorkloadTabScreen extends Component {
 
   onCanclePress() {
     this.setState({
-      selectedStartDate: this.state.from,
-      selectedEndDate: this.state.to,
+      selectedStartDate: this.state.from !== 'all' ? this.state.from : '',
+      selectedEndDate: this.state.to !== 'all' ? this.state.to : '',
     });
     this.onCloseModel();
   }

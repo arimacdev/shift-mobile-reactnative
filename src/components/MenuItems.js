@@ -129,10 +129,7 @@ class MenuItems extends Component {
             onPress={() => this.onTriggerPress()}
             disabled={this.props.disabledOpt}>
             <View style={styles.dropView}>
-              <Image
-                style={[styles.filterIcon]}
-                source={icons.filterIcon}
-              />
+              <Image style={[styles.filterIcon]} source={icons.filterIcon} />
             </View>
           </MenuTrigger>
           <MenuOptions customStyles={customStyles}>
@@ -148,14 +145,10 @@ class MenuItems extends Component {
                       value={item}>
                       <View style={styles.menuItemTouchable}>
                         <View
-                          style={{
-                            width: 20,
-                            height: 20,
-                            backgroundColor: item.color,
-                            // flex: 1,
-                            paddingVertical: 10,
-                            paddingLeft: 15,
-                          }}
+                          style={[
+                            styles.menuItemTextView,
+                            {backgroundColor: item.color},
+                          ]}
                         />
                         <Text style={styles.menuItemText}>{item.text}</Text>
                       </View>
@@ -203,9 +196,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingRight: 20,
-    marginLeft:20,
-    marginTop:10,
-    marginBottom:10
+    marginLeft: 20,
+    marginTop: 10,
+    marginBottom: 10,
   },
   selectedItemBorder: {
     width: '100%',
@@ -229,6 +222,12 @@ const styles = StyleSheet.create({
   },
   menuStyle: {
     marginRight: 18,
+  },
+  menuItemTextView: {
+    width: 20,
+    height: 20,
+    paddingVertical: 10,
+    paddingLeft: 15,
   },
 });
 
