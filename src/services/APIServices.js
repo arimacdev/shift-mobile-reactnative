@@ -59,7 +59,8 @@ import {
     DELETE_SUB_TASKS_IN_MY_TASK,
     MY_TASK_ADD_SUB_TASK,
     MY_TASK_UPDATE_SUB_TASK,
-    GET_SPRINTS_BY_PROJECT
+    GET_SPRINTS_BY_PROJECT,
+    ADD_EDIT_SPRINT_BY_PROJECT
 
 } from '../api/API';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -1475,6 +1476,51 @@ async function getAllSprintInProject(projectID) {
     }, true, headers);
 }
 
+async function addSprintData(projectID,sprintName,sprintDescription) {
+
+    let userID = null;
+    userID =  await AsyncStorage.getItem('userID');
+
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+    };
+
+    return request({
+        url: ADD_EDIT_SPRINT_BY_PROJECT,
+        method: 'POST',
+        data : {
+            projectId : projectID,
+            sprintName : sprintName,
+            sprintDescription: sprintDescription,
+            sprintCreatedBy: userID
+        
+        }
+    }, true, headers);
+};
+
+async function editSprintData(projectID,sprintName,sprintDescription,sprintId) {
+
+    let userID = null;
+    userID =  await AsyncStorage.getItem('userID');
+
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        userId : userID,
+    };
+
+    return request({
+        url: ADD_EDIT_SPRINT_BY_PROJECT + '/' + projectID + '/' + sprintId,
+        method: 'PUT',
+        data : {
+            sprintName: sprintName,
+	        sprintDescription: sprintDescription
+        
+        }
+    }, true, headers);
+};
+
 const APIServices = {
     getAllProjectsByUserData,
     getUserData,
@@ -1551,7 +1597,9 @@ const APIServices = {
     myTaskAddSubTask,
     myTaskUpdateSubTask,
     getAllTaskInDefaultBoardData,
-    getAllSprintInProject
+    getAllSprintInProject,
+    addSprintData,
+    editSprintData
 };
 
 export default APIServices;

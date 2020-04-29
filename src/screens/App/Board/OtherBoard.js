@@ -21,8 +21,7 @@ import * as Progress from 'react-native-progress';
 import { ButtonGroup } from 'react-native-elements';
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({ $rem: entireScreenWidth / 380 });
-import Collapsible from '../../../components/CollapsibleView';
-import AsyncStorage from '@react-native-community/async-storage';
+import {NavigationEvents} from 'react-navigation';
 import Loader from '../../../components/Loader';
 import moment from 'moment';
 const initialLayout = { width: entireScreenWidth };
@@ -41,8 +40,7 @@ class OtherBoard extends Component {
     }
 
     async componentDidMount() {
-        this.getAllTaskDataInProject();
-        
+        this.getAllTaskDataInProject();  
     }
 
     async getAllTaskDataInProject (){
@@ -82,20 +80,22 @@ class OtherBoard extends Component {
     renderItemMainTile(data) {
         return (
             <View style={{ flex: 1 }}>
-                <View style={styles.item}>
-                    <View style={styles.title_container} >
-                        <Text style={styles.title}>{data.item.sprintName}</Text>
-                        <Text style={styles.sub_txt}>{data.item.sprintDescription}</Text>
-                    </View>
+                <TouchableOpacity onPress={() => this.goToEditSprint(data)}>
+                    <View style={styles.item}>
+                        <View style={styles.title_container} >
+                            <Text style={styles.title}>{data.item.sprintName}</Text>
+                            <Text style={styles.sub_txt}>{data.item.sprintDescription}</Text>
+                        </View>
 
-                    <ScrollView style={styles.sub_scrollView}>
-                        <FlatList
-                            data={data.item.tasks}
-                            renderItem={this.renderItemSubTile.bind(this)}
-                            keyExtractor={item => item.id}
-                        />
-                    </ScrollView>
-                </View>
+                        <ScrollView style={styles.sub_scrollView}>
+                            <FlatList
+                                data={data.item.tasks}
+                                renderItem={this.renderItemSubTile.bind(this)}
+                                keyExtractor={item => item.id}
+                            />
+                        </ScrollView>
+                    </View>
+                </TouchableOpacity>
             </View>
         );
     }
@@ -103,6 +103,7 @@ class OtherBoard extends Component {
     renderItemSubTile(data) {
         return (
             <View style={{ flex: 1 }}>
+                 <TouchableOpacity>
                 <View style={styles.sub_item}>
                     <View style={{ flex: 1 }}>
                         {this.userIcon(data.item)}
@@ -117,6 +118,7 @@ class OtherBoard extends Component {
                         {this.userImage(data.item)}
                     </View>
                 </View>
+                </TouchableOpacity>
             </View>
         );
     }
@@ -188,10 +190,33 @@ class OtherBoard extends Component {
         }
     };
 
+    goToAddSprint(){
+        let selectedProjectID = this.props.selectedProjectID;
+        this.props.navigation.navigate('AddEditSprint', {
+             item: {},
+             projectID : selectedProjectID,
+             screenType : 'add'
+        });
+    }
+
+    goToEditSprint(item){
+        let selectedProjectID = this.props.selectedProjectID;
+        this.props.navigation.navigate('AddEditSprint', {
+             item: item.item,
+             projectID : selectedProjectID,
+             screenType : 'edit'
+        });
+    }
+
+    loadBords(){
+        this.getAllTaskDataInProject();
+      }
+
     render() {
         return (
             <View>
-                <TouchableOpacity>
+                <NavigationEvents onWillFocus={payload => this.loadBords(payload)} />
+                <TouchableOpacity onPress={() => this.goToAddSprint()}>
                     <View style={styles.button}>
                         <View style={{ flex: 1 }}>
                                 <Text style={styles.buttonText}>New Sprint</Text>

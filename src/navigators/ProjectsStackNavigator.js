@@ -21,6 +21,7 @@ import NotesScreen from '../screens/App/Tasks/NotesScreen';
 import ViewProfileScreen from '../screens/App/Profile/ViewProfileScreen';
 import AddEditSubTaskScreen from '../screens/App/Tasks/AddEditSubTaskScreen';
 import FilesView from '../screens/App/Tasks/FilesView';
+import AddEditSprint from '../screens/App/Board/AddEditSprint';
 
 export const ProjectsStackNavigator = createStackNavigator(
   {
@@ -209,6 +210,18 @@ export const ProjectsStackNavigator = createStackNavigator(
           <Header
             navigation={navigation}
             title={'Files Viewer'}
+            onPress={() => navigation.goBack()}
+          />
+        ),
+      }),
+    },
+    AddEditSprint: {
+      screen: AddEditSprint,
+      navigationOptions: ({navigation}) => ({
+        header: (
+          <Header
+            navigation={navigation}
+            title={'Sprint'}
             onPress={() => navigation.goBack()}
           />
         ),
