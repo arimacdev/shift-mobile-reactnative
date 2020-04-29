@@ -27,7 +27,6 @@ import moment from 'moment';
 const initialLayout = { width: entireScreenWidth };
 import { Icon } from 'native-base';
 import MenuItems from '../../../components/MenuItems';
-import {MenuProvider} from 'react-native-popup-menu';
 
 
 const menuItems = [
