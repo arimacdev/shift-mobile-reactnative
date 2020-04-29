@@ -29,11 +29,8 @@ class DefaultBoard extends Component {
         this.state = {
             tasks: [],
             dataLoading : false,
+            selectedProjectID: 0,
         };
-    }
-
-    componentDidUpdate(prevProps, prevState, snapshot) {
-
     }
 
     async componentDidMount() {
@@ -56,8 +53,16 @@ class DefaultBoard extends Component {
     }
 
     renderTaskList(item) {
+        let selectedProjectID = this.props.selectedProjectID;;
         return (
-            <TouchableOpacity style={styles.mainContainer}>
+            <TouchableOpacity style={styles.mainContainer} 
+            onPress={() =>
+                this.props.navigation.navigate('TasksDetailsScreen', {
+                  taskDetails: item,
+                  selectedProjectID: selectedProjectID,
+                  isFromBoards: true
+                })
+              }>
                 <View style={styles.userView}>
                     {this.userIcon(item)}
                     <View style={{ flex: 1, bottom: 15 }}>
