@@ -161,9 +161,9 @@ class ProjectFilesScreen extends Component {
         }
       })
       .catch(error => {
-        if (e.status == 401) {
+        if (error.status == 401) {
           this.setState({dataLoading: false});
-          this.showAlert('', e.data.message);
+          this.showAlert('', error.data.message);
         }
       });
   }
@@ -520,7 +520,6 @@ const styles = EStyleSheet.create({
     fontWeight: 'bold',
   },
 });
-debugger;
 const mapStateToProps = state => {
   return {
     fileProgress: state.fileUpload.fileProgress,

@@ -43,12 +43,31 @@ export const DELETE_GROUP_TASK_DATA = `${PROTOCOL}${HOST}taskgroup`;
 export const UPDATE_GROUP_TASK_DATA = `${PROTOCOL}${HOST}taskgroup`;
 export const GET_SINGLE_GROUP_TASK_DATA = `${PROTOCOL}${HOST}taskgroup`;
 export const GET_PEOPLE_IN_TASK = `${PROTOCOL}${HOST}projects`; 
-export const ADD_ALL_TASK_BY_ME_DATA = `${PROTOCOL}${HOST}non-project/tasks/personal`;
+export const ADD_ALL_TASK_BY_ME_DATA = `${PROTOCOL}${HOST}non-project/tasks/personal/user`;
 export const ADD_TASK_TO_MY_TASK_DATA = `${PROTOCOL}${HOST}non-project/tasks/personal`;
 
 export const ADD_FILE_TO_PROJECT = `${PROTOCOL}${HOST}projects`;
 export const GET_PROJECT_FILES = `${PROTOCOL}${HOST}projects`;
 export const DELETE_PROJECT_FILES = `${PROTOCOL}${HOST}projects`;
+
+export const ADD_PEOPLE_TO_TASK_GROUP = `${PROTOCOL}${HOST}taskgroup/add`;
+export const GET_GROUP_SINGLE_TASK_DATA  = `${PROTOCOL}${HOST}projects`;
+export const UPDATE_GROUP_TASK_SINGLE_TASK = `${PROTOCOL}${HOST}projects`;
+export const GET_MY_SINGLE_TASK_DATA  = `${PROTOCOL}${HOST}non-project/tasks/personal`;
+export const UPDATE_MY_SINGLE_TASK_DATA  = `${PROTOCOL}${HOST}non-project/tasks/personal`;
+export const GET_ALL_PERSONAL_TASK_FILES  = `${PROTOCOL}${HOST}non-project/tasks/personal`;
+export const DELETE_PERSONAL_TASK_FILE  = `${PROTOCOL}${HOST}non-project/tasks/personal`;
+export const ADD_FILE_TO_MY_TASK = `${PROTOCOL}${HOST}personal/tasks`;
+export const DELETE_MY_TASK = `${PROTOCOL}${HOST}non-project/tasks/personal`;
+export const GET_ALL_SUB_TASKS_IN_MY_TASK = `${PROTOCOL}${HOST}non-project/tasks/personal`
+export const DELETE_SUB_TASKS_IN_MY_TASK = `${PROTOCOL}${HOST}non-project/tasks/personal`
+export const MY_TASK_ADD_SUB_TASK = `${PROTOCOL}${HOST}non-project/tasks/personal`;
+export const MY_TASK_UPDATE_SUB_TASK = `${PROTOCOL}${HOST}non-project/tasks/personal`;
+
+
+
+
+
 
 
 

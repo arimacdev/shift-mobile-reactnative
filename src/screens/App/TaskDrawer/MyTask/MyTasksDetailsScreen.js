@@ -11,21 +11,21 @@ import {
   Alert
 } from 'react-native';
 import {connect} from 'react-redux';
-import * as actions from '../../../redux/actions';
-import colors from '../../../config/colors';
-import icons from '../../../assest/icons/icons';
+import * as actions from '../../../../redux/actions';
+import colors from '../../../../config/colors';
+import icons from '../../../../assest/icons/icons';
 import EStyleSheet from 'react-native-extended-stylesheet';
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
 import {Dropdown} from 'react-native-material-dropdown';
-import Loader from '../../../components/Loader';
+import Loader from '../../../../components/Loader';
 import moment from 'moment';
 import FadeIn from 'react-native-fade-in-image';
 import {SkypeIndicator} from 'react-native-indicators';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import APIServices from '../../../services/APIServices';
+import APIServices from '../../../../services/APIServices';
 import AwesomeAlert from 'react-native-awesome-alerts';
-import Header from '../../../components/Header';
+import Header from '../../../../components/Header';
 
 const Placeholder = () => (
   <View style={styles.landing}>
@@ -89,12 +89,11 @@ let taskData = [
   },
 ];
 
-class GroupTasksDetailsScreen extends Component {
+class MyTasksDetailsScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
       bottomItemPressColor: colors.darkBlue,
-      selectedTaskGroupId: '',
       selectedTaskID : '',
       isActive: this.props.isActive,
       name: '',
@@ -125,18 +124,18 @@ class GroupTasksDetailsScreen extends Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    if (prevProps.deleteSingleTaskInGroupError !== this.props.deleteSingleTaskInGroupError
-      && this.props.deleteSingleTaskInGroupError && this.props.deleteSingleTaskInGroupErrorMessage == '') {
+    if (prevProps.deleteSingleTaskInMyError !== this.props.deleteSingleTaskInMyError
+      && this.props.deleteSingleTaskInMyError && this.props.deleteSingleTaskInMyErrorMessage == '') {
       this.showAlert("","Error");
     }
 
-    if (prevProps.deleteSingleTaskInGroupError !== this.props.deleteSingleTaskInGroupError
-      && this.props.deleteSingleTaskInGroupError && this.props.deleteSingleTaskInGroupErrorMessage != '') {
-      this.showAlert("", this.props.deleteTaskErrorMessage);
+    if (prevProps.deleteSingleTaskInMyError !== this.props.deleteSingleTaskInMyError
+      && this.props.deleteSingleTaskInMyError && this.props.deleteSingleTaskInMyErrorMessage != '') {
+      this.showAlert("", this.props.deleteSingleTaskInMyErrorMessage);
     }
 
-    if (prevProps.deleteSingleTaskInGroupSuccess !== this.props.deleteSingleTaskInGroupSuccess
-      && this.props.deleteSingleTaskInGroupSuccess) {
+    if (prevProps.deleteSingleTaskInMySuccess !== this.props.deleteSingleTaskInMySuccess
+      && this.props.deleteSingleTaskInMySuccess) {
         Alert.alert(
           "Success",
           "Task Deleted",
@@ -150,19 +149,17 @@ class GroupTasksDetailsScreen extends Component {
 
   componentDidMount() {
     const {navigation: {state: {params}}} = this.props;
-    let selectedTaskGroupId = params.selectedTaskGroupId;
     let selectedTaskID = params.taskDetails.taskId;
     this.setState({
-        selectedTaskGroupId: selectedTaskGroupId,
         selectedTaskID : selectedTaskID,
     });
 
-    this.fetchData(selectedTaskGroupId,selectedTaskID);
+    this.fetchData(selectedTaskID);
   }
 
-  async fetchData(selectedTaskGroupId,selectedTaskID) {
+  async fetchData(selectedTaskID) {
     this.setState({dataLoading:true});
-    taskResult = await APIServices.getGroupSingleTaskData(selectedTaskGroupId,selectedTaskID);
+    taskResult = await APIServices.getMySingleTaskData(selectedTaskID);
     if(taskResult.message == 'success'){
         this.setTaskInitiator(taskResult);
         this.setTaskName(taskResult);
@@ -217,13 +214,12 @@ showAlert(title,msg){
   }
 
   async setTaskUserName (taskResult){
-    let selectedTaskGroupId = this.state.selectedTaskGroupId;
     let userID = taskResult.data.taskAssignee;
-    let activeUsers = await APIServices.getTaskPeopleData(selectedTaskGroupId);
+    let activeUsers = await APIServices.getAllUsersData();
     if (activeUsers.message == 'success' && userID) {
-      const result = activeUsers.data.find( ({ assigneeId }) => assigneeId === userID );
+      const result = activeUsers.data.find( ({ userId }) => userId === userID );
       this.setState({
-        name: result.assigneeFirstName + ' '  + result.assigneeLastName,
+        name: result.firstName + ' '  + result.lastName,
         //activeUsers : activeUsers.data,
       });
     }
@@ -427,14 +423,9 @@ showAlert(title,msg){
       case 10:
         break;
       case 0:
-        this.props.navigation.navigate('AssigneeScreenGroupTask', {
-            selectedTaskGroupId: this.state.selectedTaskGroupId,
-          onSelectUser: (name,id) => this.onSelectUser(name,id),
-        });
         break;
       case 1:
-        this.props.navigation.navigate('SubTaskScreen', {
-          selectedTaskGroupId: this.state.selectedTaskGroupId,
+        this.props.navigation.navigate('MyTaskSubTaskScreen', {
           selectedTaskID: this.state.selectedTaskID,
         });
         break;
@@ -445,14 +436,13 @@ showAlert(title,msg){
         this.setState({showPicker: true, reminder: true});
         break;
       case 4:
-        this.props.navigation.navigate('GroupTaskNotesScreen',{
+        this.props.navigation.navigate('MyTaskNotesScreen',{
           note: this.state.note,
           onUpdateNote: (note) => this.onUpdateNote(note),
         });
         break;
       case 5:
-        this.props.navigation.navigate('FilesScreen', {
-          selectedTaskGroupId: this.state.selectedTaskGroupId,
+        this.props.navigation.navigate('MyTasksFilesScreen', {
           selectedTaskID: this.state.selectedTaskID,
         });
         break;
@@ -563,9 +553,8 @@ showAlert(title,msg){
   // change note of task API
   async changeTaskNote(note){
     this.setState({dataLoading:true});
-    let selectedTaskGroupId = this.state.selectedTaskGroupId;
     let selectedTaskID = this.state.selectedTaskID;
-    resultData = await APIServices.groupTaskUpdateTaskNoteData(selectedTaskGroupId,selectedTaskID,note);
+    resultData = await APIServices.myTaskUpdateTaskNoteData(selectedTaskID,note);
     if(resultData.message == 'success'){
       this.setState({dataLoading:false,note: note});
     }else{
@@ -573,25 +562,11 @@ showAlert(title,msg){
     }
 }
 
-  // change assignee of task API DONE
-  async changeTaskAssignee(name,userID){
-      this.setState({dataLoading:true});
-      let selectedTaskGroupId = this.state.selectedTaskGroupId;
-      let selectedTaskID = this.state.selectedTaskID;
-      resultData = await APIServices.groupTaskUpdateTaskAssigneeData(selectedTaskGroupId,selectedTaskID,userID);
-      if(resultData.message == 'success'){
-        this.setState({dataLoading:false,name: name});
-      }else{
-        this.setState({dataLoading:false});
-      }
-  }
-
   // change status of task API DONE
   async changeTaskStatus(key,searchValue){
       this.setState({dataLoading:true});
-      let selectedTaskGroupId = this.state.selectedTaskGroupId;
       let selectedTaskID = this.state.selectedTaskID;
-      resultData = await APIServices.groupTaskUpdateTaskStatusData(selectedTaskGroupId,selectedTaskID,searchValue);
+      resultData = await APIServices.myTaskUpdateTaskStatusData(selectedTaskID,searchValue);
       if(resultData.message == 'success'){
         this.setState({dataLoading:false,taskStatus : key});
       }else{
@@ -602,9 +577,8 @@ showAlert(title,msg){
   // change name of task API DONE
   async onTaskNameChangeSubmit(text){
     this.setState({dataLoading:true});
-    let selectedTaskGroupId = this.state.selectedTaskGroupId;
     let selectedTaskID = this.state.selectedTaskID;
-    resultData = await APIServices.groupTaskUpdateTaskNameData(selectedTaskGroupId,selectedTaskID,text);
+    resultData = await APIServices.myTaskUpdateTaskNameData(selectedTaskID,text);
     if(resultData.message == 'success'){
       this.setState({dataLoading:false});
     }else{
@@ -616,13 +590,12 @@ showAlert(title,msg){
   async changeTaskDueDate(){
       let duedateValue = this.state.duedateValue;
       let dueTime = this.state.dueTime;
-      let selectedTaskGroupId = this.state.selectedTaskGroupId;
       let selectedTaskID = this.state.selectedTaskID;
 
       let IsoDueDate = duedateValue ?
       moment(duedateValue + dueTime,'DD/MM/YYYY hh:mmA').format('YYYY-MM-DD[T]HH:mm:ss') : '';
 
-      resultData = await APIServices.groupTaskUpdateDueDateData(selectedTaskGroupId,selectedTaskID,IsoDueDate);
+      resultData = await APIServices.myTaskUpdateDueDateData(selectedTaskID,IsoDueDate);
       if(resultData.message == 'success'){
         this.setState({dataLoading:false});
       }else{
@@ -634,13 +607,12 @@ showAlert(title,msg){
   async changeTaskReminderDate(){
       let remindDateValue = this.state.remindDateValue;
       let reminderTime = this.state.reminderTime;
-      let selectedTaskGroupId = this.state.selectedTaskGroupId;
       let selectedTaskID = this.state.selectedTaskID;
 
       let IsoReminderDate = remindDateValue ?
       moment(remindDateValue + reminderTime,'DD/MM/YYYY hh:mmA').format('YYYY-MM-DD[T]HH:mm:ss') : '';
 
-      resultData = await APIServices.groupTaskUpdateReminderDateData(selectedTaskGroupId,selectedTaskID,IsoReminderDate);
+      resultData = await APIServices.myTaskUpdateReminderDateData(selectedTaskID,IsoReminderDate);
       if(resultData.message == 'success'){
         this.setState({dataLoading:false});
       }else{
@@ -649,7 +621,6 @@ showAlert(title,msg){
   };
 
   deleteTask() {
-    let selectedTaskGroupId = this.state.selectedTaskGroupId;
     let taskID = this.state.selectedTaskID;
 
     Alert.alert(
@@ -661,7 +632,7 @@ showAlert(title,msg){
           onPress: () => console.log("Cancel Pressed"),
           style: "cancel"
         },
-        { text: "Delete", onPress: () => this.props.deleteTaskInGroupTasks(selectedTaskGroupId, taskID)}
+        { text: "Delete", onPress: () => this.props.deleteTaskInMyTasks(taskID)}
       ],
       { cancelable: false }
     );
@@ -746,7 +717,7 @@ showAlert(title,msg){
               {this.state.showTimePicker ? this.renderTimePicker() : null}
             </View>
         {dataLoading && <Loader/>}
-        {this.props.deleteSingleTaskInGroupLoading && <Loader/>}
+        {this.props.deleteSingleTaskInMyLoading && <Loader/>}
             <AwesomeAlert
                   show={showAlert}
                   showProgress={false}
@@ -906,13 +877,13 @@ const styles = EStyleSheet.create({
 
 const mapStateToProps = state => {
   return {
-    deleteSingleTaskInGroupLoading: state.tasks.deleteSingleTaskInGroupLoading,
-    deleteSingleTaskInGroupSuccess: state.tasks.deleteSingleTaskInGroupSuccess, 
-    deleteSingleTaskInGroupError: state.tasks.deleteSingleTaskInGroupError,
-    deleteSingleTaskInGroupErrorMessage: state.tasks.deleteSingleTaskInGroupErrorMessage
+    deleteSingleTaskInMyLoading: state.tasks.deleteSingleTaskInMyLoading,
+    deleteSingleTaskInMySuccess: state.tasks.deleteSingleTaskInMySuccess, 
+    deleteSingleTaskInMyError: state.tasks.deleteSingleTaskInMyError,
+    deleteSingleTaskInMyErrorMessage: state.tasks.deleteSingleTaskInMyErrorMessage
   };
 };
 export default connect(
   mapStateToProps,
   actions,
-)(GroupTasksDetailsScreen);
+)(MyTasksDetailsScreen);
