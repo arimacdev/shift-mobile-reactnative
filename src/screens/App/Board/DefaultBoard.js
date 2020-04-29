@@ -135,7 +135,7 @@ class DefaultBoard extends Component {
         }
         
         return  <Text style={[styles.subText, {color: color}]}>{dateText}</Text>;
-      };
+    };
 
     render() {
         let dataLoading = this.state.dataLoading

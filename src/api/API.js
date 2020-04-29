@@ -63,6 +63,7 @@ export const GET_ALL_SUB_TASKS_IN_MY_TASK = `${PROTOCOL}${HOST}non-project/tasks
 export const DELETE_SUB_TASKS_IN_MY_TASK = `${PROTOCOL}${HOST}non-project/tasks/personal`
 export const MY_TASK_ADD_SUB_TASK = `${PROTOCOL}${HOST}non-project/tasks/personal`;
 export const MY_TASK_UPDATE_SUB_TASK = `${PROTOCOL}${HOST}non-project/tasks/personal`;
+export const GET_SPRINTS_BY_PROJECT = `${PROTOCOL}${HOST}sprints`;
 
 
 

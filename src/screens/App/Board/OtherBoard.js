@@ -24,176 +24,15 @@ EStyleSheet.build({ $rem: entireScreenWidth / 380 });
 import Collapsible from '../../../components/CollapsibleView';
 import AsyncStorage from '@react-native-community/async-storage';
 import Loader from '../../../components/Loader';
-import { NavigationEvents } from 'react-navigation';
+import moment from 'moment';
 const initialLayout = { width: entireScreenWidth };
 
 class OtherBoard extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            sprints: [
-                {
-                    sprintId: "1259d276-c79a-4a7d-9ae2-a517b1a61621",
-                    projectId: "e1e4b8c2-70a0-4600-96b7-f7c28be1dbf3",
-                    sprintName: "Sprint 5",
-                    sprintDescription: "2020-05-15 - 2020-05-21",
-                    sprintCreatedBy: "d159877c-b01d-4447-a798-0821293d968a",
-                    sprintCreatedAt: "2020-04-21T10:47:10.000+0000",
-                    sprintStartDate: null,
-                    sprintEndDate: null,
-                    isDeleted: false,
-                    tasks: [
-                        {
-                            taskId: "068d165b-b527-4a5a-81de-4e276e415a2f",
-                            taskName: "Add task iOS bug test.",
-                            projectId: "29371ddb-6679-4d5a-9fc2-6e37f05091e7",
-                            taskAssignee: "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
-                            taskInitiator: "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
-                            taskNote: "",
-                            taskStatus: "pending",
-                            taskCreatedAt: "2020-04-27T07:25:09.000+0000",
-                            taskDueDateAt: null,
-                            taskReminderAt: null,
-                            taskAssigneeProfileImage: "https://arimac-pmtool.s3-ap-southeast-1.amazonaws.com/profileImage_1584904875259_image_4.jpg",
-                            sprintId: "default",
-                            deleted: false
-                        },
-                        {
-                            taskId: "068d165b-b527-4a5a-81de-4e276e415a2f",
-                            taskName: "Add task iOS bug test.",
-                            projectId: "29371ddb-6679-4d5a-9fc2-6e37f05091e7",
-                            taskAssignee: "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
-                            taskInitiator: "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
-                            taskNote: "",
-                            taskStatus: "pending",
-                            taskCreatedAt: "2020-04-27T07:25:09.000+0000",
-                            taskDueDateAt: null,
-                            taskReminderAt: null,
-                            taskAssigneeProfileImage: "https://arimac-pmtool.s3-ap-southeast-1.amazonaws.com/profileImage_1584904875259_image_4.jpg",
-                            sprintId: "default",
-                            deleted: false
-                        },
-                        {
-                            taskId: "068d165b-b527-4a5a-81de-4e276e415a2f",
-                            taskName: "Add task iOS bug test.",
-                            projectId: "29371ddb-6679-4d5a-9fc2-6e37f05091e7",
-                            taskAssignee: "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
-                            taskInitiator: "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
-                            taskNote: "",
-                            taskStatus: "closed",
-                            taskCreatedAt: "2020-04-27T07:25:09.000+0000",
-                            taskDueDateAt: null,
-                            taskReminderAt: null,
-                            taskAssigneeProfileImage: "https://arimac-pmtool.s3-ap-southeast-1.amazonaws.com/profileImage_1584904875259_image_4.jpg",
-                            sprintId: "default",
-                            deleted: false
-                        },
-                        {
-                            taskId: "068d165b-b527-4a5a-81de-4e276e415a2f",
-                            taskName: "Add task iOS bug test.",
-                            projectId: "29371ddb-6679-4d5a-9fc2-6e37f05091e7",
-                            taskAssignee: "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
-                            taskInitiator: "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
-                            taskNote: "",
-                            taskStatus: "pending",
-                            taskCreatedAt: "2020-04-27T07:25:09.000+0000",
-                            taskDueDateAt: null,
-                            taskReminderAt: null,
-                            taskAssigneeProfileImage: "https://arimac-pmtool.s3-ap-southeast-1.amazonaws.com/profileImage_1584904875259_image_4.jpg",
-                            sprintId: "default",
-                            deleted: false
-                        },
-                        {
-                            taskId: "068d165b-b527-4a5a-81de-4e276e415a2f",
-                            taskName: "Add task iOS bug test.",
-                            projectId: "29371ddb-6679-4d5a-9fc2-6e37f05091e7",
-                            taskAssignee: "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
-                            taskInitiator: "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
-                            taskNote: "",
-                            taskStatus: "pending",
-                            taskCreatedAt: "2020-04-27T07:25:09.000+0000",
-                            taskDueDateAt: null,
-                            taskReminderAt: null,
-                            taskAssigneeProfileImage: "https://arimac-pmtool.s3-ap-southeast-1.amazonaws.com/profileImage_1584904875259_image_4.jpg",
-                            sprintId: "default",
-                            deleted: false
-                        },
-                        {
-                            taskId: "068d165b-b527-4a5a-81de-4e276e415a2f",
-                            taskName: "Add task iOS bug test.",
-                            projectId: "29371ddb-6679-4d5a-9fc2-6e37f05091e7",
-                            taskAssignee: "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
-                            taskInitiator: "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
-                            taskNote: "",
-                            taskStatus: "pending",
-                            taskCreatedAt: "2020-04-27T07:25:09.000+0000",
-                            taskDueDateAt: null,
-                            taskReminderAt: null,
-                            taskAssigneeProfileImage: "https://arimac-pmtool.s3-ap-southeast-1.amazonaws.com/profileImage_1584904875259_image_4.jpg",
-                            sprintId: "default",
-                            deleted: false
-                        },
-                        {
-                            taskId: "068d165b-b527-4a5a-81de-4e276e415a2f",
-                            taskName: "Add task iOS bug test.",
-                            projectId: "29371ddb-6679-4d5a-9fc2-6e37f05091e7",
-                            taskAssignee: "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
-                            taskInitiator: "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
-                            taskNote: "",
-                            taskStatus: "pending",
-                            taskCreatedAt: "2020-04-27T07:25:09.000+0000",
-                            taskDueDateAt: null,
-                            taskReminderAt: null,
-                            taskAssigneeProfileImage: "https://arimac-pmtool.s3-ap-southeast-1.amazonaws.com/profileImage_1584904875259_image_4.jpg",
-                            sprintId: "default",
-                            deleted: false
-                        },
-                        {
-                            taskId: "068d165b-b527-4a5a-81de-4e276e415a2f",
-                            taskName: "Add task iOS bug test.",
-                            projectId: "29371ddb-6679-4d5a-9fc2-6e37f05091e7",
-                            taskAssignee: "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
-                            taskInitiator: "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
-                            taskNote: "",
-                            taskStatus: "pending",
-                            taskCreatedAt: "2020-04-27T07:25:09.000+0000",
-                            taskDueDateAt: null,
-                            taskReminderAt: null,
-                            taskAssigneeProfileImage: "https://arimac-pmtool.s3-ap-southeast-1.amazonaws.com/profileImage_1584904875259_image_4.jpg",
-                            sprintId: "default",
-                            deleted: false
-                        }
-                    ]
-                },
-                {
-                    sprintId: "1259d276-c79a-4a7d-9ae2-a517b1a61621",
-                    projectId: "e1e4b8c2-70a0-4600-96b7-f7c28be1dbf3",
-                    sprintName: "Sprint 5",
-                    sprintDescription: "2020-05-15 - 2020-05-21",
-                    sprintCreatedBy: "d159877c-b01d-4447-a798-0821293d968a",
-                    sprintCreatedAt: "2020-04-21T10:47:10.000+0000",
-                    sprintStartDate: null,
-                    sprintEndDate: null,
-                    isDeleted: false,
-                    tasks: [
-                        {
-                            taskId: "068d165b-b527-4a5a-81de-4e276e415a2f",
-                            taskName: "Add task iOS bug test.",
-                            projectId: "29371ddb-6679-4d5a-9fc2-6e37f05091e7",
-                            taskAssignee: "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
-                            taskInitiator: "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
-                            taskNote: "",
-                            taskStatus: "pending",
-                            taskCreatedAt: "2020-04-27T07:25:09.000+0000",
-                            taskDueDateAt: null,
-                            taskReminderAt: null,
-                            taskAssigneeProfileImage: "https://arimac-pmtool.s3-ap-southeast-1.amazonaws.com/profileImage_1584904875259_image_4.jpg",
-                            sprintId: "default",
-                            deleted: false
-                        }
-                    ]
-                }
-            ],
+            dataLoading : false,
+            sprints: [],
         };
     }
 
@@ -201,8 +40,43 @@ class OtherBoard extends Component {
 
     }
 
-    componentDidMount() {
+    async componentDidMount() {
+        this.getAllTaskDataInProject();
+        
+    }
 
+    async getAllTaskDataInProject (){
+        let selectedProjectID = this.props.selectedProjectID;
+        this.setState({dataLoading:true});
+        taskData = await APIServices.getAllTaskInDefaultBoardData(selectedProjectID);
+        if(taskData.message == 'success'){
+           this.setState({dataLoading:false});
+           this.getAllSprintInProject(taskData.data)
+        }else{
+            this.setState({dataLoading:false});
+        }
+    }
+
+    async getAllSprintInProject (taskData){
+        let selectedProjectID = this.props.selectedProjectID;
+        this.setState({dataLoading:true});
+        sprintData = await APIServices.getAllSprintInProject(selectedProjectID);
+        if(sprintData.message == 'success'){
+            let sprintsArray = [];
+            for(let i = 0; i < sprintData.data.length; i++){
+                let sprintObj = sprintData.data[i];
+                let sprintID = sprintObj.sprintId;
+                let taskArray = [];
+                taskArray =  taskData.filter(function(obj) {
+                    return obj.sprintId == sprintID;
+                });
+                sprintObj.tasks = taskArray;
+                sprintsArray.push(sprintObj);
+            }
+            this.setState({dataLoading:false,sprints:sprintsArray});
+        }else{
+            this.setState({dataLoading:false});
+        }
     }
 
     renderItemMainTile(data) {
@@ -211,7 +85,7 @@ class OtherBoard extends Component {
                 <View style={styles.item}>
                     <View style={styles.title_container} >
                         <Text style={styles.title}>{data.item.sprintName}</Text>
-                        <Text style={styles.sub_txt}>{data.item.sprintName}</Text>
+                        <Text style={styles.sub_txt}>{data.item.sprintDescription}</Text>
                     </View>
 
                     <ScrollView style={styles.sub_scrollView}>
@@ -236,7 +110,7 @@ class OtherBoard extends Component {
                     <View style={{ flex: 6 }}>
                         <View style={{ flex: 1 }}>
                             <Text style={styles.text}>{data.item.taskName}</Text>
-                            <Text style={styles.subText}>{data.item.taskId}</Text>
+                            {this.dateView(data)}
                         </View>
                     </View>
                     <View style={{ flex: 1 }}>
@@ -246,6 +120,33 @@ class OtherBoard extends Component {
             </View>
         );
     }
+
+    dateView = function(item) {
+        let date = item.item.taskDueDateAt;
+        let currentTime = moment().format();
+        let dateText = '';
+        let color = '';
+    
+        let taskStatus = item.item.taskStatus;
+        if (taskStatus == 'closed' && date) {
+          // task complete
+          dateText = moment(date).format('YYYY-MM-DD');
+          color = '#36DD5B';
+        } else if (taskStatus != 'closed' && date) {
+          if (moment(date).isAfter(currentTime)) {
+            dateText = moment(date).format('YYYY-MM-DD');
+            color = '#0C0C5A';
+          } else {
+            dateText = moment(date).format('YYYY-MM-DD');
+            color = '#ff6161';
+          }
+        } else {
+          dateText = 'Add Due Date';
+          color = '#000000';
+        }
+        return  <Text style={[styles.subText, {color: color}]}>{dateText}</Text>;
+    };
+
 
     userImage = function (item) {
         let userImage = item.taskAssigneeProfileImage;
@@ -290,28 +191,27 @@ class OtherBoard extends Component {
     render() {
         return (
             <View>
-                <View >
-                    <TouchableOpacity>
-                        <View style={styles.button}>
-                            <View style={{ flex: 1 }}>
+                <TouchableOpacity>
+                    <View style={styles.button}>
+                        <View style={{ flex: 1 }}>
                                 <Text style={styles.buttonText}>New Sprint</Text>
-                            </View>
-                            <Image
-                                style={[styles.addIcon, { marginRight: 10 }]}
-                                source={icons.addGreen}
-                                resizeMode={'center'}
-                            />
                         </View>
-                    </TouchableOpacity>
-                    <ScrollView style={styles.scrollView}>
-                        <FlatList
-                            data={this.state.sprints}
-                            horizontal={true}
-                            renderItem={this.renderItemMainTile.bind(this)}
-                            keyExtractor={item => item.id}
+                        <Image
+                            style={[styles.addIcon, { marginRight: 10 }]}
+                            source={icons.addGreen}
+                            resizeMode={'center'}
                         />
-                    </ScrollView>
-                </View>
+                    </View>
+                </TouchableOpacity>
+                <ScrollView style={styles.scrollView}>
+                    <FlatList
+                        data={this.state.sprints}
+                        horizontal={true}
+                        renderItem={this.renderItemMainTile.bind(this)}
+                        keyExtractor={item => item.id}
+                    />
+                </ScrollView>
+                {this.state.dataLoading && <Loader/>}
             </View>
         );
     }
@@ -427,7 +327,7 @@ const styles = EStyleSheet.create({
         // bo
     },
     sub_scrollView: {
-        height: '250rem',
+        height: '450rem',
         backgroundColor: '#edf0f5'
     },
     userView: {

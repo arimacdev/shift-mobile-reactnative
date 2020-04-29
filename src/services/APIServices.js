@@ -58,7 +58,8 @@ import {
     GET_ALL_SUB_TASKS_IN_MY_TASK,
     DELETE_SUB_TASKS_IN_MY_TASK,
     MY_TASK_ADD_SUB_TASK,
-    MY_TASK_UPDATE_SUB_TASK
+    MY_TASK_UPDATE_SUB_TASK,
+    GET_SPRINTS_BY_PROJECT
 
 } from '../api/API';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -1455,6 +1456,23 @@ async function getAllTaskInDefaultBoardData(projectID) {
         url: GET_MY_TASKS_BY_PROJECT + projectID + '/tasks?userId=' + userID,
         method: 'GET'
     }, true, headers);
+};
+
+async function getAllSprintInProject(projectID) {
+
+    let userID = null;
+    userID =  await AsyncStorage.getItem('userID');
+
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        userId : userID,
+    };
+
+    return request({
+        url: GET_SPRINTS_BY_PROJECT + '/' + projectID,
+        method: 'GET'
+    }, true, headers);
 }
 
 const APIServices = {
@@ -1532,7 +1550,8 @@ const APIServices = {
     myTaskdeleteSubTask,
     myTaskAddSubTask,
     myTaskUpdateSubTask,
-    getAllTaskInDefaultBoardData
+    getAllTaskInDefaultBoardData,
+    getAllSprintInProject
 };
 
 export default APIServices;
