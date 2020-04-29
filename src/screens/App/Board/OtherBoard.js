@@ -25,7 +25,16 @@ import {NavigationEvents} from 'react-navigation';
 import Loader from '../../../components/Loader';
 import moment from 'moment';
 const initialLayout = { width: entireScreenWidth };
+import { Icon } from 'native-base';
+import MenuItems from '../../../components/MenuItems';
+import {MenuProvider} from 'react-native-popup-menu';
 
+
+const menuItems = [
+    {value: 0, text: 'Edit Board Names'},
+    {value: 1, text: 'Delete Board'},
+];
+  
 class OtherBoard extends Component {
     constructor(props) {
         super(props);
@@ -58,7 +67,7 @@ class OtherBoard extends Component {
     async getAllSprintInProject (taskData){
         let selectedProjectID = this.props.selectedProjectID;
         this.setState({dataLoading:true});
-        sprintData = await APIServices.getAllSprintInProject(selectedProjectID);
+        let sprintData = await APIServices.getAllSprintInProject(selectedProjectID);
         if(sprintData.message == 'success'){
             let sprintsArray = [];
             for(let i = 0; i < sprintData.data.length; i++){
@@ -83,8 +92,18 @@ class OtherBoard extends Component {
                 <TouchableOpacity onPress={() => this.goToEditSprint(data)}>
                     <View style={styles.item}>
                         <View style={styles.title_container} >
-                            <Text style={styles.title}>{data.item.sprintName}</Text>
-                            <Text style={styles.sub_txt}>{data.item.sprintDescription}</Text>
+                            <View style={styles.title_sub_container}>
+                                <Text style={styles.title}>{data.item.sprintName}</Text>
+                                <Text style={styles.sub_txt}>{data.item.sprintDescription}</Text>
+                            </View>
+                            <View style={{alignSelf:'flex-start'}}>
+                                <MenuItems
+                                    // customStyle={styles.menuItems}
+                                    data={menuItems}
+                                    onChange={item => this.onMenuItemChange(item)}
+                                    // disabledOpt={this.props.notificationsList.length <= 0}
+                                />
+                            </View>
                         </View>
 
                         <ScrollView style={styles.sub_scrollView}>
@@ -214,6 +233,7 @@ class OtherBoard extends Component {
 
     render() {
         return (
+            
             <View>
                 <NavigationEvents onWillFocus={payload => this.loadBords(payload)} />
                 <TouchableOpacity onPress={() => this.goToAddSprint()}>
@@ -221,6 +241,7 @@ class OtherBoard extends Component {
                         <View style={{ flex: 1 }}>
                                 <Text style={styles.buttonText}>New Sprint</Text>
                         </View>
+                        
                         <Image
                             style={[styles.addIcon, { marginRight: 10 }]}
                             source={icons.addGreen}
@@ -228,16 +249,20 @@ class OtherBoard extends Component {
                         />
                     </View>
                 </TouchableOpacity>
+                
                 <ScrollView style={styles.scrollView}>
+                
                     <FlatList
                         data={this.state.sprints}
                         horizontal={true}
                         renderItem={this.renderItemMainTile.bind(this)}
                         keyExtractor={item => item.id}
                     />
+                    
                 </ScrollView>
                 {this.state.dataLoading && <Loader/>}
             </View>
+            
         );
     }
 }
@@ -348,8 +373,17 @@ const styles = EStyleSheet.create({
         width: '100%',
         alignItems: 'center',
         borderTopLeftRadius: 5,
-        borderTopRightRadius: 5
-        // bo
+        borderTopRightRadius: 5,
+        flexDirection:'row'
+    },
+    title_sub_container: {
+        flex:1,
+        // width: '100%',
+        alignItems: 'center',
+    },
+    moreIcon:{
+        width: '20rem',
+        height: '20rem',
     },
     sub_scrollView: {
         height: '450rem',

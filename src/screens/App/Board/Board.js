@@ -27,6 +27,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import Loader from '../../../components/Loader';
 import { NavigationEvents } from 'react-navigation';
 const initialLayout = { width: entireScreenWidth };
+import {MenuProvider} from 'react-native-popup-menu';
 
 class Board extends Component {
     constructor(props) {
@@ -93,6 +94,7 @@ class Board extends Component {
         const buttons = ['Default Borad', 'Other Borad']
         const { selectedIndex } = this.state
         return (
+            <MenuProvider>
             <View>
                 <ButtonGroup
                     onPress={this.updateIndex}
@@ -104,6 +106,7 @@ class Board extends Component {
                 />
                 {this.renderPage()}
             </View>
+            </MenuProvider>
         );
     }
 }
