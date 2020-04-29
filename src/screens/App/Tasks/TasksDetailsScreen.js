@@ -853,7 +853,6 @@ class TasksDetailsScreen extends Component {
                   selectedItemColor={'black'}
                   dropdownOffset={{ top: 10 }}
                   baseColor={colors.lightGreen}
-                  // renderAccessory={this.renderBase}
                   itemTextStyle={{
                     marginLeft: 15,
                     fontFamily: 'CircularStd-Book',
