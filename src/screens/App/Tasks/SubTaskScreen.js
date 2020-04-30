@@ -6,7 +6,7 @@ import {
   Dimensions,
   Image,
   TouchableOpacity,
-  Alert
+  Alert,
 } from 'react-native';
 import {connect} from 'react-redux';
 import * as actions from '../../../redux/actions';
@@ -18,7 +18,7 @@ EStyleSheet.build({$rem: entireScreenWidth / 380});
 import FadeIn from 'react-native-fade-in-image';
 import Loader from '../../../components/Loader';
 import Header from '../../../components/Header';
-import APIServices from '../../../services/APIServices'
+import APIServices from '../../../services/APIServices';
 import AsyncStorage from '@react-native-community/async-storage';
 import {NavigationEvents} from 'react-navigation';
 import AwesomeAlert from 'react-native-awesome-alerts';
@@ -27,163 +27,176 @@ class SubTasksScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedProjectID : '',
+      selectedProjectID: '',
       selectedProjectTaskID: '',
-      userID : '',
-      subTasks : [],
-      showAlert : false,
-      alertTitle : '',
-      alertMsg : '',
+      userID: '',
+      subTasks: [],
+      showAlert: false,
+      alertTitle: '',
+      alertMsg: '',
     };
   }
-
 
   componentDidMount() {
     AsyncStorage.getItem('userID').then(userID => {
       if (userID) {
-        const {navigation: {state: {params}}} = this.props;
-        let selectedProjectID = params.selectedProjectID
-        let selectedProjectTaskID = params.selectedProjectTaskID
-        this.setState({
-          selectedProjectID : selectedProjectID,
-          selectedProjectTaskID : selectedProjectTaskID,
-          userID : userID}, function() {
-          this.fetchData(userID);
-        });
-      } 
+        const {
+          navigation: {
+            state: {params},
+          },
+        } = this.props;
+        let selectedProjectID = params.selectedProjectID;
+        let selectedProjectTaskID = params.selectedProjectTaskID;
+        this.setState(
+          {
+            selectedProjectID: selectedProjectID,
+            selectedProjectTaskID: selectedProjectTaskID,
+            userID: userID,
+          },
+          function() {
+            this.fetchData(userID);
+          },
+        );
+      }
     });
   }
 
   async fetchData(userID) {
-      let selectedProjectID = this.state.selectedProjectID
-      let selectedProjectTaskID = this.state.selectedProjectTaskID
-      this.setState({dataLoading:true});
-      subTaskData = await APIServices.getSubTaskData(selectedProjectID,selectedProjectTaskID,userID);
-      if(subTaskData.message == 'success'){
-        this.setState({
-          subTasks : subTaskData.data,
-          dataLoading:false
-        });
-      }else{
-        this.setState({dataLoading:false});
-      }
+    let selectedProjectID = this.state.selectedProjectID;
+    let selectedProjectTaskID = this.state.selectedProjectTaskID;
+    this.setState({dataLoading: true});
+    subTaskData = await APIServices.getSubTaskData(
+      selectedProjectID,
+      selectedProjectTaskID,
+      userID,
+    );
+    if (subTaskData.message == 'success') {
+      this.setState({
+        subTasks: subTaskData.data,
+        dataLoading: false,
+      });
+    } else {
+      this.setState({dataLoading: false});
+    }
   }
 
-  async deleteSubTask(item){
-      let selectedProjectID = this.state.selectedProjectID;
-      let selectedProjectTaskID = this.state.selectedProjectTaskID;
-      let userID = this.state.userID;
-      this.setState({dataLoading:true});
-      try {
-        resultObj = await APIServices.deleteSubTask(selectedProjectID,selectedProjectTaskID,item.subtaskId);
-        if(resultObj.message == 'success'){
-          this.setState({dataLoading:false});
-          this.fetchData(userID);
-        }else{
-          this.setState({dataLoading:false});
-        }
+  async deleteSubTask(item) {
+    let selectedProjectID = this.state.selectedProjectID;
+    let selectedProjectTaskID = this.state.selectedProjectTaskID;
+    let userID = this.state.userID;
+    this.setState({dataLoading: true});
+    try {
+      resultObj = await APIServices.deleteSubTask(
+        selectedProjectID,
+        selectedProjectTaskID,
+        item.subtaskId,
+      );
+      if (resultObj.message == 'success') {
+        this.setState({dataLoading: false});
+        this.fetchData(userID);
+      } else {
+        this.setState({dataLoading: false});
       }
-      catch(e) {
-        if(e.status == 401){
-          this.setState({dataLoading:false});
-          this.showAlert("",e.data.message);
-        }
+    } catch (e) {
+      if (e.status == 401) {
+        this.setState({dataLoading: false});
+        this.showAlert('', e.data.message);
       }
-      
+    }
   }
 
-  deleteSubTaskAlert (item){
+  deleteSubTaskAlert(item) {
     Alert.alert(
-			'Delete Sub task',
-			'You are about to permanently delete this sub task and all of its data. \nIf you are not sure, you can close this pop up.',
-			[
-			  {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
-			  {text: 'Ok', onPress: () =>this.deleteSubTask(item)},
-			],
-			{ cancelable: false }
-		  );
+      'Delete Sub task',
+      'You are about to permanently delete this sub task and all of its data. \nIf you are not sure, you can close this pop up.',
+      [
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+        {text: 'Ok', onPress: () => this.deleteSubTask(item)},
+      ],
+      {cancelable: false},
+    );
   }
 
-  editSubTask(item){
+  editSubTask(item) {
     let selectedProjectID = this.state.selectedProjectID;
     let selectedProjectTaskID = this.state.selectedProjectTaskID;
     this.props.navigation.navigate('AddEditSubTaskScreen', {
       item: item,
-      projectID : selectedProjectID,
-      taskID : selectedProjectTaskID,
-      screenType : 'edit'
+      projectID: selectedProjectID,
+      taskID: selectedProjectTaskID,
+      screenType: 'edit',
     });
   }
 
-  addSubTask(){
+  addSubTask() {
     let selectedProjectID = this.state.selectedProjectID;
     let selectedProjectTaskID = this.state.selectedProjectTaskID;
     this.props.navigation.navigate('AddEditSubTaskScreen', {
       item: {},
-      projectID : selectedProjectID,
-      taskID : selectedProjectTaskID,
-      screenType : 'add'
+      projectID: selectedProjectID,
+      taskID: selectedProjectTaskID,
+      screenType: 'add',
     });
   }
 
-  loadSubtasks(){
+  loadSubtasks() {
     let userID = this.state.userID;
     this.fetchData(userID);
   }
 
   renderSubTaskListList(item) {
     return (
-        <View style={styles.subTaskView}>
-          <NavigationEvents onWillFocus={payload => this.loadSubtasks(payload)} />
-          <Image
-            source={item.subtaskStatus? icons.rightCircule : icons.whiteCircule}
-            style={styles.taskStateIcon}
-          />
-          <View style={{flex: 1}}>
-            <Text style={styles.text}>
-              {item.subtaskName}
-            </Text>
-          </View>
-          <View style={styles.controlView}>
-            <TouchableOpacity 
-                onPress={() => this.editSubTask(item)}>
-                <Image 
-                  style={{width: 28, height: 28,borderRadius: 28/ 2 }} 
-                  source={require('../../../asserts/img/edit_user.png')}
-                />
-            </TouchableOpacity>
-            <TouchableOpacity 
-                  onPress={() => this.deleteSubTaskAlert(item)}
-                  style={{marginLeft: EStyleSheet.value('20rem')}}>
-              <Image
-                style={styles.editDeleteIcon}
-                source={icons.deleteRoundRed}
-              />
-            </TouchableOpacity>
-          </View>
+      <View style={styles.subTaskView}>
+        <NavigationEvents onWillFocus={payload => this.loadSubtasks(payload)} />
+        <Image
+          source={item.subtaskStatus ? icons.rightCircule : icons.whiteCircule}
+          style={styles.taskStateIcon}
+        />
+        <View style={{flex: 1}}>
+          <Text style={styles.text}>{item.subtaskName}</Text>
         </View>
+        <View style={styles.controlView}>
+          <TouchableOpacity onPress={() => this.editSubTask(item)}>
+            <Image
+              style={{width: 28, height: 28, borderRadius: 28 / 2}}
+              source={require('../../../asserts/img/edit_user.png')}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => this.deleteSubTaskAlert(item)}
+            style={{marginLeft: EStyleSheet.value('20rem')}}>
+            <Image
+              style={styles.editDeleteIcon}
+              source={icons.deleteRoundRed}
+            />
+          </TouchableOpacity>
+        </View>
+      </View>
     );
   }
-
 
   onBackPress() {
     this.props.navigation.goBack();
   }
 
-  hideAlert (){
+  hideAlert() {
     this.setState({
-      showAlert : false,
-      alertTitle : '',
-      alertMsg : '',
-    })
+      showAlert: false,
+      alertTitle: '',
+      alertMsg: '',
+    });
   }
 
-  showAlert(title,msg){
+  showAlert(title, msg) {
     this.setState({
-      showAlert : true,
-      alertTitle : title,
-      alertMsg : msg,
-    })
+      showAlert: true,
+      alertTitle: title,
+      alertMsg: msg,
+    });
   }
 
   render() {
@@ -192,7 +205,6 @@ class SubTasksScreen extends Component {
     let showAlert = this.state.showAlert;
     let alertTitle = this.state.alertTitle;
     let alertMsg = this.state.alertMsg;
-
 
     return (
       <View style={styles.container}>
@@ -316,8 +328,7 @@ const styles = EStyleSheet.create({
 });
 
 const mapStateToProps = state => {
-  return {
-  };
+  return {};
 };
 export default connect(
   mapStateToProps,

@@ -85,13 +85,17 @@ class OtherBoard extends Component {
         }
     }
 
+    deleteBoard(){
+        //code hear
+    }
+
     onMenuItemChange(item, data){
         switch (item.value) {
             case 0:
-                this.goToEditSprint(data)
+                this.goToEditSprint(data);
                 break;
             case 1:
-                this.deleteDoard(data);
+                this.deleteBoard(data);
                 break;
             default:
                 break;

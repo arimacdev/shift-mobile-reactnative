@@ -94,7 +94,7 @@ class WorkloadTabTasksScreen extends Component {
   }
 
   async getAllWorkloadTasks(selectedUserId, from, to) {
-    this.setState({dataLoading: true, noData: '', workloadTasks:[]});
+    this.setState({dataLoading: true, noData: '', workloadTasks: []});
     let workloadTasks = await APIServices.getWorkloadWithAssignTasksCompletion(
       selectedUserId,
       from,
@@ -255,7 +255,7 @@ class WorkloadTabTasksScreen extends Component {
   //   });
   // };
 
-  _renderContent(item, isActive) {
+  _renderContent(item, userId, projectId, isActive) {
     return (
       <Animatable.View
         animation={isActive ? 'bounceIn' : undefined}
@@ -270,7 +270,9 @@ class WorkloadTabTasksScreen extends Component {
           //   this.setState({enableScrollViewScroll:true})
           //  }}
           data={item}
-          renderItem={({item, index}) => this.renderProjectList(item, index)}
+          renderItem={({item, index}) =>
+            this.renderProjectList(item, index, userId, projectId)
+          }
           keyExtractor={item => item.taskId}
         />
       </Animatable.View>
@@ -296,12 +298,14 @@ class WorkloadTabTasksScreen extends Component {
   //   }, 50);
   // };
 
-  renderProjectList(item, index) {
+  renderProjectList(item, index, userId, projectId) {
     return (
       <TouchableOpacity
         onPress={() =>
           this.props.navigation.navigate('WorkloadTasksDetailsScreen', {
             workloadTasksDetails: item,
+            userId: userId,
+            projectId: projectId,
           })
         }>
         <View style={styles.projectView}>
@@ -407,7 +411,7 @@ class WorkloadTabTasksScreen extends Component {
   }
 
   onSuccess(text) {
-    console.log('ddddddddddddddddddddd', text);
+    console.log('text', text);
   }
 
   renderCollaps(item) {
@@ -455,12 +459,13 @@ class WorkloadTabTasksScreen extends Component {
               containerStyle={{marginBottom: 20, marginTop: 10}}
               activeSections={this.state.activeSections}
               renderHeader={this._renderHeader}
-              renderContent={item => this._renderContent(item.taskList)}
+              renderContent={item =>
+                this._renderContent(item.taskList, item.userId, item.projectId)
+              }
               onChange={this._updateSections}
             />
           ) : (
-            <View
-              style={styles.noDataStyle}>
+            <View style={styles.noDataStyle}>
               <Text style={{color: colors.gray, fontSize: 20}}>
                 {this.state.noData}
               </Text>
@@ -674,12 +679,12 @@ const styles = EStyleSheet.create({
     borderBottomStartRadius: 5,
     backgroundColor: colors.projectBgColor,
   },
-  noDataStyle:{
+  noDataStyle: {
     flex: 1,
     height: height - 200,
     alignItems: 'center',
     justifyContent: 'center',
-  }
+  },
 });
 
 const mapStateToProps = state => {

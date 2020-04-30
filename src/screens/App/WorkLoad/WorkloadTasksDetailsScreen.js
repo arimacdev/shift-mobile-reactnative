@@ -16,6 +16,7 @@ const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
 import Loader from '../../../components/Loader';
 import moment from 'moment';
+import APIServices from '../../../services/APIServices';
 
 let taskData = [
   {
@@ -38,21 +39,6 @@ let taskData = [
   },
 ];
 
-let subTasks = [
-  {
-    id: 0,
-    name: 'Tasks One',
-    icon: icons.subTask,
-    renderImage: false,
-  },
-  {
-    id: 1,
-    name: 'Task Two',
-    icon: icons.calendarBlue,
-    renderImage: false,
-  },
-];
-
 class WorkloadTasksDetailsScreen extends Component {
   constructor(props) {
     super(props);
@@ -62,6 +48,7 @@ class WorkloadTasksDetailsScreen extends Component {
       duedate: '',
       taskName: '',
       note: '',
+      subTasks:[]
     };
   }
 
@@ -79,6 +66,32 @@ class WorkloadTasksDetailsScreen extends Component {
       taskNotes: workloadTasksDetails.taskNotes,
     });
     this.setTaskStatus(workloadTasksDetails);
+    this.fetchData(
+      params.projectId,
+      workloadTasksDetails.taskId,
+      params.userId,
+    );
+  }
+
+  async fetchData(selectedProjectID, selectedProjectTaskID, userID) {
+    this.setState({dataLoading: true});
+    try {
+      subTaskData = await APIServices.getSubTaskData(
+        selectedProjectID,
+        selectedProjectTaskID,
+        userID,
+      );
+      if (subTaskData.message == 'success') {
+        this.setState({
+          subTasks: subTaskData.data,
+          dataLoading: false,
+        });
+      } else {
+        this.setState({dataLoading: false});
+      }
+    } catch (error) {
+      this.setState({dataLoading: false});
+    }
   }
 
   setTaskStatus(workloadTasksDetails) {
@@ -156,7 +169,7 @@ class WorkloadTasksDetailsScreen extends Component {
         </View>
         <View style={styles.baseView}>
           {item.id == 0
-            ? subTasks.map(item => {
+            ? this.state.subTasks.map(item => {
                 return (
                   <View style={styles.baseInnerContent}>
                     <Image
@@ -164,7 +177,7 @@ class WorkloadTasksDetailsScreen extends Component {
                       source={icons.subTask}
                       resizeMode="contain"
                     />
-                    <Text style={styles.baseInnerText}>{item.name}</Text>
+                    <Text style={styles.baseInnerText}>{item.subtaskName}</Text>
                   </View>
                 );
               })
@@ -177,7 +190,7 @@ class WorkloadTasksDetailsScreen extends Component {
                 marginBottom: 10,
                 marginLeft: 8,
               }}>
-              {this.state.taskNotes == '' ? 'No notes' : this.state.taskNotes}
+              {this.state.taskNotes == '' || this.state.taskNotes == null ? 'No notes' : this.state.taskNotes}
             </Text>
           ) : null}
         </View>
