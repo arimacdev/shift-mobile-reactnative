@@ -391,7 +391,7 @@ const styles = EStyleSheet.create({
         height: '20rem',
     },
     sub_scrollView: {
-        height: '450rem',
+        height: '70%',
         backgroundColor: '#edf0f5'
     },
     userView: {
