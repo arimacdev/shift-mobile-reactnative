@@ -737,87 +737,129 @@ class TasksDetailsScreen extends Component {
 
   // change note of task API
   async changeTaskNote(note) {
-    this.setState({ dataLoading: true });
-    let projectID = this.state.selectedProjectID;
-    let taskID = this.state.selectedProjectTaskID;
-    resultData = await APIServices.updateTaskNoteData(projectID, taskID, note);
-    if (resultData.message == 'success') {
-      this.setState({ dataLoading: false, note: note });
-    } else {
-      this.setState({ dataLoading: false });
+    try {
+      this.setState({ dataLoading: true });
+      let projectID = this.state.selectedProjectID;
+      let taskID = this.state.selectedProjectTaskID;
+      resultData = await APIServices.updateTaskNoteData(projectID, taskID, note);
+      if (resultData.message == 'success') {
+        this.setState({ dataLoading: false, note: note });
+      } else {
+        this.setState({ dataLoading: false });
+      }
+    }catch(e) {
+      if(e.status == 401 || e.status == 403){
+        this.setState({dataLoading:false});
+        this.showAlert("",e.data.message);
+      }
     }
   }
 
   // change assignee of task API
   async changeTaskAssignee(name, userID) {
-    this.setState({ dataLoading: true });
-    let projectID = this.state.selectedProjectID;
-    let taskID = this.state.selectedProjectTaskID;
-    resultData = await APIServices.updateTaskAssigneeData(projectID, taskID, userID);
-    if (resultData.message == 'success') {
-      this.setState({ dataLoading: false, name: name });
-    } else {
-      this.setState({ dataLoading: false });
+    try {
+      this.setState({ dataLoading: true });
+      let projectID = this.state.selectedProjectID;
+      let taskID = this.state.selectedProjectTaskID;
+      resultData = await APIServices.updateTaskAssigneeData(projectID, taskID, userID);
+      if (resultData.message == 'success') {
+        this.setState({ dataLoading: false, name: name });
+      } else {
+        this.setState({ dataLoading: false });
+      }
+    }catch(e) {
+      if(e.status == 401 || e.status == 403){
+        this.setState({dataLoading:false});
+        this.showAlert("",e.data.message);
+      }
     }
   }
 
   // change status of task API
   async changeTaskStatus(key, searchValue) {
-    this.setState({ dataLoading: true });
-    let projectID = this.state.selectedProjectID;
-    let taskID = this.state.selectedProjectTaskID;
-    resultData = await APIServices.updateTaskStatusData(projectID, taskID, searchValue);
-    if (resultData.message == 'success') {
-      this.setState({ dataLoading: false, taskStatus: key });
-    } else {
-      this.setState({ dataLoading: false });
+    try {
+      this.setState({ dataLoading: true });
+      let projectID = this.state.selectedProjectID;
+      let taskID = this.state.selectedProjectTaskID;
+      resultData = await APIServices.updateTaskStatusData(projectID, taskID, searchValue);
+      if (resultData.message == 'success') {
+        this.setState({ dataLoading: false, taskStatus: key });
+      } else {
+        this.setState({ dataLoading: false });
+      }
+    }catch(e) {
+      if(e.status == 401 || e.status == 403){
+        this.setState({dataLoading:false});
+        this.showAlert("",e.data.message);
+      }
     }
   }
 
   // change name of task API
   async onTaskNameChangeSubmit(text) {
-    this.setState({ dataLoading: true });
-    let projectID = this.state.selectedProjectID;
-    let taskID = this.state.selectedProjectTaskID;
-    resultData = await APIServices.updateTaskNameData(projectID, taskID, text);
-    if (resultData.message == 'success') {
-      this.setState({ dataLoading: false });
-    } else {
-      this.setState({ dataLoading: false });
+    try {
+      this.setState({ dataLoading: true });
+      let projectID = this.state.selectedProjectID;
+      let taskID = this.state.selectedProjectTaskID;
+      resultData = await APIServices.updateTaskNameData(projectID, taskID, text);
+      if (resultData.message == 'success') {
+        this.setState({ dataLoading: false });
+      } else {
+        this.setState({ dataLoading: false });
+      }
+    }catch(e) {
+      if(e.status == 401 || e.status == 403){
+        this.setState({dataLoading:false});
+        this.showAlert("",e.data.message);
+      }
     }
   }
 
   async changeTaskDueDate() {
-    let duedateValue = this.state.duedateValue;
-    let dueTime = this.state.dueTime;
-    let projectID = this.state.selectedProjectID;
-    let taskID = this.state.selectedProjectTaskID;
-
-    let IsoDueDate = duedateValue ?
-      moment(duedateValue + dueTime, 'DD/MM/YYYY hh:mmA').format('YYYY-MM-DD[T]HH:mm:ss') : '';
-
-    resultData = await APIServices.updateTaskDueDateData(projectID, taskID, IsoDueDate);
-    if (resultData.message == 'success') {
-      this.setState({ dataLoading: false });
-    } else {
-      this.setState({ dataLoading: false });
+    try{
+      let duedateValue = this.state.duedateValue;
+      let dueTime = this.state.dueTime;
+      let projectID = this.state.selectedProjectID;
+      let taskID = this.state.selectedProjectTaskID;
+  
+      let IsoDueDate = duedateValue ?
+        moment(duedateValue + dueTime, 'DD/MM/YYYY hh:mmA').format('YYYY-MM-DD[T]HH:mm:ss') : '';
+  
+      resultData = await APIServices.updateTaskDueDateData(projectID, taskID, IsoDueDate);
+      if (resultData.message == 'success') {
+        this.setState({ dataLoading: false });
+      } else {
+        this.setState({ dataLoading: false });
+      }
+    }catch(e) {
+      if(e.status == 401 || e.status == 403){
+        this.setState({dataLoading:false});
+        this.showAlert("",e.data.message);
+      }
     }
   };
 
   async changeTaskReminderDate() {
-    let remindDateValue = this.state.remindDateValue;
-    let reminderTime = this.state.reminderTime;
-    let projectID = this.state.selectedProjectID;
-    let taskID = this.state.selectedProjectTaskID;
-
-    let IsoReminderDate = remindDateValue ?
-      moment(remindDateValue + reminderTime, 'DD/MM/YYYY hh:mmA').format('YYYY-MM-DD[T]HH:mm:ss') : '';
-
-    resultData = await APIServices.updateTaskReminderDateData(projectID, taskID, IsoReminderDate);
-    if (resultData.message == 'success') {
-      this.setState({ dataLoading: false });
-    } else {
-      this.setState({ dataLoading: false });
+    try{
+      let remindDateValue = this.state.remindDateValue;
+      let reminderTime = this.state.reminderTime;
+      let projectID = this.state.selectedProjectID;
+      let taskID = this.state.selectedProjectTaskID;
+  
+      let IsoReminderDate = remindDateValue ?
+        moment(remindDateValue + reminderTime, 'DD/MM/YYYY hh:mmA').format('YYYY-MM-DD[T]HH:mm:ss') : '';
+  
+      resultData = await APIServices.updateTaskReminderDateData(projectID, taskID, IsoReminderDate);
+      if (resultData.message == 'success') {
+        this.setState({ dataLoading: false });
+      } else {
+        this.setState({ dataLoading: false });
+      }
+    }catch(e) {
+      if(e.status == 401 || e.status == 403){
+        this.setState({dataLoading:false});
+        this.showAlert("",e.data.message);
+      }
     }
   };
 
