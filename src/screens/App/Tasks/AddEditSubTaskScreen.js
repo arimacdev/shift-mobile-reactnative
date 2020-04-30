@@ -185,7 +185,7 @@ class AddEditSubTaskScreen extends Component {
             </View>
         </View>
       <TouchableOpacity
-          style={{marginTop:10}} 
+          style={styles.bottomContainer}
           onPress={() => this.addEditSubTask()}>
           <View style={styles.button}>
             <Image
@@ -280,7 +280,13 @@ const styles = EStyleSheet.create({
       color: colors.gray,
       fontFamily: 'CircularStd-Medium',
       textAlign: 'left',
-  },  
+    },
+    bottomContainer: {
+      position: 'absolute',
+      bottom: 0,
+      width: '100%',
+      marginBottom: 15,
+    },  
 });
 
 const mapStateToProps = state => {
