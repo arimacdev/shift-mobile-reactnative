@@ -321,7 +321,7 @@ class ProjectFilesScreen extends Component {
       )
         .then(response => {
           if (response.message == 'success') {
-            await this.setState({dataLoading: false, Uploading: 100});
+            this.setState({dataLoading: false, Uploading: 100});
             this.setState({files: []});
             this.fetchData(this.props.selectedProjectID);
           } else {
