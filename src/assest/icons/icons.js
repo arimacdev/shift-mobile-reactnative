@@ -54,5 +54,6 @@ const icons = {
     users : require('./users.png'),
     filterIcon : require('./filter_icon.png'),
     downloadIcon : require('./download_icon.png'),
+    menuVertical: require('./menu_vertical.png'),
 };
 export default icons;

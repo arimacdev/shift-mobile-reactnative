@@ -26,7 +26,7 @@ import Loader from '../../../components/Loader';
 import moment from 'moment';
 const initialLayout = { width: entireScreenWidth };
 import { Icon } from 'native-base';
-import MenuItems from '../../../components/MenuItems';
+import PopupMenuNormal from '../../../components/PopupMenuNormal';
 
 
 const menuItems = [
@@ -85,10 +85,22 @@ class OtherBoard extends Component {
         }
     }
 
+    onMenuItemChange(item, data){
+        switch (item.value) {
+            case 0:
+                this.goToEditSprint(data)
+                break;
+            case 1:
+                this.deleteDoard(data);
+                break;
+            default:
+                break;
+        }
+    }
+
     renderItemMainTile(data) {
         return (
             <View style={{ flex: 1 }}>
-                <TouchableOpacity onPress={() => this.goToEditSprint(data)}>
                     <View style={styles.item}>
                         <View style={styles.title_container} >
                             <View style={styles.title_sub_container}>
@@ -96,11 +108,10 @@ class OtherBoard extends Component {
                                 <Text style={styles.sub_txt}>{data.item.sprintDescription}</Text>
                             </View>
                             <View style={{alignSelf:'flex-start'}}>
-                                <MenuItems
+                                <PopupMenuNormal
                                     // customStyle={styles.menuItems}
                                     data={menuItems}
-                                    onChange={item => this.onMenuItemChange(item)}
-                                    // disabledOpt={this.props.notificationsList.length <= 0}
+                                    onChange={item => this.onMenuItemChange(item, data)}
                                 />
                             </View>
                         </View>
@@ -113,7 +124,6 @@ class OtherBoard extends Component {
                             />
                         </ScrollView>
                     </View>
-                </TouchableOpacity>
             </View>
         );
     }

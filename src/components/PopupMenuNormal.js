@@ -14,14 +14,13 @@ const shadow = Platform.select({
     elevation: 6,
   },
 });
-class MenuItems extends Component {
+class PopupMenuNormal extends Component {
   defaultRan = false;
   constructor(props) {
     super(props);
     this.state = {
       opened: false,
       text: props.text || props.data.length > 0 ? props.data[0].text : '',
-      color: props.color || props.data.length > 0 ? props.data[0].color : '',
     };
   }
 
@@ -34,7 +33,6 @@ class MenuItems extends Component {
       if (!this.props.selectedItem && nextProps.data.length > 1) {
         this.setState({
           text: nextProps.data[0].text,
-          color: nextProps.data[0].color,
         });
       }
       if (nextProps.data.length === 1) {
@@ -48,7 +46,6 @@ class MenuItems extends Component {
       this.setState({
         opened: false,
         text: item.text,
-        color: item.color,
         selectdItem: item,
       });
     }
@@ -58,7 +55,6 @@ class MenuItems extends Component {
     this.setState({
       opened: false,
       text: item.text,
-      color: item.color,
       selectdItem: item,
     });
     // this.updateDataOrder(item);
@@ -98,10 +94,9 @@ class MenuItems extends Component {
       optionsContainer: {
         minWidth: 120,
         width: 150,
-        paddingVertical: 10,
+        paddingVertical: 5,
         paddingHorizontal: 0,
-        // paddingTop:10,
-        marginTop: Platform.OS === 'ios' ? 17 : 35,
+        marginTop: Platform.OS === 'ios' ? 17 : -30,
         backgroundColor: colors.white,
         borderRadius: 5,
         ...shadow,
@@ -127,7 +122,7 @@ class MenuItems extends Component {
             onPress={() => this.onTriggerPress()}
             disabled={this.props.disabledOpt}>
             <View style={styles.dropView}>
-              <Image style={[styles.filterIcon]} source={icons.filterIcon} />
+              <Image style={[styles.menuIcon]} source={icons.menuVertical} />
             </View>
           </MenuTrigger>
           <MenuOptions customStyles={customStyles}>
@@ -142,13 +137,13 @@ class MenuItems extends Component {
                       key={index}
                       value={item}>
                       <View style={styles.menuItemTouchable}>
-                        <View
+                        <Text
                           style={[
-                            styles.menuItemTextView,
-                            {backgroundColor: item.color},
-                          ]}
-                        />
-                        <Text style={styles.menuItemText}>{item.text}</Text>
+                            styles.menuItemText,
+                            {color: index == 1 ? colors.lightRed : colors.gray},
+                          ]}>
+                          {item.text}
+                        </Text>
                       </View>
                     </MenuOption>
                   );
@@ -172,10 +167,10 @@ const styles = StyleSheet.create({
     marginLeft: 15,
     marginRight: 15,
   },
-  filterIcon: {
-    width: 23,
-    height: 23,
-    marginTop: 2,
+  menuIcon: {
+    width: 20,
+    height: 20,
+    marginTop: 3,
     marginRight: -10,
   },
   dropDownText: {
@@ -188,12 +183,14 @@ const styles = StyleSheet.create({
   },
   dropContainer: {
     flexDirection: 'column',
+    marginTop: 2,
+    marginRight: -15,
   },
   menuItemTouchable: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    paddingRight: 20,
+    paddingRight: 10,
     marginLeft: 20,
     marginTop: 10,
     marginBottom: 10,
@@ -204,10 +201,9 @@ const styles = StyleSheet.create({
     borderBottomColor: localColors.borderColor,
   },
   menuItemText: {
-    // flex: 1,
-    // paddingVertical: 10,
-    paddingLeft: 15,
-    color: colors.gray,
+    fontFamily: 'Product Sans',
+    fontSize: 12,
+    paddingLeft: 5,
   },
   menuItemArrowWrapper: {
     width: 24,
@@ -219,7 +215,7 @@ const styles = StyleSheet.create({
     height: 12,
   },
   menuStyle: {
-    marginRight: 18,
+    marginRight: 20,
   },
   menuItemTextView: {
     width: 20,
@@ -229,4 +225,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MenuItems;
+export default PopupMenuNormal;
