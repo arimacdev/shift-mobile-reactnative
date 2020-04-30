@@ -27,13 +27,8 @@ export const DrawerNavigator = createDrawerNavigator(
             headerMode: 'none',
             header: null,
             navigationOptions: {
-                drawerLabel: 'Projects ',
-                drawerIcon: ({ tintColor }) => (
-                    <Image
-                        source={require('../asserts/img/drawer_projects.png')}
-                        style={{ width:  EStyleSheet.value('25rem'),height:EStyleSheet.value('25rem')}}
-                    />
-                ),
+                drawerLabel:  () => null,
+                drawerIcon:  () => null,
             }
         },
         Users: {

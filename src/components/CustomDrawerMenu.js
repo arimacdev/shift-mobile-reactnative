@@ -69,10 +69,19 @@ const CustomDrawerContentComponent = props => (
       <DrawerNavigatorItems {...props} />
       {/* DrawerTasksScreen */}
       {true &&
-        <TouchableOpacity style={styles.custtomButton} onPress={() => {  NavigationService.navigate('DrawerTasksScreen'); }}>
+        <TouchableOpacity style={styles.custtomButton} onPress={() => {  NavigationService.navigate('Projects'); }}>
+          <Image
+            source={require('../asserts/img/drawer_projects.png')}
+            style={{ width:  EStyleSheet.value('25rem'),height:EStyleSheet.value('23rem')}}
+          />
+          <Text style={styles.text}>Projects</Text>
+        </TouchableOpacity>
+      }
+      {true &&
+        <TouchableOpacity style={styles.custtomButton1} onPress={() => {  NavigationService.navigate('DrawerTasksScreen'); }}>
           <Image
             source={require('../asserts/img/drawer_tasks.png')}
-            style={{ width:  EStyleSheet.value('25rem'),height:EStyleSheet.value('25rem')}}
+            style={{ width:  EStyleSheet.value('25rem'),height:EStyleSheet.value('23rem')}}
           />
           <Text style={styles.text}>Tasks</Text>
         </TouchableOpacity>
@@ -82,7 +91,7 @@ const CustomDrawerContentComponent = props => (
         <TouchableOpacity style={styles.custtomButton1} onPress={() => {  NavigationService.navigate('WorkloadScreen'); }}>
           <Image
             source={require('../asserts/img/drawer_workload.png')}
-            style={{ width:  EStyleSheet.value('25rem'),height:EStyleSheet.value('25rem')}}
+            style={{ width:  EStyleSheet.value('25rem'),height:EStyleSheet.value('23rem')}}
           />
           <Text style={styles.text}>Workload</Text>
         </TouchableOpacity>
@@ -92,7 +101,7 @@ const CustomDrawerContentComponent = props => (
         <TouchableOpacity style={styles.custtomButton1} onPress={() => {  NavigationService.navigate('UsersScreen'); }}>
           <Image
             source={require('../asserts/img/drawer_users.png')}
-            style={{ width:  EStyleSheet.value('25rem'),height:EStyleSheet.value('25rem')}}
+            style={{ width:  EStyleSheet.value('25rem'),height:EStyleSheet.value('23rem')}}
           />
           <Text style={styles.text}>Users</Text>
         </TouchableOpacity>
@@ -148,9 +157,9 @@ const styles = EStyleSheet.create({
   text: {
     opacity: 0.5,
     color: '#ffffff',
-    fontFamily: 'HelveticaNeueMedium',
-    fontSize: 14.5,
-    fontWeight: 'bold',
+    fontFamily: 'CircularStd-Book',
+    fontSize: 19,
+    fontWeight: '400',
     marginLeft: 34,
   },
   custtomButton: {
@@ -161,7 +170,7 @@ const styles = EStyleSheet.create({
   custtomButton1: {
     flexDirection: 'row',
     paddingHorizontal: 18,
-    marginTop: 22,
+    marginTop: '20rem',
   },
   iconBack: {
     fontSize: '32rem',
