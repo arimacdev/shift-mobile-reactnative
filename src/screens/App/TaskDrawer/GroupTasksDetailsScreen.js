@@ -562,6 +562,14 @@ showAlert(title,msg){
   
   // change note of task API
   async changeTaskNote(note){
+    try {
+
+    }catch(e) {
+      if(e.status == 401 || e.status == 403){
+        this.setState({dataLoading:false});
+        this.showAlert("",e.data.message);
+      }
+    }
     this.setState({dataLoading:true});
     let selectedTaskGroupId = this.state.selectedTaskGroupId;
     let selectedTaskID = this.state.selectedTaskID;
@@ -575,76 +583,111 @@ showAlert(title,msg){
 
   // change assignee of task API DONE
   async changeTaskAssignee(name,userID){
-      this.setState({dataLoading:true});
-      let selectedTaskGroupId = this.state.selectedTaskGroupId;
-      let selectedTaskID = this.state.selectedTaskID;
-      resultData = await APIServices.groupTaskUpdateTaskAssigneeData(selectedTaskGroupId,selectedTaskID,userID);
-      if(resultData.message == 'success'){
-        this.setState({dataLoading:false,name: name});
-      }else{
-        this.setState({dataLoading:false});
+      try {
+        this.setState({dataLoading:true});
+        let selectedTaskGroupId = this.state.selectedTaskGroupId;
+        let selectedTaskID = this.state.selectedTaskID;
+        resultData = await APIServices.groupTaskUpdateTaskAssigneeData(selectedTaskGroupId,selectedTaskID,userID);
+        if(resultData.message == 'success'){
+          this.setState({dataLoading:false,name: name});
+        }else{
+          this.setState({dataLoading:false});
+        }
+      }catch(e) {
+        if(e.status == 401 || e.status == 403){
+          this.setState({dataLoading:false});
+          this.showAlert("",e.data.message);
+        }
       }
   }
 
   // change status of task API DONE
   async changeTaskStatus(key,searchValue){
-      this.setState({dataLoading:true});
-      let selectedTaskGroupId = this.state.selectedTaskGroupId;
-      let selectedTaskID = this.state.selectedTaskID;
-      resultData = await APIServices.groupTaskUpdateTaskStatusData(selectedTaskGroupId,selectedTaskID,searchValue);
-      if(resultData.message == 'success'){
-        this.setState({dataLoading:false,taskStatus : key});
-      }else{
-        this.setState({dataLoading:false});
+      try {
+        this.setState({dataLoading:true});
+        let selectedTaskGroupId = this.state.selectedTaskGroupId;
+        let selectedTaskID = this.state.selectedTaskID;
+        resultData = await APIServices.groupTaskUpdateTaskStatusData(selectedTaskGroupId,selectedTaskID,searchValue);
+        if(resultData.message == 'success'){
+          this.setState({dataLoading:false,taskStatus : key});
+        }else{
+          this.setState({dataLoading:false});
+        }
+      }catch(e) {
+        if(e.status == 401 || e.status == 403){
+          this.setState({dataLoading:false});
+          this.showAlert("",e.data.message);
+        }
       }
   }
 
   // change name of task API DONE
   async onTaskNameChangeSubmit(text){
-    this.setState({dataLoading:true});
-    let selectedTaskGroupId = this.state.selectedTaskGroupId;
-    let selectedTaskID = this.state.selectedTaskID;
-    resultData = await APIServices.groupTaskUpdateTaskNameData(selectedTaskGroupId,selectedTaskID,text);
-    if(resultData.message == 'success'){
-      this.setState({dataLoading:false});
-    }else{
-      this.setState({dataLoading:false});
-    }
-  }
-
-   // change due date of task API DONE
-  async changeTaskDueDate(){
-      let duedateValue = this.state.duedateValue;
-      let dueTime = this.state.dueTime;
+    try {
+      this.setState({dataLoading:true});
       let selectedTaskGroupId = this.state.selectedTaskGroupId;
       let selectedTaskID = this.state.selectedTaskID;
-
-      let IsoDueDate = duedateValue ?
-      moment(duedateValue + dueTime,'DD/MM/YYYY hh:mmA').format('YYYY-MM-DD[T]HH:mm:ss') : '';
-
-      resultData = await APIServices.groupTaskUpdateDueDateData(selectedTaskGroupId,selectedTaskID,IsoDueDate);
+      resultData = await APIServices.groupTaskUpdateTaskNameData(selectedTaskGroupId,selectedTaskID,text);
       if(resultData.message == 'success'){
         this.setState({dataLoading:false});
       }else{
         this.setState({dataLoading:false});
       }
+    }catch(e) {
+      if(e.status == 401 || e.status == 403){
+        this.setState({dataLoading:false});
+        this.showAlert("",e.data.message);
+      }
+    }
+  }
+
+   // change due date of task API DONE
+  async changeTaskDueDate(){
+      try {
+        let duedateValue = this.state.duedateValue;
+        let dueTime = this.state.dueTime;
+        let selectedTaskGroupId = this.state.selectedTaskGroupId;
+        let selectedTaskID = this.state.selectedTaskID;
+  
+        let IsoDueDate = duedateValue ?
+        moment(duedateValue + dueTime,'DD/MM/YYYY hh:mmA').format('YYYY-MM-DD[T]HH:mm:ss') : '';
+  
+        resultData = await APIServices.groupTaskUpdateDueDateData(selectedTaskGroupId,selectedTaskID,IsoDueDate);
+        if(resultData.message == 'success'){
+          this.setState({dataLoading:false});
+        }else{
+          this.setState({dataLoading:false});
+        }
+      }catch(e) {
+        if(e.status == 401 || e.status == 403){
+          this.setState({dataLoading:false});
+          this.showAlert("",e.data.message);
+        }
+      }
   };
 
   // change reminder date of task API DONE
   async changeTaskReminderDate(){
-      let remindDateValue = this.state.remindDateValue;
-      let reminderTime = this.state.reminderTime;
-      let selectedTaskGroupId = this.state.selectedTaskGroupId;
-      let selectedTaskID = this.state.selectedTaskID;
-
-      let IsoReminderDate = remindDateValue ?
-      moment(remindDateValue + reminderTime,'DD/MM/YYYY hh:mmA').format('YYYY-MM-DD[T]HH:mm:ss') : '';
-
-      resultData = await APIServices.groupTaskUpdateReminderDateData(selectedTaskGroupId,selectedTaskID,IsoReminderDate);
-      if(resultData.message == 'success'){
-        this.setState({dataLoading:false});
-      }else{
-        this.setState({dataLoading:false});
+      try {
+        let remindDateValue = this.state.remindDateValue;
+        let reminderTime = this.state.reminderTime;
+        let selectedTaskGroupId = this.state.selectedTaskGroupId;
+        let selectedTaskID = this.state.selectedTaskID;
+  
+        let IsoReminderDate = remindDateValue ?
+        moment(remindDateValue + reminderTime,'DD/MM/YYYY hh:mmA').format('YYYY-MM-DD[T]HH:mm:ss') : '';
+  
+        resultData = await APIServices.groupTaskUpdateReminderDateData(selectedTaskGroupId,selectedTaskID,IsoReminderDate);
+        if(resultData.message == 'success'){
+          this.setState({dataLoading:false});
+        }else{
+          this.setState({dataLoading:false});
+        }
+      }catch(e) {
+        if(e.status == 401 || e.status == 403){
+          this.setState({dataLoading:false});
+          this.showAlert("",e.data.message);
+        }
       }
   };
 
