@@ -67,6 +67,7 @@ class ProjectFilesScreen extends Component {
       loading: false,
       isFetching: false,
       Uploading: 0,
+      indeterminate: false,
     };
   }
 
@@ -311,7 +312,7 @@ class ProjectFilesScreen extends Component {
       }
       await this.setState({
         files: this.state.files,
-        dataLoading: true,
+        indeterminate: true,
         Uploading: 0,
       });
 
@@ -321,16 +322,15 @@ class ProjectFilesScreen extends Component {
       )
         .then(response => {
           if (response.message == 'success') {
-            this.setState({dataLoading: false, Uploading: 100});
-            this.setState({files: []});
+            this.setState({indeterminate: false, files: [], Uploading: 100});
             this.fetchData(this.props.selectedProjectID);
           } else {
-            this.setState({dataLoading: false, files: [], Uploading: 0});
+            this.setState({indeterminate: false, files: [], Uploading: 0});
           }
         })
         .catch(error => {
           if (error.status == 401) {
-            this.setState({dataLoading: false, files: [], Uploading: 0});
+            this.setState({indeterminate: false, files: [], Uploading: 0});
             this.showAlert('', error.data.message);
           }
         });
@@ -379,7 +379,7 @@ class ProjectFilesScreen extends Component {
         }}>
         <Progress.Bar
           progress={0.0}
-          indeterminate={this.state.dataLoading}
+          indeterminate={this.state.indeterminate}
           indeterminateAnimationDuration={1000}
           width={null}
           animated={true}
@@ -406,7 +406,9 @@ class ProjectFilesScreen extends Component {
     let isFetching = this.state.isFetching;
     return (
       <View style={styles.container}>
-        <TouchableOpacity onPress={() => this.doumentPicker()}>
+        <TouchableOpacity
+          onPress={() => this.doumentPicker()}
+          disabled={this.state.indeterminate}>
           {this.state.files.length > 0 ? (
             <View
               style={[
