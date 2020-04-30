@@ -134,7 +134,7 @@ class PeopleScreen extends Component {
                     {this.userIcon(item)}
                     <View style={{ flex: 1 }}>
                         <Text style={styles.text}>{item.projectJobRoleName}</Text>
-                        <Text style={styles.subText}>{item.assigneeFirstName + ' ' + item.assigneeLastName}</Text>
+                        <Text style={styles.subTextName}>{item.assigneeFirstName + ' ' + item.assigneeLastName}</Text>
                     </View>
                     <View style={styles.controlView}>
                         <TouchableOpacity onPress={() => this.goToEditPeople(item)}>
@@ -291,6 +291,16 @@ const styles = EStyleSheet.create({
       subText: {
         fontSize: '10rem',
         color: '#b9b9b9',
+        textAlign: 'center',
+        lineHeight: '17rem',
+        fontFamily: 'CircularStd-Medium',
+        textAlign: 'left',
+        marginLeft: '10rem',
+        fontWeight: '400'
+      },
+      subTextName : {
+        fontSize: '12rem',
+        color: '#080848',
         textAlign: 'center',
         lineHeight: '17rem',
         fontFamily: 'CircularStd-Medium',

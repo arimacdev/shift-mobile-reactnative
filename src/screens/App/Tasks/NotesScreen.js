@@ -48,7 +48,7 @@ class NotesScreen extends Component {
                     onChangeText={text => this.onNotesChange(text)}
                 />
             </View>
-            <TouchableOpacity onPress={() => this.updateNote()}>
+            <TouchableOpacity style={styles.bottomContainer} onPress={() => this.updateNote()}>
                 <View style={styles.button}>
                     <Image
                     style={[styles.bottomBarIcon, { marginRight: 15, marginLeft: 10 }]}
@@ -120,6 +120,12 @@ const styles = EStyleSheet.create({
       addIcon: {
         width: '28rem',
         height: '28rem',
+      },
+      bottomContainer: {
+        position: 'absolute',
+        bottom: 0,
+        width: '100%',
+        marginBottom: 15,
       },
 });
 
