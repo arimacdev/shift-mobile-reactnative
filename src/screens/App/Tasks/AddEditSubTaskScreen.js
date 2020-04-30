@@ -93,6 +93,7 @@ class AddEditSubTaskScreen extends Component {
               resultObj = await APIServices.updateSubTask(userID,projectID,taskID,subTaskID,subTaskName,isSelected);
               if(resultObj.message == 'success'){
                 this.setState({dataLoading:false});
+                this.props.addEditSubTaskSuccessInProject(true);
                 this.props.navigation.goBack();
               }else{
                 this.setState({dataLoading:false});
@@ -121,6 +122,7 @@ class AddEditSubTaskScreen extends Component {
               resultObj = await APIServices.addSubTask(userID,projectID,taskID,subTaskName);
               if(resultObj.message == 'success'){
                 this.setState({dataLoading:false});
+                this.props.addEditSubTaskSuccessInProject(true);
                 this.props.navigation.goBack();
               }else{
                 this.setState({dataLoading:false});

@@ -14,6 +14,7 @@ import {
     DELETE_SINGLE_TASK_IN_MY_TASKS_FAILED,
     DELETE_SINGLE_TASK_IN_MY_TASKS_FAILED_MASSAGE,
 
+    MY_TASK_SUB_TASK_SUMBIT_SUCCESS
 
 } from '../types';
 import APIServices from '../../services/APIServices';
@@ -104,5 +105,12 @@ export const deleteTaskInMyTasks =  (taskID) => {
                 dispatch({ type: DELETE_SINGLE_TASK_IN_MY_TASKS_FAILED});  
             } 
         });
+    };
+};
+
+export const addEditSubTaskSuccess = value => {
+    return {
+        type: MY_TASK_SUB_TASK_SUMBIT_SUCCESS,
+        payload: value
     };
 };

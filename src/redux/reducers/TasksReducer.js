@@ -14,11 +14,12 @@ import {
     DELETE_SINGLE_TASK_IN_MY_TASKS_FAILED,
     DELETE_SINGLE_TASK_IN_MY_TASKS_FAILED_MASSAGE,
 
+    MY_TASK_SUB_TASK_SUMBIT_SUCCESS,
+
 } from '../types';
 
 const INITIAL_STATE = {
     
-
     deleteSingleTaskInGroupLoading: false,
     deleteSingleTaskInGroupSuccess: false,
     deleteSingleTaskInGroupError: false,
@@ -33,6 +34,8 @@ const INITIAL_STATE = {
     deleteSingleTaskInMySuccess: false,
     deleteSingleTaskInMyError: false,
     deleteSingleTaskInMyErrorMessage: '',
+
+    myTaskAddEditSubTask : false,
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -128,7 +131,12 @@ export default (state = INITIAL_STATE, action) => {
                 deleteSingleTaskInMySuccess: false,
                 deleteSingleTaskInMyError: true,
                 deleteSingleTaskInMyErrorMessage: action.payload
-            };           
+            };
+        case MY_TASK_SUB_TASK_SUMBIT_SUCCESS :
+            return {
+                ...state,
+                myTaskAddEditSubTask: action.payload
+            };                
         default:
             return state;
     }

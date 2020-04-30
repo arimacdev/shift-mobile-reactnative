@@ -45,7 +45,8 @@ import {
     DELETE_TASK_FAILED,
     DELETE_TASK_FAILED_MASSAGE,
 
-    MODEL_VISIBLE_CHANGE
+    MODEL_VISIBLE_CHANGE,
+    PROJECT_TASK_SUB_TASK_SUMBIT_SUCCESS
 
 } from '../types';
 import APIServices from '../../services/APIServices';
@@ -294,6 +295,13 @@ export const deleteTask =  (selectedProjectID, taskId, taskName, initiator) => {
 export const addPeopleModal = value => {
     return {
         type: MODEL_VISIBLE_CHANGE,
+        payload: value
+    };
+};
+
+export const addEditSubTaskSuccessInProject = value => {
+    return {
+        type: PROJECT_TASK_SUB_TASK_SUMBIT_SUCCESS,
         payload: value
     };
 };
