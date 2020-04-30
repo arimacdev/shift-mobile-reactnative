@@ -65,6 +65,8 @@ export const MY_TASK_ADD_SUB_TASK = `${PROTOCOL}${HOST}non-project/tasks/persona
 export const MY_TASK_UPDATE_SUB_TASK = `${PROTOCOL}${HOST}non-project/tasks/personal`;
 export const GET_SPRINTS_BY_PROJECT = `${PROTOCOL}${HOST}sprints`;
 export const ADD_EDIT_SPRINT_BY_PROJECT = `${PROTOCOL}${HOST}sprints`;
+export const UPDATE_SPRINT = `${PROTOCOL}${HOST}projects`;
+
 
 
 

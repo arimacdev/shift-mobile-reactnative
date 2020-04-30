@@ -189,7 +189,8 @@ class TasksDetailsScreen extends Component {
       note: '',
       sprints: [],
       isFromBoards: false,
-      selectedSprint: ''
+      selectedSprint: '',
+      previousSprintID : '',
     };
   }
 
@@ -268,7 +269,7 @@ class TasksDetailsScreen extends Component {
   setSprintDroupDownData(sprintData) {
     let sprintArray = [
       {
-        id: "Default",
+        id: "default",
         value: "Default",
       }
     ];
@@ -283,11 +284,11 @@ class TasksDetailsScreen extends Component {
 
   setSprintDroupDownSelectedValue(sprintData,selectedSprintID) {
     if(selectedSprintID == "default"){
-      this.setState({selectedSprint: "Default" });
+      this.setState({selectedSprint: "Default" ,previousSprintID:'default'});
     }else{
       let selectedSprint = sprintData.find( ({ sprintId }) => sprintId == selectedSprintID );
       if(selectedSprint){
-        this.setState({selectedSprint: selectedSprint.sprintName });
+        this.setState({selectedSprint: selectedSprint.sprintName,previousSprintID:selectedSprint.sprintId });
       }
     }
   }
@@ -705,11 +706,33 @@ class TasksDetailsScreen extends Component {
   }
 
   onFilterSprintData = (value, index, data) => {
+    let previousSprintID = this.state.previousSprintID;
+    let selectedProjectID = this.state.selectedProjectID;
+    let selectedProjectTaskID = this.state.selectedProjectTaskID;
     const selectedId = data[index].id;
     let selectedName  = data[index].value;
-    this.setState({selectedSprint: selectedName });
-    //API Call 
+    //this.setState({selectedSprint: selectedName });
+    this.changeSprint(selectedName,selectedId,previousSprintID,selectedProjectID,selectedProjectTaskID);
   };
+
+   // change Sprint 
+  async changeSprint(selectedName,selectedId,previousSprintID,selectedProjectID,selectedProjectTaskID) {
+    this.setState({dataLoading:true});
+    try {
+        resultObj = await APIServices.changeSprint(selectedId,previousSprintID,selectedProjectID,selectedProjectTaskID);
+        if(resultObj.message == 'success'){
+          this.setState({dataLoading:false,selectedSprint: selectedName});
+        }else{
+          this.setState({dataLoading:false});
+          this.showAlert("","Error");
+        }
+    }catch(e) {
+      if(e.status == 401 || e.status == 403){
+        this.setState({dataLoading:false});
+        this.showAlert("",e.data.message);
+      }
+    }
+  }
 
 
   // change note of task API

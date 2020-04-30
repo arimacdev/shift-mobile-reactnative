@@ -234,7 +234,7 @@ class OtherBoard extends Component {
 
     loadBords(){
         this.getAllTaskDataInProject();
-      }
+    }
 
     render() {
         return (

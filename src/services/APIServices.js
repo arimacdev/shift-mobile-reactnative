@@ -60,7 +60,8 @@ import {
     MY_TASK_ADD_SUB_TASK,
     MY_TASK_UPDATE_SUB_TASK,
     GET_SPRINTS_BY_PROJECT,
-    ADD_EDIT_SPRINT_BY_PROJECT
+    ADD_EDIT_SPRINT_BY_PROJECT,
+    UPDATE_SPRINT
 
 } from '../api/API';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -1521,6 +1522,28 @@ async function editSprintData(projectID,sprintName,sprintDescription,sprintId) {
     }, true, headers);
 };
 
+async function changeSprint(selectedId,previousSprintID,selectedProjectID,selectedProjectTaskID) {
+
+    let userID = null;
+    userID =  await AsyncStorage.getItem('userID');
+
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        user : userID,
+    };
+
+    return request({
+        url: UPDATE_SPRINT + '/' + selectedProjectID + '/tasks/' + selectedProjectTaskID + '/sprint',
+        method: 'PUT',
+        data : {
+            newSprint: selectedId,
+	        previousSprint: previousSprintID
+        
+        }
+    }, true, headers);
+};
+
 const APIServices = {
     getAllProjectsByUserData,
     getUserData,
@@ -1599,7 +1622,8 @@ const APIServices = {
     getAllTaskInDefaultBoardData,
     getAllSprintInProject,
     addSprintData,
-    editSprintData
+    editSprintData,
+    changeSprint
 };
 
 export default APIServices;

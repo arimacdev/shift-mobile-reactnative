@@ -21,6 +21,7 @@ const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({ $rem: entireScreenWidth / 380 });
 import Loader from '../../../components/Loader';
 import moment from 'moment';
+import {NavigationEvents} from 'react-navigation';
 const initialLayout = { width: entireScreenWidth };
 
 class DefaultBoard extends Component {
@@ -34,6 +35,10 @@ class DefaultBoard extends Component {
     }
 
     async componentDidMount() {
+        this.fetchData();
+    }
+
+    async fetchData(){
         let selectedProjectID = this.props.selectedProjectID;
         this.setState({dataLoading:true});
         taskData = await APIServices.getAllTaskInDefaultBoardData(selectedProjectID);
@@ -142,11 +147,16 @@ class DefaultBoard extends Component {
         return  <Text style={[styles.subText, {color: color}]}>{dateText}</Text>;
     };
 
+    loadDefulatBords(){
+        this.fetchData()
+    }
+
     render() {
         let dataLoading = this.state.dataLoading
         return (
             <View>
-                <View >
+                <NavigationEvents onWillFocus={payload => this.loadDefulatBords(payload)} />
+                <View>
                     <ScrollView style={styles.subContainer}>
                         <FlatList
                             style={styles.flalList}
