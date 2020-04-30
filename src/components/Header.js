@@ -147,7 +147,7 @@ class Header extends Component {
                                         }
                                    />
                                 }
-                                <Text style={styles.title}>{title}</Text>
+                                <Text style={styles.title} numberOfLines={1}>{title}</Text>
                             </View>
                             <View style={styles.rightContainer} >
                                 { addButton &&
