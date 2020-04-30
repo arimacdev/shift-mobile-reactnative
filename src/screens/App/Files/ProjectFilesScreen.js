@@ -66,6 +66,7 @@ class ProjectFilesScreen extends Component {
       progress: 0,
       loading: false,
       isFetching: false,
+      Uploading: 0,
     };
   }
 
@@ -308,9 +309,32 @@ class ProjectFilesScreen extends Component {
           res.size,
         );
       }
-      await this.setState({files: this.state.files});
-      // APIServices.uploadFileData(this.state.files, this.props.selectedProjectID);
-      this.props.uploadFile(this.state.files, this.props.selectedProjectID);
+      await this.setState({
+        files: this.state.files,
+        dataLoading: true,
+        Uploading: 0,
+      });
+
+      await APIServices.uploadFileData(
+        this.state.files,
+        this.props.selectedProjectID,
+      )
+        .then(response => {
+          if (response.message == 'success') {
+            await this.setState({dataLoading: false, Uploading: 100});
+            this.setState({files: []});
+            this.fetchData(this.props.selectedProjectID);
+          } else {
+            this.setState({dataLoading: false, files: [], Uploading: 0});
+          }
+        })
+        .catch(error => {
+          if (error.status == 401) {
+            this.setState({dataLoading: false, files: [], Uploading: 0});
+            this.showAlert('', error.data.message);
+          }
+        });
+      // this.props.uploadFile(this.state.files, this.props.selectedProjectID);
 
       console.log(this.state.files);
     } catch (err) {
@@ -342,7 +366,7 @@ class ProjectFilesScreen extends Component {
     this.props.addFileToTask(file, taskID, projectID);
   }
 
-  renderDocPickeredView(item) {
+  renderDocPickeredView() {
     return (
       <View
         style={{
@@ -354,9 +378,9 @@ class ProjectFilesScreen extends Component {
           justifyContent: 'center',
         }}>
         <Progress.Bar
-          progress={0.3}
-          //   indeterminate={true}
-          //   indeterminateAnimationDuration={1000}
+          progress={0.0}
+          indeterminate={this.state.dataLoading}
+          indeterminateAnimationDuration={1000}
           width={null}
           animated={true}
           color={colors.lightGreen}
@@ -365,7 +389,9 @@ class ProjectFilesScreen extends Component {
           height={20}
           borderRadius={5}
         />
-        <Text style={styles.uploadingText}>Uploading 20%</Text>
+        <Text style={styles.uploadingText}>
+          Uploading {this.state.Uploading}%
+        </Text>
       </View>
     );
   }
