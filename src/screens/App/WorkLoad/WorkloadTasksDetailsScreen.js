@@ -37,6 +37,12 @@ let taskData = [
     icon: icons.noteRed,
     renderImage: false,
   },
+  {
+    id: 3,
+    name: 'Files',
+    icon: icons.fileOrange,
+    renderImage: false,
+  },
 ];
 
 class WorkloadTasksDetailsScreen extends Component {
@@ -48,7 +54,8 @@ class WorkloadTasksDetailsScreen extends Component {
       duedate: '',
       taskName: '',
       note: '',
-      subTasks:[]
+      subTasks: [],
+      files: [],
     };
   }
 
@@ -59,21 +66,29 @@ class WorkloadTasksDetailsScreen extends Component {
       },
     } = this.props;
     let workloadTasksDetails = params.workloadTasksDetails;
-    let date = workloadTasksDetails.dueDate;
+    let date =
+      workloadTasksDetails.dueDate !== null
+        ? moment(workloadTasksDetails.dueDate).format('Do MMMM YYYY')
+        : '';
     this.setState({
       workloadTasksDetails: workloadTasksDetails,
-      duedate: 'Due on ' + moment(date).format('Do MMMM YYYY'),
+      duedate: 'Due on ' + date,
       taskNotes: workloadTasksDetails.taskNotes,
     });
     this.setTaskStatus(workloadTasksDetails);
-    this.fetchData(
+    this.fetchSubTasksData(
+      params.projectId,
+      workloadTasksDetails.taskId,
+      params.userId,
+    );
+    this.fetchFilesData(
       params.projectId,
       workloadTasksDetails.taskId,
       params.userId,
     );
   }
 
-  async fetchData(selectedProjectID, selectedProjectTaskID, userID) {
+  async fetchSubTasksData(selectedProjectID, selectedProjectTaskID, userID) {
     this.setState({dataLoading: true});
     try {
       subTaskData = await APIServices.getSubTaskData(
@@ -86,6 +101,24 @@ class WorkloadTasksDetailsScreen extends Component {
           subTasks: subTaskData.data,
           dataLoading: false,
         });
+      } else {
+        this.setState({dataLoading: false});
+      }
+    } catch (error) {
+      this.setState({dataLoading: false});
+    }
+  }
+
+  async fetchFilesData(projectID, taskID, userID) {
+    this.setState({dataLoading: true});
+    try {
+      filesData = await APIServices.getFilesInTaskData(
+        projectID,
+        taskID,
+        userID,
+      );
+      if (filesData.message == 'success') {
+        this.setState({files: filesData.data, dataLoading: false});
       } else {
         this.setState({dataLoading: false});
       }
@@ -169,9 +202,13 @@ class WorkloadTasksDetailsScreen extends Component {
         </View>
         <View style={styles.baseView}>
           {item.id == 0
-            ? this.state.subTasks.map(item => {
+            ? this.state.subTasks.map((item, index) => {
                 return (
-                  <View style={styles.baseInnerContent}>
+                  <View
+                    style={[
+                      styles.baseInnerContent,
+                      {marginTop: index == 0 ? -5 : 0},
+                    ]}>
                     <Image
                       style={styles.subTaskIcon}
                       source={icons.subTask}
@@ -183,16 +220,38 @@ class WorkloadTasksDetailsScreen extends Component {
               })
             : null}
           {item.id == 2 ? (
-            <Text
-              style={{
-                fontSize: 11,
-                color: colors.gray,
-                marginBottom: 10,
-                marginLeft: 8,
-              }}>
-              {this.state.taskNotes == '' || this.state.taskNotes == null ? 'No notes' : this.state.taskNotes}
-            </Text>
+            this.state.taskNotes !== '' && this.state.taskNotes !== null ? (
+              <Text
+                style={{
+                  fontSize: 11,
+                  color: colors.gray,
+                  marginBottom: 10,
+                  marginLeft: 8,
+                }}>
+                {this.state.taskNotes}
+              </Text>
+            ) : null
           ) : null}
+          {item.id == 3
+            ? this.state.files.map((item, index) => {
+                return (
+                  <View
+                    style={[
+                      styles.baseInnerContent,
+                      {marginTop: index == 0 ? -5 : 0},
+                    ]}>
+                    <Image
+                      style={styles.filesIcon}
+                      source={icons.fileOrange}
+                      resizeMode="contain"
+                    />
+                    <Text style={styles.baseInnerText}>
+                      {item.taskFileName}
+                    </Text>
+                  </View>
+                );
+              })
+            : null}
         </View>
       </View>
     );
@@ -202,7 +261,7 @@ class WorkloadTasksDetailsScreen extends Component {
     let dataLoading = this.state.dataLoading;
     return (
       <ScrollView style={styles.container}>
-        <View>
+        <View style={styles.innerContainer}>
           <View style={styles.projectFilerView}>
             <Text style={{color: colors.white}}>{this.state.taskStatus}</Text>
           </View>
@@ -221,6 +280,9 @@ class WorkloadTasksDetailsScreen extends Component {
 const styles = EStyleSheet.create({
   container: {
     flex: 1,
+  },
+  innerContainer: {
+    marginBottom: 10,
   },
   projectFilerView: {
     backgroundColor: colors.lightBlue,
@@ -277,22 +339,27 @@ const styles = EStyleSheet.create({
   subTaskIcon: {
     width: '13rem',
     height: '13rem',
+    marginTop: '1rem',
+  },
+  filesIcon: {
+    width: '13rem',
+    height: '13rem',
   },
   baseView: {
     marginTop: -5,
     marginBottom: 10,
   },
   baseInnerContent: {
-    marginTop: 0,
     flexDirection: 'row',
-    alignItems: 'center',
+    // alignItems: 'center',
     marginBottom: 10,
     marginLeft: 45,
   },
   baseInnerText: {
-    fontSize: 11,
+    fontSize: '10rem',
     color: colors.gray,
-    marginLeft: 5,
+    marginLeft: '5rem',
+    marginRight: '10rem',
   },
 });
 

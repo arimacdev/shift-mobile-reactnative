@@ -36,17 +36,6 @@ const Placeholder = () => (
   </View>
 );
 
-const SECTIONS = [
-  {
-    title: 'First',
-    content: 'Lorem ipsum...',
-  },
-  {
-    title: 'Second',
-    content: 'Lorem ipsum...',
-  },
-];
-
 class WorkloadTabTasksScreen extends Component {
   constructor(props) {
     super(props);

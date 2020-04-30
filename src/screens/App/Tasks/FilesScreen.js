@@ -111,6 +111,10 @@ class FilesScreen extends Component {
     // }else{
     //   fileDateText = '';
     // }
+    let date = moment(item.taskFileDate).format('YYYY/MM/DD');
+    let time = moment(item.taskFileDate).format('hh:mm a');
+    let taskFileDate = date +' | '+time;
+
     return (
       <TouchableOpacity onPress={()=>this.props.navigation.navigate('FilesView',{filesData:item})}>
         <View style={styles.filesView}>
@@ -120,6 +124,7 @@ class FilesScreen extends Component {
               {item.taskFileName}
             </Text>
             <Text style={styles.textDate}>
+              {taskFileDate}
             </Text>
           </View>
           <View style={styles.controlView}>
