@@ -78,13 +78,6 @@ target 'arimacPmTool' do
   
   pod 'react-native-document-picker', :path => '../node_modules/react-native-document-picker'
 
-  pod 'rn-fetch-blob', :path => '../node_modules/rn-fetch-blob'
-
-  target 'arimacPmToolTests' do
-    inherit! :complete
-    # Pods for testing
-  end
-
   use_native_modules!
 
   # Enables Flipper.
