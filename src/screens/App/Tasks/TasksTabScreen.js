@@ -6,6 +6,7 @@ import {
   Dimensions,
   Image,
   TouchableOpacity,
+  TextInput,
 } from 'react-native';
 import {connect} from 'react-redux';
 import * as actions from '../../../redux/actions';
@@ -30,6 +31,41 @@ const Placeholder = () => (
 );
 
 let dropData = [
+  {
+    id: 'none',
+    value: 'None',
+  },
+  {
+    id: 'Pending',
+    value: 'Pending',
+  },
+  {
+    id: 'Implementing',
+    value: 'Implementing',
+  },
+  {
+    id: 'QA',
+    value: 'QA',
+  },
+  {
+    id: 'Ready to Deploy',
+    value: 'Ready to Deploy',
+  },
+  {
+    id: 'Reopened',
+    value: 'Reopened',
+  },
+  {
+    id: 'Deployed',
+    value: 'Deployed',
+  },
+  {
+    id: 'Closed',
+    value: 'Closed',
+  },
+];
+
+let dropDataMyTasks = [
   {
     id: 'All',
     value: 'All',
@@ -94,8 +130,9 @@ class TasksTabScreen extends Component {
       bottomItemPressColor: colors.darkBlue,
       selectedProjectID: 0,
       isActive: this.props.isActive,
-      selectedTypeAllTasks: 'All',
+      selectedTypeAllTasks: 'None',
       selectedTypeMyTasks: 'All',
+      tasksName: '',
     };
   }
 
@@ -203,7 +240,7 @@ class TasksTabScreen extends Component {
 
   async getAllTaskInProject() {
     this.setState({
-      selectedTypeAllTasks: 'All',
+      selectedTypeAllTasks: 'None',
     });
     let selectedProjectID = this.state.selectedProjectID;
     AsyncStorage.getItem('userID').then(userID => {
@@ -278,7 +315,7 @@ class TasksTabScreen extends Component {
           this.props.navigation.navigate('TasksDetailsScreen', {
             taskDetails: item,
             selectedProjectID: selectedProjectID,
-            isFromBoards: false
+            isFromBoards: false,
           })
         }>
         <View style={styles.projectView}>
@@ -290,8 +327,23 @@ class TasksTabScreen extends Component {
                 : icons.whiteCircule
             }
           />
-          <View style={{flex: 1}}>
-            <Text style={styles.text}>{item.taskName}</Text>
+          <View style={{flex: 1, marginLeft: 10,}}>
+            <View
+              style={{flexDirection: 'row', alignItems: 'baseline', marginBottom:5}}>
+              <Text style={styles.textMain}>MRI - #1</Text>
+              <Text style={styles.text}>{item.taskName}</Text>
+            </View>
+            <View
+              style={{
+                width: 70,
+                height: 15,
+                borderRadius: 10,
+                backgroundColor: colors.lightRed,
+                justifyContent:'center',
+                alignItems:'center'
+              }}>
+              <Text style={{fontSize:8,color:colors.white}}>Oprational</Text>
+            </View>
           </View>
           <View style={styles.statusView}>
             {this.dateView(item)}
@@ -379,7 +431,7 @@ class TasksTabScreen extends Component {
     let searchValue = '';
     let index = this.state.index;
     switch (value) {
-      case 'All':
+      case 'None':
         searchValue = '';
         break;
       case 'Pending':
@@ -403,8 +455,8 @@ class TasksTabScreen extends Component {
       case 'Closed':
         searchValue = 'closed';
         break;
-      case 'Open' : 
-          searchValue = 'open';  
+      case 'Open':
+        searchValue = 'open';
         break;
     }
 
@@ -446,8 +498,8 @@ class TasksTabScreen extends Component {
       case 'Closed':
         searchValue = 'closed';
         break;
-      case 'Open' : 
-        searchValue = 'open';  
+      case 'Open':
+        searchValue = 'open';
         break;
     }
     let filteredData = this.state.allDataMyTasks.filter(function(item) {
@@ -471,9 +523,29 @@ class TasksTabScreen extends Component {
     );
   }
 
-  onSuccess(text){
+  onSuccess(text) {
     this.setState({index: 0});
     this.getAllTaskInProject();
+  }
+
+  onNewTasksNameChange(text) {
+    this.setState({tasksName: text});
+  }
+
+  async onNewTasksNameSubmit(text) {
+    try {
+      let tasksName = this.state.tasksName;
+      this.setState({dataLoading: true});
+      newTaskData = await APIServices.addTaskData(tasksName);
+      if (newTaskData.message == 'success') {
+        this.setState({dataLoading: false, tasksName: ''});
+        this.fetchData();
+      } else {
+        this.setState({dataLoading: false});
+      }
+    } catch (e) {
+      this.setState({dataLoading: false});
+    }
   }
 
   render() {
@@ -484,6 +556,7 @@ class TasksTabScreen extends Component {
     let myTaskByProjectLoading = this.props.myTaskByProjectLoading;
     let selectedTypeAllTasks = this.state.selectedTypeAllTasks;
     let selectedTypeMyTasks = this.state.selectedTypeMyTasks;
+    let tasksName = this.state.tasksName;
 
     return (
       <View style={styles.backgroundImage}>
@@ -492,40 +565,51 @@ class TasksTabScreen extends Component {
         />
         {this.state.index !== 2 ? (
           <View>
-            <View style={styles.projectFilerView}>
-              {index == 0 ? (
+            {index == 0 ? (
+              <View style={styles.tasksFilterMainView}>
+                <Text style={styles.filterByText}>Filter By : </Text>
+                <View style={styles.tasksFilerView}>
+                  <Dropdown
+                    // style={{}}
+                    label=""
+                    labelFontSize={0}
+                    data={dropData}
+                    textColor={colors.darkBlue}
+                    error={''}
+                    animationDuration={0.5}
+                    containerStyle={{width: '100%'}}
+                    overlayStyle={{width: '100%'}}
+                    pickerStyle={{
+                      width: '69%',
+                      marginTop: 65,
+                      marginLeft: 97,
+                    }}
+                    dropdownPosition={0}
+                    value={selectedTypeAllTasks}
+                    itemColor={'black'}
+                    selectedItemColor={'black'}
+                    dropdownOffset={{top: 10}}
+                    baseColor={colors.lightgray}
+                    // renderBase={this.renderBase}
+                    // renderAccessory={this.renderBase}
+                    itemTextStyle={{
+                      marginLeft: 15,
+                      fontFamily: 'CircularStd-Book',
+                    }}
+                    itemPadding={10}
+                    onChangeText={value => this.onFilterAllTasks(value)}
+                  />
+                </View>
+              </View>
+            ) : null}
+
+            {index == 1 ? (
+              <View style={styles.projectFilerView}>
                 <Dropdown
                   // style={{}}
                   label=""
                   labelFontSize={0}
-                  data={dropData}
-                  textColor={colors.dropDownText}
-                  error={''}
-                  animationDuration={0.5}
-                  containerStyle={{width: '100%'}}
-                  overlayStyle={{width: '100%'}}
-                  pickerStyle={{width: '89%', marginTop: 70, marginLeft: 15}}
-                  dropdownPosition={0}
-                  value={selectedTypeAllTasks}
-                  itemColor={'black'}
-                  selectedItemColor={'black'}
-                  dropdownOffset={{top: 10}}
-                  baseColor={colors.projectBgColor}
-                  // renderBase={this.renderBase}
-                  renderAccessory={this.renderBase}
-                  itemTextStyle={{
-                    marginLeft: 15,
-                    fontFamily: 'CircularStd-Book',
-                  }}
-                  itemPadding={10}
-                  onChangeText={value => this.onFilterAllTasks(value)}
-                />
-              ) : (
-                <Dropdown
-                  // style={{}}
-                  label=""
-                  labelFontSize={0}
-                  data={dropData}
+                  data={dropDataMyTasks}
                   textColor={colors.dropDownText}
                   error={''}
                   animationDuration={0.5}
@@ -547,7 +631,23 @@ class TasksTabScreen extends Component {
                   itemPadding={10}
                   onChangeText={value => this.onFilterMyTasks(value)}
                 />
-              )}
+              </View>
+            ) : null}
+            <View style={[styles.addNewFieldView, {flexDirection: 'row'}]}>
+              <Image
+                style={styles.addNewIcon}
+                source={icons.blueAdd}
+                resizeMode={'center'}
+              />
+              <TextInput
+                style={[styles.textInput, {width: '95%'}]}
+                placeholder={'Add a main task...'}
+                value={tasksName}
+                onChangeText={tasksName => this.onNewTasksNameChange(tasksName)}
+                onSubmitEditing={() =>
+                  this.onNewTasksNameSubmit(this.state.tasksName)
+                }
+              />
             </View>
             <FlatList
               style={{marginBottom: EStyleSheet.value('160rem')}}
@@ -561,7 +661,7 @@ class TasksTabScreen extends Component {
             <AddNewTasksScreen
               navigation={this.props.navigation}
               selectedProjectID={this.state.selectedProjectID}
-              onSuccess={(text)=>this.onSuccess(text)}
+              onSuccess={text => this.onSuccess(text)}
             />
           </View>
         )}
@@ -592,6 +692,29 @@ const styles = EStyleSheet.create({
     height: '45rem',
     marginHorizontal: '20rem',
   },
+  filterByText: {
+    fontSize: 16,
+    color: colors.gray,
+    fontWeight: 'bold',
+  },
+  tasksFilterMainView: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginHorizontal: '20rem',
+  },
+  tasksFilerView: {
+    backgroundColor: colors.lightgray,
+    borderRadius: 5,
+    width: '264rem',
+    marginTop: '17rem',
+    marginBottom: '12rem',
+    flexDirection: 'row',
+    alignItems: 'center',
+    // justifyContent: 'center',
+    paddingHorizontal: '12rem',
+    height: '45rem',
+    marginHorizontal: '10rem',
+  },
   textFilter: {
     fontSize: '14rem',
     color: colors.white,
@@ -602,25 +725,31 @@ const styles = EStyleSheet.create({
     // fontWeight: 'bold',
   },
   projectView: {
-    backgroundColor: colors.projectBgColor,
-    borderRadius: 5,
-    height: '60rem',
+    backgroundColor: colors.darkBlue,
+    borderTopStartRadius: '5rem',
+    borderTopEndRadius: '5rem',
+    height: '75rem',
     marginTop: '7rem',
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: '12rem',
     marginHorizontal: '20rem',
   },
-  text: {
+  textMain: {
     fontSize: '11rem',
-    color: colors.projectTaskNameColor,
-    textAlign: 'center',
+    color: colors.white,
     fontWeight: 'bold',
-    lineHeight: '17rem',
+    // lineHeight: '17rem',
+    fontFamily: 'CircularStd-Medium',
+    textAlign: 'left',
+  },
+  text: {
+    fontSize: '9rem',
+    color: colors.white,
+    // lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
     marginLeft: '10rem',
-    fontWeight: '400',
   },
   textDate: {
     fontFamily: 'Circular Std Book',
@@ -691,6 +820,30 @@ const styles = EStyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  addNewFieldView: {
+    backgroundColor: colors.projectBgColor,
+    borderRadius: 5,
+    marginTop: '5rem',
+    marginBottom: '0rem',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: '15rem',
+    height: '57rem',
+    marginHorizontal: '20rem',
+  },
+  addNewIcon: {
+    width: '23rem',
+    height: '23rem',
+  },
+  textInput: {
+    fontSize: '12rem',
+    color: colors.gray,
+    textAlign: 'center',
+    lineHeight: '17rem',
+    fontFamily: 'Circular Std Medium',
+    textAlign: 'left',
+    marginLeft: '5rem',
   },
 });
 
