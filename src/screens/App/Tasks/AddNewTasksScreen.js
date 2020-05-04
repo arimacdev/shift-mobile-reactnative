@@ -306,7 +306,6 @@ class AddNewTasksScreen extends Component {
   }
 
 
-
   renderDatePicker() {
     if (Platform.OS == 'ios') {
       return (
