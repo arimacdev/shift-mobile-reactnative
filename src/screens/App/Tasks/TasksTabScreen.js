@@ -133,6 +133,7 @@ class TasksTabScreen extends Component {
       selectedTypeAllTasks: 'None',
       selectedTypeMyTasks: 'All',
       tasksName: '',
+      filter: false,
     };
   }
 
@@ -310,61 +311,47 @@ class TasksTabScreen extends Component {
   renderSubTasksList(item) {
     let selectedProjectID = this.state.selectedProjectID;
     return (
-        <TouchableOpacity
-          onPress={() =>
-            this.props.navigation.navigate('TasksDetailsScreen', {
-              taskDetails: item,
-              selectedProjectID: selectedProjectID,
-              isFromBoards: false,
-            })
-          }>
-          <View style={styles.projectView}>
-            <Image
-              style={styles.completionIcon}
-              source={
-                item.taskStatus == 'closed'
-                  ? icons.rightCircule
-                  : icons.whiteCircule
-              }
-            />
-            <View style={{flex: 1, marginLeft: 10}}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'baseline',
-                  marginBottom: 5,
-                }}>
-                <Text style={styles.textMain}>MRI - #1</Text>
-                <Text style={styles.text}>{item.taskName}</Text>
-              </View>
-              <View
-                style={{
-                  width: 75,
-                  height: 18,
-                  borderRadius: 10,
-                  backgroundColor: colors.lightRed,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}>
-                <Text style={{fontSize: 8, color: colors.white}}>
-                  Oprational
-                </Text>
-              </View>
+      <TouchableOpacity
+        onPress={() =>
+          this.props.navigation.navigate('TasksDetailsScreen', {
+            taskDetails: item,
+            selectedProjectID: selectedProjectID,
+            isFromBoards: false,
+          })
+        }>
+        <View style={styles.subTasksView}>
+          <Image
+            style={styles.completionIcon}
+            source={
+              item.taskStatus == 'closed'
+                ? icons.rightCircule
+                : icons.circuleGray
+            }
+          />
+          <View style={styles.subTasksMainView}>
+            <View style={styles.subTasksTextView}>
+              <Text style={styles.subTextMain}>MRI - #1</Text>
+              <Text style={styles.subText}>{item.taskName}</Text>
             </View>
-            <View style={styles.statusView}>
-              {this.dateView(item)}
-              {this.userImage(item)}
+            <View style={styles.subTasksLabelView}>
+              <Text style={styles.subTasksLabelText}>Oprational</Text>
             </View>
           </View>
-        </TouchableOpacity>
+          <View style={styles.statusView}>
+            {this.dateView(item)}
+            {this.userImage(item)}
+          </View>
+        </View>
+      </TouchableOpacity>
     );
   }
 
-  renderProjectList(item) {
+  renderTaskList(item, indexMain) {
     let index = this.state.index;
-    let selectedProjectID = this.state.selectedProjectID;
     let filterdDataAllTaks = this.state.filterdDataAllTaks;
     let filterdDataMyTasks = this.state.filterdDataMyTasks;
+    let selectedProjectID = this.state.selectedProjectID;
+    let tasksName = this.state.tasksName;
     return (
       <View>
         <TouchableOpacity
@@ -375,7 +362,24 @@ class TasksTabScreen extends Component {
               isFromBoards: false,
             })
           }>
-          <View style={styles.projectView}>
+          <View
+            style={[
+              styles.projectView,
+              {
+                marginTop:
+                  indexMain == 0
+                    ? 0
+                    : this.state.filter
+                    ? EStyleSheet.value('8rem')
+                    : EStyleSheet.value('20rem'),
+                borderBottomStartRadius: this.state.filter
+                  ? EStyleSheet.value('5rem')
+                  : EStyleSheet.value('0rem'),
+                borderBottomEndRadius: this.state.filter
+                  ? EStyleSheet.value('5rem')
+                  : EStyleSheet.value('0rem'),
+              },
+            ]}>
             <Image
               style={styles.completionIcon}
               source={
@@ -384,28 +388,13 @@ class TasksTabScreen extends Component {
                   : icons.whiteCircule
               }
             />
-            <View style={{flex: 1, marginLeft: 10}}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'baseline',
-                  marginBottom: 5,
-                }}>
+            <View style={styles.tasksMainView}>
+              <View style={styles.tasksHeaderView}>
                 <Text style={styles.textMain}>MRI - #1</Text>
                 <Text style={styles.text}>{item.taskName}</Text>
               </View>
-              <View
-                style={{
-                  width: 75,
-                  height: 18,
-                  borderRadius: 10,
-                  backgroundColor: colors.lightRed,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}>
-                <Text style={{fontSize: 8, color: colors.white}}>
-                  Oprational
-                </Text>
+              <View style={styles.tasksLabelView}>
+                <Text style={styles.tasksLabelText}>Oprational</Text>
               </View>
             </View>
             <View style={styles.statusView}>
@@ -414,12 +403,35 @@ class TasksTabScreen extends Component {
             </View>
           </View>
         </TouchableOpacity>
-        <FlatList
-          style={{marginBottom: EStyleSheet.value('10rem')}}
-          data={index == 0 ? filterdDataAllTaks : filterdDataMyTasks}
-          renderItem={({item}) => this.renderSubTasksList(item)}
-          keyExtractor={item => item.taskId}
-        />
+        {!this.state.filter ? (
+          <View style={styles.tasksInnerView}>
+            <View style={[styles.addNewSubTaskView, {flexDirection: 'row'}]}>
+              <Image
+                style={styles.addSubTaskIcon}
+                source={icons.add}
+                resizeMode={'center'}
+              />
+              <TextInput
+                style={[styles.subTaskTextInput, {width: '95%'}]}
+                placeholder={'Add a subtask...'}
+                placeholderTextColor={colors.white}
+                value={tasksName}
+                onChangeText={tasksName => this.onNewTasksNameChange(tasksName)}
+                onSubmitEditing={() =>
+                  this.onNewTasksNameSubmit(this.state.tasksName)
+                }
+              />
+            </View>
+            <FlatList
+              style={{
+                marginBottom: EStyleSheet.value('15rem'),
+              }}
+              data={index == 0 ? filterdDataAllTaks : filterdDataMyTasks}
+              renderItem={({item}) => this.renderSubTasksList(item)}
+              keyExtractor={item => item.taskId}
+            />
+          </View>
+        ) : null}
       </View>
     );
   }
@@ -528,6 +540,12 @@ class TasksTabScreen extends Component {
       case 'Open':
         searchValue = 'open';
         break;
+    }
+
+    if (searchValue != '') {
+      this.setState({filter: true});
+    } else {
+      this.setState({filter: false});
     }
 
     let filteredData = this.state.allDataAllTaks.filter(function(item) {
@@ -703,26 +721,43 @@ class TasksTabScreen extends Component {
                 />
               </View>
             ) : null}
-            <View style={[styles.addNewFieldView, {flexDirection: 'row'}]}>
-              <Image
-                style={styles.addNewIcon}
-                source={icons.blueAdd}
-                resizeMode={'center'}
-              />
-              <TextInput
-                style={[styles.textInput, {width: '95%'}]}
-                placeholder={'Add a main task...'}
-                value={tasksName}
-                onChangeText={tasksName => this.onNewTasksNameChange(tasksName)}
-                onSubmitEditing={() =>
-                  this.onNewTasksNameSubmit(this.state.tasksName)
-                }
-              />
-            </View>
+            {this.state.filter ? (
+              <View style={styles.filterMainView}>
+                <View style={styles.filterTextView}>
+                  <Text style={styles.filterText}>aaaa</Text>
+                </View>
+                <View
+                  style={styles.filterIconView}>
+                  <Image
+                    style={styles.filterIcon}
+                    source={icons.filterIcon}
+                  />
+                </View>
+              </View>
+            ) : (
+              <View style={[styles.addNewFieldView, {flexDirection: 'row'}]}>
+                <Image
+                  style={styles.addNewIcon}
+                  source={icons.blueAdd}
+                  resizeMode={'center'}
+                />
+                <TextInput
+                  style={[styles.textInput, {width: '95%'}]}
+                  placeholder={'Add a main task...'}
+                  value={tasksName}
+                  onChangeText={tasksName =>
+                    this.onNewTasksNameChange(tasksName)
+                  }
+                  onSubmitEditing={() =>
+                    this.onNewTasksNameSubmit(this.state.tasksName)
+                  }
+                />
+              </View>
+            )}
             <FlatList
-              style={{marginBottom: EStyleSheet.value('160rem')}}
+              style={styles.tasksFlatList}
               data={index == 0 ? filterdDataAllTaks : filterdDataMyTasks}
-              renderItem={({item}) => this.renderProjectList(item)}
+              renderItem={({item, index}) => this.renderTaskList(item, index)}
               keyExtractor={item => item.taskId}
             />
           </View>
@@ -788,22 +823,29 @@ const styles = EStyleSheet.create({
   textFilter: {
     fontSize: '14rem',
     color: colors.white,
-    textAlign: 'center',
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'center',
-    // fontWeight: 'bold',
   },
   projectView: {
     backgroundColor: colors.darkBlue,
     borderTopStartRadius: '5rem',
     borderTopEndRadius: '5rem',
     height: '75rem',
-    marginTop: '7rem',
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: '12rem',
     marginHorizontal: '20rem',
+  },
+  subTasksView: {
+    backgroundColor: colors.white,
+    borderRadius: '5rem',
+    height: '65rem',
+    marginTop: '7rem',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: '12rem',
+    marginHorizontal: '10rem',
   },
   textMain: {
     fontSize: '11rem',
@@ -821,11 +863,27 @@ const styles = EStyleSheet.create({
     textAlign: 'left',
     marginLeft: '10rem',
   },
+  subTextMain: {
+    fontSize: '11rem',
+    color: colors.black,
+    fontWeight: 'bold',
+    // lineHeight: '17rem',
+    fontFamily: 'CircularStd-Medium',
+    textAlign: 'left',
+  },
+  subText: {
+    fontSize: '9rem',
+    color: colors.gray,
+    // lineHeight: '17rem',
+    fontFamily: 'CircularStd-Medium',
+    textAlign: 'left',
+    marginLeft: '5rem',
+  },
   textDate: {
     fontFamily: 'Circular Std Book',
     fontSize: '9rem',
     fontWeight: '400',
-    textAlign: 'center',
+    // textAlign: 'center',
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
@@ -835,7 +893,7 @@ const styles = EStyleSheet.create({
   avatarIcon: {
     width: '20rem',
     height: '20rem',
-    marginLeft: 10,
+    marginLeft: '10rem',
   },
   statusView: {
     // backgroundColor: colors.gray,
@@ -893,9 +951,9 @@ const styles = EStyleSheet.create({
   },
   addNewFieldView: {
     backgroundColor: colors.projectBgColor,
-    borderRadius: 5,
+    borderRadius: '5rem',
     marginTop: '5rem',
-    marginBottom: '0rem',
+    marginBottom: '10rem',
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: '15rem',
@@ -903,18 +961,122 @@ const styles = EStyleSheet.create({
     marginHorizontal: '20rem',
   },
   addNewIcon: {
-    width: '23rem',
-    height: '23rem',
+    width: '25rem',
+    height: '25rem',
   },
   textInput: {
     fontSize: '12rem',
     color: colors.gray,
-    textAlign: 'center',
     lineHeight: '17rem',
     fontFamily: 'Circular Std Medium',
     textAlign: 'left',
     marginLeft: '5rem',
   },
+  tasksMainView: {
+    flex: 1,
+    marginLeft: '10rem',
+  },
+  tasksHeaderView: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
+    marginBottom: 5,
+  },
+  tasksLabelView: {
+    width: '75rem',
+    height: '18rem',
+    borderRadius: '10rem',
+    backgroundColor: colors.lightRed,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  tasksLabelText: {
+    fontSize: '8rem',
+    color: colors.white,
+  },
+  tasksInnerView: {
+    backgroundColor: colors.projectBgColor,
+    marginHorizontal: '20rem',
+    borderBottomStartRadius: '5rem',
+    borderBottomEndRadius: '5rem',
+  },
+  addNewSubTaskView: {
+    backgroundColor: colors.lightBlue,
+    borderRadius: '5rem',
+    marginTop: '8rem',
+    marginBottom: '0rem',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: '10rem',
+    height: '40rem',
+    marginHorizontal: '10rem',
+  },
+  addSubTaskIcon: {
+    width: '20rem',
+    height: '20rem',
+  },
+  subTasksMainView: {
+    flex: 1,
+    marginLeft: '10rem',
+  },
+  subTasksTextView: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
+    marginBottom: '5rem',
+  },
+  subTaskTextInput: {
+    fontSize: '10rem',
+    color: colors.white,
+    lineHeight: '17rem',
+    fontFamily: 'Circular Std Medium',
+    textAlign: 'left',
+    marginLeft: '5rem',
+  },
+  subTasksLabelView: {
+    width: '75rem',
+    height: '18rem',
+    borderRadius: '10rem',
+    backgroundColor: colors.lightRed,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  subTasksLabelText: {
+    fontSize: '8rem',
+    color: colors.white,
+  },
+  tasksFlatList: {
+    marginBottom: '220rem',
+    marginTop: '0rem',
+  },
+  filterMainView: {
+    flexDirection: 'row',
+    marginHorizontal: '20rem',
+    marginBottom: '10rem',
+  },
+  filterTextView: {
+    backgroundColor: colors.projectBgColor,
+    flex: 1,
+    height: '45rem',
+    borderRadius: '5rem',
+    justifyContent: 'center',
+    paddingLeft: '20rem',
+  },
+  filterText: {
+    color: colors.darkBlue,
+  },
+  filterIconView:{
+    width: '45rem',
+    height: '45rem',
+    padding: '10rem',
+    backgroundColor: colors.darkBlue,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: '5rem',
+    marginLeft: '10rem',
+  },
+  filterIcon:{
+    width: '20rem',
+    height: '20rem',
+  }
 });
 
 const mapStateToProps = state => {
