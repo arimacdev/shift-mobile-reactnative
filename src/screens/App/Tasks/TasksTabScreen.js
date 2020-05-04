@@ -307,50 +307,120 @@ class TasksTabScreen extends Component {
     }
   };
 
-  renderProjectList(item) {
+  renderSubTasksList(item) {
     let selectedProjectID = this.state.selectedProjectID;
     return (
-      <TouchableOpacity
-        onPress={() =>
-          this.props.navigation.navigate('TasksDetailsScreen', {
-            taskDetails: item,
-            selectedProjectID: selectedProjectID,
-            isFromBoards: false,
-          })
-        }>
-        <View style={styles.projectView}>
-          <Image
-            style={styles.completionIcon}
-            source={
-              item.taskStatus == 'closed'
-                ? icons.rightCircule
-                : icons.whiteCircule
-            }
-          />
-          <View style={{flex: 1, marginLeft: 10,}}>
-            <View
-              style={{flexDirection: 'row', alignItems: 'baseline', marginBottom:5}}>
-              <Text style={styles.textMain}>MRI - #1</Text>
-              <Text style={styles.text}>{item.taskName}</Text>
+        <TouchableOpacity
+          onPress={() =>
+            this.props.navigation.navigate('TasksDetailsScreen', {
+              taskDetails: item,
+              selectedProjectID: selectedProjectID,
+              isFromBoards: false,
+            })
+          }>
+          <View style={styles.projectView}>
+            <Image
+              style={styles.completionIcon}
+              source={
+                item.taskStatus == 'closed'
+                  ? icons.rightCircule
+                  : icons.whiteCircule
+              }
+            />
+            <View style={{flex: 1, marginLeft: 10}}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'baseline',
+                  marginBottom: 5,
+                }}>
+                <Text style={styles.textMain}>MRI - #1</Text>
+                <Text style={styles.text}>{item.taskName}</Text>
+              </View>
+              <View
+                style={{
+                  width: 75,
+                  height: 18,
+                  borderRadius: 10,
+                  backgroundColor: colors.lightRed,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Text style={{fontSize: 8, color: colors.white}}>
+                  Oprational
+                </Text>
+              </View>
             </View>
-            <View
-              style={{
-                width: 70,
-                height: 15,
-                borderRadius: 10,
-                backgroundColor: colors.lightRed,
-                justifyContent:'center',
-                alignItems:'center'
-              }}>
-              <Text style={{fontSize:8,color:colors.white}}>Oprational</Text>
+            <View style={styles.statusView}>
+              {this.dateView(item)}
+              {this.userImage(item)}
             </View>
           </View>
-          <View style={styles.statusView}>
-            {this.dateView(item)}
-            {this.userImage(item)}
+        </TouchableOpacity>
+    );
+  }
+
+  renderProjectList(item) {
+    let index = this.state.index;
+    let selectedProjectID = this.state.selectedProjectID;
+    let filterdDataAllTaks = this.state.filterdDataAllTaks;
+    let filterdDataMyTasks = this.state.filterdDataMyTasks;
+    return (
+      <View>
+        <TouchableOpacity
+          onPress={() =>
+            this.props.navigation.navigate('TasksDetailsScreen', {
+              taskDetails: item,
+              selectedProjectID: selectedProjectID,
+              isFromBoards: false,
+            })
+          }>
+          <View style={styles.projectView}>
+            <Image
+              style={styles.completionIcon}
+              source={
+                item.taskStatus == 'closed'
+                  ? icons.rightCircule
+                  : icons.whiteCircule
+              }
+            />
+            <View style={{flex: 1, marginLeft: 10}}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'baseline',
+                  marginBottom: 5,
+                }}>
+                <Text style={styles.textMain}>MRI - #1</Text>
+                <Text style={styles.text}>{item.taskName}</Text>
+              </View>
+              <View
+                style={{
+                  width: 75,
+                  height: 18,
+                  borderRadius: 10,
+                  backgroundColor: colors.lightRed,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Text style={{fontSize: 8, color: colors.white}}>
+                  Oprational
+                </Text>
+              </View>
+            </View>
+            <View style={styles.statusView}>
+              {this.dateView(item)}
+              {this.userImage(item)}
+            </View>
           </View>
-        </View>
-      </TouchableOpacity>
+        </TouchableOpacity>
+        <FlatList
+          style={{marginBottom: EStyleSheet.value('10rem')}}
+          data={index == 0 ? filterdDataAllTaks : filterdDataMyTasks}
+          renderItem={({item}) => this.renderSubTasksList(item)}
+          keyExtractor={item => item.taskId}
+        />
+      </View>
     );
   }
 
@@ -781,8 +851,8 @@ const styles = EStyleSheet.create({
     height: '13rem',
   },
   completionIcon: {
-    width: '40rem',
-    height: '40rem',
+    width: '35rem',
+    height: '35rem',
   },
   bottomBarContainer: {
     position: 'absolute',
