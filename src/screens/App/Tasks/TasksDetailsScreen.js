@@ -192,6 +192,7 @@ class TasksDetailsScreen extends Component {
       isFromBoards: false,
       selectedSprint: '',
       previousSprintID : '',
+      isDateNeedLoading: false
     };
   }
 

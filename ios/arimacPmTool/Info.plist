@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>arimacPmTool</string>
+	<string>Arimac PM Tool</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -32,7 +32,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -49,13 +49,13 @@
 		</dict>
 	</dict>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>&apos;PM Tool&apos; will use your location to send push notifications</string>
+	<string>PM Tool will use your location to send push notifications</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>&apos;PM Tool&apos; would like access to your current locatoin to send push 		notifications</string>
+	<string>PM Tool would like access to your current locatoin to send push notifications</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>&apos;PM Tool&apos; would like access to your photo gallery to upload files to tasks</string>
+	<string>PM Tool would like access to your photo gallery to upload files to tasks</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>&apos;PM Tool&apos; would like access to your photo gallery to upload files to tasks</string>
+	<string>PM Tool would like access to your photo gallery to upload files to tasks</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>CircularStd-Medium.ttf</string>
