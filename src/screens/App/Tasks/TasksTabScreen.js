@@ -23,6 +23,7 @@ import moment from 'moment';
 import FadeIn from 'react-native-fade-in-image';
 import {SkypeIndicator} from 'react-native-indicators';
 import {NavigationEvents} from 'react-navigation';
+import PopupMenuAssignee from '../../../components/PopupMenuAssignee';
 
 const Placeholder = () => (
   <View style={styles.landing}>
@@ -32,36 +33,24 @@ const Placeholder = () => (
 
 let dropData = [
   {
-    id: 'none',
+    id: 'None',
     value: 'None',
   },
   {
-    id: 'Pending',
-    value: 'Pending',
+    id: 'Date',
+    value: 'Date',
   },
   {
-    id: 'Implementing',
-    value: 'Implementing',
+    id: 'Assignee',
+    value: 'Assignee',
   },
   {
-    id: 'QA',
-    value: 'QA',
+    id: 'Task type',
+    value: 'Task type',
   },
   {
-    id: 'Ready to Deploy',
-    value: 'Ready to Deploy',
-  },
-  {
-    id: 'Reopened',
-    value: 'Reopened',
-  },
-  {
-    id: 'Deployed',
-    value: 'Deployed',
-  },
-  {
-    id: 'Closed',
-    value: 'Closed',
+    id: 'Task status',
+    value: 'Task status',
   },
 ];
 
@@ -337,7 +326,6 @@ class TasksTabScreen extends Component {
 
   renderSubTasksList(item) {
     let selectedProjectID = this.state.selectedProjectID;
-    console.log('dddddddddddddddddddddd', item);
     return (
       <TouchableOpacity
         onPress={() =>
@@ -390,7 +378,6 @@ class TasksTabScreen extends Component {
     let filterdDataMyTasks = this.state.filterdDataMyTasks;
     let selectedProjectID = this.state.selectedProjectID;
     let tasksName = this.state.tasksName;
-    console.log('vvvvvvvvvvvvv', item);
     return (
       <View>
         <TouchableOpacity
@@ -569,36 +556,26 @@ class TasksTabScreen extends Component {
       case 'None':
         searchValue = '';
         break;
-      case 'Pending':
-        searchValue = 'pending';
+      case 'Date':
+        searchValue = 'Date';
         break;
-      case 'Implementing':
-        searchValue = 'implementing';
+      case 'Assignee':
+        searchValue = 'Assignee';
         break;
-      case 'QA':
-        searchValue = 'qa';
+      case 'Task type':
+        searchValue = 'Task type';
         break;
-      case 'Ready to Deploy':
-        searchValue = 'readyToDeploy';
+      case 'Task status':
+        searchValue = 'Task status';
         break;
-      case 'Reopened':
-        searchValue = 'reOpened';
-        break;
-      case 'Deployed':
-        searchValue = 'deployed';
-        break;
-      case 'Closed':
-        searchValue = 'closed';
-        break;
-      case 'Open':
-        searchValue = 'open';
+      default:
         break;
     }
 
     if (searchValue != '') {
-      this.setState({filter: true});
+      this.setState({filter: true, selectedTypeAllTasks: key});
     } else {
-      this.setState({filter: false});
+      this.setState({filter: false, selectedTypeAllTasks: key});
     }
 
     // let filteredData = this.state.allDataAllTaks.filter(function(item) {
@@ -691,6 +668,37 @@ class TasksTabScreen extends Component {
     }
   }
 
+  onSelectUser = async item => {
+    this.setState({
+      // visiblePeopleModal: false,
+      userName: item.label,
+      userID: item.key,
+      // popupMenuOpen:false
+    });
+    await this.props.addPeopleModal(false);
+  };
+
+  renderFilterType() {
+    let key = this.state.selectedTypeAllTasks;
+
+    switch (key) {
+      case 'Date':
+        return (
+          <View style={styles.filterTextView}>
+            <Text style={styles.filterText}>From - To</Text>
+          </View>
+        );
+      case 'Assignee':
+        return (
+          <PopupMenuAssignee
+            onSelect={item => this.onSelectUser(item)}
+          />
+        );
+      default:
+        break;
+    }
+  }
+
   render() {
     let index = this.state.index;
     let filterdDataAllTaks = this.state.filterdDataAllTaks;
@@ -700,8 +708,6 @@ class TasksTabScreen extends Component {
     let selectedTypeAllTasks = this.state.selectedTypeAllTasks;
     let selectedTypeMyTasks = this.state.selectedTypeMyTasks;
     let tasksName = this.state.tasksName;
-
-    console.log('wwwwwwwwwwwwwwwwwwwwww', filterdDataAllTaks);
 
     return (
       <View style={styles.backgroundImage}>
@@ -780,9 +786,7 @@ class TasksTabScreen extends Component {
             ) : null}
             {this.state.filter ? (
               <View style={styles.filterMainView}>
-                <View style={styles.filterTextView}>
-                  <Text style={styles.filterText}>Name</Text>
-                </View>
+                {this.renderFilterType()}
                 <View style={styles.filterIconView}>
                   <Image style={styles.filterIcon} source={icons.filterIcon} />
                 </View>
@@ -1096,7 +1100,7 @@ const styles = EStyleSheet.create({
     color: colors.white,
   },
   tasksFlatList: {
-    marginBottom: '220rem',
+    marginBottom: '230rem',
     marginTop: '0rem',
   },
   filterMainView: {
