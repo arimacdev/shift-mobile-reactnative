@@ -118,6 +118,154 @@ let bottomData = [
   },
 ];
 
+let allTasks = {
+  "message": "success",
+  "data": [
+      {
+          "parentTask": {
+              "taskId": "27193436-39d3-4328-9eef-c2fe87e10019",
+              "taskName": "Paten Task 2",
+              "projectId": "ba77bb8f-22a7-4b43-85ab-5f55c3d7324d",
+              "taskAssignee": "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
+              "taskInitiator": "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
+              "taskNote": "dummy",
+              "taskStatus": "pending",
+              "taskCreatedAt": "2020-05-04T09:39:02.000+0000",
+              "taskDueDateAt": "2020-04-02T11:00:00.000+0000",
+              "taskReminderAt": "2020-04-04T19:30:00.000+0000",
+              "taskAssigneeProfileImage": "https://arimac-pmtool.s3-ap-southeast-1.amazonaws.com/profileImage_1584904875259_image_4.jpg",
+              "sprintId": "53d6dccf-2f86-4ce5-a583-fa32816a252c",
+              "issueType": "development",
+              "parentId": "961f6f2a-ebca-4493-b5cf-c29be7abac1f",
+              "isParent": true,
+              "deleted": false
+          },
+          "childTasks": []
+      },
+      {
+          "parentTask": {
+              "taskId": "65dfd159-cb7b-4add-8f35-51c758994985",
+              "taskName": "Time test task 1213",
+              "projectId": "ba77bb8f-22a7-4b43-85ab-5f55c3d7324d",
+              "taskAssignee": "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
+              "taskInitiator": "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
+              "taskNote": "",
+              "taskStatus": "closed",
+              "taskCreatedAt": "2020-05-04T10:32:00.000+0000",
+              "taskDueDateAt": "2020-04-02T22:00:00.000+0000",
+              "taskReminderAt": "2024-03-28T12:25:00.000+0000",
+              "taskAssigneeProfileImage": "https://arimac-pmtool.s3-ap-southeast-1.amazonaws.com/profileImage_1584904875259_image_4.jpg",
+              "sprintId": "default",
+              "issueType": "development",
+              "parentId": null,
+              "isParent": true,
+              "deleted": false
+          },
+          "childTasks": [
+              {
+                  "taskId": "da2d353f-76fa-42d7-a4fd-74734f17fa38",
+                  "taskName": "Child 1",
+                  "projectId": "ba77bb8f-22a7-4b43-85ab-5f55c3d7324d",
+                  "taskAssignee": "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
+                  "taskInitiator": "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
+                  "taskNote": null,
+                  "taskStatus": "pending",
+                  "taskCreatedAt": "2020-04-30T07:32:53.000+0000",
+                  "taskDueDateAt": null,
+                  "taskReminderAt": null,
+                  "taskAssigneeProfileImage": "https://arimac-pmtool.s3-ap-southeast-1.amazonaws.com/profileImage_1584904875259_image_4.jpg",
+                  "sprintId": "53d6dccf-2f86-4ce5-a583-fa32816a252c",
+                  "issueType": "development",
+                  "parentId": "65dfd159-cb7b-4add-8f35-51c758994985",
+                  "isParent": false,
+                  "deleted": false
+              }
+          ]
+      },
+      {
+          "parentTask": {
+              "taskId": "f67c9c7d-5a6d-4e8b-99af-99976b44d610",
+              "taskName": "updated 123",
+              "projectId": "ba77bb8f-22a7-4b43-85ab-5f55c3d7324d",
+              "taskAssignee": "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
+              "taskInitiator": "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
+              "taskNote": null,
+              "taskStatus": "pending",
+              "taskCreatedAt": "2020-05-04T09:45:52.000+0000",
+              "taskDueDateAt": "1970-01-01T05:30:00.000+0000",
+              "taskReminderAt": "2020-04-30T12:49:00.000+0000",
+              "taskAssigneeProfileImage": "https://arimac-pmtool.s3-ap-southeast-1.amazonaws.com/profileImage_1584904875259_image_4.jpg",
+              "sprintId": "53d6dccf-2f86-4ce5-a583-fa32816a252c",
+              "issueType": "qa",
+              "parentId": "",
+              "isParent": true,
+              "deleted": false
+          },
+          "childTasks": [
+              {
+                  "taskId": "d918638c-52aa-4e5d-a230-8b7aef9d5f71",
+                  "taskName": "Child 2",
+                  "projectId": "ba77bb8f-22a7-4b43-85ab-5f55c3d7324d",
+                  "taskAssignee": "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
+                  "taskInitiator": "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
+                  "taskNote": null,
+                  "taskStatus": "pending",
+                  "taskCreatedAt": "2020-05-04T09:38:48.000+0000",
+                  "taskDueDateAt": "2020-04-17T13:22:00.000+0000",
+                  "taskReminderAt": "2020-04-27T16:45:26.000+0000",
+                  "taskAssigneeProfileImage": "https://arimac-pmtool.s3-ap-southeast-1.amazonaws.com/profileImage_1584904875259_image_4.jpg",
+                  "sprintId": "53d6dccf-2f86-4ce5-a583-fa32816a252c",
+                  "issueType": "development",
+                  "parentId": "f67c9c7d-5a6d-4e8b-99af-99976b44d610",
+                  "isParent": false,
+                  "deleted": false
+              },
+              {
+                  "taskId": "f76b766a-f57e-46ec-8a4f-3beec1138cea",
+                  "taskName": "Child 3",
+                  "projectId": "ba77bb8f-22a7-4b43-85ab-5f55c3d7324d",
+                  "taskAssignee": "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
+                  "taskInitiator": "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
+                  "taskNote": null,
+                  "taskStatus": "pending",
+                  "taskCreatedAt": "2020-05-04T06:15:23.000+0000",
+                  "taskDueDateAt": null,
+                  "taskReminderAt": null,
+                  "taskAssigneeProfileImage": "https://arimac-pmtool.s3-ap-southeast-1.amazonaws.com/profileImage_1584904875259_image_4.jpg",
+                  "sprintId": "53d6dccf-2f86-4ce5-a583-fa32816a252c",
+                  "issueType": "development",
+                  "parentId": "f67c9c7d-5a6d-4e8b-99af-99976b44d610",
+                  "isParent": false,
+                  "deleted": false
+              }
+          ]
+      },
+      {
+          "parentTask": {
+              "taskId": "hg",
+              "taskName": "test",
+              "projectId": "ba77bb8f-22a7-4b43-85ab-5f55c3d7324d",
+              "taskAssignee": "fbf2e299-ff38-409f-98f3-ca0c70234d36",
+              "taskInitiator": "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
+              "taskNote": null,
+              "taskStatus": "pending",
+              "taskCreatedAt": "2020-05-04T10:54:55.000+0000",
+              "taskDueDateAt": "2020-04-24T07:49:00.000+0000",
+              "taskReminderAt": "2020-04-15T16:45:00.000+0000",
+              "taskAssigneeProfileImage": "https://arimac-pmtool.s3-ap-southeast-1.amazonaws.com/profileImage_1587381571910_Buddhika Priyabhashana.png",
+              "sprintId": "default",
+              "issueType": "development",
+              "parentId": null,
+              "isParent": true,
+              "deleted": false
+          },
+          "childTasks": []
+      }
+  ],
+  "status": "OK",
+  "timestamp": "Mon May 04 16:26:52 IST 2020"
+}
+
 class TasksTabScreen extends Component {
   constructor(props) {
     super(props);
@@ -165,7 +313,7 @@ class TasksTabScreen extends Component {
       });
 
       this.setState({
-        filterdDataAllTaks: filteredDataAllTask,
+        filterdDataAllTaks: allTasks.data,
         allDataAllTaks: this.props.allTaskByProject,
       });
     }
@@ -177,7 +325,7 @@ class TasksTabScreen extends Component {
       this.props.allTaskByProject.length == 0
     ) {
       this.setState({
-        filterdDataAllTaks: this.props.allTaskByProject,
+        filterdDataAllTaks: allTasks.data,
         allDataAllTaks: this.props.allTaskByProject,
       });
     }
@@ -310,6 +458,7 @@ class TasksTabScreen extends Component {
 
   renderSubTasksList(item) {
     let selectedProjectID = this.state.selectedProjectID;
+    console.log("dddddddddddddddddddddd",item);
     return (
       <TouchableOpacity
         onPress={() =>
@@ -352,6 +501,7 @@ class TasksTabScreen extends Component {
     let filterdDataMyTasks = this.state.filterdDataMyTasks;
     let selectedProjectID = this.state.selectedProjectID;
     let tasksName = this.state.tasksName;
+    console.log("vvvvvvvvvvvvv",item)
     return (
       <View>
         <TouchableOpacity
@@ -390,11 +540,11 @@ class TasksTabScreen extends Component {
             />
             <View style={styles.tasksMainView}>
               <View style={styles.tasksHeaderView}>
-                <Text style={styles.textMain}>MRI - #1</Text>
-                <Text style={styles.text}>{item.taskName}</Text>
+                <Text style={styles.textMain}>{item.parentTask.taskName}</Text>
+                <Text style={styles.text}>{item.parentTask.taskName}</Text>
               </View>
               <View style={styles.tasksLabelView}>
-                <Text style={styles.tasksLabelText}>Oprational</Text>
+                <Text style={styles.tasksLabelText}>{item.parentTask.issueType}</Text>
               </View>
             </View>
             <View style={styles.statusView}>
@@ -426,7 +576,7 @@ class TasksTabScreen extends Component {
               style={{
                 marginBottom: EStyleSheet.value('15rem'),
               }}
-              data={index == 0 ? filterdDataAllTaks : filterdDataMyTasks}
+              data={index == 0 ? item.childTasks : filterdDataMyTasks}
               renderItem={({item}) => this.renderSubTasksList(item)}
               keyExtractor={item => item.taskId}
             />
@@ -758,7 +908,7 @@ class TasksTabScreen extends Component {
               style={styles.tasksFlatList}
               data={index == 0 ? filterdDataAllTaks : filterdDataMyTasks}
               renderItem={({item, index}) => this.renderTaskList(item, index)}
-              keyExtractor={item => item.taskId}
+              keyExtractor={item => item.parentTask.taskId}
             />
           </View>
         ) : (
