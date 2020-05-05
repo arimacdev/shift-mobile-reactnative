@@ -198,7 +198,7 @@ class TasksTabScreen extends Component {
     if (
       prevProps.myTaskByProjectLoading !== this.props.myTaskByProjectLoading &&
       this.props.myTaskByProject &&
-      this.props.myTaskByProject.length == 0
+      this.props.myTaskByProject.length  > 0
     ) {
       this.setState({
         filterdDataMyTasks: this.props.myTaskByProject,
@@ -206,20 +206,6 @@ class TasksTabScreen extends Component {
       });
     }
   }
-
-  // componentWillReceiveProps(nextProps) {
-  //   let selectedProjectID = this.props.selectedProjectID;
-  //   if (this.props.isActive !== nextProps.isActive) {
-  //     this.setState(
-  //       {
-  //         selectedProjectID: selectedProjectID,
-  //       },
-  //       () => {
-  //         this.getAllTaskInProject();
-  //       },
-  //     );
-  //   }
-  // }
 
   componentDidMount() {
     // let selectedProjectID = this.props.selectedProjectID;
@@ -288,6 +274,33 @@ class TasksTabScreen extends Component {
       this.props.getMyTaskInProjects(userID, selectedProjectID);
     });
   }
+
+  dateViewMyAndFilter = function(item) {
+    let date = item.taskDueDateAt;
+    let currentTime = moment().format();
+    let dateText = '';
+    let color = '';
+
+    let taskStatus = item.taskStatus;
+    if (taskStatus == 'closed' && date) {
+      // task complete
+      dateText = moment(date).format('YYYY-MM-DD');
+      color = '#36DD5B';
+    } else if (taskStatus != 'closed' && date) {
+      if (moment(date).isAfter(currentTime)) {
+        dateText = moment(date).format('YYYY-MM-DD');
+        color = '#0C0C5A';
+      } else {
+        dateText = moment(date).format('YYYY-MM-DD');
+        color = '#ff6161';
+      }
+    } else {
+      dateText = 'Add Due Date';
+      color = item.isParent ? '#ffffff' :'#000000';
+    }
+
+    return <Text style={[styles.textDate, {color: color}]}>{dateText}</Text>;
+  };
 
   dateView = function(item) {
     let date = item.taskDueDateAt;
@@ -511,6 +524,54 @@ class TasksTabScreen extends Component {
           </View>
         ) : null}
       </View>
+    );
+  }
+
+  renderMyTasksAndFilterTaskList(item, indexMain) {
+    let selectedProjectID = this.state.selectedProjectID;
+    return (
+      <TouchableOpacity
+        onPress={() =>
+          this.props.navigation.navigate('TasksDetailsScreen', {
+            taskDetails: item,
+            selectedProjectID: selectedProjectID,
+            isFromBoards: false,
+          })
+        }>
+        <View style={ item.isParent ? styles.parentTaskView : styles.childTasksView}>
+          <Image
+            style={styles.completionIcon}
+            source={
+              item.taskStatus == 'closed'
+                ? icons.rightCircule
+                : icons.circuleGray
+            }
+          />
+          <View style={styles.subTasksMainView}>
+            <View style={styles.subTasksTextView}>
+              {/* <Text style={styles.subTextMain}>
+                {this.state.selectedProjectName}
+              </Text>
+              <Text style={styles.subText}>{item.taskName}</Text> */}
+
+              <Text style={ item.isParent ? styles.parentTextMain : styles.subTextMain}>{item.taskName}</Text>
+            </View>
+            <View
+              style={[
+                styles.subTasksLabelView,
+                {
+                  backgroundColor: this.issueTypeColor(item.issueType),
+                },
+              ]}>
+              <Text style={styles.subTasksLabelText}>{item.issueType}</Text>
+            </View>
+          </View>
+          <View style={styles.statusView}>
+            {this.dateViewMyAndFilter(item)}
+            {this.userImage(item)}
+          </View>
+        </View>
+      </TouchableOpacity>
     );
   }
 
@@ -931,70 +992,57 @@ class TasksTabScreen extends Component {
                 />
               </View>
             </View>
-
-            {/* {index == 1 ? (
-              <View style={styles.projectFilerView}>
-                <Dropdown
-                  // style={{}}
-                  label=""
-                  labelFontSize={0}
-                  data={dropDataMyTasks}
-                  textColor={colors.dropDownText}
-                  error={''}
-                  animationDuration={0.5}
-                  containerStyle={{width: '100%'}}
-                  overlayStyle={{width: '100%'}}
-                  pickerStyle={{width: '89%', marginTop: 70, marginLeft: 15}}
-                  dropdownPosition={0}
-                  value={selectedTypeMyTasks}
-                  itemColor={'black'}
-                  selectedItemColor={'black'}
-                  dropdownOffset={{top: 10}}
-                  baseColor={colors.projectBgColor}
-                  // renderBase={this.renderBase}
-                  renderAccessory={this.renderBase}
-                  itemTextStyle={{
-                    marginLeft: 15,
-                    fontFamily: 'CircularStd-Book',
-                  }}
-                  itemPadding={10}
-                  onChangeText={value => this.onFilterMyTasks(value)}
-                />
-              </View>
-            ) : null} */}
-            {this.state.filter ? (
-              <View style={styles.filterMainView}>
-                {this.renderFilterType()}
-                <View style={styles.filterIconView}>
-                  <Image style={styles.filterIcon} source={icons.filterIcon} />
+            {
+              this.state.filter ? 
+                <View style={styles.filterMainView}>
+                  {this.renderFilterType()}
+                  <View style={styles.filterIconView}>
+                    <Image style={styles.filterIcon} source={icons.filterIcon} />
+                  </View>
                 </View>
-              </View>
-            ) : (
-              <View style={[styles.addNewFieldView, {flexDirection: 'row'}]}>
-                <Image
-                  style={styles.addNewIcon}
-                  source={icons.blueAdd}
-                  resizeMode={'center'}
-                />
-                <TextInput
-                  style={[styles.textInput, {width: '95%'}]}
-                  placeholder={'Add a main task...'}
-                  value={tasksName}
-                  onChangeText={tasksName =>
-                    this.onNewTasksNameChange(tasksName)
-                  }
-                  onSubmitEditing={() =>
-                    this.onNewTasksNameSubmit(this.state.tasksName)
-                  }
-                />
-              </View>
-            )}
-            <FlatList
-              style={styles.tasksFlatList}
-              data={index == 0 ? filterdDataAllTaks : filterdDataMyTasks}
-              renderItem={({item, index}) => this.renderTaskList(item, index)}
-              keyExtractor={item => item.parentTask.taskId}
-            />
+                 : 
+                this.state.index == 0 ? 
+                <View style={[styles.addNewFieldView, {flexDirection: 'row'}]}>
+                  <Image
+                    style={styles.addNewIcon}
+                    source={icons.blueAdd}
+                    resizeMode={'center'}
+                  />
+                  <TextInput
+                    style={[styles.textInput, {width: '95%'}]}
+                    placeholder={'Add a main task...'}
+                    value={tasksName}
+                    onChangeText={tasksName =>
+                      this.onNewTasksNameChange(tasksName)
+                    }
+                    onSubmitEditing={() =>
+                      this.onNewTasksNameSubmit(this.state.tasksName)
+                    }
+                  />
+                </View>
+                : null
+            }
+
+            {/* render all tasks without filters */}
+            { index == 0 &&
+              <FlatList
+                style={styles.tasksFlatList}
+                data={filterdDataAllTaks}
+                renderItem={({item, index}) => this.renderTaskList(item, index)}
+                keyExtractor={item => item.parentTask.taskId}
+              />
+            }
+
+            {/* render my tasks*/}
+            { index == 1 &&
+              <FlatList
+                style={styles.myTasksFlatList}
+                data={filterdDataMyTasks}
+                renderItem={({item, index}) => this.renderMyTasksAndFilterTaskList(item, index)}
+                keyExtractor={item => item.taskId}
+              />
+            }
+            
           </View>
         ) : (
           <View>
@@ -1106,6 +1154,15 @@ const styles = EStyleSheet.create({
     // lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
+  },
+  parentTextMain: {
+    fontSize: '11rem',
+    color: '#080848',
+    fontWeight: 'bold',
+    // lineHeight: '17rem',
+    fontFamily: 'CircularStd-Medium',
+    textAlign: 'left',
+    color: colors.white
   },
   subText: {
     fontSize: '9rem',
@@ -1282,6 +1339,10 @@ const styles = EStyleSheet.create({
     marginBottom: '230rem',
     marginTop: '0rem',
   },
+  myTasksFlatList: {
+    marginBottom: '160rem',
+    marginTop: '0rem',
+  },
   filterMainView: {
     flexDirection: 'row',
     marginHorizontal: '20rem',
@@ -1369,6 +1430,26 @@ const styles = EStyleSheet.create({
   modalStyle: {
     backgroundColor: colors.white,
     marginVertical: 50,
+  },
+  parentTaskView: {
+    backgroundColor: colors.darkBlue,
+    borderRadius: '5rem',
+    height: '65rem',
+    marginTop: '7rem',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: '12rem',
+    marginHorizontal: '10rem',
+  },
+  childTasksView: {
+    backgroundColor:colors.projgbcolr,
+    borderRadius: '5rem',
+    height: '65rem',
+    marginTop: '7rem',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: '12rem',
+    marginHorizontal: '10rem',
   },
 });
 
