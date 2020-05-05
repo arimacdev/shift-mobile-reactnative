@@ -29,6 +29,7 @@ import CalendarPicker from 'react-native-calendar-picker';
 import Modal from 'react-native-modal';
 const {height, width} = Dimensions.get('window');
 import {Icon} from 'native-base';
+import APIServices from '../../../services/APIServices';
 
 const Placeholder = () => (
   <View style={styles.landing}>
@@ -112,6 +113,7 @@ class TasksTabScreen extends Component {
       selectedTypeAllTasks: 'None',
       selectedTypeMyTasks: 'All',
       tasksName: '',
+      subTasksName: '',
       filter: false,
       showPicker: false,
       from: 'all',
@@ -308,7 +310,7 @@ class TasksTabScreen extends Component {
       }
     } else {
       dateText = 'Add Due Date';
-      color = '#D2D2D2';
+      color = '#000000';
     }
 
     return <Text style={[styles.textDate, {color: color}]}>{dateText}</Text>;
@@ -412,6 +414,8 @@ class TasksTabScreen extends Component {
     let filterdDataMyTasks = this.state.filterdDataMyTasks;
     let selectedProjectID = this.state.selectedProjectID;
     let tasksName = this.state.tasksName;
+    let subTasksName = this.state.subTasksName;
+    console.log('vvvvvvvvvvvvv', item);
     return (
       <View>
         <TouchableOpacity
@@ -489,10 +493,10 @@ class TasksTabScreen extends Component {
                 style={[styles.subTaskTextInput, {width: '95%'}]}
                 placeholder={'Add a subtask...'}
                 placeholderTextColor={colors.white}
-                value={tasksName}
-                onChangeText={tasksName => this.onNewTasksNameChange(tasksName)}
+                value={subTasksName}
+                onChangeText={subTasksName => this.onNewSubTasksNameChange(subTasksName)}
                 onSubmitEditing={() =>
-                  this.onNewTasksNameSubmit(this.state.tasksName)
+                  this.onNewSubTasksNameSubmit(this.state.subTasksName,item)
                 }
               />
             </View>
@@ -682,6 +686,28 @@ class TasksTabScreen extends Component {
     this.getAllTaskInProject();
   }
 
+  onNewSubTasksNameChange(text) {
+    this.setState({subTasksName: text});
+  }
+
+  async onNewSubTasksNameSubmit(text,item) {
+    try {
+      let subTasksName = this.state.subTasksName;
+      let selectedProjectID = this.state.selectedProjectID;
+      let taskId = item.parentTask.taskId;
+      this.setState({dataLoading: true});
+      newTaskData = await APIServices.addSubTaskToProjectData(subTasksName,selectedProjectID,taskId);
+      if (newTaskData.message == 'success') {
+        this.setState({dataLoading: false, subTasksName: ''});
+        this.getAllTaskInProject();
+      } else {
+        this.setState({dataLoading: false});
+      }
+    } catch (e) {
+      this.setState({dataLoading: false});
+    }
+  }
+
   onNewTasksNameChange(text) {
     this.setState({tasksName: text});
   }
@@ -689,11 +715,12 @@ class TasksTabScreen extends Component {
   async onNewTasksNameSubmit(text) {
     try {
       let tasksName = this.state.tasksName;
+      let selectedProjectID = this.state.selectedProjectID;
       this.setState({dataLoading: true});
-      newTaskData = await APIServices.addTaskData(tasksName);
+      newTaskData = await APIServices.addMainTaskToProjectData(tasksName,selectedProjectID);
       if (newTaskData.message == 'success') {
         this.setState({dataLoading: false, tasksName: ''});
-        this.fetchData();
+        this.getAllTaskInProject();
       } else {
         this.setState({dataLoading: false});
       }
@@ -1081,7 +1108,7 @@ const styles = EStyleSheet.create({
   },
   subTextMain: {
     fontSize: '11rem',
-    color: colors.black,
+    color: '#080848',
     fontWeight: 'bold',
     // lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',

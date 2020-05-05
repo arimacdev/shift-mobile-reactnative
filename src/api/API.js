@@ -67,6 +67,9 @@ export const GET_SPRINTS_BY_PROJECT = `${PROTOCOL}${HOST}sprints`;
 export const ADD_EDIT_SPRINT_BY_PROJECT = `${PROTOCOL}${HOST}sprints`;
 export const UPDATE_SPRINT = `${PROTOCOL}${HOST}projects`;
 
+export const ADD_MAIN_TASK_TO_PROJECT = `${PROTOCOL}${HOST}projects`;
+export const ADD_SUB_TASK_TO_PROJECT = `${PROTOCOL}${HOST}projects`;
+
 
 
 

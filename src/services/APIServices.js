@@ -61,7 +61,10 @@ import {
     MY_TASK_UPDATE_SUB_TASK,
     GET_SPRINTS_BY_PROJECT,
     ADD_EDIT_SPRINT_BY_PROJECT,
-    UPDATE_SPRINT
+    UPDATE_SPRINT,
+
+    ADD_MAIN_TASK_TO_PROJECT,
+    ADD_SUB_TASK_TO_PROJECT,
 
 } from '../api/API';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -1544,6 +1547,53 @@ async function changeSprint(selectedId,previousSprintID,selectedProjectID,select
     }, true, headers);
 };
 
+async function addMainTaskToProjectData(taskName,selectedProjectID) {
+
+    let userID = null;
+    userID =  await AsyncStorage.getItem('userID');
+    
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+    };
+
+    return request({
+        url: ADD_MAIN_TASK_TO_PROJECT + '/' + selectedProjectID + '/tasks',
+        method: 'POST',
+        data: {
+            taskName: taskName,
+            projectId : selectedProjectID,
+            taskInitiator: userID,
+            taskType: "project",
+            issueType: "development"
+        }
+    }, true, headers);
+};
+
+async function addSubTaskToProjectData(taskName,selectedProjectID,taskID) {
+
+    let userID = null;
+    userID =  await AsyncStorage.getItem('userID');
+    
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+    };
+
+    return request({
+        url: ADD_MAIN_TASK_TO_PROJECT + '/' + selectedProjectID + '/tasks',
+        method: 'POST',
+        data: {
+            taskName: taskName,
+            projectId : selectedProjectID,
+            taskInitiator: userID,
+            taskType: "project",
+            issueType: "development",
+            parentTaskId: taskID,
+        }
+    }, true, headers);
+};
+
 const APIServices = {
     getAllProjectsByUserData,
     getUserData,
@@ -1623,7 +1673,9 @@ const APIServices = {
     getAllSprintInProject,
     addSprintData,
     editSprintData,
-    changeSprint
+    changeSprint,
+    addMainTaskToProjectData,
+    addSubTaskToProjectData
 };
 
 export default APIServices;
