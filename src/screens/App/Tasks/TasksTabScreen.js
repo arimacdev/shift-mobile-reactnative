@@ -358,18 +358,18 @@ class TasksTabScreen extends Component {
           />
           <View style={styles.subTasksMainView}>
             <View style={styles.subTasksTextView}>
-              <Text style={styles.subTextMain}>
+              {/* <Text style={styles.subTextMain}>
                 {this.state.selectedProjectName}
               </Text>
-              <Text style={styles.subText}>{item.taskName}</Text>
+              <Text style={styles.subText}>{item.taskName}</Text> */}
+
+              <Text style={styles.subTextMain}>{item.taskName}</Text>
             </View>
             <View
               style={[
                 styles.subTasksLabelView,
                 {
-                  backgroundColor: this.issueTypeColor(
-                    item.issueType,
-                  ),
+                  backgroundColor: this.issueTypeColor(item.issueType),
                 },
               ]}>
               <Text style={styles.subTasksLabelText}>{item.issueType}</Text>
@@ -429,10 +429,12 @@ class TasksTabScreen extends Component {
             />
             <View style={styles.tasksMainView}>
               <View style={styles.tasksHeaderView}>
-                <Text style={styles.textMain}>
+                {/* <Text style={styles.textMain}>
                   {this.state.selectedProjectName}
                 </Text>
-                <Text style={styles.text}>{item.parentTask.taskName}</Text>
+                <Text style={styles.text}>{item.parentTask.taskName}</Text> */}
+
+                <Text style={styles.textMain}>{item.parentTask.taskName}</Text>
               </View>
               <View
                 style={[
@@ -779,7 +781,7 @@ class TasksTabScreen extends Component {
             {this.state.filter ? (
               <View style={styles.filterMainView}>
                 <View style={styles.filterTextView}>
-                  <Text style={styles.filterText}>aaaa</Text>
+                  <Text style={styles.filterText}>Name</Text>
                 </View>
                 <View style={styles.filterIconView}>
                   <Image style={styles.filterIcon} source={icons.filterIcon} />
