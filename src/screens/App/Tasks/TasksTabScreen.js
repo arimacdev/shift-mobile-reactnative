@@ -111,7 +111,7 @@ class TasksTabScreen extends Component {
       selectedProjectName: '',
       isActive: this.props.isActive,
       selectedTypeAllTasks: 'None',
-      selectedTypeMyTasks: 'All',
+      selectedTypeMyTasks: 'None',
       tasksName: '',
       subTasksName: '',
       filter: false,
@@ -281,7 +281,7 @@ class TasksTabScreen extends Component {
 
   async getMyTaskInProject() {
     this.setState({
-      selectedTypeMyTasks: 'All',
+      selectedTypeMyTasks: 'None',
     });
     let selectedProjectID = this.state.selectedProjectID;
     AsyncStorage.getItem('userID').then(userID => {
@@ -504,7 +504,7 @@ class TasksTabScreen extends Component {
               style={{
                 marginBottom: EStyleSheet.value('15rem'),
               }}
-              data={index == 0 ? item.childTasks : filterdDataMyTasks}
+              data={index == 0 ? item.childTasks : item.childTasks}
               renderItem={({item}) => this.renderSubTasksList(item)}
               keyExtractor={item => item.taskId}
             />
@@ -658,13 +658,6 @@ class TasksTabScreen extends Component {
         searchValue = 'open';
         break;
     }
-    // let filteredData = this.state.allDataMyTasks.filter(function(item) {
-    //   return item.taskStatus.includes(searchValue);
-    // });
-    // this.setState({
-    //   filterdDataMyTasks: filteredData,
-    //   selectedTypeMyTasks: key,
-    // });
   }
 
   async tabOpenTaskTab() {
