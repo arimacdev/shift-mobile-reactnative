@@ -7,6 +7,7 @@ import {
   Image,
   TouchableOpacity,
   TextInput,
+  BackHandler,
 } from 'react-native';
 import {connect} from 'react-redux';
 import * as actions from '../../../redux/actions';
@@ -24,6 +25,10 @@ import FadeIn from 'react-native-fade-in-image';
 import {SkypeIndicator} from 'react-native-indicators';
 import {NavigationEvents} from 'react-navigation';
 import PopupMenuAssignee from '../../../components/PopupMenuAssignee';
+import CalendarPicker from 'react-native-calendar-picker';
+import Modal from 'react-native-modal';
+const {height, width} = Dimensions.get('window');
+import {Icon} from 'native-base';
 
 const Placeholder = () => (
   <View style={styles.landing}>
@@ -108,7 +113,16 @@ class TasksTabScreen extends Component {
       selectedTypeMyTasks: 'All',
       tasksName: '',
       filter: false,
+      showPicker: false,
+      from: 'all',
+      to: 'all',
+      mode: 'date',
+      selectedStartDate: null,
+      selectedEndDate: null,
     };
+
+    this.onDateChange = this.onDateChange.bind(this);
+    this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -215,6 +229,42 @@ class TasksTabScreen extends Component {
     //     this.getAllTaskInProject();
     //   },
     // );
+  }
+
+  componentWillMount() {
+    BackHandler.addEventListener(
+      'hardwareBackPress',
+      this.handleBackButtonClick,
+    );
+  }
+
+  componentWillUnmount() {
+    BackHandler.removeEventListener(
+      'hardwareBackPress',
+      this.handleBackButtonClick,
+    );
+  }
+
+  handleBackButtonClick() {
+    if (this.state.showPicker) {
+      this.onCloseModel();
+    } else {
+      this.props.navigation.goBack(null);
+    }
+    return true;
+  }
+
+  onDateChange(date, type) {
+    if (type === 'END_DATE') {
+      this.setState({
+        selectedEndDate: date,
+      });
+    } else {
+      this.setState({
+        selectedStartDate: date,
+        selectedEndDate: null,
+      });
+    }
   }
 
   async getAllTaskInProject() {
@@ -663,13 +713,24 @@ class TasksTabScreen extends Component {
   };
 
   renderFilterType() {
+    const {selectedStartDate, selectedEndDate} = this.state;
     let key = this.state.selectedTypeAllTasks;
+    let from = selectedStartDate
+      ? moment(this.state.selectedStartDate).format('YYYY/MM/DD')
+      : 'From';
+    let to = selectedEndDate
+      ? moment(this.state.selectedEndDate).format('YYYY/MM/DD')
+      : 'To';
 
     switch (key) {
       case 'Date':
         return (
           <View style={styles.filterTextView}>
-            <Text style={styles.filterText}>From - To</Text>
+            <TouchableOpacity onPress={() => this.onCalendarPress()}>
+              <Text style={styles.filterText}>
+                {from} to {to}
+              </Text>
+            </TouchableOpacity>
           </View>
         );
       case 'Assignee':
@@ -677,6 +738,125 @@ class TasksTabScreen extends Component {
       default:
         return <View style={styles.filterTextView} />;
     }
+  }
+
+  onCalendarPress() {
+    this.setState({showPicker: true});
+  }
+
+  onCloseModel() {
+    this.setState({showPicker: false});
+  }
+
+  onDateSet() {
+    let selectedStartDate =
+      moment(this.state.selectedStartDate).format('YYYY-MM-DD[T]') + '00:00:00';
+    let selectedEndDate =
+      moment(this.state.selectedEndDate).format('YYYY-MM-DD[T]') + '23:59:59';
+
+    this.setState({
+      from: selectedStartDate == '' ? 'all' : selectedStartDate,
+      to: selectedEndDate == '' ? 'all' : selectedEndDate,
+      showPicker: false,
+      date: new Date(),
+    });
+  }
+
+  getButtonDisabledStaus() {
+    if (
+      this.state.selectedStartDate == null ||
+      this.state.selectedEndDate == null
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  onCanclePress() {
+    this.setState({
+      selectedStartDate: this.state.from !== 'all' ? this.state.from : '',
+      selectedEndDate: this.state.to !== 'all' ? this.state.to : '',
+    });
+    this.onCloseModel();
+  }
+
+  renderCalender() {
+    const {selectedStartDate, selectedEndDate} = this.state;
+    const minDate = new Date(); // Today
+    const maxDate = new Date(2500, 1, 1);
+    const startDate = selectedStartDate
+      ? moment(this.state.selectedStartDate).format('Do MMMM YYYY')
+      : 'From';
+    const endDate = selectedEndDate
+      ? moment(this.state.selectedEndDate).format('Do MMMM YYYY')
+      : 'To';
+    return (
+      <Modal
+        isVisible={this.state.showPicker}
+        style={styles.modalStyle}
+        onBackButtonPress={() => this.onCloseModel()}
+        onBackdropPress={() => this.onCloseModel()}
+        onRequestClose={() => this.onCloseModel()}
+        coverScreen={false}>
+        <View style={{margin: 10}}>
+          <View>
+            <CalendarPicker
+              startFromMonday={true}
+              allowRangeSelection={true}
+              // minDate={minDate}
+              // maxDate={maxDate}
+              selectedStartDate={selectedStartDate}
+              selectedEndDate={selectedEndDate}
+              width={width - 60}
+              previousTitle={
+                <Icon name={'arrow-dropleft'} style={styles.iconCalendar} />
+              }
+              nextTitle={
+                <Icon name={'arrow-dropright'} style={styles.iconCalendar} />
+              }
+              todayBackgroundColor={colors.lightBlue}
+              selectedDayColor={colors.selectedRange}
+              selectedDayTextColor={colors.white}
+              weekdays={['M', 'T', 'W', 'T', 'F', 'S', 'S']}
+              textStyle={styles.dateTextStyle}
+              dayLabelsWrapper={{
+                borderBottomWidth: 0,
+                borderTopWidth: 0,
+              }}
+              dayShape={'square'}
+              onDateChange={this.onDateChange}
+            />
+          </View>
+          <View style={styles.selectedDates}>
+            <Text>{startDate}</Text>
+            <Text style={styles.dashText}> - </Text>
+            <Text>{endDate}</Text>
+          </View>
+
+          <View style={styles.ButtonViewStyle}>
+            <TouchableOpacity
+              style={styles.cancelStyle}
+              onPress={() => this.onCanclePress()}>
+              <Text style={styles.cancelTextStyle}>Cancel</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.okStyle,
+                {
+                  backgroundColor: this.getButtonDisabledStaus()
+                    ? colors.lighterGray
+                    : colors.lightGreen,
+                },
+              ]}
+              disabled={this.getButtonDisabledStaus()}
+              onPress={() => this.onDateSet()}>
+              <Text style={styles.saveTextStyle}>Save</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+    );
   }
 
   render() {
@@ -807,6 +987,7 @@ class TasksTabScreen extends Component {
         )}
 
         {this.renderBottomBar()}
+        {this.renderCalender()}
         {allTaskByProjectLoading && <Loader />}
         {myTaskByProjectLoading && <Loader />}
       </View>
@@ -1110,6 +1291,64 @@ const styles = EStyleSheet.create({
   filterIcon: {
     width: '20rem',
     height: '20rem',
+  },
+  dateTextStyle: {
+    color: colors.black,
+    fontWeight: 'bold',
+  },
+  selectedDates: {
+    flexDirection: 'row',
+    marginTop: 0,
+    height: 50,
+    backgroundColor: colors.projectBgColor,
+    borderRadius: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginHorizontal: 15,
+  },
+  dashText: {
+    fontSize: 30,
+    color: colors.gray,
+    marginBottom: 5,
+  },
+  ButtonViewStyle: {
+    flexDirection: 'row',
+    marginTop: 10,
+    marginBottom: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginHorizontal: 15,
+  },
+  cancelStyle: {
+    marginRight: 10,
+    backgroundColor: colors.lightRed,
+    borderRadius: 5,
+    paddingHorizontal: 40,
+    paddingVertical: 10,
+    flex: 1,
+    justifyContent: 'center',
+  },
+  okStyle: {
+    backgroundColor: colors.lightGreen,
+    borderRadius: 5,
+    paddingHorizontal: 40,
+    paddingVertical: 10,
+    flex: 1,
+    justifyContent: 'center',
+  },
+  cancelTextStyle: {
+    fontSize: 16,
+    color: colors.white,
+    textAlign: 'center',
+  },
+  saveTextStyle: {
+    fontSize: 16,
+    color: colors.white,
+    textAlign: 'center',
+  },
+  modalStyle: {
+    backgroundColor: colors.white,
+    marginVertical: 50,
   },
 });
 
