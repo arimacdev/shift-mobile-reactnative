@@ -118,154 +118,6 @@ let bottomData = [
   },
 ];
 
-let allTasks = {
-  "message": "success",
-  "data": [
-      {
-          "parentTask": {
-              "taskId": "27193436-39d3-4328-9eef-c2fe87e10019",
-              "taskName": "Paten Task 2",
-              "projectId": "ba77bb8f-22a7-4b43-85ab-5f55c3d7324d",
-              "taskAssignee": "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
-              "taskInitiator": "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
-              "taskNote": "dummy",
-              "taskStatus": "pending",
-              "taskCreatedAt": "2020-05-04T09:39:02.000+0000",
-              "taskDueDateAt": "2020-04-02T11:00:00.000+0000",
-              "taskReminderAt": "2020-04-04T19:30:00.000+0000",
-              "taskAssigneeProfileImage": "https://arimac-pmtool.s3-ap-southeast-1.amazonaws.com/profileImage_1584904875259_image_4.jpg",
-              "sprintId": "53d6dccf-2f86-4ce5-a583-fa32816a252c",
-              "issueType": "development",
-              "parentId": "961f6f2a-ebca-4493-b5cf-c29be7abac1f",
-              "isParent": true,
-              "deleted": false
-          },
-          "childTasks": []
-      },
-      {
-          "parentTask": {
-              "taskId": "65dfd159-cb7b-4add-8f35-51c758994985",
-              "taskName": "Time test task 1213",
-              "projectId": "ba77bb8f-22a7-4b43-85ab-5f55c3d7324d",
-              "taskAssignee": "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
-              "taskInitiator": "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
-              "taskNote": "",
-              "taskStatus": "closed",
-              "taskCreatedAt": "2020-05-04T10:32:00.000+0000",
-              "taskDueDateAt": "2020-04-02T22:00:00.000+0000",
-              "taskReminderAt": "2024-03-28T12:25:00.000+0000",
-              "taskAssigneeProfileImage": "https://arimac-pmtool.s3-ap-southeast-1.amazonaws.com/profileImage_1584904875259_image_4.jpg",
-              "sprintId": "default",
-              "issueType": "development",
-              "parentId": null,
-              "isParent": true,
-              "deleted": false
-          },
-          "childTasks": [
-              {
-                  "taskId": "da2d353f-76fa-42d7-a4fd-74734f17fa38",
-                  "taskName": "Child 1",
-                  "projectId": "ba77bb8f-22a7-4b43-85ab-5f55c3d7324d",
-                  "taskAssignee": "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
-                  "taskInitiator": "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
-                  "taskNote": null,
-                  "taskStatus": "pending",
-                  "taskCreatedAt": "2020-04-30T07:32:53.000+0000",
-                  "taskDueDateAt": null,
-                  "taskReminderAt": null,
-                  "taskAssigneeProfileImage": "https://arimac-pmtool.s3-ap-southeast-1.amazonaws.com/profileImage_1584904875259_image_4.jpg",
-                  "sprintId": "53d6dccf-2f86-4ce5-a583-fa32816a252c",
-                  "issueType": "development",
-                  "parentId": "65dfd159-cb7b-4add-8f35-51c758994985",
-                  "isParent": false,
-                  "deleted": false
-              }
-          ]
-      },
-      {
-          "parentTask": {
-              "taskId": "f67c9c7d-5a6d-4e8b-99af-99976b44d610",
-              "taskName": "updated 123",
-              "projectId": "ba77bb8f-22a7-4b43-85ab-5f55c3d7324d",
-              "taskAssignee": "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
-              "taskInitiator": "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
-              "taskNote": null,
-              "taskStatus": "pending",
-              "taskCreatedAt": "2020-05-04T09:45:52.000+0000",
-              "taskDueDateAt": "1970-01-01T05:30:00.000+0000",
-              "taskReminderAt": "2020-04-30T12:49:00.000+0000",
-              "taskAssigneeProfileImage": "https://arimac-pmtool.s3-ap-southeast-1.amazonaws.com/profileImage_1584904875259_image_4.jpg",
-              "sprintId": "53d6dccf-2f86-4ce5-a583-fa32816a252c",
-              "issueType": "qa",
-              "parentId": "",
-              "isParent": true,
-              "deleted": false
-          },
-          "childTasks": [
-              {
-                  "taskId": "d918638c-52aa-4e5d-a230-8b7aef9d5f71",
-                  "taskName": "Child 2",
-                  "projectId": "ba77bb8f-22a7-4b43-85ab-5f55c3d7324d",
-                  "taskAssignee": "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
-                  "taskInitiator": "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
-                  "taskNote": null,
-                  "taskStatus": "pending",
-                  "taskCreatedAt": "2020-05-04T09:38:48.000+0000",
-                  "taskDueDateAt": "2020-04-17T13:22:00.000+0000",
-                  "taskReminderAt": "2020-04-27T16:45:26.000+0000",
-                  "taskAssigneeProfileImage": "https://arimac-pmtool.s3-ap-southeast-1.amazonaws.com/profileImage_1584904875259_image_4.jpg",
-                  "sprintId": "53d6dccf-2f86-4ce5-a583-fa32816a252c",
-                  "issueType": "development",
-                  "parentId": "f67c9c7d-5a6d-4e8b-99af-99976b44d610",
-                  "isParent": false,
-                  "deleted": false
-              },
-              {
-                  "taskId": "f76b766a-f57e-46ec-8a4f-3beec1138cea",
-                  "taskName": "Child 3",
-                  "projectId": "ba77bb8f-22a7-4b43-85ab-5f55c3d7324d",
-                  "taskAssignee": "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
-                  "taskInitiator": "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
-                  "taskNote": null,
-                  "taskStatus": "pending",
-                  "taskCreatedAt": "2020-05-04T06:15:23.000+0000",
-                  "taskDueDateAt": null,
-                  "taskReminderAt": null,
-                  "taskAssigneeProfileImage": "https://arimac-pmtool.s3-ap-southeast-1.amazonaws.com/profileImage_1584904875259_image_4.jpg",
-                  "sprintId": "53d6dccf-2f86-4ce5-a583-fa32816a252c",
-                  "issueType": "development",
-                  "parentId": "f67c9c7d-5a6d-4e8b-99af-99976b44d610",
-                  "isParent": false,
-                  "deleted": false
-              }
-          ]
-      },
-      {
-          "parentTask": {
-              "taskId": "hg",
-              "taskName": "test",
-              "projectId": "ba77bb8f-22a7-4b43-85ab-5f55c3d7324d",
-              "taskAssignee": "fbf2e299-ff38-409f-98f3-ca0c70234d36",
-              "taskInitiator": "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
-              "taskNote": null,
-              "taskStatus": "pending",
-              "taskCreatedAt": "2020-05-04T10:54:55.000+0000",
-              "taskDueDateAt": "2020-04-24T07:49:00.000+0000",
-              "taskReminderAt": "2020-04-15T16:45:00.000+0000",
-              "taskAssigneeProfileImage": "https://arimac-pmtool.s3-ap-southeast-1.amazonaws.com/profileImage_1587381571910_Buddhika Priyabhashana.png",
-              "sprintId": "default",
-              "issueType": "development",
-              "parentId": null,
-              "isParent": true,
-              "deleted": false
-          },
-          "childTasks": []
-      }
-  ],
-  "status": "OK",
-  "timestamp": "Mon May 04 16:26:52 IST 2020"
-}
-
 class TasksTabScreen extends Component {
   constructor(props) {
     super(props);
@@ -277,6 +129,7 @@ class TasksTabScreen extends Component {
       index: 0,
       bottomItemPressColor: colors.darkBlue,
       selectedProjectID: 0,
+      selectedProjectName: '',
       isActive: this.props.isActive,
       selectedTypeAllTasks: 'None',
       selectedTypeMyTasks: 'All',
@@ -286,11 +139,15 @@ class TasksTabScreen extends Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
+    console.log('uuuuuuuuuuuuuuuuuu', this.props.projDetails);
     if (prevProps.isActive !== this.props.isActive && this.props.isActive) {
       let selectedProjectID = this.props.selectedProjectID;
+      let selectedProjectName = this.props.projDetails.projectName;
+
       this.setState(
         {
           selectedProjectID: selectedProjectID,
+          selectedProjectName: selectedProjectName,
         },
         () => {
           this.getAllTaskInProject();
@@ -299,55 +156,55 @@ class TasksTabScreen extends Component {
     }
 
     // all tasks
+    // if (
+    //   prevProps.allTaskByProjectLoading !==
+    //     this.props.allTaskByProjectLoading &&
+    //   this.props.allTaskByProject &&
+    //   this.props.allTaskByProject.length > 0
+    // ) {
+    //   let searchValueAllTask = '';
+    //   let filteredDataAllTask = this.props.allTaskByProject.filter(function(
+    //     item,
+    //   ) {
+    //     return item.taskStatus.includes(searchValueAllTask);
+    //   });
+
+    //   this.setState({
+    //     filterdDataAllTaks: filteredDataAllTask,
+    //     allDataAllTaks: this.props.allTaskByProject,
+    //   });
+    // }
+
     if (
       prevProps.allTaskByProjectLoading !==
         this.props.allTaskByProjectLoading &&
       this.props.allTaskByProject &&
       this.props.allTaskByProject.length > 0
     ) {
-      let searchValueAllTask = '';
-      let filteredDataAllTask = this.props.allTaskByProject.filter(function(
-        item,
-      ) {
-        return item.taskStatus.includes(searchValueAllTask);
-      });
-
       this.setState({
-        filterdDataAllTaks: allTasks.data,
-        allDataAllTaks: this.props.allTaskByProject,
-      });
-    }
-
-    if (
-      prevProps.allTaskByProjectLoading !==
-        this.props.allTaskByProjectLoading &&
-      this.props.allTaskByProject &&
-      this.props.allTaskByProject.length == 0
-    ) {
-      this.setState({
-        filterdDataAllTaks: allTasks.data,
+        filterdDataAllTaks: this.props.allTaskByProject,
         allDataAllTaks: this.props.allTaskByProject,
       });
     }
 
     // my task
-    if (
-      prevProps.myTaskByProjectLoading !== this.props.myTaskByProjectLoading &&
-      this.props.myTaskByProject &&
-      this.props.myTaskByProject.length > 0
-    ) {
-      let searchValueMyTask = '';
-      let filteredDataMyTask = this.props.myTaskByProject.filter(function(
-        item,
-      ) {
-        return item.taskStatus.includes(searchValueMyTask);
-      });
+    // if (
+    //   prevProps.myTaskByProjectLoading !== this.props.myTaskByProjectLoading &&
+    //   this.props.myTaskByProject &&
+    //   this.props.myTaskByProject.length > 0
+    // ) {
+    //   let searchValueMyTask = '';
+    //   let filteredDataMyTask = this.props.myTaskByProject.filter(function(
+    //     item,
+    //   ) {
+    //     return item.taskStatus.includes(searchValueMyTask);
+    //   });
 
-      this.setState({
-        filterdDataMyTasks: filteredDataMyTask,
-        allDataMyTasks: this.props.myTaskByProject,
-      });
-    }
+    //   this.setState({
+    //     filterdDataMyTasks: filteredDataMyTask,
+    //     allDataMyTasks: this.props.myTaskByProject,
+    //   });
+    // }
 
     if (
       prevProps.myTaskByProjectLoading !== this.props.myTaskByProjectLoading &&
@@ -428,11 +285,33 @@ class TasksTabScreen extends Component {
       }
     } else {
       dateText = 'Add Due Date';
-      color = '#000000';
+      color = '#D2D2D2';
     }
 
     return <Text style={[styles.textDate, {color: color}]}>{dateText}</Text>;
   };
+
+  issueTypeColor(issueType) {
+    let color = '';
+    switch (issueType) {
+      case 'development':
+        color = colors.colorOrange;
+        break;
+      case 'qa':
+        color = colors.colorRed;
+        break;
+      case 'oparational':
+        color = '#ff33ff';
+        break;
+      case 'presales':
+        color = '#22ff22';
+        break;
+      default:
+        break;
+    }
+
+    return color;
+  }
 
   userImage = function(item) {
     let userImage = item.taskAssigneeProfileImage;
@@ -458,7 +337,7 @@ class TasksTabScreen extends Component {
 
   renderSubTasksList(item) {
     let selectedProjectID = this.state.selectedProjectID;
-    console.log("dddddddddddddddddddddd",item);
+    console.log('dddddddddddddddddddddd', item);
     return (
       <TouchableOpacity
         onPress={() =>
@@ -479,11 +358,21 @@ class TasksTabScreen extends Component {
           />
           <View style={styles.subTasksMainView}>
             <View style={styles.subTasksTextView}>
-              <Text style={styles.subTextMain}>MRI - #1</Text>
+              <Text style={styles.subTextMain}>
+                {this.state.selectedProjectName}
+              </Text>
               <Text style={styles.subText}>{item.taskName}</Text>
             </View>
-            <View style={styles.subTasksLabelView}>
-              <Text style={styles.subTasksLabelText}>Oprational</Text>
+            <View
+              style={[
+                styles.subTasksLabelView,
+                {
+                  backgroundColor: this.issueTypeColor(
+                    item.issueType,
+                  ),
+                },
+              ]}>
+              <Text style={styles.subTasksLabelText}>{item.issueType}</Text>
             </View>
           </View>
           <View style={styles.statusView}>
@@ -501,7 +390,7 @@ class TasksTabScreen extends Component {
     let filterdDataMyTasks = this.state.filterdDataMyTasks;
     let selectedProjectID = this.state.selectedProjectID;
     let tasksName = this.state.tasksName;
-    console.log("vvvvvvvvvvvvv",item)
+    console.log('vvvvvvvvvvvvv', item);
     return (
       <View>
         <TouchableOpacity
@@ -540,11 +429,23 @@ class TasksTabScreen extends Component {
             />
             <View style={styles.tasksMainView}>
               <View style={styles.tasksHeaderView}>
-                <Text style={styles.textMain}>{item.parentTask.taskName}</Text>
+                <Text style={styles.textMain}>
+                  {this.state.selectedProjectName}
+                </Text>
                 <Text style={styles.text}>{item.parentTask.taskName}</Text>
               </View>
-              <View style={styles.tasksLabelView}>
-                <Text style={styles.tasksLabelText}>{item.parentTask.issueType}</Text>
+              <View
+                style={[
+                  styles.tasksLabelView,
+                  {
+                    backgroundColor: this.issueTypeColor(
+                      item.parentTask.issueType,
+                    ),
+                  },
+                ]}>
+                <Text style={styles.tasksLabelText}>
+                  {item.parentTask.issueType}
+                </Text>
               </View>
             </View>
             <View style={styles.statusView}>
@@ -698,13 +599,13 @@ class TasksTabScreen extends Component {
       this.setState({filter: false});
     }
 
-    let filteredData = this.state.allDataAllTaks.filter(function(item) {
-      return item.taskStatus.includes(searchValue);
-    });
-    this.setState({
-      filterdDataAllTaks: filteredData,
-      selectedTypeAllTasks: key,
-    });
+    // let filteredData = this.state.allDataAllTaks.filter(function(item) {
+    //   return item.taskStatus.includes(searchValue);
+    // });
+    // this.setState({
+    //   filterdDataAllTaks: filteredData,
+    //   selectedTypeAllTasks: key,
+    // });
   }
 
   onFilterMyTasks(key) {
@@ -740,20 +641,22 @@ class TasksTabScreen extends Component {
         searchValue = 'open';
         break;
     }
-    let filteredData = this.state.allDataMyTasks.filter(function(item) {
-      return item.taskStatus.includes(searchValue);
-    });
-    this.setState({
-      filterdDataMyTasks: filteredData,
-      selectedTypeMyTasks: key,
-    });
+    // let filteredData = this.state.allDataMyTasks.filter(function(item) {
+    //   return item.taskStatus.includes(searchValue);
+    // });
+    // this.setState({
+    //   filterdDataMyTasks: filteredData,
+    //   selectedTypeMyTasks: key,
+    // });
   }
 
   async tabOpenTaskTab() {
     let selectedProjectID = this.props.selectedProjectID;
+    let selectedProjectName = this.props.projDetails.projectName;
     this.setState(
       {
         selectedProjectID: selectedProjectID,
+        selectedProjectName: selectedProjectName,
       },
       () => {
         this.getAllTaskInProject();
@@ -795,6 +698,8 @@ class TasksTabScreen extends Component {
     let selectedTypeAllTasks = this.state.selectedTypeAllTasks;
     let selectedTypeMyTasks = this.state.selectedTypeMyTasks;
     let tasksName = this.state.tasksName;
+
+    console.log('wwwwwwwwwwwwwwwwwwwwww', filterdDataAllTaks);
 
     return (
       <View style={styles.backgroundImage}>
@@ -876,12 +781,8 @@ class TasksTabScreen extends Component {
                 <View style={styles.filterTextView}>
                   <Text style={styles.filterText}>aaaa</Text>
                 </View>
-                <View
-                  style={styles.filterIconView}>
-                  <Image
-                    style={styles.filterIcon}
-                    source={icons.filterIcon}
-                  />
+                <View style={styles.filterIconView}>
+                  <Image style={styles.filterIcon} source={icons.filterIcon} />
                 </View>
               </View>
             ) : (
@@ -1135,7 +1036,6 @@ const styles = EStyleSheet.create({
     width: '75rem',
     height: '18rem',
     borderRadius: '10rem',
-    backgroundColor: colors.lightRed,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -1213,7 +1113,7 @@ const styles = EStyleSheet.create({
   filterText: {
     color: colors.darkBlue,
   },
-  filterIconView:{
+  filterIconView: {
     width: '45rem',
     height: '45rem',
     padding: '10rem',
@@ -1223,10 +1123,10 @@ const styles = EStyleSheet.create({
     borderRadius: '5rem',
     marginLeft: '10rem',
   },
-  filterIcon:{
+  filterIcon: {
     width: '20rem',
     height: '20rem',
-  }
+  },
 });
 
 const mapStateToProps = state => {

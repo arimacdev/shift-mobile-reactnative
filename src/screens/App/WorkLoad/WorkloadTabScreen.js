@@ -30,9 +30,9 @@ import {Icon} from 'native-base';
 
 const initialLayout = {width: entireScreenWidth};
 const menuItems = [
-  {value: 0, text: 'Due today', color: colors.dueTodayColor},
+  {value: 0, text: 'Due today', color: colors.colorRed},
   {value: 1, text: 'This Week', color: colors.thisWeekColor},
-  {value: 2, text: 'This Month', color: colors.thosMonthColor},
+  {value: 2, text: 'This Month', color: colors.colorOrange},
   {value: 3, text: 'Custom', color: colors.customColor},
 ];
 class WorkloadTabScreen extends Component {

@@ -73,6 +73,7 @@ class TasksScreen extends Component {
         return (
           <Tasks
             selectedProjectID={projectId}
+            projDetails = {params.projDetails}
             navigation={this.props.navigation}
             isActive={isActive}
           />
