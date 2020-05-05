@@ -14,7 +14,9 @@ import {
     EDIT_USER_FAILED_MESSAGE,
 
     USER_DATA_SUCCESS,
-    USER_TYPE_DATA_SUCCESS
+    USER_TYPE_DATA_SUCCESS,
+
+    DRAWER_ITEM_SELECT
 
 } from '../types';
 import APIServices from '../../services/APIServices';
@@ -98,6 +100,13 @@ export const UserInfoSuccess = (data) => {
 export const UserType = (data) => {
     return {
         type: USER_TYPE_DATA_SUCCESS,
+        payload : data,
+    };
+};
+
+export const drawerItemSelect = (data) => {
+    return {
+        type: DRAWER_ITEM_SELECT,
         payload : data,
     };
 };

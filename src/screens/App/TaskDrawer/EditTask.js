@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Dimensions,TouchableOpacity,Image,Text,TextInput} from 'react-native';
+import {View, Dimensions,TouchableOpacity,Image,Text,TextInput,Alert} from 'react-native';
 import {connect} from 'react-redux';
 import * as actions from '../../../redux/actions';
 import EStyleSheet from 'react-native-extended-stylesheet';
@@ -21,7 +21,8 @@ class EditTask extends Component {
         alertMsg : '',
         dataLoading : false,
         groupName : '',
-        selectedTaskGroupId : ''
+        selectedTaskGroupId : '',
+        isChange: true,
     };
   }
 
@@ -76,13 +77,29 @@ class EditTask extends Component {
     }
   }
 
+  deleteGroupdeleteGroupAlert (){
+    Alert.alert(
+      'Delete Group',
+      'You are about to permanantly delete this group and all of its data.\n If you are not sure, you can cancel this action.',
+      [
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+        {text: 'Ok', onPress: () => this.deleteGroupdeleteGroup()},
+      ],
+      {cancelable: false},
+    );
+  }
+
 
   async deleteGroupdeleteGroup () { 
       let selectedTaskGroupId = this.state.selectedTaskGroupId;
       try {
         resultObj = await APIServices.deleteGroupTaskData(selectedTaskGroupId);
         if(resultObj.message == 'success'){
-          this.setState({dataLoading:false});
+          this.setState({dataLoading:false,isChange:true});
           this.props.navigation.goBack();
         }else{
           this.setState({dataLoading:false});
@@ -97,7 +114,7 @@ class EditTask extends Component {
   }
 
   onChangeTextName(text) {
-    this.setState({ groupName: text });
+    this.setState({ groupName: text,isChange:false });
   }
 
   hideAlert (){
@@ -118,7 +135,7 @@ class EditTask extends Component {
 
   async getGroupDetails() {
     let selectedTaskGroupId = this.state.selectedTaskGroupId;
-    this.setState({dataLoading:true});
+    this.setState({dataLoading:true,isChange:true});
     dataResult = await APIServices.getSingleGroupTaskData(selectedTaskGroupId);
     if(dataResult.message == 'success'){
       this.setState({
@@ -148,6 +165,7 @@ class EditTask extends Component {
     let alertTitle = this.state.alertTitle;
     let alertMsg = this.state.alertMsg;
     let groupName = this.state.groupName;
+    let isChange = this.state.isChange;
 
     return (
       <View style={styles.container}>
@@ -163,6 +181,7 @@ class EditTask extends Component {
             </View>
             <TouchableOpacity
                 style={{marginTop:10}} 
+                disabled={isChange}
                 onPress={() => this.renameGroup()}>
                 <View style={styles.buttonEdit}>
                     <View style={{flex: 1}}>
@@ -174,7 +193,7 @@ class EditTask extends Component {
         <View style={styles.bottomView}>
             <TouchableOpacity
             style={{marginTop:10}} 
-            onPress={() => this.deleteGroupdeleteGroup()}>
+            onPress={() => this.deleteGroupdeleteGroupAlert()}>
             <View style={styles.button}>
                 <View style={{flex: 1}}>
                 <Text style={styles.buttonText}>{'Delete list'}</Text>

@@ -15,6 +15,8 @@ import {
 
     USER_DATA_SUCCESS,
     USER_TYPE_DATA_SUCCESS,
+    
+    DRAWER_ITEM_SELECT
 
 } from '../types';
 
@@ -34,6 +36,8 @@ const INITIAL_STATE = {
 
     loginUser : {},
     loginUserType : '',
+
+    selectedDrawerItem : 'projects',
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -67,7 +71,9 @@ export default (state = INITIAL_STATE, action) => {
         case USER_DATA_SUCCESS : 
             return {...state,loginUser: action.payload.data} 
         case USER_TYPE_DATA_SUCCESS : 
-            return {...state,loginUserType: action.payload}                          
+            return {...state,loginUserType: action.payload}     
+        case DRAWER_ITEM_SELECT :  
+            return {...state,selectedDrawerItem: action.payload}                       
         default:
             return state;
     }

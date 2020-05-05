@@ -104,6 +104,10 @@ class AddPeopleScreen extends Component {
     console.log(newValue);
   }
 
+  cancelUserSave (){
+    this.props.navigation.goBack();
+  }
+
   onSelectUser = async item => {
     this.setState({
       visiblePeopleModal: false,
@@ -141,7 +145,13 @@ class AddPeopleScreen extends Component {
         resultObj = await APIServices.addUserToGroupTask(userID,taskItemID);
         if(resultObj.message == 'success'){
           this.setState({dataLoading:false});
-          this.props.navigation.goBack();
+          this.showAlert('', 'Successfully completed');
+          this.setState({
+            name: '',
+            role: '',
+            userName: '',
+            userID: '',
+          })
         }else{
           this.setState({dataLoading:false});
           this.showAlert("","Error");
@@ -156,7 +166,7 @@ class AddPeopleScreen extends Component {
 
   validateUser(userID) {
     if (!userID && _.isEmpty(userID)) {
-      this.showAlert('', 'Please Select a User');
+      this.showAlert('', 'Please select a user');
       return false;
     }
 

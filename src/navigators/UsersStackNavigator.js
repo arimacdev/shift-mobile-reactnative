@@ -31,7 +31,7 @@ export const UsersStackNavigator = createStackNavigator(
       screen: ViewUserScreen,
       navigationOptions: ({ navigation }) => ({
           header: <Header
-              title='View User'
+              title='View user'
               onPress={() => navigation.pop()}
           />,
       }),

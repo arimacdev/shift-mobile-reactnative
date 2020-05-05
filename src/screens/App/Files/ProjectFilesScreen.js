@@ -7,6 +7,8 @@ import {
   Image,
   TouchableOpacity,
   PermissionsAndroid,
+  Alert,
+  TextInput
 } from 'react-native';
 import {connect} from 'react-redux';
 import * as actions from '../../../redux/actions';
@@ -63,11 +65,13 @@ class ProjectFilesScreen extends Component {
       alertTitle: '',
       alertMsg: '',
       filesData: [],
+      allFilesData: [],
       progress: 0,
       loading: false,
       isFetching: false,
       Uploading: 0,
       indeterminate: false,
+      searchText : '',
     };
   }
 
@@ -83,6 +87,7 @@ class ProjectFilesScreen extends Component {
     if (filesData.message == 'success') {
       this.setState({
         filesData: filesData.data,
+        allFilesData : filesData.data,
         dataLoading: false,
         isFetching: false,
       });
@@ -143,6 +148,22 @@ class ProjectFilesScreen extends Component {
     } catch (err) {
       console.warn(err);
     }
+  }
+
+  deleteFileAlert (item){
+    Alert.alert(
+      'Delete File',
+      'You are about to permanantly delete this file,\n If you are not sure, you can cancel this action.',
+      [
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+        {text: 'Ok', onPress: () => this.deleteFile(item)},
+      ],
+      {cancelable: false},
+    );
   }
 
   async deleteFile(item) {
@@ -208,7 +229,7 @@ class ProjectFilesScreen extends Component {
   }
 
   onRefresh() {
-    this.setState({isFetching: false, filesData: []}, function() {
+    this.setState({isFetching: false, filesData: [],allFilesData:[]}, function() {
       this.fetchData(this.props.selectedProjectID);
     });
   }
@@ -249,7 +270,7 @@ class ProjectFilesScreen extends Component {
               />
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => this.deleteFile(item)}
+              onPress={() => this.deleteFileAlert(item)}
               style={{marginLeft: EStyleSheet.value('10rem')}}>
               <Image
                 style={{width: 30, height: 30}}
@@ -396,6 +417,18 @@ class ProjectFilesScreen extends Component {
     );
   }
 
+  onSearchTextChange(text) {
+    this.setState({searchText: text});
+    let result = this.state.allFilesData.filter(data =>
+      data.projectFileName.toLowerCase().includes(text.toLowerCase()),
+    );
+    if (text == '') {
+      this.setState({filesData: this.state.allFilesData});
+    } else {
+      this.setState({filesData: result});
+    }
+  }
+
   render() {
     let filesData = this.state.filesData;
     let dataLoading = this.state.dataLoading;
@@ -406,6 +439,15 @@ class ProjectFilesScreen extends Component {
     let isFetching = this.state.isFetching;
     return (
       <View style={styles.container}>
+        <View style={styles.projectFilerView}>
+          <Image style={styles.searchIcon} source={icons.searchGray} />
+          <TextInput
+            style={[styles.textInput, {width: '95%'}]}
+            placeholder={'Search'}
+            value={this.state.searchText}
+            onChangeText={text => this.onSearchTextChange(text)}
+          />
+        </View>
         <TouchableOpacity
           onPress={() => this.doumentPicker()}
           disabled={this.state.indeterminate}>
@@ -548,7 +590,7 @@ const styles = EStyleSheet.create({
   taskFieldDocPickView: {
     backgroundColor: colors.projectBgColor,
     borderRadius: 5,
-    marginTop: '20rem',
+    marginTop: '10rem',
     marginBottom: '7rem',
     flexDirection: 'row',
     alignItems: 'center',
@@ -560,7 +602,7 @@ const styles = EStyleSheet.create({
     backgroundColor: colors.projectBgColor,
     borderRadius: 5,
     // width: '330rem',
-    marginTop: '20rem',
+    marginTop: '10rem',
     marginBottom: '7rem',
     flexDirection: 'row',
     alignItems: 'center',
@@ -588,6 +630,31 @@ const styles = EStyleSheet.create({
     fontSize: 11,
     color: colors.darkBlue,
     fontWeight: 'bold',
+  },
+  projectFilerView: {
+    backgroundColor: colors.projectBgColor,
+    borderRadius: 5,
+    marginTop: '17rem',
+    marginBottom: '12rem',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: '12rem',
+    height: '45rem',
+    marginHorizontal: '20rem',
+    flexDirection: 'row',
+  },
+  textInput: {
+    fontSize: '12rem',
+    color: colors.gray,
+    textAlign: 'center',
+    lineHeight: '17rem',
+    fontFamily: 'HelveticaNeuel',
+    textAlign: 'left',
+    marginLeft: '7rem',
+  },
+  searchIcon: {
+    width: '17rem',
+    height: '17rem',
   },
 });
 const mapStateToProps = state => {

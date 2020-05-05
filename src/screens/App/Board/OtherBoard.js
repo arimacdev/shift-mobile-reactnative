@@ -269,16 +269,13 @@ class OtherBoard extends Component {
                     </View>
                 </TouchableOpacity>
                 
-                <ScrollView style={styles.scrollView}>
-                
-                    <FlatList
-                        data={this.state.sprints}
-                        horizontal={true}
-                        renderItem={this.renderItemMainTile.bind(this)}
-                        keyExtractor={item => item.id}
-                    />
-                    
-                </ScrollView>
+                <FlatList
+                    data={this.state.sprints}
+                    horizontal={true}
+                    renderItem={this.renderItemMainTile.bind(this)}
+                    keyExtractor={item => item.id}
+                    style={{marginBottom: EStyleSheet.value('260rem')}}
+                />
                 {this.state.dataLoading && <Loader/>}
             </View>
             

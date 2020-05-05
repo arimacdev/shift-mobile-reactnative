@@ -280,7 +280,7 @@ class ViewProfileScreen extends Component {
                 resizeMode={'contain'}
               />
               <Text style={[styles.textBottom, {color: colors.white}]}>
-                Connect your app with Slack
+                Add to Slack
               </Text>
             </View>
           </TouchableOpacity>

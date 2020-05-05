@@ -71,8 +71,13 @@ class AddPeopleScreen extends Component {
         this.props.addPeopleProjectSuccess &&
       this.props.addPeopleProjectSuccess
     ) {
-      this.showAlert('', 'User Added');
-      this.props.navigation.goBack();
+      this.showAlert('', 'Successfully completed');
+      this.setState({
+        name: '',
+        role: '',
+        userName: '',
+        userID: '',
+      })
     }
   }
 
@@ -180,7 +185,7 @@ class AddPeopleScreen extends Component {
 
   validateUser(userID, role) {
     if (!userID && _.isEmpty(userID)) {
-      this.showAlert('', 'Please Select a User');
+      this.showAlert('', 'Please select a user');
       return false;
     }
 
@@ -294,6 +299,11 @@ class AddPeopleScreen extends Component {
       // </TouchableOpacity>
     );
   }
+
+  cancelUserSave (){
+    this.props.navigation.goBack();
+  }
+
 
   render() {
     let visiblePeopleModal = this.state.visiblePeopleModal;
