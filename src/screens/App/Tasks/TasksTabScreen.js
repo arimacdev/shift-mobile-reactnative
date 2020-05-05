@@ -56,36 +56,20 @@ let dropData = [
 
 let dropDataMyTasks = [
   {
-    id: 'All',
-    value: 'All',
+    id: 'None',
+    value: 'None',
   },
   {
-    id: 'Pending',
-    value: 'Pending',
+    id: 'Date',
+    value: 'Date',
   },
   {
-    id: 'Implementing',
-    value: 'Implementing',
+    id: 'Task type',
+    value: 'Task type',
   },
   {
-    id: 'QA',
-    value: 'QA',
-  },
-  {
-    id: 'Ready to Deploy',
-    value: 'Ready to Deploy',
-  },
-  {
-    id: 'Reopened',
-    value: 'Reopened',
-  },
-  {
-    id: 'Deployed',
-    value: 'Deployed',
-  },
-  {
-    id: 'Closed',
-    value: 'Closed',
+    id: 'Task status',
+    value: 'Task status',
   },
 ];
 
@@ -689,13 +673,9 @@ class TasksTabScreen extends Component {
           </View>
         );
       case 'Assignee':
-        return (
-          <PopupMenuAssignee
-            onSelect={item => this.onSelectUser(item)}
-          />
-        );
+        return <PopupMenuAssignee onSelect={item => this.onSelectUser(item)} />;
       default:
-        break;
+        return <View style={styles.filterTextView} />;
     }
   }
 
@@ -716,45 +696,43 @@ class TasksTabScreen extends Component {
         />
         {this.state.index !== 2 ? (
           <View>
-            {index == 0 ? (
-              <View style={styles.tasksFilterMainView}>
-                <Text style={styles.filterByText}>Filter By : </Text>
-                <View style={styles.tasksFilerView}>
-                  <Dropdown
-                    // style={{}}
-                    label=""
-                    labelFontSize={0}
-                    data={dropData}
-                    textColor={colors.darkBlue}
-                    error={''}
-                    animationDuration={0.5}
-                    containerStyle={{width: '100%'}}
-                    overlayStyle={{width: '100%'}}
-                    pickerStyle={{
-                      width: '69%',
-                      marginTop: 65,
-                      marginLeft: 97,
-                    }}
-                    dropdownPosition={0}
-                    value={selectedTypeAllTasks}
-                    itemColor={'black'}
-                    selectedItemColor={'black'}
-                    dropdownOffset={{top: 10}}
-                    baseColor={colors.lightgray}
-                    // renderBase={this.renderBase}
-                    // renderAccessory={this.renderBase}
-                    itemTextStyle={{
-                      marginLeft: 15,
-                      fontFamily: 'CircularStd-Book',
-                    }}
-                    itemPadding={10}
-                    onChangeText={value => this.onFilterAllTasks(value)}
-                  />
-                </View>
+            <View style={styles.tasksFilterMainView}>
+              <Text style={styles.filterByText}>Filter By : </Text>
+              <View style={styles.tasksFilerView}>
+                <Dropdown
+                  // style={{}}
+                  label=""
+                  labelFontSize={0}
+                  data={index == 0 ? dropData : dropDataMyTasks}
+                  textColor={colors.darkBlue}
+                  error={''}
+                  animationDuration={0.5}
+                  containerStyle={{width: '100%'}}
+                  overlayStyle={{width: '100%'}}
+                  pickerStyle={{
+                    width: '69%',
+                    marginTop: 65,
+                    marginLeft: 97,
+                  }}
+                  dropdownPosition={0}
+                  value={selectedTypeAllTasks}
+                  itemColor={'black'}
+                  selectedItemColor={'black'}
+                  dropdownOffset={{top: 10}}
+                  baseColor={colors.lightgray}
+                  // renderBase={this.renderBase}
+                  // renderAccessory={this.renderBase}
+                  itemTextStyle={{
+                    marginLeft: 15,
+                    fontFamily: 'CircularStd-Book',
+                  }}
+                  itemPadding={10}
+                  onChangeText={value => this.onFilterAllTasks(value)}
+                />
               </View>
-            ) : null}
+            </View>
 
-            {index == 1 ? (
+            {/* {index == 1 ? (
               <View style={styles.projectFilerView}>
                 <Dropdown
                   // style={{}}
@@ -783,7 +761,7 @@ class TasksTabScreen extends Component {
                   onChangeText={value => this.onFilterMyTasks(value)}
                 />
               </View>
-            ) : null}
+            ) : null} */}
             {this.state.filter ? (
               <View style={styles.filterMainView}>
                 {this.renderFilterType()}
