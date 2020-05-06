@@ -1051,22 +1051,45 @@ class TasksDetailsScreen extends Component {
 
   _renderHeader() {
     return (
-      <View>
+      <View style={styles.subTasksHeader}>
         <Text style={styles.parentTaskText}>Parent Task</Text>
+        <Image
+          style={styles.iconArrow}
+          source={
+            this.state.activeSections[0] == 0 ? icons.arrowDown : icons.arrowUp
+          }
+        />
       </View>
     );
   }
 
   _updateSections = activeSections => {
     this.setState({activeSections});
-    // if (!activeSections.length == 0) {
-    //   let fy = activeSections * 70;
-    //   this._myScroll.scrollTo({x: 0, y: fy, animated: true});
-    // }
+  };
+
+  userImage = function(item) {
+    let userImage = item.taskAssigneeProfileImage;
+
+    if (userImage) {
+      return (
+        <FadeIn>
+          <Image
+            source={{uri: userImage}}
+            style={{width: 24, height: 24, borderRadius: 24 / 2}}
+          />
+        </FadeIn>
+      );
+    } else {
+      return (
+        <Image
+          style={{width: 24, height: 24, borderRadius: 24 / 2}}
+          source={require('../../../asserts/img/defult_user.png')}
+        />
+      );
+    }
   };
 
   renderSubtasksList(item, index, userId, projectId) {
-    console.log('sssssssssssssssssss', item);
     return (
       <TouchableOpacity
         onPress={() =>
@@ -1076,23 +1099,24 @@ class TasksDetailsScreen extends Component {
             projectId: projectId,
           })
         }>
-
-      <View style={styles.subTasksListView}>
-        <Image
-          style={styles.completionIcon}
-          source={
-            item.taskStatus == 'closed' ? icons.rightCircule : icons.whiteCircule
-          }
-        />
-        <View style={{flex: 1}}>
-          <Text style={styles.text}>{item.taskName}</Text>
+        <View style={styles.subTasksListView}>
+          <Image
+            style={styles.subTasksCompletionIcon}
+            source={
+              item.taskStatus == 'closed'
+                ? icons.rightCircule
+                : icons.whiteCircule
+            }
+          />
+          <View style={{flex: 1}}>
+            <Text style={styles.subTaskText}>{item.taskName}</Text>
+          </View>
+          <View style={styles.statusView}>
+            {this.dateView(item)}
+            {this.userImage(item)}
+          </View>
         </View>
-        <View style={styles.statusView}>
-          {this.dateView(item)}
-          {/* {this.userImage(item)} */}
-        </View>
-      </View>
-    </TouchableOpacity>
+      </TouchableOpacity>
     );
   }
 
@@ -1206,9 +1230,9 @@ class TasksDetailsScreen extends Component {
                 underlayColor={colors.white}
                 sections={this.state.subTaskList}
                 // sectionContainerStyle={{height:200}}
-                containerStyle={{flex:1, marginBottom: 20, marginTop: 0}}
+                containerStyle={{flex: 1, marginBottom: 20, marginTop: 0}}
                 activeSections={this.state.activeSections}
-                renderHeader={this._renderHeader}
+                renderHeader={() => this._renderHeader()}
                 renderContent={item => this._renderContent(item)}
                 onChange={this._updateSections}
               />
@@ -1434,10 +1458,11 @@ const styles = EStyleSheet.create({
   },
   parentTaskView: {
     flexDirection: 'row',
-    marginHorizontal:'20rem',
-    marginTop: '10rem'
+    marginHorizontal: '20rem',
+    marginTop: '10rem',
   },
   parentTaskText: {
+    flex: 1,
     fontSize: '10rem',
   },
   subTasksListView: {
@@ -1448,19 +1473,30 @@ const styles = EStyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: '12rem',
-    // marginHorizontal: '20rem',
   },
   flatListStyle: {
     marginBottom: '10rem',
     marginTop: '0rem',
-    // marginRight: '10rem'
   },
-  // flatListView: {
-  //   marginHorizontal: 20,
-  //   borderBottomEndRadius: 5,
-  //   borderBottomStartRadius: 5,
-  //   backgroundColor: colors.projectBgColor,
-  // },
+  subTasksHeader: {
+    flexDirection: 'row',
+  },
+  iconArrow: {
+    width: '23rem',
+    height: '15rem',
+  },
+  subTasksCompletionIcon: {
+    width: '26rem',
+    height: '26rem',
+  },
+  subTaskText:{
+    fontSize: '10rem',
+    color: colors.projectTaskNameColor,
+    lineHeight: '17rem',
+    fontFamily: 'CircularStd-Medium',
+    textAlign: 'left',
+    marginLeft: '10rem',
+  },
 
   //taskLog
   taskLogTextView: {
