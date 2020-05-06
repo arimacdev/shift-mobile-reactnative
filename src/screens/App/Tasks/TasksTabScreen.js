@@ -432,7 +432,7 @@ class TasksTabScreen extends Component {
         <TouchableOpacity
           onPress={() =>
             this.props.navigation.navigate('TasksDetailsScreen', {
-              taskDetails: item,
+              taskDetails: item.parentTask,
               selectedProjectID: selectedProjectID,
               isFromBoards: false,
             })

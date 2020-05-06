@@ -327,9 +327,8 @@ async function getProjecTaskData(projectID,selectedProjectTaskID) {
     let headers =  {
         Accept: 'application/json',
         'Content-Type': 'application/json',
-        type : 'project',
+        // type : 'project',
         user : userIDHeder,
-        type : 'project',
     };
     return request({
         url: GET_TASK_IN_PROJECT+'/'+projectID +'/tasks/'+selectedProjectTaskID,
