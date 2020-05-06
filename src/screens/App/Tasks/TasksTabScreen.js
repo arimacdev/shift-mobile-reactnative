@@ -128,7 +128,6 @@ class TasksTabScreen extends Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    console.log('uuuuuuuuuuuuuuuuuu', this.props.projDetails);
     if (prevProps.isActive !== this.props.isActive && this.props.isActive) {
       let selectedProjectID = this.props.selectedProjectID;
       let selectedProjectName = this.props.projDetails.projectName;
@@ -428,7 +427,6 @@ class TasksTabScreen extends Component {
     let selectedProjectID = this.state.selectedProjectID;
     let tasksName = this.state.tasksName;
     let subTasksName = this.state.subTasksName;
-    console.log('vvvvvvvvvvvvv', item);
     return (
       <View>
         <TouchableOpacity

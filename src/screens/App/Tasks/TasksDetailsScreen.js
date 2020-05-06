@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import {
   View,
   FlatList,
@@ -8,21 +8,21 @@ import {
   TouchableOpacity,
   TextInput,
   ScrollView,
-  Alert
+  Alert,
 } from 'react-native';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import * as actions from '../../../redux/actions';
 import colors from '../../../config/colors';
 import icons from '../../../assest/icons/icons';
 import EStyleSheet from 'react-native-extended-stylesheet';
 const entireScreenWidth = Dimensions.get('window').width;
-EStyleSheet.build({ $rem: entireScreenWidth / 380 });
-import { Dropdown } from 'react-native-material-dropdown';
+EStyleSheet.build({$rem: entireScreenWidth / 380});
+import {Dropdown} from 'react-native-material-dropdown';
 import AsyncStorage from '@react-native-community/async-storage';
 import Loader from '../../../components/Loader';
 import moment from 'moment';
 import FadeIn from 'react-native-fade-in-image';
-import { SkypeIndicator } from 'react-native-indicators';
+import {SkypeIndicator} from 'react-native-indicators';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import APIServices from '../../../services/APIServices';
 import AwesomeAlert from 'react-native-awesome-alerts';
@@ -190,30 +190,36 @@ class TasksDetailsScreen extends Component {
       sprints: [],
       isFromBoards: false,
       selectedSprint: '',
-      previousSprintID : '',
+      previousSprintID: '',
     };
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    if (prevProps.deleteTaskError !== this.props.deleteTaskError
-      && this.props.deleteTaskError && this.props.deleteTaskErrorMessage == '') {
-      this.showAlert("", this.props.deleteTaskErrorMessage);
+    if (
+      prevProps.deleteTaskError !== this.props.deleteTaskError &&
+      this.props.deleteTaskError &&
+      this.props.deleteTaskErrorMessage == ''
+    ) {
+      this.showAlert('', this.props.deleteTaskErrorMessage);
     }
 
-    if (prevProps.deleteTaskError !== this.props.deleteTaskError
-      && this.props.deleteTaskError && this.props.deleteTaskErrorMessage != '') {
-      this.showAlert("", this.props.deleteTaskErrorMessage);
+    if (
+      prevProps.deleteTaskError !== this.props.deleteTaskError &&
+      this.props.deleteTaskError &&
+      this.props.deleteTaskErrorMessage != ''
+    ) {
+      this.showAlert('', this.props.deleteTaskErrorMessage);
     }
 
-    if (prevProps.deleteTaskSuccess !== this.props.deleteTaskSuccess
-      && this.props.deleteTaskSuccess) {
+    if (
+      prevProps.deleteTaskSuccess !== this.props.deleteTaskSuccess &&
+      this.props.deleteTaskSuccess
+    ) {
       Alert.alert(
-        "Success",
-        "Task Deleted",
-        [
-          { text: "OK", onPress: () => this.props.navigation.goBack() }
-        ],
-        { cancelable: false }
+        'Success',
+        'Task Deleted',
+        [{text: 'OK', onPress: () => this.props.navigation.goBack()}],
+        {cancelable: false},
       );
       // const taskID = this.props.taskId.data.taskId;
       // this.uploadFiles(this.state.files, taskID)
@@ -221,84 +227,100 @@ class TasksDetailsScreen extends Component {
   }
 
   componentDidMount() {
-    const { navigation: { state: { params } } } = this.props;
+    const {
+      navigation: {
+        state: {params},
+      },
+    } = this.props;
     let selectedProjectID = params.selectedProjectID;
     let selectedProjectTaskID = params.taskDetails.taskId;
     let isFromBoards = params.isFromBoards;
     this.setState({
       selectedProjectID: selectedProjectID,
       selectedProjectTaskID: selectedProjectTaskID,
-      isFromBoards: params.isFromBoards
+      isFromBoards: params.isFromBoards,
     });
     this.fetchData(selectedProjectID, selectedProjectTaskID);
     if (params.isFromBoards == true) {
-      let sprintId =  params.taskDetails.sprintId;
-      this.getAllSprintInProject(selectedProjectID,sprintId)
+      let sprintId = params.taskDetails.sprintId;
+      this.getAllSprintInProject(selectedProjectID, sprintId);
     }
   }
 
-  async getAllSprintInProject(selectedProjectID,sprintId) {
-    this.setState({ dataLoading: true });
+  async getAllSprintInProject(selectedProjectID, sprintId) {
+    this.setState({dataLoading: true});
     sprintData = await APIServices.getAllSprintInProject(selectedProjectID);
     if (sprintData.message == 'success') {
       this.setSprintDroupDownData(sprintData.data);
-      this.setSprintDroupDownSelectedValue(sprintData.data,sprintId);
-      this.setState({ dataLoading: false});
+      this.setSprintDroupDownSelectedValue(sprintData.data, sprintId);
+      this.setState({dataLoading: false});
     } else {
-      this.setState({ dataLoading: false });
+      this.setState({dataLoading: false});
     }
   }
 
   async fetchData(selectedProjectID, selectedProjectTaskID) {
-    this.setState({ dataLoading: true });
-    taskResult = await APIServices.getProjecTaskData(selectedProjectID, selectedProjectTaskID);
-    if (taskResult.message == 'success') {
-      this.setTaskInitiator(taskResult);
-      this.setTaskName(taskResult);
-      this.setTaskStatus(taskResult);
-      this.setTaskUserName(taskResult);
-      this.setDueDate(taskResult);
-      this.setReminderDate(taskResult);
-      this.setTaskNote(taskResult);
-      this.setState({ dataLoading: false });
-    } else {
-      this.setState({ dataLoading: false });
+    this.setState({dataLoading: true});
+    try {
+      taskResult = await APIServices.getProjecTaskData(
+        selectedProjectID,
+        selectedProjectTaskID,
+      );
+      if (taskResult.message == 'success') {
+        this.setTaskInitiator(taskResult);
+        this.setTaskName(taskResult);
+        this.setTaskStatus(taskResult);
+        this.setTaskUserName(taskResult);
+        this.setDueDate(taskResult);
+        this.setReminderDate(taskResult);
+        this.setTaskNote(taskResult);
+        this.setState({dataLoading: false});
+      } else {
+        this.setState({dataLoading: false});
+      }
+    } catch (error) {
+      this.setState({dataLoading: false});
     }
   }
 
   setSprintDroupDownData(sprintData) {
     let sprintArray = [
       {
-        id: "default",
-        value: "Default",
-      }
+        id: 'default',
+        value: 'Default',
+      },
     ];
-    for(let i=0 ; i < sprintData.length; i++){
+    for (let i = 0; i < sprintData.length; i++) {
       sprintArray.push({
         id: sprintData[i].sprintId,
         value: sprintData[i].sprintName,
       });
     }
-    this.setState({sprints: sprintArray });
-  };
+    this.setState({sprints: sprintArray});
+  }
 
-  setSprintDroupDownSelectedValue(sprintData,selectedSprintID) {
-    if(selectedSprintID == "default"){
-      this.setState({selectedSprint: "Default" ,previousSprintID:'default'});
-    }else{
-      let selectedSprint = sprintData.find( ({ sprintId }) => sprintId == selectedSprintID );
-      if(selectedSprint){
-        this.setState({selectedSprint: selectedSprint.sprintName,previousSprintID:selectedSprint.sprintId });
+  setSprintDroupDownSelectedValue(sprintData, selectedSprintID) {
+    if (selectedSprintID == 'default') {
+      this.setState({selectedSprint: 'Default', previousSprintID: 'default'});
+    } else {
+      let selectedSprint = sprintData.find(
+        ({sprintId}) => sprintId == selectedSprintID,
+      );
+      if (selectedSprint) {
+        this.setState({
+          selectedSprint: selectedSprint.sprintName,
+          previousSprintID: selectedSprint.sprintId,
+        });
       }
     }
   }
 
   setTaskInitiator(taskResult) {
-    this.setState({ projectTaskInitiator: taskResult.data.taskInitiator });
+    this.setState({projectTaskInitiator: taskResult.data.taskInitiator});
   }
 
   setTaskName(taskResult) {
-    this.setState({ taskName: taskResult.data.taskName });
+    this.setState({taskName: taskResult.data.taskName});
   }
 
   hideAlert() {
@@ -306,7 +328,7 @@ class TasksDetailsScreen extends Component {
       showAlert: false,
       alertTitle: '',
       alertMsg: '',
-    })
+    });
   }
 
   showAlert(title, msg) {
@@ -314,37 +336,37 @@ class TasksDetailsScreen extends Component {
       showAlert: true,
       alertTitle: title,
       alertMsg: msg,
-    })
+    });
   }
 
   setTaskStatus(taskResult) {
     let statusValue = '';
     switch (taskResult.data.taskStatus) {
       case 'pending':
-        statusValue = 'Pending'
+        statusValue = 'Pending';
         break;
       case 'implementing':
-        statusValue = 'Implementing'
+        statusValue = 'Implementing';
         break;
       case 'qa':
-        statusValue = 'QA'
+        statusValue = 'QA';
         break;
       case 'readyToDeploy':
-        statusValue = 'Ready to Deploy'
+        statusValue = 'Ready to Deploy';
         break;
       case 'reOpened':
-        statusValue = 'Re-Opened'
+        statusValue = 'Re-Opened';
         break;
       case 'deployed':
-        statusValue = 'Deployed'
+        statusValue = 'Deployed';
         break;
       case 'closed':
-        statusValue = 'Closed'
+        statusValue = 'Closed';
         break;
     }
     this.setState({
-      taskStatus: statusValue
-    })
+      taskStatus: statusValue,
+    });
   }
 
   async setTaskUserName(taskResult) {
@@ -352,7 +374,7 @@ class TasksDetailsScreen extends Component {
     let userID = taskResult.data.taskAssignee;
     let activeUsers = await APIServices.getAllUsersByProjectId(projectID);
     if (activeUsers.message == 'success' && userID) {
-      const result = activeUsers.data.find(({ userId }) => userId === userID);
+      const result = activeUsers.data.find(({userId}) => userId === userID);
       this.setState({
         name: result.firstName + ' ' + result.lastName,
         //activeUsers : activeUsers.data,
@@ -361,28 +383,32 @@ class TasksDetailsScreen extends Component {
   }
 
   setDueDate(taskResult) {
-    let taskDueDate = moment.parseZone(taskResult.data.taskDueDateAt).format('Do MMMM YYYY');
+    let taskDueDate = moment
+      .parseZone(taskResult.data.taskDueDateAt)
+      .format('Do MMMM YYYY');
     if (taskDueDate != 'Invalid date') {
       this.setState({
-        duedate: 'Due on ' + taskDueDate
-      })
+        duedate: 'Due on ' + taskDueDate,
+      });
     }
   }
 
   setReminderDate(taskResult) {
-    let taskReminderDate = moment.parseZone(taskResult.data.taskReminderAt).format('Do MMMM YYYY');
+    let taskReminderDate = moment
+      .parseZone(taskResult.data.taskReminderAt)
+      .format('Do MMMM YYYY');
     if (taskReminderDate != 'Invalid date') {
       this.setState({
         remindDate: 'Remind on ' + taskReminderDate,
-      })
+      });
     }
   }
 
   setTaskNote(taskResult) {
-    this.setState({ note: taskResult.data.taskNote });
+    this.setState({note: taskResult.data.taskNote});
   }
 
-  dateView = function (item) {
+  dateView = function(item) {
     let date = item.taskDueDateAt;
     let currentTime = moment().format();
     let dateText = '';
@@ -403,7 +429,7 @@ class TasksDetailsScreen extends Component {
       }
     }
 
-    return <Text style={[styles.textDate, { color: color }]}>{dateText}</Text>;
+    return <Text style={[styles.textDate, {color: color}]}>{dateText}</Text>;
   };
 
   onChangeDate(event, selectedDate) {
@@ -508,23 +534,23 @@ class TasksDetailsScreen extends Component {
   clearDates(id) {
     switch (id) {
       case 2:
-        this.setState({ duedate: '' });
+        this.setState({duedate: ''});
         break;
       case 3:
-        this.setState({ remindDate: '' });
+        this.setState({remindDate: ''});
         break;
       default:
         break;
     }
   }
 
-  renderImage = function (item) {
+  renderImage = function(item) {
     if (item.renderImage) {
       return (
         <FadeIn>
           <Image
             source={icons.forwordGray}
-            style={{ width: 24, height: 24, borderRadius: 24 / 2 }}
+            style={{width: 24, height: 24, borderRadius: 24 / 2}}
           />
         </FadeIn>
       );
@@ -533,10 +559,7 @@ class TasksDetailsScreen extends Component {
         (this.state.duedate != '' && item.id == 2) ||
         (this.state.remindDate != '' && item.id == 3)
       ) {
-        return (
-          <TouchableOpacity >
-          </TouchableOpacity>
-        );
+        return <TouchableOpacity />;
       }
     }
   };
@@ -550,7 +573,7 @@ class TasksDetailsScreen extends Component {
   }
 
   onTaskNameChange(text) {
-    this.setState({ taskName: text });
+    this.setState({taskName: text});
   }
 
   onItemPress(item) {
@@ -570,15 +593,15 @@ class TasksDetailsScreen extends Component {
         });
         break;
       case 2:
-        this.setState({ showPicker: true, reminder: false });
+        this.setState({showPicker: true, reminder: false});
         break;
       case 3:
-        this.setState({ showPicker: true, reminder: true });
+        this.setState({showPicker: true, reminder: true});
         break;
       case 4:
         this.props.navigation.navigate('NotesScreen', {
           note: this.state.note,
-          onUpdateNote: (note) => this.onUpdateNote(note),
+          onUpdateNote: note => this.onUpdateNote(note),
         });
         break;
       case 5:
@@ -615,7 +638,7 @@ class TasksDetailsScreen extends Component {
     }
 
     return (
-      <View style={{ flex: 1 }}>
+      <View style={{flex: 1}}>
         {item.id == 10 ? (
           <TextInput
             style={[
@@ -623,27 +646,28 @@ class TasksDetailsScreen extends Component {
               {
                 flex: 1,
                 marginLeft: 5,
-                color:
-                  value !== '' ? colors.darkBlue : colors.darkBlue,
+                color: value !== '' ? colors.darkBlue : colors.darkBlue,
               },
             ]}
             placeholder={item.name}
             value={this.state.taskName}
             onChangeText={text => this.onTaskNameChange(text)}
-            onSubmitEditing={() => this.onTaskNameChangeSubmit(this.state.taskName)}
+            onSubmitEditing={() =>
+              this.onTaskNameChangeSubmit(this.state.taskName)
+            }
           />
         ) : (
-            <Text
-              style={[
-                styles.text,
-                {
-                  color:
-                    value !== '' ? colors.darkBlue : colors.projectTaskNameColor,
-                },
-              ]}>
-              {value !== '' ? value : item.name}
-            </Text>
-          )}
+          <Text
+            style={[
+              styles.text,
+              {
+                color:
+                  value !== '' ? colors.darkBlue : colors.projectTaskNameColor,
+              },
+            ]}>
+            {value !== '' ? value : item.name}
+          </Text>
+        )}
       </View>
     );
   }
@@ -669,7 +693,7 @@ class TasksDetailsScreen extends Component {
 
   renderBase() {
     return (
-      <View style={{ justifyContent: 'center', flex: 1 }}>
+      <View style={{justifyContent: 'center', flex: 1}}>
         <Image style={styles.dropIcon} source={icons.arrow} />
       </View>
     );
@@ -710,47 +734,67 @@ class TasksDetailsScreen extends Component {
     let selectedProjectID = this.state.selectedProjectID;
     let selectedProjectTaskID = this.state.selectedProjectTaskID;
     const selectedId = data[index].id;
-    let selectedName  = data[index].value;
+    let selectedName = data[index].value;
     //this.setState({selectedSprint: selectedName });
-    this.changeSprint(selectedName,selectedId,previousSprintID,selectedProjectID,selectedProjectTaskID);
+    this.changeSprint(
+      selectedName,
+      selectedId,
+      previousSprintID,
+      selectedProjectID,
+      selectedProjectTaskID,
+    );
   };
 
-   // change Sprint 
-  async changeSprint(selectedName,selectedId,previousSprintID,selectedProjectID,selectedProjectTaskID) {
-    this.setState({dataLoading:true});
+  // change Sprint
+  async changeSprint(
+    selectedName,
+    selectedId,
+    previousSprintID,
+    selectedProjectID,
+    selectedProjectTaskID,
+  ) {
+    this.setState({dataLoading: true});
     try {
-        resultObj = await APIServices.changeSprint(selectedId,previousSprintID,selectedProjectID,selectedProjectTaskID);
-        if(resultObj.message == 'success'){
-          this.setState({dataLoading:false,selectedSprint: selectedName});
-        }else{
-          this.setState({dataLoading:false});
-          this.showAlert("","Error");
-        }
-    }catch(e) {
-      if(e.status == 401 || e.status == 403){
-        this.setState({dataLoading:false});
-        this.showAlert("",e.data.message);
+      resultObj = await APIServices.changeSprint(
+        selectedId,
+        previousSprintID,
+        selectedProjectID,
+        selectedProjectTaskID,
+      );
+      if (resultObj.message == 'success') {
+        this.setState({dataLoading: false, selectedSprint: selectedName});
+      } else {
+        this.setState({dataLoading: false});
+        this.showAlert('', 'Error');
+      }
+    } catch (e) {
+      if (e.status == 401 || e.status == 403) {
+        this.setState({dataLoading: false});
+        this.showAlert('', e.data.message);
       }
     }
   }
 
-
   // change note of task API
   async changeTaskNote(note) {
     try {
-      this.setState({ dataLoading: true });
+      this.setState({dataLoading: true});
       let projectID = this.state.selectedProjectID;
       let taskID = this.state.selectedProjectTaskID;
-      resultData = await APIServices.updateTaskNoteData(projectID, taskID, note);
+      resultData = await APIServices.updateTaskNoteData(
+        projectID,
+        taskID,
+        note,
+      );
       if (resultData.message == 'success') {
-        this.setState({ dataLoading: false, note: note });
+        this.setState({dataLoading: false, note: note});
       } else {
-        this.setState({ dataLoading: false });
+        this.setState({dataLoading: false});
       }
-    }catch(e) {
-      if(e.status == 401 || e.status == 403){
-        this.setState({dataLoading:false});
-        this.showAlert("",e.data.message);
+    } catch (e) {
+      if (e.status == 401 || e.status == 403) {
+        this.setState({dataLoading: false});
+        this.showAlert('', e.data.message);
       }
     }
   }
@@ -758,19 +802,23 @@ class TasksDetailsScreen extends Component {
   // change assignee of task API
   async changeTaskAssignee(name, userID) {
     try {
-      this.setState({ dataLoading: true });
+      this.setState({dataLoading: true});
       let projectID = this.state.selectedProjectID;
       let taskID = this.state.selectedProjectTaskID;
-      resultData = await APIServices.updateTaskAssigneeData(projectID, taskID, userID);
+      resultData = await APIServices.updateTaskAssigneeData(
+        projectID,
+        taskID,
+        userID,
+      );
       if (resultData.message == 'success') {
-        this.setState({ dataLoading: false, name: name });
+        this.setState({dataLoading: false, name: name});
       } else {
-        this.setState({ dataLoading: false });
+        this.setState({dataLoading: false});
       }
-    }catch(e) {
-      if(e.status == 401 || e.status == 403){
-        this.setState({dataLoading:false});
-        this.showAlert("",e.data.message);
+    } catch (e) {
+      if (e.status == 401 || e.status == 403) {
+        this.setState({dataLoading: false});
+        this.showAlert('', e.data.message);
       }
     }
   }
@@ -778,19 +826,23 @@ class TasksDetailsScreen extends Component {
   // change status of task API
   async changeTaskStatus(key, searchValue) {
     try {
-      this.setState({ dataLoading: true });
+      this.setState({dataLoading: true});
       let projectID = this.state.selectedProjectID;
       let taskID = this.state.selectedProjectTaskID;
-      resultData = await APIServices.updateTaskStatusData(projectID, taskID, searchValue);
+      resultData = await APIServices.updateTaskStatusData(
+        projectID,
+        taskID,
+        searchValue,
+      );
       if (resultData.message == 'success') {
-        this.setState({ dataLoading: false, taskStatus: key });
+        this.setState({dataLoading: false, taskStatus: key});
       } else {
-        this.setState({ dataLoading: false });
+        this.setState({dataLoading: false});
       }
-    }catch(e) {
-      if(e.status == 401 || e.status == 403){
-        this.setState({dataLoading:false});
-        this.showAlert("",e.data.message);
+    } catch (e) {
+      if (e.status == 401 || e.status == 403) {
+        this.setState({dataLoading: false});
+        this.showAlert('', e.data.message);
       }
     }
   }
@@ -798,70 +850,88 @@ class TasksDetailsScreen extends Component {
   // change name of task API
   async onTaskNameChangeSubmit(text) {
     try {
-      this.setState({ dataLoading: true });
+      this.setState({dataLoading: true});
       let projectID = this.state.selectedProjectID;
       let taskID = this.state.selectedProjectTaskID;
-      resultData = await APIServices.updateTaskNameData(projectID, taskID, text);
+      resultData = await APIServices.updateTaskNameData(
+        projectID,
+        taskID,
+        text,
+      );
       if (resultData.message == 'success') {
-        this.setState({ dataLoading: false });
+        this.setState({dataLoading: false});
       } else {
-        this.setState({ dataLoading: false });
+        this.setState({dataLoading: false});
       }
-    }catch(e) {
-      if(e.status == 401 || e.status == 403){
-        this.setState({dataLoading:false});
-        this.showAlert("",e.data.message);
+    } catch (e) {
+      if (e.status == 401 || e.status == 403) {
+        this.setState({dataLoading: false});
+        this.showAlert('', e.data.message);
       }
     }
   }
 
   async changeTaskDueDate() {
-    try{
+    try {
       let duedateValue = this.state.duedateValue;
       let dueTime = this.state.dueTime;
       let projectID = this.state.selectedProjectID;
       let taskID = this.state.selectedProjectTaskID;
-  
-      let IsoDueDate = duedateValue ?
-        moment(duedateValue + dueTime, 'DD/MM/YYYY hh:mmA').format('YYYY-MM-DD[T]HH:mm:ss') : '';
-  
-      resultData = await APIServices.updateTaskDueDateData(projectID, taskID, IsoDueDate);
+
+      let IsoDueDate = duedateValue
+        ? moment(duedateValue + dueTime, 'DD/MM/YYYY hh:mmA').format(
+            'YYYY-MM-DD[T]HH:mm:ss',
+          )
+        : '';
+
+      resultData = await APIServices.updateTaskDueDateData(
+        projectID,
+        taskID,
+        IsoDueDate,
+      );
       if (resultData.message == 'success') {
-        this.setState({ dataLoading: false });
+        this.setState({dataLoading: false});
       } else {
-        this.setState({ dataLoading: false });
+        this.setState({dataLoading: false});
       }
-    }catch(e) {
-      if(e.status == 401 || e.status == 403){
-        this.setState({dataLoading:false});
-        this.showAlert("",e.data.message);
+    } catch (e) {
+      if (e.status == 401 || e.status == 403) {
+        this.setState({dataLoading: false});
+        this.showAlert('', e.data.message);
       }
     }
-  };
+  }
 
   async changeTaskReminderDate() {
-    try{
+    try {
       let remindDateValue = this.state.remindDateValue;
       let reminderTime = this.state.reminderTime;
       let projectID = this.state.selectedProjectID;
       let taskID = this.state.selectedProjectTaskID;
-  
-      let IsoReminderDate = remindDateValue ?
-        moment(remindDateValue + reminderTime, 'DD/MM/YYYY hh:mmA').format('YYYY-MM-DD[T]HH:mm:ss') : '';
-  
-      resultData = await APIServices.updateTaskReminderDateData(projectID, taskID, IsoReminderDate);
+
+      let IsoReminderDate = remindDateValue
+        ? moment(remindDateValue + reminderTime, 'DD/MM/YYYY hh:mmA').format(
+            'YYYY-MM-DD[T]HH:mm:ss',
+          )
+        : '';
+
+      resultData = await APIServices.updateTaskReminderDateData(
+        projectID,
+        taskID,
+        IsoReminderDate,
+      );
       if (resultData.message == 'success') {
-        this.setState({ dataLoading: false });
+        this.setState({dataLoading: false});
       } else {
-        this.setState({ dataLoading: false });
+        this.setState({dataLoading: false});
       }
-    }catch(e) {
-      if(e.status == 401 || e.status == 403){
-        this.setState({dataLoading:false});
-        this.showAlert("",e.data.message);
+    } catch (e) {
+      if (e.status == 401 || e.status == 403) {
+        this.setState({dataLoading: false});
+        this.showAlert('', e.data.message);
       }
     }
-  };
+  }
 
   deleteTask() {
     let projectID = this.state.selectedProjectID;
@@ -870,17 +940,21 @@ class TasksDetailsScreen extends Component {
     let taskName = this.state.taskName;
 
     Alert.alert(
-      "Delete Task",
+      'Delete Task',
       "You're about to permanently delete this task, its comments\n and attachments, and all of its data.\nIf you're not sure, you can close this pop up.",
       [
         {
-          text: "Cancel",
-          onPress: () => console.log("Cancel Pressed"),
-          style: "cancel"
+          text: 'Cancel',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
         },
-        { text: "Delete", onPress: () => this.props.deleteTask(projectID, taskID, taskName, tskInitiator) }
+        {
+          text: 'Delete',
+          onPress: () =>
+            this.props.deleteTask(projectID, taskID, taskName, tskInitiator),
+        },
       ],
-      { cancelable: false }
+      {cancelable: false},
     );
   }
 
@@ -917,14 +991,14 @@ class TasksDetailsScreen extends Component {
                 textColor={colors.white}
                 error={''}
                 animationDuration={0.5}
-                containerStyle={{ width: '100%' }}
-                overlayStyle={{ width: '100%' }}
-                pickerStyle={{ width: '89%', marginTop: 70, marginLeft: 15 }}
+                containerStyle={{width: '100%'}}
+                overlayStyle={{width: '100%'}}
+                pickerStyle={{width: '89%', marginTop: 70, marginLeft: 15}}
                 dropdownPosition={0}
                 value={taskStatus}
                 itemColor={'black'}
                 selectedItemColor={'black'}
-                dropdownOffset={{ top: 10 }}
+                dropdownOffset={{top: 10}}
                 baseColor={colors.lightBlue}
                 renderAccessory={this.renderBase}
                 itemTextStyle={{
@@ -936,7 +1010,7 @@ class TasksDetailsScreen extends Component {
               />
             </View>
 
-            {this.state.isFromBoards ?
+            {this.state.isFromBoards ? (
               <View style={styles.projectFilerViewGreen}>
                 <Dropdown
                   // style={{}}
@@ -947,14 +1021,14 @@ class TasksDetailsScreen extends Component {
                   renderAccessory={() => null}
                   error={''}
                   animationDuration={0.5}
-                  containerStyle={{ width: '100%' }}
-                  overlayStyle={{ width: '100%' }}
-                  pickerStyle={{ width: '89%', marginTop: 70, marginLeft: 15 }}
+                  containerStyle={{width: '100%'}}
+                  overlayStyle={{width: '100%'}}
+                  pickerStyle={{width: '89%', marginTop: 70, marginLeft: 15}}
                   dropdownPosition={0}
                   value={selectedSprint}
                   itemColor={'black'}
                   selectedItemColor={'black'}
-                  dropdownOffset={{ top: 10 }}
+                  dropdownOffset={{top: 10}}
                   baseColor={colors.lightGreen}
                   itemTextStyle={{
                     marginLeft: 15,
@@ -964,10 +1038,10 @@ class TasksDetailsScreen extends Component {
                   onChangeText={this.onFilterSprintData}
                 />
               </View>
-              : null}
+            ) : null}
             <FlatList
               data={taskData}
-              renderItem={({ item }) => this.renderProjectList(item)}
+              renderItem={({item}) => this.renderProjectList(item)}
               keyExtractor={item => item.taskId}
             />
             <TouchableOpacity onPress={() => this.deleteTask()}>
@@ -975,17 +1049,17 @@ class TasksDetailsScreen extends Component {
                 <Image
                   style={[
                     styles.bottomBarIcon,
-                    { marginRight: 15, marginLeft: 10 },
+                    {marginRight: 15, marginLeft: 10},
                   ]}
                   source={icons.taskWhite}
                   resizeMode={'center'}
                 />
-                <View style={{ flex: 1 }}>
+                <View style={{flex: 1}}>
                   <Text style={styles.buttonText}>Delete Task</Text>
                 </View>
 
                 <Image
-                  style={[styles.deleteIcon, { marginRight: 10 }]}
+                  style={[styles.deleteIcon, {marginRight: 10}]}
                   source={icons.deleteWhite}
                   resizeMode={'center'}
                 />
@@ -1168,7 +1242,7 @@ const mapStateToProps = state => {
     deleteTaskLoading: state.project.deleteTaskLoading,
     deleteTaskSuccess: state.project.deleteTaskSuccess,
     deleteTaskError: state.project.deleteTaskError,
-    deleteTaskErrorMessage: state.project.deleteTaskErrorMessage
+    deleteTaskErrorMessage: state.project.deleteTaskErrorMessage,
   };
 };
 export default connect(
