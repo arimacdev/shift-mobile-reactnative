@@ -27,6 +27,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import APIServices from '../../../services/APIServices';
 import AwesomeAlert from 'react-native-awesome-alerts';
 import Header from '../../../components/Header';
+import Accordion from 'react-native-collapsible/Accordion';
 
 const Placeholder = () => (
   <View style={styles.landing}>
@@ -160,24 +161,38 @@ taskLogData = [
     id: 0,
     date: '2020 Jan 20',
     details: [
-      {time:'10:25 AM :', name: '@inidika', log: 'Set the task type to Original'},
-      {time:'11:30 AM :', name: '@inidika', log: 'has update the task name'},
-      {time:'11:40 AM :', name: '@inidika', log: 'has assign to @indika to task'},
+      {
+        time: '10:25 AM :',
+        name: '@inidika',
+        log: 'Set the task type to Original',
+      },
+      {time: '11:30 AM :', name: '@inidika', log: 'has update the task name'},
+      {
+        time: '11:40 AM :',
+        name: '@inidika',
+        log: 'has assign to @indika to task',
+      },
     ],
   },
   {
     id: 1,
     date: '2020 Jan 30',
     details: [
-      {time:'09:10 AM :', name: '@inidika', log: 'has update the task name'},
-      {time:'01:25 PM :', name: '@inidika', log: 'has assign to @indika to task'},
+      {time: '09:10 AM :', name: '@inidika', log: 'has update the task name'},
+      {
+        time: '01:25 PM :',
+        name: '@inidika',
+        log: 'has assign to @indika to task',
+      },
     ],
   },
   {
     id: 2,
     date: '2020 Feb 1',
-    details: [{time:'04:22 PM :', name: '@inidika', log: 'has update the task name'}],
-  }
+    details: [
+      {time: '04:22 PM :', name: '@inidika', log: 'has update the task name'},
+    ],
+  },
 ];
 
 class TasksDetailsScreen extends Component {
@@ -216,6 +231,8 @@ class TasksDetailsScreen extends Component {
       isFromBoards: false,
       selectedSprint: '',
       previousSprintID: '',
+      subTaskList: [],
+      activeSections: [],
     };
   }
 
@@ -264,6 +281,7 @@ class TasksDetailsScreen extends Component {
       selectedProjectID: selectedProjectID,
       selectedProjectTaskID: selectedProjectTaskID,
       isFromBoards: params.isFromBoards,
+      subTaskList: [params.subTaskDetails],
     });
     this.fetchData(selectedProjectID, selectedProjectTaskID);
     if (params.isFromBoards == true) {
@@ -987,8 +1005,8 @@ class TasksDetailsScreen extends Component {
     this.props.navigation.goBack();
   }
 
-  renderTaskLogDetailsList(item){
-    return(
+  renderTaskLogDetailsList(item) {
+    return (
       <View>
         <View style={styles.detailsView}>
           <Text style={styles.timeText}>{item.time}</Text>
@@ -998,11 +1016,11 @@ class TasksDetailsScreen extends Component {
           </View>
         </View>
       </View>
-    )
+    );
   }
 
-  renderTaskLogList(item){
-    return(
+  renderTaskLogList(item) {
+    return (
       <View>
         <View style={styles.dateView}>
           <Text style={styles.dateText}>{item.date}</Text>
@@ -1013,7 +1031,7 @@ class TasksDetailsScreen extends Component {
           keyExtractor={item => item.id}
         />
       </View>
-    )
+    );
   }
 
   renderTaskLog() {
@@ -1026,6 +1044,66 @@ class TasksDetailsScreen extends Component {
           data={taskLogData}
           renderItem={({item}) => this.renderTaskLogList(item)}
           keyExtractor={item => item.id}
+        />
+      </View>
+    );
+  }
+
+  _renderHeader() {
+    return (
+      <View>
+        <Text style={styles.parentTaskText}>Parent Task</Text>
+      </View>
+    );
+  }
+
+  _updateSections = activeSections => {
+    this.setState({activeSections});
+    // if (!activeSections.length == 0) {
+    //   let fy = activeSections * 70;
+    //   this._myScroll.scrollTo({x: 0, y: fy, animated: true});
+    // }
+  };
+
+  renderSubtasksList(item, index, userId, projectId) {
+    console.log('sssssssssssssssssss', item);
+    return (
+      <TouchableOpacity
+        onPress={() =>
+          this.props.navigation.navigate('WorkloadTasksDetailsScreen', {
+            workloadTasksDetails: item,
+            userId: userId,
+            projectId: projectId,
+          })
+        }>
+
+      <View style={styles.subTasksListView}>
+        <Image
+          style={styles.completionIcon}
+          source={
+            item.taskStatus == 'closed' ? icons.rightCircule : icons.whiteCircule
+          }
+        />
+        <View style={{flex: 1}}>
+          <Text style={styles.text}>{item.taskName}</Text>
+        </View>
+        <View style={styles.statusView}>
+          {this.dateView(item)}
+          {/* {this.userImage(item)} */}
+        </View>
+      </View>
+    </TouchableOpacity>
+    );
+  }
+
+  _renderContent(item) {
+    return (
+      <View style={styles.flatListView}>
+        <FlatList
+          style={styles.flatListStyle}
+          data={item}
+          renderItem={({item, index}) => this.renderSubtasksList(item)}
+          keyExtractor={item => item.taskId}
         />
       </View>
     );
@@ -1051,33 +1129,43 @@ class TasksDetailsScreen extends Component {
         />
         <ScrollView style={styles.backgroundImage}>
           <View>
-            <View style={styles.projectFilerView}>
-              <Dropdown
-                // style={{}}
-                label=""
-                labelFontSize={0}
-                data={dropData}
-                textColor={colors.white}
-                error={''}
-                animationDuration={0.5}
-                containerStyle={{width: '100%'}}
-                overlayStyle={{width: '100%'}}
-                pickerStyle={{width: '89%', marginTop: 70, marginLeft: 15}}
-                dropdownPosition={0}
-                value={taskStatus}
-                itemColor={'black'}
-                selectedItemColor={'black'}
-                dropdownOffset={{top: 10}}
-                baseColor={colors.lightBlue}
-                renderAccessory={this.renderBase}
-                itemTextStyle={{
-                  marginLeft: 15,
-                  fontFamily: 'CircularStd-Book',
-                }}
-                itemPadding={10}
-                onChangeText={value => this.onFilterTasksStatus(value)}
-              />
+            <View style={styles.headerView}>
+              <Text>Task - </Text>
+              <Text style={styles.headerText}>#34</Text>
+              <View style={styles.projectFilerView}>
+                <Dropdown
+                  // style={{}}
+                  label=""
+                  labelFontSize={0}
+                  data={dropData}
+                  fontSize={12}
+                  textColor={colors.white}
+                  error={''}
+                  animationDuration={0.5}
+                  containerStyle={{width: '100%', marginLeft: 17, marginTop: 2}}
+                  // overlayStyle={{width: '29%',marginLeft:100}}
+                  pickerStyle={{width: '26%', marginTop: 53, marginLeft: 115}}
+                  dropdownPosition={0}
+                  // dropdownMargins={{min: 2, max: 5}}
+                  value={taskStatus}
+                  itemColor={'black'}
+                  selectedItemColor={'black'}
+                  dropdownOffset={{top: 10}}
+                  baseColor={colors.lightBlue}
+                  // renderAccessory={this.renderBase}
+                  itemTextStyle={{
+                    marginLeft: 15,
+                    fontFamily: 'CircularStd-Book',
+                  }}
+                  itemPadding={10}
+                  onChangeText={value => this.onFilterTasksStatus(value)}
+                />
+              </View>
             </View>
+            <View>
+              <Text style={styles.taskNameStyle}>Sample Task Name</Text>
+            </View>
+            <View style={styles.borderStyle} />
 
             {this.state.isFromBoards ? (
               <View style={styles.projectFilerViewGreen}>
@@ -1108,6 +1196,23 @@ class TasksDetailsScreen extends Component {
                 />
               </View>
             ) : null}
+            <View style={styles.parentTaskView}>
+              <Image
+                style={styles.completionIcon}
+                source={icons.subTask}
+                resizeMode="contain"
+              />
+              <Accordion
+                underlayColor={colors.white}
+                sections={this.state.subTaskList}
+                // sectionContainerStyle={{height:200}}
+                containerStyle={{flex:1, marginBottom: 20, marginTop: 0}}
+                activeSections={this.state.activeSections}
+                renderHeader={this._renderHeader}
+                renderContent={item => this._renderContent(item)}
+                onChange={this._updateSections}
+              />
+            </View>
             <FlatList
               data={taskData}
               renderItem={({item}) => this.renderProjectList(item)}
@@ -1173,7 +1278,8 @@ const styles = EStyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: '12rem',
-    height: '45rem',
+    height: '30rem',
+    width: '100rem',
     marginHorizontal: '20rem',
   },
   projectFilerViewGreen: {
@@ -1305,6 +1411,56 @@ const styles = EStyleSheet.create({
     width: '28rem',
     height: '28rem',
   },
+  headerView: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginHorizontal: '20rem',
+  },
+  headerText: {
+    fontSize: '20rem',
+    fontWeight: 'bold',
+  },
+  taskNameStyle: {
+    color: colors.gray,
+    fontSize: '14rem',
+    fontWeight: 'bold',
+    marginHorizontal: '20rem',
+    marginBottom: '15rem',
+  },
+  borderStyle: {
+    borderWidth: '0.4rem',
+    borderColor: colors.lightgray,
+    marginBottom: '8rem',
+  },
+  parentTaskView: {
+    flexDirection: 'row',
+    marginHorizontal:'20rem',
+    marginTop: '10rem'
+  },
+  parentTaskText: {
+    fontSize: '10rem',
+  },
+  subTasksListView: {
+    backgroundColor: colors.projectBgColor,
+    borderRadius: 5,
+    height: '45rem',
+    marginTop: '7rem',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: '12rem',
+    // marginHorizontal: '20rem',
+  },
+  flatListStyle: {
+    marginBottom: '10rem',
+    marginTop: '0rem',
+    // marginRight: '10rem'
+  },
+  // flatListView: {
+  //   marginHorizontal: 20,
+  //   borderBottomEndRadius: 5,
+  //   borderBottomStartRadius: 5,
+  //   backgroundColor: colors.projectBgColor,
+  // },
 
   //taskLog
   taskLogTextView: {
@@ -1319,48 +1475,48 @@ const styles = EStyleSheet.create({
     fontWeight: 'bold',
     marginLeft: '20rem',
   },
-  dateView:{
-    backgroundColor:colors.projDetails,
-    height:'40rem',
-    justifyContent:'center',
+  dateView: {
+    backgroundColor: colors.projDetails,
+    height: '40rem',
+    justifyContent: 'center',
     marginHorizontal: '20rem',
-    borderRadius:'5rem',
-    marginBottom:'10rem',
+    borderRadius: '5rem',
+    marginBottom: '10rem',
   },
-  dateText:{
-    fontSize:'15rem',
-    color:colors.gray,
-    fontWeight:'bold',
+  dateText: {
+    fontSize: '15rem',
+    color: colors.gray,
+    fontWeight: 'bold',
     marginHorizontal: '15rem',
   },
-  detailsView:{
-    backgroundColor:colors.projectBgColor,
-    height:'55rem',
-    justifyContent:'center',
+  detailsView: {
+    backgroundColor: colors.projectBgColor,
+    height: '55rem',
+    justifyContent: 'center',
     marginHorizontal: '20rem',
-    borderRadius:'5rem',
-    marginBottom:'10rem',
-    paddingHorizontal:'15rem'
+    borderRadius: '5rem',
+    marginBottom: '10rem',
+    paddingHorizontal: '15rem',
   },
-  timeText:{
-    color:colors.gray,
-    fontWeight:'bold',
-    fontSize:'10rem',
-    marginBottom:'2rem'
+  timeText: {
+    color: colors.gray,
+    fontWeight: 'bold',
+    fontSize: '10rem',
+    marginBottom: '2rem',
   },
-  logView:{
-    flexDirection:'row'
+  logView: {
+    flexDirection: 'row',
   },
-  nameText:{
-    color:colors.gray,
-    fontWeight:'bold',
-    marginRight:'5rem',
-    fontSize:'11rem',
+  nameText: {
+    color: colors.gray,
+    fontWeight: 'bold',
+    marginRight: '5rem',
+    fontSize: '11rem',
   },
-  logText:{
-    color:colors.gray,
-    fontSize:'11rem'
-  }
+  logText: {
+    color: colors.gray,
+    fontSize: '11rem',
+  },
 });
 
 const mapStateToProps = state => {

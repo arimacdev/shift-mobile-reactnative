@@ -433,6 +433,7 @@ class TasksTabScreen extends Component {
           onPress={() =>
             this.props.navigation.navigate('TasksDetailsScreen', {
               taskDetails: item.parentTask,
+              subTaskDetails: item.childTasks,
               selectedProjectID: selectedProjectID,
               isFromBoards: false,
             })
