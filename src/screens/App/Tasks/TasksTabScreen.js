@@ -197,7 +197,7 @@ class TasksTabScreen extends Component {
     if (
       prevProps.myTaskByProjectLoading !== this.props.myTaskByProjectLoading &&
       this.props.myTaskByProject &&
-      this.props.myTaskByProject.length  > 0
+      this.props.myTaskByProject.length > 0
     ) {
       this.setState({
         filterdDataMyTasks: this.props.myTaskByProject,
@@ -295,7 +295,7 @@ class TasksTabScreen extends Component {
       }
     } else {
       dateText = 'Add Due Date';
-      color = item.isParent ? '#ffffff' :'#000000';
+      color = item.isParent ? '#ffffff' : '#000000';
     }
 
     return <Text style={[styles.textDate, {color: color}]}>{dateText}</Text>;
@@ -394,12 +394,10 @@ class TasksTabScreen extends Component {
           />
           <View style={styles.subTasksMainView}>
             <View style={styles.subTasksTextView}>
-              {/* <Text style={styles.subTextMain}>
-                {this.state.selectedProjectName}
-              </Text>
-              <Text style={styles.subText}>{item.taskName}</Text> */}
+              <Text style={styles.subTextMain}>{item.secondaryTaskId}</Text>
+              <Text style={styles.subText}>{item.taskName}</Text>
 
-              <Text style={styles.subTextMain}>{item.taskName}</Text>
+              {/* <Text style={styles.subTextMain}>{item.taskName}</Text> */}
             </View>
             <View
               style={[
@@ -466,12 +464,12 @@ class TasksTabScreen extends Component {
             />
             <View style={styles.tasksMainView}>
               <View style={styles.tasksHeaderView}>
-                {/* <Text style={styles.textMain}>
-                  {this.state.selectedProjectName}
+                <Text style={styles.textMain}>
+                  {item.parentTask.secondaryTaskId}
                 </Text>
-                <Text style={styles.text}>{item.parentTask.taskName}</Text> */}
+                <Text style={styles.text}>{item.parentTask.taskName}</Text>
 
-                <Text style={styles.textMain}>{item.parentTask.taskName}</Text>
+                {/* <Text style={styles.textMain}>{item.parentTask.taskName}</Text> */}
               </View>
               <View
                 style={[
@@ -506,9 +504,11 @@ class TasksTabScreen extends Component {
                 placeholder={'Add a subtask...'}
                 placeholderTextColor={colors.white}
                 value={subTasksName}
-                onChangeText={subTasksName => this.onNewSubTasksNameChange(subTasksName)}
+                onChangeText={subTasksName =>
+                  this.onNewSubTasksNameChange(subTasksName)
+                }
                 onSubmitEditing={() =>
-                  this.onNewSubTasksNameSubmit(this.state.subTasksName,item)
+                  this.onNewSubTasksNameSubmit(this.state.subTasksName, item)
                 }
               />
             </View>
@@ -537,7 +537,8 @@ class TasksTabScreen extends Component {
             isFromBoards: false,
           })
         }>
-        <View style={ item.isParent ? styles.parentTaskView : styles.childTasksView}>
+        <View
+          style={item.isParent ? styles.parentTaskView : styles.childTasksView}>
           <Image
             style={styles.completionIcon}
             source={
@@ -553,7 +554,12 @@ class TasksTabScreen extends Component {
               </Text>
               <Text style={styles.subText}>{item.taskName}</Text> */}
 
-              <Text style={ item.isParent ? styles.parentTextMain : styles.subTextMain}>{item.taskName}</Text>
+              <Text
+                style={
+                  item.isParent ? styles.parentTextMain : styles.subTextMain
+                }>
+                {item.taskName}
+              </Text>
             </View>
             <View
               style={[
@@ -743,13 +749,17 @@ class TasksTabScreen extends Component {
     this.setState({subTasksName: text});
   }
 
-  async onNewSubTasksNameSubmit(text,item) {
+  async onNewSubTasksNameSubmit(text, item) {
     try {
       let subTasksName = this.state.subTasksName;
       let selectedProjectID = this.state.selectedProjectID;
       let taskId = item.parentTask.taskId;
       this.setState({dataLoading: true});
-      newTaskData = await APIServices.addSubTaskToProjectData(subTasksName,selectedProjectID,taskId);
+      newTaskData = await APIServices.addSubTaskToProjectData(
+        subTasksName,
+        selectedProjectID,
+        taskId,
+      );
       if (newTaskData.message == 'success') {
         this.setState({dataLoading: false, subTasksName: ''});
         this.getAllTaskInProject();
@@ -770,7 +780,10 @@ class TasksTabScreen extends Component {
       let tasksName = this.state.tasksName;
       let selectedProjectID = this.state.selectedProjectID;
       this.setState({dataLoading: true});
-      newTaskData = await APIServices.addMainTaskToProjectData(tasksName,selectedProjectID);
+      newTaskData = await APIServices.addMainTaskToProjectData(
+        tasksName,
+        selectedProjectID,
+      );
       if (newTaskData.message == 'success') {
         this.setState({dataLoading: false, tasksName: ''});
         this.getAllTaskInProject();
@@ -991,57 +1004,55 @@ class TasksTabScreen extends Component {
                 />
               </View>
             </View>
-            {
-              this.state.filter ? 
-                <View style={styles.filterMainView}>
-                  {this.renderFilterType()}
-                  <View style={styles.filterIconView}>
-                    <Image style={styles.filterIcon} source={icons.filterIcon} />
-                  </View>
+            {this.state.filter ? (
+              <View style={styles.filterMainView}>
+                {this.renderFilterType()}
+                <View style={styles.filterIconView}>
+                  <Image style={styles.filterIcon} source={icons.filterIcon} />
                 </View>
-                 : 
-                this.state.index == 0 ? 
-                <View style={[styles.addNewFieldView, {flexDirection: 'row'}]}>
-                  <Image
-                    style={styles.addNewIcon}
-                    source={icons.blueAdd}
-                    resizeMode={'center'}
-                  />
-                  <TextInput
-                    style={[styles.textInput, {width: '95%'}]}
-                    placeholder={'Add a main task...'}
-                    value={tasksName}
-                    onChangeText={tasksName =>
-                      this.onNewTasksNameChange(tasksName)
-                    }
-                    onSubmitEditing={() =>
-                      this.onNewTasksNameSubmit(this.state.tasksName)
-                    }
-                  />
-                </View>
-                : null
-            }
+              </View>
+            ) : this.state.index == 0 ? (
+              <View style={[styles.addNewFieldView, {flexDirection: 'row'}]}>
+                <Image
+                  style={styles.addNewIcon}
+                  source={icons.blueAdd}
+                  resizeMode={'center'}
+                />
+                <TextInput
+                  style={[styles.textInput, {width: '95%'}]}
+                  placeholder={'Add a main task...'}
+                  value={tasksName}
+                  onChangeText={tasksName =>
+                    this.onNewTasksNameChange(tasksName)
+                  }
+                  onSubmitEditing={() =>
+                    this.onNewTasksNameSubmit(this.state.tasksName)
+                  }
+                />
+              </View>
+            ) : null}
 
             {/* render all tasks without filters */}
-            { index == 0 &&
+            {index == 0 && (
               <FlatList
                 style={styles.tasksFlatList}
                 data={filterdDataAllTaks}
                 renderItem={({item, index}) => this.renderTaskList(item, index)}
                 keyExtractor={item => item.parentTask.taskId}
               />
-            }
+            )}
 
             {/* render my tasks*/}
-            { index == 1 &&
+            {index == 1 && (
               <FlatList
                 style={styles.myTasksFlatList}
                 data={filterdDataMyTasks}
-                renderItem={({item, index}) => this.renderMyTasksAndFilterTaskList(item, index)}
+                renderItem={({item, index}) =>
+                  this.renderMyTasksAndFilterTaskList(item, index)
+                }
                 keyExtractor={item => item.taskId}
               />
-            }
-            
+            )}
           </View>
         ) : (
           <View>
@@ -1161,7 +1172,7 @@ const styles = EStyleSheet.create({
     // lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
-    color: colors.white
+    color: colors.white,
   },
   subText: {
     fontSize: '9rem',
@@ -1441,7 +1452,7 @@ const styles = EStyleSheet.create({
     marginHorizontal: '10rem',
   },
   childTasksView: {
-    backgroundColor:colors.projgbcolr,
+    backgroundColor: colors.projgbcolr,
     borderRadius: '5rem',
     height: '65rem',
     marginTop: '7rem',

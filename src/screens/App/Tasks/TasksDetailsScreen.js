@@ -9,7 +9,7 @@ import {
   TextInput,
   ScrollView,
   Alert,
-  PermissionsAndroid
+  PermissionsAndroid,
 } from 'react-native';
 import {connect} from 'react-redux';
 import * as actions from '../../../redux/actions';
@@ -227,6 +227,7 @@ class TasksDetailsScreen extends Component {
       filesData: [],
       progress: 0,
       loading: false,
+      secondaryTaskId: '',
     };
   }
 
@@ -516,6 +517,7 @@ class TasksDetailsScreen extends Component {
       if (taskResult.message == 'success') {
         this.setTaskInitiator(taskResult);
         this.setTaskName(taskResult);
+        this.setSecondaryTaskId(taskResult);
         this.setTaskStatus(taskResult);
         this.setTaskUserName(taskResult);
         this.setDueDate(taskResult);
@@ -568,6 +570,10 @@ class TasksDetailsScreen extends Component {
 
   setTaskName(taskResult) {
     this.setState({taskName: taskResult.data.taskName});
+  }
+
+  setSecondaryTaskId(taskResult) {
+    this.setState({secondaryTaskId: taskResult.data.secondaryTaskId});
   }
 
   hideAlert() {
@@ -1347,6 +1353,7 @@ class TasksDetailsScreen extends Component {
     let taskName = this.state.taskName;
     let selectedSprint = this.state.selectedSprint;
     let sprints = this.state.sprints;
+    let secondaryTaskId = this.state.secondaryTaskId;
 
     return (
       <View style={styles.backgroundImage}>
@@ -1360,9 +1367,10 @@ class TasksDetailsScreen extends Component {
           <View>
             <View style={styles.headerView}>
               <Text>Task - </Text>
-              <Text style={styles.headerText}>#34</Text>
+              <Text style={styles.headerText}> #{secondaryTaskId}</Text>
               <View style={styles.projectFilerView}>
-                <Dropdown
+                <Text style={styles.statusText}>{taskStatus}</Text>
+                {/* <Dropdown
                   // style={{}}
                   label=""
                   labelFontSize={0}
@@ -1388,11 +1396,11 @@ class TasksDetailsScreen extends Component {
                   }}
                   itemPadding={10}
                   onChangeText={value => this.onFilterTasksStatus(value)}
-                />
+                /> */}
               </View>
             </View>
             <View>
-              <Text style={styles.taskNameStyle}>Sample Task Name</Text>
+              <Text style={styles.taskNameStyle}>{taskName}</Text>
             </View>
             <View style={styles.borderStyle} />
 
@@ -1645,6 +1653,7 @@ const styles = EStyleSheet.create({
     marginBottom: '12rem',
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent:'center',
     paddingHorizontal: '12rem',
     height: '30rem',
     width: '100rem',
@@ -2006,6 +2015,9 @@ const styles = EStyleSheet.create({
     width: '38rem',
     height: '38rem',
   },
+  statusText:{
+    color:colors.white,
+  }
 });
 
 const mapStateToProps = state => {
