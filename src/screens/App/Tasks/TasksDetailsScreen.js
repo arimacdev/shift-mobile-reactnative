@@ -737,7 +737,7 @@ class TasksDetailsScreen extends Component {
   renderBase() {
     return (
       <View style={{justifyContent: 'center', flex: 1}}>
-        <Image style={styles.dropIcon} source={icons.arrow} />
+        <Image style={styles.dropIcon} source={icons.arrowDark} />
       </View>
     );
   }
@@ -1056,7 +1056,9 @@ class TasksDetailsScreen extends Component {
         <Image
           style={styles.iconArrow}
           source={
-            this.state.activeSections[0] == 0 ? icons.arrowDown : icons.arrowUp
+            this.state.activeSections[0] == 0
+              ? icons.arrowUpRoundedGreen
+              : icons.arrowDownRoundedGreen
           }
         />
       </View>
@@ -1222,8 +1224,8 @@ class TasksDetailsScreen extends Component {
             ) : null}
             <View style={styles.parentTaskView}>
               <Image
-                style={styles.completionIcon}
-                source={icons.subTask}
+                style={styles.iconStyle}
+                source={icons.subTasksRoundedGreen}
                 resizeMode="contain"
               />
               <Accordion
@@ -1237,6 +1239,121 @@ class TasksDetailsScreen extends Component {
                 onChange={this._updateSections}
               />
             </View>
+            <View style={styles.taskTypeMainView}>
+              <View style={styles.taskTypeNameView}>
+                <Image
+                  style={styles.iconStyle}
+                  source={icons.taskRoundedBlue}
+                  resizeMode="contain"
+                />
+                <Text style={styles.parentTaskText}>Task Type</Text>
+              </View>
+              <View style={styles.taskTypeDropMainView}>
+                <View style={[styles.taskTypeDropDownView, {marginRight: 5}]}>
+                  <Dropdown
+                    // style={{}}
+                    label=""
+                    labelFontSize={0}
+                    data={sprints}
+                    textColor={colors.black}
+                    fontSize={14}
+                    renderAccessory={() => null}
+                    error={''}
+                    animationDuration={0.5}
+                    containerStyle={{width: '100%'}}
+                    overlayStyle={{width: '100%'}}
+                    pickerStyle={{width: '89%', marginTop: 70, marginLeft: 15}}
+                    dropdownPosition={0}
+                    value={'Oparational'}
+                    itemColor={'black'}
+                    selectedItemColor={'black'}
+                    dropdownOffset={{top: 10}}
+                    baseColor={colors.projectBgColor}
+                    renderAccessory={this.renderBase}
+                    itemTextStyle={{
+                      marginLeft: 15,
+                      fontFamily: 'CircularStd-Book',
+                    }}
+                    itemPadding={10}
+                    onChangeText={this.onFilterSprintData}
+                  />
+                </View>
+                <View style={[styles.taskTypeDropDownView, {marginLeft: 5}]}>
+                  <Dropdown
+                    // style={{}}
+                    label=""
+                    labelFontSize={0}
+                    data={dropData}
+                    textColor={colors.black}
+                    fontSize={14}
+                    renderAccessory={() => null}
+                    error={''}
+                    animationDuration={0.5}
+                    containerStyle={{width: '100%'}}
+                    overlayStyle={{width: '100%'}}
+                    pickerStyle={{width: '38%', marginTop: 62, marginLeft: 225}}
+                    dropdownPosition={0}
+                    value={'Pending'}
+                    itemColor={'black'}
+                    selectedItemColor={'black'}
+                    dropdownOffset={{top: 10}}
+                    baseColor={colors.projectBgColor}
+                    renderAccessory={this.renderBase}
+                    itemTextStyle={{
+                      marginLeft: 15,
+                      fontFamily: 'CircularStd-Book',
+                    }}
+                    itemPadding={10}
+                    onChangeText={this.onFilterSprintData}
+                  />
+                </View>
+              </View>
+            </View>
+
+            <View style={styles.taskTypeMainView}>
+              <View style={styles.taskTypeNameView}>
+                <Image
+                  style={styles.iconStyle}
+                  source={icons.boardRoundedGreen}
+                  resizeMode="contain"
+                />
+                <Text style={styles.parentTaskText}>Board</Text>
+              </View>
+              <View style={styles.taskTypeDropMainView}>
+                <View style={styles.taskTypeDropDownView}>
+                  <Dropdown
+                    // style={{}}
+                    label=""
+                    labelFontSize={0}
+                    data={sprints}
+                    textColor={colors.black}
+                    fontSize={14}
+                    renderAccessory={() => null}
+                    error={''}
+                    animationDuration={0.5}
+                    containerStyle={{width: '100%'}}
+                    overlayStyle={{width: '100%'}}
+                    pickerStyle={{width: '89%', marginTop: 70, marginLeft: 15}}
+                    dropdownPosition={0}
+                    value={'Sprint 1'}
+                    itemColor={'black'}
+                    selectedItemColor={'black'}
+                    dropdownOffset={{top: 10}}
+                    baseColor={colors.projectBgColor}
+                    renderAccessory={this.renderBase}
+                    itemTextStyle={{
+                      marginLeft: 15,
+                      fontFamily: 'CircularStd-Book',
+                    }}
+                    itemPadding={10}
+                    onChangeText={this.onFilterSprintData}
+                  />
+                </View>
+                
+              </View>
+            </View>
+
+
             <FlatList
               data={taskData}
               renderItem={({item}) => this.renderProjectList(item)}
@@ -1475,21 +1592,21 @@ const styles = EStyleSheet.create({
     paddingHorizontal: '12rem',
   },
   flatListStyle: {
-    marginBottom: '10rem',
+    marginBottom: '0rem',
     marginTop: '0rem',
   },
   subTasksHeader: {
     flexDirection: 'row',
   },
   iconArrow: {
-    width: '23rem',
-    height: '15rem',
+    width: '17rem',
+    height: '17rem',
   },
   subTasksCompletionIcon: {
     width: '26rem',
     height: '26rem',
   },
-  subTaskText:{
+  subTaskText: {
     fontSize: '10rem',
     color: colors.projectTaskNameColor,
     lineHeight: '17rem',
@@ -1552,6 +1669,33 @@ const styles = EStyleSheet.create({
   logText: {
     color: colors.gray,
     fontSize: '11rem',
+  },
+  iconStyle: {
+    width: '30rem',
+    height: '30rem',
+    marginRight: '10rem',
+  },
+  taskTypeMainView: {
+    marginHorizontal: '20rem',
+    marginTop: '10rem',
+  },
+  taskTypeDropMainView: {
+    flex: 1,
+    flexDirection: 'row',
+    marginLeft: '40rem',
+  },
+  taskTypeDropDownView: {
+    flex: 1,
+    backgroundColor: colors.projectBgColor,
+    borderRadius: 5,
+    marginTop: '5rem',
+    marginBottom: '5rem',
+    paddingHorizontal: '12rem',
+    height: '45rem',
+  },
+  taskTypeNameView: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 });
 

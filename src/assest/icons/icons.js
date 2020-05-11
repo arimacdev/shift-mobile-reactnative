@@ -56,5 +56,15 @@ const icons = {
     downloadIcon : require('./download_icon.png'),
     menuVertical: require('./menu_vertical.png'),
     defultUser: require('./defult_user.png'),
+    assigneeRoundedBlue: require('./assignee_rounded_blue.png'),
+    boardRoundedGreen: require('./board_rounded_green.png'),
+    dueDateRoundedGreen: require('./due_date_rounded_green.png'),
+    filesRoundedOrange: require('./files_rounded_orange.png'),
+    noteRoundedRed: require('./note_rounded_red.png'),
+    remindRoundedOrange: require('./remind_rounded_orange.png'),
+    subTasksRoundedGreen: require('./sub_tasks_rounded_green.png'),
+    taskRoundedBlue: require('./task_rounded_blue.png'),
+    arrowUpRoundedGreen: require('./arrow_up_rounded_green.png'),
+    arrowDownRoundedGreen: require('./arrow_down_rounded_green.png'),
 };
 export default icons;
