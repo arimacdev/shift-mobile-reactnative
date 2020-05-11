@@ -23,6 +23,7 @@ import Loader from '../../../components/Loader';
 import moment from 'moment';
 import {NavigationEvents} from 'react-navigation';
 const initialLayout = { width: entireScreenWidth };
+import Triangle from 'react-native-triangle';
 
 class DefaultBoard extends Component {
     constructor(props) {
@@ -44,10 +45,19 @@ class DefaultBoard extends Component {
         taskData = await APIServices.getAllTaskInDefaultBoardData(selectedProjectID);
         if(taskData.message == 'success'){
             let dataArray = [];
-            dataArray =  taskData.data.filter(function(obj) {
-                return obj.sprintId == "default";
-            });
-
+            for(let i = 0 ; i < taskData.data.length ; i++){
+                let parentTask = taskData.data[i].parentTask;
+                let childTasks = taskData.data[i].childTasks;
+                if(parentTask.sprintId =="default"){
+                    dataArray.push(parentTask);
+                }
+                for(let j = 0 ; j < childTasks.length ; j++){
+                    let childTasksItem = childTasks[j];
+                    if(childTasksItem.sprintId =="default"){
+                        dataArray.push(childTasksItem);
+                    }
+                }
+            }
             this.setState({
                 tasks : dataArray,
                 dataLoading:false
@@ -68,13 +78,25 @@ class DefaultBoard extends Component {
                   isFromBoards: true
                 })
               }>
-                <View style={styles.userView}>
+                <View style={styles.userView}>   
                     {this.userIcon(item)}
                     <View style={{ flex: 1, bottom: 15 }}>
                         <Text style={styles.text}>{item.taskName}</Text>
                         {this.dateView(item)}
                     </View>
                     {this.userImage(item)}
+                    {
+                        item.isParent &&
+                        <View style={styles.triangleShape}>
+                            <Triangle
+                                width={30}
+                                height={30}
+                                color={'#0bafff'}
+                                direction={'up-right'}
+                            />
+                        </View> 
+                    }
+                    
                 </View>
             </TouchableOpacity>
         );
@@ -222,6 +244,11 @@ const styles = EStyleSheet.create({
         marginLeft: '10rem',
         fontWeight: '400'
     },
+    triangleShape : {
+        position: 'absolute',
+        right: 0,
+        top: 0,
+    }
 });
 
 const mapStateToProps = state => {
