@@ -43,7 +43,7 @@ class FilesScreen extends Component {
     if (prevProps.addFileTaskSuccess !== this.props.addFileTaskSuccess
       && this.props.addFileTaskSuccess) {
         let userID = this.state.userID;
-        this.fetchData(userID);
+        this.fetchData();
       }
   }
 
@@ -57,17 +57,17 @@ class FilesScreen extends Component {
           projectID : projectID,
           taskID : taskID,
           userID : userID}, function() {
-          this.fetchData(userID);
+          this.fetchData();
         });
       } 
     });
   }
 
-  async fetchData(userID) {
+  async fetchData() {
       let projectID = this.state.projectID
       let taskID = this.state.taskID
       this.setState({dataLoading:true});
-      filesData = await APIServices.getFilesInTaskData(projectID,taskID,userID);
+      filesData = await APIServices.getFilesInTaskData(projectID,taskID);
       if(filesData.message == 'success'){
         this.setState({files : filesData.data,dataLoading:false});
       }else{
@@ -86,7 +86,7 @@ class FilesScreen extends Component {
       resultObj = await APIServices.deleteFileInTaskData(projectID,taskID,taskFileId);
       if(resultObj.message == 'success'){
         this.setState({dataLoading:false});
-        this.fetchData(userID);
+        this.fetchData();
       }else{
         this.setState({dataLoading:false});
       }

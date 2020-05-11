@@ -38,7 +38,8 @@ const colors = {
     colorOrange:'#ffa800',
     customColor:'#5e98f0',
     black:'#000000',
-    selectedRange:'#7300e6'
+    selectedRange:'#7300e6',
+    detailsViewText:'#424f64'
 
 };
 export default colors;

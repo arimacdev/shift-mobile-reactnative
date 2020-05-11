@@ -9,6 +9,7 @@ import {
   TextInput,
   ScrollView,
   Alert,
+  PermissionsAndroid
 } from 'react-native';
 import {connect} from 'react-redux';
 import * as actions from '../../../redux/actions';
@@ -28,6 +29,8 @@ import APIServices from '../../../services/APIServices';
 import AwesomeAlert from 'react-native-awesome-alerts';
 import Header from '../../../components/Header';
 import Accordion from 'react-native-collapsible/Accordion';
+import RNFetchBlob from 'rn-fetch-blob';
+import fileTypes from '../../../assest/fileTypes/fileTypes';
 
 const Placeholder = () => (
   <View style={styles.landing}>
@@ -68,46 +71,32 @@ let dropData = [
 
 let taskData = [
   {
-    id: 10,
-    name: 'Task Name',
-    icon: icons.taskDark,
-    renderImage: false,
-  },
-  {
     id: 0,
-    name: 'Name',
-    icon: icons.taskUser,
+    name: 'Assignee',
+    icon: icons.assigneeRoundedBlue,
     renderImage: false,
-  },
-  {
-    id: 1,
-    name: 'Sub tasks',
-    icon: icons.subTask,
-    renderImage: true,
+    disabled: false,
   },
   {
     id: 2,
-    name: 'Due on',
-    icon: icons.calendarBlue,
+    name: 'Due Date',
+    icon: icons.dueDateRoundedGreen,
     renderImage: false,
+    disabled: false,
   },
   {
     id: 3,
-    name: 'Remind on',
-    icon: icons.clockOrange,
+    name: 'Remind',
+    icon: icons.remindRoundedOrange,
     renderImage: false,
-  },
-  {
-    id: 4,
-    name: 'Notes',
-    icon: icons.noteRed,
-    renderImage: false,
+    disabled: false,
   },
   {
     id: 5,
     name: 'Files',
-    icon: icons.fileOrange,
-    renderImage: true,
+    icon: icons.filesRoundedOrange,
+    renderImage: false,
+    disabled: true,
   },
 ];
 
@@ -211,8 +200,10 @@ class TasksDetailsScreen extends Component {
       showPicker: false,
       showTimePicker: false,
       date: new Date(),
+      time: new Date(),
       selectedDateReminder: '',
       selectedTimeReminder: '',
+      selectedTime: '',
       dateReminder: new Date(),
       timeReminder: new Date(),
       mode: 'date',
@@ -233,6 +224,9 @@ class TasksDetailsScreen extends Component {
       previousSprintID: '',
       subTaskList: [],
       activeSections: [],
+      filesData: [],
+      progress: 0,
+      loading: false,
     };
   }
 
@@ -284,10 +278,220 @@ class TasksDetailsScreen extends Component {
       subTaskList: [params.subTaskDetails],
     });
     this.fetchData(selectedProjectID, selectedProjectTaskID);
+    this.fetchFilesData(selectedProjectID, selectedProjectTaskID);
     if (params.isFromBoards == true) {
       let sprintId = params.taskDetails.sprintId;
       this.getAllSprintInProject(selectedProjectID, sprintId);
     }
+  }
+
+  async fetchFilesData(projectID, taskID) {
+    this.setState({dataLoading: true});
+    let filesData = await APIServices.getFilesInTaskData(projectID, taskID);
+    if (filesData.message == 'success') {
+      this.setState({
+        filesData: filesData.data,
+        dataLoading: false,
+      });
+    } else {
+      this.setState({dataLoading: false});
+    }
+  }
+
+  actualDownload = item => {
+    this.setState({
+      progress: 0,
+      loading: true,
+    });
+    let dirs = RNFetchBlob.fs.dirs;
+    RNFetchBlob.config({
+      // add this option that makes response data to be stored as a file,
+      // this is much more performant.
+      path: dirs.DownloadDir + '/' + item.projectFileName,
+      fileCache: true,
+    })
+      .fetch('GET', item.taskFileUrl, {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      })
+      .progress((received, total) => {
+        console.log('progress', received / total);
+        this.setState({progress: received / total});
+      })
+      .then(res => {
+        this.setState({
+          progress: 100,
+          loading: false,
+        });
+        this.showAlert(
+          '',
+          'Your file has been downloaded to downloads folder!',
+        );
+      });
+  };
+
+  async downloadFile(item) {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+        {
+          title: 'Storage Permission',
+          message: 'App needs access to memory to download the file ',
+        },
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        this.actualDownload(item);
+      } else {
+        Alert.alert(
+          'Permission Denied!',
+          'You need to give storage permission to download the file',
+        );
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+  }
+
+  deleteFileAlert(item) {
+    Alert.alert(
+      'Delete File',
+      'You are about to permanantly delete this file,\n If you are not sure, you can cancel this action.',
+      [
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+        {text: 'Ok', onPress: () => this.deleteFile(item)},
+      ],
+      {cancelable: false},
+    );
+  }
+
+  async deleteFile(item) {
+    let projectID = this.state.selectedProjectID;
+    let taskID = item.taskId;
+    let taskFileId = item.taskFileId;
+
+    this.setState({dataLoading: true});
+
+    await APIServices.deleteFileInTaskData(projectID, taskID, taskFileId)
+      .then(response => {
+        if (response.message == 'success') {
+          this.setState({dataLoading: false});
+          this.fetchFilesData(projectID, taskID);
+        } else {
+          this.setState({dataLoading: false});
+        }
+      })
+      .catch(error => {
+        if (error.status == 401) {
+          this.setState({dataLoading: false});
+          this.showAlert('', error.data.message);
+        }
+      });
+  }
+
+  bytesToSize(bytes) {
+    var sizes = ['Bytes', 'Kb', 'MB', 'GB', 'TB'];
+    if (bytes == 0) return '0 Byte';
+    var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+    return Math.round(bytes / Math.pow(1024, i), 2) + '' + sizes[i];
+  }
+
+  getTypeIcons(fileName) {
+    let key = fileName.split('.')[1];
+    let imageType = '';
+    switch (key) {
+      case 'excel':
+        imageType = fileTypes.excel;
+        break;
+      case 'jpg':
+        imageType = fileTypes.jpg;
+        break;
+      case 'mp3':
+        imageType = fileTypes.mp3;
+        break;
+      case 'pdf':
+        imageType = fileTypes.pdf;
+        break;
+      case 'png':
+        imageType = fileTypes.png;
+        break;
+      case 'video':
+        imageType = fileTypes.video;
+        break;
+      case 'word':
+        imageType = fileTypes.word;
+        break;
+      default:
+        imageType = fileTypes.default;
+        break;
+    }
+    return imageType;
+  }
+
+  // onRefresh() {
+  //   this.setState({isFetching: false, filesData: [],allFilesData:[]}, function() {
+  //     this.fetchData(this.props.selectedProjectID);
+  //   });
+  // }
+
+  renderFilesList(item) {
+    let details = '';
+    let size = this.bytesToSize(item.projectFileSize);
+    let date = moment(item.taskFileDate).format('YYYY-MM-DD');
+    let name = item.firstName + ' ' + item.lastName;
+
+    details = size + ' | ' + date + ' by ' + name;
+
+    return (
+      // <TouchableOpacity
+      //   onPress={() =>
+      //     this.props.navigation.navigate('FilesView', {filesData: item})
+      //   }>
+      <View style={styles.filesView}>
+        <Image
+          source={this.getTypeIcons(item.taskFileName)}
+          style={styles.taskStateIcon}
+        />
+        <View style={{flex: 1}}>
+          <Text style={styles.filesText} numberOfLines={1}>
+            {item.taskFileName}
+          </Text>
+          <Text style={styles.filesTextDate} numberOfLines={1}>
+            {size}
+          </Text>
+        </View>
+        <View style={{flex: 1}}>
+          <Text style={styles.filesText} numberOfLines={1}>
+            {/* {item.name} */}Inidika Wijesooriya
+          </Text>
+          <Text style={styles.filesTextDate} numberOfLines={1}>
+            {date}
+          </Text>
+        </View>
+        <View style={styles.controlView}>
+          <TouchableOpacity
+            onPress={() => this.downloadFile(item)}
+            style={{marginLeft: EStyleSheet.value('24rem')}}>
+            <Image
+              style={{width: 30, height: 30}}
+              source={icons.downloadIcon}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => this.deleteFileAlert(item)}
+            style={{marginLeft: EStyleSheet.value('10rem')}}>
+            <Image
+              style={{width: 30, height: 30}}
+              source={icons.deleteRoundRed}
+            />
+          </TouchableOpacity>
+        </View>
+      </View>
+      // </TouchableOpacity>
+    );
   }
 
   async getAllSprintInProject(selectedProjectID, sprintId) {
@@ -431,7 +635,7 @@ class TasksDetailsScreen extends Component {
       .format('Do MMMM YYYY');
     if (taskDueDate != 'Invalid date') {
       this.setState({
-        duedate: 'Due on ' + taskDueDate,
+        duedate: taskDueDate,
       });
     }
   }
@@ -442,7 +646,7 @@ class TasksDetailsScreen extends Component {
       .format('Do MMMM YYYY');
     if (taskReminderDate != 'Invalid date') {
       this.setState({
-        remindDate: 'Remind on ' + taskReminderDate,
+        remindDate: taskReminderDate,
       });
     }
   }
@@ -481,17 +685,17 @@ class TasksDetailsScreen extends Component {
     let newDateValue = '';
 
     if (this.state.reminder) {
-      newDate = moment(date).format('Do MMMM YYYY');
+      newDate = moment(date).format('MMMM DD, YYYY');
       newDateValue = moment(date).format('DD MM YYYY');
     } else {
-      newDate = moment(date).format('Do MMMM YYYY');
+      newDate = moment(date).format('MMMM DD, YYYY');
       newDateValue = moment(date).format('DD MM YYYY');
     }
 
     if (event.type == 'set') {
       if (this.state.reminder) {
         this.setState({
-          remindDate: 'Remind on ' + newDate,
+          remindDate: newDate,
           remindDateValue: newDateValue,
           showPicker: false,
           showTimePicker: true,
@@ -499,13 +703,18 @@ class TasksDetailsScreen extends Component {
         });
       } else {
         this.setState({
-          duedate: 'Due On ' + newDate,
+          duedate: newDate,
           duedateValue: newDateValue,
           showPicker: false,
           showTimePicker: true,
           date: new Date(selectedDate),
         });
       }
+    } else {
+      this.setState({
+        showPicker: false,
+        showTimePicker: false,
+      });
     }
   }
 
@@ -528,13 +737,18 @@ class TasksDetailsScreen extends Component {
         // due time
         this.setState({
           dueTime: newTime,
-          selectedTimeReminder: newTime,
+          selectedTime: newTime,
           showPicker: false,
           showTimePicker: false,
-          timeReminder: new Date(selectedTime),
+          time: new Date(selectedTime),
         });
         this.changeTaskDueDate();
       }
+    } else {
+      this.setState({
+        showPicker: false,
+        showTimePicker: false,
+      });
     }
   }
 
@@ -563,7 +777,11 @@ class TasksDetailsScreen extends Component {
       <DateTimePicker
         testID="dateTimePicker"
         timeZoneOffsetInMinutes={0}
-        value={this.state.timeReminder}
+        value={
+          this.state.reminder == true
+            ? this.state.timeReminder
+            : this.state.time
+        }
         mode={'time'}
         is24Hour={true}
         display="default"
@@ -648,10 +866,10 @@ class TasksDetailsScreen extends Component {
         });
         break;
       case 5:
-        this.props.navigation.navigate('FilesScreen', {
-          projectID: this.state.selectedProjectID,
-          taskID: this.state.selectedProjectTaskID,
-        });
+        // this.props.navigation.navigate('FilesScreen', {
+        //   projectID: this.state.selectedProjectID,
+        //   taskID: this.state.selectedProjectTaskID,
+        // });
         break;
       case 6:
         this.props.navigation.navigate('ChatScreen');
@@ -671,56 +889,41 @@ class TasksDetailsScreen extends Component {
         value = this.state.name;
         break;
       case 2:
-        value = this.state.duedate;
+        value =
+          this.state.duedate !== ''
+            ? this.state.duedate + ' : ' + this.state.dueTime
+            : '';
         break;
       case 3:
-        value = this.state.remindDate;
+        value =
+          this.state.remindDate !== ''
+            ? this.state.remindDate + ' : ' + this.state.reminderTime
+            : '';
         break;
       default:
         break;
     }
 
-    return (
+    return value !== '' ? (
       <View style={{flex: 1}}>
-        {item.id == 10 ? (
-          <TextInput
-            style={[
-              styles.text,
-              {
-                flex: 1,
-                marginLeft: 5,
-                color: value !== '' ? colors.darkBlue : colors.darkBlue,
-              },
-            ]}
-            placeholder={item.name}
-            value={this.state.taskName}
-            onChangeText={text => this.onTaskNameChange(text)}
-            onSubmitEditing={() =>
-              this.onTaskNameChangeSubmit(this.state.taskName)
-            }
-          />
-        ) : (
-          <Text
-            style={[
-              styles.text,
-              {
-                color:
-                  value !== '' ? colors.darkBlue : colors.projectTaskNameColor,
-              },
-            ]}>
-            {value !== '' ? value : item.name}
-          </Text>
-        )}
+        <Text style={[styles.textHeader]}>{item.name}</Text>
+        <Text style={[styles.textValue]}>{value}</Text>
+      </View>
+    ) : (
+      <View style={{flex: 1}}>
+        <Text style={[styles.text]}>{item.name}</Text>
       </View>
     );
   }
 
   renderProjectList(item) {
     return (
-      <TouchableOpacity onPress={() => this.onItemPress(item)}>
+      <TouchableOpacity
+        onPress={() => this.onItemPress(item)}
+        disabled={item.disabled}>
         <View style={styles.projectView}>
           <Image
-            style={styles.completionIcon}
+            style={styles.iconStyle}
             source={item.icon}
             resizeMode="contain"
           />
@@ -1349,15 +1552,39 @@ class TasksDetailsScreen extends Component {
                     onChangeText={this.onFilterSprintData}
                   />
                 </View>
-                
               </View>
             </View>
 
-
+            <View style={styles.notesMainView}>
+              <Image
+                style={styles.iconStyle}
+                source={icons.noteRoundedRed}
+                resizeMode="contain"
+              />
+              <View style={styles.notesView}>
+                <Text style={styles.noteText}>Notes</Text>
+                <TextInput
+                  style={styles.notesTextInput}
+                  placeholder={'Notes'}
+                  value={this.state.note}
+                  multiline={true}
+                  onChangeText={text => this.changeTaskNote(text)}
+                />
+              </View>
+            </View>
+            <View style={styles.borderStyle} />
             <FlatList
               data={taskData}
               renderItem={({item}) => this.renderProjectList(item)}
               keyExtractor={item => item.taskId}
+            />
+            <FlatList
+              style={styles.flalList}
+              data={this.state.filesData}
+              renderItem={({item}) => this.renderFilesList(item)}
+              keyExtractor={item => item.projId}
+              // onRefresh={() => this.onRefresh()}
+              // refreshing={isFetching}
             />
             <TouchableOpacity onPress={() => this.deleteTask()}>
               <View style={styles.buttonDelete}>
@@ -1443,13 +1670,13 @@ const styles = EStyleSheet.create({
     textAlign: 'center',
   },
   projectView: {
-    backgroundColor: colors.projectBgColor,
+    // backgroundColor: colors.projectBgColor,
     borderRadius: 5,
-    height: '60rem',
-    marginTop: '7rem',
+    // height: '60rem',
+    marginTop: '20rem',
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: '12rem',
+    // paddingHorizontal: '12rem',
     marginHorizontal: '20rem',
   },
   text: {
@@ -1457,10 +1684,10 @@ const styles = EStyleSheet.create({
     color: colors.projectTaskNameColor,
     textAlign: 'center',
     fontWeight: 'bold',
-    lineHeight: '17rem',
+    // lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
-    marginLeft: '10rem',
+    // marginLeft: '10rem',
     fontWeight: '400',
   },
   textDate: {
@@ -1581,6 +1808,8 @@ const styles = EStyleSheet.create({
   parentTaskText: {
     flex: 1,
     fontSize: '10rem',
+    fontFamily: 'CircularStd-Medium',
+    color: colors.projectTaskNameColor,
   },
   subTasksListView: {
     backgroundColor: colors.projectBgColor,
@@ -1670,6 +1899,8 @@ const styles = EStyleSheet.create({
     color: colors.gray,
     fontSize: '11rem',
   },
+
+  //
   iconStyle: {
     width: '30rem',
     height: '30rem',
@@ -1677,7 +1908,7 @@ const styles = EStyleSheet.create({
   },
   taskTypeMainView: {
     marginHorizontal: '20rem',
-    marginTop: '10rem',
+    marginTop: '15rem',
   },
   taskTypeDropMainView: {
     flex: 1,
@@ -1696,6 +1927,84 @@ const styles = EStyleSheet.create({
   taskTypeNameView: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  notesNameView: {
+    flexDirection: 'row',
+  },
+  notesMainView: {
+    marginHorizontal: '20rem',
+    marginTop: '15rem',
+    flexDirection: 'row',
+  },
+  notesView: {
+    flex: 1,
+    marginBottom: '15rem',
+  },
+  notesTextInput: {
+    fontSize: '12rem',
+    color: colors.gray,
+    lineHeight: '17rem',
+    fontFamily: 'CircularStd-Black',
+    textAlign: 'left',
+    marginLeft: '-3rem',
+    width: '100%',
+    textAlignVertical: 'top',
+  },
+  noteText: {
+    fontSize: '10rem',
+    fontFamily: 'CircularStd-Medium',
+    color: colors.projectTaskNameColor,
+    marginBottom: '-5rem',
+  },
+  textHeader: {
+    fontSize: '10rem',
+    fontFamily: 'CircularStd-Medium',
+    color: colors.projectTaskNameColor,
+  },
+  textValue: {
+    fontSize: '12rem',
+    fontFamily: 'CircularStd-Medium',
+    color: colors.detailsViewText,
+  },
+  filesView: {
+    backgroundColor: colors.projectBgColor,
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: colors.lighterGray,
+    height: '50rem',
+    marginTop: '7rem',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: '10rem',
+    marginHorizontal: '20rem',
+  },
+  filesText: {
+    fontSize: '11rem',
+    color: colors.userListUserNameColor,
+    lineHeight: '17rem',
+    fontFamily: 'CircularStd-Medium',
+    textAlign: 'left',
+    marginLeft: '5rem',
+    fontWeight: '400',
+  },
+  filesTextDate: {
+    fontSize: '9rem',
+    color: colors.textPlaceHolderColor,
+    lineHeight: '13rem',
+    fontFamily: 'CircularStd-Medium',
+    textAlign: 'left',
+    marginLeft: '5rem',
+  },
+  controlView: {
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  flalList: {
+    marginTop: '5rem',
+  },
+  taskStateIcon: {
+    width: '38rem',
+    height: '38rem',
   },
 });
 

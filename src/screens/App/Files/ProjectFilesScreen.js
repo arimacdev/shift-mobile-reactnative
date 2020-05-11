@@ -83,7 +83,7 @@ class ProjectFilesScreen extends Component {
 
   async fetchData(selectedProjectID) {
     this.setState({dataLoading: true});
-    filesData = await APIServices.getProjectFiles(selectedProjectID);
+    let filesData = await APIServices.getProjectFiles(selectedProjectID);
     if (filesData.message == 'success') {
       this.setState({
         filesData: filesData.data,
@@ -234,7 +234,7 @@ class ProjectFilesScreen extends Component {
     });
   }
 
-  renderUserListList(item) {
+  renderFilesList(item) {
     let details = '';
     let size = this.bytesToSize(item.projectFileSize);
     let date = moment(item.projectFileAddedOn).format('YYYY-MM-DD');
@@ -474,7 +474,7 @@ class ProjectFilesScreen extends Component {
           <FlatList
             style={styles.flalList}
             data={filesData}
-            renderItem={({item}) => this.renderUserListList(item)}
+            renderItem={({item}) => this.renderFilesList(item)}
             keyExtractor={item => item.projId}
             onRefresh={() => this.onRefresh()}
             refreshing={isFetching}

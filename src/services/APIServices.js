@@ -630,7 +630,7 @@ async function updateSubTask(userID,projectID,taskID,subTaskID,subTaskName,isSel
     }, true, headers);
 };
 
-async function getFilesInTaskData(projectID,taskID,userID) {
+async function getFilesInTaskData(projectID,taskID) {
 
     let userIDHeder = null;
     userIDHeder =  await AsyncStorage.getItem('userID');
