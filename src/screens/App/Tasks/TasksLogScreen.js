@@ -24,6 +24,45 @@ import {MenuProvider} from 'react-native-popup-menu';
 
 const initialLayout = {width: entireScreenWidth};
 
+taskLogData = [
+  {
+    id: 0,
+    date: '2020 Jan 20',
+    details: [
+      {
+        time: '10:25 AM :',
+        name: '@inidika',
+        log: 'Set the task type to Original',
+      },
+      {time: '11:30 AM :', name: '@inidika', log: 'has update the task name'},
+      {
+        time: '11:40 AM :',
+        name: '@inidika',
+        log: 'has assign to @indika to task',
+      },
+    ],
+  },
+  {
+    id: 1,
+    date: '2020 Jan 30',
+    details: [
+      {time: '09:10 AM :', name: '@inidika', log: 'has update the task name'},
+      {
+        time: '01:25 PM :',
+        name: '@inidika',
+        log: 'has assign to @indika to task',
+      },
+    ],
+  },
+  {
+    id: 2,
+    date: '2020 Feb 1',
+    details: [
+      {time: '04:22 PM :', name: '@inidika', log: 'has update the task name'},
+    ],
+  },
+];
+
 class TasksLogScreen extends Component {
   constructor(props) {
     super(props);

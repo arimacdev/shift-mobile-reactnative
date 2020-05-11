@@ -130,7 +130,7 @@ class TasksTabScreen extends Component {
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (prevProps.isActive !== this.props.isActive && this.props.isActive) {
       let selectedProjectID = this.props.selectedProjectID;
-      let selectedProjectName = this.props.projDetails.projectName;
+      let selectedProjectName = this.props.projectName;
 
       this.setState(
         {
@@ -374,6 +374,7 @@ class TasksTabScreen extends Component {
 
   renderSubTasksList(item) {
     let selectedProjectID = this.state.selectedProjectID;
+    let selectedProjectName = this.state.selectedProjectName;
     return (
       <TouchableOpacity
         onPress={() =>
@@ -381,6 +382,7 @@ class TasksTabScreen extends Component {
             taskDetails: item,
             selectedProjectID: selectedProjectID,
             isFromBoards: false,
+            selectedProjectName: selectedProjectName,
           })
         }>
         <View style={styles.subTasksView}>
@@ -425,6 +427,7 @@ class TasksTabScreen extends Component {
     let selectedProjectID = this.state.selectedProjectID;
     let tasksName = this.state.tasksName;
     let subTasksName = this.state.subTasksName;
+    let selectedProjectName = this.state.selectedProjectName;
     return (
       <View>
         <TouchableOpacity
@@ -433,6 +436,7 @@ class TasksTabScreen extends Component {
               taskDetails: item.parentTask,
               subTaskDetails: item.childTasks,
               selectedProjectID: selectedProjectID,
+              selectedProjectName:selectedProjectName,
               isFromBoards: false,
             })
           }>

@@ -145,45 +145,6 @@ let taskDataWhenParentIsBoard = [
   },
 ];
 
-taskLogData = [
-  {
-    id: 0,
-    date: '2020 Jan 20',
-    details: [
-      {
-        time: '10:25 AM :',
-        name: '@inidika',
-        log: 'Set the task type to Original',
-      },
-      {time: '11:30 AM :', name: '@inidika', log: 'has update the task name'},
-      {
-        time: '11:40 AM :',
-        name: '@inidika',
-        log: 'has assign to @indika to task',
-      },
-    ],
-  },
-  {
-    id: 1,
-    date: '2020 Jan 30',
-    details: [
-      {time: '09:10 AM :', name: '@inidika', log: 'has update the task name'},
-      {
-        time: '01:25 PM :',
-        name: '@inidika',
-        log: 'has assign to @indika to task',
-      },
-    ],
-  },
-  {
-    id: 2,
-    date: '2020 Feb 1',
-    details: [
-      {time: '04:22 PM :', name: '@inidika', log: 'has update the task name'},
-    ],
-  },
-];
-
 class TasksDetailsScreen extends Component {
   constructor(props) {
     super(props);
@@ -228,6 +189,7 @@ class TasksDetailsScreen extends Component {
       progress: 0,
       loading: false,
       secondaryTaskId: '',
+      selectedProjectName:''
     };
   }
 
@@ -270,10 +232,12 @@ class TasksDetailsScreen extends Component {
       },
     } = this.props;
     let selectedProjectID = params.selectedProjectID;
+    let selectedProjectName = params.selectedProjectName;
     let selectedProjectTaskID = params.taskDetails.taskId;
     let isFromBoards = params.isFromBoards;
     this.setState({
       selectedProjectID: selectedProjectID,
+      selectedProjectName: selectedProjectName,
       selectedProjectTaskID: selectedProjectTaskID,
       isFromBoards: params.isFromBoards,
       subTaskList: [params.subTaskDetails],
@@ -1316,9 +1280,9 @@ class TasksDetailsScreen extends Component {
         <Header
           isTaskLog={true}
           navigation={this.props.navigation}
-          title={taskName ? taskName : ''}
-          drawStatus={true}
-          taskStatus={taskStatus ? taskStatus : ''}
+          title={this.state.selectedProjectName}
+          // drawStatus={true}
+          // taskStatus={taskStatus ? taskStatus : ''}
           onPress={() => this.onBackPress()}
         />
         <ScrollView style={styles.backgroundImage}>
