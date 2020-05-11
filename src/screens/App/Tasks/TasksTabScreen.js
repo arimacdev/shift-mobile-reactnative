@@ -1457,7 +1457,7 @@ const styles = EStyleSheet.create({
     marginTop: '0rem',
   },
   myTasksFlatList: {
-    marginBottom: '210rem',
+    marginBottom: '160rem',
     marginTop: '0rem',
   },
   filterMainView: {
