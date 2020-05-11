@@ -96,7 +96,6 @@ class DefaultBoard extends Component {
                             />
                         </View> 
                     }
-                    
                 </View>
             </TouchableOpacity>
         );

@@ -27,7 +27,7 @@ import moment from 'moment';
 const initialLayout = { width: entireScreenWidth };
 import { Icon } from 'native-base';
 import PopupMenuNormal from '../../../components/PopupMenuNormal';
-
+import Triangle from 'react-native-triangle';
 
 const menuItems = [
     {value: 0, text: 'Edit Board Names'},
@@ -57,7 +57,17 @@ class OtherBoard extends Component {
         taskData = await APIServices.getAllTaskInDefaultBoardData(selectedProjectID);
         if(taskData.message == 'success'){
            this.setState({dataLoading:false});
-           this.getAllSprintInProject(taskData.data)
+           let dataArray = [];
+            for(let i = 0 ; i < taskData.data.length ; i++){
+                let parentTask = taskData.data[i].parentTask;
+                let childTasks = taskData.data[i].childTasks;
+                dataArray.push(parentTask);
+                for(let j = 0 ; j < childTasks.length ; j++){
+                    let childTasksItem = childTasks[j];
+                    dataArray.push(childTasksItem);
+                }
+            }
+           this.getAllSprintInProject(dataArray)
         }else{
             this.setState({dataLoading:false});
         }
@@ -155,6 +165,17 @@ class OtherBoard extends Component {
                     <View style={{ flex: 1 }}>
                         {this.userImage(data.item)}
                     </View>
+                    {
+                        data.item.isParent &&
+                        <View style={styles.triangleShape}>
+                            <Triangle
+                                width={30}
+                                height={30}
+                                color={'#0bafff'}
+                                direction={'up-right'}
+                            />
+                        </View> 
+                    }
                 </View>
                 </TouchableOpacity>
             </View>
@@ -434,6 +455,11 @@ const styles = EStyleSheet.create({
         marginLeft: '10rem',
         fontWeight: '400'
     },
+    triangleShape : {
+        position: 'absolute',
+        right: 0,
+        top: 0,
+    }
 });
 
 const mapStateToProps = state => {
