@@ -69,6 +69,9 @@ export const UPDATE_SPRINT = `${PROTOCOL}${HOST}projects`;
 
 export const ADD_MAIN_TASK_TO_PROJECT = `${PROTOCOL}${HOST}projects`;
 export const ADD_SUB_TASK_TO_PROJECT = `${PROTOCOL}${HOST}projects`;
+export const FILTER_TASK_IN_PROJECT = `${PROTOCOL}${HOST}projects`;
+
+
 
 
 

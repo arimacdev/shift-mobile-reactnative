@@ -70,16 +70,17 @@ class PopupMenuAssignee extends Component {
   }
 
   componentDidMount() {
-    this.getActiveUsers();
+    let projectID = this.props.projectID;
+    this.getActiveUsers(projectID);
     if(this.state.userName != ''){
       this.onSearchTextChange(this.state.userName)
     }
     this.setState({opened: false});
   }
 
-  async getActiveUsers() {
+  async getActiveUsers(projectID) {
     // this.setState({dataLoading: true});
-    let activeUsers = await APIServices.getActiveUsers();
+    let activeUsers = await APIServices.getAllUsersByProjectId(projectID);
     if (activeUsers.message == 'success') {
       let userList = [];
       for (let i = 0; i < activeUsers.data.length; i++) {
@@ -257,7 +258,7 @@ const styles = EStyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: '12rem',
     height: '45rem',
-    width: '285rem',
+    width: '100%',
     marginRight: '0rem',
   },
   inputsText: {

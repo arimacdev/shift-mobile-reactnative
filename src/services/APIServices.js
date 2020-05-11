@@ -65,6 +65,7 @@ import {
 
     ADD_MAIN_TASK_TO_PROJECT,
     ADD_SUB_TASK_TO_PROJECT,
+    FILTER_TASK_IN_PROJECT,
 
 } from '../api/API';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -1593,6 +1594,72 @@ async function addSubTaskToProjectData(taskName,selectedProjectID,taskID) {
     }, true, headers);
 };
 
+async function filterTaskByDate(selectedProjectID,selectedStartDate,selectedEndDate) {
+
+    let userID = null;
+    userID =  await AsyncStorage.getItem('userID');
+    
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        user: userID,
+        filterType : "dueDate",
+        issueType : null,
+        from : selectedStartDate,
+        to : selectedEndDate,
+        assignee : null
+    };
+
+    return request({
+        url: FILTER_TASK_IN_PROJECT + '/' + selectedProjectID + '/tasks/filter',
+        method: 'GET',
+    }, true, headers);
+};
+
+async function filterTaskByUser(selectedProjectID,assignee) {
+
+    let userID = null;
+    userID =  await AsyncStorage.getItem('userID');
+    
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        user: userID,
+        filterType : "assignee",
+        issueType : null,
+        from : null,
+        to : null,
+        assignee : assignee
+    };
+
+    return request({
+        url: FILTER_TASK_IN_PROJECT + '/' + selectedProjectID + '/tasks/filter',
+        method: 'GET',
+    }, true, headers);
+};
+
+async function filterTaskByTaskTypeData(selectedProjectID,issueType) {
+
+    let userID = null;
+    userID =  await AsyncStorage.getItem('userID');
+    
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        user: userID,
+        filterType : "issueType",
+        issueType : issueType,
+        from : null,
+        to : null,
+        assignee : null
+    };
+
+    return request({
+        url: FILTER_TASK_IN_PROJECT + '/' + selectedProjectID + '/tasks/filter',
+        method: 'GET',
+    }, true, headers);
+};
+
 const APIServices = {
     getAllProjectsByUserData,
     getUserData,
@@ -1674,7 +1741,10 @@ const APIServices = {
     editSprintData,
     changeSprint,
     addMainTaskToProjectData,
-    addSubTaskToProjectData
+    addSubTaskToProjectData,
+    filterTaskByDate,
+    filterTaskByUser,
+    filterTaskByTaskTypeData
 };
 
 export default APIServices;
