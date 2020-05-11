@@ -1563,7 +1563,7 @@ async function addMainTaskToProjectData(taskName,selectedProjectID) {
             taskName: taskName,
             projectId : selectedProjectID,
             taskInitiator: userID,
-            taskType: "project",
+            //taskType: "project",
             issueType: "development"
         }
     }, true, headers);
@@ -1586,7 +1586,7 @@ async function addSubTaskToProjectData(taskName,selectedProjectID,taskID) {
             taskName: taskName,
             projectId : selectedProjectID,
             taskInitiator: userID,
-            taskType: "project",
+            //taskType: "project",
             issueType: "development",
             parentTaskId: taskID,
         }
