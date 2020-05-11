@@ -1214,54 +1214,10 @@ class TasksDetailsScreen extends Component {
     this.props.navigation.goBack();
   }
 
-  renderTaskLogDetailsList(item) {
-    return (
-      <View>
-        <View style={styles.detailsView}>
-          <Text style={styles.timeText}>{item.time}</Text>
-          <View style={styles.logView}>
-            <Text style={styles.nameText}>{item.name}</Text>
-            <Text style={styles.logText}>{item.log}</Text>
-          </View>
-        </View>
-      </View>
-    );
-  }
-
-  renderTaskLogList(item) {
-    return (
-      <View>
-        <View style={styles.dateView}>
-          <Text style={styles.dateText}>{item.date}</Text>
-        </View>
-        <FlatList
-          data={item.details}
-          renderItem={({item}) => this.renderTaskLogDetailsList(item)}
-          keyExtractor={item => item.id}
-        />
-      </View>
-    );
-  }
-
-  renderTaskLog() {
-    return (
-      <View>
-        <View style={styles.taskLogTextView}>
-          <Text style={styles.taskLogText}>Task Log</Text>
-        </View>
-        <FlatList
-          data={taskLogData}
-          renderItem={({item}) => this.renderTaskLogList(item)}
-          keyExtractor={item => item.id}
-        />
-      </View>
-    );
-  }
-
   _renderHeader() {
     return (
       <View style={styles.subTasksHeader}>
-        <Text style={styles.parentTaskText}>Parent Task</Text>
+        <Text style={styles.parentTaskText}>Child Tasks</Text>
         <Image
           style={styles.iconArrow}
           source={
@@ -1358,6 +1314,8 @@ class TasksDetailsScreen extends Component {
     return (
       <View style={styles.backgroundImage}>
         <Header
+          isTaskLog={true}
+          navigation={this.props.navigation}
           title={taskName ? taskName : ''}
           drawStatus={true}
           taskStatus={taskStatus ? taskStatus : ''}
@@ -1617,7 +1575,6 @@ class TasksDetailsScreen extends Component {
             </TouchableOpacity>
             {this.state.showPicker ? this.renderDatePicker() : null}
             {this.state.showTimePicker ? this.renderTimePicker() : null}
-            {this.renderTaskLog()}
           </View>
           {dataLoading && <Loader />}
           <AwesomeAlert
@@ -1653,7 +1610,7 @@ const styles = EStyleSheet.create({
     marginBottom: '12rem',
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent:'center',
+    justifyContent: 'center',
     paddingHorizontal: '12rem',
     height: '30rem',
     width: '100rem',
@@ -1852,64 +1809,6 @@ const styles = EStyleSheet.create({
     textAlign: 'left',
     marginLeft: '10rem',
   },
-
-  //taskLog
-  taskLogTextView: {
-    backgroundColor: colors.darkBlue,
-    height: '50rem',
-    justifyContent: 'center',
-    marginBottom: '15rem',
-  },
-  taskLogText: {
-    fontSize: '15rem',
-    color: colors.white,
-    fontWeight: 'bold',
-    marginLeft: '20rem',
-  },
-  dateView: {
-    backgroundColor: colors.projDetails,
-    height: '40rem',
-    justifyContent: 'center',
-    marginHorizontal: '20rem',
-    borderRadius: '5rem',
-    marginBottom: '10rem',
-  },
-  dateText: {
-    fontSize: '15rem',
-    color: colors.gray,
-    fontWeight: 'bold',
-    marginHorizontal: '15rem',
-  },
-  detailsView: {
-    backgroundColor: colors.projectBgColor,
-    height: '55rem',
-    justifyContent: 'center',
-    marginHorizontal: '20rem',
-    borderRadius: '5rem',
-    marginBottom: '10rem',
-    paddingHorizontal: '15rem',
-  },
-  timeText: {
-    color: colors.gray,
-    fontWeight: 'bold',
-    fontSize: '10rem',
-    marginBottom: '2rem',
-  },
-  logView: {
-    flexDirection: 'row',
-  },
-  nameText: {
-    color: colors.gray,
-    fontWeight: 'bold',
-    marginRight: '5rem',
-    fontSize: '11rem',
-  },
-  logText: {
-    color: colors.gray,
-    fontSize: '11rem',
-  },
-
-  //
   iconStyle: {
     width: '30rem',
     height: '30rem',
@@ -2015,9 +1914,9 @@ const styles = EStyleSheet.create({
     width: '38rem',
     height: '38rem',
   },
-  statusText:{
-    color:colors.white,
-  }
+  statusText: {
+    color: colors.white,
+  },
 });
 
 const mapStateToProps = state => {

@@ -22,6 +22,7 @@ import ViewProfileScreen from '../screens/App/Profile/ViewProfileScreen';
 import AddEditSubTaskScreen from '../screens/App/Tasks/AddEditSubTaskScreen';
 import FilesView from '../screens/App/Tasks/FilesView';
 import AddEditSprint from '../screens/App/Board/AddEditSprint';
+import TasksLogScreen from '../screens/App/Tasks/TasksLogScreen';
 
 export const ProjectsStackNavigator = createStackNavigator(
   {
@@ -222,6 +223,18 @@ export const ProjectsStackNavigator = createStackNavigator(
           <Header
             navigation={navigation}
             title={'Sprint'}
+            onPress={() => navigation.goBack()}
+          />
+        ),
+      }),
+    },
+    TaskLogScreen: {
+      screen: TasksLogScreen,
+      navigationOptions: ({navigation}) => ({
+        header: (
+          <Header
+            navigation={navigation}
+            title={'Task Log'}
             onPress={() => navigation.goBack()}
           />
         ),
