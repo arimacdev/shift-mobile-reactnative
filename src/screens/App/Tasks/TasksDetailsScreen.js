@@ -101,6 +101,100 @@ let taskData = [
   },
 ];
 
+let issueTypeList = [
+  {value: 'Development', id: 'development'},
+  {value: 'QA', id: 'qa'},
+  {value: 'Design', id: 'design'},
+  {value: 'Bug', id: 'bug'},
+  {value: 'Operational', id: 'operational'},
+  {value: 'Pre-sales', id: 'preSales'},
+  {value: 'General', id: 'general'},
+];
+
+let development = [
+  {value: 'Pending', id: 'pending'},
+  {value: 'On hold', id: 'onHold'},
+  {value: 'Open', id: 'open'},
+  {value: 'Completed', id: 'completed'},
+  {value: 'Implementing', id: 'implementing'},
+  {value: 'Deployed', id: 'deployed'},
+  {value: 'Closed', id: 'closed'},
+];
+let qa = [
+  {value: 'Pending', id: 'pending'},
+  {value: 'Testing', id: 'testing'},
+  {value: 'Review', id: 'review'},
+  {value: 'Closed', id: 'closed'},
+];
+let design = [
+  {value: 'Pending', id: 'pending'},
+  {value: 'On hold', id: 'onHold'},
+  {value: 'Cancel', id: 'cancel'},
+  {value: 'Fixing', id: 'fixing'},
+  {value: 'Resolved', id: 'resolved'},
+  {value: 'In progress', id: 'inprogress'},
+  {value: 'Completed', id: 'completed'},
+  {value: 'Under review', id: 'underReview'},
+  {value: 'Weiting for approval', id: 'waitingForApproval'},
+  {value: 'Review', id: 'review'},
+  {value: 'Waiting response', id: 'waitingResponse'},
+  {value: 'Rejected', id: 'rejected'},
+  {value: 'Closed', id: 'closed'},
+];
+let bug = [
+  {value: 'Pending', id: 'pending'},
+  {value: 'On hold', id: 'onHold'},
+  {value: 'Open', id: 'open'},
+  {value: 'Cancel', id: 'cancel'},
+  {value: 'Reopened', id: 'reopened'},
+  {value: 'Fixing', id: 'fixing'},
+  {value: 'Testing', id: 'testing'},
+  {value: 'Resolved', id: 'resolved'},
+  {value: 'Under review', id: 'underReview'},
+  {value: 'Review', id: 'review'},
+  {value: 'Waiting response', id: 'waitingResponse'},
+  {value: 'Closed', id: 'closed'},
+];
+let operational = [
+  {value: 'Pending', id: 'pending'},
+  {value: 'On hold', id: 'onHold'},
+  {value: 'Open', id: 'open'},
+  {value: 'Cancel', id: 'cancel'},
+  {value: 'Resolved', id: 'resolved'},
+  {value: 'In progress', id: 'inprogress'},
+  {value: 'Completed', id: 'completed'},
+  {value: 'Under review', id: 'underReview'},
+  {value: 'Weiting for approval', id: 'waitingForApproval'},
+  {value: 'Discussion', id: 'discussion'},
+  {value: 'Waiting response', id: 'waitingResponse'},
+  {value: 'Ready', id: 'ready'},
+  {value: 'Rejected', id: 'rejected'},
+  {value: 'Closed', id: 'closed'},
+];
+let preSales = [
+  {value: 'Pending', id: 'pending'},
+  {value: 'On hold', id: 'onHold'},
+  {value: 'Open', id: 'open'},
+  {value: 'Cancel', id: 'cancel'},
+  {value: 'Resolved', id: 'resolved'},
+  {value: 'In progress', id: 'inprogress'},
+  {value: 'Under review', id: 'underReview'},
+  {value: 'Weiting for approval', id: 'waitingForApproval'},
+  {value: 'Discussion', id: 'discussion'},
+  {value: 'Waiting response', id: 'waitingResponse'},
+  {value: 'Rejected', id: 'rejected'},
+  {value: 'Closed', id: 'closed'},
+];
+let general = [
+  {value: 'Pending', id: 'pending'},
+  {value: 'On hold', id: 'onHold'},
+  {value: 'Open', id: 'open'},
+  {value: 'Cancel', id: 'cancel'},
+  {value: 'In progress', id: 'inprogress'},
+  {value: 'Completed', id: 'completed'},
+  {value: 'Closed', id: 'closed'},
+];
+
 let taskDataWhenParentIsBoard = [
   // {
   //   id: 10,
@@ -191,6 +285,11 @@ class TasksDetailsScreen extends Component {
       loading: false,
       secondaryTaskId: '',
       selectedProjectName: '',
+      isParent: false,
+      issueType: 'Development',
+      taskTypeList: [],
+      taskType: 'Pending',
+      sprintName: 'Default',
     };
   }
 
@@ -242,6 +341,7 @@ class TasksDetailsScreen extends Component {
       selectedProjectTaskID: selectedProjectTaskID,
       isFromBoards: params.isFromBoards,
       subTaskList: [params.subTaskDetails],
+      parentTaskName: params.parentTaskName,
     });
     this.fetchData(selectedProjectID, selectedProjectTaskID);
     this.fetchFilesData(selectedProjectID, selectedProjectTaskID);
@@ -462,7 +562,7 @@ class TasksDetailsScreen extends Component {
 
   async getAllSprintInProject(selectedProjectID, sprintId) {
     this.setState({dataLoading: true});
-    sprintData = await APIServices.getAllSprintInProject(selectedProjectID);
+    let sprintData = await APIServices.getAllSprintInProject(selectedProjectID);
     if (sprintData.message == 'success') {
       this.setSprintDroupDownData(sprintData.data);
       this.setSprintDroupDownSelectedValue(sprintData.data, sprintId);
@@ -488,6 +588,7 @@ class TasksDetailsScreen extends Component {
         this.setDueDate(taskResult);
         this.setReminderDate(taskResult);
         this.setTaskNote(taskResult);
+        this.setIsParent(taskResult);
         this.setState({dataLoading: false});
       } else {
         this.setState({dataLoading: false});
@@ -510,7 +611,7 @@ class TasksDetailsScreen extends Component {
         value: sprintData[i].sprintName,
       });
     }
-    this.setState({sprints: sprintArray});
+    this.setState({sprints: sprintArray, sprintName: sprintArray[0].value});
   }
 
   setSprintDroupDownSelectedValue(sprintData, selectedSprintID) {
@@ -604,9 +705,17 @@ class TasksDetailsScreen extends Component {
     let taskDueDate = moment
       .parseZone(taskResult.data.taskDueDateAt)
       .format('Do MMMM YYYY');
+
+    let taskDueTime = moment
+      .parseZone(taskResult.data.taskDueDateAt)
+      .format('hh:mmA');
+
     if (taskDueDate != 'Invalid date') {
       this.setState({
         duedate: taskDueDate,
+        dueTime: taskDueTime,
+        date: new Date(taskResult.data.taskDueDateAt),
+        // time: new Date(taskDueDate),
       });
     }
   }
@@ -615,15 +724,25 @@ class TasksDetailsScreen extends Component {
     let taskReminderDate = moment
       .parseZone(taskResult.data.taskReminderAt)
       .format('Do MMMM YYYY');
+
+      let taskReminderTime = moment
+      .parseZone(taskResult.data.taskReminderAt)
+      .format('hh:mmA');
+
     if (taskReminderDate != 'Invalid date') {
       this.setState({
         remindDate: taskReminderDate,
+        reminderTime: taskReminderTime
       });
     }
   }
 
   setTaskNote(taskResult) {
     this.setState({note: taskResult.data.taskNote});
+  }
+
+  setIsParent(taskResult) {
+    this.setState({isParent: taskResult.data.isParent});
   }
 
   dateView = function(item) {
@@ -651,6 +770,7 @@ class TasksDetailsScreen extends Component {
   };
 
   onChangeDate(event, selectedDate) {
+    console.log("dddddddddddddddddddd",selectedDate)
     let date = new Date(selectedDate);
     let newDate = '';
     let newDateValue = '';
@@ -992,28 +1112,29 @@ class TasksDetailsScreen extends Component {
     }
   }
 
-  // change note of task API
   async changeTaskNote(note) {
-    try {
-      this.setState({dataLoading: true});
-      let projectID = this.state.selectedProjectID;
-      let taskID = this.state.selectedProjectTaskID;
-      resultData = await APIServices.updateTaskNoteData(
-        projectID,
-        taskID,
-        note,
-      );
-      if (resultData.message == 'success') {
-        this.setState({dataLoading: false, note: note});
-      } else {
-        this.setState({dataLoading: false});
-      }
-    } catch (e) {
-      if (e.status == 401 || e.status == 403) {
-        this.setState({dataLoading: false});
-        this.showAlert('', e.data.message);
-      }
-    }
+    this.setState({note: note});
+  }
+
+  // change note of task API
+  async onSubmitTaskNote(note) {
+    this.setState({dataLoading: true});
+    let projectID = this.state.selectedProjectID;
+    let taskID = this.state.selectedProjectTaskID;
+    await APIServices.updateTaskNoteData(projectID, taskID, note)
+      .then(response => {
+        if (response.message == 'success') {
+          this.setState({dataLoading: false, note: note});
+        } else {
+          this.setState({dataLoading: false});
+        }
+      })
+      .catch(error => {
+        if (error.status == 401 || e.status == 403) {
+          this.setState({dataLoading: false});
+          this.showAlert('', error.data.message);
+        }
+      });
   }
 
   // change assignee of task API
@@ -1182,7 +1303,15 @@ class TasksDetailsScreen extends Component {
   _renderHeader() {
     return (
       <View style={styles.subTasksHeader}>
-        <Text style={styles.parentTaskText}>Child Tasks</Text>
+        <View style={{flex: 1}}>
+          <Text style={styles.parentTaskText}>Child Tasks</Text>
+          <Text style={styles.childTaskText}>
+            {this.state.subTaskList.length > 0
+              ? this.state.subTaskList[0].length
+              : 0}{' '}
+            Task(s)
+          </Text>
+        </View>
         <Image
           style={styles.iconArrow}
           source={
@@ -1268,6 +1397,44 @@ class TasksDetailsScreen extends Component {
     );
   }
 
+  onFilterIssueTypes = (value, index, data) => {
+    const selectedIssueTypeId = data[index].id;
+    let selectedIssueTypeName = data[index].value;
+    let taskTypeList = [];
+
+    switch (selectedIssueTypeId) {
+      case 'development':
+        taskTypeList = development;
+        break;
+      case 'qa':
+        taskTypeList = qa;
+        break;
+      case 'design':
+        taskTypeList = design;
+        break;
+      case 'bug':
+        taskTypeList = bug;
+        break;
+      case 'operational':
+        taskTypeList = operational;
+        break;
+      case 'preSales':
+        taskTypeList = preSales;
+        break;
+      case 'general':
+        taskTypeList = general;
+        break;
+      default:
+        break;
+    }
+
+    this.setState({
+      issueType: selectedIssueTypeName,
+      taskTypeList: taskTypeList,
+      taskType: taskTypeList[0].value,
+    });
+  };
+
   render() {
     let taskStatus = this.state.taskStatus;
     let dataLoading = this.state.dataLoading;
@@ -1278,6 +1445,7 @@ class TasksDetailsScreen extends Component {
     let selectedSprint = this.state.selectedSprint;
     let sprints = this.state.sprints;
     let secondaryTaskId = this.state.secondaryTaskId;
+    let isParent = this.state.isParent;
 
     return (
       <View style={styles.backgroundImage}>
@@ -1382,16 +1550,25 @@ class TasksDetailsScreen extends Component {
                 source={icons.subTasksRoundedGreen}
                 resizeMode="contain"
               />
-              <Accordion
-                underlayColor={colors.white}
-                sections={this.state.subTaskList}
-                // sectionContainerStyle={{height:200}}
-                containerStyle={{flex: 1, marginBottom: 20, marginTop: 0}}
-                activeSections={this.state.activeSections}
-                renderHeader={() => this._renderHeader()}
-                renderContent={item => this._renderContent(item)}
-                onChange={this._updateSections}
-              />
+              {isParent ? (
+                <Accordion
+                  underlayColor={colors.white}
+                  sections={this.state.subTaskList}
+                  // sectionContainerStyle={{height:200}}
+                  containerStyle={{flex: 1, marginBottom: 20, marginTop: 0}}
+                  activeSections={this.state.activeSections}
+                  renderHeader={() => this._renderHeader()}
+                  renderContent={item => this._renderContent(item)}
+                  onChange={this._updateSections}
+                />
+              ) : (
+                <View style={{flex: 1}}>
+                  <Text style={styles.parentTaskText}>Parent Task</Text>
+                  <Text style={styles.childTaskText}>
+                    {this.state.parentTaskName}
+                  </Text>
+                </View>
+              )}
             </View>
             <View style={styles.taskTypeMainView}>
               <View style={styles.taskTypeNameView}>
@@ -1408,7 +1585,7 @@ class TasksDetailsScreen extends Component {
                     // style={{}}
                     label=""
                     labelFontSize={0}
-                    data={sprints}
+                    data={issueTypeList}
                     textColor={colors.black}
                     fontSize={14}
                     renderAccessory={() => null}
@@ -1418,7 +1595,7 @@ class TasksDetailsScreen extends Component {
                     overlayStyle={{width: '100%'}}
                     pickerStyle={{width: '89%', marginTop: 70, marginLeft: 15}}
                     dropdownPosition={0}
-                    value={'Oparational'}
+                    value={this.state.issueType}
                     itemColor={'black'}
                     selectedItemColor={'black'}
                     dropdownOffset={{top: 10}}
@@ -1429,7 +1606,7 @@ class TasksDetailsScreen extends Component {
                       fontFamily: 'CircularStd-Book',
                     }}
                     itemPadding={10}
-                    onChangeText={this.onFilterSprintData}
+                    onChangeText={this.onFilterIssueTypes}
                   />
                 </View>
                 <View style={[styles.taskTypeDropDownView, {marginLeft: 5}]}>
@@ -1437,7 +1614,7 @@ class TasksDetailsScreen extends Component {
                     // style={{}}
                     label=""
                     labelFontSize={0}
-                    data={dropData}
+                    data={this.state.taskTypeList}
                     textColor={colors.black}
                     fontSize={14}
                     renderAccessory={() => null}
@@ -1447,7 +1624,7 @@ class TasksDetailsScreen extends Component {
                     overlayStyle={{width: '100%'}}
                     pickerStyle={{width: '38%', marginTop: 62, marginLeft: 225}}
                     dropdownPosition={0}
-                    value={'Pending'}
+                    value={this.state.taskType}
                     itemColor={'black'}
                     selectedItemColor={'black'}
                     dropdownOffset={{top: 10}}
@@ -1489,7 +1666,7 @@ class TasksDetailsScreen extends Component {
                     overlayStyle={{width: '100%'}}
                     pickerStyle={{width: '89%', marginTop: 70, marginLeft: 15}}
                     dropdownPosition={0}
-                    value={'Sprint 1'}
+                    value={this.state.sprintName}
                     itemColor={'black'}
                     selectedItemColor={'black'}
                     dropdownOffset={{top: 10}}
@@ -1519,8 +1696,15 @@ class TasksDetailsScreen extends Component {
                   placeholder={'Notes'}
                   value={this.state.note}
                   multiline={true}
+                  // blurOnSubmit={true}
                   onChangeText={text => this.changeTaskNote(text)}
+                  // onSubmitEditing={() => this.onSubmitTaskNote(this.state.note)}
                 />
+                <TouchableOpacity
+                  style={styles.updateNotesView}
+                  onPress={() => this.onSubmitTaskNote(this.state.note)}>
+                  <Text style={styles.updateNotesText}>UPDATE NOTES</Text>
+                </TouchableOpacity>
               </View>
             </View>
             <View style={styles.borderStyle} />
@@ -1762,6 +1946,11 @@ const styles = EStyleSheet.create({
     fontFamily: 'CircularStd-Medium',
     color: colors.projectTaskNameColor,
   },
+  childTaskText: {
+    fontSize: '12rem',
+    fontFamily: 'CircularStd-Medium',
+    color: colors.detailsViewText,
+  },
   subTasksListView: {
     backgroundColor: colors.projectBgColor,
     borderRadius: 5,
@@ -1772,7 +1961,7 @@ const styles = EStyleSheet.create({
     paddingHorizontal: '12rem',
   },
   flatListStyle: {
-    marginBottom: '0rem',
+    marginBottom: '1rem',
     marginTop: '0rem',
   },
   subTasksHeader: {
@@ -1835,9 +2024,9 @@ const styles = EStyleSheet.create({
   },
   notesTextInput: {
     fontSize: '11rem',
-    color: colors.gray,
+    color: colors.detailsViewText,
     lineHeight: '17rem',
-    fontFamily: 'CircularStd-Black',
+    fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
     marginLeft: '-3rem',
     width: '100%',
@@ -1925,6 +2114,20 @@ const styles = EStyleSheet.create({
     borderRadius: '5rem',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  updateNotesView: {
+    backgroundColor: colors.lightBlue,
+    height: 30,
+    width: 120,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 5,
+    marginBottom: 20,
+  },
+  updateNotesText: {
+    color: colors.white,
+    fontSize: 12,
+    fontWeight: 'bold',
   },
 });
 

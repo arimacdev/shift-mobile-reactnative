@@ -97,15 +97,15 @@ let bottomData = [
   },
 ];
 
-let issueTypeList =  [
-  { value: "Development", id: "development" },
-  { value: "QA", id: "qa" },
-  { value: "Design", id: "design" },
-  { value: "Bug", id: "bug" },
-  { value: "Operational", id: "operational" },
-  { value: "Pre-sales", id: "preSales" },
-  { value: "General", id: "general" }
-]
+let issueTypeList = [
+  {value: 'Development', id: 'development'},
+  {value: 'QA', id: 'qa'},
+  {value: 'Design', id: 'design'},
+  {value: 'Bug', id: 'bug'},
+  {value: 'Operational', id: 'operational'},
+  {value: 'Pre-sales', id: 'preSales'},
+  {value: 'General', id: 'general'},
+];
 
 class TasksTabScreen extends Component {
   constructor(props) {
@@ -166,7 +166,7 @@ class TasksTabScreen extends Component {
     if (
       prevProps.myTaskByProjectLoading !== this.props.myTaskByProjectLoading &&
       this.props.myTaskByProject &&
-      this.props.myTaskByProject.length  > 0
+      this.props.myTaskByProject.length > 0
     ) {
       this.setState({
         filterdAndMyTasksData: this.props.myTaskByProject,
@@ -263,7 +263,7 @@ class TasksTabScreen extends Component {
       }
     } else {
       dateText = 'Add Due Date';
-      color = item.isParent ? '#ffffff' :'#000000';
+      color = item.isParent ? '#ffffff' : '#000000';
     }
 
     return <Text style={[styles.textDate, {color: color}]}>{dateText}</Text>;
@@ -306,7 +306,7 @@ class TasksTabScreen extends Component {
         color = colors.colorTangerine;
         break;
       case 'design':
-        color = colors.colorApple
+        color = colors.colorApple;
         break;
       case 'bug':
         color = colors.colorCoralRed;
@@ -318,7 +318,7 @@ class TasksTabScreen extends Component {
         color = colors.colorCaribbeanGreen;
         break;
       case 'general':
-        color = colors.colorFreeSpeechGreen;//needs color
+        color = colors.colorFreeSpeechGreen; //needs color
         break;
       default:
         break;
@@ -371,7 +371,7 @@ class TasksTabScreen extends Component {
     }
   };
 
-  renderSubTasksList(item) {
+  renderSubTasksList(item, parentTaskName) {
     let selectedProjectID = this.state.selectedProjectID;
     let selectedProjectName = this.state.selectedProjectName;
     return (
@@ -382,6 +382,7 @@ class TasksTabScreen extends Component {
             selectedProjectID: selectedProjectID,
             isFromBoards: false,
             selectedProjectName: selectedProjectName,
+            parentTaskName: parentTaskName,
           })
         }>
         <View style={styles.subTasksView}>
@@ -395,12 +396,10 @@ class TasksTabScreen extends Component {
           />
           <View style={styles.subTasksMainView}>
             <View style={styles.subTasksTextView}>
-              {/* <Text style={styles.subTextMain}>
-                {this.state.selectedProjectName}
-              </Text>
-              <Text style={styles.subText}>{item.taskName}</Text> */}
+              <Text style={styles.subTextMain}>{item.secondaryTaskId}</Text>
+              <Text style={styles.subText}>{item.taskName}</Text>
 
-              <Text style={styles.subTextMain}>{item.taskName}</Text>
+              {/* <Text style={styles.subTextMain}>{item.taskName}</Text> */}
             </View>
             <View
               style={[
@@ -426,6 +425,7 @@ class TasksTabScreen extends Component {
     let selectedProjectID = this.state.selectedProjectID;
     let subTasksName = this.state.subTasksName;
     let selectedProjectName = this.state.selectedProjectName;
+    let parentTaskName = item.parentTask.taskName;
     return (
       <View>
         <TouchableOpacity
@@ -435,7 +435,7 @@ class TasksTabScreen extends Component {
               subTaskDetails: item.childTasks,
               selectedProjectID: selectedProjectID,
               selectedProjectName: selectedProjectName,
-              isFromBoards: false,
+              isFromBoards: true,
             })
           }>
           <View
@@ -466,12 +466,12 @@ class TasksTabScreen extends Component {
             />
             <View style={styles.tasksMainView}>
               <View style={styles.tasksHeaderView}>
-                {/* <Text style={styles.textMain}>
-                  {this.state.selectedProjectName}
+                <Text style={styles.textMain}>
+                  {item.parentTask.secondaryTaskId}
                 </Text>
-                <Text style={styles.text}>{item.parentTask.taskName}</Text> */}
+                <Text style={styles.text}>{item.parentTask.taskName}</Text>
 
-                <Text style={styles.textMain}>{item.parentTask.taskName}</Text>
+                {/* <Text style={styles.textMain}>{item.parentTask.taskName}</Text> */}
               </View>
               <View
                 style={[
@@ -523,7 +523,9 @@ class TasksTabScreen extends Component {
                 marginBottom: EStyleSheet.value('15rem'),
               }}
               data={index == 0 ? item.childTasks : item.childTasks}
-              renderItem={({item}) => this.renderSubTasksList(item)}
+              renderItem={({item}) =>
+                this.renderSubTasksList(item, parentTaskName)
+              }
               keyExtractor={item => item.taskId}
             />
           </View>
@@ -545,7 +547,8 @@ class TasksTabScreen extends Component {
             selectedProjectName: selectedProjectName,
           })
         }>
-        <View style={ item.isParent ? styles.parentTaskView : styles.childTasksView}>
+        <View
+          style={item.isParent ? styles.parentTaskView : styles.childTasksView}>
           <Image
             style={styles.completionIcon}
             source={
@@ -561,7 +564,12 @@ class TasksTabScreen extends Component {
               </Text>
               <Text style={styles.subText}>{item.taskName}</Text> */}
 
-              <Text style={ item.isParent ? styles.parentTextMain : styles.subTextMain}>{item.taskName}</Text>
+              <Text
+                style={
+                  item.isParent ? styles.parentTextMain : styles.subTextMain
+                }>
+                {item.taskName}
+              </Text>
             </View>
             <View
               style={[
@@ -596,12 +604,12 @@ class TasksTabScreen extends Component {
     switch (index) {
       case 0:
         // All tasks
-        await this.resetValues()
+        await this.resetValues();
         this.getAllTaskInProject();
         break;
       case 1:
         // my tasks
-        await this.resetValues()
+        await this.resetValues();
         this.getMyTaskInProject();
         break;
     }
@@ -672,7 +680,7 @@ class TasksTabScreen extends Component {
         break;
       case 'Task type':
         searchValue = 'Task type';
-        this.setState({filterTaskType: 'Development'})
+        this.setState({filterTaskType: 'Development'});
         this.fetchInitialDataWithTaskType();
         break;
       case 'Task status':
@@ -685,19 +693,19 @@ class TasksTabScreen extends Component {
     if (searchValue != '') {
       this.setState({filter: true});
     } else {
-      if(index == 0){
+      if (index == 0) {
         this.setState({filter: false});
-        this.getAllTaskInProject()
-      }else{
+        this.getAllTaskInProject();
+      } else {
         this.setState({filter: false});
         this.getMyTaskInProject();
       }
     }
     // reset Values
-  this.resetFilterValues(key);
+    this.resetFilterValues(key);
   }
 
-  resetFilterValues(key){
+  resetFilterValues(key) {
     this.setState({
       filterType: key,
       selectedStartDate: null,
@@ -705,11 +713,11 @@ class TasksTabScreen extends Component {
     });
   }
 
-  resetValues(key){
+  resetValues(key) {
     this.setState({
       filterType: 'None',
-      filterdAndMyTasksData : [],
-      filterdDataAllTaks : [],
+      filterdAndMyTasksData: [],
+      filterdDataAllTaks: [],
       selectedStartDate: null,
       selectedEndDate: null,
       filter: false,
@@ -745,7 +753,11 @@ class TasksTabScreen extends Component {
       let selectedProjectID = this.state.selectedProjectID;
       let taskId = item.parentTask.taskId;
       this.setState({dataLoading: true});
-      newTaskData = await APIServices.addSubTaskToProjectData(subTasksName,selectedProjectID,taskId);
+      newTaskData = await APIServices.addSubTaskToProjectData(
+        subTasksName,
+        selectedProjectID,
+        taskId,
+      );
       if (newTaskData.message == 'success') {
         this.setState({dataLoading: false, textInputs: []});
         this.getAllTaskInProject();
@@ -766,7 +778,10 @@ class TasksTabScreen extends Component {
       let tasksName = this.state.tasksName;
       let selectedProjectID = this.state.selectedProjectID;
       this.setState({dataLoading: true});
-      newTaskData = await APIServices.addMainTaskToProjectData(tasksName,selectedProjectID);
+      newTaskData = await APIServices.addMainTaskToProjectData(
+        tasksName,
+        selectedProjectID,
+      );
       if (newTaskData.message == 'success') {
         this.setState({dataLoading: false, tasksName: ''});
         this.getAllTaskInProject();
@@ -778,22 +793,32 @@ class TasksTabScreen extends Component {
     }
   }
 
-  async fetchInitialDataWithTaskType (){
+  async fetchInitialDataWithTaskType() {
     try {
       let selectedProjectID = this.state.selectedProjectID;
       let index = this.state.index;
       this.setState({dataLoading: true});
-      filtedData = await APIServices.filterTaskByTaskTypeData(selectedProjectID,'development');
+      filtedData = await APIServices.filterTaskByTaskTypeData(
+        selectedProjectID,
+        'development',
+      );
       if (filtedData.message == 'success') {
-        if(index == 0){ // filter tasks when myTasks selected
-          this.setState({dataLoading: false,filterdAndMyTasksData: filtedData.data });
-        }else{
+        if (index == 0) {
+          // filter tasks when myTasks selected
+          this.setState({
+            dataLoading: false,
+            filterdAndMyTasksData: filtedData.data,
+          });
+        } else {
           let myTasksFiltedData = [];
-          let userID = await AsyncStorage.getItem('userID');;
-          myTasksFiltedData =   filtedData.data.filter(function(data) {
+          let userID = await AsyncStorage.getItem('userID');
+          myTasksFiltedData = filtedData.data.filter(function(data) {
             return data.taskAssignee == userID;
           });
-          this.setState({dataLoading: false,filterdAndMyTasksData: myTasksFiltedData });
+          this.setState({
+            dataLoading: false,
+            filterdAndMyTasksData: myTasksFiltedData,
+          });
         }
       } else {
         this.setState({dataLoading: false});
@@ -802,24 +827,34 @@ class TasksTabScreen extends Component {
       console.log(e);
       this.setState({dataLoading: false});
     }
-  };
+  }
 
-  async fetchDataWithTaskType (issueTypeID){
+  async fetchDataWithTaskType(issueTypeID) {
     try {
       let selectedProjectID = this.state.selectedProjectID;
       let index = this.state.index;
       this.setState({dataLoading: true});
-      filtedData = await APIServices.filterTaskByTaskTypeData(selectedProjectID,issueTypeID);
+      filtedData = await APIServices.filterTaskByTaskTypeData(
+        selectedProjectID,
+        issueTypeID,
+      );
       if (filtedData.message == 'success') {
-        if(index == 0){ // filter tasks when myTasks selected
-          this.setState({dataLoading: false,filterdAndMyTasksData: filtedData.data });
-        }else{
+        if (index == 0) {
+          // filter tasks when myTasks selected
+          this.setState({
+            dataLoading: false,
+            filterdAndMyTasksData: filtedData.data,
+          });
+        } else {
           let myTasksFiltedData = [];
-          let userID = await AsyncStorage.getItem('userID');;
-          myTasksFiltedData =   filtedData.data.filter(function(data) {
+          let userID = await AsyncStorage.getItem('userID');
+          myTasksFiltedData = filtedData.data.filter(function(data) {
             return data.taskAssignee == userID;
           });
-          this.setState({dataLoading: false,filterdAndMyTasksData: myTasksFiltedData });
+          this.setState({
+            dataLoading: false,
+            filterdAndMyTasksData: myTasksFiltedData,
+          });
         }
       } else {
         this.setState({dataLoading: false});
@@ -828,12 +863,12 @@ class TasksTabScreen extends Component {
       console.log(e);
       this.setState({dataLoading: false});
     }
-  };
+  }
 
   onFilterTaskTypeData = (value, index, data) => {
     let issueTypeID = data[index].id;
     let issueTypeName = data[index].value;
-    this.setState({filterTaskType: issueTypeName})
+    this.setState({filterTaskType: issueTypeName});
     this.fetchDataWithTaskType(issueTypeID);
   };
 
@@ -849,9 +884,15 @@ class TasksTabScreen extends Component {
     try {
       let selectedProjectID = this.state.selectedProjectID;
       this.setState({dataLoading: true});
-      filtedData = await APIServices.filterTaskByUser(selectedProjectID,assignee);
+      filtedData = await APIServices.filterTaskByUser(
+        selectedProjectID,
+        assignee,
+      );
       if (filtedData.message == 'success') {
-        this.setState({dataLoading: false,filterdAndMyTasksData: filtedData.data });
+        this.setState({
+          dataLoading: false,
+          filterdAndMyTasksData: filtedData.data,
+        });
       } else {
         this.setState({dataLoading: false});
       }
@@ -882,13 +923,20 @@ class TasksTabScreen extends Component {
           </View>
         );
       case 'Assignee':
-        return  <View style={styles.filterTextView}>
-                    <PopupMenuAssignee projectID={this.state.selectedProjectID}onSelect={item => this.onSelectUser(item)} />
-                </View>;
+        return (
+          <View style={styles.filterTextView}>
+            <PopupMenuAssignee
+              projectID={this.state.selectedProjectID}
+              onSelect={item => this.onSelectUser(item)}
+            />
+          </View>
+        );
       case 'Task type':
-        return <View style={styles.filterTextView}>
-                  {this.renderFilterTaskType()}
-                </View>      
+        return (
+          <View style={styles.filterTextView}>
+            {this.renderFilterTaskType()}
+          </View>
+        );
       default:
         return <View style={styles.filterTextView} />;
     }
@@ -898,31 +946,31 @@ class TasksTabScreen extends Component {
     let filterTaskType = this.state.filterTaskType;
     return (
       <Dropdown
-          label=""
-          labelFontSize={0}
-          data={issueTypeList}
-          textColor={colors.darkBlue}
-          error={''}
-          animationDuration={0.5}
-          containerStyle={{width: '100%'}}
-          overlayStyle={{width: '100%'}}
-          pickerStyle={{
-            width: '90%',
-            marginTop: 65,
-            marginLeft: 10,
-          }}
-          dropdownPosition={0}
-          value={filterTaskType}
-          itemColor={'black'}
-          selectedItemColor={'black'}
-          dropdownOffset={{top: 10}}
-          baseColor={colors.projectBgColor}
-          itemTextStyle={{
-            marginLeft: 15,
-            fontFamily: 'CircularStd-Book',
-          }}
-          itemPadding={10}
-          onChangeText={this.onFilterTaskTypeData}
+        label=""
+        labelFontSize={0}
+        data={issueTypeList}
+        textColor={colors.darkBlue}
+        error={''}
+        animationDuration={0.5}
+        containerStyle={{width: '100%'}}
+        overlayStyle={{width: '100%'}}
+        pickerStyle={{
+          width: '90%',
+          marginTop: 65,
+          marginLeft: 10,
+        }}
+        dropdownPosition={0}
+        value={filterTaskType}
+        itemColor={'black'}
+        selectedItemColor={'black'}
+        dropdownOffset={{top: 10}}
+        baseColor={colors.projectBgColor}
+        itemTextStyle={{
+          marginLeft: 15,
+          fontFamily: 'CircularStd-Book',
+        }}
+        itemPadding={10}
+        onChangeText={this.onFilterTaskTypeData}
       />
     );
   }
@@ -936,10 +984,12 @@ class TasksTabScreen extends Component {
   }
 
   async onDateSet() {
-    let selectedStartDate =
-      moment(this.state.selectedStartDate).format('YYYY-MM-DD');
-    let selectedEndDate =
-      moment(this.state.selectedEndDate).format('YYYY-MM-DD');
+    let selectedStartDate = moment(this.state.selectedStartDate).format(
+      'YYYY-MM-DD',
+    );
+    let selectedEndDate = moment(this.state.selectedEndDate).format(
+      'YYYY-MM-DD',
+    );
 
     this.setState({
       from: selectedStartDate == '' ? 'all' : selectedStartDate,
@@ -952,25 +1002,36 @@ class TasksTabScreen extends Component {
       let selectedProjectID = this.state.selectedProjectID;
       let index = this.state.index;
       this.setState({dataLoading: true});
-      filtedData = await APIServices.filterTaskByDate(selectedProjectID,selectedStartDate,selectedEndDate);
+      filtedData = await APIServices.filterTaskByDate(
+        selectedProjectID,
+        selectedStartDate,
+        selectedEndDate,
+      );
       if (filtedData.message == 'success') {
-        if(index == 0){ // filter tasks when myTasks selected
-          this.setState({dataLoading: false,filterdAndMyTasksData: filtedData.data });
-        }else{
+        if (index == 0) {
+          // filter tasks when myTasks selected
+          this.setState({
+            dataLoading: false,
+            filterdAndMyTasksData: filtedData.data,
+          });
+        } else {
           let myTasksFiltedData = [];
-          let userID = await AsyncStorage.getItem('userID');;
-          myTasksFiltedData =   filtedData.data.filter(function(data) {
+          let userID = await AsyncStorage.getItem('userID');
+          myTasksFiltedData = filtedData.data.filter(function(data) {
             return data.taskAssignee == userID;
           });
-          this.setState({dataLoading: false,filterdAndMyTasksData: myTasksFiltedData });
-        }   
+          this.setState({
+            dataLoading: false,
+            filterdAndMyTasksData: myTasksFiltedData,
+          });
+        }
       } else {
         this.setState({dataLoading: false});
       }
     } catch (e) {
       this.setState({dataLoading: false});
     }
-  };
+  }
 
   getButtonDisabledStaus() {
     if (
@@ -1121,57 +1182,55 @@ class TasksTabScreen extends Component {
                 />
               </View>
             </View>
-            {
-              this.state.filter ? 
-                <View style={styles.filterMainView}>
-                  {this.renderFilterType()}
-                  {/* <View style={styles.filterIconView}>
+            {this.state.filter ? (
+              <View style={styles.filterMainView}>
+                {this.renderFilterType()}
+                {/* <View style={styles.filterIconView}>
                     <Image style={styles.filterIcon} source={icons.filterIcon} />
                   </View> */}
-                </View>
-                 : 
-                this.state.index == 0 ? 
-                <View style={[styles.addNewFieldView, {flexDirection: 'row'}]}>
-                  <Image
-                    style={styles.addNewIcon}
-                    source={icons.blueAdd}
-                    resizeMode={'center'}
-                  />
-                  <TextInput
-                    style={[styles.textInput, {width: '95%'}]}
-                    placeholder={'Add a main task...'}
-                    value={tasksName}
-                    onChangeText={tasksName =>
-                      this.onNewTasksNameChange(tasksName)
-                    }
-                    onSubmitEditing={() =>
-                      this.onNewTasksNameSubmit(this.state.tasksName)
-                    }
-                  />
-                </View>
-                : null
-            }
+              </View>
+            ) : this.state.index == 0 ? (
+              <View style={[styles.addNewFieldView, {flexDirection: 'row'}]}>
+                <Image
+                  style={styles.addNewIcon}
+                  source={icons.blueAdd}
+                  resizeMode={'center'}
+                />
+                <TextInput
+                  style={[styles.textInput, {width: '95%'}]}
+                  placeholder={'Add a main task...'}
+                  value={tasksName}
+                  onChangeText={tasksName =>
+                    this.onNewTasksNameChange(tasksName)
+                  }
+                  onSubmitEditing={() =>
+                    this.onNewTasksNameSubmit(this.state.tasksName)
+                  }
+                />
+              </View>
+            ) : null}
 
             {/* render all tasks without filters */}
-            { index == 0 &&  !this.state.filter && 
+            {index == 0 && !this.state.filter && (
               <FlatList
                 style={styles.tasksFlatList}
                 data={filterdDataAllTaks}
                 renderItem={({item, index}) => this.renderTaskList(item, index)}
                 keyExtractor={item => item.parentTask.taskId}
               />
-            }
+            )}
 
             {/* render my tasks and task list when filter*/}
-            { (index == 1 || this.state.filter) && 
+            {(index == 1 || this.state.filter) && (
               <FlatList
                 style={styles.myTasksFlatList}
                 data={filterdAndMyTasksData}
-                renderItem={({item, index}) => this.renderMyTasksAndFilterTaskList(item, index)}
+                renderItem={({item, index}) =>
+                  this.renderMyTasksAndFilterTaskList(item, index)
+                }
                 keyExtractor={item => item.taskId}
               />
-            }
-            
+            )}
           </View>
         ) : (
           <View>
@@ -1292,7 +1351,7 @@ const styles = EStyleSheet.create({
     // lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
-    color: colors.white
+    color: colors.white,
   },
   subText: {
     fontSize: '9rem',
