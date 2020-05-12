@@ -48,5 +48,8 @@ const colors = {
   colorTangerine: '#FF7A00',
   colorCaribbeanGreen: '#00c29f',
   colorHeliotrope: '#DD6DEF',
+  colorApple:'#4EBC44',
+  colorCoralRed:'#FB3F3F',
+  colorsNavyBlue: '#0083E2'
 };
 export default colors;

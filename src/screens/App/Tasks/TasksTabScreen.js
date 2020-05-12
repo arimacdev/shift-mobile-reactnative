@@ -299,16 +299,16 @@ class TasksTabScreen extends Component {
     let color = '';
     switch (issueType) {
       case 'development':
-        color = '#ffa800';
+        color = colors.colorOrange;
         break;
       case 'qa':
         color = colors.colorTangerine;
         break;
       case 'design':
-        color = '#4ebc44';//needs color
+        color = colors.colorApple
         break;
       case 'bug':
-        color = '#fb3f3f';
+        color = colors.colorCoralRed;
         break;
       case 'oparational':
         (color = colors), colorHeliotrope;
@@ -372,6 +372,7 @@ class TasksTabScreen extends Component {
 
   renderSubTasksList(item) {
     let selectedProjectID = this.state.selectedProjectID;
+    let selectedProjectName = this.state.selectedProjectName;
     return (
       <TouchableOpacity
         onPress={() =>
@@ -379,6 +380,7 @@ class TasksTabScreen extends Component {
             taskDetails: item,
             selectedProjectID: selectedProjectID,
             isFromBoards: false,
+            selectedProjectName: selectedProjectName,
           })
         }>
         <View style={styles.subTasksView}>
@@ -422,6 +424,7 @@ class TasksTabScreen extends Component {
     let index = this.state.index;
     let selectedProjectID = this.state.selectedProjectID;
     let subTasksName = this.state.subTasksName;
+    let selectedProjectName = this.state.selectedProjectName;
     return (
       <View>
         <TouchableOpacity
@@ -524,6 +527,7 @@ class TasksTabScreen extends Component {
 
   renderMyTasksAndFilterTaskList(item, indexMain) {
     let selectedProjectID = this.state.selectedProjectID;
+    let selectedProjectName = this.state.selectedProjectName;
     return (
       <TouchableOpacity
         onPress={() =>
@@ -531,6 +535,7 @@ class TasksTabScreen extends Component {
             taskDetails: item,
             selectedProjectID: selectedProjectID,
             isFromBoards: false,
+            selectedProjectName: selectedProjectName,
           })
         }>
         <View style={ item.isParent ? styles.parentTaskView : styles.childTasksView}>

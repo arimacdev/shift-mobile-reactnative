@@ -1326,11 +1326,20 @@ class TasksDetailsScreen extends Component {
               </View>
             </View>
             <View>
-              <Text style={styles.taskNameStyle}>{taskName}</Text>
+              <TextInput
+                style={[styles.taskNameStyle]}
+                placeholder={'Task name'}
+                value={this.state.taskName}
+                onChangeText={text => this.onTaskNameChange(text)}
+                onSubmitEditing={() =>
+                  this.onTaskNameChangeSubmit(this.state.taskName)
+                }
+              />
+              {/* <Text style={styles.taskNameStyle}>{taskName}</Text> */}
             </View>
             <View style={styles.borderStyle} />
 
-            {this.state.isFromBoards ? (
+            {/* {this.state.isFromBoards ? (
               <View style={styles.projectFilerViewGreen}>
                 <Dropdown
                   // style={{}}
@@ -1358,7 +1367,15 @@ class TasksDetailsScreen extends Component {
                   onChangeText={this.onFilterSprintData}
                 />
               </View>
-            ) : null}
+            ) : null} */}
+            <View style={styles.buttonAddTaskView}>
+              <TouchableOpacity style={styles.buttonAddParentTask}>
+                <Text style={{color: colors.white}}>Add parent task</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.buttonAddChildTask}>
+                <Text style={{color: colors.white}}>Add child task</Text>
+              </TouchableOpacity>
+            </View>
             <View style={styles.parentTaskView}>
               <Image
                 style={styles.iconStyle}
@@ -1727,7 +1744,7 @@ const styles = EStyleSheet.create({
     fontSize: '14rem',
     fontWeight: 'bold',
     marginHorizontal: '20rem',
-    marginBottom: '15rem',
+    marginBottom: '0rem',
   },
   borderStyle: {
     borderWidth: '0.4rem',
@@ -1814,7 +1831,7 @@ const styles = EStyleSheet.create({
   },
   notesView: {
     flex: 1,
-    marginBottom: '15rem',
+    marginBottom: '1rem',
   },
   notesTextInput: {
     fontSize: '11rem',
@@ -1884,6 +1901,30 @@ const styles = EStyleSheet.create({
   },
   statusText: {
     color: colors.white,
+  },
+  buttonAddTaskView: {
+    flexDirection: 'row',
+    marginHorizontal: '20rem',
+    marginTop: '5rem',
+    marginBottom: '12rem',
+  },
+  buttonAddParentTask: {
+    flex: 1,
+    backgroundColor: colors.lightGreen,
+    height: '45rem',
+    marginRight: '7rem',
+    borderRadius: '5rem',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  buttonAddChildTask: {
+    flex: 1,
+    backgroundColor: colors.colorsNavyBlue,
+    height: '45rem',
+    marginLeft: '7rem',
+    borderRadius: '5rem',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
