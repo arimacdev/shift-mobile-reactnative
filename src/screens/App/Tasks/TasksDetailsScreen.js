@@ -31,6 +31,7 @@ import Header from '../../../components/Header';
 import Accordion from 'react-native-collapsible/Accordion';
 import RNFetchBlob from 'rn-fetch-blob';
 import fileTypes from '../../../assest/fileTypes/fileTypes';
+import * as Animatable from 'react-native-animatable';
 
 const Placeholder = () => (
   <View style={styles.landing}>
@@ -189,7 +190,7 @@ class TasksDetailsScreen extends Component {
       progress: 0,
       loading: false,
       secondaryTaskId: '',
-      selectedProjectName:''
+      selectedProjectName: '',
     };
   }
 
@@ -404,7 +405,7 @@ class TasksDetailsScreen extends Component {
 
   renderFilesList(item) {
     let details = '';
-    let size = this.bytesToSize(item.projectFileSize);
+    let size = this.bytesToSize(item.taskFileSize);
     let date = moment(item.taskFileDate).format('YYYY-MM-DD');
     let name = item.firstName + ' ' + item.lastName;
 
@@ -430,7 +431,7 @@ class TasksDetailsScreen extends Component {
         </View>
         <View style={{flex: 1}}>
           <Text style={styles.filesText} numberOfLines={1}>
-            {/* {item.name} */}Inidika Wijesooriya
+            {name}
           </Text>
           <Text style={styles.filesTextDate} numberOfLines={1}>
             {date}
@@ -1253,14 +1254,17 @@ class TasksDetailsScreen extends Component {
 
   _renderContent(item) {
     return (
-      <View style={styles.flatListView}>
+      <Animatable.View
+        animation={'bounceIn'}
+        duration={400}
+        style={styles.flatListView}>
         <FlatList
           style={styles.flatListStyle}
           data={item}
           renderItem={({item, index}) => this.renderSubtasksList(item)}
           keyExtractor={item => item.taskId}
         />
-      </View>
+      </Animatable.View>
     );
   }
 
@@ -1813,7 +1817,7 @@ const styles = EStyleSheet.create({
     marginBottom: '15rem',
   },
   notesTextInput: {
-    fontSize: '12rem',
+    fontSize: '11rem',
     color: colors.gray,
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Black',

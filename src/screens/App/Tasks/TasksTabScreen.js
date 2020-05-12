@@ -302,23 +302,23 @@ class TasksTabScreen extends Component {
         color = '#ffa800';
         break;
       case 'qa':
-        color = '#ff7a00';
+        color = colors.colorTangerine;
         break;
-      case 'design' : 
-        color = '#4ebc44';
+      case 'design':
+        color = '#4ebc44';//needs color
         break;
-      case 'bug' : 
+      case 'bug':
         color = '#fb3f3f';
-        break     
-      case 'operational':
-        color = '#dd6def';
+        break;
+      case 'oparational':
+        (color = colors), colorHeliotrope;
         break;
       case 'preSales':
-        color = '#00c29f';
+        color = colors.colorCaribbeanGreen;
         break;
       case 'general':
-        color = '#00c29f';
-        break;   
+        color = colors.colorFreeSpeechGreen;//needs color
+        break;
       default:
         break;
     }
@@ -430,6 +430,7 @@ class TasksTabScreen extends Component {
               taskDetails: item.parentTask,
               subTaskDetails: item.childTasks,
               selectedProjectID: selectedProjectID,
+              selectedProjectName: selectedProjectName,
               isFromBoards: false,
             })
           }>
