@@ -38,7 +38,7 @@ export const GET_WORKLOAD_WITH_COMPLETION = `${PROTOCOL}${HOST}projects/tasks/us
 export const GET_GROUP_TASK_DATA = `${PROTOCOL}${HOST}taskgroup`;
 export const ADD_GROUP_TASK_DATA = `${PROTOCOL}${HOST}taskgroup`;
 export const ADD_ALL_TASK_BY_GROUP_DATA = `${PROTOCOL}${HOST}projects`;
-export const ADD_TASK_TO_GROUP_TASK_DATA = `${PROTOCOL}${HOST}projects`;
+export const ADD_TASK_TO_GROUP_TASK_DATA = `${PROTOCOL}${HOST}taskgroup`;
 export const DELETE_GROUP_TASK_DATA = `${PROTOCOL}${HOST}taskgroup`;
 export const UPDATE_GROUP_TASK_DATA = `${PROTOCOL}${HOST}taskgroup`;
 export const GET_SINGLE_GROUP_TASK_DATA = `${PROTOCOL}${HOST}taskgroup`;
@@ -70,6 +70,8 @@ export const UPDATE_SPRINT = `${PROTOCOL}${HOST}projects`;
 export const ADD_MAIN_TASK_TO_PROJECT = `${PROTOCOL}${HOST}projects`;
 export const ADD_SUB_TASK_TO_PROJECT = `${PROTOCOL}${HOST}projects`;
 export const FILTER_TASK_IN_PROJECT = `${PROTOCOL}${HOST}projects`;
+
+export const VIEW_ALL_TASK_BY_GROUP_DATA = `${PROTOCOL}${HOST}taskgroup`;
 
 
 

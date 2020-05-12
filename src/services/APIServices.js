@@ -67,6 +67,8 @@ import {
     ADD_SUB_TASK_TO_PROJECT,
     FILTER_TASK_IN_PROJECT,
 
+    VIEW_ALL_TASK_BY_GROUP_DATA,
+
 } from '../api/API';
 import AsyncStorage from '@react-native-community/async-storage';
 import { SET_UPLOAD_PROGRESS } from '../redux/types';
@@ -782,7 +784,7 @@ async function getAllTaskByGroup(selectedTaskGroupId) {
         type : 'taskGroup',
     };
     return request({
-        url: ADD_ALL_TASK_BY_GROUP_DATA +'/'+selectedTaskGroupId + '/tasks?userId='+userIDHeder,
+        url: VIEW_ALL_TASK_BY_GROUP_DATA +'/'+selectedTaskGroupId + '/tasks?userId='+userIDHeder,
         method: 'GET',
     }, true,headers);
 };
@@ -798,15 +800,13 @@ async function addTaskGroupTaskData(taskName,taskGroupId) {
     };
 
     return request({
-        url: ADD_TASK_TO_GROUP_TASK_DATA + '/' + taskGroupId + '/tasks',
+        url: ADD_TASK_TO_GROUP_TASK_DATA + '/' + taskGroupId + '/task',
         method: 'POST',
         data: {
             taskName: taskName,
-            projectId: taskGroupId,
+            taskGroupId: taskGroupId,
             taskInitiator: taskInitiator,
-            taskDueDate: null,
-            taskRemindOnDate: null,
-            taskType: "taskGroup"
+            parentTaskId: null,
         }
     }, true, headers);
 };
@@ -1660,6 +1660,27 @@ async function filterTaskByTaskTypeData(selectedProjectID,issueType) {
     }, true, headers);
 };
 
+async function addSubTaskGroupTaskData(taskName,taskGroupId,parentTaskId) {
+
+    taskInitiator =  await AsyncStorage.getItem('userID');
+
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+    };
+
+    return request({
+        url: ADD_TASK_TO_GROUP_TASK_DATA + '/' + taskGroupId + '/task',
+        method: 'POST',
+        data: {
+            taskName: taskName,
+            taskGroupId: taskGroupId,
+            taskInitiator: taskInitiator,
+            parentTaskId: parentTaskId,
+        }
+    }, true, headers);
+};
+
 const APIServices = {
     getAllProjectsByUserData,
     getUserData,
@@ -1744,7 +1765,8 @@ const APIServices = {
     addSubTaskToProjectData,
     filterTaskByDate,
     filterTaskByUser,
-    filterTaskByTaskTypeData
+    filterTaskByTaskTypeData,
+    addSubTaskGroupTaskData
 };
 
 export default APIServices;

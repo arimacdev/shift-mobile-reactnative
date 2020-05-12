@@ -129,6 +129,7 @@ class TasksTabScreen extends Component {
       selectedStartDate: null,
       selectedEndDate: null,
       filterTaskType : '',
+      textInputs: [],
     };
 
     this.onDateChange = this.onDateChange.bind(this);
@@ -504,10 +505,16 @@ class TasksTabScreen extends Component {
                 style={[styles.subTaskTextInput, {width: '95%'}]}
                 placeholder={'Add a subtask...'}
                 placeholderTextColor={colors.white}
-                value={subTasksName}
-                onChangeText={subTasksName => this.onNewSubTasksNameChange(subTasksName)}
+                onChangeText={subTasksName => {
+                  let { textInputs } = this.state;
+                  textInputs[indexMain] = subTasksName;
+                  this.setState({
+                    textInputs,
+                  });
+                }}
+                value={this.state.textInputs[indexMain]}
                 onSubmitEditing={() =>
-                  this.onNewSubTasksNameSubmit(this.state.subTasksName,item)
+                  this.onNewSubTasksNameSubmit(this.state.subTasksName,item,indexMain)
                 }
               />
             </View>
@@ -732,21 +739,21 @@ class TasksTabScreen extends Component {
     this.setState({subTasksName: text});
   }
 
-  async onNewSubTasksNameSubmit(text,item) {
+  async onNewSubTasksNameSubmit(text,item,indexMain) {
     try {
-      let subTasksName = this.state.subTasksName;
+      let subTasksName = this.state.textInputs[indexMain];
       let selectedProjectID = this.state.selectedProjectID;
       let taskId = item.parentTask.taskId;
       this.setState({dataLoading: true});
       newTaskData = await APIServices.addSubTaskToProjectData(subTasksName,selectedProjectID,taskId);
       if (newTaskData.message == 'success') {
-        this.setState({dataLoading: false, subTasksName: ''});
+        this.setState({dataLoading: false, textInputs: []});
         this.getAllTaskInProject();
       } else {
-        this.setState({dataLoading: false});
+        this.setState({dataLoading: false,textInputs: []});
       }
     } catch (e) {
-      this.setState({dataLoading: false});
+      this.setState({dataLoading: false,textInputs: []});
     }
   }
 

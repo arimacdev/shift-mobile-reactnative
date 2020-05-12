@@ -24,6 +24,7 @@ import FadeIn from 'react-native-fade-in-image';
 import {SkypeIndicator} from 'react-native-indicators';
 import {NavigationEvents} from 'react-navigation';
 import APIServices from '../../../services/APIServices';
+import Triangle from 'react-native-triangle';
 
 const Placeholder = () => (
   <View style={styles.landing}>
@@ -58,7 +59,10 @@ class Tasks extends Component {
       isActive: this.props.isActive,
       selectedTypeAllTasks: 'All',
       dataLoading : false,
-      taskName : ''
+      taskName : '',
+      filter : false,
+      subTasksName : '',
+      textInputs: [],
     };
   }
 
@@ -96,6 +100,7 @@ class Tasks extends Component {
     let selectedTaskGroupId = this.state.selectedTaskGroupId;
     this.setState({dataLoading:true});
     allTaskData = await APIServices.getAllTaskByGroup(selectedTaskGroupId);
+    console.log(allTaskData);
     if(allTaskData.message == 'success'){
       this.setState({
         dataLoading:false,
@@ -108,15 +113,15 @@ class Tasks extends Component {
   }
 
   async tabOpenTaskTab() {
-    let selectedTaskGroupId = this.props.selectedTaskGroupId;
-    this.setState(
-      {
-        selectedTaskGroupId: selectedTaskGroupId,
-      },
-      () => {
-        this.getAllTaskInGroup();
-      },
-    );
+    // let selectedTaskGroupId = this.props.selectedTaskGroupId;
+    // this.setState(
+    //   {
+    //     selectedTaskGroupId: selectedTaskGroupId,
+    //   },
+    //   () => {
+    //     this.getAllTaskInGroup();
+    //   },
+    // );
   }
 
   dateView = function(item) {
@@ -147,7 +152,7 @@ class Tasks extends Component {
   };
 
   userImage = function(item) {
-    let userImage = item.taskAssigneeProfileImage;
+    let userImage = item.parentTask.taskAssigneeProfileImage;
 
     if (userImage) {
       return (
@@ -168,36 +173,27 @@ class Tasks extends Component {
     }
   };
 
-  renderTaskList(item) {
-    let selectedTaskGroupId = this.state.selectedTaskGroupId;
-    return (
-      <TouchableOpacity
-          onPress={() =>
-            this.props.navigation.navigate('GroupTasksDetailsScreen', {
-              taskDetails: item,
-              selectedTaskGroupId: selectedTaskGroupId,
-            })
-          }>
-        <View style={styles.taskView}>
+  userImageSubTask = function(item) {
+    let userImage = item.taskAssigneeProfileImage;
+
+    if (userImage) {
+      return (
+        <FadeIn>
           <Image
-            style={styles.completionIcon}
-            source={
-              item.taskStatus == 'closed'
-                ? icons.rightCircule
-                : icons.whiteCircule
-            }
+            source={{uri: userImage}}
+            style={{width: 24, height: 24, borderRadius: 24 / 2}}
           />
-          <View style={{flex: 1}}>
-            <Text style={styles.text}>{item.taskName}</Text>
-          </View>
-          <View style={styles.statusView}>
-            {this.dateView(item)}
-            {this.userImage(item)}
-          </View>
-        </View>
-      </TouchableOpacity>
-    );
-  }
+        </FadeIn>
+      );
+    } else {
+      return (
+        <Image
+          style={{width: 24, height: 24, borderRadius: 24 / 2}}
+          source={require('../../../asserts/img/defult_user.png')}
+        />
+      );
+    }
+  };
 
   renderBase() {
     return (
@@ -224,13 +220,28 @@ class Tasks extends Component {
         break;
     }
 
-    let filteredData = this.state.allDataAllTaks.filter(function(item) {
-      return item.taskStatus.includes(searchValue);
-    });
-    this.setState({
-      filterdDataAllTaks: filteredData,
-      selectedTypeAllTasks: key,
-    });
+    if (searchValue != '') {
+      //to do list all task individually
+      let dataArray = [];
+      let list = this.state.allDataAllTaks;
+      for(let i = 0 ; i < list.length ; i++){
+        let parentTask = list[i].parentTask;
+        let childTasks = list[i].childTasks;
+        if(parentTask.taskStatus == searchValue){
+          dataArray.push(parentTask);
+        }
+        for(let j = 0 ; j < childTasks.length ; j++){
+          let childTasksItem = childTasks[j];
+          if(childTasksItem.taskStatus == searchValue){
+            dataArray.push(childTasksItem);
+          }
+        }
+      }
+      this.setState({filterdDataAllTaks: dataArray,selectedTypeAllTasks: key,filter: true});  
+    } else {
+      let filteredData = this.state.allDataAllTaks;
+      this.setState({filterdDataAllTaks: filteredData,selectedTypeAllTasks: key,filter: false});
+    }
   }
 
   onNewTaskNameChange(text) {
@@ -254,11 +265,201 @@ class Tasks extends Component {
     }
   }
 
+  onNewSubTasksNameChange(text) {
+    this.setState({subTasksName: text});
+  }
+
+  async onNewSubTasksNameSubmit(text,item,indexMain) {
+    try {
+      let subTasksName = this.state.textInputs[indexMain];
+      let selectedTaskGroupId = this.state.selectedTaskGroupId;
+      let taskId = item.parentTask.taskId;
+      this.setState({dataLoading: true});
+      newTaskData = await APIServices.addSubTaskGroupTaskData(subTasksName,selectedTaskGroupId,taskId);
+      if (newTaskData.message == 'success') {
+        this.setState({dataLoading: false, textInputs: []});
+        this.getAllTaskInGroup();
+      } else {
+        this.setState({dataLoading: false,textInputs: []});
+      }
+    } catch (e) {
+      this.setState({dataLoading: false,textInputs: []});
+    }
+  }
+
+  // render main list without filter
+  renderTaskList(item, indexMain) {
+    let index = this.state.index;
+    let subTasksName = this.state.subTasksName;
+    return (
+      <View>
+        <TouchableOpacity
+          onPress={() =>
+            this.props.navigation.navigate('TasksDetailsScreen', {
+              taskDetails: item.parentTask,
+            })
+          }>
+          <View
+            style={[
+              styles.projectView,
+              {
+                marginTop:
+                  indexMain == 0
+                    ? 0
+                    : this.state.filter
+                    ? EStyleSheet.value('8rem')
+                    : EStyleSheet.value('20rem'),
+                borderBottomStartRadius: this.state.filter
+                  ? EStyleSheet.value('5rem')
+                  : EStyleSheet.value('0rem'),
+                borderBottomEndRadius: this.state.filter
+                  ? EStyleSheet.value('5rem')
+                  : EStyleSheet.value('0rem'),
+              },
+            ]}>
+            <Image
+              style={styles.completionIcon}
+              source={
+                item.taskStatus == 'closed'
+                  ? icons.rightCircule
+                  : icons.whiteCircule
+              }
+            />
+            <View style={styles.tasksMainView}>
+              <View style={styles.tasksHeaderView}>
+                {/* <Text style={styles.textMain}>
+                  {this.state.selectedProjectName}
+                </Text>
+                <Text style={styles.text}>{item.parentTask.taskName}</Text> */}
+
+                <Text style={styles.textMain}>{item.parentTask.taskName}</Text>
+              </View>
+            </View>
+            <View style={styles.statusView}>
+              {this.dateView(item)}
+              {this.userImage(item)}
+            </View>
+          </View>
+        </TouchableOpacity>
+        {!this.state.filter ? (
+          <View style={styles.tasksInnerView}>
+            <View style={[styles.addNewSubTaskView, {flexDirection: 'row'}]}>
+              <Image
+                style={styles.addSubTaskIcon}
+                source={icons.add}
+                resizeMode={'center'}
+              />
+              <TextInput
+                style={[styles.subTaskTextInput, {width: '95%'}]}
+                placeholder={'Add a subtask...'}
+                placeholderTextColor={colors.white}
+                onChangeText={subTasksName => {
+                  let { textInputs } = this.state;
+                  textInputs[indexMain] = subTasksName;
+                  this.setState({
+                    textInputs,
+                  });
+                }}
+                value={this.state.textInputs[indexMain]}
+                onSubmitEditing={() =>
+                  this.onNewSubTasksNameSubmit(this.state.subTasksName,item,indexMain)
+                }
+              />
+            </View>
+            <FlatList
+              style={{
+                marginBottom: EStyleSheet.value('15rem'),
+              }}
+              data={index == 0 ? item.childTasks : item.childTasks}
+              renderItem={({item}) => this.renderSubTasksList(item)}
+              keyExtractor={item => item.taskId}
+            />
+          </View>
+        ) : null}
+      </View>
+    );
+  }
+
+  // render sub list without filter
+  renderSubTasksList(item) {
+    return (
+      <TouchableOpacity
+        onPress={() =>
+          this.props.navigation.navigate('TasksDetailsScreen', {
+            taskDetails: item,
+          })
+        }>
+        <View style={styles.subTasksView}>
+          <Image
+            style={styles.completionIcon}
+            source={
+              item.taskStatus == 'closed'
+                ? icons.rightCircule
+                : icons.circuleGray
+            }
+          />
+          <View style={styles.subTasksMainView}>
+            <View style={styles.subTasksTextView}>
+              <Text style={styles.subTextMain}>{item.taskName}</Text>
+            </View>
+          </View>
+          <View style={styles.statusView}>
+            {this.dateView(item)}
+            {this.userImageSubTask(item)}
+          </View>
+        </View>
+      </TouchableOpacity>
+    );
+  }
+
+// render all task list with a filter
+  renderTaskListFilter(item) {
+    return (
+      <TouchableOpacity
+        onPress={() =>
+          this.props.navigation.navigate('TasksDetailsScreen', {
+            taskDetails: item,
+          })
+        }>
+        <View style={styles.subTasksView}>
+          <Image
+            style={styles.completionIcon}
+            source={
+              item.taskStatus == 'closed'
+                ? icons.rightCircule
+                : icons.circuleGray
+            }
+          />
+          <View style={styles.subTasksMainView}>
+            <View style={styles.subTasksTextView}>
+              <Text style={styles.subTextMain}>{item.taskName}</Text>
+            </View>
+          </View>
+          <View style={styles.statusView}>
+            {this.dateView(item)}
+            {this.userImageSubTask(item)}
+            {
+              item.parent &&
+                <View style={styles.triangleShape}>
+                  <Triangle
+                    width={30}
+                    height={30}
+                    color={'#0bafff'}
+                    direction={'up-right'}/>
+                </View> 
+            }
+          </View>
+        </View>
+      </TouchableOpacity>
+    );
+  }
+
   render() {
     let filterdDataAllTaks = this.state.filterdDataAllTaks;
     let selectedTypeAllTasks = this.state.selectedTypeAllTasks;
-    let dataLoading = this.state.dataLoading;
+    let dataLoading = this.state.dataLoading;selectedTypeAllTasks
     let taskName =this.state.taskName
+    let filter = this.state.filter;
 
     return (
       <View style={styles.backgroundImage}>
@@ -292,7 +493,8 @@ class Tasks extends Component {
                   onChangeText={value => this.onFilterAllTasks(value)}
                 />
             </View>
-            <View style={[styles.addNewFieldView, {flexDirection: 'row'}]}>
+            {!filter &&
+              <View style={[styles.addNewFieldView, {flexDirection: 'row'}]}>
                 <TextInput
                   style={[styles.textInput, {width: '95%'}]}
                   placeholder={'Add a task'}
@@ -300,14 +502,30 @@ class Tasks extends Component {
                   onChangeText={taskName => this.onNewTaskNameChange(taskName)}
                   onSubmitEditing={() => this.onNewTaskNameSubmit(this.state.taskName)}
                 />
-            </View>
-            <FlatList
-              style={{marginBottom: EStyleSheet.value('80rem')}}
-              data={filterdDataAllTaks}
-              renderItem={({item}) => this.renderTaskList(item)}
-              keyExtractor={item => item.taskId}
-            />
+              </View>
+            }
+            
           </View>
+          {!filter &&
+          <View style={styles.subContainer}>
+              <FlatList
+                style={{marginBottom: EStyleSheet.value('10rem'),marginTop: EStyleSheet.value('10rem')}}
+                data={filterdDataAllTaks}
+                renderItem={({item, index}) => this.renderTaskList(item, index)}
+                keyExtractor={item => item.parentTask.taskId}
+              />
+            </View>    
+          }
+          {filter &&
+              <View style={styles.subContainer}>
+                <FlatList
+                  style={{marginBottom: EStyleSheet.value('10rem'),marginTop: EStyleSheet.value('10rem')}}
+                  data={filterdDataAllTaks}
+                  renderItem={({ item }) => this.renderTaskListFilter(item)}
+                  keyExtractor={item => item.taskId}
+                />
+              </View>  
+            }
           {dataLoading && <Loader/>}
       </View>
     );
@@ -319,6 +537,14 @@ const styles = EStyleSheet.create({
     flex: 1,
     // backgroundColor: colors.pageBackGroundColor,
   },
+  subContainer: {
+    marginBottom: '65rem',
+    backgroundColor: colors.projectBgColor,
+    borderRadius: 5,
+    marginHorizontal: '05rem',
+    marginTop: '7rem',
+    marginBottom: '150rem',
+},
   projectFilerView: {
     backgroundColor: colors.projectBgColor,
     borderRadius: 5,
@@ -445,6 +671,105 @@ const styles = EStyleSheet.create({
     height: '57rem',
     marginHorizontal: '20rem',
   },
+  projectView: {
+    backgroundColor: colors.darkBlue,
+    borderTopStartRadius: '5rem',
+    borderTopEndRadius: '5rem',
+    height: '75rem',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: '12rem',
+    marginHorizontal: '20rem',
+  },
+  tasksMainView: {
+    flex: 1,
+    marginLeft: '10rem',
+  },
+  tasksHeaderView: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
+    marginBottom: 5,
+  },
+  textMain: {
+    fontSize: '11rem',
+    color: colors.white,
+    fontWeight: 'bold',
+    // lineHeight: '17rem',
+    fontFamily: 'CircularStd-Medium',
+    textAlign: 'left',
+  },
+  tasksLabelView: {
+    width: '75rem',
+    height: '18rem',
+    borderRadius: '10rem',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  tasksLabelText: {
+    fontSize: '8rem',
+    color: colors.white,
+  },
+  tasksInnerView: {
+    backgroundColor: colors.projectBgColor,
+    marginHorizontal: '20rem',
+    borderBottomStartRadius: '5rem',
+    borderBottomEndRadius: '5rem',
+  },
+  addSubTaskIcon: {
+    width: '20rem',
+    height: '20rem',
+  },
+  subTaskTextInput: {
+    fontSize: '10rem',
+    color: colors.white,
+    lineHeight: '17rem',
+    fontFamily: 'Circular Std Medium',
+    textAlign: 'left',
+    marginLeft: '5rem',
+  },
+  subTasksView: {
+    backgroundColor: colors.white,
+    borderRadius: '5rem',
+    height: '65rem',
+    marginTop: '7rem',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: '12rem',
+    marginHorizontal: '10rem',
+  },
+  subTasksMainView: {
+    flex: 1,
+    marginLeft: '10rem',
+  },
+  subTasksTextView: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
+    marginBottom: '5rem',
+  },
+  subTextMain: {
+    fontSize: '11rem',
+    color: '#080848',
+    fontWeight: 'bold',
+    // lineHeight: '17rem',
+    fontFamily: 'CircularStd-Medium',
+    textAlign: 'left',
+  },
+  addNewSubTaskView: {
+    backgroundColor: colors.lightBlue,
+    borderRadius: '5rem',
+    marginTop: '8rem',
+    marginBottom: '0rem',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: '10rem',
+    height: '40rem',
+    marginHorizontal: '10rem',
+  },
+  triangleShape : {
+    position: 'absolute',
+    right: 0,
+    top: 0,
+}
 });
 
 const mapStateToProps = state => {
