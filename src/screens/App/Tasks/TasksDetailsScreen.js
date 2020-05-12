@@ -287,7 +287,7 @@ class TasksDetailsScreen extends Component {
       selectedProjectName: '',
       isParent: false,
       issueType: 'Development',
-      taskTypeList: [],
+      taskTypeList: development,
       taskType: 'Pending',
       sprintName: 'Default',
     };
@@ -1150,31 +1150,31 @@ class TasksDetailsScreen extends Component {
 
   // change assignee of task API
   async changeTaskAssignee(name, userID) {
-    try {
-      this.setState({dataLoading: true});
-      let projectID = this.state.selectedProjectID;
-      let taskID = this.state.selectedProjectTaskID;
-      resultData = await APIServices.updateTaskAssigneeData(
-        projectID,
-        taskID,
-        userID,
-      );
-      if (resultData.message == 'success') {
-        this.setState({dataLoading: false, name: name});
-      } else {
-        this.setState({dataLoading: false});
-      }
-    } catch (e) {
-      if (e.status == 401 || e.status == 403) {
-        this.setState({dataLoading: false});
-        this.showAlert('', e.data.message);
-      }
-    }
+    this.setState({dataLoading: true});
+    let projectID = this.state.selectedProjectID;
+    let taskID = this.state.selectedProjectTaskID;
+    resultData = await APIServices.updateTaskAssigneeData(
+      projectID,
+      taskID,
+      userID,
+    )
+      .then(response => {
+        if (response.message == 'success') {
+          this.setState({dataLoading: false, name: name});
+        } else {
+          this.setState({dataLoading: false});
+        }
+      })
+      .catch(error => {
+        if (error.status == 401 || e.status == 403) {
+          this.setState({dataLoading: false});
+          this.showAlert('', error.data.message);
+        }
+      });
   }
 
   // change status of task API
   async changeTaskStatus(key, searchValue) {
-    try {
       this.setState({dataLoading: true});
       let projectID = this.state.selectedProjectID;
       let taskID = this.state.selectedProjectTaskID;
@@ -1182,23 +1182,23 @@ class TasksDetailsScreen extends Component {
         projectID,
         taskID,
         searchValue,
-      );
-      if (resultData.message == 'success') {
-        this.setState({dataLoading: false, taskStatus: key});
-      } else {
-        this.setState({dataLoading: false});
-      }
-    } catch (e) {
-      if (e.status == 401 || e.status == 403) {
-        this.setState({dataLoading: false});
-        this.showAlert('', e.data.message);
-      }
-    }
+      ).then(response => {
+        if (response.message == 'success') {
+          this.setState({dataLoading: false, taskStatus: key});
+        } else {
+          this.setState({dataLoading: false});
+        }
+      })
+      .catch(error => {
+        if (error.status == 401 || e.status == 403) {
+          this.setState({dataLoading: false});
+          this.showAlert('', error.data.message);
+        }
+      });
   }
 
   // change name of task API
   async onTaskNameChangeSubmit(text) {
-    try {
       this.setState({dataLoading: true});
       let projectID = this.state.selectedProjectID;
       let taskID = this.state.selectedProjectTaskID;
@@ -1206,22 +1206,22 @@ class TasksDetailsScreen extends Component {
         projectID,
         taskID,
         text,
-      );
-      if (resultData.message == 'success') {
-        this.setState({dataLoading: false});
-      } else {
-        this.setState({dataLoading: false});
-      }
-    } catch (e) {
-      if (e.status == 401 || e.status == 403) {
-        this.setState({dataLoading: false});
-        this.showAlert('', e.data.message);
-      }
-    }
+      ).then(response => {
+        if (response.message == 'success') {
+          this.setState({dataLoading: false});
+        } else {
+          this.setState({dataLoading: false});
+        }
+      })
+      .catch(error => {
+        if (error.status == 401 || e.status == 403) {
+          this.setState({dataLoading: false});
+          this.showAlert('', error.data.message);
+        }
+      });
   }
 
   async changeTaskDueDate() {
-    try {
       let duedateValue = this.state.duedateValue;
       let dueTime = this.state.dueTime;
       let projectID = this.state.selectedProjectID;
@@ -1237,18 +1237,19 @@ class TasksDetailsScreen extends Component {
         projectID,
         taskID,
         IsoDueDate,
-      );
-      if (resultData.message == 'success') {
-        this.setState({dataLoading: false});
-      } else {
-        this.setState({dataLoading: false});
-      }
-    } catch (e) {
-      if (e.status == 401 || e.status == 403) {
-        this.setState({dataLoading: false});
-        this.showAlert('', e.data.message);
-      }
-    }
+      ).then(response => {
+        if (response.message == 'success') {
+          this.setState({dataLoading: false});
+        } else {
+          this.setState({dataLoading: false});
+        }
+      })
+      .catch(error => {
+        if (error.status == 401 || e.status == 403) {
+          this.setState({dataLoading: false});
+          this.showAlert('', error.data.message);
+        }
+      });
   }
 
   async changeTaskReminderDate() {
@@ -1604,7 +1605,7 @@ class TasksDetailsScreen extends Component {
                     animationDuration={0.5}
                     containerStyle={{width: '100%'}}
                     overlayStyle={{width: '100%'}}
-                    pickerStyle={{width: '89%', marginTop: 70, marginLeft: 15}}
+                    pickerStyle={{width: '38%', marginTop: 62, marginLeft: 59}}
                     dropdownPosition={0}
                     value={this.state.issueType}
                     itemColor={'black'}
