@@ -1447,6 +1447,10 @@ class TasksDetailsScreen extends Component {
     });
   };
 
+  onTaskDeketePress(){
+    this.deleteTask();
+  }
+
   render() {
     let taskStatus = this.state.taskStatus;
     let dataLoading = this.state.dataLoading;
@@ -1463,11 +1467,12 @@ class TasksDetailsScreen extends Component {
       <View style={styles.backgroundImage}>
         <Header
           isTaskLog={true}
+          isDelete={true}
           navigation={this.props.navigation}
           title={this.state.selectedProjectName}
           // drawStatus={true}
           // taskStatus={taskStatus ? taskStatus : ''}
-          onPress={() => this.onBackPress()}
+          onPress={() => this.onTaskDeketePress()}
         />
         <ScrollView style={styles.backgroundImage}>
           <View>
@@ -1733,7 +1738,7 @@ class TasksDetailsScreen extends Component {
               // onRefresh={() => this.onRefresh()}
               // refreshing={isFetching}
             />
-            <TouchableOpacity onPress={() => this.deleteTask()}>
+            {/* <TouchableOpacity onPress={() => this.deleteTask()}>
               <View style={styles.buttonDelete}>
                 <Image
                   style={[
@@ -1753,7 +1758,7 @@ class TasksDetailsScreen extends Component {
                   resizeMode={'center'}
                 />
               </View>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             {this.state.showPicker ? this.renderDatePicker() : null}
             {this.state.showTimePicker ? this.renderTimePicker() : null}
           </View>
@@ -2095,6 +2100,7 @@ const styles = EStyleSheet.create({
   },
   flalList: {
     marginTop: '5rem',
+    marginBottom: '20rem'
   },
   taskStateIcon: {
     width: '38rem',

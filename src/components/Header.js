@@ -80,7 +80,7 @@ class Header extends Component {
       drawStatus,
       taskStatus,
       isTaskLog,
-      isDelete
+      isDelete,
     } = this.props;
     // console.log('PPPP',this.props)
     return (
@@ -254,23 +254,20 @@ class Header extends Component {
                   onPress={() =>
                     this.props.navigation.navigate('TaskLogScreen')
                   }>
-                  <Icon
-                    name={'calendar'}
-                    style={styles.iconCalendar}
-                    type={'Feather'}
+                  <Image
+                    style={styles.iconTaskLog}
+                    source={icons.taskLogWhite}
                   />
                 </TouchableOpacity>
               )}
               {isDelete && (
                 <TouchableOpacity
                   style={{alignItems: 'flex-end'}}
-                  onPress={() =>
-                    this.props.navigation.navigate('TaskLogScreen')
-                  }>
-                  <Icon
-                    name={'calendar'}
-                    style={styles.iconCalendar}
-                    type={'Feather'}
+                  onPress={() => this.props.onPress()}>
+                  <Image
+                    source={icons.deleteWhite}
+                    style={styles.iconEdit}
+                    resizeMode={'contain'}
                   />
                 </TouchableOpacity>
               )}
@@ -390,7 +387,12 @@ const styles = EStyleSheet.create({
     fontSize: '25rem',
     color: colors.white,
     fontWeight: '800',
-    marginLeft: 10,
+    marginLeft: '10rem',
+  },
+  iconTaskLog: {
+    width: '20rem',
+    height: '20rem',
+    marginRight: '20rem',
   },
 });
 
