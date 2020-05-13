@@ -857,7 +857,7 @@ const styles = EStyleSheet.create({
     fontWeight: '400',
   },
   textDate: {
-    fontFamily: 'Circular Std Book',
+    fontFamily: 'CircularStd-Book',
     fontSize: '9rem',
     fontWeight: '400',
     textAlign: 'center',
@@ -938,7 +938,7 @@ const styles = EStyleSheet.create({
     fontSize: '12rem',
     color: colors.white,
     lineHeight: '17rem',
-    fontFamily: 'HelveticaNeuel',
+    fontFamily: 'CircularStd-Medium',
     fontWeight: 'bold',
   },
   deleteIcon: {

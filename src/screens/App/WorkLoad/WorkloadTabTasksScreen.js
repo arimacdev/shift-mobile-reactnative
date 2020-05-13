@@ -524,7 +524,7 @@ const styles = EStyleSheet.create({
     fontWeight: '400',
   },
   textDate: {
-    fontFamily: 'Circular Std Book',
+    fontFamily: 'CircularStd-Book',
     fontSize: '9rem',
     fontWeight: '400',
     textAlign: 'center',

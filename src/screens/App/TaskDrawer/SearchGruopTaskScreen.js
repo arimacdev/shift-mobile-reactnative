@@ -185,7 +185,7 @@ const styles = EStyleSheet.create({
     color: colors.gray,
     textAlign: 'center',
     lineHeight: '17rem',
-    fontFamily: 'HelveticaNeuel',
+    fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
     marginLeft: '7rem',
   },

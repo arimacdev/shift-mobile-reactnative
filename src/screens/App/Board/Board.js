@@ -100,7 +100,7 @@ class Board extends Component {
                     buttons={buttons}
                     containerStyle={{ height: 60, marginTop: '7%', marginBottom: '1%', marginLeft: '5%', marginRight: '5%', borderRadius: 10, backgroundColor: '#edf0f5' }}
                     selectedButtonStyle={{ backgroundColor: '#0bafff' }}
-                    textStyle={{fontFamily: 'Circular Std Medium',fontWeight: 'bold',fontSize: 14,}}
+                    textStyle={{fontFamily: 'CircularStd-Medium',fontWeight: 'bold',fontSize: 14,}}
                     disabledTextStyle = {{color:'080848'}}
                 />
                 {this.renderPage()}

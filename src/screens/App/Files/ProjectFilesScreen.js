@@ -568,7 +568,7 @@ const styles = EStyleSheet.create({
     fontSize: '12rem',
     color: colors.white,
     lineHeight: '17rem',
-    fontFamily: 'HelveticaNeuel',
+    fontFamily: 'CircularStd-Medium',
     fontWeight: 'bold',
   },
   addIcon: {
@@ -620,7 +620,7 @@ const styles = EStyleSheet.create({
     color: colors.gray,
     textAlign: 'center',
     lineHeight: '17rem',
-    fontFamily: 'HelveticaNeuel',
+    fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
     // width: '95%'
   },
@@ -648,7 +648,7 @@ const styles = EStyleSheet.create({
     color: colors.gray,
     textAlign: 'center',
     lineHeight: '17rem',
-    fontFamily: 'HelveticaNeuel',
+    fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
     marginLeft: '7rem',
   },
