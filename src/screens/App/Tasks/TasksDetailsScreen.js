@@ -302,6 +302,7 @@ class TasksDetailsScreen extends Component {
       showTaskModal: false,
       selectedTask: '',
       taskModalData: [],
+      fromParent: true,
     };
   }
 
@@ -394,12 +395,7 @@ class TasksDetailsScreen extends Component {
         });
       }
     }
-    this.setState({
-      taskModalData: taskModalData,
-      selectedTask: this.state.isParent
-        ? 'Select parent task'
-        : 'Select child task',
-    });
+    this.setState({taskModalData: taskModalData});
   }
 
   async doumentPicker() {
@@ -1692,20 +1688,22 @@ class TasksDetailsScreen extends Component {
     this.deleteTask();
   }
 
-  onAddParentTaskPress() {
-    this.setState({showTaskModal: true});
+  onAddTaskPress(fromParent) {
+    this.setState({
+      showTaskModal: true,
+      fromParent: fromParent,
+      selectedTask: fromParent ? 'Select parent task' : 'Select child task',
+    });
   }
 
   onCloseTaskModal() {
     this.setState({showTaskModal: false});
   }
 
-  getButtonDisabledStaus() {
+  getDisabledStaus() {
     if (
-      (this.state.selectedTask == 'Select parent task' &&
-        this.state.isParent == true) ||
-      (this.state.selectedTask == 'Select child task' &&
-        this.state.isParent == false)
+      this.state.selectedTask == 'Select parent task' ||
+      this.state.selectedTask == 'Select child task'
     ) {
       return true;
     } else {
@@ -1713,7 +1711,9 @@ class TasksDetailsScreen extends Component {
     }
   }
 
-  onCanclePress() {}
+  onCanclePress() {
+    this.setState({showTaskModal: false});
+  }
 
   onFilterTaskModalData = (value, index, data) => {
     const selectedTaskIdModal = data[index].id;
@@ -1723,9 +1723,10 @@ class TasksDetailsScreen extends Component {
   };
 
   renderTaskModal() {
+    let fromParent = this.state.fromParent;
     return (
       <Modal
-        isVisible={true} //this.state.showTaskModal}
+        isVisible={this.state.showTaskModal}
         style={styles.modalStyle}
         onBackButtonPress={() => this.onCloseTaskModal()}
         onBackdropPress={() => this.onCloseTaskModal()}
@@ -1738,7 +1739,9 @@ class TasksDetailsScreen extends Component {
               source={icons.subTasksRoundedGreen}
               resizeMode="contain"
             />
-            <Text style={styles.modalHeadderText}>Add Parent task</Text>
+            <Text style={styles.modalHeadderText}>
+              {fromParent ? 'Add Parent Task' : 'Add Child Task'}
+            </Text>
           </View>
           <View style={styles.taskModalDropDownView}>
             <Dropdown
@@ -1746,12 +1749,7 @@ class TasksDetailsScreen extends Component {
               label=""
               labelFontSize={0}
               data={this.state.taskModalData}
-              textColor={
-                this.state.selectedTask == 'Select parent task' ||
-                this.state.selectedTask == 'Select child task'
-                  ? colors.gray
-                  : colors.black
-              }
+              textColor={this.getDisabledStaus() ? colors.gray : colors.black}
               fontSize={14}
               renderAccessory={() => null}
               error={''}
@@ -1784,12 +1782,12 @@ class TasksDetailsScreen extends Component {
               style={[
                 styles.okStyle,
                 {
-                  backgroundColor: this.getButtonDisabledStaus()
+                  backgroundColor: this.getDisabledStaus()
                     ? colors.lighterGray
                     : colors.lightGreen,
                 },
               ]}
-              disabled={this.getButtonDisabledStaus()}
+              disabled={this.getDisabledStaus()}
               onPress={() => this.onDateSet()}>
               <Text style={styles.saveTextStyle}>Save</Text>
             </TouchableOpacity>
@@ -1905,10 +1903,12 @@ class TasksDetailsScreen extends Component {
             <View style={styles.buttonAddTaskView}>
               <TouchableOpacity
                 style={styles.buttonAddParentTask}
-                onPress={() => this.onAddParentTaskPress()}>
+                onPress={() => this.onAddTaskPress(true)}>
                 <Text style={{color: colors.white}}>Add parent task</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.buttonAddChildTask}>
+              <TouchableOpacity
+                style={styles.buttonAddChildTask}
+                onPress={() => this.onAddTaskPress(false)}>
                 <Text style={{color: colors.white}}>Add child task</Text>
               </TouchableOpacity>
             </View>
