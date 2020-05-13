@@ -36,6 +36,7 @@ import * as Progress from 'react-native-progress';
 import RNFetchBlob from 'rn-fetch-blob';
 import fileTypes from '../../../assest/fileTypes/fileTypes';
 import * as Animatable from 'react-native-animatable';
+import Modal from 'react-native-modal';
 
 const Placeholder = () => (
   <View style={styles.landing}>
@@ -298,6 +299,9 @@ class TasksDetailsScreen extends Component {
       files: [],
       uploading: 0,
       indeterminate: false,
+      showTaskModal: false,
+      selectedTask: 'Select parent task',
+      taskModalData: [],
     };
   }
 
@@ -339,10 +343,13 @@ class TasksDetailsScreen extends Component {
         state: {params},
       },
     } = this.props;
+
     let selectedProjectID = params.selectedProjectID;
     let selectedProjectName = params.selectedProjectName;
     let selectedProjectTaskID = params.taskDetails.taskId;
     let isFromBoards = params.isFromBoards;
+    let allDetails = params.allDetails;
+
     this.setState({
       selectedProjectID: selectedProjectID,
       selectedProjectName: selectedProjectName,
@@ -351,12 +358,16 @@ class TasksDetailsScreen extends Component {
       subTaskList: [params.subTaskDetails],
       parentTaskName: params.parentTaskName,
     });
+
     this.fetchData(selectedProjectID, selectedProjectTaskID);
     this.fetchFilesData(selectedProjectID, selectedProjectTaskID);
+
     if (params.isFromBoards == true) {
       let sprintId = params.taskDetails.sprintId;
       this.getAllSprintInProject(selectedProjectID, sprintId);
     }
+
+    this.getTaskModalData(allDetails);
   }
 
   async fetchFilesData(projectID, taskID) {
@@ -370,6 +381,23 @@ class TasksDetailsScreen extends Component {
     } else {
       this.setState({dataLoading: false});
     }
+  }
+
+  getTaskModalData(allDetails) {
+    let taskModalData = [];
+    for (let index = 0; index < allDetails.length; index++) {
+      const element = allDetails[index];
+      if (element.parentTask) {
+        taskModalData.push({
+          id: element.parentTask.taskId,
+          value: element.parentTask.taskName,
+        });
+      }
+    }
+    this.setState({
+      taskModalData: taskModalData,
+      // selectedTask: taskModalData[0].value,
+    });
   }
 
   async doumentPicker() {
@@ -1662,6 +1690,107 @@ class TasksDetailsScreen extends Component {
     this.deleteTask();
   }
 
+  onAddParentTaskPress() {
+    this.setState({showTaskModal: true});
+  }
+
+  onCloseTaskModal() {
+    this.setState({showTaskModal: false});
+  }
+
+  getButtonDisabledStaus() {
+    if (this.state.selectedTask == 'Select parent task') {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  onCanclePress() {}
+
+  onFilterTaskModalData = (value, index, data) => {
+    const selectedTaskIdModal = data[index].id;
+    let selectedTaskNameModal = data[index].value;
+
+    this.setState({selectedTask: selectedTaskNameModal});
+  };
+
+  renderTaskModal() {
+    return (
+      <Modal
+        isVisible={true} //this.state.showTaskModal}
+        style={styles.modalStyle}
+        onBackButtonPress={() => this.onCloseTaskModal()}
+        onBackdropPress={() => this.onCloseTaskModal()}
+        onRequestClose={() => this.onCloseTaskModal()}
+        coverScreen={false}>
+        <View style={styles.modalMainView}>
+          <View style={styles.modalHeaderView}>
+            <Image
+              style={styles.iconStyle}
+              source={icons.subTasksRoundedGreen}
+              resizeMode="contain"
+            />
+            <Text style={styles.modalHeadderText}>Add Parent task</Text>
+          </View>
+          <View style={styles.taskModalDropDownView}>
+            <Dropdown
+              // style={{}}
+              label=""
+              labelFontSize={0}
+              data={this.state.taskModalData}
+              textColor={
+                this.state.selectedTask == 'Select parent task'
+                  ? colors.gray
+                  : colors.black
+              }
+              fontSize={14}
+              renderAccessory={() => null}
+              error={''}
+              animationDuration={0.5}
+              containerStyle={{width: '100%'}}
+              overlayStyle={{width: '100%'}}
+              pickerStyle={{width: '79%', marginTop: 62, marginLeft: 35}}
+              dropdownPosition={0}
+              value={this.state.selectedTask}
+              itemColor={'black'}
+              selectedItemColor={'black'}
+              dropdownOffset={{top: 10}}
+              baseColor={colors.projectBgColor}
+              renderAccessory={this.renderBase}
+              itemTextStyle={{
+                marginLeft: 15,
+                fontFamily: 'CircularStd-Book',
+              }}
+              itemPadding={10}
+              onChangeText={this.onFilterTaskModalData}
+            />
+          </View>
+          <View style={styles.ButtonViewStyle}>
+            <TouchableOpacity
+              style={styles.cancelStyle}
+              onPress={() => this.onCanclePress()}>
+              <Text style={styles.cancelTextStyle}>Cancel</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.okStyle,
+                {
+                  backgroundColor: this.getButtonDisabledStaus()
+                    ? colors.lighterGray
+                    : colors.lightGreen,
+                },
+              ]}
+              disabled={this.getButtonDisabledStaus()}
+              onPress={() => this.onDateSet()}>
+              <Text style={styles.saveTextStyle}>Save</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+    );
+  }
+
   render() {
     let taskStatus = this.state.taskStatus;
     let dataLoading = this.state.dataLoading;
@@ -1689,7 +1818,7 @@ class TasksDetailsScreen extends Component {
         <ScrollView style={styles.backgroundImage}>
           <View>
             <View style={styles.headerView}>
-              <Text>Task - </Text>
+              <Text style={{color: colors.colorShuttleGrey}}>Task - </Text>
               <Text style={styles.headerText}> #{secondaryTaskId}</Text>
               <View style={styles.projectFilerView}>
                 <Text style={styles.statusText}>{taskStatus}</Text>
@@ -1766,7 +1895,9 @@ class TasksDetailsScreen extends Component {
               </View>
             ) : null} */}
             <View style={styles.buttonAddTaskView}>
-              <TouchableOpacity style={styles.buttonAddParentTask}>
+              <TouchableOpacity
+                style={styles.buttonAddParentTask}
+                onPress={() => this.onAddParentTaskPress()}>
                 <Text style={{color: colors.white}}>Add parent task</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.buttonAddChildTask}>
@@ -1997,6 +2128,7 @@ class TasksDetailsScreen extends Component {
             </TouchableOpacity> */}
             {this.state.showPicker ? this.renderDatePicker() : null}
             {this.state.showTimePicker ? this.renderTimePicker() : null}
+            {this.renderTaskModal()}
           </View>
           {dataLoading && <Loader />}
           <AwesomeAlert
@@ -2028,8 +2160,8 @@ const styles = EStyleSheet.create({
   projectFilerView: {
     backgroundColor: colors.lightBlue,
     borderRadius: 5,
-    marginTop: '17rem',
-    marginBottom: '12rem',
+    // marginTop: '17rem',
+    // marginBottom: '12rem',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
@@ -2171,13 +2303,15 @@ const styles = EStyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginHorizontal: '20rem',
+    marginTop: '20rem',
   },
   headerText: {
     fontSize: '20rem',
     fontWeight: 'bold',
+    color: colors.colorMidnightExpress,
   },
   taskNameStyle: {
-    color: colors.gray,
+    color: colors.colorLightSlateGrey,
     fontSize: '14rem',
     fontWeight: 'bold',
     marginHorizontal: '20rem',
@@ -2424,6 +2558,72 @@ const styles = EStyleSheet.create({
     fontSize: 11,
     color: colors.darkBlue,
     fontWeight: 'bold',
+  },
+  ButtonViewStyle: {
+    flexDirection: 'row',
+    marginTop: '5rem',
+    marginBottom: '20rem',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginHorizontal: '20rem',
+  },
+  cancelStyle: {
+    marginRight: '10rem',
+    backgroundColor: colors.lightRed,
+    borderRadius: '5rem',
+    paddingHorizontal: '40rem',
+    paddingVertical: '10rem',
+    flex: 1,
+    justifyContent: 'center',
+  },
+  okStyle: {
+    backgroundColor: colors.lightGreen,
+    borderRadius: '5rem',
+    paddingHorizontal: '40rem',
+    paddingVertical: '10rem',
+    flex: 1,
+    justifyContent: 'center',
+  },
+  cancelTextStyle: {
+    fontSize: '15rem',
+    color: colors.white,
+    textAlign: 'center',
+    fontFamily: 'CircularStd-Medium',
+  },
+  saveTextStyle: {
+    fontSize: '15rem',
+    color: colors.white,
+    textAlign: 'center',
+    fontFamily: 'CircularStd-Medium',
+  },
+  modalStyle: {
+    // backgroundColor: colors.white,
+    // marginVertical: 50,
+    marginBottom: 250,
+  },
+  taskModalDropDownView: {
+    // flex: 1,
+    backgroundColor: colors.projectBgColor,
+    borderRadius: '5rem',
+    marginTop: '5rem',
+    marginBottom: '15rem',
+    paddingHorizontal: '12rem',
+    height: '45rem',
+    marginHorizontal: '20rem',
+  },
+  modalMainView: {
+    backgroundColor: colors.white,
+    borderRadius: '5rem',
+  },
+  modalHeaderView: {
+    flexDirection: 'row',
+    marginHorizontal: '20rem',
+    marginVertical: '20rem',
+    alignItems: 'center',
+  },
+  modalHeadderText: {
+    fontSize: '16rem',
+    fontFamily: 'CircularStd-Medium',
   },
 });
 
