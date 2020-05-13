@@ -102,10 +102,10 @@ export const getMyTaskInProjects =  (userID,projectID) => {
     };
 };
 
-export const addproject =  (projectName,projectClient,IsoStartDate,IsoSEndDate,projectOwner) => {
+export const addproject =  (projectName,projectClient,IsoStartDate,IsoSEndDate,projectOwner,projectAlias) => {
     return (dispatch) => {
         dispatch({ type: ADD_PROJECT });
-        APIServices.addprojectData(projectName,projectClient,IsoStartDate,IsoSEndDate,projectOwner).then(response => {
+        APIServices.addprojectData(projectName,projectClient,IsoStartDate,IsoSEndDate,projectOwner,projectAlias).then(response => {
             if(response.message == 'success'){
                 dispatch({ 
                     type: ADD_PROJECT_SUCCESS,

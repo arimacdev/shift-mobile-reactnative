@@ -57,7 +57,8 @@ class CreateNewProjectScreen extends Component {
       showAlert: false,
       alertTitle: '',
       alertMsg: '',
-      isDateNeedLoading: false
+      isDateNeedLoading: false,
+      projectAlias:''
     };
   }
 
@@ -299,24 +300,30 @@ class CreateNewProjectScreen extends Component {
     let projectEndDateValue = this.state.projectEndDateValue;
     let projectStartTime = this.state.projectStartTime;
     let projectEndTime = this.state.projectEndTime;
+    let projectAlias = this.state.projectAlias;
 
-    if (this.validateProject(projectName, projectClient, projectStartDateValue, projectEndDateValue)) {
+    if (this.validateProject(projectName, projectClient, projectStartDateValue, projectEndDateValue,projectAlias)) {
       let IsoStartDate = projectStartDateValue ? moment(projectStartDateValue + projectStartTime, 'DD/MM/YYYY hh:mmA').format('YYYY-MM-DD[T]HH:mm:ss') : '';
       let IsoSEndDate = projectEndDateValue ? moment(projectEndDateValue + projectEndTime, 'DD/MM/YYYY hh:mmA').format('YYYY-MM-DD[T]HH:mm:ss') : '';
       AsyncStorage.getItem('userID').then(userID => {
-        this.props.addproject(projectName, projectClient, IsoStartDate, IsoSEndDate, userID);
+        this.props.addproject(projectName, projectClient, IsoStartDate, IsoSEndDate, userID,projectAlias);
       });
 
     }
   };
 
-  validateProject(projectName, projectClient, projectStartDateValue, projectEndDateValue) {
+  validateProject(projectName, projectClient, projectStartDateValue, projectEndDateValue,projectAlias) {
     if (!projectName && _.isEmpty(projectName)) {
       this.showAlert("", "Please enter the project name");
       return false;
     }
     if (!projectClient && _.isEmpty(projectClient)) {
       this.showAlert("", "Please enter the client name");
+      return false;
+    }
+
+    if (!projectAlias && _.isEmpty(projectAlias)) {
+      this.showAlert("", "Please enter the project alias");
       return false;
     }
 
@@ -381,6 +388,7 @@ class CreateNewProjectScreen extends Component {
     let estimateDatesText = '';
     let projectStartTime = this.state.projectStartTime;
     let projectEndTime = this.state.projectEndTime;
+    let projectAlias = this.state.projectAlias;
     if (projectStartDate && projectEndDate) {
 
       let startDate = moment(projectStartDateValue, "DD MM YYYY");
@@ -420,6 +428,15 @@ class CreateNewProjectScreen extends Component {
             placeholder={'Client'}
             value={projectClient}
             onChangeText={projectClient => this.setState({ projectClient })}
+          />
+        </View>
+        <View style={[styles.taskFieldView]}>
+          <TextInput
+            style={[styles.textInput, { width: '95%' }]}
+            placeholder={'Project Alias'}
+            value={projectAlias}
+            maxLength={6}
+            onChangeText={projectAlias => this.setState({ projectAlias })}
           />
         </View>
         <TouchableOpacity

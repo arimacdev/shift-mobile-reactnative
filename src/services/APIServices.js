@@ -175,7 +175,7 @@ function editUserData(firstName, lastName, userName, email, password, confirmPas
     }, true, headers);
 };
 
-function addprojectData(projectName, projectClient, IsoStartDate, IsoSEndDate, projectOwner) {
+function addprojectData(projectName, projectClient, IsoStartDate, IsoSEndDate, projectOwner,projectAlias) {
     let headers =  {
         Accept: 'application/json',
         'Content-Type': 'application/json',
@@ -188,7 +188,8 @@ function addprojectData(projectName, projectClient, IsoStartDate, IsoSEndDate, p
             projectName: projectName,
             clientId: projectClient,
             projectStartDate: IsoStartDate,
-            projectEndDate: IsoSEndDate
+            projectEndDate: IsoSEndDate,
+            projectAlias: projectAlias
         }
     }, true,headers);
 }
