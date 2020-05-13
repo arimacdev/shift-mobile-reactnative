@@ -68,10 +68,12 @@ import {
     FILTER_TASK_IN_PROJECT,
 
     VIEW_ALL_TASK_BY_GROUP_DATA,
+    UPLOAD_USER_PROFILE
 
 } from '../api/API';
 import AsyncStorage from '@react-native-community/async-storage';
 import { SET_UPLOAD_PROGRESS } from '../redux/types';
+import _ from 'lodash';
 
 async function getAllProjectsByUserData(userID) {
     let userIDHeder = null;
@@ -1681,6 +1683,65 @@ async function addSubTaskGroupTaskData(taskName,taskGroupId,parentTaskId) {
     }, true, headers);
 };
 
+async function updateMyDetails(firstName, lastName, email, password) {
+
+    let userID = null;
+    userID =  await AsyncStorage.getItem('userID');
+
+    let headers =  {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+    };
+
+    let data = null;
+    if(!password && _.isEmpty(password)){
+        data = {
+            firstName: firstName,
+            lastName: lastName,
+            email: email,
+        }
+    }else{
+        data = {
+            firstName: firstName,
+            lastName: lastName,
+            email: email,
+            password : password
+        }
+    }
+
+    return request({
+        url: UPDATE_USER + '/' + userID,
+        method: 'PUT',
+        data: data
+    }, true, headers);
+};
+
+async function uplaodProfilePhoto(file) {
+
+    let userIDHeder = null;
+    userIDHeder =  await AsyncStorage.getItem('userID');
+    
+    let headers =  {
+        Accept: 'application/json',
+        'content-type': 'multipart/form-data',
+        user : userIDHeder,
+    };
+
+    const file1 = {
+        uri: file[0].uri,
+        name: 'image-pmtool-user'+ new Date().getTime(),
+        type: file[0].type,
+    };
+    const formData = new FormData(); 
+    formData.append('files', file1);
+    formData.append('type', "profileImage");
+    return request({
+        url: UPLOAD_USER_PROFILE,
+        method: 'POST',
+        data: formData
+    }, true, headers);
+};
+
 const APIServices = {
     getAllProjectsByUserData,
     getUserData,
@@ -1766,7 +1827,9 @@ const APIServices = {
     filterTaskByDate,
     filterTaskByUser,
     filterTaskByTaskTypeData,
-    addSubTaskGroupTaskData
+    addSubTaskGroupTaskData,
+    updateMyDetails,
+    uplaodProfilePhoto
 };
 
 export default APIServices;

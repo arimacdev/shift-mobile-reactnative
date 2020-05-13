@@ -21,6 +21,10 @@ import APIServices from '../../../services/APIServices';
 import {TextInput} from 'react-native-gesture-handler';
 import {authorize} from 'react-native-app-auth';
 import strings from '../../../config/strings';
+import _ from 'lodash';
+import AwesomeAlert from 'react-native-awesome-alerts';
+import DocumentPicker from 'react-native-document-picker';
+import moment from 'moment';
 
 const config = {
   clientId: strings.slack.clientId, // found under App Credentials
@@ -49,6 +53,12 @@ class ViewProfileScreen extends Component {
       notification: false,
       dataLoading: false,
       editEnabled: false,
+      showAlert: false,
+      alertTitle: '',
+      alertMsg: '',
+      dataLoading: false,
+      files: [],
+      userID :  '',
       // switchValue: false,
     };
   }
@@ -61,6 +71,7 @@ class ViewProfileScreen extends Component {
     } = this.props;
     let profile = params.profile;
     let userID = profile.userId;
+    this.setState({userID: userID});
     this.fetchUserData(userID);
   }
 
@@ -124,7 +135,72 @@ class ViewProfileScreen extends Component {
     this.setState({editEnabled: true});
   }
 
-  onProfileImageClick() {}
+  async onProfileImageClick() {
+     try {
+      const results = await DocumentPicker.pickMultiple({
+        type: [
+          DocumentPicker.types.images,
+        ],
+      });
+      for (const res of results) {
+        this.onFilesCrossPress(res.uri);
+
+        await this.state.files.push({
+          uri: res.uri,
+          type: res.type, // mime type
+          name: res.name,
+          size: res.size,
+          dateTime:
+            moment().format('YYYY/MM/DD') + ' | ' + moment().format('HH:mm'),
+        });
+
+        this.uploadFiles(this.state.files)
+        
+      }
+      this.setState({ files: this.state.files });
+      console.log(this.state.files);
+    } catch (err) {
+      if (DocumentPicker.isCancel(err)) {
+        console.log('file pick error', err);
+      } else {
+        throw err;
+      }
+    }
+  }
+
+  onFilesCrossPress(uri) {
+    this.setState(
+      {
+        files: [],
+      },
+      () => {
+        let filesArray = this.state.files.filter(item => {
+          return item.uri !== uri;
+        });
+        this.setState({files: filesArray});
+      },
+    );
+  }
+
+  async uploadFiles(file) {
+    try {
+      let userID =this.state.userID;
+      this.setState({dataLoading: true});
+      let userData = await APIServices.uplaodProfilePhoto(file);
+      if (userData.message == 'success') {
+        this.setState({dataLoading: false});
+        this.fetchUserData(userID);
+      } else {
+        this.setState({dataLoading: false});
+      }
+    }catch(e) {
+      if(e.status == 500){
+        console.log('error', e);
+        this.setState({dataLoading:false});
+        this.showAlert("",e.data.message);
+      }
+    }
+  }
 
   onFirstNameChange(text) {
     this.setState({userFirstName: text});
@@ -172,6 +248,96 @@ class ViewProfileScreen extends Component {
     }
   }
 
+  async saveUser() {
+    let userFirstName =this.state.userFirstName;
+    let userLastName =this.state.userLastName; 
+    let userEmail =this.state.userEmail; 
+    let userNewPassword =this.state.userNewPassword; 
+    let userConfirmPassword =this.state.userConfirmPassword;  
+    if (this.validateUser(userFirstName,userLastName,userEmail,userNewPassword,userConfirmPassword)) {
+      try {
+        this.setState({dataLoading: true});
+        let userData = await APIServices.updateMyDetails(userFirstName,userLastName,userEmail,userNewPassword);
+        if (userData.message == 'success') {
+          this.setState({dataLoading: false});
+        } else {
+          this.setState({dataLoading: false});
+        }
+      }catch(e) {
+        if(e.status == 500){
+          this.setState({dataLoading:false});
+          this.showAlert("",e.data.message);
+        }
+      }
+    }
+  }
+
+  validateUser(firstName,lastName,email,password,confirmPassword) {
+    if (!firstName && _.isEmpty(firstName)) {
+      this.showAlert('', 'Please Enter the First Name');
+      return false;
+    }
+    if (!lastName && _.isEmpty(lastName)) {
+      this.showAlert('', 'Please Enter the Last Name');
+      return false;
+    }
+    if (!email && _.isEmpty(email)) {
+      this.showAlert('', 'Please Enter the Email');
+      return false;
+    } else {
+      const validMail = this.validateEmail(email);
+      if (!validMail) {
+        this.showAlert('', 'Please a valid Email');
+        return false;
+      }
+    }
+    if (password && !_.isEmpty(password)) {
+      const validPassword = this.validatePassword(password);
+      if (!validPassword) {
+        this.showAlert('', 'Please Enter a valid Password');
+        return false;
+      }
+    } 
+    if (password && !_.isEmpty(password) && !confirmPassword && _.isEmpty(confirmPassword)) {
+      this.showAlert('', 'Please confirm the password');
+      return false;
+    } else {
+      if (password !== confirmPassword) {
+        this.showAlert('', 'Please match the Confirm Password');
+        return false;
+      }
+    }
+    return true;
+  }
+
+  validatePassword(employeePassword) {
+    if (employeePassword.length > 1) {
+      return true;
+    }
+    return false;
+  }
+
+  validateEmail(email) {
+    let re = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()\.,;\s@\"]+\.{0,1})+[^<>()\.,;:\s@\"]{2,})$/i;
+    return re.test(String(email).toLowerCase());
+  }
+
+  hideAlert() {
+    this.setState({
+      showAlert: false,
+      alertTitle: '',
+      alertMsg: '',
+    });
+  }
+
+  showAlert(title, msg) {
+    this.setState({
+      showAlert: true,
+      alertTitle: title,
+      alertMsg: msg,
+    });
+  }
+
   // toggleSwitch = value => {
   //   this.updateSlackNotificationStatus()
   // };
@@ -189,6 +355,9 @@ class ViewProfileScreen extends Component {
       userLastImage,
       dataLoading,
       editEnabled,
+      showAlert,
+      alertTitle,
+      alertMsg
     } = this.state;
 
     return (
@@ -228,15 +397,6 @@ class ViewProfileScreen extends Component {
               value={userLastName}
               editable={editEnabled}
               onChangeText={text => this.onLastNameChange(text)}
-            />
-          </View>
-          <View style={[styles.taskFieldView]}>
-            <TextInput
-              style={styles.textBottom}
-              placeholder={'User Name'}
-              value={userNameId}
-              editable={false}
-              onChangeText={text => this.onUserNameChange(text)}
             />
           </View>
           <View style={[styles.taskFieldView]}>
@@ -310,6 +470,39 @@ class ViewProfileScreen extends Component {
               thumbColor={notification ? colors.switchColor : colors.gray}
             />
           </View>
+          <TouchableOpacity 
+            disabled={!editEnabled}
+            onPress={() => this.saveUser()}>
+            <View style={styles.button}>
+              <Image
+                style={[
+                  styles.bottomBarIcon,
+                  {marginRight: 15, marginLeft: 10},
+                ]}
+                source={icons.userWhite}
+                resizeMode={'center'}
+              />
+              <View style={{flex: 1}}>
+                <Text style={styles.buttonText}>Save Changes</Text>
+              </View>
+            </View>
+          </TouchableOpacity>
+          <AwesomeAlert
+            show={showAlert}
+            showProgress={false}
+            title={alertTitle}
+            message={alertMsg}
+            closeOnTouchOutside={true}
+            closeOnHardwareBackPress={false}
+            showCancelButton={false}
+            showConfirmButton={true}
+            cancelText=""
+            confirmText="OK"
+            confirmButtonColor={colors.primary}
+            onConfirmPressed={() => {
+              this.hideAlert();
+            }}
+          />
         </View>
         {dataLoading && <Loader />}
       </ScrollView>
@@ -400,6 +593,33 @@ const styles = EStyleSheet.create({
     alignSelf: 'flex-end',
     bottom: 0,
     paddingRight: 10,
+  },
+  button: {
+    flexDirection: 'row',
+    backgroundColor: colors.lightBlue,
+    borderRadius: 5,
+    marginTop: '17rem',
+    flexDirection: 'row',
+    alignItems: 'center',
+    // justifyContent: 'center',
+    paddingHorizontal: '12rem',
+    height: '55rem',
+    marginHorizontal: '20rem',
+  },
+  buttonText: {
+    fontSize: '12rem',
+    color: colors.white,
+    lineHeight: '17rem',
+    fontFamily: 'CircularStd-Medium',
+    fontWeight: 'bold',
+  },
+  bottomBarIcon: {
+    width: '20rem',
+    height: '20rem',
+  },
+  addIcon: {
+    width: '28rem',
+    height: '28rem',
   },
 });
 
