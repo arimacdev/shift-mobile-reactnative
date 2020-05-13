@@ -263,7 +263,7 @@ class Header extends Component {
               {isDelete && (
                 <TouchableOpacity
                   style={{alignItems: 'flex-end'}}
-                  onPress={() => this.props.onPress()}>
+                  onPress={() => this.props.onPressDelete()}>
                   <Image
                     source={icons.deleteWhite}
                     style={styles.iconEdit}

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import {
   View,
   FlatList,
@@ -10,26 +10,29 @@ import {
   ScrollView,
   Alert,
   PermissionsAndroid,
+  Platform,
 } from 'react-native';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import * as actions from '../../../redux/actions';
 import colors from '../../../config/colors';
 import icons from '../../../assest/icons/icons';
 import EStyleSheet from 'react-native-extended-stylesheet';
 const entireScreenWidth = Dimensions.get('window').width;
-EStyleSheet.build({ $rem: entireScreenWidth / 380 });
-import { Dropdown } from 'react-native-material-dropdown';
+EStyleSheet.build({$rem: entireScreenWidth / 380});
+import {Dropdown} from 'react-native-material-dropdown';
 import AsyncStorage from '@react-native-community/async-storage';
 import Loader from '../../../components/Loader';
 import moment from 'moment';
 import FadeIn from 'react-native-fade-in-image';
-import { SkypeIndicator } from 'react-native-indicators';
+import {SkypeIndicator} from 'react-native-indicators';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import DateTimePickerModal from "react-native-modal-datetime-picker";
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import APIServices from '../../../services/APIServices';
 import AwesomeAlert from 'react-native-awesome-alerts';
 import Header from '../../../components/Header';
 import Accordion from 'react-native-collapsible/Accordion';
+import DocumentPicker from 'react-native-document-picker';
+import * as Progress from 'react-native-progress';
 import RNFetchBlob from 'rn-fetch-blob';
 import fileTypes from '../../../assest/fileTypes/fileTypes';
 import * as Animatable from 'react-native-animatable';
@@ -291,7 +294,10 @@ class TasksDetailsScreen extends Component {
       taskTypeList: development,
       taskType: 'Pending',
       sprintName: 'Default',
-      isDateNeedLoading: false
+      isDateNeedLoading: false,
+      files: [],
+      uploading: 0,
+      indeterminate: false,
     };
   }
 
@@ -363,6 +369,70 @@ class TasksDetailsScreen extends Component {
       });
     } else {
       this.setState({dataLoading: false});
+    }
+  }
+
+  async doumentPicker() {
+    // Pick multiple files
+    try {
+      const results = await DocumentPicker.pickMultiple({
+        type: [
+          DocumentPicker.types.images,
+          DocumentPicker.types.plainText,
+          DocumentPicker.types.pdf,
+        ],
+      });
+      for (const res of results) {
+        this.onFilesCrossPress(res.uri);
+
+        await this.state.files.push({
+          uri: res.uri,
+          type: res.type, // mime type
+          name: res.name,
+          size: res.size,
+          dateTime:
+            moment().format('YYYY/MM/DD') + ' | ' + moment().format('HH:mm'),
+        });
+        console.log(
+          res.uri,
+          res.type, // mime type
+          res.name,
+          res.size,
+        );
+      }
+      await this.setState({
+        files: this.state.files,
+        indeterminate: true,
+        uploading: 0,
+      });
+
+      await APIServices.uploadFileData(
+        this.state.files,
+        this.props.selectedProjectID,
+      )
+        .then(response => {
+          if (response.message == 'success') {
+            this.setState({indeterminate: false, files: [], uploading: 100});
+            this.fetchData(this.props.selectedProjectID);
+          } else {
+            this.setState({indeterminate: false, files: [], uploading: 0});
+          }
+        })
+        .catch(error => {
+          if (error.status == 401) {
+            this.setState({indeterminate: false, files: [], uploading: 0});
+            this.showAlert('', error.data.message);
+          }
+        });
+      // this.props.uploadFile(this.state.files, this.props.selectedProjectID);
+
+      console.log(this.state.files);
+    } catch (err) {
+      if (DocumentPicker.isCancel(err)) {
+        console.log('file pick error', err);
+      } else {
+        throw err;
+      }
     }
   }
 
@@ -504,6 +574,36 @@ class TasksDetailsScreen extends Component {
   //     this.fetchData(this.props.selectedProjectID);
   //   });
   // }
+
+  renderDocPickeredView() {
+    return (
+      <View
+        style={{
+          width: '100%',
+          height: 50,
+          borderRadius: 5,
+          marginRight: 5,
+          marginTop: 5,
+          justifyContent: 'center',
+        }}>
+        <Progress.Bar
+          progress={0.0}
+          indeterminate={this.state.indeterminate}
+          indeterminateAnimationDuration={1000}
+          width={null}
+          animated={true}
+          color={colors.lightGreen}
+          unfilledColor={colors.lightgray}
+          borderWidth={0}
+          height={20}
+          borderRadius={5}
+        />
+        <Text style={styles.uploadingText}>
+          Uploading {this.state.uploading}%
+        </Text>
+      </View>
+    );
+  }
 
   renderFilesList(item) {
     let details = '';
@@ -759,7 +859,7 @@ class TasksDetailsScreen extends Component {
     this.setState({isParent: taskResult.data.isParent});
   }
 
-  dateView = function (item) {
+  dateView = function(item) {
     let date = item.taskDueDateAt;
     let currentTime = moment().format();
     let dateText = '';
@@ -780,20 +880,20 @@ class TasksDetailsScreen extends Component {
       }
     }
 
-    return <Text style={[styles.textDate, { color: color }]}>{dateText}</Text>;
+    return <Text style={[styles.textDate, {color: color}]}>{dateText}</Text>;
   };
 
   showDatePicker = () => {
-    this.setState({ showPicker: true })
+    this.setState({showPicker: true});
   };
 
   hideDatePicker = () => {
-    this.setState({ showPicker: false })
+    this.setState({showPicker: false});
   };
 
   handleDateConfirm = date => {
     this.hideDatePicker();
-    this.setState({ isDateNeedLoading: true })
+    this.setState({isDateNeedLoading: true});
     let date1 = new Date(date);
     let newDate = '';
     let newDateValue = '';
@@ -821,20 +921,20 @@ class TasksDetailsScreen extends Component {
       this.setState({
         isDateNeedLoading: false,
         showTimePicker: true,
-      })
+      });
     }, 500);
   };
 
   showTimePicker = () => {
-    this.setState({ showTimePicker: true })
+    this.setState({showTimePicker: true});
   };
 
   hideTimePicker = () => {
-    this.setState({ showTimePicker: false })
+    this.setState({showTimePicker: false});
   };
 
   handleTimeConfirm = time1 => {
-    console.log(time1, 'time')
+    console.log(time1, 'time');
     this.hideTimePicker();
     let time = new Date(time1);
     let newTime = moment(time).format('hh:mmA');
@@ -1009,23 +1109,23 @@ class TasksDetailsScreen extends Component {
   clearDates(id) {
     switch (id) {
       case 2:
-        this.setState({ duedate: '' });
+        this.setState({duedate: ''});
         break;
       case 3:
-        this.setState({ remindDate: '' });
+        this.setState({remindDate: ''});
         break;
       default:
         break;
     }
   }
 
-  renderImage = function (item) {
+  renderImage = function(item) {
     if (item.renderImage) {
       return (
         <FadeIn>
           <Image
             source={icons.forwordGray}
-            style={{ width: 24, height: 24, borderRadius: 24 / 2 }}
+            style={{width: 24, height: 24, borderRadius: 24 / 2}}
           />
         </FadeIn>
       );
@@ -1048,7 +1148,7 @@ class TasksDetailsScreen extends Component {
   }
 
   onTaskNameChange(text) {
-    this.setState({ taskName: text });
+    this.setState({taskName: text});
   }
 
   onItemPress(item) {
@@ -1068,10 +1168,10 @@ class TasksDetailsScreen extends Component {
         });
         break;
       case 2:
-        this.setState({ showPicker: true, reminder: false });
+        this.setState({showPicker: true, reminder: false});
         break;
       case 3:
-        this.setState({ showPicker: true, reminder: true });
+        this.setState({showPicker: true, reminder: true});
         break;
       case 4:
         this.props.navigation.navigate('NotesScreen', {
@@ -1287,14 +1387,15 @@ class TasksDetailsScreen extends Component {
 
   // change status of task API
   async changeTaskStatus(key, searchValue) {
-      this.setState({dataLoading: true});
-      let projectID = this.state.selectedProjectID;
-      let taskID = this.state.selectedProjectTaskID;
-      resultData = await APIServices.updateTaskStatusData(
-        projectID,
-        taskID,
-        searchValue,
-      ).then(response => {
+    this.setState({dataLoading: true});
+    let projectID = this.state.selectedProjectID;
+    let taskID = this.state.selectedProjectTaskID;
+    resultData = await APIServices.updateTaskStatusData(
+      projectID,
+      taskID,
+      searchValue,
+    )
+      .then(response => {
         if (response.message == 'success') {
           this.setState({dataLoading: false, taskStatus: key});
         } else {
@@ -1311,14 +1412,11 @@ class TasksDetailsScreen extends Component {
 
   // change name of task API
   async onTaskNameChangeSubmit(text) {
-      this.setState({dataLoading: true});
-      let projectID = this.state.selectedProjectID;
-      let taskID = this.state.selectedProjectTaskID;
-      resultData = await APIServices.updateTaskNameData(
-        projectID,
-        taskID,
-        text,
-      ).then(response => {
+    this.setState({dataLoading: true});
+    let projectID = this.state.selectedProjectID;
+    let taskID = this.state.selectedProjectTaskID;
+    resultData = await APIServices.updateTaskNameData(projectID, taskID, text)
+      .then(response => {
         if (response.message == 'success') {
           this.setState({dataLoading: false});
         } else {
@@ -1334,22 +1432,23 @@ class TasksDetailsScreen extends Component {
   }
 
   async changeTaskDueDate() {
-      let duedateValue = this.state.duedateValue;
-      let dueTime = this.state.dueTime;
-      let projectID = this.state.selectedProjectID;
-      let taskID = this.state.selectedProjectTaskID;
+    let duedateValue = this.state.duedateValue;
+    let dueTime = this.state.dueTime;
+    let projectID = this.state.selectedProjectID;
+    let taskID = this.state.selectedProjectTaskID;
 
-      let IsoDueDate = duedateValue
-        ? moment(duedateValue + dueTime, 'DD/MM/YYYY hh:mmA').format(
-            'YYYY-MM-DD[T]HH:mm:ss',
-          )
-        : '';
+    let IsoDueDate = duedateValue
+      ? moment(duedateValue + dueTime, 'DD/MM/YYYY hh:mmA').format(
+          'YYYY-MM-DD[T]HH:mm:ss',
+        )
+      : '';
 
-      resultData = await APIServices.updateTaskDueDateData(
-        projectID,
-        taskID,
-        IsoDueDate,
-      ).then(response => {
+    resultData = await APIServices.updateTaskDueDateData(
+      projectID,
+      taskID,
+      IsoDueDate,
+    )
+      .then(response => {
         if (response.message == 'success') {
           this.setState({dataLoading: false});
         } else {
@@ -1559,7 +1658,7 @@ class TasksDetailsScreen extends Component {
     });
   };
 
-  onTaskDeketePress(){
+  onTaskDeketePress() {
     this.deleteTask();
   }
 
@@ -1584,7 +1683,8 @@ class TasksDetailsScreen extends Component {
           title={this.state.selectedProjectName}
           // drawStatus={true}
           // taskStatus={taskStatus ? taskStatus : ''}
-          onPress={() => this.onTaskDeketePress()}
+          onPress={() => this.props.navigation.goBack()}
+          onPressDelete={() => this.onTaskDeketePress()}
         />
         <ScrollView style={styles.backgroundImage}>
           <View>
@@ -1842,6 +1942,30 @@ class TasksDetailsScreen extends Component {
               renderItem={({item}) => this.renderProjectList(item)}
               keyExtractor={item => item.taskId}
             />
+            <TouchableOpacity
+              onPress={() => this.doumentPicker()}
+              disabled={this.state.indeterminate}>
+              {this.state.files.length > 0 ? (
+                <View
+                  style={[
+                    styles.taskFieldDocPickView,
+                    {flexDirection: 'row', flexWrap: 'wrap'},
+                  ]}>
+                  {this.renderDocPickeredView()}
+                </View>
+              ) : (
+                <View style={[styles.taskFieldView, {flexDirection: 'row'}]}>
+                  <Image
+                    style={[styles.fileUploadIcon, {marginRight: 10}]}
+                    source={icons.upload}
+                    resizeMode={'center'}
+                  />
+                  <Text style={[styles.addFilesText, {flex: 1}]}>
+                    Add files
+                  </Text>
+                </View>
+              )}
+            </TouchableOpacity>
             <FlatList
               style={styles.flalList}
               data={this.state.filesData}
@@ -2157,7 +2281,7 @@ const styles = EStyleSheet.create({
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
-    marginLeft: '-3rem',
+    marginLeft: Platform.OS == 'ios' ? '0rem' : '-3rem',
     width: '100%',
     textAlignVertical: 'top',
   },
@@ -2211,8 +2335,8 @@ const styles = EStyleSheet.create({
     flexDirection: 'row',
   },
   flalList: {
-    marginTop: '5rem',
-    marginBottom: '20rem'
+    marginTop: '0rem',
+    marginBottom: '20rem',
   },
   taskStateIcon: {
     width: '38rem',
@@ -2257,6 +2381,48 @@ const styles = EStyleSheet.create({
   updateNotesText: {
     color: colors.white,
     fontSize: 12,
+    fontWeight: 'bold',
+  },
+  taskFieldDocPickView: {
+    backgroundColor: colors.projectBgColor,
+    borderRadius: 5,
+    marginTop: '15rem',
+    marginBottom: '7rem',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: '12rem',
+    marginHorizontal: '20rem',
+    paddingVertical: '6rem',
+  },
+  taskFieldView: {
+    backgroundColor: colors.projectBgColor,
+    borderRadius: 5,
+    marginTop: '15rem',
+    marginBottom: '7rem',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: '12rem',
+    height: '50rem',
+    marginHorizontal: '20rem',
+  },
+  fileUploadIcon: {
+    width: '23rem',
+    height: '23rem',
+  },
+  addFilesText: {
+    fontSize: '12rem',
+    color: colors.gray,
+    textAlign: 'center',
+    lineHeight: '17rem',
+    fontFamily: 'HelveticaNeuel',
+    textAlign: 'left',
+    marginLeft: '7rem',
+  },
+  uploadingText: {
+    marginTop: 5,
+    textAlign: 'center',
+    fontSize: 11,
+    color: colors.darkBlue,
     fontWeight: 'bold',
   },
 });
