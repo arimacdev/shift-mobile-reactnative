@@ -53,6 +53,31 @@ let dropData = [
     value: 'Close',
   },
 ];
+
+let operationalData = [
+  {
+    value: 'Development',
+  },
+  {
+    value: 'QA',
+  },
+  {
+    value: 'Design',
+  },
+  {
+    value: 'Bug',
+  },
+  {
+    value: 'Operational',
+  },
+  {
+    value: 'Pre-sales',
+  },
+  {
+    value: 'General',
+  },
+];
+
 class AddNewTasksScreen extends Component {
   constructor(props) {
     super(props);
@@ -75,8 +100,11 @@ class AddNewTasksScreen extends Component {
       files: [],
       notes: '',
       dropPeopleData: [],
+      dropSprintData: [],
       selectedAssignee: 'Assignee',
+      selectedParentTask: 'No Parent',
       selectedStatus: 'Status',
+      selectedOperarionalStatus: 'Operational',
       initiator: null,
       assigneeId: '',
       showAlert: false,
@@ -85,7 +113,9 @@ class AddNewTasksScreen extends Component {
       reminderTime: '',
       selectedDateValue: '',
       selectedDateReminderValue: '',
-      isDateNeedLoading: false
+      sprintStatus: 'Sprint',
+      isDateNeedLoading: false,
+      sprintId: ''
     };
   }
 
@@ -147,7 +177,37 @@ class AddNewTasksScreen extends Component {
     } else {
       this.setState({ dataLoading: false });
     }
+    this.getAllSprintInProject(this.props.selectedProjectID);
   }
+
+  async getAllSprintInProject (selectedProjectID){
+    // let selectedProjectID = this.props.selectedProjectID;
+    this.setState({dataLoading:true});
+    let sprintData = await APIServices.getAllSprintInProject(selectedProjectID);
+    if(sprintData.message == 'success'){
+      console.log('sprintData sprintData sprintData',sprintData)
+        let sprintsArray = [];
+        for(let i = 0; i < sprintData.data.length; i++){
+            let sprintObj = sprintData.data[i];
+            let sprintID = sprintObj.sprintId;
+            let sprintName = sprintObj.sprintName;
+            // let taskArray = [];
+            // taskArray =  taskData.filter(function(obj) {
+            //     return obj.sprintId == sprintID;
+            // });
+            // sprintObj.tasks = taskArray;
+            sprintsArray.push({
+              id: sprintID,
+              value: sprintName,
+            });
+        }
+        console.log('sprintData sprintData sprintData',sprintsArray)
+        this.setState({dropSprintData:sprintsArray, dataLoading:false});
+        // this.setState({dataLoading:false,sprints:sprintsArray});
+    }else{
+        this.setState({dataLoading:false});
+    }
+}
 
   onTaskNameChange(text) {
     this.setState({ taskName: text });
@@ -567,6 +627,20 @@ class AddNewTasksScreen extends Component {
     this.setState({ selectedStatus: value })
   }
 
+  selectOperationalStatus = (value) => {
+    this.setState({ selectedOperarionalStatus: value })
+  }
+
+  // selectSprintStatus = (value) => {
+  //   this.setState({ sprintStatus: value })
+  // }
+
+  selectSprintStatus = (value, index, data) => {
+    let sprintId = data[index].id;
+    let sprintName = data[index].value;
+    this.setState({sprintStatus: sprintName, sprintId: sprintId});
+  };
+
   async addNewTask() {
     await AsyncStorage.getItem('userID').then(userID => {
       if (userID) {
@@ -577,6 +651,7 @@ class AddNewTasksScreen extends Component {
     let initiator = this.state.initiator;
     let assigneeId = this.state.assigneeId;
     let selectedStatus = this.state.selectedStatus;
+    let selectedOperarionalStatus = this.state.selectedOperarionalStatus;
     let selectedStatusEnum = null;
     if (selectedStatus != '') {
       switch (selectedStatus) {
@@ -665,6 +740,7 @@ class AddNewTasksScreen extends Component {
     let alertMsg = this.state.alertMsg;
     let addFileTaskLoading = this.props.addFileTaskLoading;
     let addTaskToProjectLoading = this.props.addTaskToProjectLoading;
+    let dropSprintData = this.props.dropSprintData;
 
     return (
       <ScrollView style={{ marginBottom: 90 }}>
@@ -706,6 +782,67 @@ class AddNewTasksScreen extends Component {
         <View style={styles.taskFieldView}>
           <Dropdown
             style={{ paddingLeft: 5 }}
+            label="Parent Task"
+            labelFontSize={11}
+            fontSize={13}
+            data={this.state.dropPeopleData}
+            textColor={colors.gray}
+            error={''}
+            animationDuration={0.5}
+            containerStyle={{ width: '100%' }}
+            overlayStyle={{ width: '100%' }}
+            pickerStyle={{ width: '89%', marginTop: 70, marginLeft: 15 }}
+            dropdownPosition={0}
+            value={this.state.selectedParentTask}
+            itemColor={'black'}
+            selectedItemColor={'black'}
+            onChangeText={(value) => this.selectAssignee(value)}
+            // onChangeText={(value)=>{this.selectAssignee(item.name, value)}}
+            dropdownOffset={{ top: 10 }}
+            // baseColor={colors.projectBgColor}
+            // renderBase={this.renderBase}
+            renderAccessory={this.renderBase}
+            itemTextStyle={{ marginLeft: 15 }}
+            itemPadding={10}
+          />
+        </View>
+        <View style={styles.subTitleStyle}>
+          <Text style={styles.subTitleText}>
+            Task Type
+          </Text>
+        </View>
+        <View style={styles.taskFieldView}>
+          <Dropdown
+            style={{ paddingLeft: 5 }}
+            label=""
+            labelFontSize={0}
+            fontSize={13}
+            data={operationalData}
+            textColor={colors.gray}
+            error={''}
+            animationDuration={0.5}
+            containerStyle={{ width: '100%' }}
+            overlayStyle={{ width: '100%' }}
+            pickerStyle={{ width: '89%', marginTop: 70, marginLeft: 15 }}
+            dropdownPosition={0}
+            value={this.state.selectedOperarionalStatus}
+            itemColor={'black'}
+            selectedItemColor={'black'}
+            dropdownOffset={{ top: 10 }}
+            baseColor={colors.projectBgColor}
+            onChangeText={value => this.selectOperationalStatus(value)}
+            // renderBase={this.renderBase}
+            renderAccessory={this.renderBase}
+            itemTextStyle={{ marginLeft: 15 }}
+            itemPadding={10}
+          />
+        </View>
+
+
+
+        <View style={styles.taskFieldView}>
+          <Dropdown
+            style={{ paddingLeft: 5 }}
             label=""
             labelFontSize={0}
             fontSize={13}
@@ -729,6 +866,41 @@ class AddNewTasksScreen extends Component {
             itemPadding={10}
           />
         </View>
+
+        <View style={styles.subTitleStyle}>
+          <Text style={styles.subTitleText}>
+            Board
+          </Text>
+        </View>
+
+        <View style={styles.taskFieldView}>
+          <Dropdown
+            style={{ paddingLeft: 5 }}
+            label=""
+            labelFontSize={0}
+            fontSize={13}
+            data={this.state.dropSprintData}
+            textColor={colors.gray}
+            error={''}
+            animationDuration={0.5}
+            containerStyle={{ width: '100%' }}
+            overlayStyle={{ width: '100%' }}
+            pickerStyle={{ width: '89%', marginTop: 70, marginLeft: 15 }}
+            dropdownPosition={0}
+            value={this.state.sprintStatus}
+            itemColor={'black'}
+            selectedItemColor={'black'}
+            dropdownOffset={{ top: 10 }}
+            baseColor={colors.projectBgColor}
+            // onChangeText={value => this.selectSprintStatus(value)}
+            onChangeText={this.selectSprintStatus}
+            // renderBase={this.renderBase}
+            renderAccessory={this.renderBase}
+            itemTextStyle={{ marginLeft: 15 }}
+            itemPadding={10}
+          />
+        </View>
+
         <TouchableOpacity
           onPress={() =>
             this.setState({ showPicker: true, reminder: false, mode: 'date' })
@@ -1008,6 +1180,14 @@ const styles = EStyleSheet.create({
     width: '28rem',
     height: '28rem',
   },
+  subTitleStyle: {
+    marginLeft: '20rem',
+    marginBottom: '10rem',
+    marginTop: '5rem'
+  },
+  subTitleText: {
+    fontFamily: 'CircularStd-Book',
+  }
 });
 
 const mapStateToProps = state => {
