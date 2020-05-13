@@ -1584,7 +1584,8 @@ class TasksDetailsScreen extends Component {
           title={this.state.selectedProjectName}
           // drawStatus={true}
           // taskStatus={taskStatus ? taskStatus : ''}
-          onPress={() => this.onTaskDeketePress()}
+          onPress={() => this.props.navigation.goBack()}
+          onPressDelete={() => this.onTaskDeketePress()}
         />
         <ScrollView style={styles.backgroundImage}>
           <View>
