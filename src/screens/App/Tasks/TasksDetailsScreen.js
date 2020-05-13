@@ -300,7 +300,7 @@ class TasksDetailsScreen extends Component {
       uploading: 0,
       indeterminate: false,
       showTaskModal: false,
-      selectedTask: 'Select parent task',
+      selectedTask: '',
       taskModalData: [],
     };
   }
@@ -396,7 +396,9 @@ class TasksDetailsScreen extends Component {
     }
     this.setState({
       taskModalData: taskModalData,
-      // selectedTask: taskModalData[0].value,
+      selectedTask: this.state.isParent
+        ? 'Select parent task'
+        : 'Select child task',
     });
   }
 
@@ -1699,7 +1701,12 @@ class TasksDetailsScreen extends Component {
   }
 
   getButtonDisabledStaus() {
-    if (this.state.selectedTask == 'Select parent task') {
+    if (
+      (this.state.selectedTask == 'Select parent task' &&
+        this.state.isParent == true) ||
+      (this.state.selectedTask == 'Select child task' &&
+        this.state.isParent == false)
+    ) {
       return true;
     } else {
       return false;
@@ -1740,7 +1747,8 @@ class TasksDetailsScreen extends Component {
               labelFontSize={0}
               data={this.state.taskModalData}
               textColor={
-                this.state.selectedTask == 'Select parent task'
+                this.state.selectedTask == 'Select parent task' ||
+                this.state.selectedTask == 'Select child task'
                   ? colors.gray
                   : colors.black
               }
