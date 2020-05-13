@@ -464,8 +464,10 @@ async function updateTaskNoteData(projectID,taskID,note) {
     }, true,headers);
 };
 
-function addTaskToProjectData(taskName, initiator, assigneeId, selectedStatus, dueDate, selectedDateReminder, notes, selectedProjectID) {
-    
+function addTaskToProjectData(taskName, initiator, assigneeId, selectedStatus, dueDate, selectedDateReminder, notes, selectedProjectID, issueType, parentTaskId, sprintId) {
+    console.log('issueType,', issueType)
+    console.log(' parentTaskId,',  parentTaskId)
+    console.log(' sprintId,',  sprintId)
     let headers =  {
         Accept: 'application/json',
         'Content-Type': 'application/json',
@@ -485,7 +487,11 @@ function addTaskToProjectData(taskName, initiator, assigneeId, selectedStatus, d
             taskRemindOnDate: selectedDateReminder,
             taskType: "project",
             taskNotes: notes,
-            taskStatus: selectedStatus
+            taskStatus: selectedStatus,
+      
+            issueType: issueType,
+            parentTaskId: parentTaskId,
+            sprintId: sprintId
         }
     }, true, headers);
 };

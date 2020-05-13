@@ -202,11 +202,11 @@ export const addUserToProject =  (assignerId,userID,role,assigneeProjectRole,pro
     };
 };
 
-export const addTaskToProject =  (taskName, initiator, assigneeId, selectedStatus, dueDate, selectedDateReminder, notes, selectedProjectID) => {
+export const addTaskToProject =  (taskName, initiator, assigneeId, selectedStatus, dueDate, selectedDateReminder, notes, selectedProjectID, issueType, parentTaskId, sprintId) => {
     console.log(selectedProjectID,'selectedProjectIDselectedProjectID')   
     return (dispatch) => {
         dispatch({ type: ADD_TASK_TO_PROJECT });
-        APIServices.addTaskToProjectData(taskName, initiator, assigneeId, selectedStatus, dueDate, selectedDateReminder, notes, selectedProjectID).then(response => {
+        APIServices.addTaskToProjectData(taskName, initiator, assigneeId, selectedStatus, dueDate, selectedDateReminder, notes, selectedProjectID, issueType, parentTaskId, sprintId).then(response => {
             if(response.message == 'success'){
                 dispatch({ 
                     type: ADD_TASK_TO_PROJECT_SUCCESS,

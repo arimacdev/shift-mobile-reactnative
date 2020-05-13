@@ -78,6 +78,16 @@ let operationalData = [
   },
 ];
 
+let issueTypeList = [
+  {value: 'Development', id: 'development'},
+  {value: 'QA', id: 'qa'},
+  {value: 'Design', id: 'design'},
+  {value: 'Bug', id: 'bug'},
+  {value: 'Operational', id: 'operational'},
+  {value: 'Pre-sales', id: 'preSales'},
+  {value: 'General', id: 'general'},
+];
+
 class AddNewTasksScreen extends Component {
   constructor(props) {
     super(props);
@@ -101,6 +111,7 @@ class AddNewTasksScreen extends Component {
       notes: '',
       dropPeopleData: [],
       dropSprintData: [],
+      dropParentData: [],
       selectedAssignee: 'Assignee',
       selectedParentTask: 'No Parent',
       selectedStatus: 'Status',
@@ -115,7 +126,10 @@ class AddNewTasksScreen extends Component {
       selectedDateReminderValue: '',
       sprintStatus: 'Sprint',
       isDateNeedLoading: false,
-      sprintId: ''
+      sprintId: '',
+      parentTaskStatus: 'ParentTask',
+      parentTaskId: '',
+      selectedOperarionalId: ''
     };
   }
 
@@ -178,36 +192,58 @@ class AddNewTasksScreen extends Component {
       this.setState({ dataLoading: false });
     }
     this.getAllSprintInProject(this.props.selectedProjectID);
+    this.getAllParentTasks(this.props.selectedProjectID);
   }
 
-  async getAllSprintInProject (selectedProjectID){
+  async getAllSprintInProject(selectedProjectID) {
     // let selectedProjectID = this.props.selectedProjectID;
-    this.setState({dataLoading:true});
+    this.setState({ dataLoading: true });
     let sprintData = await APIServices.getAllSprintInProject(selectedProjectID);
-    if(sprintData.message == 'success'){
-      console.log('sprintData sprintData sprintData',sprintData)
-        let sprintsArray = [];
-        for(let i = 0; i < sprintData.data.length; i++){
-            let sprintObj = sprintData.data[i];
-            let sprintID = sprintObj.sprintId;
-            let sprintName = sprintObj.sprintName;
-            // let taskArray = [];
-            // taskArray =  taskData.filter(function(obj) {
-            //     return obj.sprintId == sprintID;
-            // });
-            // sprintObj.tasks = taskArray;
-            sprintsArray.push({
-              id: sprintID,
-              value: sprintName,
-            });
-        }
-        console.log('sprintData sprintData sprintData',sprintsArray)
-        this.setState({dropSprintData:sprintsArray, dataLoading:false});
-        // this.setState({dataLoading:false,sprints:sprintsArray});
-    }else{
-        this.setState({dataLoading:false});
+    if (sprintData.message == 'success') {
+      let sprintsArray = [];
+      for (let i = 0; i < sprintData.data.length; i++) {
+        let sprintObj = sprintData.data[i];
+        let sprintID = sprintObj.sprintId;
+        let sprintName = sprintObj.sprintName;
+        // let taskArray = [];
+        // taskArray =  taskData.filter(function(obj) {
+        //     return obj.sprintId == sprintID;
+        // });
+        // sprintObj.tasks = taskArray;
+        sprintsArray.push({
+          id: sprintID,
+          value: sprintName,
+        });
+      }
+      this.setState({ dropSprintData: sprintsArray, dataLoading: false });
+      // this.setState({dataLoading:false,sprints:sprintsArray});
+    } else {
+      this.setState({ dataLoading: false });
     }
-}
+  }
+
+  async getAllParentTasks(selectedProjectID) {
+    let userID = await AsyncStorage.getItem('userID');
+    // let selectedProjectID = this.props.selectedProjectID;
+    this.setState({ dataLoading: true });
+    let parentTaskData = await APIServices.getAllTaskInProjectsData(userID, selectedProjectID);
+    if (parentTaskData.message == 'success') {
+      let taskModalData = [];
+      for (let index = 0; index < parentTaskData.data.length; index++) {
+        const element = parentTaskData.data[index];
+        if (element.parentTask) {
+          taskModalData.push({
+            id: element.parentTask.taskId,
+            value: element.parentTask.taskName,
+          });
+        }
+      }
+      this.setState({ dropParentData: taskModalData, dataLoading: false });
+    } else {
+      this.setState({ dataLoading: false });
+    }
+  }
+
 
   onTaskNameChange(text) {
     this.setState({ taskName: text });
@@ -293,7 +329,7 @@ class AddNewTasksScreen extends Component {
         time: new Date(time1),
       });
     }
-    this.setState({showPicker: true})
+    this.setState({ showPicker: true })
   };
 
   hideDatePicker = () => {
@@ -349,21 +385,21 @@ class AddNewTasksScreen extends Component {
     let newTime = moment(time).format('hh:mmA');
     // let newTime = time.getHours() + ':' + time.getMinutes();
     // if (event.type == 'set') {
-      if (this.state.reminder) {
-        this.setState({
-          selectedTimeReminder: newTime,
-          showPicker: false,
-          showTimePicker: false,
-          timeReminder: new Date(time1),
-        });
-      } else {
-        this.setState({
-          selectedTime: newTime,
-          showPicker: false,
-          showTimePicker: false,
-          time: new Date(time1),
-        });
-      }
+    if (this.state.reminder) {
+      this.setState({
+        selectedTimeReminder: newTime,
+        showPicker: false,
+        showTimePicker: false,
+        timeReminder: new Date(time1),
+      });
+    } else {
+      this.setState({
+        selectedTime: newTime,
+        showPicker: false,
+        showTimePicker: false,
+        time: new Date(time1),
+      });
+    }
     // } else {
     //   this.setState({
     //     showPicker: false,
@@ -627,18 +663,22 @@ class AddNewTasksScreen extends Component {
     this.setState({ selectedStatus: value })
   }
 
-  selectOperationalStatus = (value) => {
-    this.setState({ selectedOperarionalStatus: value })
-  }
+  selectOperationalStatus = (value, index, data) => {
+    let selectedIssueId = data[index].id;
+    let selectedIssueName = data[index].value;
+    this.setState({ selectedOperarionalStatus: selectedIssueName, selectedOperarionalId: selectedIssueId });
+  };
 
-  // selectSprintStatus = (value) => {
-  //   this.setState({ sprintStatus: value })
-  // }
+  setParentTask = (value, index, data) => {
+    let parentTaskId = data[index].id;
+    let parentTaskName = data[index].value;
+    this.setState({ parentTaskStatus: parentTaskName, parentTaskId: parentTaskId });
+  };
 
   selectSprintStatus = (value, index, data) => {
     let sprintId = data[index].id;
     let sprintName = data[index].value;
-    this.setState({sprintStatus: sprintName, sprintId: sprintId});
+    this.setState({ sprintStatus: sprintName, sprintId: sprintId });
   };
 
   async addNewTask() {
@@ -651,7 +691,9 @@ class AddNewTasksScreen extends Component {
     let initiator = this.state.initiator;
     let assigneeId = this.state.assigneeId;
     let selectedStatus = this.state.selectedStatus;
-    let selectedOperarionalStatus = this.state.selectedOperarionalStatus;
+    let issueType = this.state.selectedOperarionalId;
+    let parentTaskId = this.state.parentTaskId
+    let sprintId = this.state.sprintId
     let selectedStatusEnum = null;
     if (selectedStatus != '') {
       switch (selectedStatus) {
@@ -692,7 +734,7 @@ class AddNewTasksScreen extends Component {
     let IsoReminderDate = selectedDateReminder ?
       moment(selectedDateReminder + selectedTimeReminder, 'DD/MM/YYYY hh:mmA').format('YYYY-MM-DD[T]HH:mm:ss') : '';
     if (this.validateData(taskName, assigneeId, selectedDateReminder, dueDate)) {
-      this.props.addTaskToProject(taskName, initiator, assigneeId, selectedStatusEnum, IsoDueDate, IsoReminderDate, notes, this.props.selectedProjectID);
+      this.props.addTaskToProject(taskName, initiator, assigneeId, selectedStatusEnum, IsoDueDate, IsoReminderDate, notes, this.props.selectedProjectID, issueType, parentTaskId, sprintId);
     }
   }
 
@@ -785,7 +827,7 @@ class AddNewTasksScreen extends Component {
             label="Parent Task"
             labelFontSize={11}
             fontSize={13}
-            data={this.state.dropPeopleData}
+            data={this.state.dropParentData}
             textColor={colors.gray}
             error={''}
             animationDuration={0.5}
@@ -793,10 +835,10 @@ class AddNewTasksScreen extends Component {
             overlayStyle={{ width: '100%' }}
             pickerStyle={{ width: '89%', marginTop: 70, marginLeft: 15 }}
             dropdownPosition={0}
-            value={this.state.selectedParentTask}
+            value={this.state.parentTaskStatus}
             itemColor={'black'}
             selectedItemColor={'black'}
-            onChangeText={(value) => this.selectAssignee(value)}
+            onChangeText={this.setParentTask}
             // onChangeText={(value)=>{this.selectAssignee(item.name, value)}}
             dropdownOffset={{ top: 10 }}
             // baseColor={colors.projectBgColor}
@@ -817,7 +859,7 @@ class AddNewTasksScreen extends Component {
             label=""
             labelFontSize={0}
             fontSize={13}
-            data={operationalData}
+            data={issueTypeList}
             textColor={colors.gray}
             error={''}
             animationDuration={0.5}
@@ -830,7 +872,7 @@ class AddNewTasksScreen extends Component {
             selectedItemColor={'black'}
             dropdownOffset={{ top: 10 }}
             baseColor={colors.projectBgColor}
-            onChangeText={value => this.selectOperationalStatus(value)}
+            onChangeText={this.selectOperationalStatus}
             // renderBase={this.renderBase}
             renderAccessory={this.renderBase}
             itemTextStyle={{ marginLeft: 15 }}
