@@ -436,6 +436,7 @@ class TasksTabScreen extends Component {
               selectedProjectID: selectedProjectID,
               selectedProjectName: selectedProjectName,
               isFromBoards: true,
+              allDetails: this.state.filterdDataAllTaks
             })
           }>
           <View
@@ -459,7 +460,7 @@ class TasksTabScreen extends Component {
             <Image
               style={styles.completionIcon}
               source={
-                item.taskStatus == 'closed'
+                item.parentTask.taskStatus == 'closed'
                   ? icons.rightCircule
                   : icons.whiteCircule
               }

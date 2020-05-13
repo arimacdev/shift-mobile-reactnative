@@ -50,6 +50,9 @@ const colors = {
   colorHeliotrope: '#DD6DEF',
   colorApple:'#4EBC44',
   colorCoralRed:'#FB3F3F',
-  colorsNavyBlue: '#0083E2'
+  colorsNavyBlue: '#0083E2',
+  colorLightSlateGrey: '#7A8B9F',
+  colorMidnightExpress:'#080848',
+  colorShuttleGrey:'#576377'
 };
 export default colors;

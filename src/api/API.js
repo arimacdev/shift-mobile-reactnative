@@ -72,6 +72,7 @@ export const ADD_SUB_TASK_TO_PROJECT = `${PROTOCOL}${HOST}projects`;
 export const FILTER_TASK_IN_PROJECT = `${PROTOCOL}${HOST}projects`;
 
 export const VIEW_ALL_TASK_BY_GROUP_DATA = `${PROTOCOL}${HOST}taskgroup`;
+export const UPLOAD_USER_PROFILE = `${PROTOCOL}${HOST}user/profile/upload`;
 
 
 
