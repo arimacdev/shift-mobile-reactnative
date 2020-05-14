@@ -300,13 +300,14 @@ class TasksDetailsScreen extends Component {
       uploading: 0,
       indeterminate: false,
       showTaskModal: false,
-      selectedTask: '',
+      selectedTaskName: '',
+      selectedTaskID: '',
       taskModalData: [],
       fromParent: true,
       addParentTaskShow: false,
       addChildTaskShow: false,
       subTaskListLength: 0,
-      allDetails:[]
+      allDetails: [],
     };
   }
 
@@ -367,7 +368,7 @@ class TasksDetailsScreen extends Component {
       subTaskList: [params.subTaskDetails],
       parentTaskName: params.parentTaskName,
       subTaskListLength: subTaskListLength,
-      allDetails:allDetails,
+      allDetails: allDetails,
     });
 
     this.fetchData(selectedProjectID, selectedProjectTaskID);
@@ -405,21 +406,24 @@ class TasksDetailsScreen extends Component {
         }
       } else {
         if (element.childTasks.length == 0) {
-          if(selectedProjectTaskID !== element.parentTask.taskId){
+          if (selectedProjectTaskID !== element.parentTask.taskId) {
             taskModalData.push({
               id: element.parentTask.taskId,
               value: element.parentTask.taskName,
             });
           }
-        } else {
-          taskModalData.push({
-            id: 'noData',
-            value: 'No data avilable',
-          });
         }
       }
     }
-    this.setState({taskModalData: taskModalData});
+    if (taskModalData.length > 0) {
+      this.setState({taskModalData: taskModalData});
+    } else {
+      // taskModalData.push({
+      //   id: 'noData',
+      //   value: 'No data avilable',
+      // });
+      this.setState({selectedTaskName: 'No data avilable'});
+    }
   }
 
   async doumentPicker() {
@@ -1409,7 +1413,7 @@ class TasksDetailsScreen extends Component {
         }
       })
       .catch(error => {
-        if (error.status == 401 || e.status == 403) {
+        if (error.status == 401 || error.status == 403) {
           this.setState({dataLoading: false});
           this.showAlert('', error.data.message);
         }
@@ -1434,7 +1438,7 @@ class TasksDetailsScreen extends Component {
         }
       })
       .catch(error => {
-        if (error.status == 401 || e.status == 403) {
+        if (error.status == 401 || error.status == 403) {
           this.setState({dataLoading: false});
           this.showAlert('', error.data.message);
         }
@@ -1459,7 +1463,7 @@ class TasksDetailsScreen extends Component {
         }
       })
       .catch(error => {
-        if (error.status == 401 || e.status == 403) {
+        if (error.status == 401 || error.status == 403) {
           this.setState({dataLoading: false});
           this.showAlert('', error.data.message);
         }
@@ -1480,7 +1484,7 @@ class TasksDetailsScreen extends Component {
         }
       })
       .catch(error => {
-        if (error.status == 401 || e.status == 403) {
+        if (error.status == 401 || error.status == 403) {
           this.setState({dataLoading: false});
           this.showAlert('', error.data.message);
         }
@@ -1512,7 +1516,7 @@ class TasksDetailsScreen extends Component {
         }
       })
       .catch(error => {
-        if (error.status == 401 || e.status == 403) {
+        if (error.status == 401 || error.status == 403) {
           this.setState({dataLoading: false});
           this.showAlert('', error.data.message);
         }
@@ -1727,7 +1731,7 @@ class TasksDetailsScreen extends Component {
     this.setState({
       showTaskModal: true,
       fromParent: fromParent,
-      selectedTask: fromParent ? 'Select parent task' : 'Select child task',
+      selectedTaskName: fromParent ? 'Select parent task' : 'Select child task',
     });
 
     this.getTaskModalData(selectedProjectTaskID, allDetails, fromParent);
@@ -1739,8 +1743,9 @@ class TasksDetailsScreen extends Component {
 
   getDisabledStaus() {
     if (
-      this.state.selectedTask == 'Select parent task' ||
-      this.state.selectedTask == 'Select child task'
+      this.state.selectedTaskName == 'Select parent task' ||
+      this.state.selectedTaskName == 'Select child task' ||
+      this.state.selectedTaskName == 'No data avilable'
     ) {
       return true;
     } else {
@@ -1753,11 +1758,43 @@ class TasksDetailsScreen extends Component {
   }
 
   onFilterTaskModalData = (value, index, data) => {
-    const selectedTaskIdModal = data[index].id;
+    let selectedTaskIdModal = data[index].id;
     let selectedTaskNameModal = data[index].value;
 
-    this.setState({selectedTask: selectedTaskNameModal});
+    this.setState({
+      selectedTaskName: selectedTaskNameModal,
+      selectedTaskID: selectedTaskIdModal,
+    });
   };
+
+  async onSavePress() {
+    let selectedProjectID = this.state.selectedProjectID;
+    let selectedTaskIdModal = this.state.selectedTaskID;
+    let selectedTaskNameModal = this.state.selectedTaskName;
+    let selectedProjectTaskID = this.state.selectedProjectTaskID;
+    let parentTaskName = this.state.parentTaskName;
+    let projectTaskInitiator = this.state.projectTaskInitiator;
+
+    await APIServices.updateParentToChild(
+      selectedProjectID,
+      selectedProjectTaskID,
+      selectedTaskNameModal,
+      projectTaskInitiator,
+    )
+      .then(response => {
+        if (response.message == 'success') {
+          this.setState({dataLoading: false});
+        } else {
+          this.setState({dataLoading: false});
+        }
+      })
+      .catch(error => {
+        if (error.status == 401 || error.status == 403) {
+          this.setState({dataLoading: false});
+          this.showAlert('', error.data.message);
+        }
+      });
+  }
 
   renderTaskModal() {
     let fromParent = this.state.fromParent;
@@ -1795,7 +1832,7 @@ class TasksDetailsScreen extends Component {
               overlayStyle={{width: '100%'}}
               pickerStyle={{width: '79%', marginTop: 62, marginLeft: 35}}
               dropdownPosition={0}
-              value={this.state.selectedTask}
+              value={this.state.selectedTaskName}
               itemColor={'black'}
               selectedItemColor={'black'}
               dropdownOffset={{top: 10}}
@@ -1825,7 +1862,7 @@ class TasksDetailsScreen extends Component {
                 },
               ]}
               disabled={this.getDisabledStaus()}
-              onPress={() => this.onDateSet()}>
+              onPress={() => this.onSavePress()}>
               <Text style={styles.saveTextStyle}>Save</Text>
             </TouchableOpacity>
           </View>
