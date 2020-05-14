@@ -21,6 +21,7 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
 import {MenuProvider} from 'react-native-popup-menu';
+import APIServices from '../../../services/APIServices';
 
 const initialLayout = {width: entireScreenWidth};
 
@@ -71,7 +72,34 @@ class TasksLogScreen extends Component {
 
   componentDidUpdate(prevProps, prevState, snapshot) {}
 
-  componentDidMount() {}
+  componentDidMount() {
+    const {
+      navigation: {
+        state: {params},
+      },
+    } = this.props;
+
+    let selectedProjectTaskID = params.selectedProjectTaskID;
+    this.fetchData(selectedProjectTaskID);
+  }
+
+  async fetchData(selectedProjectTaskID) {
+    await APIServices.getTaskLogData(selectedProjectTaskID)
+      .then(response => {
+        if (response.message == 'success') {
+          this.setState({indeterminate: false, files: [], uploading: 100});
+          this.fetchData(this.props.selectedProjectID);
+        } else {
+          this.setState({indeterminate: false, files: [], uploading: 0});
+        }
+      })
+      .catch(error => {
+        if (error.status == 401) {
+          this.setState({indeterminate: false, files: [], uploading: 0});
+          this.showAlert('', error.data.message);
+        }
+      });
+  }
 
   renderTaskLogDetailsList(item) {
     return (
@@ -127,8 +155,8 @@ const styles = EStyleSheet.create({
   container: {
     flex: 1,
   },
-  flatListStyle:{
-    marginTop: '20rem'
+  flatListStyle: {
+    marginTop: '20rem',
   },
   taskLogTextView: {
     backgroundColor: colors.darkBlue,

@@ -917,6 +917,13 @@ class TasksDetailsScreen extends Component {
       addParentTaskShow: subTaskListLength > 0 ? false : true,
       addChildTaskShow: isParent ? true : false,
     });
+
+    if(!isParent){
+      this.setState({
+        addParentTaskShow: false,
+        addChildTaskShow: false,
+      });
+    }
   }
 
   dateView = function(item) {
@@ -1775,10 +1782,12 @@ class TasksDetailsScreen extends Component {
     let parentTaskName = this.state.parentTaskName;
     let projectTaskInitiator = this.state.projectTaskInitiator;
 
+    this.setState({showTaskModal: false});
+
     await APIServices.updateParentToChild(
       selectedProjectID,
       selectedProjectTaskID,
-      selectedTaskNameModal,
+      parentTaskName,
       projectTaskInitiator,
     )
       .then(response => {
@@ -1895,6 +1904,11 @@ class TasksDetailsScreen extends Component {
           // drawStatus={true}
           // taskStatus={taskStatus ? taskStatus : ''}
           onPress={() => this.props.navigation.goBack()}
+          onPressTaskLog={() =>
+            this.props.navigation.navigate('TaskLogScreen', {
+              selectedProjectTaskID: this.state.selectedProjectTaskID,
+            })
+          }
           onPressDelete={() => this.onTaskDeketePress()}
         />
         <ScrollView style={styles.backgroundImage}>

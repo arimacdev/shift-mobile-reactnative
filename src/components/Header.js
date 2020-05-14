@@ -251,9 +251,7 @@ class Header extends Component {
               {isTaskLog && (
                 <TouchableOpacity
                   style={{alignItems: 'flex-end'}}
-                  onPress={() =>
-                    this.props.navigation.navigate('TaskLogScreen')
-                  }>
+                  onPress={() => this.props.onPressTaskLog()}>
                   <Image
                     style={styles.iconTaskLog}
                     source={icons.taskLogWhite}
