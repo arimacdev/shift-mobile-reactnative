@@ -1689,7 +1689,7 @@ class TasksDetailsScreen extends Component {
     );
   }
 
-  onFilterIssueTypes = (value, index, data) => {
+  onFilterTaskTypes = (value, index, data) => {
     const selectedIssueTypeId = data[index].id;
     let selectedIssueTypeName = data[index].value;
     let taskTypeList = [];
@@ -1726,6 +1726,10 @@ class TasksDetailsScreen extends Component {
       taskType: taskTypeList[0].value,
     });
   };
+
+  onFilterIssueType(){
+    
+  }
 
   onTaskDeketePress() {
     this.deleteTask();
@@ -2068,7 +2072,7 @@ class TasksDetailsScreen extends Component {
                       fontFamily: 'CircularStd-Book',
                     }}
                     itemPadding={10}
-                    onChangeText={this.onFilterIssueTypes}
+                    onChangeText={this.onFilterTaskTypes}
                   />
                 </View>
                 <View style={[styles.taskTypeDropDownView, {marginLeft: 5}]}>
@@ -2097,7 +2101,7 @@ class TasksDetailsScreen extends Component {
                       fontFamily: 'CircularStd-Book',
                     }}
                     itemPadding={10}
-                    onChangeText={this.onFilterSprintData}
+                    onChangeText={this.onFilterIssueType}
                   />
                 </View>
               </View>

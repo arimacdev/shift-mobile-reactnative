@@ -128,7 +128,7 @@ class TasksTabScreen extends Component {
       mode: 'date',
       selectedStartDate: null,
       selectedEndDate: null,
-      filterTaskType : '',
+      filterTaskType: '',
       textInputs: [],
     };
 
@@ -383,7 +383,7 @@ class TasksTabScreen extends Component {
             isFromBoards: false,
             selectedProjectName: selectedProjectName,
             parentTaskName: parentTaskName,
-            allDetails: this.state.filterdDataAllTaks
+            allDetails: this.state.filterdDataAllTaks,
           })
         }>
         <View style={styles.subTasksView}>
@@ -438,7 +438,7 @@ class TasksTabScreen extends Component {
               selectedProjectName: selectedProjectName,
               isFromBoards: true,
               parentTaskName: parentTaskName,
-              allDetails: this.state.filterdDataAllTaks
+              allDetails: this.state.filterdDataAllTaks,
             })
           }>
           <View
@@ -509,7 +509,7 @@ class TasksTabScreen extends Component {
                 placeholder={'Add a subtask...'}
                 placeholderTextColor={colors.white}
                 onChangeText={subTasksName => {
-                  let { textInputs } = this.state;
+                  let {textInputs} = this.state;
                   textInputs[indexMain] = subTasksName;
                   this.setState({
                     textInputs,
@@ -517,7 +517,11 @@ class TasksTabScreen extends Component {
                 }}
                 value={this.state.textInputs[indexMain]}
                 onSubmitEditing={() =>
-                  this.onNewSubTasksNameSubmit(this.state.subTasksName,item,indexMain)
+                  this.onNewSubTasksNameSubmit(
+                    this.state.subTasksName,
+                    item,
+                    indexMain,
+                  )
                 }
               />
             </View>
@@ -750,7 +754,7 @@ class TasksTabScreen extends Component {
     this.setState({subTasksName: text});
   }
 
-  async onNewSubTasksNameSubmit(text,item,indexMain) {
+  async onNewSubTasksNameSubmit(text, item, indexMain) {
     try {
       let subTasksName = this.state.textInputs[indexMain];
       let selectedProjectID = this.state.selectedProjectID;
@@ -765,10 +769,10 @@ class TasksTabScreen extends Component {
         this.setState({dataLoading: false, textInputs: []});
         this.getAllTaskInProject();
       } else {
-        this.setState({dataLoading: false,textInputs: []});
+        this.setState({dataLoading: false, textInputs: []});
       }
     } catch (e) {
-      this.setState({dataLoading: false,textInputs: []});
+      this.setState({dataLoading: false, textInputs: []});
     }
   }
 
