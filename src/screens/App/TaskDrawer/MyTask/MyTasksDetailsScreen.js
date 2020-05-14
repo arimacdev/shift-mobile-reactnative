@@ -8,7 +8,9 @@ import {
   TouchableOpacity,
   TextInput,
   ScrollView,
-  Alert
+  Alert,
+  PermissionsAndroid,
+  Platform,
 } from 'react-native';
 import {connect} from 'react-redux';
 import * as actions from '../../../../redux/actions';
@@ -18,14 +20,23 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
 import {Dropdown} from 'react-native-material-dropdown';
+import AsyncStorage from '@react-native-community/async-storage';
 import Loader from '../../../../components/Loader';
 import moment from 'moment';
 import FadeIn from 'react-native-fade-in-image';
 import {SkypeIndicator} from 'react-native-indicators';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import APIServices from '../../../../services/APIServices';
 import AwesomeAlert from 'react-native-awesome-alerts';
 import Header from '../../../../components/Header';
+import Accordion from 'react-native-collapsible/Accordion';
+import DocumentPicker from 'react-native-document-picker';
+import * as Progress from 'react-native-progress';
+import RNFetchBlob from 'rn-fetch-blob';
+import fileTypes from '../../../../assest/fileTypes/fileTypes';
+import * as Animatable from 'react-native-animatable';
+import Modal from 'react-native-modal';
 
 const Placeholder = () => (
   <View style={styles.landing}>
@@ -33,68 +44,48 @@ const Placeholder = () => (
   </View>
 );
 
-let dropData = [
-  {
-    id: 'Open',
-    value: 'Open',
-  },
-  {
-    id: 'Closed',
-    value: 'Closed',
-  },
-];
-
 let taskData = [
-  {
-    id: 10,
-    name: 'Task Name',
-    icon: icons.taskDark,
-    renderImage: false,
-  },
-  {
-    id: 0,
-    name: 'Name',
-    icon: icons.taskUser,
-    renderImage: false,
-  },
-  {
-    id: 1,
-    name: 'Sub tasks',
-    icon: icons.subTask,
-    renderImage: true,
-  },
+  
   {
     id: 2,
-    name: 'Due on',
-    icon: icons.calendarBlue,
+    name: 'Due Date',
+    icon: icons.dueDateRoundedGreen,
     renderImage: false,
+    disabled: false,
   },
   {
     id: 3,
-    name: 'Remind on',
-    icon: icons.clockOrange,
+    name: 'Remind',
+    icon: icons.remindRoundedOrange,
     renderImage: false,
-  },
-  {
-    id: 4,
-    name: 'Notes',
-    icon: icons.noteRed,
-    renderImage: false,
+    disabled: false,
   },
   {
     id: 5,
     name: 'Files',
-    icon: icons.fileOrange,
-    renderImage: true,
+    icon: icons.filesRoundedOrange,
+    renderImage: false,
+    disabled: true,
   },
 ];
+
+let dropData = [
+  {
+    id: 'open',
+    value: 'Open',
+  },
+  {
+    id: 'closed',
+    value: 'Closed',
+  },
+]
 
 class MyTasksDetailsScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      bottomItemPressColor: colors.darkBlue,
-      selectedTaskID : '',
+      selectedProjectID: '',
+      selectedProjectTaskID: '',
       isActive: this.props.isActive,
       name: '',
       duedate: '',
@@ -104,22 +95,32 @@ class MyTasksDetailsScreen extends Component {
       showPicker: false,
       showTimePicker: false,
       date: new Date(),
-      selectedDateReminder: '',
+      time: new Date(),
       selectedTimeReminder: '',
+      selectedTime: '',
       dateReminder: new Date(),
       timeReminder: new Date(),
       mode: 'date',
       reminder: false,
       taskName: '',
-      taskStatus : 'Pending',
-      dataLoading : false,
-      reminderTime : '',
-      dueTime : '',
+      taskStatus: '',
+      dataLoading: false,
+      reminderTime: '',
+      dueTime: '',
       projectTaskInitiator: '',
-      showAlert : false,
-      alertTitle : '',
-      alertMsg : '',
-      note : '',
+      showAlert: false,
+      alertTitle: '',
+      alertMsg: '',
+      note: '',
+      filesData: [],
+      progress: 0,
+      loading: false,
+      taskType: '',
+      isDateNeedLoading: false,
+      files: [],
+      uploading: 0,
+      indeterminate: false,
+      selectedTaskID : ''
     };
   }
 
@@ -161,44 +162,23 @@ class MyTasksDetailsScreen extends Component {
     this.setState({dataLoading:true});
     taskResult = await APIServices.getMySingleTaskData(selectedTaskID);
     if(taskResult.message == 'success'){
-        this.setTaskInitiator(taskResult);
         this.setTaskName(taskResult);
         this.setTaskStatus(taskResult);
-        this.setTaskUserName(taskResult);
         this.setDueDate(taskResult);
         this.setReminderDate(taskResult);
         this.setTaskNote(taskResult);
+        this.setFiles();
         this.setState({dataLoading:false}); 
     }else{
         this.setState({dataLoading:false});
     }
   }
 
-  setTaskInitiator (taskResult){
-    this.setState({projectTaskInitiator : taskResult.data.taskInitiator});
-  }
-
-  setTaskName (taskResult){
+  setTaskName(taskResult){
     this.setState({taskName : taskResult.data.taskName});
-  }
+  };
 
-  hideAlert (){
-    this.setState({
-      showAlert : false,
-      alertTitle : '',
-      alertMsg : '',
-    })
-}
-
-showAlert(title,msg){
-    this.setState({
-      showAlert : true,
-      alertTitle : title,
-      alertMsg : msg,
-    })
-}
-
-  setTaskStatus (taskResult){
+  setTaskStatus(taskResult){
     let statusValue = '';
     switch (taskResult.data.taskStatus) {
         case 'open':
@@ -211,40 +191,360 @@ showAlert(title,msg){
       this.setState({
         taskStatus : statusValue
       })
-  }
+  };
 
-  async setTaskUserName (taskResult){
-    let userID = taskResult.data.taskAssignee;
-    let activeUsers = await APIServices.getAllUsersData();
-    if (activeUsers.message == 'success' && userID) {
-      const result = activeUsers.data.find( ({ userId }) => userId === userID );
+  setDueDate(taskResult) {
+    let taskDueDate = moment
+      .parseZone(taskResult.data.taskDueDateAt)
+      .format('Do MMMM YYYY');
+
+    let taskDueTime = moment
+      .parseZone(taskResult.data.taskDueDateAt)
+      .format('hh:mmA');
+
+    if (taskDueDate != 'Invalid date') {
       this.setState({
-        name: result.firstName + ' '  + result.lastName,
-        //activeUsers : activeUsers.data,
+        duedate: taskDueDate,
+        dueTime: taskDueTime,
       });
     }
   }
 
-  setDueDate(taskResult){
-    let taskDueDate = moment.parseZone(taskResult.data.taskDueDateAt).format('Do MMMM YYYY');
-    if(taskDueDate != 'Invalid date'){
+  setReminderDate(taskResult) {
+    let taskReminderDate = moment
+      .parseZone(taskResult.data.taskReminderAt)
+      .format('Do MMMM YYYY');
+
+    let taskReminderTime = moment
+      .parseZone(taskResult.data.taskReminderAt)
+      .format('hh:mmA');
+
+    if (taskReminderDate != 'Invalid date') {
       this.setState({
-        duedate : 'Due on ' + taskDueDate
-      })
+        remindDate: taskReminderDate,
+        reminderTime: taskReminderTime,
+      });
     }
   }
 
-  setReminderDate (taskResult){
-    let taskReminderDate = moment.parseZone(taskResult.data.taskReminderAt).format('Do MMMM YYYY');
-    if(taskReminderDate != 'Invalid date'){
-      this.setState({
-        remindDate : 'Remind on ' + taskReminderDate,
-      })
+  setTaskNote(taskResult) {
+    this.setState({note: taskResult.data.taskNote});
+  }
+
+  async setFiles() {
+    let selectedTaskID = this.state.selectedTaskID
+    this.setState({dataLoading:true});
+    resultData = await APIServices.getFilesInMyTaskData(selectedTaskID,);
+    if(resultData.message == 'success'){
+      this.setState({filesData : resultData.data,dataLoading:false});
+    }else{
+      this.setState({dataLoading:false});
     }
   }
 
-  setTaskNote (taskResult){
-    this.setState({note : taskResult.data.taskNote});
+  onFilesCrossPress(uri) {
+    this.setState(
+      {
+        files: [],
+      },
+      () => {
+        let filesArray = this.state.files.filter(item => {
+          return item.uri !== uri;
+        });
+        this.setState({ files: filesArray });
+      },
+    );
+  }
+
+  async doumentPicker() {
+    // Pick multiple files
+    try {
+      const results = await DocumentPicker.pickMultiple({
+        type: [
+          DocumentPicker.types.images,
+          DocumentPicker.types.plainText,
+          DocumentPicker.types.pdf,
+        ],
+      });
+      for (const res of results) {
+        this.onFilesCrossPress(res.uri);
+
+        await this.state.files.push({
+          uri: res.uri,
+          type: res.type, // mime type
+          name: res.name,
+          size: res.size,
+          dateTime:
+            moment().format('YYYY/MM/DD') + ' | ' + moment().format('HH:mm'),
+        });
+        console.log(
+          res.uri,
+          res.type, // mime type
+          res.name,
+          res.size,
+        );
+      }
+      await this.setState({
+        files: this.state.files,
+        indeterminate: true,
+        uploading: 0,
+      });
+
+      await APIServices.addFileToMyTaskData(
+        this.state.files,
+        this.state.selectedTaskID,
+      )
+        .then(response => {
+          if (response.message == 'success') {
+            this.setState({indeterminate: false, files: [], uploading: 100});
+            this.setFiles();
+          } else {
+            this.setState({indeterminate: false, files: [], uploading: 0});
+          }
+        })
+        .catch(error => {
+          if (error.status == 401) {
+            this.setState({indeterminate: false, files: [], uploading: 0});
+            this.showAlert('', error.data.message);
+          }
+        });
+      console.log(this.state.files);
+    } catch (err) {
+      if (DocumentPicker.isCancel(err)) {
+        console.log('file pick error', err);
+      } else {
+        throw err;
+      }
+    }
+  }
+
+  actualDownload = item => {
+    this.setState({
+      progress: 0,
+      loading: true,
+    });
+    let dirs = RNFetchBlob.fs.dirs;
+    RNFetchBlob.config({
+      // add this option that makes response data to be stored as a file,
+      // this is much more performant.
+      path: dirs.DownloadDir + '/' + item.projectFileName,
+      fileCache: true,
+    })
+      .fetch('GET', item.taskFileUrl, {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      })
+      .progress((received, total) => {
+        console.log('progress', received / total);
+        this.setState({progress: received / total});
+      })
+      .then(res => {
+        this.setState({
+          progress: 100,
+          loading: false,
+        });
+        this.showAlert(
+          '',
+          'Your file has been downloaded to downloads folder!',
+        );
+      });
+  };
+
+  async downloadFile(item) {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+        {
+          title: 'Storage Permission',
+          message: 'App needs access to memory to download the file ',
+        },
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        this.actualDownload(item);
+      } else {
+        Alert.alert(
+          'Permission Denied!',
+          'You need to give storage permission to download the file',
+        );
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+  }
+
+  deleteFileAlert(item) {
+    Alert.alert(
+      'Delete File',
+      'You are about to permanantly delete this file,\n If you are not sure, you can cancel this action.',
+      [
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+        {text: 'Ok', onPress: () => this.deleteFile(item)},
+      ],
+      {cancelable: false},
+    );
+  }
+
+  async deleteFile(item){
+    let selectedTaskID = this.state.selectedTaskID;
+    let taskFileId = item.taskFileId;
+
+    this.setState({dataLoading:true});
+    try {
+      resultObj = await APIServices.deleteFileInMyTaskData(selectedTaskID,taskFileId);
+      if(resultObj.message == 'success'){
+        this.setState({dataLoading:false});
+        this.setFiles();
+      }else{
+        this.setState({dataLoading:false});
+      }
+    }
+    catch(e) {
+      if(e.status == 401){
+        this.setState({dataLoading:false});
+        this.showAlert("",e.data.message);
+      }
+    }
+  }
+
+  bytesToSize(bytes) {
+    var sizes = ['Bytes', 'Kb', 'MB', 'GB', 'TB'];
+    if (bytes == 0) return '0 Byte';
+    var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+    return Math.round(bytes / Math.pow(1024, i), 2) + '' + sizes[i];
+  }
+
+  getTypeIcons(fileName) {
+    let key = fileName.split('.')[1];
+    let imageType = '';
+    switch (key) {
+      case 'excel':
+        imageType = fileTypes.excel;
+        break;
+      case 'jpg':
+        imageType = fileTypes.jpg;
+        break;
+      case 'mp3':
+        imageType = fileTypes.mp3;
+        break;
+      case 'pdf':
+        imageType = fileTypes.pdf;
+        break;
+      case 'png':
+        imageType = fileTypes.png;
+        break;
+      case 'video':
+        imageType = fileTypes.video;
+        break;
+      case 'word':
+        imageType = fileTypes.word;
+        break;
+      default:
+        imageType = fileTypes.default;
+        break;
+    }
+    return imageType;
+  }
+
+  renderDocPickeredView() {
+    return (
+      <View
+        style={{
+          width: '100%',
+          height: 50,
+          borderRadius: 5,
+          marginRight: 5,
+          marginTop: 5,
+          justifyContent: 'center',
+        }}>
+        <Progress.Bar
+          progress={0.0}
+          indeterminate={this.state.indeterminate}
+          indeterminateAnimationDuration={1000}
+          width={null}
+          animated={true}
+          color={colors.lightGreen}
+          unfilledColor={colors.lightgray}
+          borderWidth={0}
+          height={20}
+          borderRadius={5}
+        />
+        <Text style={styles.uploadingText}>
+          Uploading {this.state.uploading}%
+        </Text>
+      </View>
+    );
+  }
+
+  renderFilesList(item) {
+    let details = '';
+    let size = this.bytesToSize(item.taskFileSize);
+    let date = moment(item.taskFileDate).format('YYYY-MM-DD');
+    let name = item.taskFileName ;
+
+    details = size + ' | ' + date + ' by ' + name;
+
+    return (
+      <View style={styles.filesView}>
+        <Image
+          source={this.getTypeIcons(item.taskFileName)}
+          style={styles.taskStateIcon}
+        />
+        <View style={{flex: 1}}>
+          <Text style={styles.filesText} numberOfLines={1}>
+            {item.taskFileName}
+          </Text>
+          <Text style={styles.filesTextDate} numberOfLines={1}>
+            {size}
+          </Text>
+        </View>
+        <View style={{flex: 1}}>
+          <Text style={styles.filesText} numberOfLines={1}>
+            {name}
+          </Text>
+          <Text style={styles.filesTextDate} numberOfLines={1}>
+            {date}
+          </Text>
+        </View>
+        <View style={styles.controlView}>
+          <TouchableOpacity
+            onPress={() => this.downloadFile(item)}
+            style={{marginLeft: EStyleSheet.value('24rem')}}>
+            <Image
+              style={{width: 30, height: 30}}
+              source={icons.downloadIcon}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => this.deleteFileAlert(item)}
+            style={{marginLeft: EStyleSheet.value('10rem')}}>
+            <Image
+              style={{width: 30, height: 30}}
+              source={icons.deleteRoundRed}
+            />
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  }
+
+  hideAlert() {
+    this.setState({
+      showAlert: false,
+      alertTitle: '',
+      alertMsg: '',
+    });
+  }
+
+  showAlert(title, msg) {
+    this.setState({
+      showAlert: true,
+      alertTitle: title,
+      alertMsg: msg,
+    });
   }
 
   dateView = function(item) {
@@ -271,37 +571,126 @@ showAlert(title,msg){
     return <Text style={[styles.textDate, {color: color}]}>{dateText}</Text>;
   };
 
+  showDatePicker = () => {
+    this.setState({showPicker: true});
+  };
+
+  hideDatePicker = () => {
+    this.setState({showPicker: false});
+  };
+
+  handleDateConfirm = date => {
+    this.hideDatePicker();
+    this.setState({isDateNeedLoading: true});
+    let date1 = new Date(date);
+    let newDate = '';
+    let newDateValue = '';
+    if (this.state.reminder) {
+      newDate = moment(date1).format('Do MMMM YYYY');
+      newDateValue = moment(date1).format('DD MM YYYY');
+    } else {
+      newDate = moment(date1).format('Do MMMM YYYY');
+      newDateValue = moment(date1).format('DD MM YYYY');
+    }
+    if (this.state.reminder) {
+      this.setState({
+        remindDate: 'Remind on ' + newDate,
+        remindDateValue: newDateValue,
+        dateReminder: new Date(date1),
+      });
+    } else {
+      this.setState({
+        duedate: 'Due On ' + newDate,
+        duedateValue: newDateValue,
+        date: new Date(date1),
+      });
+    }
+    setTimeout(() => {
+      this.setState({
+        isDateNeedLoading: false,
+        showTimePicker: true,
+      });
+    }, 500);
+  };
+
+  showTimePicker = () => {
+    this.setState({showTimePicker: true});
+  };
+
+  hideTimePicker = () => {
+    this.setState({showTimePicker: false});
+  };
+
+  handleTimeConfirm = time1 => {
+    console.log(time1, 'time');
+    this.hideTimePicker();
+    let time = new Date(time1);
+    let newTime = moment(time).format('hh:mmA');
+    // let newTime = time.getHours() + ':' + time.getMinutes();
+    // if (event.type == 'set') {
+    if (this.state.reminder) {
+      this.setState({
+        reminderTime: newTime,
+        selectedTimeReminder: newTime,
+        showPicker: false,
+        showTimePicker: false,
+        timeReminder: new Date(time1),
+      });
+      this.changeTaskReminderDate();
+    } else {
+      this.setState({
+        dueTime: newTime,
+        selectedTimeReminder: newTime,
+        showPicker: false,
+        showTimePicker: false,
+        time: new Date(time1),
+      });
+      this.changeTaskDueDate();
+    }
+    // } else {
+    //   this.setState({
+    //     showPicker: false,
+    //     showTimePicker: false,
+    //   });
+    // }
+  };
+
   onChangeDate(event, selectedDate) {
     let date = new Date(selectedDate);
     let newDate = '';
     let newDateValue = '';
 
     if (this.state.reminder) {
-      newDate = moment(date).format('Do MMMM YYYY');
+      newDate = moment(date).format('MMMM DD, YYYY');
       newDateValue = moment(date).format('DD MM YYYY');
     } else {
-      newDate = moment(date).format('Do MMMM YYYY');
+      newDate = moment(date).format('MMMM DD, YYYY');
       newDateValue = moment(date).format('DD MM YYYY');
     }
 
     if (event.type == 'set') {
       if (this.state.reminder) {
         this.setState({
-          remindDate: 'Remind on ' + newDate,
-          remindDateValue : newDateValue,
+          remindDate: newDate,
+          remindDateValue: newDateValue,
           showPicker: false,
           showTimePicker: true,
           dateReminder: new Date(selectedDate),
         });
       } else {
         this.setState({
-          duedate: 'Due On ' + newDate,
-          duedateValue : newDateValue,
+          duedate: newDate,
+          duedateValue: newDateValue,
           showPicker: false,
           showTimePicker: true,
           date: new Date(selectedDate),
         });
       }
+    } else {
+      this.setState({
+        showPicker: false,
+        showTimePicker: false,
+      });
     }
   }
 
@@ -313,61 +702,96 @@ showAlert(title,msg){
       if (this.state.reminder) {
         // reminder time
         this.setState({
-          reminderTime : newTime,
+          reminderTime: newTime,
           selectedTimeReminder: newTime,
           showPicker: false,
           showTimePicker: false,
           timeReminder: new Date(selectedTime),
         });
         this.changeTaskReminderDate();
-      }else {
+      } else {
         // due time
         this.setState({
-          dueTime : newTime,
-          selectedTimeReminder: newTime,
+          dueTime: newTime,
+          selectedTime: newTime,
           showPicker: false,
           showTimePicker: false,
-          timeReminder: new Date(selectedTime),
+          time: new Date(selectedTime),
         });
         this.changeTaskDueDate();
       }
+    } else {
+      this.setState({
+        showPicker: false,
+        showTimePicker: false,
+      });
     }
   }
 
   renderDatePicker() {
-    return (
-      <DateTimePicker
-        testID="dateTimePicker"
-        timeZoneOffsetInMinutes={0}
-        value={
-          this.state.reminder == true
-            ? this.state.dateReminder
-            : this.state.date
-        }
-        mode={this.state.mode}
-        is24Hour={true}
-        display="default"
-        onChange={(event, selectedDate) =>
-          this.onChangeDate(event, selectedDate)
-        }
-      />
-    );
+    if (Platform.OS == 'ios') {
+      return (
+        <View>
+          <DateTimePickerModal
+            isVisible={this.state.showPicker}
+            mode="date"
+            onConfirm={this.handleDateConfirm}
+            onCancel={this.hideDatePicker}
+          />
+        </View>
+      );
+    } else {
+      return (
+        <DateTimePicker
+          testID="dateTimePicker"
+          timeZoneOffsetInMinutes={0}
+          value={
+            this.state.reminder == true
+              ? this.state.dateReminder
+              : this.state.date
+          }
+          mode={this.state.mode}
+          is24Hour={true}
+          display="default"
+          onChange={(event, selectedDate) =>
+            this.onChangeDate(event, selectedDate)
+          }
+        />
+      );
+    }
   }
 
   renderTimePicker() {
-    return (
-      <DateTimePicker
-        testID="dateTimePicker"
-        timeZoneOffsetInMinutes={0}
-        value={this.state.timeReminder}
-        mode={'time'}
-        is24Hour={true}
-        display="default"
-        onChange={(event, selectedTime) =>
-          this.onChangeTime(event, selectedTime)
-        }
-      />
-    );
+    if (Platform.OS == 'ios') {
+      return (
+        <View>
+          <DateTimePickerModal
+            isVisible={this.state.showTimePicker}
+            mode="time"
+            onConfirm={this.handleTimeConfirm}
+            onCancel={this.hideTimePicker}
+          />
+        </View>
+      );
+    } else {
+      return (
+        <DateTimePicker
+          testID="dateTimePicker"
+          timeZoneOffsetInMinutes={0}
+          value={
+            this.state.reminder == true
+              ? this.state.timeReminder
+              : this.state.time
+          }
+          mode={'time'}
+          is24Hour={true}
+          display="default"
+          onChange={(event, selectedTime) =>
+            this.onChangeTime(event, selectedTime)
+          }
+        />
+      );
+    }
   }
 
   clearDates(id) {
@@ -398,25 +822,10 @@ showAlert(title,msg){
         (this.state.duedate != '' && item.id == 2) ||
         (this.state.remindDate != '' && item.id == 3)
       ) {
-        return (
-          <TouchableOpacity >
-          </TouchableOpacity>
-        );
+        return <TouchableOpacity />;
       }
     }
   };
-
-  onSelectUser(name,userID) {
-    this.changeTaskAssignee(name,userID);
-  }
-
-  onUpdateNote(note) {
-    this.changeTaskNote(note);
-  }
-
-  onTaskNameChange(text) {
-    this.setState({taskName: text});
-  }
 
   onItemPress(item) {
     switch (item.id) {
@@ -425,9 +834,6 @@ showAlert(title,msg){
       case 0:
         break;
       case 1:
-        this.props.navigation.navigate('MyTaskSubTaskScreen', {
-          selectedTaskID: this.state.selectedTaskID,
-        });
         break;
       case 2:
         this.setState({showPicker: true, reminder: false});
@@ -436,15 +842,8 @@ showAlert(title,msg){
         this.setState({showPicker: true, reminder: true});
         break;
       case 4:
-        this.props.navigation.navigate('MyTaskNotesScreen',{
-          note: this.state.note,
-          onUpdateNote: (note) => this.onUpdateNote(note),
-        });
         break;
       case 5:
-        this.props.navigation.navigate('MyTasksFilesScreen', {
-          selectedTaskID: this.state.selectedTaskID,
-        });
         break;
       case 6:
         this.props.navigation.navigate('ChatScreen');
@@ -464,55 +863,41 @@ showAlert(title,msg){
         value = this.state.name;
         break;
       case 2:
-        value = this.state.duedate;
+        value =
+          this.state.duedate !== ''
+            ? this.state.duedate + ' : ' + this.state.dueTime
+            : '';
         break;
       case 3:
-        value = this.state.remindDate;
+        value =
+          this.state.remindDate !== ''
+            ? this.state.remindDate + ' : ' + this.state.reminderTime
+            : '';
         break;
       default:
         break;
     }
 
-    return (
+    return value !== '' ? (
       <View style={{flex: 1}}>
-        {item.id == 10 ? (
-          <TextInput
-            style={[
-              styles.text,
-              {
-                flex: 1,
-                marginLeft: 5,
-                color:
-                  value !== '' ? colors.darkBlue : colors.darkBlue,
-              },
-            ]}
-            placeholder={item.name}
-            value={this.state.taskName}
-            onChangeText={text => this.onTaskNameChange(text)}
-            onSubmitEditing={() => this.onTaskNameChangeSubmit(this.state.taskName)}
-          />
-        ) : (
-          <Text
-            style={[
-              styles.text,
-              {
-                color:
-                  value !== '' ? colors.darkBlue : colors.projectTaskNameColor,
-              },
-            ]}>
-            {value !== '' ? value : item.name}
-          </Text>
-        )}
+        <Text style={[styles.textHeader]}>{item.name}</Text>
+        <Text style={[styles.textValue]}>{value}</Text>
+      </View>
+    ) : (
+      <View style={{flex: 1}}>
+        <Text style={[styles.text]}>{item.name}</Text>
       </View>
     );
   }
 
   renderProjectList(item) {
     return (
-      <TouchableOpacity onPress={() => this.onItemPress(item)}>
+      <TouchableOpacity
+        onPress={() => this.onItemPress(item)}
+        disabled={item.disabled}>
         <View style={styles.projectView}>
           <Image
-            style={styles.completionIcon}
+            style={styles.iconStyle}
             source={item.icon}
             resizeMode="contain"
           />
@@ -529,52 +914,109 @@ showAlert(title,msg){
   renderBase() {
     return (
       <View style={{justifyContent: 'center', flex: 1}}>
-        <Image style={styles.dropIcon} source={icons.arrow} />
+        <Image style={styles.dropIcon} source={icons.arrowDark} />
       </View>
     );
   }
 
-  onFilterTasksStatus(key) {
-    let value = key;
-    let searchValue = '';
-    switch (value) {
-      case 'Open':
-        searchValue = 'open';
-        break;
-      case 'Closed':
-        searchValue = 'closed';
-        break;
-    }
-    
-    this.changeTaskStatus(key,searchValue);
+  onBackPress() {
+    this.props.navigation.goBack();
   }
 
-  
-  // change note of task API
-  async changeTaskNote(note){
+  userImage = function(item) {
+    let userImage = item.taskAssigneeProfileImage;
+
+    if (userImage) {
+      return (
+        <FadeIn>
+          <Image
+            source={{uri: userImage}}
+            style={{width: 24, height: 24, borderRadius: 24 / 2}}
+          />
+        </FadeIn>
+      );
+    } else {
+      return (
+        <Image
+          style={{width: 24, height: 24, borderRadius: 24 / 2}}
+          source={require('../../../../asserts/img/defult_user.png')}
+        />
+      );
+    }
+  };
+
+  renderSubtasksList(item, index, userId, projectId) {
+    return (
+      <TouchableOpacity
+        onPress={() =>
+          this.props.navigation.navigate('WorkloadTasksDetailsScreen', {
+            workloadTasksDetails: item,
+            userId: userId,
+            projectId: projectId,
+          })
+        }>
+        <View style={styles.subTasksListView}>
+          <Image
+            style={styles.subTasksCompletionIcon}
+            source={
+              item.taskStatus == 'closed'
+                ? icons.rightCircule
+                : icons.whiteCircule
+            }
+          />
+          <View style={{flex: 1}}>
+            <Text style={styles.subTaskText}>{item.taskName}</Text>
+          </View>
+          <View style={styles.statusView}>
+            {this.dateView(item)}
+            {this.userImage(item)}
+          </View>
+        </View>
+      </TouchableOpacity>
+    );
+  }
+
+  _renderContent(item) {
+    return (
+      <Animatable.View
+        animation={'bounceIn'}
+        duration={400}
+        style={styles.flatListView}>
+        <FlatList
+          style={styles.flatListStyle}
+          data={item}
+          renderItem={({item, index}) => this.renderSubtasksList(item)}
+          keyExtractor={item => item.taskId}
+        />
+      </Animatable.View>
+    );
+  }
+
+  // change task status 
+  onFilterTaskStatus = (value, index, data) => {
+    let selectedTaskStatusID = data[index].id;
+    let selectedTaskStatusName = data[index].value;
+    this.changeTaskStatus(selectedTaskStatusID,selectedTaskStatusName)
+  };
+
+  //API change task status
+  async changeTaskStatus(selectedTaskStatusID,selectedTaskStatusName){
     this.setState({dataLoading:true});
     let selectedTaskID = this.state.selectedTaskID;
-    resultData = await APIServices.myTaskUpdateTaskNoteData(selectedTaskID,note);
+    resultData = await APIServices.myTaskUpdateTaskStatusData(selectedTaskID,selectedTaskStatusID);
     if(resultData.message == 'success'){
-      this.setState({dataLoading:false,note: note});
+      this.setState({dataLoading:false,taskStatus : selectedTaskStatusName});
     }else{
       this.setState({dataLoading:false});
     }
-}
+  };
 
-  // change status of task API DONE
-  async changeTaskStatus(key,searchValue){
-      this.setState({dataLoading:true});
-      let selectedTaskID = this.state.selectedTaskID;
-      resultData = await APIServices.myTaskUpdateTaskStatusData(selectedTaskID,searchValue);
-      if(resultData.message == 'success'){
-        this.setState({dataLoading:false,taskStatus : key});
-      }else{
-        this.setState({dataLoading:false});
-      }
+  // change name of task 
+  onTaskNameChange(text) {
+    this.setState({taskName: text});
   }
 
-  // change name of task API DONE
+  //API change name of task API
   async onTaskNameChangeSubmit(text){
     this.setState({dataLoading:true});
     let selectedTaskID = this.state.selectedTaskID;
@@ -586,7 +1028,24 @@ showAlert(title,msg){
     }
   }
 
-   // change due date of task API DONE
+  // change note of task 
+  changeTaskNote(note) {
+    this.setState({note: note});
+  }
+
+  // change note of task API
+  async onSubmitTaskNote(note){
+    this.setState({dataLoading:true});
+    let selectedTaskID = this.state.selectedTaskID;
+    resultData = await APIServices.myTaskUpdateTaskNoteData(selectedTaskID,note);
+    if(resultData.message == 'success'){
+      this.setState({dataLoading:false,note: note});
+    }else{
+      this.setState({dataLoading:false});
+    }
+  }
+
+  // change due date of task API DONE
   async changeTaskDueDate(){
       let duedateValue = this.state.duedateValue;
       let dueTime = this.state.dueTime;
@@ -603,24 +1062,24 @@ showAlert(title,msg){
       }
   };
 
-  // change reminder date of task API DONE
+    // change reminder date of task API DONE
   async changeTaskReminderDate(){
-      let remindDateValue = this.state.remindDateValue;
-      let reminderTime = this.state.reminderTime;
-      let selectedTaskID = this.state.selectedTaskID;
+    let remindDateValue = this.state.remindDateValue;
+    let reminderTime = this.state.reminderTime;
+    let selectedTaskID = this.state.selectedTaskID;
 
-      let IsoReminderDate = remindDateValue ?
-      moment(remindDateValue + reminderTime,'DD/MM/YYYY hh:mmA').format('YYYY-MM-DD[T]HH:mm:ss') : '';
+    let IsoReminderDate = remindDateValue ?
+    moment(remindDateValue + reminderTime,'DD/MM/YYYY hh:mmA').format('YYYY-MM-DD[T]HH:mm:ss') : '';
 
-      resultData = await APIServices.myTaskUpdateReminderDateData(selectedTaskID,IsoReminderDate);
-      if(resultData.message == 'success'){
-        this.setState({dataLoading:false});
-      }else{
-        this.setState({dataLoading:false});
-      }
+    resultData = await APIServices.myTaskUpdateReminderDateData(selectedTaskID,IsoReminderDate);
+    if(resultData.message == 'success'){
+      this.setState({dataLoading:false});
+    }else{
+      this.setState({dataLoading:false});
+    }
   };
 
-  deleteTask() {
+  onTaskDeketePress() {
     let taskID = this.state.selectedTaskID;
 
     Alert.alert(
@@ -638,10 +1097,6 @@ showAlert(title,msg){
     );
   }
 
-  onBackPress() {
-    this.props.navigation.goBack();
-  }
-
   render() {
     let taskStatus = this.state.taskStatus;
     let dataLoading = this.state.dataLoading;
@@ -653,89 +1108,155 @@ showAlert(title,msg){
     return (
       <View style={styles.backgroundImage}>
         <Header
-            title={taskName ? taskName : ''}
-            drawStatus = {true}
-            taskStatus={taskStatus ? taskStatus : ''}
-            onPress={() => this.onBackPress()}
+          isDelete={true}
+          navigation={this.props.navigation}
+          title={'My personal Tasks'}
+          onPress={() => this.props.navigation.goBack()}
+          onPressDelete={() => this.onTaskDeketePress()}
         />
         <ScrollView style={styles.backgroundImage}>
-            <View>
+          <View>
+            <View style={styles.headerView}>
               <View style={styles.projectFilerView}>
-              <Dropdown
+                <Text style={styles.statusText}>{taskStatus}</Text>
+              </View>
+            </View>
+            <View>
+              <TextInput
+                style={[styles.taskNameStyle]}
+                placeholder={'Task name'}
+                value={this.state.taskName}
+                onChangeText={text => this.onTaskNameChange(text)}
+                onSubmitEditing={() =>
+                  this.onTaskNameChangeSubmit(this.state.taskName)
+                }
+              />
+            </View>
+            <View style={styles.borderStyle} />
+            <View style={styles.taskTypeMainView}>
+              <View style={styles.taskTypeNameView}>
+                <Image
+                  style={styles.iconStyle}
+                  source={icons.taskRoundedBlue}
+                  resizeMode="contain"
+                />
+                <Text style={styles.parentTaskText}>Task Status</Text>
+              </View>
+              <View style={styles.taskTypeDropMainView}>
+                <View style={[styles.taskTypeDropDownView, {marginLeft: 5}]}>
+                  <Dropdown
                     // style={{}}
                     label=""
                     labelFontSize={0}
                     data={dropData}
-                    textColor={colors.white}
+                    textColor={colors.black}
+                    fontSize={14}
+                    renderAccessory={() => null}
                     error={''}
                     animationDuration={0.5}
                     containerStyle={{width: '100%'}}
                     overlayStyle={{width: '100%'}}
-                    pickerStyle={{width: '89%', marginTop: 70, marginLeft: 15}}
+                    pickerStyle={{width: '89%', marginTop: 70, marginLeft: 25}}
                     dropdownPosition={0}
                     value={taskStatus}
                     itemColor={'black'}
                     selectedItemColor={'black'}
                     dropdownOffset={{top: 10}}
-                    baseColor={colors.lightBlue}
+                    baseColor={colors.projectBgColor}
                     renderAccessory={this.renderBase}
                     itemTextStyle={{
                       marginLeft: 15,
                       fontFamily: 'CircularStd-Book',
                     }}
                     itemPadding={10}
-                    onChangeText={value => this.onFilterTasksStatus(value)}
-                  />
-              </View>
-              <FlatList
-                data={taskData}
-                renderItem={({item}) => this.renderProjectList(item)}
-                keyExtractor={item => item.taskId}
-              />
-              <TouchableOpacity onPress={() => this.deleteTask()}>
-                <View style={styles.buttonDelete}>
-                  <Image
-                    style={[
-                      styles.bottomBarIcon,
-                      {marginRight: 15, marginLeft: 10},
-                    ]}
-                    source={icons.taskWhite}
-                    resizeMode={'center'}
-                  />
-                  <View style={{flex: 1}}>
-                    <Text style={styles.buttonText}>Delete Task</Text>
-                  </View>
-
-                  <Image
-                    style={[styles.deleteIcon, {marginRight: 10}]}
-                    source={icons.deleteWhite}
-                    resizeMode={'center'}
+                    onChangeText={this.onFilterTaskStatus}
                   />
                 </View>
-              </TouchableOpacity>
-              {this.state.showPicker ? this.renderDatePicker() : null}
-              {this.state.showTimePicker ? this.renderTimePicker() : null}
+              </View>
             </View>
-        {dataLoading && <Loader/>}
-        {this.props.deleteSingleTaskInMyLoading && <Loader/>}
-            <AwesomeAlert
-                  show={showAlert}
-                  showProgress={false}
-                  title={alertTitle}
-                  message={alertMsg}
-                  closeOnTouchOutside={true}
-                  closeOnHardwareBackPress={false}
-                  showCancelButton={false}
-                  showConfirmButton={true}
-                  cancelText=""
-                  confirmText="OK"
-                  confirmButtonColor={colors.primary}
-                  onConfirmPressed={() => {
-                      this.hideAlert();
-                  }}
+
+            <View style={styles.notesMainView}>
+              <Image
+                style={styles.iconStyle}
+                source={icons.noteRoundedRed}
+                resizeMode="contain"
               />
+              <View style={styles.notesView}>
+                <Text style={styles.noteText}>Notes</Text>
+                <TextInput
+                  style={styles.notesTextInput}
+                  placeholder={'Notes'}
+                  value={this.state.note}
+                  multiline={true}
+                  // blurOnSubmit={true}
+                  onChangeText={text => this.changeTaskNote(text)}
+                  // onSubmitEditing={() => this.onSubmitTaskNote(this.state.note)}
+                />
+                <TouchableOpacity
+                  style={styles.updateNotesView}
+                  onPress={() => this.onSubmitTaskNote(this.state.note)}>
+                  <Text style={styles.updateNotesText}>UPDATE NOTES</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+            <View style={styles.borderStyle} />
+            <FlatList
+              data={taskData}
+              renderItem={({item}) => this.renderProjectList(item)}
+              keyExtractor={item => item.taskId}
+            />
+            <TouchableOpacity
+              onPress={() => this.doumentPicker()}
+              disabled={this.state.indeterminate}>
+              {this.state.files.length > 0 ? (
+                <View
+                  style={[
+                    styles.taskFieldDocPickView,
+                    {flexDirection: 'row', flexWrap: 'wrap'},
+                  ]}>
+                  {this.renderDocPickeredView()}
+                </View>
+              ) : (
+                <View style={[styles.taskFieldView, {flexDirection: 'row'}]}>
+                  <Image
+                    style={[styles.fileUploadIcon, {marginRight: 10}]}
+                    source={icons.upload}
+                    resizeMode={'center'}
+                  />
+                  <Text style={[styles.addFilesText, {flex: 1}]}>
+                    Add files
+                  </Text>
+                </View>
+              )}
+            </TouchableOpacity>
+            <FlatList
+              style={styles.flalList}
+              data={this.state.filesData}
+              renderItem={({item}) => this.renderFilesList(item)}
+              keyExtractor={item => item.projId}
+            />
+            {this.state.showPicker ? this.renderDatePicker() : null}
+            {this.state.showTimePicker ? this.renderTimePicker() : null}
+          </View>
+          {dataLoading && <Loader />}
+          <AwesomeAlert
+            show={showAlert}
+            showProgress={false}
+            title={alertTitle}
+            message={alertMsg}
+            closeOnTouchOutside={true}
+            closeOnHardwareBackPress={false}
+            showCancelButton={false}
+            showConfirmButton={true}
+            cancelText=""
+            confirmText="OK"
+            confirmButtonColor={colors.primary}
+            onConfirmPressed={() => {
+              this.hideAlert();
+            }}
+          />
         </ScrollView>
-    </View>  
+      </View>
     );
   }
 }
@@ -747,30 +1268,17 @@ const styles = EStyleSheet.create({
   projectFilerView: {
     backgroundColor: colors.lightBlue,
     borderRadius: 5,
-    marginTop: '17rem',
-    marginBottom: '12rem',
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: '12rem',
-    height: '45rem',
-    marginHorizontal: '20rem',
-  },
-  textFilter: {
-    fontSize: '14rem',
-    color: colors.white,
-    textAlign: 'center',
-    lineHeight: '17rem',
-    fontFamily: 'CircularStd-Medium',
-    textAlign: 'center',
+    justifyContent: 'center',
+    height: '30rem',
+    width: '100rem',
   },
   projectView: {
-    backgroundColor: colors.projectBgColor,
     borderRadius: 5,
-    height: '60rem',
-    marginTop: '7rem',
+    marginTop: '20rem',
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: '12rem',
     marginHorizontal: '20rem',
   },
   text: {
@@ -778,10 +1286,8 @@ const styles = EStyleSheet.create({
     color: colors.projectTaskNameColor,
     textAlign: 'center',
     fontWeight: 'bold',
-    lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
-    marginLeft: '10rem',
     fontWeight: '400',
   },
   textDate: {
@@ -794,11 +1300,6 @@ const styles = EStyleSheet.create({
     textAlign: 'left',
     marginLeft: '10rem',
     marginRight: '5rem',
-  },
-  avatarIcon: {
-    width: '20rem',
-    height: '20rem',
-    marginLeft: 10,
   },
   statusView: {
     alignItems: 'center',
@@ -813,66 +1314,222 @@ const styles = EStyleSheet.create({
     height: '23rem',
     marginHorizontal: '5rem',
   },
-  bottomBarContainer: {
-    position: 'absolute',
-    bottom: 0,
-    height: 80,
-    width: '100%',
-    backgroundColor: colors.projectBgColor,
-  },
-  bottomBarInnerContainer: {
-    flexDirection: 'row',
-    height: 80,
-  },
-  bottomItemView: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'row',
-  },
-  bottomItemTouch: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: '100%',
-  },
-  horizontalLine: {
-    backgroundColor: colors.gray,
-    width: 1,
-    height: 40,
-  },
-  bottomBarIcon: {
-    width: '20rem',
-    height: '20rem',
-  },
   landing: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  buttonDelete: {
+  headerView: {
     flexDirection: 'row',
-    backgroundColor: colors.lightRed,
+    alignItems: 'center',
+    marginHorizontal: '20rem',
+    marginTop: '20rem',
+  },
+  taskNameStyle: {
+    color: colors.colorLightSlateGrey,
+    fontSize: '14rem',
+    fontWeight: 'bold',
+    marginHorizontal: '20rem',
+    marginBottom: '0rem',
+  },
+  borderStyle: {
+    borderWidth: '0.4rem',
+    borderColor: colors.lightgray,
+    marginBottom: '8rem',
+  },
+  parentTaskText: {
+    flex: 1,
+    fontSize: '10rem',
+    fontFamily: 'CircularStd-Medium',
+    color: colors.projectTaskNameColor,
+  },
+  subTasksListView: {
+    backgroundColor: colors.projectBgColor,
     borderRadius: 5,
-    marginTop: '40rem',
-    marginBottom: '30rem',
+    height: '45rem',
+    marginTop: '7rem',
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: '12rem',
-    height: '55rem',
-    marginHorizontal: '20rem',
   },
-  buttonText: {
-    fontSize: '12rem',
-    color: colors.white,
+  flatListStyle: {
+    marginBottom: '1rem',
+    marginTop: '0rem',
+  },
+  subTasksCompletionIcon: {
+    width: '26rem',
+    height: '26rem',
+  },
+  subTaskText: {
+    fontSize: '10rem',
+    color: colors.projectTaskNameColor,
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
+    textAlign: 'left',
+    marginLeft: '10rem',
+  },
+  iconStyle: {
+    width: '30rem',
+    height: '30rem',
+    marginRight: '10rem',
+  },
+  taskTypeMainView: {
+    marginHorizontal: '20rem',
+    marginTop: '15rem',
+  },
+  taskTypeDropMainView: {
+    flex: 1,
+    flexDirection: 'row',
+    marginLeft: '40rem',
+  },
+  taskTypeDropDownView: {
+    flex: 1,
+    backgroundColor: colors.projectBgColor,
+    borderRadius: 5,
+    marginTop: '5rem',
+    marginBottom: '5rem',
+    paddingHorizontal: '12rem',
+    height: '45rem',
+  },
+  taskTypeNameView: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  notesMainView: {
+    marginHorizontal: '20rem',
+    marginTop: '15rem',
+    flexDirection: 'row',
+  },
+  notesView: {
+    flex: 1,
+    marginBottom: '1rem',
+  },
+  notesTextInput: {
+    fontSize: '11rem',
+    color: colors.detailsViewText,
+    lineHeight: '17rem',
+    fontFamily: 'CircularStd-Medium',
+    textAlign: 'left',
+    marginLeft: Platform.OS == 'ios' ? '0rem' : '-3rem',
+    width: '100%',
+    textAlignVertical: 'top',
+  },
+  noteText: {
+    fontSize: '10rem',
+    fontFamily: 'CircularStd-Medium',
+    color: colors.projectTaskNameColor,
+    marginBottom: '-5rem',
+  },
+  textHeader: {
+    fontSize: '10rem',
+    fontFamily: 'CircularStd-Medium',
+    color: colors.projectTaskNameColor,
+  },
+  textValue: {
+    fontSize: '12rem',
+    fontFamily: 'CircularStd-Medium',
+    color: colors.detailsViewText,
+  },
+  filesView: {
+    backgroundColor: colors.projectBgColor,
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: colors.lighterGray,
+    height: '50rem',
+    marginTop: '7rem',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: '10rem',
+    marginHorizontal: '20rem',
+  },
+  filesText: {
+    fontSize: '11rem',
+    color: colors.userListUserNameColor,
+    lineHeight: '17rem',
+    fontFamily: 'CircularStd-Medium',
+    textAlign: 'left',
+    marginLeft: '5rem',
+    fontWeight: '400',
+  },
+  filesTextDate: {
+    fontSize: '9rem',
+    color: colors.textPlaceHolderColor,
+    lineHeight: '13rem',
+    fontFamily: 'CircularStd-Medium',
+    textAlign: 'left',
+    marginLeft: '5rem',
+  },
+  controlView: {
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  flalList: {
+    marginTop: '0rem',
+    marginBottom: '20rem',
+  },
+  taskStateIcon: {
+    width: '38rem',
+    height: '38rem',
+  },
+  statusText: {
+    color: colors.white,
+  },
+  updateNotesView: {
+    backgroundColor: colors.lightBlue,
+    height: 30,
+    width: 120,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 5,
+    marginBottom: 20,
+  },
+  updateNotesText: {
+    color: colors.white,
+    fontSize: 12,
     fontWeight: 'bold',
   },
-  deleteIcon: {
-    width: '28rem',
-    height: '28rem',
+  taskFieldDocPickView: {
+    backgroundColor: colors.projectBgColor,
+    borderRadius: 5,
+    marginTop: '15rem',
+    marginBottom: '7rem',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: '12rem',
+    marginHorizontal: '20rem',
+    paddingVertical: '6rem',
   },
+  taskFieldView: {
+    backgroundColor: colors.projectBgColor,
+    borderRadius: 5,
+    marginTop: '15rem',
+    marginBottom: '7rem',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: '12rem',
+    height: '50rem',
+    marginHorizontal: '20rem',
+  },
+  fileUploadIcon: {
+    width: '23rem',
+    height: '23rem',
+  },
+  addFilesText: {
+    fontSize: '12rem',
+    color: colors.gray,
+    textAlign: 'center',
+    lineHeight: '17rem',
+    fontFamily: 'HelveticaNeuel',
+    textAlign: 'left',
+    marginLeft: '7rem',
+  },
+  uploadingText: {
+    marginTop: 5,
+    textAlign: 'center',
+    fontSize: 11,
+    color: colors.darkBlue,
+    fontWeight: 'bold',
+  }
 });
 
 const mapStateToProps = state => {
