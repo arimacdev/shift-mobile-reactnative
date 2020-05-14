@@ -506,7 +506,7 @@ class Tasks extends Component {
             }
             
           </View>
-          {!filter &&
+          {!filter &&  filterdDataAllTaks.length > 0 &&
           <View style={styles.subContainer}>
               <FlatList
                 style={{marginBottom: EStyleSheet.value('10rem'),marginTop: EStyleSheet.value('10rem')}}
@@ -516,7 +516,7 @@ class Tasks extends Component {
               />
             </View>    
           }
-          {filter &&
+          {filter && filterdDataAllTaks.length > 0 &&
               <View style={styles.subContainer}>
                 <FlatList
                   style={{marginBottom: EStyleSheet.value('10rem'),marginTop: EStyleSheet.value('10rem')}}
@@ -537,6 +537,14 @@ const styles = EStyleSheet.create({
     flex: 1,
     // backgroundColor: colors.pageBackGroundColor,
   },
+  subContainerWhite: {
+    marginBottom: '65rem',
+    backgroundColor: colors.white,
+    borderRadius: 5,
+    marginHorizontal: '05rem',
+    marginTop: '7rem',
+    marginBottom: '150rem',
+},
   subContainer: {
     marginBottom: '65rem',
     backgroundColor: colors.projectBgColor,
@@ -767,8 +775,8 @@ const styles = EStyleSheet.create({
   },
   triangleShape : {
     position: 'absolute',
-    right: 0,
-    top: 0,
+    right: -12,
+    top: -22,
 }
 });
 
