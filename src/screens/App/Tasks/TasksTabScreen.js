@@ -380,7 +380,7 @@ class TasksTabScreen extends Component {
           this.props.navigation.navigate('TasksDetailsScreen', {
             taskDetails: item,
             selectedProjectID: selectedProjectID,
-            isFromBoards: false,
+            isFromBoards: true,
             selectedProjectName: selectedProjectName,
             parentTaskName: parentTaskName,
             allDetails: this.state.filterdDataAllTaks,
@@ -550,7 +550,7 @@ class TasksTabScreen extends Component {
           this.props.navigation.navigate('TasksDetailsScreen', {
             taskDetails: item,
             selectedProjectID: selectedProjectID,
-            isFromBoards: false,
+            isFromBoards: true,
             selectedProjectName: selectedProjectName,
           })
         }>

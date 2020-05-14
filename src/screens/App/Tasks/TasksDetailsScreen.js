@@ -44,37 +44,6 @@ const Placeholder = () => (
   </View>
 );
 
-let dropData = [
-  {
-    id: 'Pending',
-    value: 'Pending',
-  },
-  {
-    id: 'Implementing',
-    value: 'Implementing',
-  },
-  {
-    id: 'QA',
-    value: 'QA',
-  },
-  {
-    id: 'Ready to Deploy',
-    value: 'Ready to Deploy',
-  },
-  {
-    id: 'Re-Opened',
-    value: 'Re-Opened',
-  },
-  {
-    id: 'Deployed',
-    value: 'Deployed',
-  },
-  {
-    id: 'Closed',
-    value: 'Closed',
-  },
-];
-
 let taskData = [
   {
     id: 0,
@@ -125,13 +94,8 @@ let development = [
   {value: 'Deployed', id: 'deployed'},
   {value: 'Closed', id: 'closed'},
 ];
-let qa = [
-  {value: 'Pending', id: 'pending'},
-  {value: 'Testing', id: 'testing'},
-  {value: 'Review', id: 'review'},
-  {value: 'Closed', id: 'closed'},
-];
-let design = [
+
+let taskStatusData = [
   {value: 'Pending', id: 'pending'},
   {value: 'On hold', id: 'onHold'},
   {value: 'Cancel', id: 'cancel'},
@@ -140,65 +104,13 @@ let design = [
   {value: 'In progress', id: 'inprogress'},
   {value: 'Completed', id: 'completed'},
   {value: 'Under review', id: 'underReview'},
-  {value: 'Weiting for approval', id: 'waitingForApproval'},
+  {value: 'Wating for approval', id: 'waitingForApproval'},
   {value: 'Review', id: 'review'},
-  {value: 'Waiting response', id: 'waitingResponse'},
+  {value: 'Wating response', id: 'waitingResponse'},
   {value: 'Rejected', id: 'rejected'},
   {value: 'Closed', id: 'closed'},
-];
-let bug = [
-  {value: 'Pending', id: 'pending'},
-  {value: 'On hold', id: 'onHold'},
-  {value: 'Open', id: 'open'},
-  {value: 'Cancel', id: 'cancel'},
-  {value: 'Reopened', id: 'reopened'},
-  {value: 'Fixing', id: 'fixing'},
-  {value: 'Testing', id: 'testing'},
-  {value: 'Resolved', id: 'resolved'},
-  {value: 'Under review', id: 'underReview'},
-  {value: 'Review', id: 'review'},
-  {value: 'Waiting response', id: 'waitingResponse'},
-  {value: 'Closed', id: 'closed'},
-];
-let operational = [
-  {value: 'Pending', id: 'pending'},
-  {value: 'On hold', id: 'onHold'},
-  {value: 'Open', id: 'open'},
-  {value: 'Cancel', id: 'cancel'},
-  {value: 'Resolved', id: 'resolved'},
-  {value: 'In progress', id: 'inprogress'},
-  {value: 'Completed', id: 'completed'},
-  {value: 'Under review', id: 'underReview'},
-  {value: 'Weiting for approval', id: 'waitingForApproval'},
-  {value: 'Discussion', id: 'discussion'},
-  {value: 'Waiting response', id: 'waitingResponse'},
-  {value: 'Ready', id: 'ready'},
-  {value: 'Rejected', id: 'rejected'},
-  {value: 'Closed', id: 'closed'},
-];
-let preSales = [
-  {value: 'Pending', id: 'pending'},
-  {value: 'On hold', id: 'onHold'},
-  {value: 'Open', id: 'open'},
-  {value: 'Cancel', id: 'cancel'},
-  {value: 'Resolved', id: 'resolved'},
-  {value: 'In progress', id: 'inprogress'},
-  {value: 'Under review', id: 'underReview'},
-  {value: 'Weiting for approval', id: 'waitingForApproval'},
-  {value: 'Discussion', id: 'discussion'},
-  {value: 'Waiting response', id: 'waitingResponse'},
-  {value: 'Rejected', id: 'rejected'},
-  {value: 'Closed', id: 'closed'},
-];
-let general = [
-  {value: 'Pending', id: 'pending'},
-  {value: 'On hold', id: 'onHold'},
-  {value: 'Open', id: 'open'},
-  {value: 'Cancel', id: 'cancel'},
-  {value: 'In progress', id: 'inprogress'},
-  {value: 'Completed', id: 'completed'},
-  {value: 'Closed', id: 'closed'},
-];
+]
+
 
 let taskDataWhenParentIsBoard = [
   // {
@@ -270,7 +182,6 @@ class TasksDetailsScreen extends Component {
       mode: 'date',
       reminder: false,
       taskName: '',
-      taskStatus: 'Pending',
       dataLoading: false,
       reminderTime: '',
       dueTime: '',
@@ -291,10 +202,9 @@ class TasksDetailsScreen extends Component {
       secondaryTaskId: '',
       selectedProjectName: '',
       isParent: false,
-      issueType: 'Development',
-      taskTypeList: development,
-      taskType: 'Pending',
-      sprintName: 'Default',
+      issueType: '',
+      taskStatusValue: '',
+      sprintName: '',
       isDateNeedLoading: false,
       files: [],
       uploading: 0,
@@ -745,6 +655,7 @@ class TasksDetailsScreen extends Component {
         this.setReminderDate(taskResult);
         this.setTaskNote(taskResult);
         this.setIsParent(taskResult);
+        this.setIssueType(taskResult);
         this.setState({dataLoading: false});
       } else {
         this.setState({dataLoading: false});
@@ -767,18 +678,19 @@ class TasksDetailsScreen extends Component {
         value: sprintData[i].sprintName,
       });
     }
-    this.setState({sprints: sprintArray, sprintName: sprintArray[0].value});
+    this.setState({sprints: sprintArray});
   }
 
   setSprintDroupDownSelectedValue(sprintData, selectedSprintID) {
     if (selectedSprintID == 'default') {
-      this.setState({selectedSprint: 'Default', previousSprintID: 'default'});
+      this.setState({selectedSprint: 'Default', previousSprintID: 'default',sprintName: 'Default'});
     } else {
       let selectedSprint = sprintData.find(
         ({sprintId}) => sprintId == selectedSprintID,
       );
       if (selectedSprint) {
         this.setState({
+          sprintName : selectedSprint.sprintName,
           selectedSprint: selectedSprint.sprintName,
           previousSprintID: selectedSprint.sprintId,
         });
@@ -820,27 +732,43 @@ class TasksDetailsScreen extends Component {
       case 'pending':
         statusValue = 'Pending';
         break;
-      case 'implementing':
-        statusValue = 'Implementing';
+      case 'onHold':
+        statusValue = 'On hold';
         break;
-      case 'qa':
-        statusValue = 'QA';
+      case 'cancel':
+        statusValue = 'Cancel';
         break;
-      case 'readyToDeploy':
-        statusValue = 'Ready to Deploy';
+      case 'fixing':
+        statusValue = 'Fixing';
         break;
-      case 'reOpened':
-        statusValue = 'Re-Opened';
+      case 'resolved':
+        statusValue = 'Resolved';
         break;
-      case 'deployed':
-        statusValue = 'Deployed';
+      case 'inprogress':
+        statusValue = 'In progress';
         break;
+      case 'completed':
+        statusValue = 'Completed';
+      case 'underReview':
+        statusValue = 'Under review';  
+        break;
+     case 'waitingForApproval':
+        statusValue = 'Wating for approval';
+        break;
+      case 'review':
+        statusValue = 'Review';
+        break;
+      case 'waitingResponse':
+        statusValue = 'Wating response';
+        break;
+      case 'rejected':
+        statusValue = 'Rejected';
       case 'closed':
-        statusValue = 'Closed';
-        break;
+        statusValue = 'Closed';  
+        break;   
     }
     this.setState({
-      taskStatus: statusValue,
+      taskStatusValue: statusValue,
     });
   }
 
@@ -924,6 +852,38 @@ class TasksDetailsScreen extends Component {
         addChildTaskShow: false,
       });
     }
+  }
+
+  setIssueType(taskResult){
+
+    let value = taskResult.data.issueType;
+    let issueTypeValue = '';
+    switch (value) {
+      case 'development':
+        issueTypeValue = 'Development';
+        break;
+      case 'qa':
+        issueTypeValue = 'QA';
+        break;
+      case 'design':
+        issueTypeValue = 'Design';
+        break;
+      case 'bug':
+        issueTypeValue = 'Bug';
+        break;
+      case 'operational':
+        issueTypeValue = 'Operational';
+        break;
+      case 'preSales':
+        issueTypeValue = 'Pre-sales';
+        break;
+      case 'general':
+        issueTypeValue = 'General';
+        break;
+    }
+    this.setState({
+      issueType: issueTypeValue,
+    });
   }
 
   dateView = function(item) {
@@ -1326,36 +1286,6 @@ class TasksDetailsScreen extends Component {
     );
   }
 
-  onFilterTasksStatus(key) {
-    let value = key;
-    let searchValue = '';
-    switch (value) {
-      case 'Pending':
-        searchValue = 'pending';
-        break;
-      case 'Implementing':
-        searchValue = 'implementing';
-        break;
-      case 'QA':
-        searchValue = 'qa';
-        break;
-      case 'Ready to Deploy':
-        searchValue = 'readyToDeploy';
-        break;
-      case 'Re-Opened':
-        searchValue = 'reOpened';
-        break;
-      case 'Deployed':
-        searchValue = 'deployed';
-        break;
-      case 'Closed':
-        searchValue = 'closed';
-        break;
-    }
-
-    this.changeTaskStatus(key, searchValue);
-  }
-
   onFilterSprintData = (value, index, data) => {
     let previousSprintID = this.state.previousSprintID;
     let selectedProjectID = this.state.selectedProjectID;
@@ -1389,7 +1319,7 @@ class TasksDetailsScreen extends Component {
         selectedProjectTaskID,
       );
       if (resultObj.message == 'success') {
-        this.setState({dataLoading: false, selectedSprint: selectedName});
+        this.setState({dataLoading: false, sprintName: selectedName});
       } else {
         this.setState({dataLoading: false});
         this.showAlert('', 'Error');
@@ -1406,7 +1336,6 @@ class TasksDetailsScreen extends Component {
     this.setState({note: note});
   }
 
-  // change note of task API
   async onSubmitTaskNote(note) {
     this.setState({dataLoading: true});
     let projectID = this.state.selectedProjectID;
@@ -1415,6 +1344,30 @@ class TasksDetailsScreen extends Component {
       .then(response => {
         if (response.message == 'success') {
           this.setState({dataLoading: false, note: note});
+        } else {
+          this.setState({dataLoading: false});
+        }
+      })
+      .catch(error => {
+        if (error.status == 401 || error.status == 403) {
+          this.setState({dataLoading: false});
+          this.showAlert('', error.data.message);
+        }
+      });
+  }
+
+  // change issue typ of task API
+  async onChangeIssueType(selectedIssueTypeId,selectedIssueTypeName) {
+    this.setState({dataLoading: true});
+    let projectID = this.state.selectedProjectID;
+    let taskID = this.state.selectedProjectTaskID;
+    await APIServices.updateTaskIssueTypeData(projectID, taskID, selectedIssueTypeId)
+      .then(response => {
+        if (response.message == 'success') {
+          this.setState({
+            dataLoading: false,
+            issueType: selectedIssueTypeName,
+          });
         } else {
           this.setState({dataLoading: false});
         }
@@ -1453,18 +1406,18 @@ class TasksDetailsScreen extends Component {
   }
 
   // change status of task API
-  async changeTaskStatus(key, searchValue) {
+  async onChangeTaskStatus(selectedTaskStatusId,selectedTaskStatusName) {
     this.setState({dataLoading: true});
     let projectID = this.state.selectedProjectID;
     let taskID = this.state.selectedProjectTaskID;
     resultData = await APIServices.updateTaskStatusData(
       projectID,
       taskID,
-      searchValue,
+      selectedTaskStatusId,
     )
       .then(response => {
         if (response.message == 'success') {
-          this.setState({dataLoading: false, taskStatus: key});
+          this.setState({dataLoading: false, taskStatusValue: selectedTaskStatusName});
         } else {
           this.setState({dataLoading: false});
         }
@@ -1692,43 +1645,13 @@ class TasksDetailsScreen extends Component {
   onFilterTaskTypes = (value, index, data) => {
     const selectedIssueTypeId = data[index].id;
     let selectedIssueTypeName = data[index].value;
-    let taskTypeList = [];
-
-    switch (selectedIssueTypeId) {
-      case 'development':
-        taskTypeList = development;
-        break;
-      case 'qa':
-        taskTypeList = qa;
-        break;
-      case 'design':
-        taskTypeList = design;
-        break;
-      case 'bug':
-        taskTypeList = bug;
-        break;
-      case 'operational':
-        taskTypeList = operational;
-        break;
-      case 'preSales':
-        taskTypeList = preSales;
-        break;
-      case 'general':
-        taskTypeList = general;
-        break;
-      default:
-        break;
-    }
-
-    this.setState({
-      issueType: selectedIssueTypeName,
-      taskTypeList: taskTypeList,
-      taskType: taskTypeList[0].value,
-    });
+    this.onChangeIssueType(selectedIssueTypeId,selectedIssueTypeName)
   };
 
-  onFilterIssueType(){
-    
+  onFilterTaskStatusData =  (value, index, data) => {
+    const selectedTaskStatusId = data[index].id;
+    let selectedTaskStatusName = data[index].value;
+    this.onChangeTaskStatus(selectedTaskStatusId,selectedTaskStatusName)
   }
 
   onTaskDeketePress() {
@@ -1885,7 +1808,7 @@ class TasksDetailsScreen extends Component {
   }
 
   render() {
-    let taskStatus = this.state.taskStatus;
+    let taskStatusValue = this.state.taskStatusValue;
     let dataLoading = this.state.dataLoading;
     let showAlert = this.state.showAlert;
     let alertTitle = this.state.alertTitle;
@@ -1921,7 +1844,7 @@ class TasksDetailsScreen extends Component {
               <Text style={{color: colors.colorShuttleGrey}}>Task - </Text>
               <Text style={styles.headerText}> #{secondaryTaskId}</Text>
               <View style={styles.projectFilerView}>
-                <Text style={styles.statusText}>{taskStatus}</Text>
+                <Text style={styles.statusText}>{taskStatusValue}</Text>
                 {/* <Dropdown
                   // style={{}}
                   label=""
@@ -2080,7 +2003,7 @@ class TasksDetailsScreen extends Component {
                     // style={{}}
                     label=""
                     labelFontSize={0}
-                    data={this.state.taskTypeList}
+                    data={taskStatusData}
                     textColor={colors.black}
                     fontSize={14}
                     renderAccessory={() => null}
@@ -2090,7 +2013,7 @@ class TasksDetailsScreen extends Component {
                     overlayStyle={{width: '100%'}}
                     pickerStyle={{width: '38%', marginTop: 62, marginLeft: 225}}
                     dropdownPosition={0}
-                    value={this.state.taskType}
+                    value={this.state.taskStatusValue}
                     itemColor={'black'}
                     selectedItemColor={'black'}
                     dropdownOffset={{top: 10}}
@@ -2101,7 +2024,7 @@ class TasksDetailsScreen extends Component {
                       fontFamily: 'CircularStd-Book',
                     }}
                     itemPadding={10}
-                    onChangeText={this.onFilterIssueType}
+                    onChangeText={this.onFilterTaskStatusData}
                   />
                 </View>
               </View>
@@ -2144,6 +2067,7 @@ class TasksDetailsScreen extends Component {
                     }}
                     itemPadding={10}
                     onChangeText={this.onFilterSprintData}
+                    //disabled={isParent ? false : true}
                   />
                 </View>
               </View>

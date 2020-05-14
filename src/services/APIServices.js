@@ -2296,7 +2296,30 @@ async function getTaskLogData(taskId) {
       headers,
     );
   }
-//"{{pm-service}}/log/a36e22fa-16c3-49c3-b1fd-b546c0bf1092"
+
+  async function updateTaskIssueTypeData(projectID, taskID, selectedIssueTypeId) {
+    let userIDHeder = null;
+    userIDHeder = await AsyncStorage.getItem('userID');
+  
+    let headers = {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      user: userIDHeder,
+    };
+  
+    return request(
+      {
+        url: UPDATE_PROJECT_TASK + '/' + projectID + '/tasks/' + taskID,
+        method: 'PUT',
+        data: {
+          issueType: selectedIssueTypeId,
+          taskType: 'project',
+        },
+      },
+      true,
+      headers,
+    );
+  }
 
 const APIServices = {
   getAllProjectsByUserData,
@@ -2387,7 +2410,8 @@ const APIServices = {
   updateMyDetails,
   uplaodProfilePhoto,
   updateParentToChild,
-  getTaskLogData
+  getTaskLogData,
+  updateTaskIssueTypeData
 };
 
 export default APIServices;
