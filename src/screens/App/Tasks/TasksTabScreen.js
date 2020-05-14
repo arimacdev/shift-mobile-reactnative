@@ -383,6 +383,7 @@ class TasksTabScreen extends Component {
             isFromBoards: false,
             selectedProjectName: selectedProjectName,
             parentTaskName: parentTaskName,
+            allDetails: this.state.filterdDataAllTaks
           })
         }>
         <View style={styles.subTasksView}>

@@ -303,6 +303,10 @@ class TasksDetailsScreen extends Component {
       selectedTask: '',
       taskModalData: [],
       fromParent: true,
+      addParentTaskShow: false,
+      addChildTaskShow: false,
+      subTaskListLength: 0,
+      allDetails:[]
     };
   }
 
@@ -350,6 +354,10 @@ class TasksDetailsScreen extends Component {
     let selectedProjectTaskID = params.taskDetails.taskId;
     let isFromBoards = params.isFromBoards;
     let allDetails = params.allDetails;
+    let subTaskListLength = params.subTaskDetails
+      ? params.subTaskDetails.length
+      : 0;
+    // params.subTaskDetails.length > 0 ? this.state.subTaskList[0].length : 0;
 
     this.setState({
       selectedProjectID: selectedProjectID,
@@ -358,6 +366,8 @@ class TasksDetailsScreen extends Component {
       isFromBoards: params.isFromBoards,
       subTaskList: [params.subTaskDetails],
       parentTaskName: params.parentTaskName,
+      subTaskListLength: subTaskListLength,
+      allDetails:allDetails,
     });
 
     this.fetchData(selectedProjectID, selectedProjectTaskID);
@@ -367,8 +377,6 @@ class TasksDetailsScreen extends Component {
       let sprintId = params.taskDetails.sprintId;
       this.getAllSprintInProject(selectedProjectID, sprintId);
     }
-
-    this.getTaskModalData(allDetails);
   }
 
   async fetchFilesData(projectID, taskID) {
@@ -384,15 +392,31 @@ class TasksDetailsScreen extends Component {
     }
   }
 
-  getTaskModalData(allDetails) {
+  getTaskModalData(selectedProjectTaskID, allDetails, fromParent) {
     let taskModalData = [];
     for (let index = 0; index < allDetails.length; index++) {
       const element = allDetails[index];
-      if (element.parentTask) {
-        taskModalData.push({
-          id: element.parentTask.taskId,
-          value: element.parentTask.taskName,
-        });
+      if (element.parentTask && fromParent) {
+        if (selectedProjectTaskID !== element.parentTask.taskId) {
+          taskModalData.push({
+            id: element.parentTask.taskId,
+            value: element.parentTask.taskName,
+          });
+        }
+      } else {
+        if (element.childTasks.length == 0) {
+          if(selectedProjectTaskID !== element.parentTask.taskId){
+            taskModalData.push({
+              id: element.parentTask.taskId,
+              value: element.parentTask.taskName,
+            });
+          }
+        } else {
+          taskModalData.push({
+            id: 'noData',
+            value: 'No data avilable',
+          });
+        }
       }
     }
     this.setState({taskModalData: taskModalData});
@@ -882,7 +906,13 @@ class TasksDetailsScreen extends Component {
   }
 
   setIsParent(taskResult) {
-    this.setState({isParent: taskResult.data.isParent});
+    let isParent = taskResult.data.isParent;
+    let subTaskListLength = this.state.subTaskListLength;
+    this.setState({
+      isParent: isParent,
+      addParentTaskShow: subTaskListLength > 0 ? false : true,
+      addChildTaskShow: isParent ? true : false,
+    });
   }
 
   dateView = function(item) {
@@ -1619,7 +1649,9 @@ class TasksDetailsScreen extends Component {
             }
           />
           <View style={{flex: 1}}>
-            <Text style={styles.subTaskText}>{item.taskName}</Text>
+            <Text style={styles.subTaskText} numberOfLines={1}>
+              {item.taskName}
+            </Text>
           </View>
           <View style={styles.statusView}>
             {this.dateView(item)}
@@ -1689,11 +1721,16 @@ class TasksDetailsScreen extends Component {
   }
 
   onAddTaskPress(fromParent) {
+    let selectedProjectTaskID = this.state.selectedProjectTaskID;
+    let allDetails = this.state.allDetails;
+
     this.setState({
       showTaskModal: true,
       fromParent: fromParent,
       selectedTask: fromParent ? 'Select parent task' : 'Select child task',
     });
+
+    this.getTaskModalData(selectedProjectTaskID, allDetails, fromParent);
   }
 
   onCloseTaskModal() {
@@ -1808,6 +1845,8 @@ class TasksDetailsScreen extends Component {
     let sprints = this.state.sprints;
     let secondaryTaskId = this.state.secondaryTaskId;
     let isParent = this.state.isParent;
+    let addParentTaskShow = this.state.addParentTaskShow;
+    let addChildTaskShow = this.state.addChildTaskShow;
 
     return (
       <View style={styles.backgroundImage}>
@@ -1901,16 +1940,20 @@ class TasksDetailsScreen extends Component {
               </View>
             ) : null} */}
             <View style={styles.buttonAddTaskView}>
-              <TouchableOpacity
-                style={styles.buttonAddParentTask}
-                onPress={() => this.onAddTaskPress(true)}>
-                <Text style={{color: colors.white}}>Add parent task</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.buttonAddChildTask}
-                onPress={() => this.onAddTaskPress(false)}>
-                <Text style={{color: colors.white}}>Add child task</Text>
-              </TouchableOpacity>
+              {addParentTaskShow ? (
+                <TouchableOpacity
+                  style={styles.buttonAddParentTask}
+                  onPress={() => this.onAddTaskPress(true)}>
+                  <Text style={{color: colors.white}}>Add parent task</Text>
+                </TouchableOpacity>
+              ) : null}
+              {addChildTaskShow ? (
+                <TouchableOpacity
+                  style={styles.buttonAddChildTask}
+                  onPress={() => this.onAddTaskPress(false)}>
+                  <Text style={{color: colors.white}}>Add child task</Text>
+                </TouchableOpacity>
+              ) : null}
             </View>
             <View style={styles.parentTaskView}>
               <Image
@@ -2490,8 +2533,6 @@ const styles = EStyleSheet.create({
   buttonAddTaskView: {
     flexDirection: 'row',
     marginHorizontal: '20rem',
-    marginTop: '5rem',
-    marginBottom: '12rem',
   },
   buttonAddParentTask: {
     flex: 1,
@@ -2501,6 +2542,8 @@ const styles = EStyleSheet.create({
     borderRadius: '5rem',
     justifyContent: 'center',
     alignItems: 'center',
+    marginTop: '5rem',
+    marginBottom: '12rem',
   },
   buttonAddChildTask: {
     flex: 1,
@@ -2510,6 +2553,8 @@ const styles = EStyleSheet.create({
     borderRadius: '5rem',
     justifyContent: 'center',
     alignItems: 'center',
+    marginTop: '5rem',
+    marginBottom: '12rem',
   },
   updateNotesView: {
     backgroundColor: colors.lightBlue,
