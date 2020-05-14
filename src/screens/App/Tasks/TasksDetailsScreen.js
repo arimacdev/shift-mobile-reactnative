@@ -1423,7 +1423,7 @@ class TasksDetailsScreen extends Component {
         }
       })
       .catch(error => {
-        if (error.status == 401 || error.status == 403) {
+        if (error.status == 400 || error.status == 401 || error.status == 403) {
           this.setState({dataLoading: false});
           this.showAlert('', error.data.message);
         }

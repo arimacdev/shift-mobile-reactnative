@@ -311,8 +311,8 @@ class TasksTabScreen extends Component {
       case 'bug':
         color = colors.colorCoralRed;
         break;
-      case 'oparational':
-        (color = colors), colorHeliotrope;
+      case 'operational':
+        color = colors.colorHeliotrope;
         break;
       case 'preSales':
         color = colors.colorCaribbeanGreen;
