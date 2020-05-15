@@ -1494,7 +1494,7 @@ class TasksDetailsScreen extends Component {
         }
       })
       .catch(error => {
-        if (error.status == 400 || error.status == 401 || error.status == 403) {
+        if (error.status == 401 || error.status == 403 ||  error.status == 400) {
           this.setState({dataLoading: false});
           this.showAlert('', error.data.message);
         }
@@ -2241,8 +2241,8 @@ class TasksDetailsScreen extends Component {
             {this.state.showTimePicker ? this.renderTimePicker() : null}
             {this.renderTaskModal()}
           </View>
-          {dataLoading && <Loader />}
-          <AwesomeAlert
+        </ScrollView>
+        <AwesomeAlert
             show={showAlert}
             showProgress={false}
             title={alertTitle}
@@ -2258,7 +2258,7 @@ class TasksDetailsScreen extends Component {
               this.hideAlert();
             }}
           />
-        </ScrollView>
+        {dataLoading && <Loader />}  
       </View>
     );
   }
