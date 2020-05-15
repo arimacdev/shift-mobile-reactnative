@@ -267,6 +267,7 @@ class TasksDetailsScreen extends Component {
     let subTaskListLength = params.subTaskDetails
       ? params.subTaskDetails.length
       : 0;
+    let sprintId = params.taskDetails.sprintId;
     // params.subTaskDetails.length > 0 ? this.state.subTaskList[0].length : 0;
 
     this.setState({
@@ -278,13 +279,14 @@ class TasksDetailsScreen extends Component {
       parentTaskName: params.parentTaskName,
       subTaskListLength: subTaskListLength,
       allDetails: allDetails,
+      sprintId: sprintId,
     });
 
     this.fetchData(selectedProjectID, selectedProjectTaskID);
     this.fetchFilesData(selectedProjectID, selectedProjectTaskID);
 
     if (params.isFromBoards == true) {
-      let sprintId = params.taskDetails.sprintId;
+      // let sprintId = params.taskDetails.sprintId;
       this.getAllSprintInProject(selectedProjectID, sprintId);
     }
   }
@@ -335,7 +337,18 @@ class TasksDetailsScreen extends Component {
     }
   }
 
+  onFilesCrossPress(uri) {
+    this.setState({files: []}, () => {
+      let filesArray = this.state.files.filter(item => {
+        return item.uri !== uri;
+      });
+      this.setState({files: filesArray});
+    });
+  }
+
   async doumentPicker() {
+    let selectedProjectID = this.state.selectedProjectID;
+    let selectedProjectTaskID = this.state.selectedProjectTaskID;
     // Pick multiple files
     try {
       const results = await DocumentPicker.pickMultiple({
@@ -369,14 +382,15 @@ class TasksDetailsScreen extends Component {
         uploading: 0,
       });
 
-      await APIServices.uploadFileData(
+      await APIServices.addFileToTask(
         this.state.files,
-        this.props.selectedProjectID,
+        selectedProjectTaskID,
+        selectedProjectID,
       )
         .then(response => {
           if (response.message == 'success') {
             this.setState({indeterminate: false, files: [], uploading: 100});
-            this.fetchData(this.props.selectedProjectID);
+            this.fetchFilesData(selectedProjectID, selectedProjectTaskID);
           } else {
             this.setState({indeterminate: false, files: [], uploading: 0});
           }
@@ -1604,14 +1618,14 @@ class TasksDetailsScreen extends Component {
 
   renderSubtasksList(item, index, userId, projectId) {
     return (
-      <TouchableOpacity
-        onPress={() =>
-          this.props.navigation.navigate('WorkloadTasksDetailsScreen', {
-            workloadTasksDetails: item,
-            userId: userId,
-            projectId: projectId,
-          })
-        }>
+      // <TouchableOpacity
+      //   onPress={() =>
+      //     this.props.navigation.navigate('WorkloadTasksDetailsScreen', {
+      //       workloadTasksDetails: item,
+      //       userId: userId,
+      //       projectId: projectId,
+      //     })
+      //   }>
         <View style={styles.subTasksListView}>
           <Image
             style={styles.subTasksCompletionIcon}
@@ -1631,7 +1645,7 @@ class TasksDetailsScreen extends Component {
             {this.userImage(item)}
           </View>
         </View>
-      </TouchableOpacity>
+      // </TouchableOpacity>
     );
   }
 
@@ -1719,7 +1733,7 @@ class TasksDetailsScreen extends Component {
     let selectedProjectTaskID = fromParent
       ? this.state.selectedProjectTaskID
       : this.state.selectedTaskID;
-
+    let sprintId = this.state.sprintId;
     let selectedTaskNameModal = this.state.selectedTaskName;
     let parentTaskName = this.state.parentTaskName;
     let projectTaskInitiator = this.state.projectTaskInitiator;
@@ -1734,6 +1748,9 @@ class TasksDetailsScreen extends Component {
       .then(response => {
         if (response.message == 'success') {
           this.setState({dataLoading: false});
+          this.fetchData(selectedProjectID, selectedProjectTaskID);
+          this.fetchFilesData(selectedProjectID, selectedProjectTaskID);
+          this.getAllSprintInProject(selectedProjectID, sprintId);
         } else {
           this.setState({dataLoading: false});
         }
