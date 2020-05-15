@@ -251,8 +251,6 @@ class TasksDetailsScreen extends Component {
         [{text: 'OK', onPress: () => this.props.navigation.goBack()}],
         {cancelable: false},
       );
-      // const taskID = this.props.taskId.data.taskId;
-      // this.uploadFiles(this.state.files, taskID)
     }
 
     if (
@@ -1947,37 +1945,10 @@ class TasksDetailsScreen extends Component {
         <ScrollView style={styles.backgroundImage}>
           <View>
             <View style={styles.headerView}>
-              <Text style={{color: colors.colorShuttleGrey}}>Task - </Text>
+              <Text style={styles.headerTaskText}>Task - </Text>
               <Text style={styles.headerText}> #{secondaryTaskId}</Text>
               <View style={styles.projectFilerView}>
                 <Text style={styles.statusText}>{taskStatusValue}</Text>
-                {/* <Dropdown
-                  // style={{}}
-                  label=""
-                  labelFontSize={0}
-                  data={dropData}
-                  fontSize={12}
-                  textColor={colors.white}
-                  error={''}
-                  animationDuration={0.5}
-                  containerStyle={{width: '100%', marginLeft: 17, marginTop: 2}}
-                  // overlayStyle={{width: '29%',marginLeft:100}}
-                  pickerStyle={{width: '26%', marginTop: 53, marginLeft: 115}}
-                  dropdownPosition={0}
-                  // dropdownMargins={{min: 2, max: 5}}
-                  value={taskStatus}
-                  itemColor={'black'}
-                  selectedItemColor={'black'}
-                  dropdownOffset={{top: 10}}
-                  baseColor={colors.lightBlue}
-                  // renderAccessory={this.renderBase}
-                  itemTextStyle={{
-                    marginLeft: 15,
-                    fontFamily: 'CircularStd-Book',
-                  }}
-                  itemPadding={10}
-                  onChangeText={value => this.onFilterTasksStatus(value)}
-                /> */}
               </View>
             </View>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -2002,39 +1973,8 @@ class TasksDetailsScreen extends Component {
                   resizeMode="contain"
                 />
               </TouchableOpacity>
-              {/* <Text style={styles.taskNameStyle}>{taskName}</Text> */}
             </View>
             <View style={styles.borderStyle} />
-
-            {/* {this.state.isFromBoards ? (
-              <View style={styles.projectFilerViewGreen}>
-                <Dropdown
-                  // style={{}}
-                  label=""
-                  labelFontSize={0}
-                  data={sprints}
-                  textColor={colors.white}
-                  renderAccessory={() => null}
-                  error={''}
-                  animationDuration={0.5}
-                  containerStyle={{width: '100%'}}
-                  overlayStyle={{width: '100%'}}
-                  pickerStyle={{width: '89%', marginTop: 70, marginLeft: 15}}
-                  dropdownPosition={0}
-                  value={selectedSprint}
-                  itemColor={'black'}
-                  selectedItemColor={'black'}
-                  dropdownOffset={{top: 10}}
-                  baseColor={colors.lightGreen}
-                  itemTextStyle={{
-                    marginLeft: 15,
-                    fontFamily: 'CircularStd-Book',
-                  }}
-                  itemPadding={10}
-                  onChangeText={this.onFilterSprintData}
-                />
-              </View>
-            ) : null} */}
             <View style={styles.buttonAddTaskView}>
               {addParentTaskShow ? (
                 <TouchableOpacity
@@ -2174,7 +2114,11 @@ class TasksDetailsScreen extends Component {
                     animationDuration={0.5}
                     containerStyle={{width: '100%'}}
                     overlayStyle={{width: '100%'}}
-                    pickerStyle={{width: '78.5%', marginTop: 62, marginLeft: 58}}
+                    pickerStyle={{
+                      width: '78.5%',
+                      marginTop: 62,
+                      marginLeft: 58,
+                    }}
                     dropdownPosition={0}
                     value={this.state.sprintName}
                     itemColor={'black'}
@@ -2256,27 +2200,6 @@ class TasksDetailsScreen extends Component {
               // onRefresh={() => this.onRefresh()}
               // refreshing={isFetching}
             />
-            {/* <TouchableOpacity onPress={() => this.deleteTask()}>
-              <View style={styles.buttonDelete}>
-                <Image
-                  style={[
-                    styles.bottomBarIcon,
-                    {marginRight: 15, marginLeft: 10},
-                  ]}
-                  source={icons.taskWhite}
-                  resizeMode={'center'}
-                />
-                <View style={{flex: 1}}>
-                  <Text style={styles.buttonText}>Delete Task</Text>
-                </View>
-
-                <Image
-                  style={[styles.deleteIcon, {marginRight: 10}]}
-                  source={icons.deleteWhite}
-                  resizeMode={'center'}
-                />
-              </View>
-            </TouchableOpacity> */}
             {this.state.showPicker ? this.renderDatePicker() : null}
             {this.state.showTimePicker ? this.renderTimePicker() : null}
             {this.renderTaskModal()}
@@ -2310,9 +2233,7 @@ const styles = EStyleSheet.create({
   },
   projectFilerView: {
     backgroundColor: colors.lightBlue,
-    borderRadius: 5,
-    // marginTop: '17rem',
-    // marginBottom: '12rem',
+    borderRadius: '5rem',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
@@ -2323,7 +2244,7 @@ const styles = EStyleSheet.create({
   },
   projectFilerViewGreen: {
     backgroundColor: colors.lightGreen,
-    borderRadius: 5,
+    borderRadius: '5rem',
     marginTop: '5rem',
     marginBottom: '5rem',
     flexDirection: 'row',
@@ -2335,37 +2256,27 @@ const styles = EStyleSheet.create({
   textFilter: {
     fontSize: '14rem',
     color: colors.white,
-    textAlign: 'center',
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'center',
   },
   projectView: {
-    // backgroundColor: colors.projectBgColor,
-    borderRadius: 5,
-    // height: '60rem',
+    borderRadius: '5rem',
     marginTop: '20rem',
     flexDirection: 'row',
     alignItems: 'center',
-    // paddingHorizontal: '12rem',
     marginHorizontal: '20rem',
   },
   text: {
     fontSize: '11rem',
     color: colors.projectTaskNameColor,
-    textAlign: 'center',
     fontWeight: 'bold',
-    // lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
-    // marginLeft: '10rem',
-    fontWeight: '400',
   },
   textDate: {
-    fontFamily: 'CircularStd-Book',
     fontSize: '9rem',
     fontWeight: '400',
-    textAlign: 'center',
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
@@ -2375,7 +2286,7 @@ const styles = EStyleSheet.create({
   avatarIcon: {
     width: '20rem',
     height: '20rem',
-    marginLeft: 10,
+    marginLeft: '10rem',
   },
   statusView: {
     alignItems: 'center',
@@ -2389,38 +2300,6 @@ const styles = EStyleSheet.create({
     width: '23rem',
     height: '23rem',
     marginHorizontal: '5rem',
-  },
-  bottomBarContainer: {
-    position: 'absolute',
-    bottom: 0,
-    height: 80,
-    width: '100%',
-    backgroundColor: colors.projectBgColor,
-  },
-  bottomBarInnerContainer: {
-    flexDirection: 'row',
-    height: 80,
-  },
-  bottomItemView: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'row',
-  },
-  bottomItemTouch: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: '100%',
-  },
-  horizontalLine: {
-    backgroundColor: colors.gray,
-    width: 1,
-    height: 40,
-  },
-  bottomBarIcon: {
-    width: '20rem',
-    height: '20rem',
   },
   landing: {
     flex: 1,
@@ -2456,9 +2335,14 @@ const styles = EStyleSheet.create({
     marginHorizontal: '20rem',
     marginTop: '20rem',
   },
+  headerTaskText: {
+    color: colors.colorShuttleGrey,
+    fontFamily: 'CircularStd-Medium',
+  },
   headerText: {
     fontSize: '20rem',
     fontWeight: 'bold',
+    fontFamily: 'CircularStd-Medium',
     color: colors.colorMidnightExpress,
   },
   taskNameStyle: {
@@ -2468,6 +2352,7 @@ const styles = EStyleSheet.create({
     fontWeight: 'bold',
     marginLeft: '20rem',
     marginBottom: '0rem',
+    fontFamily: 'CircularStd-Medium',
   },
   borderStyle: {
     borderWidth: '0.4rem',
@@ -2492,7 +2377,7 @@ const styles = EStyleSheet.create({
   },
   subTasksListView: {
     backgroundColor: colors.projectBgColor,
-    borderRadius: 5,
+    borderRadius: '5rem',
     height: '45rem',
     marginTop: '7rem',
     flexDirection: 'row',
@@ -2539,7 +2424,7 @@ const styles = EStyleSheet.create({
   taskTypeDropDownView: {
     flex: 1,
     backgroundColor: colors.projectBgColor,
-    borderRadius: 5,
+    borderRadius: '5rem',
     marginTop: '5rem',
     marginBottom: '5rem',
     paddingHorizontal: '12rem',
@@ -2589,7 +2474,7 @@ const styles = EStyleSheet.create({
   },
   filesView: {
     backgroundColor: colors.projectBgColor,
-    borderRadius: 5,
+    borderRadius: '5rem',
     borderWidth: 1,
     borderColor: colors.lighterGray,
     height: '50rem',
@@ -2629,6 +2514,9 @@ const styles = EStyleSheet.create({
     height: '38rem',
   },
   statusText: {
+    fontSize: '11rem',
+    fontFamily: 'CircularStd-Medium',
+    fontWeight: 'bold',
     color: colors.white,
   },
   buttonAddTaskView: {
@@ -2659,21 +2547,22 @@ const styles = EStyleSheet.create({
   },
   updateNotesView: {
     backgroundColor: colors.lightBlue,
-    height: 30,
-    width: 120,
+    height: '30rem',
+    width: '120rem',
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 5,
-    marginBottom: 20,
+    borderRadius: '5rem',
+    marginBottom: '20rem',
   },
   updateNotesText: {
     color: colors.white,
-    fontSize: 12,
+    fontSize: '11rem',
     fontWeight: 'bold',
+    fontFamily: 'CircularStd-Medium',
   },
   taskFieldDocPickView: {
     backgroundColor: colors.projectBgColor,
-    borderRadius: 5,
+    borderRadius: '5rem',
     marginTop: '15rem',
     marginBottom: '7rem',
     flexDirection: 'row',
@@ -2684,7 +2573,7 @@ const styles = EStyleSheet.create({
   },
   taskFieldView: {
     backgroundColor: colors.projectBgColor,
-    borderRadius: 5,
+    borderRadius: '5rem',
     marginTop: '15rem',
     marginBottom: '7rem',
     flexDirection: 'row',
@@ -2700,18 +2589,18 @@ const styles = EStyleSheet.create({
   addFilesText: {
     fontSize: '12rem',
     color: colors.gray,
-    textAlign: 'center',
     lineHeight: '17rem',
-    fontFamily: 'HelveticaNeuel',
+    fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
     marginLeft: '7rem',
   },
   uploadingText: {
-    marginTop: 5,
+    marginTop: '5rem',
     textAlign: 'center',
-    fontSize: 11,
+    fontSize: '11rem',
     color: colors.darkBlue,
     fontWeight: 'bold',
+    fontFamily: 'CircularStd-Medium',
   },
   ButtonViewStyle: {
     flexDirection: 'row',
@@ -2751,12 +2640,9 @@ const styles = EStyleSheet.create({
     fontFamily: 'CircularStd-Medium',
   },
   modalStyle: {
-    // backgroundColor: colors.white,
-    // marginVertical: 50,
-    marginBottom: 250,
+    marginBottom: '250rem',
   },
   taskModalDropDownView: {
-    // flex: 1,
     backgroundColor: colors.projectBgColor,
     borderRadius: '5rem',
     marginTop: '5rem',
@@ -2786,10 +2672,10 @@ const styles = EStyleSheet.create({
   },
   progressBarView: {
     width: '100%',
-    height: 50,
-    borderRadius: 5,
-    marginRight: 5,
-    marginTop: 5,
+    height: '50rem',
+    borderRadius: '5rem',
+    marginRight: '5rem',
+    marginTop: '5rem',
     justifyContent: 'center',
   },
 });
