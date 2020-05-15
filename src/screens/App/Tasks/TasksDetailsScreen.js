@@ -217,6 +217,8 @@ class TasksDetailsScreen extends Component {
       addChildTaskShow: false,
       subTaskListLength: 0,
       allDetails: [],
+      taskResult: [],
+      taskNameEditable: false,
     };
   }
 
@@ -554,15 +556,7 @@ class TasksDetailsScreen extends Component {
 
   renderDocPickeredView() {
     return (
-      <View
-        style={{
-          width: '100%',
-          height: 50,
-          borderRadius: 5,
-          marginRight: 5,
-          marginTop: 5,
-          justifyContent: 'center',
-        }}>
+      <View style={styles.progressBarView}>
         <Progress.Bar
           progress={0.0}
           indeterminate={this.state.indeterminate}
@@ -669,7 +663,7 @@ class TasksDetailsScreen extends Component {
         this.setTaskNote(taskResult);
         this.setIsParent(taskResult);
         this.setIssueType(taskResult);
-        this.setState({dataLoading: false});
+        this.setState({dataLoading: false, taskResult: taskResult});
       } else {
         this.setState({dataLoading: false});
       }
@@ -941,21 +935,21 @@ class TasksDetailsScreen extends Component {
     let newDate = '';
     let newDateValue = '';
     if (this.state.reminder) {
-      newDate = moment(date1).format('Do MMMM YYYY');
+      newDate = moment(date1).format('MMMM DD, YYYY');
       newDateValue = moment(date1).format('DD MM YYYY');
     } else {
-      newDate = moment(date1).format('Do MMMM YYYY');
+      newDate = moment(date1).format('MMMM DD, YYYY');
       newDateValue = moment(date1).format('DD MM YYYY');
     }
     if (this.state.reminder) {
       this.setState({
-        remindDate: 'Remind on ' + newDate,
+        remindDate: newDate,
         remindDateValue: newDateValue,
         dateReminder: new Date(date1),
       });
     } else {
       this.setState({
-        duedate: 'Due On ' + newDate,
+        duedate: newDate,
         duedateValue: newDateValue,
         date: new Date(date1),
       });
@@ -1046,6 +1040,7 @@ class TasksDetailsScreen extends Component {
         showPicker: false,
         showTimePicker: false,
       });
+      this.setDueDate(this.state.taskResult);
     }
   }
 
@@ -1080,6 +1075,7 @@ class TasksDetailsScreen extends Component {
         showPicker: false,
         showTimePicker: false,
       });
+      this.setDueDate(this.state.taskResult);
     }
   }
 
@@ -1247,13 +1243,13 @@ class TasksDetailsScreen extends Component {
         break;
       case 2:
         value =
-          this.state.duedate !== ''
+          this.state.duedate !== '' && this.state.dueTime !== ''
             ? this.state.duedate + ' : ' + this.state.dueTime
             : '';
         break;
       case 3:
         value =
-          this.state.remindDate !== ''
+          this.state.remindDate !== '' && this.state.reminderTime !== ''
             ? this.state.remindDate + ' : ' + this.state.reminderTime
             : '';
         break;
@@ -1405,11 +1401,7 @@ class TasksDetailsScreen extends Component {
     this.setState({dataLoading: true});
     let projectID = this.state.selectedProjectID;
     let taskID = this.state.selectedProjectTaskID;
-    resultData = await APIServices.updateTaskAssigneeData(
-      projectID,
-      taskID,
-      userID,
-    )
+    await APIServices.updateTaskAssigneeData(projectID, taskID, userID)
       .then(response => {
         if (response.message == 'success') {
           this.setState({dataLoading: false, name: name});
@@ -1430,7 +1422,7 @@ class TasksDetailsScreen extends Component {
     this.setState({dataLoading: true});
     let projectID = this.state.selectedProjectID;
     let taskID = this.state.selectedProjectTaskID;
-    resultData = await APIServices.updateTaskStatusData(
+    await APIServices.updateTaskStatusData(
       projectID,
       taskID,
       selectedTaskStatusId,
@@ -1455,10 +1447,10 @@ class TasksDetailsScreen extends Component {
 
   // change name of task API
   async onTaskNameChangeSubmit(text) {
-    this.setState({dataLoading: true});
+    this.setState({dataLoading: true, taskNameEditable: false});
     let projectID = this.state.selectedProjectID;
     let taskID = this.state.selectedProjectTaskID;
-    resultData = await APIServices.updateTaskNameData(projectID, taskID, text)
+    await APIServices.updateTaskNameData(projectID, taskID, text)
       .then(response => {
         if (response.message == 'success') {
           this.setState({dataLoading: false});
@@ -1486,11 +1478,7 @@ class TasksDetailsScreen extends Component {
         )
       : '';
 
-    resultData = await APIServices.updateTaskDueDateData(
-      projectID,
-      taskID,
-      IsoDueDate,
-    )
+    await APIServices.updateTaskDueDateData(projectID, taskID, IsoDueDate)
       .then(response => {
         if (response.message == 'success') {
           this.setState({dataLoading: false});
@@ -1519,7 +1507,7 @@ class TasksDetailsScreen extends Component {
           )
         : '';
 
-      resultData = await APIServices.updateTaskReminderDateData(
+      let resultData = await APIServices.updateTaskReminderDateData(
         projectID,
         taskID,
         IsoReminderDate,
@@ -1626,25 +1614,25 @@ class TasksDetailsScreen extends Component {
       //       projectId: projectId,
       //     })
       //   }>
-        <View style={styles.subTasksListView}>
-          <Image
-            style={styles.subTasksCompletionIcon}
-            source={
-              item.taskStatus == 'closed'
-                ? icons.rightCircule
-                : icons.whiteCircule
-            }
-          />
-          <View style={{flex: 1}}>
-            <Text style={styles.subTaskText} numberOfLines={1}>
-              {item.taskName}
-            </Text>
-          </View>
-          <View style={styles.statusView}>
-            {this.dateView(item)}
-            {this.userImage(item)}
-          </View>
+      <View style={styles.subTasksListView}>
+        <Image
+          style={styles.subTasksCompletionIcon}
+          source={
+            item.taskStatus == 'closed'
+              ? icons.rightCircule
+              : icons.whiteCircule
+          }
+        />
+        <View style={{flex: 1}}>
+          <Text style={styles.subTaskText} numberOfLines={1}>
+            {item.taskName}
+          </Text>
         </View>
+        <View style={styles.statusView}>
+          {this.dateView(item)}
+          {this.userImage(item)}
+        </View>
+      </View>
       // </TouchableOpacity>
     );
   }
@@ -1838,6 +1826,11 @@ class TasksDetailsScreen extends Component {
     );
   }
 
+  async onTaskNameEditPress() {
+    await this.setState({taskNameEditable: true});
+    this.taskNameTextInput.focus();
+  }
+
   render() {
     let taskStatusValue = this.state.taskStatusValue;
     let dataLoading = this.state.dataLoading;
@@ -1905,16 +1898,28 @@ class TasksDetailsScreen extends Component {
                 /> */}
               </View>
             </View>
-            <View>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <TextInput
+                ref={input => {
+                  this.taskNameTextInput = input;
+                }}
                 style={[styles.taskNameStyle]}
                 placeholder={'Task name'}
                 value={this.state.taskName}
+                editable={this.state.taskNameEditable}
+                onBlur={() => this.onTaskNameChangeSubmit(this.state.taskName)}
                 onChangeText={text => this.onTaskNameChange(text)}
                 onSubmitEditing={() =>
                   this.onTaskNameChangeSubmit(this.state.taskName)
                 }
               />
+              <TouchableOpacity onPress={() => this.onTaskNameEditPress()}>
+                <Image
+                  style={styles.iconEdit}
+                  source={icons.editRoundedBlue}
+                  resizeMode="contain"
+                />
+              </TouchableOpacity>
               {/* <Text style={styles.taskNameStyle}>{taskName}</Text> */}
             </View>
             <View style={styles.borderStyle} />
@@ -1958,7 +1963,10 @@ class TasksDetailsScreen extends Component {
               ) : null}
               {addChildTaskShow ? (
                 <TouchableOpacity
-                  style={styles.buttonAddChildTask}
+                  style={[
+                    styles.buttonAddChildTask,
+                    {marginLeft: addParentTaskShow && addChildTaskShow ? 7 : 0},
+                  ]}
                   onPress={() => this.onAddTaskPress(false)}>
                   <Text style={{color: colors.white}}>Add child task</Text>
                 </TouchableOpacity>
@@ -2372,10 +2380,11 @@ const styles = EStyleSheet.create({
     color: colors.colorMidnightExpress,
   },
   taskNameStyle: {
+    flex: 1,
     color: colors.colorLightSlateGrey,
     fontSize: '14rem',
     fontWeight: 'bold',
-    marginHorizontal: '20rem',
+    marginLeft: '20rem',
     marginBottom: '0rem',
   },
   borderStyle: {
@@ -2687,6 +2696,19 @@ const styles = EStyleSheet.create({
   modalHeadderText: {
     fontSize: '16rem',
     fontFamily: 'CircularStd-Medium',
+  },
+  iconEdit: {
+    width: '20rem',
+    height: '20rem',
+    marginRight: '20rem',
+  },
+  progressBarView: {
+    width: '100%',
+    height: 50,
+    borderRadius: 5,
+    marginRight: 5,
+    marginTop: 5,
+    justifyContent: 'center',
   },
 });
 
