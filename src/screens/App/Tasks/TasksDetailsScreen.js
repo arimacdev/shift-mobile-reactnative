@@ -220,6 +220,7 @@ class TasksDetailsScreen extends Component {
       taskResult: [],
       taskNameEditable: false,
       sprintId: '',
+      taskModalDataID: '',
     };
   }
 
@@ -252,6 +253,17 @@ class TasksDetailsScreen extends Component {
       );
       // const taskID = this.props.taskId.data.taskId;
       // this.uploadFiles(this.state.files, taskID)
+    }
+
+    if (
+      prevProps.allTaskByProjectLoading !==
+        this.props.allTaskByProjectLoading &&
+      this.props.allTaskByProject &&
+      this.props.allTaskByProject.length > 0
+    ) {
+      this.setState({
+        allDetails: this.props.allTaskByProject,
+      });
     }
   }
 
@@ -309,6 +321,7 @@ class TasksDetailsScreen extends Component {
 
   getTaskModalData(selectedProjectTaskID, allDetails, fromParent) {
     let taskModalData = [];
+    this.setState({taskModalData: []});
     for (let index = 0; index < allDetails.length; index++) {
       const element = allDetails[index];
       if (element.parentTask && fromParent) {
@@ -320,7 +333,10 @@ class TasksDetailsScreen extends Component {
         }
       } else {
         if (element.childTasks.length == 0) {
-          if (selectedProjectTaskID !== element.parentTask.taskId) {
+          if (
+            selectedProjectTaskID !== element.parentTask.taskId
+            // && this.state.taskModalDataID !== element.parentTask.taskId
+          ) {
             taskModalData.push({
               id: element.parentTask.taskId,
               value: element.parentTask.taskName,
@@ -1718,6 +1734,16 @@ class TasksDetailsScreen extends Component {
     });
   };
 
+  async getAllTaskInProject() {
+    this.setState({
+      filterType: 'None',
+    });
+    let selectedProjectID = this.state.selectedProjectID;
+    AsyncStorage.getItem('userID').then(userID => {
+      this.props.getAllTaskInProjects(userID, selectedProjectID);
+    });
+  }
+
   async getChildTasksOfParent(selectedProjectID, newParent, selectedTaskID) {
     await APIServices.getChildTasksOfParentData(selectedProjectID, newParent)
       .then(async response => {
@@ -1731,12 +1757,15 @@ class TasksDetailsScreen extends Component {
           this.fetchData(selectedProjectID, newParent);
           this.fetchFilesData(selectedProjectID, newParent);
           this.getAllSprintInProject(selectedProjectID, this.state.sprintId);
-
-          let taskModalData = [];
-          taskModalData = this.state.taskModalData.filter(item => {
-            return item.taskId !== selectedTaskID;
-          });
-          this.setState({taskModalData:taskModalData})
+          this.getAllTaskInProject();
+          // let taskModalData = [];
+          // taskModalData = this.state.taskModalData.filter(item => {
+          //   return item.id == selectedTaskID;
+          // });
+          // this.setState({
+          //   taskModalDataID: taskModalData[0].id,
+          //   taskModalData: [],
+          // });
         } else {
           this.setState({dataLoading: false});
         }
@@ -1760,7 +1789,7 @@ class TasksDetailsScreen extends Component {
       : this.state.selectedTaskID;
 
     let selectedTaskNameModal = this.state.selectedTaskName;
-    let parentTaskName = this.state.parentTaskName;
+    let parentTaskName = this.state.selectedTaskName;
     let projectTaskInitiator = this.state.projectTaskInitiator;
 
     this.setState({showTaskModal: false});
@@ -1773,11 +1802,22 @@ class TasksDetailsScreen extends Component {
       .then(response => {
         if (response.message == 'success') {
           this.setState({dataLoading: false});
-          this.getChildTasksOfParent(
-            selectedProjectID,
-            this.state.selectedProjectTaskID,
-            this.state.selectedTaskID,
-          );
+          if (fromParent) {
+            this.fetchData(selectedProjectID, this.state.selectedProjectTaskID);
+            this.fetchFilesData(
+              selectedProjectID,
+              this.state.selectedProjectTaskID,
+            );
+            this.getAllSprintInProject(selectedProjectID, this.state.sprintId);
+            this.getAllTaskInProject();
+            this.setState({parentTaskName: parentTaskName});
+          } else {
+            this.getChildTasksOfParent(
+              selectedProjectID,
+              this.state.selectedProjectTaskID,
+              this.state.selectedTaskID,
+            );
+          }
           // this.fetchData(selectedProjectID, this.state.selectedProjectTaskID);
           // this.fetchFilesData(selectedProjectID, this.state.selectedProjectTaskID);
           // this.getAllSprintInProject(selectedProjectID, this.state.sprintId);
@@ -2760,6 +2800,8 @@ const mapStateToProps = state => {
     deleteTaskSuccess: state.project.deleteTaskSuccess,
     deleteTaskError: state.project.deleteTaskError,
     deleteTaskErrorMessage: state.project.deleteTaskErrorMessage,
+    allTaskByProjectLoading: state.project.allTaskByProjectLoading,
+    allTaskByProject: state.project.allTaskByProject,
   };
 };
 export default connect(
