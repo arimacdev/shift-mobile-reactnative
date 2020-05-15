@@ -433,7 +433,7 @@ class TasksTabScreen extends Component {
           onPress={() =>
             this.props.navigation.navigate('TasksDetailsScreen', {
               taskDetails: item.parentTask,
-              subTaskDetails: item.childTasks,
+              // subTaskDetails: item.childTasks,
               selectedProjectID: selectedProjectID,
               selectedProjectName: selectedProjectName,
               isFromBoards: true,
@@ -544,6 +544,8 @@ class TasksTabScreen extends Component {
   renderMyTasksAndFilterTaskList(item, indexMain) {
     let selectedProjectID = this.state.selectedProjectID;
     let selectedProjectName = this.state.selectedProjectName;
+    let parentTaskName = item.taskName;
+
     return (
       <TouchableOpacity
         onPress={() =>
@@ -552,6 +554,9 @@ class TasksTabScreen extends Component {
             selectedProjectID: selectedProjectID,
             isFromBoards: true,
             selectedProjectName: selectedProjectName,
+            parentTaskName: parentTaskName,
+            allDetails: this.state.filterdDataAllTaks,
+            fromMyTask:true
           })
         }>
         <View
