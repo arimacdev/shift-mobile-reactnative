@@ -2174,7 +2174,7 @@ class TasksDetailsScreen extends Component {
                     animationDuration={0.5}
                     containerStyle={{width: '100%'}}
                     overlayStyle={{width: '100%'}}
-                    pickerStyle={{width: '89%', marginTop: 70, marginLeft: 15}}
+                    pickerStyle={{width: '78.5%', marginTop: 62, marginLeft: 58}}
                     dropdownPosition={0}
                     value={this.state.sprintName}
                     itemColor={'black'}
