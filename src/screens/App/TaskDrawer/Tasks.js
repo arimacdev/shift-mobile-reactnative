@@ -105,7 +105,8 @@ class Tasks extends Component {
       this.setState({
         dataLoading:false,
         allDataAllTaks:allTaskData.data,
-        filterdDataAllTaks:allTaskData.data
+        filterdDataAllTaks:allTaskData.data,
+        filter : false
       });   
     }else{
       this.setState({dataLoading:false});
@@ -506,6 +507,7 @@ class Tasks extends Component {
             }
             
           </View>
+          {/* view task list with child parent view */}
           {!filter &&  filterdDataAllTaks.length > 0 &&
           <View style={styles.subContainer}>
               <FlatList
@@ -516,6 +518,7 @@ class Tasks extends Component {
               />
             </View>    
           }
+          {/* view task list one by one */}
           {filter && filterdDataAllTaks.length > 0 &&
               <View style={styles.subContainer}>
                 <FlatList

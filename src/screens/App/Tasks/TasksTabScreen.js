@@ -145,6 +145,8 @@ class TasksTabScreen extends Component {
         {
           selectedProjectID: selectedProjectID,
           selectedProjectName: selectedProjectName,
+          filterType: 'None',
+          filter:false,
         },
         () => {
           this.getAllTaskInProject();
