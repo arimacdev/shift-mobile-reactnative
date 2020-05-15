@@ -221,7 +221,7 @@ class TasksDetailsScreen extends Component {
       taskNameEditable: false,
       sprintId: '',
       taskModalDataID: '',
-      fromMyTask:false
+      fromMyTask: false,
     };
   }
 
@@ -282,7 +282,7 @@ class TasksDetailsScreen extends Component {
     //   ? params.subTaskDetails.length
     //   : 0;
     let sprintId = params.taskDetails.sprintId;
-    let fromMyTask = params.fromMyTask ? params.fromMyTask : false
+    let fromMyTask = params.fromMyTask ? params.fromMyTask : false;
     // params.subTaskDetails.length > 0 ? this.state.subTaskList[0].length : 0;
 
     this.setState({
@@ -295,7 +295,7 @@ class TasksDetailsScreen extends Component {
       // subTaskListLength: subTaskListLength,
       allDetails: allDetails,
       sprintId: sprintId,
-      fromMyTask:fromMyTask
+      fromMyTask: fromMyTask,
     });
 
     this.fetchData(selectedProjectID, selectedProjectTaskID);
@@ -331,8 +331,10 @@ class TasksDetailsScreen extends Component {
             dataLoading: false,
             subTaskList: response.data ? [response.data] : [],
             subTaskListLength: response.data ? response.data.length : 0,
-            addParentTaskShow: response.data && response.data.length > 0 ? false : true,
-            addChildTaskShow: this.state.isParent && !this.state.fromMyTask ? true : false,
+            addParentTaskShow:
+              response.data && response.data.length > 0 ? false : true,
+            addChildTaskShow:
+              this.state.isParent && !this.state.fromMyTask ? true : false,
           });
         } else {
           this.setState({dataLoading: false});
@@ -913,8 +915,8 @@ class TasksDetailsScreen extends Component {
         addChildTaskShow: false,
       });
     }
-    
-    if(isParent){
+
+    if (isParent) {
       this.getSubTAskDetails();
     }
   }
@@ -1835,14 +1837,14 @@ class TasksDetailsScreen extends Component {
         if (response.message == 'success') {
           this.setState({dataLoading: false});
           // if (fromParent) {
-            this.fetchData(selectedProjectID, this.state.selectedProjectTaskID);
-            this.fetchFilesData(
-              selectedProjectID,
-              this.state.selectedProjectTaskID,
-            );
-            // this.getAllSprintInProject(selectedProjectID, this.state.sprintId);
-            this.getAllTaskInProject();
-            this.setState({parentTaskName: parentTaskName});
+          this.fetchData(selectedProjectID, this.state.selectedProjectTaskID);
+          this.fetchFilesData(
+            selectedProjectID,
+            this.state.selectedProjectTaskID,
+          );
+          // this.getAllSprintInProject(selectedProjectID, this.state.sprintId);
+          this.getAllTaskInProject();
+          this.setState({parentTaskName: parentTaskName});
           // } else {
           //   this.getChildTasksOfParent(
           //     selectedProjectID,
