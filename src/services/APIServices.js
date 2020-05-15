@@ -2253,7 +2253,7 @@ async function uplaodProfilePhoto(file) {
   );
 }
 
-async function updateParentToChild(projectId, taskId, taskName, taskInitiator) {
+async function updateParentToChild(projectId, taskId, newParent) {
   let userIDHeder = null;
   userIDHeder = await AsyncStorage.getItem('userID');
 
@@ -2268,9 +2268,7 @@ async function updateParentToChild(projectId, taskId, taskName, taskInitiator) {
       url: UPDATE_PARENT_TO_CHILD + '/' + projectId + '/tasks/' + taskId + '/parent/transition',
       method: 'PUT',
       data: {
-         taskName: taskName, 
-         projectId: projectId, 
-         taskInitiator: taskInitiator
+         newParent: newParent,
       },
     },
     true,

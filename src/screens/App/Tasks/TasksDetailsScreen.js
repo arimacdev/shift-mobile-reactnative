@@ -109,8 +109,7 @@ let taskStatusData = [
   {value: 'Wating response', id: 'waitingResponse'},
   {value: 'Rejected', id: 'rejected'},
   {value: 'Closed', id: 'closed'},
-]
-
+];
 
 let taskDataWhenParentIsBoard = [
   // {
@@ -683,14 +682,18 @@ class TasksDetailsScreen extends Component {
 
   setSprintDroupDownSelectedValue(sprintData, selectedSprintID) {
     if (selectedSprintID == 'default') {
-      this.setState({selectedSprint: 'Default', previousSprintID: 'default',sprintName: 'Default'});
+      this.setState({
+        selectedSprint: 'Default',
+        previousSprintID: 'default',
+        sprintName: 'Default',
+      });
     } else {
       let selectedSprint = sprintData.find(
         ({sprintId}) => sprintId == selectedSprintID,
       );
       if (selectedSprint) {
         this.setState({
-          sprintName : selectedSprint.sprintName,
+          sprintName: selectedSprint.sprintName,
           selectedSprint: selectedSprint.sprintName,
           previousSprintID: selectedSprint.sprintId,
         });
@@ -750,9 +753,9 @@ class TasksDetailsScreen extends Component {
       case 'completed':
         statusValue = 'Completed';
       case 'underReview':
-        statusValue = 'Under review';  
+        statusValue = 'Under review';
         break;
-     case 'waitingForApproval':
+      case 'waitingForApproval':
         statusValue = 'Wating for approval';
         break;
       case 'review':
@@ -764,8 +767,8 @@ class TasksDetailsScreen extends Component {
       case 'rejected':
         statusValue = 'Rejected';
       case 'closed':
-        statusValue = 'Closed';  
-        break;   
+        statusValue = 'Closed';
+        break;
     }
     this.setState({
       taskStatusValue: statusValue,
@@ -846,7 +849,7 @@ class TasksDetailsScreen extends Component {
       addChildTaskShow: isParent ? true : false,
     });
 
-    if(!isParent){
+    if (!isParent) {
       this.setState({
         addParentTaskShow: false,
         addChildTaskShow: false,
@@ -854,8 +857,7 @@ class TasksDetailsScreen extends Component {
     }
   }
 
-  setIssueType(taskResult){
-
+  setIssueType(taskResult) {
     let value = taskResult.data.issueType;
     let issueTypeValue = '';
     switch (value) {
@@ -1357,11 +1359,15 @@ class TasksDetailsScreen extends Component {
   }
 
   // change issue typ of task API
-  async onChangeIssueType(selectedIssueTypeId,selectedIssueTypeName) {
+  async onChangeIssueType(selectedIssueTypeId, selectedIssueTypeName) {
     this.setState({dataLoading: true});
     let projectID = this.state.selectedProjectID;
     let taskID = this.state.selectedProjectTaskID;
-    await APIServices.updateTaskIssueTypeData(projectID, taskID, selectedIssueTypeId)
+    await APIServices.updateTaskIssueTypeData(
+      projectID,
+      taskID,
+      selectedIssueTypeId,
+    )
       .then(response => {
         if (response.message == 'success') {
           this.setState({
@@ -1406,7 +1412,7 @@ class TasksDetailsScreen extends Component {
   }
 
   // change status of task API
-  async onChangeTaskStatus(selectedTaskStatusId,selectedTaskStatusName) {
+  async onChangeTaskStatus(selectedTaskStatusId, selectedTaskStatusName) {
     this.setState({dataLoading: true});
     let projectID = this.state.selectedProjectID;
     let taskID = this.state.selectedProjectTaskID;
@@ -1417,7 +1423,10 @@ class TasksDetailsScreen extends Component {
     )
       .then(response => {
         if (response.message == 'success') {
-          this.setState({dataLoading: false, taskStatusValue: selectedTaskStatusName});
+          this.setState({
+            dataLoading: false,
+            taskStatusValue: selectedTaskStatusName,
+          });
         } else {
           this.setState({dataLoading: false});
         }
@@ -1645,14 +1654,14 @@ class TasksDetailsScreen extends Component {
   onFilterTaskTypes = (value, index, data) => {
     const selectedIssueTypeId = data[index].id;
     let selectedIssueTypeName = data[index].value;
-    this.onChangeIssueType(selectedIssueTypeId,selectedIssueTypeName)
+    this.onChangeIssueType(selectedIssueTypeId, selectedIssueTypeName);
   };
 
-  onFilterTaskStatusData =  (value, index, data) => {
+  onFilterTaskStatusData = (value, index, data) => {
     const selectedTaskStatusId = data[index].id;
     let selectedTaskStatusName = data[index].value;
-    this.onChangeTaskStatus(selectedTaskStatusId,selectedTaskStatusName)
-  }
+    this.onChangeTaskStatus(selectedTaskStatusId, selectedTaskStatusName);
+  };
 
   onTaskDeketePress() {
     this.deleteTask();
@@ -1701,11 +1710,17 @@ class TasksDetailsScreen extends Component {
     });
   };
 
-  async onSavePress() {
+  async onSavePress(fromParent) {
     let selectedProjectID = this.state.selectedProjectID;
-    let selectedTaskIdModal = this.state.selectedTaskID;
+    let newParent = fromParent
+      ? this.state.selectedTaskID
+      : this.state.selectedProjectTaskID;
+
+    let selectedProjectTaskID = fromParent
+      ? this.state.selectedProjectTaskID
+      : this.state.selectedTaskID;
+
     let selectedTaskNameModal = this.state.selectedTaskName;
-    let selectedProjectTaskID = this.state.selectedProjectTaskID;
     let parentTaskName = this.state.parentTaskName;
     let projectTaskInitiator = this.state.projectTaskInitiator;
 
@@ -1714,8 +1729,7 @@ class TasksDetailsScreen extends Component {
     await APIServices.updateParentToChild(
       selectedProjectID,
       selectedProjectTaskID,
-      parentTaskName,
-      projectTaskInitiator,
+      newParent,
     )
       .then(response => {
         if (response.message == 'success') {
@@ -1798,7 +1812,7 @@ class TasksDetailsScreen extends Component {
                 },
               ]}
               disabled={this.getDisabledStaus()}
-              onPress={() => this.onSavePress()}>
+              onPress={() => this.onSavePress(fromParent)}>
               <Text style={styles.saveTextStyle}>Save</Text>
             </TouchableOpacity>
           </View>
