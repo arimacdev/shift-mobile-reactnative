@@ -741,6 +741,10 @@ class TasksTabScreen extends Component {
   }
 
   async tabOpenTaskTab() {
+    
+  }
+
+  async componentDidMount() {
     let selectedProjectID = this.props.selectedProjectID;
     let selectedProjectName = this.props.projDetails.projectName;
     this.setState(
