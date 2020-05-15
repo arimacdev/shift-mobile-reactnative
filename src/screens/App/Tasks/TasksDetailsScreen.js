@@ -219,6 +219,7 @@ class TasksDetailsScreen extends Component {
       allDetails: [],
       taskResult: [],
       taskNameEditable: false,
+      sprintId: '',
     };
   }
 
@@ -663,6 +664,7 @@ class TasksDetailsScreen extends Component {
         this.setTaskNote(taskResult);
         this.setIsParent(taskResult);
         this.setIssueType(taskResult);
+        this.setSprintId(taskResult);
         this.setState({dataLoading: false, taskResult: taskResult});
       } else {
         this.setState({dataLoading: false});
@@ -719,6 +721,10 @@ class TasksDetailsScreen extends Component {
 
   setSecondaryTaskId(taskResult) {
     this.setState({secondaryTaskId: taskResult.data.secondaryTaskId});
+  }
+
+  setSprintId(taskResult) {
+    this.setState({sprintId: taskResult.data.sprintId});
   }
 
   hideAlert() {
@@ -1323,25 +1329,25 @@ class TasksDetailsScreen extends Component {
     selectedProjectTaskID,
   ) {
     this.setState({dataLoading: true});
-    try {
-      resultObj = await APIServices.changeSprint(
-        selectedId,
-        previousSprintID,
-        selectedProjectID,
-        selectedProjectTaskID,
-      );
-      if (resultObj.message == 'success') {
-        this.setState({dataLoading: false, sprintName: selectedName});
-      } else {
-        this.setState({dataLoading: false});
-        this.showAlert('', 'Error');
-      }
-    } catch (e) {
-      if (e.status == 401 || e.status == 403) {
-        this.setState({dataLoading: false});
-        this.showAlert('', e.data.message);
-      }
-    }
+    await APIServices.changeSprint(
+      selectedId,
+      previousSprintID,
+      selectedProjectID,
+      selectedProjectTaskID,
+    )
+      .then(response => {
+        if (response.message == 'success') {
+          this.setState({dataLoading: false, sprintName: selectedName});
+        } else {
+          this.setState({dataLoading: false});
+        }
+      })
+      .catch(error => {
+        if (error.status == 401 || error.status == 403) {
+          this.setState({dataLoading: false});
+          this.showAlert('', error.data.message);
+        }
+      });
   }
 
   async changeTaskNote(note) {
@@ -1712,6 +1718,37 @@ class TasksDetailsScreen extends Component {
     });
   };
 
+  async getChildTasksOfParent(selectedProjectID, newParent, selectedTaskID) {
+    await APIServices.getChildTasksOfParentData(selectedProjectID, newParent)
+      .then(async response => {
+        if (response.message == 'success') {
+          await this.setState({
+            dataLoading: false,
+            subTaskList: response.data ? [response.data] : [],
+            subTaskListLength: response.data ? response.data.length : 0,
+            selectedProjectTaskID: newParent,
+          });
+          this.fetchData(selectedProjectID, newParent);
+          this.fetchFilesData(selectedProjectID, newParent);
+          this.getAllSprintInProject(selectedProjectID, this.state.sprintId);
+
+          let taskModalData = [];
+          taskModalData = this.state.taskModalData.filter(item => {
+            return item.taskId !== selectedTaskID;
+          });
+          this.setState({taskModalData:taskModalData})
+        } else {
+          this.setState({dataLoading: false});
+        }
+      })
+      .catch(error => {
+        if (error.status == 401 || error.status == 403) {
+          this.setState({dataLoading: false});
+          this.showAlert('', error.data.message);
+        }
+      });
+  }
+
   async onSavePress(fromParent) {
     let selectedProjectID = this.state.selectedProjectID;
     let newParent = fromParent
@@ -1721,7 +1758,7 @@ class TasksDetailsScreen extends Component {
     let selectedProjectTaskID = fromParent
       ? this.state.selectedProjectTaskID
       : this.state.selectedTaskID;
-    let sprintId = this.state.sprintId;
+
     let selectedTaskNameModal = this.state.selectedTaskName;
     let parentTaskName = this.state.parentTaskName;
     let projectTaskInitiator = this.state.projectTaskInitiator;
@@ -1736,9 +1773,14 @@ class TasksDetailsScreen extends Component {
       .then(response => {
         if (response.message == 'success') {
           this.setState({dataLoading: false});
-          this.fetchData(selectedProjectID, selectedProjectTaskID);
-          this.fetchFilesData(selectedProjectID, selectedProjectTaskID);
-          this.getAllSprintInProject(selectedProjectID, sprintId);
+          this.getChildTasksOfParent(
+            selectedProjectID,
+            this.state.selectedProjectTaskID,
+            this.state.selectedTaskID,
+          );
+          // this.fetchData(selectedProjectID, this.state.selectedProjectTaskID);
+          // this.fetchFilesData(selectedProjectID, this.state.selectedProjectTaskID);
+          // this.getAllSprintInProject(selectedProjectID, this.state.sprintId);
         } else {
           this.setState({dataLoading: false});
         }

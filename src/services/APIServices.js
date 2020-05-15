@@ -64,7 +64,8 @@ import {
   VIEW_ALL_TASK_BY_GROUP_DATA,
   UPLOAD_USER_PROFILE,
   UPDATE_PARENT_TO_CHILD,
-  GET_TASK_LOG
+  GET_TASK_LOG,
+  GET_CHILD_TASK_OF_PARENT
 } from '../api/API';
 import AsyncStorage from '@react-native-community/async-storage';
 import {SET_UPLOAD_PROGRESS} from '../redux/types';
@@ -2319,6 +2320,26 @@ async function getTaskLogData(taskId) {
     );
   }
 
+  async function getChildTasksOfParentData(selectedProjectID, taskId) {
+    let userID = null;
+    userID = await AsyncStorage.getItem('userID');
+  
+    let headers = {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      user: userID,
+    };
+  
+    return request(
+      {
+        url: GET_CHILD_TASK_OF_PARENT + '/' + selectedProjectID + '/tasks/'+ taskId +'/children',
+        method: 'GET',
+      },
+      true,
+      headers,
+    );
+  }
+
 const APIServices = {
   getAllProjectsByUserData,
   getUserData,
@@ -2409,7 +2430,8 @@ const APIServices = {
   uplaodProfilePhoto,
   updateParentToChild,
   getTaskLogData,
-  updateTaskIssueTypeData
+  updateTaskIssueTypeData,
+  getChildTasksOfParentData
 };
 
 export default APIServices;
