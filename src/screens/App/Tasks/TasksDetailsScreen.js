@@ -2139,38 +2139,40 @@ class TasksDetailsScreen extends Component {
               </View>
               <View style={styles.taskTypeDropMainView}>
                 <View style={styles.taskTypeDropDownView}>
-                  <Dropdown
-                    // style={{}}
-                    label=""
-                    labelFontSize={0}
-                    data={sprints}
-                    textColor={colors.black}
-                    fontSize={14}
-                    renderAccessory={() => null}
-                    error={''}
-                    animationDuration={0.5}
-                    containerStyle={{width: '100%'}}
-                    overlayStyle={{width: '100%'}}
-                    pickerStyle={{
-                      width: '78.5%',
-                      marginTop: 62,
-                      marginLeft: 58,
-                    }}
-                    dropdownPosition={0}
-                    value={this.state.sprintName}
-                    itemColor={'black'}
-                    selectedItemColor={'black'}
-                    dropdownOffset={{top: 10}}
-                    baseColor={colors.projectBgColor}
-                    renderAccessory={this.renderBase}
-                    itemTextStyle={{
-                      marginLeft: 15,
-                      fontFamily: 'CircularStd-Book',
-                    }}
-                    itemPadding={10}
-                    onChangeText={this.onFilterSprintData}
-                    //disabled={isParent ? false : true}
-                  />
+                  {
+                    isParent ?
+                    <Dropdown
+                      // style={{}}
+                      label=""
+                      labelFontSize={0}
+                      data={sprints}
+                      textColor={colors.black}
+                      fontSize={14}
+                      renderAccessory={() => null}
+                      error={''}
+                      animationDuration={0.5}
+                      containerStyle={{width: '100%'}}
+                      overlayStyle={{width: '100%'}}
+                      pickerStyle={{width: '89%', marginTop: 70, marginLeft: 15}}
+                      dropdownPosition={0}
+                      value={this.state.sprintName}
+                      itemColor={'black'}
+                      selectedItemColor={'black'}
+                      dropdownOffset={{top: 10}}
+                      baseColor={colors.projectBgColor}
+                      renderAccessory={this.renderBase}
+                      itemTextStyle={{
+                        marginLeft: 15,
+                        fontFamily: 'CircularStd-Book',
+                      }}
+                      itemPadding={10}
+                      onChangeText={this.onFilterSprintData}
+                      //disabled={isParent ? false : true}
+                    />:
+                    <View style={styles.sprintNameViewMainView}>
+                       <Text style={styles.sprintNameView}>{this.state.sprintName}</Text>
+                    </View>
+                  }
                 </View>
               </View>
             </View>
@@ -2715,6 +2717,15 @@ const styles = EStyleSheet.create({
     marginTop: '5rem',
     justifyContent: 'center',
   },
+  sprintNameView : {
+    marginTop: '5rem',
+    fontFamily: 'CircularStd-Medium',
+    fontSize: '15rem',
+    color: colors.detailsViewText,
+    padding:'08rem'
+  },
+  sprintNameViewMainView : {
+  }
 });
 
 const mapStateToProps = state => {

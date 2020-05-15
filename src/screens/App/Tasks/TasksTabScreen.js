@@ -156,22 +156,23 @@ class TasksTabScreen extends Component {
       prevProps.allTaskByProjectLoading !==
         this.props.allTaskByProjectLoading &&
       this.props.allTaskByProject &&
-      this.props.allTaskByProject.length > 0
+      (this.props.allTaskByProject.length > 0 || this.props.allTaskByProject.length == 0)
     ) {
       this.setState({
         filterdDataAllTaks: this.props.allTaskByProject,
       });
-    }
+    };
 
     if (
       prevProps.myTaskByProjectLoading !== this.props.myTaskByProjectLoading &&
       this.props.myTaskByProject &&
-      this.props.myTaskByProject.length > 0
+      (this.props.myTaskByProject.length > 0 || this.props.myTaskByProject.length == 0)
     ) {
       this.setState({
         filterdAndMyTasksData: this.props.myTaskByProject,
       });
     }
+
   }
 
   componentDidMount() {
