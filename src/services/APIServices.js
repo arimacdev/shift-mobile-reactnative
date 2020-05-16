@@ -65,7 +65,8 @@ import {
   UPLOAD_USER_PROFILE,
   UPDATE_PARENT_TO_CHILD,
   GET_TASK_LOG,
-  GET_CHILD_TASK_OF_PARENT
+  GET_CHILD_TASK_OF_PARENT,
+  DELETE_TASK_IN_GROUP
 } from '../api/API';
 import AsyncStorage from '@react-native-community/async-storage';
 import {SET_UPLOAD_PROGRESS} from '../redux/types';
@@ -1563,7 +1564,7 @@ async function deleteSingleInGroupTaskData(selectedTaskGroupId, taskID) {
 
   return request(
     {
-      url: DELETE_TASK + '/' + selectedTaskGroupId + '/tasks/' + taskID,
+      url: DELETE_TASK_IN_GROUP + '/' + selectedTaskGroupId + '/tasks/' + taskID,
       method: 'DELETE',
     },
     true,

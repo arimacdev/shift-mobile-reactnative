@@ -170,6 +170,27 @@ class GroupTasksDetailsScreen extends Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
+    if (prevProps.deleteSingleTaskInGroupError !== this.props.deleteSingleTaskInGroupError
+      && this.props.deleteSingleTaskInGroupError && this.props.deleteSingleTaskInGroupErrorMessage == '') {
+      this.showAlert("","Error");
+    }
+
+    if (prevProps.deleteSingleTaskInGroupError !== this.props.deleteSingleTaskInGroupError
+      && this.props.deleteSingleTaskInGroupError && this.props.deleteSingleTaskInGroupErrorMessage != '') {
+      this.showAlert("", this.props.deleteTaskErrorMessage);
+    }
+
+    if (prevProps.deleteSingleTaskInGroupSuccess !== this.props.deleteSingleTaskInGroupSuccess
+      && this.props.deleteSingleTaskInGroupSuccess) {
+        Alert.alert(
+          "Success",
+          "Task Deleted",
+          [
+            { text: "OK", onPress: () => this.props.navigation.goBack() }
+          ],
+          { cancelable: false }
+        );
+    }
   }
 
   componentDidMount() {
@@ -1300,26 +1321,21 @@ class GroupTasksDetailsScreen extends Component {
   }
 
   deleteTask() {
-    let projectID = this.state.selectedProjectID;
-    let taskID = this.state.selectedProjectTaskID;
-    let taskName = this.state.taskName;
+    let selectedGroupTaskID = this.state.selectedGroupTaskID;
+    let selectedTaskID = this.state.selectedTaskID;
 
     Alert.alert(
-      'Delete Task',
+      "Delete Task",
       "You're about to permanently delete this task, its comments\n and attachments, and all of its data.\nIf you're not sure, you can close this pop up.",
       [
         {
-          text: 'Cancel',
-          onPress: () => console.log('Cancel Pressed'),
-          style: 'cancel',
+          text: "Cancel",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel"
         },
-        {
-          text: 'Delete',
-          onPress: () =>
-            this.props.deleteTask(projectID, taskID, taskName, tskInitiator),
-        },
+        { text: "Delete", onPress: () => this.props.deleteTaskInGroupTasks(selectedGroupTaskID, selectedTaskID)}
       ],
-      {cancelable: false},
+      { cancelable: false }
     );
   }
 
@@ -2359,6 +2375,10 @@ const styles = EStyleSheet.create({
 
 const mapStateToProps = state => {
   return {
+    deleteSingleTaskInGroupLoading: state.tasks.deleteSingleTaskInGroupLoading,
+    deleteSingleTaskInGroupSuccess: state.tasks.deleteSingleTaskInGroupSuccess, 
+    deleteSingleTaskInGroupError: state.tasks.deleteSingleTaskInGroupError,
+    deleteSingleTaskInGroupErrorMessage: state.tasks.deleteSingleTaskInGroupErrorMessage
   };
 };
 export default connect(
