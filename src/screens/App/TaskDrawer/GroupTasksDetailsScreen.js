@@ -190,13 +190,13 @@ class GroupTasksDetailsScreen extends Component {
     });
 
     this.fetchData(selectedGroupTaskID, selectedTaskID);
-    //this.fetchFilesData(selectedGroupTaskID, selectedTaskID);
+    this.fetchFilesData(selectedGroupTaskID, selectedTaskID);
 
   }
 
-  async fetchFilesData(projectID, taskID) {
+  async fetchFilesData(selectedGroupTaskID, selectedTaskID) {
     this.setState({dataLoading: true});
-    let filesData = await APIServices.getFilesInTaskData(projectID, taskID);
+    let filesData = await APIServices.getFilesInGroupTaskData(selectedGroupTaskID, selectedTaskID);
     if (filesData.message == 'success') {
       this.setState({
         filesData: filesData.data,
@@ -317,15 +317,15 @@ class GroupTasksDetailsScreen extends Component {
         uploading: 0,
       });
 
-      await APIServices.addFileToTask(
+      await APIServices.addFileToGroupTask(
         this.state.files,
-        selectedProjectTaskID,
         selectedGroupTaskID,
+        selectedTaskID,
       )
         .then(response => {
           if (response.message == 'success') {
             this.setState({indeterminate: false, files: [], uploading: 100});
-            this.fetchFilesData(selectedGroupTaskID, selectedProjectTaskID);
+            this.fetchFilesData(selectedGroupTaskID, selectedTaskID);
           } else {
             this.setState({indeterminate: false, files: [], uploading: 0});
           }
@@ -422,11 +422,11 @@ class GroupTasksDetailsScreen extends Component {
 
     this.setState({dataLoading: true});
 
-    await APIServices.deleteFileInTaskData(projectID, taskID, taskFileId)
+    await APIServices.deleteFileInGroupTaskData(selectedGroupTaskID, taskID, taskFileId)
       .then(response => {
         if (response.message == 'success') {
           this.setState({dataLoading: false});
-          this.fetchFilesData(projectID, taskID);
+          this.fetchFilesData(selectedGroupTaskID, taskID);
         } else {
           this.setState({dataLoading: false});
         }

@@ -2326,7 +2326,77 @@ async function getTaskLogData(taskId) {
       true,
       headers,
     );
-  }
+  };
+
+async function getFilesInGroupTaskData(selectedGroupTaskID, selectedTaskID) {
+    let userIDHeder = null;
+    userIDHeder = await AsyncStorage.getItem('userID');
+  
+    let headers = {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      user: userIDHeder,
+    };
+  
+    return request(
+      {
+        url: GET_GROUP_TASK_DATA + '/' + selectedGroupTaskID + '/tasks/' + selectedTaskID + '/files',
+        method: 'GET',
+      },
+      true,
+      headers,
+    );
+};
+
+async function deleteFileInGroupTaskData(selectedGroupTaskID, selectedTaskID,taskFileId) {
+  let userIDHeder = null;
+  userIDHeder = await AsyncStorage.getItem('userID');
+
+  let headers = {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+    user: userIDHeder,
+  };
+
+  return request(
+    {
+      url: GET_GROUP_TASK_DATA + '/' + selectedGroupTaskID + '/tasks/' + selectedTaskID + '/upload/'+taskFileId,
+      method: 'DELETE',
+    },
+    true,
+    headers,
+  );
+};
+
+async function addFileToGroupTask(file,selectedGroupTaskID, selectedTaskID) {
+  let userIDHeder = null;
+  userIDHeder = await AsyncStorage.getItem('userID');
+
+  let headers = {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+    user: userIDHeder,
+  };
+
+  const file1 = {
+    uri: file[0].uri,
+    name: 'image-pmtool' + new Date().getTime(),
+    type: file[0].type,
+  };
+  const formData = new FormData();
+  formData.append('type', 'taskFile');
+  formData.append('files', file1);
+
+  return request(
+    {
+      url: GET_GROUP_TASK_DATA + '/' + selectedGroupTaskID + '/tasks/' + selectedTaskID + '/upload',
+      method: 'POST',
+      data: formData,
+    },
+    true,
+    headers,
+  );
+};
 
 const APIServices = {
   getAllProjectsByUserData,
@@ -2419,7 +2489,10 @@ const APIServices = {
   updateParentToChild,
   getTaskLogData,
   updateTaskIssueTypeData,
-  getChildTasksOfParentData
+  getChildTasksOfParentData,
+  getFilesInGroupTaskData,
+  deleteFileInGroupTaskData,
+  addFileToGroupTask
 };
 
 export default APIServices;
