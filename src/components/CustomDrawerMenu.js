@@ -217,7 +217,7 @@ const styles = EStyleSheet.create({
     //opacity: 0.5,
     color: '#ffffff',
     fontFamily: 'CircularStd-Medium',
-    fontSize: 14.5,
+    fontSize: 19,
     fontWeight: 'bold',
     marginLeft: 34,
   },

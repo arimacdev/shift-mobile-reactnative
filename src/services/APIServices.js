@@ -1233,7 +1233,7 @@ async function getGroupSingleTaskData(selectedTaskGroupId, selectedTaskID) {
     true,
     headers,
   );
-}
+};
 
 async function uploadFileData(file, selectedProjectID, dispatch) {
   let userIDHeder = null;
@@ -1370,7 +1370,6 @@ async function groupTaskUpdateTaskNameData(
     Accept: 'application/json',
     'Content-Type': 'application/json',
     user: userIDHeder,
-    type: 'taskGroup',
   };
 
   return request(
@@ -1384,7 +1383,6 @@ async function groupTaskUpdateTaskNameData(
       method: 'PUT',
       data: {
         taskName: text,
-        taskType: 'taskGroup',
       },
     },
     true,
@@ -1395,7 +1393,7 @@ async function groupTaskUpdateTaskNameData(
 async function groupTaskUpdateTaskStatusData(
   selectedTaskGroupId,
   selectedTaskID,
-  searchValue,
+  selectedTaskStatusId,
 ) {
   let userIDHeder = null;
   userIDHeder = await AsyncStorage.getItem('userID');
@@ -1404,7 +1402,6 @@ async function groupTaskUpdateTaskStatusData(
     Accept: 'application/json',
     'Content-Type': 'application/json',
     user: userIDHeder,
-    type: 'taskGroup',
   };
 
   return request(
@@ -1417,8 +1414,7 @@ async function groupTaskUpdateTaskStatusData(
         selectedTaskID,
       method: 'PUT',
       data: {
-        taskStatus: searchValue,
-        taskType: 'taskGroup',
+        taskStatus: selectedTaskStatusId,
       },
     },
     true,
@@ -1438,7 +1434,6 @@ async function groupTaskUpdateTaskAssigneeData(
     Accept: 'application/json',
     'Content-Type': 'application/json',
     user: userIDHeder,
-    type: 'taskGroup',
   };
 
   return request(
@@ -1452,7 +1447,6 @@ async function groupTaskUpdateTaskAssigneeData(
       method: 'PUT',
       data: {
         taskAssignee: userID,
-        taskType: 'taskGroup',
       },
     },
     true,
@@ -1472,7 +1466,6 @@ async function groupTaskUpdateDueDateData(
     Accept: 'application/json',
     'Content-Type': 'application/json',
     user: userIDHeder,
-    type: 'taskGroup',
   };
 
   return request(
@@ -1486,7 +1479,6 @@ async function groupTaskUpdateDueDateData(
       method: 'PUT',
       data: {
         taskDueDate: IsoDueDate,
-        taskType: 'taskGroup',
       },
     },
     true,
@@ -1506,7 +1498,6 @@ async function groupTaskUpdateReminderDateData(
     Accept: 'application/json',
     'Content-Type': 'application/json',
     user: userIDHeder,
-    type: 'taskGroup',
   };
 
   return request(
@@ -1520,7 +1511,6 @@ async function groupTaskUpdateReminderDateData(
       method: 'PUT',
       data: {
         taskRemindOnDate: IsoReminderDate,
-        taskType: 'taskGroup',
       },
     },
     true,
@@ -1540,7 +1530,6 @@ async function groupTaskUpdateTaskNoteData(
     Accept: 'application/json',
     'Content-Type': 'application/json',
     user: userIDHeder,
-    type: 'taskGroup',
   };
 
   return request(
@@ -1554,7 +1543,6 @@ async function groupTaskUpdateTaskNoteData(
       method: 'PUT',
       data: {
         taskNotes: note,
-        taskType: 'taskGroup',
       },
     },
     true,

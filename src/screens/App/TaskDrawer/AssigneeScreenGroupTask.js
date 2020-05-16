@@ -28,22 +28,22 @@ class AssigneeScreenGroupTask extends Component {
       allUsers: [],
       isFetching: false,
       searchText: '',
-      selectedTaskGroupId : '',
+      selectedGroupTaskID : '',
     };
   }
 
 
   componentDidMount() {
     const {navigation: {state: {params}}} = this.props;
-    let selectedTaskGroupId = params.selectedTaskGroupId
-    this.setState({selectedTaskGroupId : selectedTaskGroupId}, function() {
+    let selectedGroupTaskID = params.selectedGroupTaskID
+    this.setState({selectedGroupTaskID : selectedGroupTaskID}, function() {
       this.fetchData();
     });
   }
 
   async fetchData() {
-      let selectedTaskGroupId = this.state.selectedTaskGroupId;
-      const activeUsers = await APIServices.getTaskPeopleData(selectedTaskGroupId);
+      let selectedGroupTaskID = this.state.selectedGroupTaskID;
+      const activeUsers = await APIServices.getTaskPeopleData(selectedGroupTaskID);
       if (activeUsers.message == 'success') {
           this.setState({
             users: activeUsers.data,
@@ -223,7 +223,7 @@ const styles = EStyleSheet.create({
     color: colors.gray,
     textAlign: 'center',
     lineHeight: '17rem',
-    fontFamily: 'CircularStd-Medium',
+    fontFamily: 'CircularStd-Book',
     textAlign: 'left',
     marginLeft: '7rem',
   },

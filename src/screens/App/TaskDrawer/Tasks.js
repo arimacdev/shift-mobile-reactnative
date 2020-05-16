@@ -81,15 +81,15 @@ class Tasks extends Component {
   }
 
   async componentDidMount() {
-    let selectedTaskGroupId = this.props.selectedTaskGroupId;
-      this.setState(
-        {
-          selectedTaskGroupId: selectedTaskGroupId,
-        },
-        () => {
-          this.getAllTaskInGroup();
-        },
-      );
+    // let selectedTaskGroupId = this.props.selectedTaskGroupId;
+    //   this.setState(
+    //     {
+    //       selectedTaskGroupId: selectedTaskGroupId,
+    //     },
+    //     () => {
+    //       this.getAllTaskInGroup();
+    //     },
+    //   );
   }
 
 
@@ -114,15 +114,15 @@ class Tasks extends Component {
   }
 
   async tabOpenTaskTab() {
-    // let selectedTaskGroupId = this.props.selectedTaskGroupId;
-    // this.setState(
-    //   {
-    //     selectedTaskGroupId: selectedTaskGroupId,
-    //   },
-    //   () => {
-    //     this.getAllTaskInGroup();
-    //   },
-    // );
+    let selectedTaskGroupId = this.props.selectedTaskGroupId;
+    this.setState(
+      {
+        selectedTaskGroupId: selectedTaskGroupId,
+      },
+      () => {
+        this.getAllTaskInGroup();
+      },
+    );
   }
 
   dateView = function(item) {
@@ -292,12 +292,15 @@ class Tasks extends Component {
   renderTaskList(item, indexMain) {
     let index = this.state.index;
     let subTasksName = this.state.subTasksName;
+    let selectedTaskGroupId = this.props.selectedTaskGroupId;
     return (
       <View>
         <TouchableOpacity
           onPress={() =>
-            this.props.navigation.navigate('TasksDetailsScreen', {
+            this.props.navigation.navigate('GroupTasksDetailsScreen', {
               taskDetails: item.parentTask,
+              selectedGroupTaskID: selectedTaskGroupId,
+              selectedGroupTaskName : item.parentTask.taskName
             })
           }>
           <View
@@ -383,11 +386,14 @@ class Tasks extends Component {
 
   // render sub list without filter
   renderSubTasksList(item) {
+    let selectedTaskGroupId = this.state.selectedTaskGroupId;
     return (
       <TouchableOpacity
         onPress={() =>
-          this.props.navigation.navigate('TasksDetailsScreen', {
+          this.props.navigation.navigate('GroupTasksDetailsScreen', {
             taskDetails: item,
+            selectedGroupTaskID: selectedTaskGroupId,
+            selectedGroupTaskName : item.taskName
           })
         }>
         <View style={styles.subTasksView}>
@@ -415,11 +421,14 @@ class Tasks extends Component {
 
 // render all task list with a filter
   renderTaskListFilter(item) {
+    let selectedTaskGroupId = this.state.selectedTaskGroupId
     return (
       <TouchableOpacity
         onPress={() =>
-          this.props.navigation.navigate('TasksDetailsScreen', {
+          this.props.navigation.navigate('GroupTasksDetailsScreen', {
             taskDetails: item,
+            selectedGroupTaskID: selectedTaskGroupId,
+            selectedGroupTaskName : item.taskName
           })
         }>
         <View style={styles.subTasksView}>
