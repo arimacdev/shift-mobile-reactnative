@@ -238,7 +238,8 @@ class PopupMenuAssignee extends Component {
 const optionsStyles = {
   optionsContainer: {
     marginTop: -5,
-    width: '75%',
+    width: '88%',
+    marginLeft:-18,
     backgroundColor: colors.projectBgColor,
   },
 };

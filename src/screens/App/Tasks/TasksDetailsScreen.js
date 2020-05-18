@@ -278,7 +278,7 @@ class TasksDetailsScreen extends Component {
     let selectedProjectName = params.selectedProjectName;
     let selectedProjectTaskID = params.taskDetails.taskId;
     let isFromBoards = params.isFromBoards;
-    let allDetails = params.allDetails;
+    // let allDetails = params.allDetails;
     // let subTaskListLength = params.subTaskDetails
     //   ? params.subTaskDetails.length
     //   : 0;
@@ -294,7 +294,7 @@ class TasksDetailsScreen extends Component {
       // subTaskList: params.subTaskDetails ? [params.subTaskDetails] : [],
       parentTaskName: params.parentTaskName ? params.parentTaskName : '',
       // subTaskListLength: subTaskListLength,
-      allDetails: allDetails,
+      // allDetails: allDetails,
       sprintId: sprintId,
       fromMyTask: fromMyTask,
     });
@@ -302,7 +302,7 @@ class TasksDetailsScreen extends Component {
 
     this.fetchData(selectedProjectID, selectedProjectTaskID);
     this.fetchFilesData(selectedProjectID, selectedProjectTaskID);
-
+    this.getAllTaskInProject();
     if (params.isFromBoards == true) {
       // let sprintId = params.taskDetails.sprintId;
       this.getAllSprintInProject(selectedProjectID, sprintId);
@@ -353,7 +353,7 @@ class TasksDetailsScreen extends Component {
             addParentTaskShow:
               response.data && response.data.length > 0 ? false : true,
             addChildTaskShow:
-              this.state.isParent && !this.state.fromMyTask ? true : false,
+              this.state.isParent ? true : false,
           });
         } else {
           this.setState({dataLoading: false});
