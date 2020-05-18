@@ -480,7 +480,7 @@ class ViewProfileScreen extends Component {
                   {marginRight: 15, marginLeft: 10},
                 ]}
                 source={icons.userWhite}
-                resizeMode={'center'}
+                resizeMode={'contain'}
               />
               <View style={{flex: 1}}>
                 <Text style={styles.buttonText}>Save Changes</Text>

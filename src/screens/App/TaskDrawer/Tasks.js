@@ -379,7 +379,7 @@ class Tasks extends Component {
               <Image
                 style={styles.addSubTaskIcon}
                 source={icons.add}
-                resizeMode={'center'}
+                resizeMode={'contain'}
               />
               <TextInput
                 style={[styles.subTaskTextInput, {width: '95%'}]}

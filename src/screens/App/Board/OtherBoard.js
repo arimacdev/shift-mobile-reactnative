@@ -285,7 +285,7 @@ class OtherBoard extends Component {
                         <Image
                             style={[styles.addIcon, { marginRight: 10 }]}
                             source={icons.addGreen}
-                            resizeMode={'center'}
+                            resizeMode={'contain'}
                         />
                     </View>
                 </TouchableOpacity>

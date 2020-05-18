@@ -287,7 +287,7 @@ class EditUserScreen extends Component {
                   {marginRight: 15, marginLeft: 10},
                 ]}
                 source={icons.userWhite}
-                resizeMode={'center'}
+                resizeMode={'contain'}
               />
               <View style={{flex: 1}}>
                 <Text style={styles.buttonText}>Save Changes</Text>
@@ -296,7 +296,7 @@ class EditUserScreen extends Component {
               <Image
                 style={[styles.addIcon, {marginRight: 10}]}
                 source={icons.add}
-                resizeMode={'center'}
+                resizeMode={'contain'}
               />
             </View>
           </TouchableOpacity>

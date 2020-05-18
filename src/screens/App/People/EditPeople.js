@@ -233,7 +233,7 @@ class EditPeople extends Component {
                   {marginRight: 15, marginLeft: 10},
                 ]}
                 source={icons.userWhite}
-                resizeMode={'center'}
+                resizeMode={'contain'}
               />
               <View style={{flex: 1}}>
                 <Text style={styles.buttonText}>Save</Text>
@@ -242,7 +242,7 @@ class EditPeople extends Component {
               <Image
                 style={[styles.addIcon, {marginRight: 10}]}
                 source={icons.addGreen}
-                resizeMode={'center'}
+                resizeMode={'contain'}
               />
             </View>
           </TouchableOpacity>
@@ -254,7 +254,7 @@ class EditPeople extends Component {
                   {marginRight: 15, marginLeft: 10},
                 ]}
                 source={icons.userWhite}
-                resizeMode={'center'}
+                resizeMode={'contain'}
               />
               <View style={{flex: 1}}>
                 <Text style={styles.buttonText}>Cancel</Text>
@@ -263,7 +263,7 @@ class EditPeople extends Component {
               <Image
                 style={[styles.addIcon, {marginRight: 10}]}
                 source={icons.delete}
-                resizeMode={'center'}
+                resizeMode={'contain'}
               />
             </View>
           </TouchableOpacity>

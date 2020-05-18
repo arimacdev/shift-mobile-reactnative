@@ -52,6 +52,8 @@
 	<string>'PM Tool' will use your location to send push notifications</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>'PM Tool' would like access to your current locatoin to send push notifications</string>
+	<key>NSMainNibFile</key>
+	<string>LaunchScreen</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>'PM Tool' would like access to your photo gallery to upload files to tasks</string>
 	<key>NSPhotoLibraryUsageDescription</key>
@@ -92,6 +94,8 @@
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 	</array>
+	<key>UIUserInterfaceStyle</key>
+	<string>Light</string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 </dict>

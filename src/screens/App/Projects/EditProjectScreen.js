@@ -717,7 +717,7 @@ class EditProjectScreen extends Component {
               <Image
                 style={styles.calendarIcon}
                 source={icons.calendar}
-                resizeMode={'center'}
+                resizeMode={'contain'}
               />
             </View>
           </TouchableOpacity>
@@ -734,7 +734,7 @@ class EditProjectScreen extends Component {
               <Image
                 style={styles.calendarIcon}
                 source={icons.calendar}
-                resizeMode={'center'}
+                resizeMode={'contain'}
               />
             </View>
           </TouchableOpacity>
@@ -771,7 +771,7 @@ class EditProjectScreen extends Component {
                   { marginRight: 15, marginLeft: 10 },
                 ]}
                 source={icons.folderWhite}
-                resizeMode={'center'}
+                resizeMode={'contain'}
               />
               <View style={{ flex: 1 }}>
                 <Text style={styles.buttonText}>Save Changes</Text>
@@ -780,7 +780,7 @@ class EditProjectScreen extends Component {
               <Image
                 style={[styles.addIcon, { marginRight: 10 }]}
                 source={icons.addGreen}
-                resizeMode={'center'}
+                resizeMode={'contain'}
               />
             </View>
           </TouchableOpacity>
@@ -792,7 +792,7 @@ class EditProjectScreen extends Component {
                   { marginRight: 15, marginLeft: 10 },
                 ]}
                 source={icons.folderWhite}
-                resizeMode={'center'}
+                resizeMode={'contain'}
               />
               <View style={{ flex: 1 }}>
                 <Text style={styles.buttonText}>Delete Project</Text>
@@ -800,7 +800,7 @@ class EditProjectScreen extends Component {
               <Image
                 style={[styles.addIcon, { marginRight: 10 }]}
                 source={icons.deleteWhite}
-                resizeMode={'center'}
+                resizeMode={'contain'}
               />
             </View>
           </TouchableOpacity>

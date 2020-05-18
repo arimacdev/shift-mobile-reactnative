@@ -569,7 +569,7 @@ class AddNewTasksScreen extends Component {
           <Image
             style={styles.gallaryIcon}
             source={icons.gallary}
-            resizeMode={'center'}
+            resizeMode={'contain'}
           />
         </View>
 
@@ -577,7 +577,7 @@ class AddNewTasksScreen extends Component {
           style={{
             flexDirection: 'column',
             marginLeft: 10,
-            justifyContent: 'center',
+            justifyContent: 'contain',
             flex: 1,
           }}>
           <Text style={{ marginTop: -2 }}>
@@ -599,7 +599,7 @@ class AddNewTasksScreen extends Component {
             <Image
               style={styles.cross}
               source={icons.cross}
-              resizeMode={'center'}
+              resizeMode={'contain'}
             />
           </TouchableOpacity>
         </View>
@@ -956,7 +956,7 @@ class AddNewTasksScreen extends Component {
             <Image
               style={styles.calendarIcon}
               source={icons.calendar}
-              resizeMode={'center'}
+              resizeMode={'contain'}
             />
           </View>
         </TouchableOpacity>
@@ -975,7 +975,7 @@ class AddNewTasksScreen extends Component {
             <Image
               style={styles.calendarIcon}
               source={icons.calendar}
-              resizeMode={'center'}
+              resizeMode={'contain'}
             />
           </View>
         </TouchableOpacity>
@@ -995,7 +995,7 @@ class AddNewTasksScreen extends Component {
                 <Image
                   style={[styles.calendarIcon, { marginRight: 10 }]}
                   source={icons.upload}
-                  resizeMode={'center'}
+                  resizeMode={'contain'}
                 />
                 <Text style={[styles.textInput, { flex: 1 }]}>Add files</Text>
               </View>
@@ -1018,7 +1018,7 @@ class AddNewTasksScreen extends Component {
             <Image
               style={[styles.bottomBarIcon, { marginRight: 15, marginLeft: 10 }]}
               source={icons.taskWhite}
-              resizeMode={'center'}
+              resizeMode={'contain'}
             />
             <View style={{ flex: 1 }}>
               <Text style={styles.buttonText}>Add new Task</Text>

@@ -2246,7 +2246,7 @@ class TasksDetailsScreen extends Component {
                   <Image
                     style={[styles.fileUploadIcon, {marginRight: 10}]}
                     source={icons.upload}
-                    resizeMode={'center'}
+                    resizeMode={'contain'}
                   />
                   <Text style={[styles.addFilesText, {flex: 1}]}>
                     Add files

@@ -533,7 +533,7 @@ class TasksTabScreen extends Component {
               <Image
                 style={styles.addSubTaskIcon}
                 source={icons.add}
-                resizeMode={'center'}
+                resizeMode={'contain'}
               />
               <TextInput
                 style={[styles.subTaskTextInput, {width: '95%'}]}
@@ -1244,7 +1244,7 @@ class TasksTabScreen extends Component {
                 <Image
                   style={styles.addNewIcon}
                   source={icons.blueAdd}
-                  resizeMode={'center'}
+                  resizeMode={'contain'}
                 />
                 <TextInput
                   style={[styles.textInput, {width: '95%'}]}

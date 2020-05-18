@@ -169,7 +169,7 @@ class ChatScreen extends Component {
             <Image
               style={styles.chatIcon}
               source={icons.forwordGreen}
-              resizeMode={'center'}
+              resizeMode={'contain'}
             />
           </TouchableOpacity>
         </View>

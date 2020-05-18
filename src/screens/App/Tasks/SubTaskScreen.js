@@ -226,7 +226,7 @@ class SubTasksScreen extends Component {
             <Image
               style={styles.bottomBarIcon}
               source={icons.taskWhite}
-              resizeMode={'center'}
+              resizeMode={'contain'}
             />
             <View style={{flex: 1}}>
               <Text style={styles.buttonText}>Add new Sub Task</Text>
@@ -235,7 +235,7 @@ class SubTasksScreen extends Component {
             <Image
               style={styles.addIcon}
               source={icons.add}
-              resizeMode={'center'}
+              resizeMode={'contain'}
             />
           </View>
         </TouchableOpacity>

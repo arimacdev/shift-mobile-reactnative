@@ -452,7 +452,7 @@ class CreateNewProjectScreen extends Component {
             <Image
               style={styles.calendarIcon}
               source={icons.calendar}
-              resizeMode={'center'}
+              resizeMode={'contain'}
             />
           </View>
         </TouchableOpacity>
@@ -469,7 +469,7 @@ class CreateNewProjectScreen extends Component {
             <Image
               style={styles.calendarIcon}
               source={icons.calendar}
-              resizeMode={'center'}
+              resizeMode={'contain'}
             />
           </View>
         </TouchableOpacity>
@@ -487,7 +487,8 @@ class CreateNewProjectScreen extends Component {
             <Image
               style={[styles.bottomBarIcon, { marginRight: 15, marginLeft: 10 }]}
               source={icons.folderWhite}
-              resizeMode={'center'}
+              source={require('../../../assest/icons/folder_white.png')}
+              resizeMode={'contain'}
             />
             <View style={{ flex: 1 }}>
               <Text style={styles.buttonText}>Add new Project</Text>
@@ -495,8 +496,8 @@ class CreateNewProjectScreen extends Component {
 
             <Image
               style={[styles.addIcon, { marginRight: 10 }]}
-              source={icons.add}
-              resizeMode={'center'}
+              source={require('../../../assest/icons/add.png')}
+              resizeMode={'contain'}
             />
           </View>
         </TouchableOpacity>

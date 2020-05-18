@@ -464,7 +464,7 @@ class ProjectFilesScreen extends Component {
               <Image
                 style={[styles.calendarIcon, {marginRight: 10}]}
                 source={icons.upload}
-                resizeMode={'center'}
+                resizeMode={'contain'}
               />
               <Text style={[styles.textInput, {flex: 1}]}>Add files</Text>
             </View>

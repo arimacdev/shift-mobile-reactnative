@@ -100,7 +100,7 @@ class DrawerTasksScreen extends Component {
                   <Image
                     style={[styles.bottomBarIcon, { marginRight: 15, marginLeft: 10 }]}
                     source={icons.taskWhite}
-                    resizeMode={'center'}
+                    resizeMode={'contain'}
                   />
                   <View style={{ flex: 1 }}>
                     <Text style={styles.buttonText}>My personal tasks</Text>
@@ -111,7 +111,7 @@ class DrawerTasksScreen extends Component {
                 <Image
                   style={styles.addNewIcon}
                   source={icons.blueAdd}
-                  resizeMode={'center'}
+                  resizeMode={'contain'}
                 />
                 <TextInput
                   style={[styles.textInput, {width: '95%'}]}

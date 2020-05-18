@@ -299,7 +299,7 @@ class AddPeopleScreen extends Component {
                     {marginRight: 15, marginLeft: 10},
                   ]}
                   source={icons.userWhite}
-                  resizeMode={'center'}
+                  resizeMode={'contain'}
                 />
                 <View style={{flex: 1}}>
                   <Text style={styles.buttonText}>Save</Text>
@@ -308,7 +308,7 @@ class AddPeopleScreen extends Component {
                 <Image
                   style={[styles.addIcon, {marginRight: 10}]}
                   source={icons.addGreen}
-                  resizeMode={'center'}
+                  resizeMode={'contain'}
                 />
               </View>
             </TouchableOpacity>
@@ -320,7 +320,7 @@ class AddPeopleScreen extends Component {
                     {marginRight: 15, marginLeft: 10},
                   ]}
                   source={icons.userWhite}
-                  resizeMode={'center'}
+                  resizeMode={'contain'}
                 />
                 <View style={{flex: 1}}>
                   <Text style={styles.buttonText}>Cancel</Text>
@@ -329,7 +329,7 @@ class AddPeopleScreen extends Component {
                 <Image
                   style={[styles.addIcon, {marginRight: 10}]}
                   source={icons.delete}
-                  resizeMode={'center'}
+                  resizeMode={'contain'}
                 />
               </View>
             </TouchableOpacity>
@@ -463,7 +463,7 @@ const styles = EStyleSheet.create({
     fontSize: '16rem',
   },
   inputsText: {
-    fontFamily:  Platform.OS=='ios'? 'CircularStd-Medium':'Product Sans',
+    fontFamily:  Platform.OS =='ios'? 'CircularStd-Medium':'Product Sans',
     height: 45,
     flex: 1,
     marginTop: '28rem',

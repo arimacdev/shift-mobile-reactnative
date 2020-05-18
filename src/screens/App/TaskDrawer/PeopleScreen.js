@@ -149,7 +149,7 @@ class PeopleScreen extends Component {
                         <Image
                             style={[styles.bottomBarIcon, { marginRight: 15, marginLeft: 10 }]}
                             source={icons.userWhite}
-                            resizeMode={'center'}
+                            resizeMode={'contain'}
                         />
                         <View style={{ flex: 1 }}>
                             <Text style={styles.buttonText}>Add new</Text>
@@ -158,7 +158,7 @@ class PeopleScreen extends Component {
                         <Image
                             style={[styles.addIcon, { marginRight: 10 }]}
                             source={icons.add}
-                            resizeMode={'center'}
+                            resizeMode={'contain'}
                         />
                     </View>
                 </TouchableOpacity>

@@ -53,7 +53,7 @@ class MyTaskNotesScreen extends Component {
                     <Image
                     style={[styles.bottomBarIcon, { marginRight: 15, marginLeft: 10 }]}
                     source={icons.taskWhite}
-                    resizeMode={'center'}
+                    resizeMode={'contain'}
                     />
                     <View style={{ flex: 1 }}>
                     <Text style={styles.buttonText}>Update Note</Text>
@@ -62,7 +62,7 @@ class MyTaskNotesScreen extends Component {
                     <Image
                     style={[styles.addIcon, { marginRight: 10 }]}
                     source={icons.add}
-                    resizeMode={'center'}
+                    resizeMode={'contain'}
                     />
                 </View>
             </TouchableOpacity>
