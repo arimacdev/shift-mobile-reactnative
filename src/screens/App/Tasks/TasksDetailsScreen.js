@@ -959,18 +959,21 @@ class TasksDetailsScreen extends Component {
     let color = '';
 
     let taskStatus = item.taskStatus;
-    if (taskStatus == 'closed') {
+    if (taskStatus == 'closed' && date) {
       // task complete
-      dateText = moment(date).format('DD/MM/YYYY');
+      dateText = moment(date).format('YYYY-MM-DD');
       color = '#36DD5B';
-    } else {
+    } else if (taskStatus != 'closed' && date) {
       if (moment(date).isAfter(currentTime)) {
-        dateText = moment(date).format('DD/MM/YYYY');
-        color = '#0C0C5A';
+        dateText = moment(date).format('YYYY-MM-DD');
+        color = '#0bafff';
       } else {
-        dateText = moment(date).format('DD/MM/YYYY');
+        dateText = moment(date).format('YYYY-MM-DD');
         color = '#ff6161';
       }
+    } else {
+      dateText = 'Add Due Date';
+      color = '#000000';
     }
 
     return <Text style={[styles.textDate, {color: color}]}>{dateText}</Text>;
