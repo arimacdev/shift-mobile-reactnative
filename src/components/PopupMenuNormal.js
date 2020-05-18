@@ -201,7 +201,7 @@ const styles = StyleSheet.create({
     borderBottomColor: localColors.borderColor,
   },
   menuItemText: {
-    fontFamily: 'Product Sans',
+    fontFamily:  Platform.OS=='ios'? 'CircularStd-Medium':'Product Sans',
     fontSize: 12,
     paddingLeft: 5,
   },

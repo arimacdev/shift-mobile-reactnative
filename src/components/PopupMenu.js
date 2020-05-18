@@ -7,6 +7,7 @@ import {
   TextInput,
   TouchableOpacity,
   Image,
+  Platform,
 } from 'react-native';
 import colors from '../config/colors';
 import icons from '../assest/icons/icons';
@@ -122,7 +123,7 @@ const styles = EStyleSheet.create({
     marginHorizontal: '20rem',
   },
   inputsText: {
-    fontFamily: 'Product Sans',
+    fontFamily: Platform.OS=='ios'? 'CircularStd-Medium':'Product Sans',
     height: 45,
     flex: 1,
     marginTop: '28rem',

@@ -463,7 +463,7 @@ const styles = EStyleSheet.create({
     fontSize: '16rem',
   },
   inputsText: {
-    fontFamily: 'Product Sans',
+    fontFamily:  Platform.OS=='ios'? 'CircularStd-Medium':'Product Sans',
     height: 45,
     flex: 1,
     marginTop: '28rem',
