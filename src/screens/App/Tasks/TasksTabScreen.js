@@ -575,7 +575,7 @@ class TasksTabScreen extends Component {
   renderMyTasksAndFilterTaskList(item, indexMain) {
     let selectedProjectID = this.state.selectedProjectID;
     let selectedProjectName = this.state.selectedProjectName;
-    let parentTaskName = item.taskName;
+    let parentTaskName = '';
 
     return (
       <TouchableOpacity
@@ -587,7 +587,7 @@ class TasksTabScreen extends Component {
             selectedProjectName: selectedProjectName,
             parentTaskName: parentTaskName,
             allDetails: this.state.filterdDataAllTaks,
-            fromMyTask:true
+            fromMyTask: this.state.filter ? false : true
           })
         }>
         <View

@@ -213,13 +213,14 @@ class GroupTasksDetailsScreen extends Component {
     let selectedGroupTaskID = params.selectedGroupTaskID;
     let selectedTaskID = params.taskDetails.taskId;
     let selectedGroupTaskName = params.selectedGroupTaskName;
+    let parentTaskName = params.parentTaskName ? params.parentTaskName : '';
     // let allDetails = params.allDetails;
 
     this.setState({
       selectedGroupTaskID: selectedGroupTaskID,
       selectedGroupTaskName: selectedGroupTaskName,
       selectedTaskID: selectedTaskID,
-      parentTaskName: params.parentTaskName,
+      parentTaskName: parentTaskName,
       // allDetails: allDetails,
     });
 

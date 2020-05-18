@@ -293,6 +293,7 @@ class Tasks extends Component {
     let index = this.state.index;
     let subTasksName = this.state.subTasksName;
     let selectedTaskGroupId = this.props.selectedTaskGroupId;
+    let parentTaskName = item.parentTask.taskName;
     return (
       <View>
         <TouchableOpacity
@@ -375,7 +376,7 @@ class Tasks extends Component {
                 marginBottom: EStyleSheet.value('15rem'),
               }}
               data={index == 0 ? item.childTasks : item.childTasks}
-              renderItem={({item}) => this.renderSubTasksList(item)}
+              renderItem={({item}) => this.renderSubTasksList(item, parentTaskName)}
               keyExtractor={item => item.taskId}
             />
           </View>
@@ -385,7 +386,7 @@ class Tasks extends Component {
   }
 
   // render sub list without filter
-  renderSubTasksList(item) {
+  renderSubTasksList(item, parentTaskName) {
     let selectedTaskGroupId = this.state.selectedTaskGroupId;
     return (
       <TouchableOpacity
@@ -393,7 +394,8 @@ class Tasks extends Component {
           this.props.navigation.navigate('GroupTasksDetailsScreen', {
             taskDetails: item,
             selectedGroupTaskID: selectedTaskGroupId,
-            selectedGroupTaskName : item.taskName
+            selectedGroupTaskName : item.taskName,
+            parentTaskName: parentTaskName,
           })
         }>
         <View style={styles.subTasksView}>
@@ -421,14 +423,17 @@ class Tasks extends Component {
 
 // render all task list with a filter
   renderTaskListFilter(item) {
-    let selectedTaskGroupId = this.state.selectedTaskGroupId
+    let selectedTaskGroupId = this.state.selectedTaskGroupId;
+    let parentTaskName = 'parentTaskName';
+    
     return (
       <TouchableOpacity
         onPress={() =>
           this.props.navigation.navigate('GroupTasksDetailsScreen', {
             taskDetails: item,
             selectedGroupTaskID: selectedTaskGroupId,
-            selectedGroupTaskName : item.taskName
+            selectedGroupTaskName : item.taskName,
+            parentTaskName: parentTaskName,
           })
         }>
         <View style={styles.subTasksView}>

@@ -222,6 +222,7 @@ class TasksDetailsScreen extends Component {
       sprintId: '',
       taskModalDataID: '',
       fromMyTask: false,
+      parentTaskName:''
     };
   }
 
@@ -297,6 +298,7 @@ class TasksDetailsScreen extends Component {
       sprintId: sprintId,
       fromMyTask: fromMyTask,
     });
+    
 
     this.fetchData(selectedProjectID, selectedProjectTaskID);
     this.fetchFilesData(selectedProjectID, selectedProjectTaskID);
@@ -316,6 +318,23 @@ class TasksDetailsScreen extends Component {
         dataLoading: false,
       });
     } else {
+      this.setState({dataLoading: false});
+    }
+  }
+
+  async gerTaskParentName(parentTaskId){
+    this.setState({dataLoading: true});
+    try {
+      let taskResult = await APIServices.getProjecTaskData(
+        this.state.selectedProjectID,
+        parentTaskId,
+      );
+      if (taskResult.message == 'success') {
+        this.setState({parentTaskName: taskResult.data.taskName})
+      } else {
+        this.setState({dataLoading: false});
+      }
+    } catch (error) {
       this.setState({dataLoading: false});
     }
   }
@@ -914,6 +933,7 @@ class TasksDetailsScreen extends Component {
         addParentTaskShow: false,
         addChildTaskShow: false,
       });
+      this.gerTaskParentName(taskResult.data.parentId)
     }
 
     if (isParent) {
