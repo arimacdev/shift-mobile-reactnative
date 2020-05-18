@@ -260,7 +260,7 @@ class TasksTabScreen extends Component {
     } else if (taskStatus != 'closed' && date) {
       if (moment(date).isAfter(currentTime)) {
         dateText = moment(date).format('YYYY-MM-DD');
-        color = '#0bafff';
+        color = '#0C0C5A';
       } else {
         dateText = moment(date).format('YYYY-MM-DD');
         color = '#ff6161';
@@ -287,7 +287,7 @@ class TasksTabScreen extends Component {
     } else if (taskStatus != 'closed' && date) {
       if (moment(date).isAfter(currentTime)) {
         dateText = moment(date).format('YYYY-MM-DD');
-        color = '#0bafff';
+        color = '#0C0C5A';
       } else {
         dateText = moment(date).format('YYYY-MM-DD');
         color = '#ff6161';
@@ -295,33 +295,6 @@ class TasksTabScreen extends Component {
     } else {
       dateText = 'Add Due Date';
       color = '#000000';
-    }
-
-    return <Text style={[styles.textDate, {color: color}]}>{dateText}</Text>;
-  };
-
-  dateViewMain = function(item) {
-    let date = item.parentTask.taskDueDateAt;
-    let currentTime = moment().format();
-    let dateText = '';
-    let color = '';
-
-    let taskStatus = item.parentTask.taskStatus;
-    if (taskStatus == 'closed' && date) {
-      // task complete
-      dateText = moment(date).format('YYYY-MM-DD');
-      color = '#36DD5B';
-    } else if (taskStatus != 'closed' && date) {
-      if (moment(date).isAfter(currentTime)) {
-        dateText = moment(date).format('YYYY-MM-DD');
-        color = '#0bafff';
-      } else {
-        dateText = moment(date).format('YYYY-MM-DD');
-        color = '#ff6161';
-      }
-    } else {
-      dateText = 'Add Due Date';
-      color = '#ffffff';
     }
 
     return <Text style={[styles.textDate, {color: color}]}>{dateText}</Text>;
@@ -522,7 +495,7 @@ class TasksTabScreen extends Component {
               </View>
             </View>
             <View style={styles.statusView}>
-              {this.dateViewMain(item)}
+              {this.dateView(item)}
               {this.userImage(item)}
             </View>
           </View>
