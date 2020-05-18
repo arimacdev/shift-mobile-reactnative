@@ -165,6 +165,7 @@ class GroupTasksDetailsScreen extends Component {
       taskNameEditable: false,
       sprintId: '',
       taskModalDataID: '',
+      parentTaskName:''
     };
   }
 
@@ -238,6 +239,23 @@ class GroupTasksDetailsScreen extends Component {
         dataLoading: false,
       });
     } else {
+      this.setState({dataLoading: false});
+    }
+  }
+
+  async gerTaskParentName(parentTaskId){
+    this.setState({dataLoading: true});
+    try {
+      let taskResult = await APIServices.getProjecTaskData(
+        this.state.selectedGroupTaskID,
+        parentTaskId,
+      );
+      if (taskResult.message == 'success') {
+        this.setState({parentTaskName: taskResult.data.taskName})
+      } else {
+        this.setState({dataLoading: false});
+      }
+    } catch (error) {
       this.setState({dataLoading: false});
     }
   }
@@ -789,6 +807,7 @@ class GroupTasksDetailsScreen extends Component {
         addParentTaskShow: false,
         addChildTaskShow: false,
       });
+      this.gerTaskParentName(taskResult.data.parentId)
     }
 
     if (isParent) {

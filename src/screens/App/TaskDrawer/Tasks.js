@@ -424,8 +424,8 @@ class Tasks extends Component {
 // render all task list with a filter
   renderTaskListFilter(item) {
     let selectedTaskGroupId = this.state.selectedTaskGroupId;
-    let parentTaskName = 'parentTaskName';
-    
+    let parentTaskName = '';
+
     return (
       <TouchableOpacity
         onPress={() =>
@@ -564,9 +564,9 @@ const styles = EStyleSheet.create({
 },
   subContainer: {
     marginBottom: '65rem',
-    backgroundColor: colors.projectBgColor,
+    // backgroundColor: colors.projectBgColor,
     borderRadius: 5,
-    marginHorizontal: '05rem',
+    marginHorizontal: '0rem',
     marginTop: '7rem',
     marginBottom: '150rem',
 },

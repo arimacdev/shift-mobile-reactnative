@@ -292,7 +292,7 @@ class TasksDetailsScreen extends Component {
       selectedProjectTaskID: selectedProjectTaskID,
       isFromBoards: params.isFromBoards,
       // subTaskList: params.subTaskDetails ? [params.subTaskDetails] : [],
-      parentTaskName: params.parentTaskName,
+      parentTaskName: params.parentTaskName ? params.parentTaskName : '',
       // subTaskListLength: subTaskListLength,
       allDetails: allDetails,
       sprintId: sprintId,
