@@ -123,7 +123,34 @@ class Tasks extends Component {
         this.getAllTaskInGroup();
       },
     );
-  }
+  };
+
+  dateViewMain = function(item) {
+    let date = item.parentTask.taskDueDateAt;
+    let currentTime = moment().format();
+    let dateText = '';
+    let color = '';
+
+    let taskStatus = item.parentTask.taskStatus;
+    if (taskStatus == 'closed' && date) {
+      // task complete
+      dateText = moment(date).format('YYYY-MM-DD');
+      color = '#36DD5B';
+    } else if (taskStatus != 'closed' && date) {
+      if (moment(date).isAfter(currentTime)) {
+        dateText = moment(date).format('YYYY-MM-DD');
+        color = '#0bafff';
+      } else {
+        dateText = moment(date).format('YYYY-MM-DD');
+        color = '#ff6161';
+      }
+    } else {
+      dateText = 'Add Due Date';
+      color = '#000000';
+    }
+
+    return <Text style={[styles.textDate, {color: color}]}>{dateText}</Text>;
+  };
 
   dateView = function(item) {
     let date = item.taskDueDateAt;
@@ -341,7 +368,7 @@ class Tasks extends Component {
               </View>
             </View>
             <View style={styles.statusView}>
-              {this.dateView(item)}
+              {this.dateViewMain(item)}
               {this.userImage(item)}
             </View>
           </View>
@@ -523,7 +550,7 @@ class Tasks extends Component {
           </View>
           {/* view task list with child parent view */}
           {!filter &&  filterdDataAllTaks.length > 0 &&
-          <View style={styles.subContainer}>
+          <View style={styles.subContainerWhite}>
               <FlatList
                 style={{marginBottom: EStyleSheet.value('10rem'),marginTop: EStyleSheet.value('10rem')}}
                 data={filterdDataAllTaks}
@@ -564,7 +591,7 @@ const styles = EStyleSheet.create({
 },
   subContainer: {
     marginBottom: '65rem',
-    // backgroundColor: colors.projectBgColor,
+    backgroundColor: colors.projectBgColor,
     borderRadius: 5,
     marginHorizontal: '0rem',
     marginTop: '7rem',
