@@ -154,7 +154,7 @@ class GroupTasksDetailsScreen extends Component {
       indeterminate: false,
       showTaskModal: false,
       selectedTaskName: '',
-      selectedTaskID: '',
+      selectedTaskIDFromModal: '',
       taskModalData: [],
       fromParent: true,
       addParentTaskShow: false,
@@ -165,7 +165,6 @@ class GroupTasksDetailsScreen extends Component {
       taskNameEditable: false,
       sprintId: '',
       taskModalDataID: '',
-      fromMyTask: false,
     };
   }
 
@@ -191,6 +190,17 @@ class GroupTasksDetailsScreen extends Component {
           { cancelable: false }
         );
     }
+
+    if (
+      prevProps.allTaskByGroupLoading !==
+        this.props.allTaskByGroupLoading &&
+      this.props.allTaskByGroup &&
+      this.props.allTaskByGroup.length > 0
+    ) {
+      this.setState({
+        allDetails: this.props.allTaskByGroup,
+      });
+    }
   }
 
   componentDidMount() {
@@ -203,16 +213,19 @@ class GroupTasksDetailsScreen extends Component {
     let selectedGroupTaskID = params.selectedGroupTaskID;
     let selectedTaskID = params.taskDetails.taskId;
     let selectedGroupTaskName = params.selectedGroupTaskName;
+    // let allDetails = params.allDetails;
 
     this.setState({
       selectedGroupTaskID: selectedGroupTaskID,
       selectedGroupTaskName: selectedGroupTaskName,
       selectedTaskID: selectedTaskID,
+      parentTaskName: params.parentTaskName,
+      // allDetails: allDetails,
     });
 
     this.fetchData(selectedGroupTaskID, selectedTaskID);
     this.fetchFilesData(selectedGroupTaskID, selectedTaskID);
-
+    this.getAllTaskByGroup(selectedGroupTaskID);
   }
 
   async fetchFilesData(selectedGroupTaskID, selectedTaskID) {
@@ -229,9 +242,9 @@ class GroupTasksDetailsScreen extends Component {
   }
 
   async getSubTAskDetails() {
-    await APIServices.getChildTasksOfParentData(
+    await APIServices.getChildTasksOfTaskGroupData(
       this.state.selectedGroupTaskID,
-      this.state.selectedProjectTaskID,
+      this.state.selectedTaskID,
     )
       .then(async response => {
         if (response.message == 'success') {
@@ -242,7 +255,7 @@ class GroupTasksDetailsScreen extends Component {
             addParentTaskShow:
               response.data && response.data.length > 0 ? false : true,
             addChildTaskShow:
-              this.state.isParent && !this.state.fromMyTask ? true : false,
+              this.state.isParent ? true : false,
           });
         } else {
           this.setState({dataLoading: false});
@@ -604,11 +617,10 @@ class GroupTasksDetailsScreen extends Component {
         this.setDueDate(taskResult);
         this.setReminderDate(taskResult);
         this.setTaskUserName(taskResult);
-        setState({dataLoading: false});
+        this.setSecondaryTaskId(taskResult);
+        this.setIsParent(taskResult);
         
-        //this.setSecondaryTaskId(taskResult);
-        //this.setIsParent(taskResult);
-        //setState({dataLoading: false, taskResult: taskResult});
+        setState({dataLoading: false, taskResult: taskResult});
       } else {
         this.setState({dataLoading: false});
       }
@@ -765,7 +777,6 @@ class GroupTasksDetailsScreen extends Component {
   setIsParent(taskResult) {
     let isParent = taskResult.data.isParent;
     let subTaskListLength = this.state.subTaskListLength;
-    let fromMyTask = this.state.fromMyTask;
     this.setState({
       isParent: isParent,
       // addParentTaskShow: subTaskListLength > 0 ? false : true,
@@ -1454,7 +1465,7 @@ class GroupTasksDetailsScreen extends Component {
   }
 
   onAddTaskPress(fromParent) {
-    let selectedProjectTaskID = this.state.selectedProjectTaskID;
+    let selectedProjectTaskID = this.state.selectedTaskID;
     let allDetails = this.state.allDetails;
 
     this.setState({
@@ -1492,71 +1503,31 @@ class GroupTasksDetailsScreen extends Component {
 
     this.setState({
       selectedTaskName: selectedTaskNameModal,
-      selectedTaskID: selectedTaskIdModal,
+      selectedTaskIDFromModal: selectedTaskIdModal,
     });
   };
 
-  async getAllTaskInProject() {
-    this.setState({
-      filterType: 'None',
-    });
-    let selectedProjectID = this.state.selectedProjectID;
-    AsyncStorage.getItem('userID').then(userID => {
-      this.props.getAllTaskInProjects(userID, selectedProjectID);
-    });
-  }
-
-  async getChildTasksOfParent(selectedProjectID, newParent, selectedTaskID) {
-    await APIServices.getChildTasksOfParentData(selectedProjectID, newParent)
-      .then(async response => {
-        if (response.message == 'success') {
-          await this.setState({
-            dataLoading: false,
-            subTaskList: response.data ? [response.data] : [],
-            subTaskListLength: response.data ? response.data.length : 0,
-            selectedProjectTaskID: newParent,
-          });
-          this.fetchData(selectedProjectID, newParent);
-          this.fetchFilesData(selectedProjectID, newParent);
-          this.getAllSprintInProject(selectedProjectID, this.state.sprintId);
-          this.getAllTaskInProject();
-          // let taskModalData = [];
-          // taskModalData = this.state.taskModalData.filter(item => {
-          //   return item.id == selectedTaskID;
-          // });
-          // this.setState({
-          //   taskModalDataID: taskModalData[0].id,
-          //   taskModalData: [],
-          // });
-        } else {
-          this.setState({dataLoading: false});
-        }
-      })
-      .catch(error => {
-        if (error.status == 401 || error.status == 403) {
-          this.setState({dataLoading: false});
-          this.showAlert('', error.data.message);
-        }
-      });
+  async getAllTaskByGroup(selectedGroupTaskID) {
+    this.props.getAllTaskByGroup(selectedGroupTaskID);
   }
 
   async onSavePress(fromParent) {
-    let selectedProjectID = this.state.selectedProjectID;
+    let selectedGroupTaskID = this.state.selectedGroupTaskID;
     let newParent = fromParent
-      ? this.state.selectedTaskID
-      : this.state.selectedProjectTaskID;
+      ? this.state.selectedTaskIDFromModal
+      : this.state.selectedTaskID;
 
     let selectedProjectTaskID = fromParent
-      ? this.state.selectedProjectTaskID
-      : this.state.selectedTaskID;
+      ? this.state.selectedTaskID
+      : this.state.selectedTaskIDFromModal;
 
     let selectedTaskNameModal = this.state.selectedTaskName;
     let parentTaskName = this.state.selectedTaskName;
 
     this.setState({showTaskModal: false});
 
-    await APIServices.updateParentToChild(
-      selectedProjectID,
+    await APIServices.updateParentToChildInGroup(
+      selectedGroupTaskID,
       selectedProjectTaskID,
       newParent,
     )
@@ -1564,24 +1535,14 @@ class GroupTasksDetailsScreen extends Component {
         if (response.message == 'success') {
           this.setState({dataLoading: false});
           // if (fromParent) {
-          this.fetchData(selectedProjectID, this.state.selectedProjectTaskID);
+          this.fetchData(selectedGroupTaskID, this.state.selectedTaskID);
           this.fetchFilesData(
-            selectedProjectID,
-            this.state.selectedProjectTaskID,
+            selectedGroupTaskID,
+            this.state.selectedTaskID,
           );
 
-          this.getAllTaskInProject();
+          this.getAllTaskByGroup(this.state.selectedGroupTaskID);
           this.setState({parentTaskName: parentTaskName});
-          // } else {
-          //   this.getChildTasksOfParent(
-          //     selectedProjectID,
-          //     this.state.selectedProjectTaskID,
-          //     this.state.selectedTaskID,
-          //   );
-          // }
-
-          // this.fetchData(selectedProjectID, this.state.selectedProjectTaskID);
-          // this.fetchFilesData(selectedProjectID, this.state.selectedProjectTaskID);
         } else {
           this.setState({dataLoading: false});
         }
@@ -1699,7 +1660,7 @@ class GroupTasksDetailsScreen extends Component {
           onPress={() => this.props.navigation.goBack()}
           onPressTaskLog={() =>
             this.props.navigation.navigate('TaskLogScreen', {
-              selectedProjectTaskID: this.state.selectedProjectTaskID,
+              selectedProjectTaskID: this.state.selectedTaskID,
             })
           }
           onPressDelete={() => this.onTaskDeketePress()}
@@ -1755,7 +1716,7 @@ class GroupTasksDetailsScreen extends Component {
                 </TouchableOpacity>
               ) : null}
             </View>
-            {/* <View style={styles.parentTaskView}>
+            <View style={styles.parentTaskView}>
               <Image
                 style={styles.iconStyle}
                 source={icons.subTasksRoundedGreen}
@@ -1780,7 +1741,7 @@ class GroupTasksDetailsScreen extends Component {
                   </Text>
                 </View>
               )}
-            </View> */}
+            </View>
             <View style={styles.taskTypeMainView}>
               <View style={styles.taskTypeNameView}>
                 <Image
@@ -2378,7 +2339,9 @@ const mapStateToProps = state => {
     deleteSingleTaskInGroupLoading: state.tasks.deleteSingleTaskInGroupLoading,
     deleteSingleTaskInGroupSuccess: state.tasks.deleteSingleTaskInGroupSuccess, 
     deleteSingleTaskInGroupError: state.tasks.deleteSingleTaskInGroupError,
-    deleteSingleTaskInGroupErrorMessage: state.tasks.deleteSingleTaskInGroupErrorMessage
+    deleteSingleTaskInGroupErrorMessage: state.tasks.deleteSingleTaskInGroupErrorMessage,
+    allTaskByGroupLoading: state.tasks.allTaskByGroupLoading,
+    allTaskByGroup: state.tasks.allTaskByGroup,
   };
 };
 export default connect(

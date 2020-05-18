@@ -66,7 +66,9 @@ import {
   UPDATE_PARENT_TO_CHILD,
   GET_TASK_LOG,
   GET_CHILD_TASK_OF_PARENT,
-  DELETE_TASK_IN_GROUP
+  DELETE_TASK_IN_GROUP,
+  GET_CHILD_TASK_OF_TASK_GROUP,
+  UPDATE_PARENT_TO_CHILD_IN_GROUP
 } from '../api/API';
 import AsyncStorage from '@react-native-community/async-storage';
 import {SET_UPLOAD_PROGRESS} from '../redux/types';
@@ -2399,6 +2401,49 @@ async function addFileToGroupTask(file,selectedGroupTaskID, selectedTaskID) {
   );
 };
 
+async function getChildTasksOfTaskGroupData(selectedGroupTaskID, taskId) {
+  let userID = null;
+  userID = await AsyncStorage.getItem('userID');
+
+  let headers = {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+    user: userID,
+  };
+
+  return request(
+    {
+      url: GET_CHILD_TASK_OF_TASK_GROUP + '/' + selectedGroupTaskID + '/tasks/'+ taskId +'/children',
+      method: 'GET',
+    },
+    true,
+    headers,
+  );
+};
+
+async function updateParentToChildInGroup(selectedGroupTaskID, taskId, newParent) {
+  let userIDHeder = null;
+  userIDHeder = await AsyncStorage.getItem('userID');
+
+  let headers = {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+    user: userIDHeder
+  };
+
+  return request(
+    {
+      url: UPDATE_PARENT_TO_CHILD_IN_GROUP + '/' + selectedGroupTaskID + '/tasks/' + taskId + '/parent/transition',
+      method: 'PUT',
+      data: {
+         newParent: newParent,
+      },
+    },
+    true,
+    headers,
+  );
+}
+
 const APIServices = {
   getAllProjectsByUserData,
   getUserData,
@@ -2493,7 +2538,9 @@ const APIServices = {
   getChildTasksOfParentData,
   getFilesInGroupTaskData,
   deleteFileInGroupTaskData,
-  addFileToGroupTask
+  addFileToGroupTask,
+  getChildTasksOfTaskGroupData,
+  updateParentToChildInGroup
 };
 
 export default APIServices;

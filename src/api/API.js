@@ -80,6 +80,10 @@ export const GET_TASK_LOG = `${PROTOCOL}${HOST}log`;
 export const GET_CHILD_TASK_OF_PARENT = `${PROTOCOL}${HOST}projects`;
 export const DELETE_TASK_IN_GROUP = `${PROTOCOL}${HOST}taskgroup`;
 
+export const GET_CHILD_TASK_OF_TASK_GROUP = `${PROTOCOL}${HOST}taskgroup`;
+export const UPDATE_PARENT_TO_CHILD_IN_GROUP = `${PROTOCOL}${HOST}taskgroup`;
+
+
 
 
 

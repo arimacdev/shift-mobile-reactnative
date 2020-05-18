@@ -14,7 +14,11 @@ import {
     DELETE_SINGLE_TASK_IN_MY_TASKS_FAILED,
     DELETE_SINGLE_TASK_IN_MY_TASKS_FAILED_MASSAGE,
 
-    MY_TASK_SUB_TASK_SUMBIT_SUCCESS
+    MY_TASK_SUB_TASK_SUMBIT_SUCCESS,
+
+    GET_ALL_TASK_BY_GROUP,
+    GET_ALL_TASK_BY_GROUP_SUCCESS,
+    GET_ALL_TASK_BY_GROUP_FAILED,
 
 } from '../types';
 import APIServices from '../../services/APIServices';
@@ -112,5 +116,22 @@ export const addEditSubTaskSuccess = value => {
     return {
         type: MY_TASK_SUB_TASK_SUMBIT_SUCCESS,
         payload: value
+    };
+};
+
+export const getAllTaskByGroup =  (selectedTaskGroupId) => {
+    return (dispatch) => {
+        dispatch({ type: GET_ALL_TASK_BY_GROUP });
+        APIServices.getAllTaskByGroup(selectedTaskGroupId).then(response => {
+            if(response.message == 'success'){
+                dispatch({ 
+                    type: GET_ALL_TASK_BY_GROUP_SUCCESS,
+                    payload: response});  
+            }else{
+                dispatch({ type: GET_ALL_TASK_BY_GROUP_FAILED});  
+            }    
+        }).catch(error => {   
+            dispatch({ type: GET_ALL_TASK_BY_GROUP_FAILED});  
+        });
     };
 };
