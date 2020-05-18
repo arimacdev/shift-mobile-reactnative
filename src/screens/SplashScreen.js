@@ -28,7 +28,7 @@ const config = {
         redirectUrl  : 'io.identityserver.demo:/oauthredirect',
         scopes : ['openid', 'roles', 'profile'],
         dangerouslyAllowInsecureHttpRequests: true
-  };
+};
   
 
 class SplashScreen extends Component {

@@ -3,13 +3,42 @@ import AsyncStorage from '@react-native-community/async-storage';
 import jwtDecode from 'jwt-decode';
 import { BASE_URL, GET_NEW_TOKENS } from '../api/API';
 import NavigationService from '../services/NavigationService';
+import { authorize } from 'react-native-app-auth';
+import moment from 'moment';
+
 
 const request = async function (options, isHeader,headers) {
     let authHeader = null;
 
     if (isHeader) {
-        authHeader = `Bearer ${await AsyncStorage.getItem('accessToken')}`;
-        headers.Authorization = authHeader;
+         let currentTime = moment().format();
+         const expiresIn = await AsyncStorage.getItem('accessTokenExpirationDate');
+         const refreshToken = await AsyncStorage.getItem('refreshToken');
+         console.log(`Refresh Token : ${refreshToken}`); 
+        //if(!(moment(expiresIn).isAfter(currentTime))){
+        if(false){    
+            let config= {
+                issuer : 'https://pmtool.devops.arimac.xyz/auth',
+                serviceConfiguration  : {
+                    authorizationEndpoint : 'https://pmtool.devops.arimac.xyz/auth/realms/pm-tool/protocol/openid-connect/auth',
+                    tokenEndpoint  : 'https://pmtool.devops.arimac.xyz/auth/realms/pm-tool/protocol/openid-connect/token',
+                },
+                clientId : 'pmtool-frontend',
+                redirectUrl  : 'io.identityserver.demo:/oauthredirect',
+                scopes : ['openid', 'roles', 'profile'],
+                dangerouslyAllowInsecureHttpRequests: true
+            }
+            console.log(config);
+            const result = await refresh(config, {
+                refreshToken: refreshToken,
+              });
+            AsyncStorage.setItem('accessToken', result.accessToken);
+            AsyncStorage.setItem('refreshToken', result.refreshToken);
+            AsyncStorage.setItem('accessTokenExpirationDate', result.accessTokenExpirationDate);
+        }else{
+            authHeader = `Bearer ${await AsyncStorage.getItem('accessToken')}`;
+            headers.Authorization = authHeader;
+        }   
     }
     
     const client = axios.create({
