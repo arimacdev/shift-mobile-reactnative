@@ -14,7 +14,6 @@ const request = async function (options, isHeader,headers) {
          let currentTime = moment().format();
          const expiresIn = await AsyncStorage.getItem('accessTokenExpirationDate');
          const refreshToken = await AsyncStorage.getItem('refreshToken');
-         console.log(`Refresh Token : ${refreshToken}`); 
         //if(!(moment(expiresIn).isAfter(currentTime))){
         if(false){    
             let config= {
