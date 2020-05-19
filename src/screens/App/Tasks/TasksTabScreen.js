@@ -295,7 +295,7 @@ class TasksTabScreen extends Component {
       }
     } else {
       dateText = 'Add Due Date';
-      color = '#000000';
+      color = item.isParent ? '#ffffff' : '#000000';
     }
 
     return <Text style={[styles.textDate, {color: color}]}>{dateText}</Text>;
@@ -322,7 +322,7 @@ class TasksTabScreen extends Component {
       }
     } else {
       dateText = 'Add Due Date';
-      color = '#000000';
+      color = item.parentTask.isParent ? '#ffffff' : '#000000';
     }
 
     return <Text style={[styles.textDate, {color: color}]}>{dateText}</Text>;
