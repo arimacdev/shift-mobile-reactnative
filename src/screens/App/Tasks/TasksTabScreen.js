@@ -538,7 +538,7 @@ class TasksTabScreen extends Component {
               />
               <TextInput
                 style={[styles.subTaskTextInput, {width: '95%'}]}
-                placeholder={'Add a subtask...'}
+                placeholder={'Add a sub task...'}
                 placeholderTextColor={colors.white}
                 onChangeText={subTasksName => {
                   let {textInputs} = this.state;
