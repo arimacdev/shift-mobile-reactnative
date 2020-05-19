@@ -222,7 +222,7 @@ class TasksDetailsScreen extends Component {
       sprintId: '',
       taskModalDataID: '',
       fromMyTask: false,
-      parentTaskName:''
+      parentTaskName: '',
     };
   }
 
@@ -298,7 +298,6 @@ class TasksDetailsScreen extends Component {
       sprintId: sprintId,
       fromMyTask: fromMyTask,
     });
-    
 
     this.fetchData(selectedProjectID, selectedProjectTaskID);
     this.fetchFilesData(selectedProjectID, selectedProjectTaskID);
@@ -322,7 +321,7 @@ class TasksDetailsScreen extends Component {
     }
   }
 
-  async gerTaskParentName(parentTaskId){
+  async gerTaskParentName(parentTaskId) {
     this.setState({dataLoading: true});
     try {
       let taskResult = await APIServices.getProjecTaskData(
@@ -330,7 +329,7 @@ class TasksDetailsScreen extends Component {
         parentTaskId,
       );
       if (taskResult.message == 'success') {
-        this.setState({parentTaskName: taskResult.data.taskName})
+        this.setState({parentTaskName: taskResult.data.taskName});
       } else {
         this.setState({dataLoading: false});
       }
@@ -352,8 +351,7 @@ class TasksDetailsScreen extends Component {
             subTaskListLength: response.data ? response.data.length : 0,
             addParentTaskShow:
               response.data && response.data.length > 0 ? false : true,
-            addChildTaskShow:
-              this.state.isParent ? true : false,
+            addChildTaskShow: this.state.isParent ? true : false,
           });
         } else {
           this.setState({dataLoading: false});
@@ -933,7 +931,7 @@ class TasksDetailsScreen extends Component {
         addParentTaskShow: false,
         addChildTaskShow: false,
       });
-      this.gerTaskParentName(taskResult.data.parentId)
+      this.gerTaskParentName(taskResult.data.parentId);
     }
 
     if (isParent) {
@@ -1517,7 +1515,7 @@ class TasksDetailsScreen extends Component {
         }
       })
       .catch(error => {
-        if (error.status == 401 || error.status == 403 ||  error.status == 400) {
+        if (error.status == 401 || error.status == 403 || error.status == 400) {
           this.setState({dataLoading: false});
           this.showAlert('', error.data.message);
         }
@@ -2162,8 +2160,7 @@ class TasksDetailsScreen extends Component {
               </View>
               <View style={styles.taskTypeDropMainView}>
                 <View style={styles.taskTypeDropDownView}>
-                  {
-                    isParent ?
+                  {isParent ? (
                     <Dropdown
                       // style={{}}
                       label=""
@@ -2176,7 +2173,11 @@ class TasksDetailsScreen extends Component {
                       animationDuration={0.5}
                       containerStyle={{width: '100%'}}
                       overlayStyle={{width: '100%'}}
-                      pickerStyle={{width: '89%', marginTop: 70, marginLeft: 15}}
+                      pickerStyle={{
+                        width: '89%',
+                        marginTop: 70,
+                        marginLeft: 15,
+                      }}
                       dropdownPosition={0}
                       value={this.state.sprintName}
                       itemColor={'black'}
@@ -2191,11 +2192,14 @@ class TasksDetailsScreen extends Component {
                       itemPadding={10}
                       onChangeText={this.onFilterSprintData}
                       //disabled={isParent ? false : true}
-                    />:
+                    />
+                  ) : (
                     <View style={styles.sprintNameViewMainView}>
-                       <Text style={styles.sprintNameView}>{this.state.sprintName}</Text>
+                      <Text style={styles.sprintNameView}>
+                        {this.state.sprintName}
+                      </Text>
                     </View>
-                  }
+                  )}
                 </View>
               </View>
             </View>
@@ -2268,22 +2272,22 @@ class TasksDetailsScreen extends Component {
           </View>
         </ScrollView>
         <AwesomeAlert
-            show={showAlert}
-            showProgress={false}
-            title={alertTitle}
-            message={alertMsg}
-            closeOnTouchOutside={true}
-            closeOnHardwareBackPress={false}
-            showCancelButton={false}
-            showConfirmButton={true}
-            cancelText=""
-            confirmText="OK"
-            confirmButtonColor={colors.primary}
-            onConfirmPressed={() => {
-              this.hideAlert();
-            }}
-          />
-        {dataLoading && <Loader />}  
+          show={showAlert}
+          showProgress={false}
+          title={alertTitle}
+          message={alertMsg}
+          closeOnTouchOutside={true}
+          closeOnHardwareBackPress={false}
+          showCancelButton={false}
+          showConfirmButton={true}
+          cancelText=""
+          confirmText="OK"
+          confirmButtonColor={colors.primary}
+          onConfirmPressed={() => {
+            this.hideAlert();
+          }}
+        />
+        {dataLoading && <Loader />}
       </View>
     );
   }
@@ -2740,15 +2744,14 @@ const styles = EStyleSheet.create({
     marginTop: '5rem',
     justifyContent: 'center',
   },
-  sprintNameView : {
+  sprintNameView: {
     marginTop: '5rem',
     fontFamily: 'CircularStd-Medium',
     fontSize: '15rem',
     color: colors.detailsViewText,
-    padding:'08rem'
+    padding: '08rem',
   },
-  sprintNameViewMainView : {
-  }
+  sprintNameViewMainView: {},
 });
 
 const mapStateToProps = state => {

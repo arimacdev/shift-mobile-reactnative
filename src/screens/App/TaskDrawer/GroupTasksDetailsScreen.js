@@ -100,7 +100,6 @@ let taskStatusData = [
   {value: 'Closed', id: 'closed'},
 ];
 
-
 class GroupTasksDetailsScreen extends Component {
   constructor(props) {
     super(props);
@@ -165,36 +164,44 @@ class GroupTasksDetailsScreen extends Component {
       taskNameEditable: false,
       sprintId: '',
       taskModalDataID: '',
-      parentTaskName:''
+      parentTaskName: '',
     };
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    if (prevProps.deleteSingleTaskInGroupError !== this.props.deleteSingleTaskInGroupError
-      && this.props.deleteSingleTaskInGroupError && this.props.deleteSingleTaskInGroupErrorMessage == '') {
-      this.showAlert("","Error");
-    }
-
-    if (prevProps.deleteSingleTaskInGroupError !== this.props.deleteSingleTaskInGroupError
-      && this.props.deleteSingleTaskInGroupError && this.props.deleteSingleTaskInGroupErrorMessage != '') {
-      this.showAlert("", this.props.deleteTaskErrorMessage);
-    }
-
-    if (prevProps.deleteSingleTaskInGroupSuccess !== this.props.deleteSingleTaskInGroupSuccess
-      && this.props.deleteSingleTaskInGroupSuccess) {
-        Alert.alert(
-          "Success",
-          "Task Deleted",
-          [
-            { text: "OK", onPress: () => this.props.navigation.goBack() }
-          ],
-          { cancelable: false }
-        );
+    if (
+      prevProps.deleteSingleTaskInGroupError !==
+        this.props.deleteSingleTaskInGroupError &&
+      this.props.deleteSingleTaskInGroupError &&
+      this.props.deleteSingleTaskInGroupErrorMessage == ''
+    ) {
+      this.showAlert('', 'Error');
     }
 
     if (
-      prevProps.allTaskByGroupLoading !==
-        this.props.allTaskByGroupLoading &&
+      prevProps.deleteSingleTaskInGroupError !==
+        this.props.deleteSingleTaskInGroupError &&
+      this.props.deleteSingleTaskInGroupError &&
+      this.props.deleteSingleTaskInGroupErrorMessage != ''
+    ) {
+      this.showAlert('', this.props.deleteTaskErrorMessage);
+    }
+
+    if (
+      prevProps.deleteSingleTaskInGroupSuccess !==
+        this.props.deleteSingleTaskInGroupSuccess &&
+      this.props.deleteSingleTaskInGroupSuccess
+    ) {
+      Alert.alert(
+        'Success',
+        'Task Deleted',
+        [{text: 'OK', onPress: () => this.props.navigation.goBack()}],
+        {cancelable: false},
+      );
+    }
+
+    if (
+      prevProps.allTaskByGroupLoading !== this.props.allTaskByGroupLoading &&
       this.props.allTaskByGroup &&
       this.props.allTaskByGroup.length > 0
     ) {
@@ -232,7 +239,10 @@ class GroupTasksDetailsScreen extends Component {
 
   async fetchFilesData(selectedGroupTaskID, selectedTaskID) {
     this.setState({dataLoading: true});
-    let filesData = await APIServices.getFilesInGroupTaskData(selectedGroupTaskID, selectedTaskID);
+    let filesData = await APIServices.getFilesInGroupTaskData(
+      selectedGroupTaskID,
+      selectedTaskID,
+    );
     if (filesData.message == 'success') {
       this.setState({
         filesData: filesData.data,
@@ -243,7 +253,7 @@ class GroupTasksDetailsScreen extends Component {
     }
   }
 
-  async gerTaskParentName(parentTaskId){
+  async gerTaskParentName(parentTaskId) {
     this.setState({dataLoading: true});
     try {
       let taskResult = await APIServices.getProjecTaskData(
@@ -251,7 +261,7 @@ class GroupTasksDetailsScreen extends Component {
         parentTaskId,
       );
       if (taskResult.message == 'success') {
-        this.setState({parentTaskName: taskResult.data.taskName})
+        this.setState({parentTaskName: taskResult.data.taskName});
       } else {
         this.setState({dataLoading: false});
       }
@@ -273,8 +283,7 @@ class GroupTasksDetailsScreen extends Component {
             subTaskListLength: response.data ? response.data.length : 0,
             addParentTaskShow:
               response.data && response.data.length > 0 ? false : true,
-            addChildTaskShow:
-              this.state.isParent ? true : false,
+            addChildTaskShow: this.state.isParent ? true : false,
           });
         } else {
           this.setState({dataLoading: false});
@@ -475,7 +484,11 @@ class GroupTasksDetailsScreen extends Component {
 
     this.setState({dataLoading: true});
 
-    await APIServices.deleteFileInGroupTaskData(selectedGroupTaskID, taskID, taskFileId)
+    await APIServices.deleteFileInGroupTaskData(
+      selectedGroupTaskID,
+      taskID,
+      taskFileId,
+    )
       .then(response => {
         if (response.message == 'success') {
           this.setState({dataLoading: false});
@@ -612,7 +625,9 @@ class GroupTasksDetailsScreen extends Component {
 
   async getAllSprintInProject(selectedGroupTaskID, sprintId) {
     this.setState({dataLoading: true});
-    let sprintData = await APIServices.getAllSprintInProject(selectedGroupTaskID);
+    let sprintData = await APIServices.getAllSprintInProject(
+      selectedGroupTaskID,
+    );
     if (sprintData.message == 'success') {
       this.setSprintDroupDownData(sprintData.data);
       this.setSprintDroupDownSelectedValue(sprintData.data, sprintId);
@@ -638,7 +653,7 @@ class GroupTasksDetailsScreen extends Component {
         this.setTaskUserName(taskResult);
         this.setSecondaryTaskId(taskResult);
         this.setIsParent(taskResult);
-        
+
         setState({dataLoading: false, taskResult: taskResult});
       } else {
         this.setState({dataLoading: false});
@@ -733,7 +748,9 @@ class GroupTasksDetailsScreen extends Component {
     let userID = taskResult.data.taskAssignee;
     let activeUsers = await APIServices.getTaskPeopleData(selectedGroupTaskID);
     if (activeUsers.message == 'success' && userID) {
-      const result = activeUsers.data.find(({assigneeId}) => assigneeId === userID);
+      const result = activeUsers.data.find(
+        ({assigneeId}) => assigneeId === userID,
+      );
       this.setState({
         name: result.assigneeFirstName + ' ' + result.assigneeLastName,
         //activeUsers : activeUsers.data,
@@ -807,7 +824,7 @@ class GroupTasksDetailsScreen extends Component {
         addParentTaskShow: false,
         addChildTaskShow: false,
       });
-      this.gerTaskParentName(taskResult.data.parentId)
+      this.gerTaskParentName(taskResult.data.parentId);
     }
 
     if (isParent) {
@@ -841,7 +858,6 @@ class GroupTasksDetailsScreen extends Component {
 
     return <Text style={[styles.textDate, {color: color}]}>{dateText}</Text>;
   };
-  
 
   showDatePicker = () => {
     this.setState({showPicker: true});
@@ -1200,8 +1216,6 @@ class GroupTasksDetailsScreen extends Component {
     );
   }
 
-
-
   async changeTaskNote(note) {
     this.setState({note: note});
   }
@@ -1210,7 +1224,11 @@ class GroupTasksDetailsScreen extends Component {
     this.setState({dataLoading: true});
     let selectedGroupTaskID = this.state.selectedGroupTaskID;
     let selectedTaskID = this.state.selectedTaskID;
-    await APIServices.groupTaskUpdateTaskNoteData(selectedGroupTaskID, selectedTaskID, note)
+    await APIServices.groupTaskUpdateTaskNoteData(
+      selectedGroupTaskID,
+      selectedTaskID,
+      note,
+    )
       .then(response => {
         if (response.message == 'success') {
           this.setState({dataLoading: false, note: note});
@@ -1226,13 +1244,16 @@ class GroupTasksDetailsScreen extends Component {
       });
   }
 
-
   // change assignee of task API
   async changeTaskAssignee(name, userID) {
     this.setState({dataLoading: true});
     let selectedGroupTaskID = this.state.selectedGroupTaskID;
     let selectedTaskID = this.state.selectedTaskID;
-    await APIServices.groupTaskUpdateTaskAssigneeData(selectedGroupTaskID, selectedTaskID, userID)
+    await APIServices.groupTaskUpdateTaskAssigneeData(
+      selectedGroupTaskID,
+      selectedTaskID,
+      userID,
+    )
       .then(response => {
         if (response.message == 'success') {
           this.setState({dataLoading: false, name: name});
@@ -1269,7 +1290,7 @@ class GroupTasksDetailsScreen extends Component {
         }
       })
       .catch(error => {
-        if (error.status == 401 || error.status == 403 ||  error.status == 400) {
+        if (error.status == 401 || error.status == 403 || error.status == 400) {
           this.setState({dataLoading: false});
           this.showAlert('', error.data.message);
         }
@@ -1277,21 +1298,25 @@ class GroupTasksDetailsScreen extends Component {
   }
 
   // change name of task API DONE
-  async onTaskNameChangeSubmit(text){
+  async onTaskNameChangeSubmit(text) {
     try {
-      this.setState({dataLoading:true});
+      this.setState({dataLoading: true});
       let selectedGroupTaskID = this.state.selectedGroupTaskID;
       let selectedTaskID = this.state.selectedTaskID;
-      resultData = await APIServices.groupTaskUpdateTaskNameData(selectedGroupTaskID,selectedTaskID,text);
-      if(resultData.message == 'success'){
-        this.setState({dataLoading:false});
-      }else{
-        this.setState({dataLoading:false});
+      resultData = await APIServices.groupTaskUpdateTaskNameData(
+        selectedGroupTaskID,
+        selectedTaskID,
+        text,
+      );
+      if (resultData.message == 'success') {
+        this.setState({dataLoading: false});
+      } else {
+        this.setState({dataLoading: false});
       }
-    }catch(e) {
-      if(e.status == 401 || e.status == 403){
-        this.setState({dataLoading:false});
-        this.showAlert("",e.data.message);
+    } catch (e) {
+      if (e.status == 401 || e.status == 403) {
+        this.setState({dataLoading: false});
+        this.showAlert('', e.data.message);
       }
     }
   }
@@ -1308,7 +1333,11 @@ class GroupTasksDetailsScreen extends Component {
         )
       : '';
 
-    await APIServices.groupTaskUpdateDueDateData(selectedGroupTaskID, selectedTaskID, IsoDueDate)
+    await APIServices.groupTaskUpdateDueDateData(
+      selectedGroupTaskID,
+      selectedTaskID,
+      IsoDueDate,
+    )
       .then(response => {
         if (response.message == 'success') {
           this.setState({dataLoading: false});
@@ -1360,17 +1389,24 @@ class GroupTasksDetailsScreen extends Component {
     let selectedTaskID = this.state.selectedTaskID;
 
     Alert.alert(
-      "Delete Task",
+      'Delete Task',
       "You're about to permanently delete this task, its comments\n and attachments, and all of its data.\nIf you're not sure, you can close this pop up.",
       [
         {
-          text: "Cancel",
-          onPress: () => console.log("Cancel Pressed"),
-          style: "cancel"
+          text: 'Cancel',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
         },
-        { text: "Delete", onPress: () => this.props.deleteTaskInGroupTasks(selectedGroupTaskID, selectedTaskID)}
+        {
+          text: 'Delete',
+          onPress: () =>
+            this.props.deleteTaskInGroupTasks(
+              selectedGroupTaskID,
+              selectedTaskID,
+            ),
+        },
       ],
-      { cancelable: false }
+      {cancelable: false},
     );
   }
 
@@ -1477,7 +1513,6 @@ class GroupTasksDetailsScreen extends Component {
     );
   }
 
-
   onFilterTaskStatusData = (value, index, data) => {
     const selectedTaskStatusId = data[index].id;
     let selectedTaskStatusName = data[index].value;
@@ -1560,10 +1595,7 @@ class GroupTasksDetailsScreen extends Component {
           this.setState({dataLoading: false});
           // if (fromParent) {
           this.fetchData(selectedGroupTaskID, this.state.selectedTaskID);
-          this.fetchFilesData(
-            selectedGroupTaskID,
-            this.state.selectedTaskID,
-          );
+          this.fetchFilesData(selectedGroupTaskID, this.state.selectedTaskID);
 
           this.getAllTaskByGroup(this.state.selectedGroupTaskID);
           this.setState({parentTaskName: parentTaskName});
@@ -1875,22 +1907,22 @@ class GroupTasksDetailsScreen extends Component {
           </View>
         </ScrollView>
         <AwesomeAlert
-            show={showAlert}
-            showProgress={false}
-            title={alertTitle}
-            message={alertMsg}
-            closeOnTouchOutside={true}
-            closeOnHardwareBackPress={false}
-            showCancelButton={false}
-            showConfirmButton={true}
-            cancelText=""
-            confirmText="OK"
-            confirmButtonColor={colors.primary}
-            onConfirmPressed={() => {
-              this.hideAlert();
-            }}
-          />
-        {dataLoading && <Loader />}  
+          show={showAlert}
+          showProgress={false}
+          title={alertTitle}
+          message={alertMsg}
+          closeOnTouchOutside={true}
+          closeOnHardwareBackPress={false}
+          showCancelButton={false}
+          showConfirmButton={true}
+          cancelText=""
+          confirmText="OK"
+          confirmButtonColor={colors.primary}
+          onConfirmPressed={() => {
+            this.hideAlert();
+          }}
+        />
+        {dataLoading && <Loader />}
       </View>
     );
   }
@@ -2347,23 +2379,23 @@ const styles = EStyleSheet.create({
     marginTop: '5rem',
     justifyContent: 'center',
   },
-  sprintNameView : {
+  sprintNameView: {
     marginTop: '5rem',
     fontFamily: 'CircularStd-Medium',
     fontSize: '15rem',
     color: colors.detailsViewText,
-    padding:'08rem'
+    padding: '08rem',
   },
-  sprintNameViewMainView : {
-  }
+  sprintNameViewMainView: {},
 });
 
 const mapStateToProps = state => {
   return {
     deleteSingleTaskInGroupLoading: state.tasks.deleteSingleTaskInGroupLoading,
-    deleteSingleTaskInGroupSuccess: state.tasks.deleteSingleTaskInGroupSuccess, 
+    deleteSingleTaskInGroupSuccess: state.tasks.deleteSingleTaskInGroupSuccess,
     deleteSingleTaskInGroupError: state.tasks.deleteSingleTaskInGroupError,
-    deleteSingleTaskInGroupErrorMessage: state.tasks.deleteSingleTaskInGroupErrorMessage,
+    deleteSingleTaskInGroupErrorMessage:
+      state.tasks.deleteSingleTaskInGroupErrorMessage,
     allTaskByGroupLoading: state.tasks.allTaskByGroupLoading,
     allTaskByGroup: state.tasks.allTaskByGroup,
   };

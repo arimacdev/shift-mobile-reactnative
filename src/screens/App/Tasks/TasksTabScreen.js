@@ -146,8 +146,8 @@ class TasksTabScreen extends Component {
           selectedProjectID: selectedProjectID,
           selectedProjectName: selectedProjectName,
           filterType: 'None',
-          filter:false,
-          index : 0
+          filter: false,
+          index: 0,
         },
         () => {
           this.getAllTaskInProject();
@@ -159,23 +159,24 @@ class TasksTabScreen extends Component {
       prevProps.allTaskByProjectLoading !==
         this.props.allTaskByProjectLoading &&
       this.props.allTaskByProject &&
-      (this.props.allTaskByProject.length > 0 || this.props.allTaskByProject.length == 0)
+      (this.props.allTaskByProject.length > 0 ||
+        this.props.allTaskByProject.length == 0)
     ) {
       this.setState({
         filterdDataAllTaks: this.props.allTaskByProject,
       });
-    };
+    }
 
     if (
       prevProps.myTaskByProjectLoading !== this.props.myTaskByProjectLoading &&
       this.props.myTaskByProject &&
-      (this.props.myTaskByProject.length > 0 || this.props.myTaskByProject.length == 0)
+      (this.props.myTaskByProject.length > 0 ||
+        this.props.myTaskByProject.length == 0)
     ) {
       this.setState({
         filterdAndMyTasksData: this.props.myTaskByProject,
       });
     }
-
   }
 
   componentDidMount() {
@@ -587,7 +588,7 @@ class TasksTabScreen extends Component {
             selectedProjectName: selectedProjectName,
             parentTaskName: parentTaskName,
             allDetails: this.state.filterdDataAllTaks,
-            fromMyTask: this.state.filter ? false : true
+            fromMyTask: this.state.filter ? false : true,
           })
         }>
         <View
@@ -767,9 +768,7 @@ class TasksTabScreen extends Component {
     });
   }
 
-  async componentDidMount() {
-    
-  }
+  async componentDidMount() {}
 
   async tabOpenTaskTab() {
     let selectedProjectID = this.props.selectedProjectID;
@@ -779,8 +778,8 @@ class TasksTabScreen extends Component {
         selectedProjectID: selectedProjectID,
         selectedProjectName: selectedProjectName,
         filterType: 'None',
-        filter:false,
-        index : 0
+        filter: false,
+        index: 0,
       },
       () => {
         this.getAllTaskInProject();
