@@ -1413,13 +1413,14 @@ class TasksDetailsScreen extends Component {
           this.setState({dataLoading: false, sprintName: selectedName});
         } else {
           this.setState({dataLoading: false});
+          this.showAlert('', response.message);
         }
       })
       .catch(error => {
-        if (error.status == 401 || error.status == 403) {
+        // if (error.status == 401 || error.status == 403) {
           this.setState({dataLoading: false});
           this.showAlert('', error.data.message);
-        }
+        // }
       });
   }
 
