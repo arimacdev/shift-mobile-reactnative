@@ -873,20 +873,12 @@ class TasksDetailsScreen extends Component {
       .parseZone(taskResult.data.taskDueDateAt)
       .format('hh:mmA');
 
-    // console.log(
-    //   'ddddddddddddddddddddddddd',
-    //   moment(taskResult.data.taskDueDateAt).format('ddd MMM DD YYYY hh:mm:ss')+' GMT+0530 (India Standard Time)',
-    // );
-
-    // console.log(
-    //   'ddddddddddddddddddddddddd',
-    //   moment(taskResult.data.taskDueDateAt).format('ddd MMM DD YYYY hh:mm:ss')+' GMT+0530 (India Standard Time)',
-    // );
-
     if (taskDueDate != 'Invalid date') {
       this.setState({
         duedate: taskDueDate,
         dueTime: taskDueTime,
+        date: new Date(taskResult.data.taskDueDateAt),
+        time: new Date(taskResult.data.taskDueDateAt),
         // date: moment.parseZone(taskResult.data.taskDueDateAt).format('ddd MMM DD YYYY hh:mm:ss')+' GMT+0530 (India Standard Time)',
 
         //new Date('Tue May 11 2020 03:14:00 GMT+0530 (India Standard Time)'),
@@ -908,6 +900,8 @@ class TasksDetailsScreen extends Component {
       this.setState({
         remindDate: taskReminderDate,
         reminderTime: taskReminderTime,
+        dateReminder: new Date(taskResult.data.taskReminderAt),
+        timeReminder: new Date(taskResult.data.taskReminderAt),
       });
     }
   }
@@ -1117,7 +1111,11 @@ class TasksDetailsScreen extends Component {
         showPicker: false,
         showTimePicker: false,
       });
-      this.setDueDate(this.state.taskResult);
+      if (this.state.reminder) {
+        this.setReminderDate(this.state.taskResult);
+      }else{
+        this.setDueDate(this.state.taskResult);
+      }
     }
   }
 
@@ -1152,7 +1150,11 @@ class TasksDetailsScreen extends Component {
         showPicker: false,
         showTimePicker: false,
       });
-      this.setDueDate(this.state.taskResult);
+      if (this.state.reminder) {
+        this.setReminderDate(this.state.taskResult);
+      }else{
+        this.setDueDate(this.state.taskResult);
+      }
     }
   }
 
