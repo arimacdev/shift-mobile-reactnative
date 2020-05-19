@@ -222,14 +222,12 @@ class GroupTasksDetailsScreen extends Component {
     let selectedTaskID = params.taskDetails.taskId;
     let selectedGroupTaskName = params.selectedGroupTaskName;
     let parentTaskName = params.parentTaskName ? params.parentTaskName : '';
-    // let allDetails = params.allDetails;
 
     this.setState({
       selectedGroupTaskID: selectedGroupTaskID,
       selectedGroupTaskName: selectedGroupTaskName,
       selectedTaskID: selectedTaskID,
       parentTaskName: parentTaskName,
-      // allDetails: allDetails,
     });
 
     this.fetchData(selectedGroupTaskID, selectedTaskID);
@@ -311,10 +309,7 @@ class GroupTasksDetailsScreen extends Component {
         }
       } else {
         if (element.childTasks.length == 0) {
-          if (
-            selectedProjectTaskID !== element.parentTask.taskId
-            // && this.state.taskModalDataID !== element.parentTask.taskId
-          ) {
+          if (selectedProjectTaskID !== element.parentTask.taskId) {
             taskModalData.push({
               id: element.parentTask.taskId,
               value: element.parentTask.taskName,
@@ -326,10 +321,6 @@ class GroupTasksDetailsScreen extends Component {
     if (taskModalData.length > 0) {
       this.setState({taskModalData: taskModalData});
     } else {
-      // taskModalData.push({
-      //   id: 'noData',
-      //   value: 'No data avilable',
-      // });
       this.setState({selectedTaskName: 'No data avilable'});
     }
   }
