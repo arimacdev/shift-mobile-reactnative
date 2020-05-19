@@ -612,6 +612,10 @@ class TasksTabScreen extends Component {
                 style={
                   item.isParent ? styles.parentTextMain : styles.subTextMain
                 }>
+                {item.secondaryTaskId}
+              </Text>
+              <Text
+                style={item.isParent ? styles.parentTextSub : styles.subText}>
                 {item.taskName}
               </Text>
             </View>
@@ -1401,6 +1405,14 @@ const styles = EStyleSheet.create({
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
     color: colors.white,
+  },
+  parentTextSub: {
+    fontSize: '9rem',
+    color: colors.white,
+    // lineHeight: '17rem',
+    fontFamily: 'CircularStd',
+    textAlign: 'left',
+    marginLeft: '5rem',
   },
   subText: {
     fontSize: '9rem',
