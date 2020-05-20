@@ -290,8 +290,8 @@ class GroupTasksDetailsScreen extends Component {
       })
       .catch(error => {
         //if (error.status == 401 || error.status == 403) {
-          this.setState({dataLoading: false});
-          this.showAlert('', error.data.message);
+        this.setState({dataLoading: false});
+        this.showAlert('', error.data.message);
         //}
       });
   }
@@ -386,8 +386,8 @@ class GroupTasksDetailsScreen extends Component {
         })
         .catch(error => {
           //if (error.status == 401) {
-            this.setState({indeterminate: false, files: [], uploading: 0});
-            this.showAlert('', error.data.message);
+          this.setState({indeterminate: false, files: [], uploading: 0});
+          this.showAlert('', error.data.message);
           //}
         });
     } catch (err) {
@@ -491,8 +491,8 @@ class GroupTasksDetailsScreen extends Component {
       })
       .catch(error => {
         //if (error.status == 401) {
-          this.setState({dataLoading: false});
-          this.showAlert('', error.data.message);
+        this.setState({dataLoading: false});
+        this.showAlert('', error.data.message);
         //}
       });
   }
@@ -1228,8 +1228,8 @@ class GroupTasksDetailsScreen extends Component {
       })
       .catch(error => {
         //if (error.status == 401 || error.status == 403) {
-          this.setState({dataLoading: false});
-          this.showAlert('', error.data.message);
+        this.setState({dataLoading: false});
+        this.showAlert('', error.data.message);
         //}
       });
   }
@@ -1253,8 +1253,8 @@ class GroupTasksDetailsScreen extends Component {
       })
       .catch(error => {
         //if (error.status == 401 || error.status == 403) {
-          this.setState({dataLoading: false});
-          this.showAlert('', error.data.message);
+        this.setState({dataLoading: false});
+        this.showAlert('', error.data.message);
         //}
       });
   }
@@ -1281,8 +1281,8 @@ class GroupTasksDetailsScreen extends Component {
       })
       .catch(error => {
         //if (error.status == 401 || error.status == 403 || error.status == 400) {
-          this.setState({dataLoading: false});
-          this.showAlert('', error.data.message);
+        this.setState({dataLoading: false});
+        this.showAlert('', error.data.message);
         //}
       });
   }
@@ -1337,8 +1337,8 @@ class GroupTasksDetailsScreen extends Component {
       })
       .catch(error => {
         //if (error.status == 401 || error.status == 403) {
-          this.setState({dataLoading: false});
-          this.showAlert('', error.data.message);
+        this.setState({dataLoading: false});
+        this.showAlert('', error.data.message);
         //}
       });
   }
@@ -1390,14 +1390,33 @@ class GroupTasksDetailsScreen extends Component {
         {
           text: 'Delete',
           onPress: () =>
-            this.props.deleteTaskInGroupTasks(
-              selectedGroupTaskID,
-              selectedTaskID,
-            ),
+            this.onGroupSubTaskDeletePress(selectedGroupTaskID, selectedTaskID),
         },
       ],
       {cancelable: false},
     );
+  }
+
+  onGroupSubTaskDeletePress(selectedGroupTaskID, selectedTaskID) {
+    this.setState({dataLoading: true});
+    APIServices.deleteSingleInGroupTaskData(selectedGroupTaskID, selectedTaskID)
+      .then(response => {
+        if (response.message == 'success') {
+          this.setState({dataLoading: false});
+          Alert.alert(
+            'Success',
+            'Task Deleted',
+            [{text: 'OK', onPress: () => this.props.navigation.goBack()}],
+            {cancelable: false},
+          );
+        } else {
+          this.setState({dataLoading: false});
+        }
+      })
+      .catch(error => {
+        this.setState({dataLoading: false});
+        this.showAlert('', error.data.message);
+      });
   }
 
   onBackPress() {
@@ -1454,38 +1473,36 @@ class GroupTasksDetailsScreen extends Component {
     }
   };
 
-  navigateTo (item){
+  navigateTo(item) {
     this.props.navigation.navigate('GroupSubTasksDetailsScreen', {
       taskDetails: item,
       selectedGroupTaskID: this.state.selectedGroupTaskID,
-      selectedGroupTaskName : item.taskName,
-    })
+      selectedGroupTaskName: item.taskName,
+    });
   }
 
   renderSubtasksList(item, index, userId, projectId) {
     return (
-      <TouchableOpacity
-          onPress={() =>this.navigateTo(item)
-        }>
-      <View style={styles.subTasksListView}>
-        <Image
-          style={styles.subTasksCompletionIcon}
-          source={
-            item.taskStatus == 'closed'
-              ? icons.rightCircule
-              : icons.whiteCircule
-          }
-        />
-        <View style={{flex: 1}}>
-          <Text style={styles.subTaskText} numberOfLines={1}>
-            {item.taskName}
-          </Text>
+      <TouchableOpacity onPress={() => this.navigateTo(item)}>
+        <View style={styles.subTasksListView}>
+          <Image
+            style={styles.subTasksCompletionIcon}
+            source={
+              item.taskStatus == 'closed'
+                ? icons.rightCircule
+                : icons.whiteCircule
+            }
+          />
+          <View style={{flex: 1}}>
+            <Text style={styles.subTaskText} numberOfLines={1}>
+              {item.taskName}
+            </Text>
+          </View>
+          <View style={styles.statusView}>
+            {this.dateView(item)}
+            {this.userImage(item)}
+          </View>
         </View>
-        <View style={styles.statusView}>
-          {this.dateView(item)}
-          {this.userImage(item)}
-        </View>
-      </View>
       </TouchableOpacity>
     );
   }
@@ -1598,8 +1615,8 @@ class GroupTasksDetailsScreen extends Component {
       })
       .catch(error => {
         //if (error.status == 401 || error.status == 403) {
-          this.setState({dataLoading: false});
-          this.showAlert('', error.data.message);
+        this.setState({dataLoading: false});
+        this.showAlert('', error.data.message);
         //}
       });
   }

@@ -362,8 +362,8 @@ class TasksDetailsScreen extends Component {
       })
       .catch(error => {
         //if (error.status == 401 || error.status == 403) {
-          this.setState({dataLoading: false});
-          this.showAlert('', error.data.message);
+        this.setState({dataLoading: false});
+        this.showAlert('', error.data.message);
         //}
       });
   }
@@ -465,8 +465,8 @@ class TasksDetailsScreen extends Component {
         })
         .catch(error => {
           //if (error.status == 401) {
-            this.setState({indeterminate: false, files: [], uploading: 0});
-            this.showAlert('', error.data.message);
+          this.setState({indeterminate: false, files: [], uploading: 0});
+          this.showAlert('', error.data.message);
           //}
         });
       // this.props.uploadFile(this.state.files, this.props.selectedProjectID);
@@ -569,8 +569,8 @@ class TasksDetailsScreen extends Component {
       })
       .catch(error => {
         //if (error.status == 401) {
-          this.setState({dataLoading: false});
-          this.showAlert('', error.data.message);
+        this.setState({dataLoading: false});
+        this.showAlert('', error.data.message);
         //}
       });
   }
@@ -1441,8 +1441,8 @@ class TasksDetailsScreen extends Component {
       })
       .catch(error => {
         //if (error.status == 401 || error.status == 403) {
-          this.setState({dataLoading: false});
-          this.showAlert('', error.data.message);
+        this.setState({dataLoading: false});
+        this.showAlert('', error.data.message);
         //}
       });
   }
@@ -1542,8 +1542,8 @@ class TasksDetailsScreen extends Component {
       })
       .catch(error => {
         //if (error.status == 401 || error.status == 403) {
-          this.setState({dataLoading: false});
-          this.showAlert('', error.data.message);
+        this.setState({dataLoading: false});
+        this.showAlert('', error.data.message);
         //}
       });
   }
@@ -1570,8 +1570,8 @@ class TasksDetailsScreen extends Component {
       })
       .catch(error => {
         //if (error.status == 401 || error.status == 403) {
-          this.setState({dataLoading: false});
-          this.showAlert('', error.data.message);
+        this.setState({dataLoading: false});
+        this.showAlert('', error.data.message);
         //}
       });
   }
@@ -1625,11 +1625,33 @@ class TasksDetailsScreen extends Component {
         {
           text: 'Delete',
           onPress: () =>
-            this.props.deleteTask(projectID, taskID, taskName, tskInitiator),
+            this.deleteTsakOkPress(projectID, taskID, taskName, tskInitiator),
         },
       ],
       {cancelable: false},
     );
+  }
+
+  deleteTsakOkPress(projectID, taskId, taskName, tskInitiator) {
+    this.setState({dataLoading: true});
+    APIServices.deleteSingleTask(projectID, taskId, taskName, tskInitiator)
+      .then(response => {
+        if (response.message == 'success') {
+          this.setState({dataLoading: false});
+          Alert.alert(
+            'Success',
+            'Task Deleted',
+            [{text: 'OK', onPress: () => this.props.navigation.goBack()}],
+            {cancelable: false},
+          );
+        } else {
+          this.setState({dataLoading: false});
+        }
+      })
+      .catch(error => {
+        this.setState({dataLoading: false});
+        this.showAlert('', error.data.message);
+      });
   }
 
   onBackPress() {
@@ -1686,39 +1708,37 @@ class TasksDetailsScreen extends Component {
     }
   };
 
-  navigateTo (item){
-    this.props.navigation.navigate('SubTasksDetailsScreen', {
+  navigateTo(item) {
+    this.props.navigation.navigate('TasksSubDetailsScreen', {
       taskDetails: item,
       selectedProjectID: this.state.selectedProjectID,
       selectedProjectName: this.state.selectedProjectName,
       isFromBoards: true,
-    })
+    });
   }
 
   renderSubtasksList(item, index, userId, projectId) {
     return (
-      <TouchableOpacity
-        onPress={() =>this.navigateTo(item)
-        }>
-      <View style={styles.subTasksListView}>
-        <Image
-          style={styles.subTasksCompletionIcon}
-          source={
-            item.taskStatus == 'closed'
-              ? icons.rightCircule
-              : icons.whiteCircule
-          }
-        />
-        <View style={{flex: 1}}>
-          <Text style={styles.subTaskText} numberOfLines={1}>
-            {item.taskName}
-          </Text>
+      <TouchableOpacity onPress={() => this.navigateTo(item)}>
+        <View style={styles.subTasksListView}>
+          <Image
+            style={styles.subTasksCompletionIcon}
+            source={
+              item.taskStatus == 'closed'
+                ? icons.rightCircule
+                : icons.whiteCircule
+            }
+          />
+          <View style={{flex: 1}}>
+            <Text style={styles.subTaskText} numberOfLines={1}>
+              {item.taskName}
+            </Text>
+          </View>
+          <View style={styles.statusView}>
+            {this.dateView(item)}
+            {this.userImage(item)}
+          </View>
         </View>
-        <View style={styles.statusView}>
-          {this.dateView(item)}
-          {this.userImage(item)}
-        </View>
-      </View>
       </TouchableOpacity>
     );
   }
@@ -1836,8 +1856,8 @@ class TasksDetailsScreen extends Component {
       })
       .catch(error => {
         //if (error.status == 401 || error.status == 403) {
-          this.setState({dataLoading: false});
-          this.showAlert('', error.data.message);
+        this.setState({dataLoading: false});
+        this.showAlert('', error.data.message);
         //}
       });
   }
@@ -1892,8 +1912,8 @@ class TasksDetailsScreen extends Component {
       })
       .catch(error => {
         //if (error.status == 401 || error.status == 403) {
-          this.setState({dataLoading: false});
-          this.showAlert('', error.data.message);
+        this.setState({dataLoading: false});
+        this.showAlert('', error.data.message);
         //}
       });
   }

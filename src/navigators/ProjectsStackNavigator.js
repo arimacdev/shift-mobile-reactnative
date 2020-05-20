@@ -133,6 +133,12 @@ export const ProjectsStackNavigator = createStackNavigator(
         header: null,
       }),
     },
+    TasksSubDetailsScreen: {
+      screen: TasksDetailsScreen,
+      navigationOptions: ({navigation}) => ({
+        header: null,
+      }),
+    },
     SubTaskScreen: {
       screen: SubTaskScreen,
       navigationOptions: ({navigation}) => ({
