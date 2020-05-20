@@ -47,7 +47,6 @@ let dropData = [
   },
 ];
 
-
 class Tasks extends Component {
   constructor(props) {
     super(props);
@@ -58,10 +57,10 @@ class Tasks extends Component {
       selectedTaskGroupId: '',
       isActive: this.props.isActive,
       selectedTypeAllTasks: 'All',
-      dataLoading : false,
-      taskName : '',
-      filter : false,
-      subTasksName : '',
+      dataLoading: false,
+      taskName: '',
+      filter: false,
+      subTasksName: '',
       textInputs: [],
     };
   }
@@ -92,24 +91,23 @@ class Tasks extends Component {
     //   );
   }
 
-
   async getAllTaskInGroup() {
     this.setState({
       selectedTypeAllTasks: 'All',
     });
     let selectedTaskGroupId = this.state.selectedTaskGroupId;
-    this.setState({dataLoading:true});
+    this.setState({dataLoading: true});
     allTaskData = await APIServices.getAllTaskByGroup(selectedTaskGroupId);
     console.log(allTaskData);
-    if(allTaskData.message == 'success'){
+    if (allTaskData.message == 'success') {
       this.setState({
-        dataLoading:false,
-        allDataAllTaks:allTaskData.data,
-        filterdDataAllTaks:allTaskData.data,
-        filter : false
-      });   
-    }else{
-      this.setState({dataLoading:false});
+        dataLoading: false,
+        allDataAllTaks: allTaskData.data,
+        filterdDataAllTaks: allTaskData.data,
+        filter: false,
+      });
+    } else {
+      this.setState({dataLoading: false});
     }
   }
 
@@ -123,7 +121,7 @@ class Tasks extends Component {
         this.getAllTaskInGroup();
       },
     );
-  };
+  }
 
   dateViewMain = function(item) {
     let date = item.parentTask.taskDueDateAt;
@@ -231,7 +229,6 @@ class Tasks extends Component {
     );
   }
 
-
   onFilterAllTasks(key) {
     let value = key;
     let searchValue = '';
@@ -243,8 +240,8 @@ class Tasks extends Component {
       case 'Closed':
         searchValue = 'closed';
         break;
-      case 'Open' : 
-          searchValue = 'open';  
+      case 'Open':
+        searchValue = 'open';
         break;
     }
 
@@ -252,44 +249,55 @@ class Tasks extends Component {
       //to do list all task individually
       let dataArray = [];
       let list = this.state.allDataAllTaks;
-      for(let i = 0 ; i < list.length ; i++){
+      for (let i = 0; i < list.length; i++) {
         let parentTask = list[i].parentTask;
         let childTasks = list[i].childTasks;
-        if(parentTask.taskStatus == searchValue){
+        if (parentTask.taskStatus == searchValue) {
           dataArray.push(parentTask);
         }
-        for(let j = 0 ; j < childTasks.length ; j++){
+        for (let j = 0; j < childTasks.length; j++) {
           let childTasksItem = childTasks[j];
-          if(childTasksItem.taskStatus == searchValue){
+          if (childTasksItem.taskStatus == searchValue) {
             dataArray.push(childTasksItem);
           }
         }
       }
-      this.setState({filterdDataAllTaks: dataArray,selectedTypeAllTasks: key,filter: true});  
+      this.setState({
+        filterdDataAllTaks: dataArray,
+        selectedTypeAllTasks: key,
+        filter: true,
+      });
     } else {
       let filteredData = this.state.allDataAllTaks;
-      this.setState({filterdDataAllTaks: filteredData,selectedTypeAllTasks: key,filter: false});
+      this.setState({
+        filterdDataAllTaks: filteredData,
+        selectedTypeAllTasks: key,
+        filter: false,
+      });
     }
   }
 
   onNewTaskNameChange(text) {
-    this.setState({ taskName: text });
+    this.setState({taskName: text});
   }
 
-  async onNewTaskNameSubmit(text){
+  async onNewTaskNameSubmit(text) {
     try {
       let taskName = this.state.taskName;
       let selectedTaskGroupId = this.state.selectedTaskGroupId;
-      this.setState({dataLoading:true});
-      newGroupTaskData = await APIServices.addTaskGroupTaskData(taskName,selectedTaskGroupId);
-      if(newGroupTaskData.message == 'success'){
-        this.setState({dataLoading:false,taskName:''});   
+      this.setState({dataLoading: true});
+      newGroupTaskData = await APIServices.addTaskGroupTaskData(
+        taskName,
+        selectedTaskGroupId,
+      );
+      if (newGroupTaskData.message == 'success') {
+        this.setState({dataLoading: false, taskName: ''});
         this.getAllTaskInGroup();
-      }else{
-        this.setState({dataLoading:false});
+      } else {
+        this.setState({dataLoading: false});
       }
-    }catch(e) {
-      this.setState({dataLoading:false});   
+    } catch (e) {
+      this.setState({dataLoading: false});
     }
   }
 
@@ -297,21 +305,25 @@ class Tasks extends Component {
     this.setState({subTasksName: text});
   }
 
-  async onNewSubTasksNameSubmit(text,item,indexMain) {
+  async onNewSubTasksNameSubmit(text, item, indexMain) {
     try {
       let subTasksName = this.state.textInputs[indexMain];
       let selectedTaskGroupId = this.state.selectedTaskGroupId;
       let taskId = item.parentTask.taskId;
       this.setState({dataLoading: true});
-      newTaskData = await APIServices.addSubTaskGroupTaskData(subTasksName,selectedTaskGroupId,taskId);
+      newTaskData = await APIServices.addSubTaskGroupTaskData(
+        subTasksName,
+        selectedTaskGroupId,
+        taskId,
+      );
       if (newTaskData.message == 'success') {
         this.setState({dataLoading: false, textInputs: []});
         this.getAllTaskInGroup();
       } else {
-        this.setState({dataLoading: false,textInputs: []});
+        this.setState({dataLoading: false, textInputs: []});
       }
     } catch (e) {
-      this.setState({dataLoading: false,textInputs: []});
+      this.setState({dataLoading: false, textInputs: []});
     }
   }
 
@@ -328,7 +340,7 @@ class Tasks extends Component {
             this.props.navigation.navigate('GroupTasksDetailsScreen', {
               taskDetails: item.parentTask,
               selectedGroupTaskID: selectedTaskGroupId,
-              selectedGroupTaskName : item.parentTask.taskName
+              selectedGroupTaskName: item.parentTask.taskName,
             })
           }>
           <View
@@ -364,7 +376,9 @@ class Tasks extends Component {
                 </Text>
                 <Text style={styles.text}>{item.parentTask.taskName}</Text> */}
 
-                <Text style={styles.textMain} numberOfLines={1}>{item.parentTask.taskName}</Text>
+                <Text style={styles.textMain} numberOfLines={1}>
+                  {item.parentTask.taskName}
+                </Text>
               </View>
             </View>
             <View style={styles.statusView}>
@@ -386,7 +400,7 @@ class Tasks extends Component {
                 placeholder={'Add a subtask...'}
                 placeholderTextColor={colors.white}
                 onChangeText={subTasksName => {
-                  let { textInputs } = this.state;
+                  let {textInputs} = this.state;
                   textInputs[indexMain] = subTasksName;
                   this.setState({
                     textInputs,
@@ -394,7 +408,11 @@ class Tasks extends Component {
                 }}
                 value={this.state.textInputs[indexMain]}
                 onSubmitEditing={() =>
-                  this.onNewSubTasksNameSubmit(this.state.subTasksName,item,indexMain)
+                  this.onNewSubTasksNameSubmit(
+                    this.state.subTasksName,
+                    item,
+                    indexMain,
+                  )
                 }
               />
             </View>
@@ -403,7 +421,9 @@ class Tasks extends Component {
                 marginBottom: EStyleSheet.value('15rem'),
               }}
               data={index == 0 ? item.childTasks : item.childTasks}
-              renderItem={({item}) => this.renderSubTasksList(item, parentTaskName)}
+              renderItem={({item}) =>
+                this.renderSubTasksList(item, parentTaskName)
+              }
               keyExtractor={item => item.taskId}
             />
           </View>
@@ -421,7 +441,7 @@ class Tasks extends Component {
           this.props.navigation.navigate('GroupTasksDetailsScreen', {
             taskDetails: item,
             selectedGroupTaskID: selectedTaskGroupId,
-            selectedGroupTaskName : item.taskName,
+            selectedGroupTaskName: item.taskName,
             parentTaskName: parentTaskName,
           })
         }>
@@ -436,7 +456,9 @@ class Tasks extends Component {
           />
           <View style={styles.subTasksMainView}>
             <View style={styles.subTasksTextView}>
-              <Text style={styles.subTextMain} numberOfLines={1}>{item.taskName}</Text>
+              <Text style={styles.subTextMain} numberOfLines={1}>
+                {item.taskName}
+              </Text>
             </View>
           </View>
           <View style={styles.statusView}>
@@ -448,7 +470,7 @@ class Tasks extends Component {
     );
   }
 
-// render all task list with a filter
+  // render all task list with a filter
   renderTaskListFilter(item) {
     let selectedTaskGroupId = this.state.selectedTaskGroupId;
     let parentTaskName = '';
@@ -459,7 +481,7 @@ class Tasks extends Component {
           this.props.navigation.navigate('GroupTasksDetailsScreen', {
             taskDetails: item,
             selectedGroupTaskID: selectedTaskGroupId,
-            selectedGroupTaskName : item.taskName,
+            selectedGroupTaskName: item.taskName,
             parentTaskName: parentTaskName,
           })
         }>
@@ -474,22 +496,24 @@ class Tasks extends Component {
           />
           <View style={styles.subTasksMainView}>
             <View style={styles.subTasksTextView}>
-              <Text style={styles.subTextMain} numberOfLines={1}>{item.taskName}</Text>
+              <Text style={styles.subTextMain} numberOfLines={1}>
+                {item.taskName}
+              </Text>
             </View>
           </View>
           <View style={styles.statusView}>
             {this.dateView(item)}
             {this.userImageSubTask(item)}
-            {
-              item.parent &&
-                <View style={styles.triangleShape}>
-                  <Triangle
-                    width={30}
-                    height={30}
-                    color={'#0bafff'}
-                    direction={'up-right'}/>
-                </View> 
-            }
+            {item.parent && (
+              <View style={styles.triangleShape}>
+                <Triangle
+                  width={30}
+                  height={30}
+                  color={'#0bafff'}
+                  direction={'up-right'}
+                />
+              </View>
+            )}
           </View>
         </View>
       </TouchableOpacity>
@@ -499,8 +523,9 @@ class Tasks extends Component {
   render() {
     let filterdDataAllTaks = this.state.filterdDataAllTaks;
     let selectedTypeAllTasks = this.state.selectedTypeAllTasks;
-    let dataLoading = this.state.dataLoading;selectedTypeAllTasks
-    let taskName =this.state.taskName
+    let dataLoading = this.state.dataLoading;
+    selectedTypeAllTasks;
+    let taskName = this.state.taskName;
     let filter = this.state.filter;
 
     return (
@@ -508,69 +533,76 @@ class Tasks extends Component {
         <NavigationEvents
           onWillFocus={payload => this.tabOpenTaskTab(payload)}
         />
-          <View>
-            <View style={styles.projectFilerView}>
-                <Dropdown
-                  label=""
-                  labelFontSize={0}
-                  data={dropData}
-                  textColor={colors.dropDownText}
-                  error={''}
-                  animationDuration={0.5}
-                  containerStyle={{width: '100%'}}
-                  overlayStyle={{width: '100%'}}
-                  pickerStyle={{width: '89%', marginTop: 70, marginLeft: 15}}
-                  dropdownPosition={0}
-                  value={selectedTypeAllTasks}
-                  itemColor={'black'}
-                  selectedItemColor={'black'}
-                  dropdownOffset={{top: 10}}
-                  baseColor={colors.projectBgColor}
-                  renderAccessory={this.renderBase}
-                  itemTextStyle={{
-                    marginLeft: 15,
-                    fontFamily: 'CircularStd-Book',
-                  }}
-                  itemPadding={10}
-                  onChangeText={value => this.onFilterAllTasks(value)}
-                />
-            </View>
-            {!filter &&
-              <View style={[styles.addNewFieldView, {flexDirection: 'row'}]}>
-                <TextInput
-                  style={[styles.textInput, {width: '95%'}]}
-                  placeholder={'Add a task'}
-                  value={taskName}
-                  onChangeText={taskName => this.onNewTaskNameChange(taskName)}
-                  onSubmitEditing={() => this.onNewTaskNameSubmit(this.state.taskName)}
-                />
-              </View>
-            }
-            
+        <View>
+          <View style={styles.projectFilerView}>
+            <Dropdown
+              label=""
+              labelFontSize={0}
+              data={dropData}
+              textColor={colors.dropDownText}
+              error={''}
+              animationDuration={0.5}
+              containerStyle={{width: '100%'}}
+              overlayStyle={{width: '100%'}}
+              pickerStyle={{width: '89%', marginTop: 70, marginLeft: 15}}
+              dropdownPosition={0}
+              value={selectedTypeAllTasks}
+              itemColor={'black'}
+              selectedItemColor={'black'}
+              dropdownOffset={{top: 10}}
+              baseColor={colors.projectBgColor}
+              renderAccessory={this.renderBase}
+              itemTextStyle={{
+                marginLeft: 15,
+                fontFamily: 'CircularStd-Book',
+              }}
+              itemPadding={10}
+              onChangeText={value => this.onFilterAllTasks(value)}
+            />
           </View>
-          {/* view task list with child parent view */}
-          {!filter &&  filterdDataAllTaks.length > 0 &&
-          <View style={styles.subContainerWhite}>
-              <FlatList
-                style={{marginBottom: EStyleSheet.value('10rem'),marginTop: EStyleSheet.value('10rem')}}
-                data={filterdDataAllTaks}
-                renderItem={({item, index}) => this.renderTaskList(item, index)}
-                keyExtractor={item => item.parentTask.taskId}
+          {!filter && (
+            <View style={[styles.addNewFieldView, {flexDirection: 'row'}]}>
+              <TextInput
+                style={[styles.textInput, {width: '95%'}]}
+                placeholder={'Add a task'}
+                value={taskName}
+                onChangeText={taskName => this.onNewTaskNameChange(taskName)}
+                onSubmitEditing={() =>
+                  this.onNewTaskNameSubmit(this.state.taskName)
+                }
               />
-            </View>    
-          }
-          {/* view task list one by one */}
-          {filter && filterdDataAllTaks.length > 0 &&
-              <View style={styles.subContainer}>
-                <FlatList
-                  style={{marginBottom: EStyleSheet.value('10rem'),marginTop: EStyleSheet.value('10rem')}}
-                  data={filterdDataAllTaks}
-                  renderItem={({ item }) => this.renderTaskListFilter(item)}
-                  keyExtractor={item => item.taskId}
-                />
-              </View>  
-            }
-          {dataLoading && <Loader/>}
+            </View>
+          )}
+        </View>
+        {/* view task list with child parent view */}
+        {!filter && filterdDataAllTaks.length > 0 && (
+          <View style={styles.subContainerWhite}>
+            <FlatList
+              style={{
+                marginBottom: EStyleSheet.value('10rem'),
+                marginTop: EStyleSheet.value('10rem'),
+              }}
+              data={filterdDataAllTaks}
+              renderItem={({item, index}) => this.renderTaskList(item, index)}
+              keyExtractor={item => item.parentTask.taskId}
+            />
+          </View>
+        )}
+        {/* view task list one by one */}
+        {filter && filterdDataAllTaks.length > 0 && (
+          <View style={styles.subContainer}>
+            <FlatList
+              style={{
+                marginBottom: EStyleSheet.value('10rem'),
+                marginTop: EStyleSheet.value('10rem'),
+              }}
+              data={filterdDataAllTaks}
+              renderItem={({item}) => this.renderTaskListFilter(item)}
+              keyExtractor={item => item.taskId}
+            />
+          </View>
+        )}
+        {dataLoading && <Loader />}
       </View>
     );
   }
@@ -588,7 +620,7 @@ const styles = EStyleSheet.create({
     marginHorizontal: '05rem',
     marginTop: '7rem',
     marginBottom: '150rem',
-},
+  },
   subContainer: {
     marginBottom: '65rem',
     backgroundColor: colors.projectBgColor,
@@ -596,7 +628,7 @@ const styles = EStyleSheet.create({
     marginHorizontal: '0rem',
     marginTop: '7rem',
     marginBottom: '150rem',
-},
+  },
   projectFilerView: {
     backgroundColor: colors.projectBgColor,
     borderRadius: 5,
@@ -714,7 +746,7 @@ const styles = EStyleSheet.create({
     backgroundColor: '#e5e9ef',
     borderRadius: 5,
     borderWidth: 2,
-    borderColor  : '#e5e9ef',
+    borderColor: '#e5e9ef',
     marginTop: '10rem',
     marginBottom: '0rem',
     flexDirection: 'row',
@@ -749,7 +781,7 @@ const styles = EStyleSheet.create({
     // lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
-    flex:0.9
+    flex: 0.9,
   },
   tasksLabelView: {
     width: '75rem',
@@ -806,7 +838,7 @@ const styles = EStyleSheet.create({
     // lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
-    flex:0.9
+    flex: 0.9,
   },
   addNewSubTaskView: {
     backgroundColor: colors.lightBlue,
@@ -819,16 +851,15 @@ const styles = EStyleSheet.create({
     height: '40rem',
     marginHorizontal: '10rem',
   },
-  triangleShape : {
+  triangleShape: {
     position: 'absolute',
     right: -12,
     top: -22,
-}
+  },
 });
 
 const mapStateToProps = state => {
-  return {
-  };
+  return {};
 };
 export default connect(
   mapStateToProps,
