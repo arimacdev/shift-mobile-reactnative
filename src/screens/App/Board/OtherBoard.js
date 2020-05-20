@@ -158,7 +158,7 @@ class OtherBoard extends Component {
                     </View>
                     <View style={{ flex: 6 }}>
                         <View style={{ flex: 1 }}>
-                            <Text style={styles.text}>{data.item.taskName}</Text>
+                            <Text numberOfLines={1} style={styles.text}>{data.item.taskName}</Text>
                             {this.dateView(data)}
                         </View>
                     </View>

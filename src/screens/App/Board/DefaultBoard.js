@@ -81,7 +81,7 @@ class DefaultBoard extends Component {
                 <View style={styles.userView}>   
                     {this.userIcon(item)}
                     <View style={{ flex: 1, bottom: 15 }}>
-                        <Text style={styles.text}>{item.taskName}</Text>
+                        <Text numberOfLines={1} style={styles.text}>{item.taskName}</Text>
                         {this.dateView(item)}
                     </View>
                     {this.userImage(item)}
