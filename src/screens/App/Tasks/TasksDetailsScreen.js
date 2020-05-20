@@ -276,13 +276,15 @@ class TasksDetailsScreen extends Component {
 
     let selectedProjectID = params.selectedProjectID;
     let selectedProjectName = params.selectedProjectName;
-    let selectedProjectTaskID = params.taskDetails.taskId;
+    let selectedProjectTaskID = params.taskDetails
+      ? params.taskDetails.taskId
+      : '';
     let isFromBoards = params.isFromBoards;
     // let allDetails = params.allDetails;
     // let subTaskListLength = params.subTaskDetails
     //   ? params.subTaskDetails.length
     //   : 0;
-    let sprintId = params.taskDetails.sprintId;
+    let sprintId = params.taskDetails ? params.taskDetails.sprintId : '';
     let fromMyTask = params.fromMyTask ? params.fromMyTask : false;
     // params.subTaskDetails.length > 0 ? this.state.subTaskList[0].length : 0;
 
@@ -301,7 +303,7 @@ class TasksDetailsScreen extends Component {
 
     this.fetchData(selectedProjectID, selectedProjectTaskID);
     this.fetchFilesData(selectedProjectID, selectedProjectTaskID);
-    this.getAllTaskInProject();
+    this.getAllTaskInProject(selectedProjectID);
     if (params.isFromBoards == true) {
       // let sprintId = params.taskDetails.sprintId;
       this.getAllSprintInProject(selectedProjectID, sprintId);
@@ -1113,7 +1115,7 @@ class TasksDetailsScreen extends Component {
       });
       if (this.state.reminder) {
         this.setReminderDate(this.state.taskResult);
-      }else{
+      } else {
         this.setDueDate(this.state.taskResult);
       }
     }
@@ -1152,7 +1154,7 @@ class TasksDetailsScreen extends Component {
       });
       if (this.state.reminder) {
         this.setReminderDate(this.state.taskResult);
-      }else{
+      } else {
         this.setDueDate(this.state.taskResult);
       }
     }
@@ -1418,8 +1420,8 @@ class TasksDetailsScreen extends Component {
       })
       .catch(error => {
         // if (error.status == 401 || error.status == 403) {
-          this.setState({dataLoading: false});
-          this.showAlert('', error.data.message);
+        this.setState({dataLoading: false});
+        this.showAlert('', error.data.message);
         // }
       });
   }
@@ -1471,8 +1473,8 @@ class TasksDetailsScreen extends Component {
       })
       .catch(error => {
         // if (error.status == 401 || error.status == 403) {
-          this.setState({dataLoading: false});
-          this.showAlert('', error.data.message);
+        this.setState({dataLoading: false});
+        this.showAlert('', error.data.message);
         // }
       });
   }
@@ -1493,8 +1495,8 @@ class TasksDetailsScreen extends Component {
       })
       .catch(error => {
         // if (error.status == 401 || error.status == 403) {
-          this.setState({dataLoading: false});
-          this.showAlert('', error.data.message);
+        this.setState({dataLoading: false});
+        this.showAlert('', error.data.message);
         // }
       });
   }
@@ -1522,8 +1524,8 @@ class TasksDetailsScreen extends Component {
       })
       .catch(error => {
         // if (error.status == 401 || error.status == 403 || error.status == 400) {
-          this.setState({dataLoading: false});
-          this.showAlert('', error.data.message);
+        this.setState({dataLoading: false});
+        this.showAlert('', error.data.message);
         // }
       });
   }
@@ -1689,34 +1691,34 @@ class TasksDetailsScreen extends Component {
 
   renderSubtasksList(item, index, userId, projectId) {
     return (
-      // <TouchableOpacity
-      //   onPress={() =>
-      //     this.props.navigation.navigate('WorkloadTasksDetailsScreen', {
-      //       workloadTasksDetails: item,
-      //       userId: userId,
-      //       projectId: projectId,
-      //     })
-      //   }>
-      <View style={styles.subTasksListView}>
-        <Image
-          style={styles.subTasksCompletionIcon}
-          source={
-            item.taskStatus == 'closed'
-              ? icons.rightCircule
-              : icons.whiteCircule
-          }
-        />
-        <View style={{flex: 1}}>
-          <Text style={styles.subTaskText} numberOfLines={1}>
-            {item.taskName}
-          </Text>
+      <TouchableOpacity
+        onPress={() =>
+          this.props.navigation.navigate('TasksDetailsScreen', {
+            taskDetails: item,
+            selectedProjectID: this.state.selectedProjectID,
+            selectedProjectName: this.state.selectedProjectName,
+          })
+        }>
+        <View style={styles.subTasksListView}>
+          <Image
+            style={styles.subTasksCompletionIcon}
+            source={
+              item.taskStatus == 'closed'
+                ? icons.rightCircule
+                : icons.whiteCircule
+            }
+          />
+          <View style={{flex: 1}}>
+            <Text style={styles.subTaskText} numberOfLines={1}>
+              {item.taskName}
+            </Text>
+          </View>
+          <View style={styles.statusView}>
+            {this.dateView(item)}
+            {this.userImage(item)}
+          </View>
         </View>
-        <View style={styles.statusView}>
-          {this.dateView(item)}
-          {this.userImage(item)}
-        </View>
-      </View>
-      // </TouchableOpacity>
+      </TouchableOpacity>
     );
   }
 
@@ -1795,11 +1797,11 @@ class TasksDetailsScreen extends Component {
     });
   };
 
-  async getAllTaskInProject() {
+  async getAllTaskInProject(selectedProjectID) {
     this.setState({
       filterType: 'None',
     });
-    let selectedProjectID = this.state.selectedProjectID;
+    // let selectedProjectID = this.state.selectedProjectID;
     AsyncStorage.getItem('userID').then(userID => {
       this.props.getAllTaskInProjects(userID, selectedProjectID);
     });
@@ -1818,7 +1820,7 @@ class TasksDetailsScreen extends Component {
           this.fetchData(selectedProjectID, newParent);
           this.fetchFilesData(selectedProjectID, newParent);
           this.getAllSprintInProject(selectedProjectID, this.state.sprintId);
-          this.getAllTaskInProject();
+          this.getAllTaskInProject(selectedProjectID);
           // let taskModalData = [];
           // taskModalData = this.state.taskModalData.filter(item => {
           //   return item.id == selectedTaskID;
@@ -1870,7 +1872,7 @@ class TasksDetailsScreen extends Component {
             this.state.selectedProjectTaskID,
           );
           // this.getAllSprintInProject(selectedProjectID, this.state.sprintId);
-          this.getAllTaskInProject();
+          this.getAllTaskInProject(selectedProjectID);
           this.setState({parentTaskName: parentTaskName});
           // } else {
           //   this.getChildTasksOfParent(

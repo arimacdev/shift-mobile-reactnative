@@ -430,7 +430,7 @@ class TasksTabScreen extends Component {
           <View style={styles.subTasksMainView}>
             <View style={styles.subTasksTextView}>
               <Text style={styles.subTextMain}>{item.secondaryTaskId}</Text>
-              <Text numberOfLines={1} style={styles.subText}>{item.taskName}</Text>
+              <Text style={styles.subText} numberOfLines={1}>{item.taskName}</Text>
 
               {/* <Text style={styles.subTextMain}>{item.taskName}</Text> */}
             </View>
@@ -504,7 +504,7 @@ class TasksTabScreen extends Component {
                 <Text style={styles.textMain}>
                   {item.parentTask.secondaryTaskId}
                 </Text>
-                <Text numberOfLines={1} style={styles.text}>{item.parentTask.taskName}</Text>
+                <Text style={styles.text} numberOfLines={1}>{item.parentTask.taskName}</Text>
 
                 {/* <Text style={styles.textMain}>{item.parentTask.taskName}</Text> */}
               </View>
@@ -616,8 +616,8 @@ class TasksTabScreen extends Component {
                 {item.secondaryTaskId}
               </Text>
               <Text
-                numberOfLines={1}
-                style={item.isParent ? styles.parentTextSub : styles.subText}>
+                style={item.isParent ? styles.parentTextSub : styles.subText}
+                numberOfLines={1}>
                 {item.taskName}
               </Text>
             </View>
@@ -1380,23 +1380,24 @@ const styles = EStyleSheet.create({
     fontSize: '11rem',
     color: colors.white,
     fontWeight: 'bold',
-    // lineHeight: '17rem',
+    lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
   },
   text: {
     fontSize: '9rem',
     color: colors.white,
-    // lineHeight: '17rem',
+    lineHeight: '15rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
     marginLeft: '10rem',
+    flex:0.9
   },
   subTextMain: {
     fontSize: '11rem',
     color: '#080848',
     fontWeight: 'bold',
-    // lineHeight: '17rem',
+    lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
   },
@@ -1404,7 +1405,7 @@ const styles = EStyleSheet.create({
     fontSize: '11rem',
     color: '#080848',
     fontWeight: 'bold',
-    // lineHeight: '17rem',
+    lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
     color: colors.white,
@@ -1412,18 +1413,20 @@ const styles = EStyleSheet.create({
   parentTextSub: {
     fontSize: '9rem',
     color: colors.white,
-    // lineHeight: '17rem',
+    lineHeight: '15rem',
     fontFamily: 'CircularStd',
     textAlign: 'left',
     marginLeft: '5rem',
+    flex:0.9
   },
   subText: {
     fontSize: '9rem',
     color: colors.gray,
-    // lineHeight: '17rem',
+    lineHeight: '15rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
     marginLeft: '5rem',
+    flex:0.9
   },
   textDate: {
     fontFamily: 'CircularStd-Book',
