@@ -161,7 +161,6 @@ class MyTasks extends Component {
           </View>
           <View style={styles.statusView}>
             {this.dateView(item)}
-            {this.userImage(item)}
           </View>
         </View>
       </TouchableOpacity>

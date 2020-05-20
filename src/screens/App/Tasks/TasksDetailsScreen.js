@@ -2029,6 +2029,7 @@ class TasksDetailsScreen extends Component {
                 onSubmitEditing={() =>
                   this.onTaskNameChangeSubmit(this.state.taskName)
                 }
+                maxLength={100}
               />
               <TouchableOpacity onPress={() => this.onTaskNameEditPress()}>
                 <Image

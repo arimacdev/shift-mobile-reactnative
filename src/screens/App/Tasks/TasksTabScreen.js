@@ -430,7 +430,7 @@ class TasksTabScreen extends Component {
           <View style={styles.subTasksMainView}>
             <View style={styles.subTasksTextView}>
               <Text style={styles.subTextMain}>{item.secondaryTaskId}</Text>
-              <Text style={styles.subText}>{item.taskName}</Text>
+              <Text numberOfLines={1} style={styles.subText}>{item.taskName}</Text>
 
               {/* <Text style={styles.subTextMain}>{item.taskName}</Text> */}
             </View>
@@ -504,7 +504,7 @@ class TasksTabScreen extends Component {
                 <Text style={styles.textMain}>
                   {item.parentTask.secondaryTaskId}
                 </Text>
-                <Text style={styles.text}>{item.parentTask.taskName}</Text>
+                <Text numberOfLines={1} style={styles.text}>{item.parentTask.taskName}</Text>
 
                 {/* <Text style={styles.textMain}>{item.parentTask.taskName}</Text> */}
               </View>
@@ -539,6 +539,7 @@ class TasksTabScreen extends Component {
               <TextInput
                 style={[styles.subTaskTextInput, {width: '95%'}]}
                 placeholder={'Add a sub task...'}
+                maxLength={100}
                 placeholderTextColor={colors.white}
                 onChangeText={subTasksName => {
                   let {textInputs} = this.state;
@@ -615,6 +616,7 @@ class TasksTabScreen extends Component {
                 {item.secondaryTaskId}
               </Text>
               <Text
+                numberOfLines={1}
                 style={item.isParent ? styles.parentTextSub : styles.subText}>
                 {item.taskName}
               </Text>
@@ -1253,6 +1255,7 @@ class TasksTabScreen extends Component {
                   style={[styles.textInput, {width: '95%'}]}
                   placeholder={'Add a main task...'}
                   value={tasksName}
+                  maxLength={100}
                   onChangeText={tasksName =>
                     this.onNewTasksNameChange(tasksName)
                   }
