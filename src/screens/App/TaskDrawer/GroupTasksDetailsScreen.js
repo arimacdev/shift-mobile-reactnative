@@ -1611,7 +1611,8 @@ class GroupTasksDetailsScreen extends Component {
         onBackButtonPress={() => this.onCloseTaskModal()}
         onBackdropPress={() => this.onCloseTaskModal()}
         onRequestClose={() => this.onCloseTaskModal()}
-        coverScreen={false}>
+        // coverScreen={false}
+      >
         <View style={styles.modalMainView}>
           <View style={styles.modalHeaderView}>
             <Image
@@ -2332,7 +2333,7 @@ const styles = EStyleSheet.create({
     fontFamily: 'CircularStd-Medium',
   },
   modalStyle: {
-    marginBottom: '250rem',
+    marginBottom: '0rem',
   },
   taskModalDropDownView: {
     backgroundColor: colors.projectBgColor,
