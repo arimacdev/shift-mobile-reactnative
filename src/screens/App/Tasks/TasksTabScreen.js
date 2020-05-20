@@ -430,7 +430,9 @@ class TasksTabScreen extends Component {
           <View style={styles.subTasksMainView}>
             <View style={styles.subTasksTextView}>
               <Text style={styles.subTextMain}>{item.secondaryTaskId}</Text>
-              <Text style={styles.subText} numberOfLines={1}>{item.taskName}</Text>
+              <Text style={styles.subText} numberOfLines={1}>
+                {item.taskName}
+              </Text>
 
               {/* <Text style={styles.subTextMain}>{item.taskName}</Text> */}
             </View>
@@ -504,7 +506,9 @@ class TasksTabScreen extends Component {
                 <Text style={styles.textMain}>
                   {item.parentTask.secondaryTaskId}
                 </Text>
-                <Text style={styles.text} numberOfLines={1}>{item.parentTask.taskName}</Text>
+                <Text style={styles.text} numberOfLines={1}>
+                  {item.parentTask.taskName}
+                </Text>
 
                 {/* <Text style={styles.textMain}>{item.parentTask.taskName}</Text> */}
               </View>
@@ -1391,7 +1395,7 @@ const styles = EStyleSheet.create({
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
     marginLeft: '10rem',
-    flex:0.9
+    flex: 0.9,
   },
   subTextMain: {
     fontSize: '11rem',
@@ -1417,7 +1421,7 @@ const styles = EStyleSheet.create({
     fontFamily: 'CircularStd',
     textAlign: 'left',
     marginLeft: '5rem',
-    flex:0.9
+    flex: 0.9,
   },
   subText: {
     fontSize: '9rem',
@@ -1426,7 +1430,7 @@ const styles = EStyleSheet.create({
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
     marginLeft: '5rem',
-    flex:0.9
+    flex: 0.9,
   },
   textDate: {
     fontFamily: 'CircularStd-Book',
