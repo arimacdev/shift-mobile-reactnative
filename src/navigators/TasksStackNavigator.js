@@ -15,7 +15,7 @@ import MyTaskNotesScreen from '../screens/App/TaskDrawer/MyTask/MyTaskNotesScree
 import MyTasksFilesScreen from '../screens/App/TaskDrawer/MyTask/MyTasksFilesScreen';
 import MyTaskSubTaskScreen from '../screens/App/TaskDrawer/MyTask/MyTaskSubTaskScreen';
 import MyTaskAddEditSubTaskScreen from '../screens/App/TaskDrawer/MyTask/MyTaskAddEditSubTaskScreen';
-import GroupSubTasksDetailsScreen from '../screens/App/TaskDrawer/GroupSubTasksDetailsScreen';
+// import GroupSubTasksDetailsScreen from '../screens/App/TaskDrawer/GroupSubTasksDetailsScreen';
 
 export const TasksStackNavigator = createStackNavigator(
   {
@@ -73,6 +73,12 @@ export const TasksStackNavigator = createStackNavigator(
       }),
     },
     GroupTasksDetailsScreen: {
+      screen: GroupTasksDetailsScreen,
+      navigationOptions: ({navigation}) => ({
+        header: null,
+      }),
+    },
+    GroupSubTasksDetailsScreen: {
       screen: GroupTasksDetailsScreen,
       navigationOptions: ({navigation}) => ({
         header: null,
@@ -167,12 +173,12 @@ export const TasksStackNavigator = createStackNavigator(
         ),
       }),
     },
-    GroupSubTasksDetailsScreen: {
-      screen: GroupSubTasksDetailsScreen,
-      navigationOptions: ({navigation}) => ({
-        header: null,
-      }),
-    },
+    // GroupSubTasksDetailsScreen: {
+    //   screen: GroupSubTasksDetailsScreen,
+    //   navigationOptions: ({navigation}) => ({
+    //     header: null,
+    //   }),
+    // },
   },
   {
     initialRouteName: 'DrawerTasksScreen',
