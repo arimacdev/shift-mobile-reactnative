@@ -2042,7 +2042,7 @@ async function addMainTaskToProjectData(taskName, selectedProjectID) {
         projectId: selectedProjectID,
         taskInitiator: userID,
         //taskType: "project",
-        issueType: 'development',
+        issueType: 'general',
       },
     },
     true,
