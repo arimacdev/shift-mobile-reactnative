@@ -255,7 +255,7 @@ class GroupTasksDetailsScreen extends Component {
   async gerTaskParentName(parentTaskId) {
     this.setState({dataLoading: true});
     try {
-      let taskResult = await APIServices.getProjecTaskData(
+      let taskResult = await APIServices.getGroupSingleTaskData(
         this.state.selectedGroupTaskID,
         parentTaskId,
       );
