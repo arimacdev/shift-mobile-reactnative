@@ -631,7 +631,7 @@ class GroupTasksDetailsScreen extends Component {
   async fetchData(selectedGroupTaskID, selectedTaskID) {
     this.setState({dataLoading: true});
     try {
-      taskResult = await APIServices.getGroupSingleTaskData(
+      let taskResult = await APIServices.getGroupSingleTaskData(
         selectedGroupTaskID,
         selectedTaskID,
       );
@@ -758,24 +758,12 @@ class GroupTasksDetailsScreen extends Component {
       .parseZone(taskResult.data.taskDueDateAt)
       .format('hh:mmA');
 
-    // console.log(
-    //   'ddddddddddddddddddddddddd',
-    //   moment(taskResult.data.taskDueDateAt).format('ddd MMM DD YYYY hh:mm:ss')+' GMT+0530 (India Standard Time)',
-    // );
-
-    // console.log(
-    //   'ddddddddddddddddddddddddd',
-    //   moment(taskResult.data.taskDueDateAt).format('ddd MMM DD YYYY hh:mm:ss')+' GMT+0530 (India Standard Time)',
-    // );
-
     if (taskDueDate != 'Invalid date') {
       this.setState({
         duedate: taskDueDate,
         dueTime: taskDueTime,
-        // date: moment.parseZone(taskResult.data.taskDueDateAt).format('ddd MMM DD YYYY hh:mm:ss')+' GMT+0530 (India Standard Time)',
-
-        //new Date('Tue May 11 2020 03:14:00 GMT+0530 (India Standard Time)'),
-        // time: new Date(taskDueDate),
+        date: new Date(taskResult.data.taskDueDateAt),
+        time: new Date(taskResult.data.taskDueDateAt),
       });
     }
   }
@@ -793,6 +781,8 @@ class GroupTasksDetailsScreen extends Component {
       this.setState({
         remindDate: taskReminderDate,
         reminderTime: taskReminderTime,
+        dateReminder: new Date(taskResult.data.taskReminderAt),
+        timeReminder: new Date(taskResult.data.taskReminderAt),
       });
     }
   }
@@ -970,7 +960,11 @@ class GroupTasksDetailsScreen extends Component {
         showPicker: false,
         showTimePicker: false,
       });
-      this.setDueDate(this.state.taskResult);
+      if (this.state.reminder) {
+        this.setReminderDate(this.state.taskResult);
+      } else {
+        this.setDueDate(this.state.taskResult);
+      }
     }
   }
 
@@ -1005,7 +999,11 @@ class GroupTasksDetailsScreen extends Component {
         showPicker: false,
         showTimePicker: false,
       });
-      this.setDueDate(this.state.taskResult);
+      if (this.state.reminder) {
+        this.setReminderDate(this.state.taskResult);
+      } else {
+        this.setDueDate(this.state.taskResult);
+      }
     }
   }
 

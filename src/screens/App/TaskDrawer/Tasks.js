@@ -146,7 +146,7 @@ class Tasks extends Component {
       }
     } else {
       dateText = 'Add Due Date';
-      color = '#000000';
+      color = '#ffffff';
     }
 
     return <Text style={[styles.textDate, {color: color}]}>{dateText}</Text>;
@@ -364,7 +364,7 @@ class Tasks extends Component {
                 </Text>
                 <Text style={styles.text}>{item.parentTask.taskName}</Text> */}
 
-                <Text style={styles.textMain}>{item.parentTask.taskName}</Text>
+                <Text style={styles.textMain} numberOfLines={1}>{item.parentTask.taskName}</Text>
               </View>
             </View>
             <View style={styles.statusView}>
@@ -436,7 +436,7 @@ class Tasks extends Component {
           />
           <View style={styles.subTasksMainView}>
             <View style={styles.subTasksTextView}>
-              <Text style={styles.subTextMain}>{item.taskName}</Text>
+              <Text style={styles.subTextMain} numberOfLines={1}>{item.taskName}</Text>
             </View>
           </View>
           <View style={styles.statusView}>
@@ -474,7 +474,7 @@ class Tasks extends Component {
           />
           <View style={styles.subTasksMainView}>
             <View style={styles.subTasksTextView}>
-              <Text style={styles.subTextMain}>{item.taskName}</Text>
+              <Text style={styles.subTextMain} numberOfLines={1}>{item.taskName}</Text>
             </View>
           </View>
           <View style={styles.statusView}>
@@ -749,6 +749,7 @@ const styles = EStyleSheet.create({
     // lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
+    flex:0.9
   },
   tasksLabelView: {
     width: '75rem',
@@ -805,6 +806,7 @@ const styles = EStyleSheet.create({
     // lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
+    flex:0.9
   },
   addNewSubTaskView: {
     backgroundColor: colors.lightBlue,

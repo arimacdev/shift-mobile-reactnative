@@ -881,10 +881,6 @@ class TasksDetailsScreen extends Component {
         dueTime: taskDueTime,
         date: new Date(taskResult.data.taskDueDateAt),
         time: new Date(taskResult.data.taskDueDateAt),
-        // date: moment.parseZone(taskResult.data.taskDueDateAt).format('ddd MMM DD YYYY hh:mm:ss')+' GMT+0530 (India Standard Time)',
-
-        //new Date('Tue May 11 2020 03:14:00 GMT+0530 (India Standard Time)'),
-        // time: new Date(taskDueDate),
       });
     }
   }
