@@ -37,7 +37,6 @@ import RNFetchBlob from 'rn-fetch-blob';
 import fileTypes from '../../../assest/fileTypes/fileTypes';
 import * as Animatable from 'react-native-animatable';
 import Modal from 'react-native-modal';
-import {NavigationEvents} from 'react-navigation';
 
 const Placeholder = () => (
   <View style={styles.landing}>
@@ -97,17 +96,73 @@ let development = [
 ];
 
 let taskStatusData = [
-  {value: 'Open', id: 'open'},
+  {value: 'Pending', id: 'pending'},
+  {value: 'On hold', id: 'onHold'},
+  {value: 'Cancel', id: 'cancel'},
+  {value: 'Fixing', id: 'fixing'},
+  {value: 'Resolved', id: 'resolved'},
+  {value: 'In progress', id: 'inprogress'},
+  {value: 'Completed', id: 'completed'},
+  {value: 'Under review', id: 'underReview'},
+  {value: 'Wating for approval', id: 'waitingForApproval'},
+  {value: 'Review', id: 'review'},
+  {value: 'Wating response', id: 'waitingResponse'},
+  {value: 'Rejected', id: 'rejected'},
   {value: 'Closed', id: 'closed'},
 ];
 
-class GroupTasksDetailsScreen extends Component {
+let taskDataWhenParentIsBoard = [
+  // {
+  //   id: 10,
+  //   name: 'Task Name',
+  //   icon: icons.taskDark,
+  //   renderImage: false,
+  // },
+  // {
+  //   id: 0,
+  //   name: 'Name',
+  //   icon: icons.taskUser,
+  //   renderImage: false,
+  // },
+  {
+    id: 1,
+    name: 'Sub tasks',
+    icon: icons.subTask,
+    renderImage: true,
+  },
+  {
+    id: 2,
+    name: 'Due on',
+    icon: icons.calendarBlue,
+    renderImage: false,
+  },
+  {
+    id: 3,
+    name: 'Remind on',
+    icon: icons.clockOrange,
+    renderImage: false,
+  },
+  {
+    id: 4,
+    name: 'Notes',
+    icon: icons.noteRed,
+    renderImage: false,
+  },
+  {
+    id: 5,
+    name: 'Files',
+    icon: icons.fileOrange,
+    renderImage: true,
+  },
+];
+
+class SubTasksDetailsScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
       bottomItemPressColor: colors.darkBlue,
-      selectedGroupTaskID: '',
-      selectedTaskID: '',
+      selectedProjectID: '',
+      selectedProjectTaskID: '',
       isActive: this.props.isActive,
       name: '',
       duedate: '',
@@ -129,6 +184,7 @@ class GroupTasksDetailsScreen extends Component {
       dataLoading: false,
       reminderTime: '',
       dueTime: '',
+      projectTaskInitiator: '',
       showAlert: false,
       alertTitle: '',
       alertMsg: '',
@@ -143,7 +199,7 @@ class GroupTasksDetailsScreen extends Component {
       progress: 0,
       loading: false,
       secondaryTaskId: '',
-      selectedGroupTaskName: '',
+      selectedProjectName: '',
       isParent: false,
       issueType: '',
       taskStatusValue: '',
@@ -154,7 +210,7 @@ class GroupTasksDetailsScreen extends Component {
       indeterminate: false,
       showTaskModal: false,
       selectedTaskName: '',
-      selectedTaskIDFromModal: '',
+      selectedTaskID: '',
       taskModalData: [],
       fromParent: true,
       addParentTaskShow: false,
@@ -165,33 +221,31 @@ class GroupTasksDetailsScreen extends Component {
       taskNameEditable: false,
       sprintId: '',
       taskModalDataID: '',
+      fromMyTask: false,
       parentTaskName: '',
     };
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (
-      prevProps.deleteSingleTaskInGroupError !==
-        this.props.deleteSingleTaskInGroupError &&
-      this.props.deleteSingleTaskInGroupError &&
-      this.props.deleteSingleTaskInGroupErrorMessage == ''
+      prevProps.deleteSubTaskError !== this.props.deleteSubTaskError &&
+      this.props.deleteSubTaskError &&
+      this.props.deleteSubTaskErrorMessage == ''
     ) {
-      this.showAlert('', 'Error');
+      this.showAlert('', this.props.deleteSubTaskErrorMessage);
     }
 
     if (
-      prevProps.deleteSingleTaskInGroupError !==
-        this.props.deleteSingleTaskInGroupError &&
-      this.props.deleteSingleTaskInGroupError &&
-      this.props.deleteSingleTaskInGroupErrorMessage != ''
+      prevProps.deleteSubTaskError !== this.props.deleteSubTaskError &&
+      this.props.deleteSubTaskError &&
+      this.props.deleteSubTaskErrorMessage != ''
     ) {
-      this.showAlert('', this.props.deleteTaskErrorMessage);
+      this.showAlert('', this.props.deleteSubTaskErrorMessage);
     }
 
     if (
-      prevProps.deleteSingleTaskInGroupSuccess !==
-        this.props.deleteSingleTaskInGroupSuccess &&
-      this.props.deleteSingleTaskInGroupSuccess
+      prevProps.deleteSubTaskSuccess !== this.props.deleteSubTaskSuccess &&
+      this.props.deleteSubTaskSuccess
     ) {
       Alert.alert(
         'Success',
@@ -202,46 +256,61 @@ class GroupTasksDetailsScreen extends Component {
     }
 
     if (
-      prevProps.allTaskByGroupLoading !== this.props.allTaskByGroupLoading &&
-      this.props.allTaskByGroup &&
-      this.props.allTaskByGroup.length > 0
+      prevProps.allTaskByProjectLoading !==
+        this.props.allTaskByProjectLoading &&
+      this.props.allTaskByProject &&
+      this.props.allTaskByProject.length > 0
     ) {
       this.setState({
-        allDetails: this.props.allTaskByGroup,
+        allDetails: this.props.allTaskByProject,
       });
     }
   }
 
-  pageOpen() {
+  componentDidMount() {
     const {
       navigation: {
         state: {params},
       },
     } = this.props;
 
-    let selectedGroupTaskID = params.selectedGroupTaskID;
-    let selectedTaskID = params.taskDetails.taskId;
-    let selectedGroupTaskName = params.selectedGroupTaskName;
-    let parentTaskName = params.parentTaskName ? params.parentTaskName : '';
+    let selectedProjectID = params.selectedProjectID;
+    let selectedProjectName = params.selectedProjectName;
+    let selectedProjectTaskID = params.taskDetails.taskId;
+    let isFromBoards = params.isFromBoards;
+    // let allDetails = params.allDetails;
+    // let subTaskListLength = params.subTaskDetails
+    //   ? params.subTaskDetails.length
+    //   : 0;
+    let sprintId = params.taskDetails.sprintId;
+    let fromMyTask = params.fromMyTask ? params.fromMyTask : false;
+    // params.subTaskDetails.length > 0 ? this.state.subTaskList[0].length : 0;
 
     this.setState({
-      selectedGroupTaskID: selectedGroupTaskID,
-      selectedGroupTaskName: selectedGroupTaskName,
-      selectedTaskID: selectedTaskID,
-      parentTaskName: parentTaskName,
+      selectedProjectID: selectedProjectID,
+      selectedProjectName: selectedProjectName,
+      selectedProjectTaskID: selectedProjectTaskID,
+      isFromBoards: params.isFromBoards,
+      // subTaskList: params.subTaskDetails ? [params.subTaskDetails] : [],
+      parentTaskName: params.parentTaskName ? params.parentTaskName : '',
+      // subTaskListLength: subTaskListLength,
+      // allDetails: allDetails,
+      sprintId: sprintId,
+      fromMyTask: fromMyTask,
     });
 
-    this.fetchData(selectedGroupTaskID, selectedTaskID);
-    this.fetchFilesData(selectedGroupTaskID, selectedTaskID);
-    this.getAllTaskByGroup(selectedGroupTaskID);
+    this.fetchData(selectedProjectID, selectedProjectTaskID);
+    this.fetchFilesData(selectedProjectID, selectedProjectTaskID);
+    this.getAllTaskInProject();
+    if (params.isFromBoards == true) {
+      // let sprintId = params.taskDetails.sprintId;
+      this.getAllSprintInProject(selectedProjectID, sprintId);
+    }
   }
 
-  async fetchFilesData(selectedGroupTaskID, selectedTaskID) {
+  async fetchFilesData(projectID, taskID) {
     this.setState({dataLoading: true});
-    let filesData = await APIServices.getFilesInGroupTaskData(
-      selectedGroupTaskID,
-      selectedTaskID,
-    );
+    let filesData = await APIServices.getFilesInTaskData(projectID, taskID);
     if (filesData.message == 'success') {
       this.setState({
         filesData: filesData.data,
@@ -256,7 +325,7 @@ class GroupTasksDetailsScreen extends Component {
     this.setState({dataLoading: true});
     try {
       let taskResult = await APIServices.getProjecTaskData(
-        this.state.selectedGroupTaskID,
+        this.state.selectedProjectID,
         parentTaskId,
       );
       if (taskResult.message == 'success') {
@@ -270,9 +339,9 @@ class GroupTasksDetailsScreen extends Component {
   }
 
   async getSubTAskDetails() {
-    await APIServices.getChildTasksOfTaskGroupData(
-      this.state.selectedGroupTaskID,
-      this.state.selectedTaskID,
+    await APIServices.getChildTasksOfParentData(
+      this.state.selectedProjectID,
+      this.state.selectedProjectTaskID,
     )
       .then(async response => {
         if (response.message == 'success') {
@@ -310,7 +379,10 @@ class GroupTasksDetailsScreen extends Component {
         }
       } else {
         if (element.childTasks.length == 0) {
-          if (selectedProjectTaskID !== element.parentTask.taskId) {
+          if (
+            selectedProjectTaskID !== element.parentTask.taskId
+            // && this.state.taskModalDataID !== element.parentTask.taskId
+          ) {
             taskModalData.push({
               id: element.parentTask.taskId,
               value: element.parentTask.taskName,
@@ -322,6 +394,10 @@ class GroupTasksDetailsScreen extends Component {
     if (taskModalData.length > 0) {
       this.setState({taskModalData: taskModalData});
     } else {
+      // taskModalData.push({
+      //   id: 'noData',
+      //   value: 'No data avilable',
+      // });
       this.setState({selectedTaskName: 'No data avilable'});
     }
   }
@@ -336,8 +412,8 @@ class GroupTasksDetailsScreen extends Component {
   }
 
   async doumentPicker() {
-    let selectedGroupTaskID = this.state.selectedGroupTaskID;
-    let selectedTaskID = this.state.selectedTaskID;
+    let selectedProjectID = this.state.selectedProjectID;
+    let selectedProjectTaskID = this.state.selectedProjectTaskID;
     // Pick multiple files
     try {
       const results = await DocumentPicker.pickMultiple({
@@ -371,15 +447,15 @@ class GroupTasksDetailsScreen extends Component {
         uploading: 0,
       });
 
-      await APIServices.addFileToGroupTask(
+      await APIServices.addFileToTask(
         this.state.files,
-        selectedGroupTaskID,
-        selectedTaskID,
+        selectedProjectTaskID,
+        selectedProjectID,
       )
         .then(response => {
           if (response.message == 'success') {
             this.setState({indeterminate: false, files: [], uploading: 100});
-            this.fetchFilesData(selectedGroupTaskID, selectedTaskID);
+            this.fetchFilesData(selectedProjectID, selectedProjectTaskID);
           } else {
             this.setState({indeterminate: false, files: [], uploading: 0});
           }
@@ -390,6 +466,9 @@ class GroupTasksDetailsScreen extends Component {
             this.showAlert('', error.data.message);
           //}
         });
+      // this.props.uploadFile(this.state.files, this.props.selectedProjectID);
+
+      console.log(this.state.files);
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
         console.log('file pick error', err);
@@ -470,21 +549,17 @@ class GroupTasksDetailsScreen extends Component {
   }
 
   async deleteFile(item) {
-    let selectedGroupTaskID = this.state.selectedGroupTaskID;
+    let projectID = this.state.selectedProjectID;
     let taskID = item.taskId;
     let taskFileId = item.taskFileId;
 
     this.setState({dataLoading: true});
 
-    await APIServices.deleteFileInGroupTaskData(
-      selectedGroupTaskID,
-      taskID,
-      taskFileId,
-    )
+    await APIServices.deleteFileInTaskData(projectID, taskID, taskFileId)
       .then(response => {
         if (response.message == 'success') {
           this.setState({dataLoading: false});
-          this.fetchFilesData(selectedGroupTaskID, taskID);
+          this.fetchFilesData(projectID, taskID);
         } else {
           this.setState({dataLoading: false});
         }
@@ -535,6 +610,12 @@ class GroupTasksDetailsScreen extends Component {
     }
     return imageType;
   }
+
+  // onRefresh() {
+  //   this.setState({isFetching: false, filesData: [],allFilesData:[]}, function() {
+  //     this.fetchData(this.props.selectedProjectID);
+  //   });
+  // }
 
   renderDocPickeredView() {
     return (
@@ -615,11 +696,9 @@ class GroupTasksDetailsScreen extends Component {
     );
   }
 
-  async getAllSprintInProject(selectedGroupTaskID, sprintId) {
+  async getAllSprintInProject(selectedProjectID, sprintId) {
     this.setState({dataLoading: true});
-    let sprintData = await APIServices.getAllSprintInProject(
-      selectedGroupTaskID,
-    );
+    let sprintData = await APIServices.getAllSprintInProject(selectedProjectID);
     if (sprintData.message == 'success') {
       this.setSprintDroupDownData(sprintData.data);
       this.setSprintDroupDownSelectedValue(sprintData.data, sprintId);
@@ -629,24 +708,26 @@ class GroupTasksDetailsScreen extends Component {
     }
   }
 
-  async fetchData(selectedGroupTaskID, selectedTaskID) {
+  async fetchData(selectedProjectID, selectedProjectTaskID) {
     this.setState({dataLoading: true});
     try {
-      let taskResult = await APIServices.getGroupSingleTaskData(
-        selectedGroupTaskID,
-        selectedTaskID,
+      taskResult = await APIServices.getProjecTaskData(
+        selectedProjectID,
+        selectedProjectTaskID,
       );
       if (taskResult.message == 'success') {
+        this.setTaskInitiator(taskResult);
         this.setTaskName(taskResult);
+        this.setSecondaryTaskId(taskResult);
         this.setTaskStatus(taskResult);
-        this.setTaskNote(taskResult);
+        this.setTaskUserName(taskResult);
         this.setDueDate(taskResult);
         this.setReminderDate(taskResult);
-        this.setTaskUserName(taskResult);
-        this.setSecondaryTaskId(taskResult);
+        this.setTaskNote(taskResult);
         this.setIsParent(taskResult);
-
-        setState({dataLoading: false, taskResult: taskResult});
+        this.setIssueType(taskResult);
+        this.setSprintId(taskResult);
+        this.setState({dataLoading: false, taskResult: taskResult});
       } else {
         this.setState({dataLoading: false});
       }
@@ -692,6 +773,10 @@ class GroupTasksDetailsScreen extends Component {
     }
   }
 
+  setTaskInitiator(taskResult) {
+    this.setState({projectTaskInitiator: taskResult.data.taskInitiator});
+  }
+
   setTaskName(taskResult) {
     this.setState({taskName: taskResult.data.taskName});
   }
@@ -723,9 +808,40 @@ class GroupTasksDetailsScreen extends Component {
   setTaskStatus(taskResult) {
     let statusValue = '';
     switch (taskResult.data.taskStatus) {
-      case 'open':
-        statusValue = 'Open';
+      case 'pending':
+        statusValue = 'Pending';
         break;
+      case 'onHold':
+        statusValue = 'On hold';
+        break;
+      case 'cancel':
+        statusValue = 'Cancel';
+        break;
+      case 'fixing':
+        statusValue = 'Fixing';
+        break;
+      case 'resolved':
+        statusValue = 'Resolved';
+        break;
+      case 'inprogress':
+        statusValue = 'In progress';
+        break;
+      case 'completed':
+        statusValue = 'Completed';
+      case 'underReview':
+        statusValue = 'Under review';
+        break;
+      case 'waitingForApproval':
+        statusValue = 'Wating for approval';
+        break;
+      case 'review':
+        statusValue = 'Review';
+        break;
+      case 'waitingResponse':
+        statusValue = 'Wating response';
+        break;
+      case 'rejected':
+        statusValue = 'Rejected';
       case 'closed':
         statusValue = 'Closed';
         break;
@@ -736,15 +852,13 @@ class GroupTasksDetailsScreen extends Component {
   }
 
   async setTaskUserName(taskResult) {
-    let selectedGroupTaskID = this.state.selectedGroupTaskID;
+    let projectID = this.state.selectedProjectID;
     let userID = taskResult.data.taskAssignee;
-    let activeUsers = await APIServices.getTaskPeopleData(selectedGroupTaskID);
+    let activeUsers = await APIServices.getAllUsersByProjectId(projectID);
     if (activeUsers.message == 'success' && userID) {
-      const result = activeUsers.data.find(
-        ({assigneeId}) => assigneeId === userID,
-      );
+      const result = activeUsers.data.find(({userId}) => userId === userID);
       this.setState({
-        name: result.assigneeFirstName + ' ' + result.assigneeLastName,
+        name: result.firstName + ' ' + result.lastName,
         //activeUsers : activeUsers.data,
       });
     }
@@ -765,6 +879,10 @@ class GroupTasksDetailsScreen extends Component {
         dueTime: taskDueTime,
         date: new Date(taskResult.data.taskDueDateAt),
         time: new Date(taskResult.data.taskDueDateAt),
+        // date: moment.parseZone(taskResult.data.taskDueDateAt).format('ddd MMM DD YYYY hh:mm:ss')+' GMT+0530 (India Standard Time)',
+
+        //new Date('Tue May 11 2020 03:14:00 GMT+0530 (India Standard Time)'),
+        // time: new Date(taskDueDate),
       });
     }
   }
@@ -795,6 +913,7 @@ class GroupTasksDetailsScreen extends Component {
   setIsParent(taskResult) {
     let isParent = taskResult.data.isParent;
     let subTaskListLength = this.state.subTaskListLength;
+    let fromMyTask = this.state.fromMyTask;
     this.setState({
       isParent: isParent,
       // addParentTaskShow: subTaskListLength > 0 ? false : true,
@@ -812,6 +931,37 @@ class GroupTasksDetailsScreen extends Component {
     if (isParent) {
       this.getSubTAskDetails();
     }
+  }
+
+  setIssueType(taskResult) {
+    let value = taskResult.data.issueType;
+    let issueTypeValue = '';
+    switch (value) {
+      case 'development':
+        issueTypeValue = 'Development';
+        break;
+      case 'qa':
+        issueTypeValue = 'QA';
+        break;
+      case 'design':
+        issueTypeValue = 'Design';
+        break;
+      case 'bug':
+        issueTypeValue = 'Bug';
+        break;
+      case 'operational':
+        issueTypeValue = 'Operational';
+        break;
+      case 'preSales':
+        issueTypeValue = 'Pre-sales';
+        break;
+      case 'general':
+        issueTypeValue = 'General';
+        break;
+    }
+    this.setState({
+      issueType: issueTypeValue,
+    });
   }
 
   dateView = function(item) {
@@ -963,7 +1113,7 @@ class GroupTasksDetailsScreen extends Component {
       });
       if (this.state.reminder) {
         this.setReminderDate(this.state.taskResult);
-      } else {
+      }else{
         this.setDueDate(this.state.taskResult);
       }
     }
@@ -1002,7 +1152,7 @@ class GroupTasksDetailsScreen extends Component {
       });
       if (this.state.reminder) {
         this.setReminderDate(this.state.taskResult);
-      } else {
+      }else{
         this.setDueDate(this.state.taskResult);
       }
     }
@@ -1124,9 +1274,15 @@ class GroupTasksDetailsScreen extends Component {
       case 10:
         break;
       case 0:
-        this.props.navigation.navigate('AssigneeScreenGroupTask', {
-          selectedGroupTaskID: this.state.selectedGroupTaskID,
+        this.props.navigation.navigate('AssigneeScreen', {
+          selectedProjectID: this.state.selectedProjectID,
           onSelectUser: (name, id) => this.onSelectUser(name, id),
+        });
+        break;
+      case 1:
+        this.props.navigation.navigate('SubTaskScreen', {
+          selectedProjectID: this.state.selectedProjectID,
+          selectedProjectTaskID: this.state.selectedProjectTaskID,
         });
         break;
       case 2:
@@ -1134,6 +1290,21 @@ class GroupTasksDetailsScreen extends Component {
         break;
       case 3:
         this.setState({showPicker: true, reminder: true});
+        break;
+      case 4:
+        this.props.navigation.navigate('NotesScreen', {
+          note: this.state.note,
+          onUpdateNote: note => this.onUpdateNote(note),
+        });
+        break;
+      case 5:
+        // this.props.navigation.navigate('FilesScreen', {
+        //   projectID: this.state.selectedProjectID,
+        //   taskID: this.state.selectedProjectTaskID,
+        // });
+        break;
+      case 6:
+        this.props.navigation.navigate('ChatScreen');
         break;
       default:
         break;
@@ -1206,19 +1377,62 @@ class GroupTasksDetailsScreen extends Component {
     );
   }
 
+  onFilterSprintData = (value, index, data) => {
+    let previousSprintID = this.state.previousSprintID;
+    let selectedProjectID = this.state.selectedProjectID;
+    let selectedProjectTaskID = this.state.selectedProjectTaskID;
+    const selectedId = data[index].id;
+    let selectedName = data[index].value;
+    //this.setState({selectedSprint: selectedName });
+    this.changeSprint(
+      selectedName,
+      selectedId,
+      previousSprintID,
+      selectedProjectID,
+      selectedProjectTaskID,
+    );
+  };
+
+  // change Sprint
+  async changeSprint(
+    selectedName,
+    selectedId,
+    previousSprintID,
+    selectedProjectID,
+    selectedProjectTaskID,
+  ) {
+    this.setState({dataLoading: true});
+    await APIServices.changeSprint(
+      selectedId,
+      previousSprintID,
+      selectedProjectID,
+      selectedProjectTaskID,
+    )
+      .then(response => {
+        if (response.message == 'success') {
+          this.setState({dataLoading: false, sprintName: selectedName});
+        } else {
+          this.setState({dataLoading: false});
+          this.showAlert('', response.message);
+        }
+      })
+      .catch(error => {
+        // if (error.status == 401 || error.status == 403) {
+          this.setState({dataLoading: false});
+          this.showAlert('', error.data.message);
+        // }
+      });
+  }
+
   async changeTaskNote(note) {
     this.setState({note: note});
   }
 
   async onSubmitTaskNote(note) {
     this.setState({dataLoading: true});
-    let selectedGroupTaskID = this.state.selectedGroupTaskID;
-    let selectedTaskID = this.state.selectedTaskID;
-    await APIServices.groupTaskUpdateTaskNoteData(
-      selectedGroupTaskID,
-      selectedTaskID,
-      note,
-    )
+    let projectID = this.state.selectedProjectID;
+    let taskID = this.state.selectedProjectTaskID;
+    await APIServices.updateTaskNoteData(projectID, taskID, note)
       .then(response => {
         if (response.message == 'success') {
           this.setState({dataLoading: false, note: note});
@@ -1234,19 +1448,95 @@ class GroupTasksDetailsScreen extends Component {
       });
   }
 
-  // change assignee of task API
-  async changeTaskAssignee(name, userID) {
+  // change issue typ of task API
+  async onChangeIssueType(selectedIssueTypeId, selectedIssueTypeName) {
     this.setState({dataLoading: true});
-    let selectedGroupTaskID = this.state.selectedGroupTaskID;
-    let selectedTaskID = this.state.selectedTaskID;
-    await APIServices.groupTaskUpdateTaskAssigneeData(
-      selectedGroupTaskID,
-      selectedTaskID,
-      userID,
+    let projectID = this.state.selectedProjectID;
+    let taskID = this.state.selectedProjectTaskID;
+    await APIServices.updateTaskIssueTypeData(
+      projectID,
+      taskID,
+      selectedIssueTypeId,
     )
       .then(response => {
         if (response.message == 'success') {
+          this.setState({
+            dataLoading: false,
+            issueType: selectedIssueTypeName,
+          });
+        } else {
+          this.setState({dataLoading: false});
+          this.showAlert('', response.message);
+        }
+      })
+      .catch(error => {
+        // if (error.status == 401 || error.status == 403) {
+          this.setState({dataLoading: false});
+          this.showAlert('', error.data.message);
+        // }
+      });
+  }
+
+  // change assignee of task API
+  async changeTaskAssignee(name, userID) {
+    this.setState({dataLoading: true});
+    let projectID = this.state.selectedProjectID;
+    let taskID = this.state.selectedProjectTaskID;
+    await APIServices.updateTaskAssigneeData(projectID, taskID, userID)
+      .then(response => {
+        if (response.message == 'success') {
           this.setState({dataLoading: false, name: name});
+        } else {
+          this.setState({dataLoading: false});
+          this.showAlert('', response.message);
+        }
+      })
+      .catch(error => {
+        // if (error.status == 401 || error.status == 403) {
+          this.setState({dataLoading: false});
+          this.showAlert('', error.data.message);
+        // }
+      });
+  }
+
+  // change status of task API
+  async onChangeTaskStatus(selectedTaskStatusId, selectedTaskStatusName) {
+    this.setState({dataLoading: true});
+    let projectID = this.state.selectedProjectID;
+    let taskID = this.state.selectedProjectTaskID;
+    await APIServices.updateTaskStatusData(
+      projectID,
+      taskID,
+      selectedTaskStatusId,
+    )
+      .then(response => {
+        if (response.message == 'success') {
+          this.setState({
+            dataLoading: false,
+            taskStatusValue: selectedTaskStatusName,
+          });
+        } else {
+          this.setState({dataLoading: false});
+          this.showAlert('', response.message);
+        }
+      })
+      .catch(error => {
+        // if (error.status == 401 || error.status == 403 || error.status == 400) {
+          this.setState({dataLoading: false});
+          this.showAlert('', error.data.message);
+        // }
+      });
+  }
+
+  // change name of task API
+  async onTaskNameChangeSubmit(text) {
+    this.setState({dataLoading: true, taskNameEditable: false});
+    let projectID = this.state.selectedProjectID;
+    let taskID = this.state.selectedProjectTaskID;
+    await APIServices.updateTaskNameData(projectID, taskID, text)
+      .then(response => {
+        if (response.message == 'success') {
+          this.setState({dataLoading: false});
         } else {
           this.setState({dataLoading: false});
         }
@@ -1259,63 +1549,11 @@ class GroupTasksDetailsScreen extends Component {
       });
   }
 
-  // change status of task API
-  async onChangeTaskStatus(selectedTaskStatusId, selectedTaskStatusName) {
-    this.setState({dataLoading: true});
-    let selectedGroupTaskID = this.state.selectedGroupTaskID;
-    let selectedTaskID = this.state.selectedTaskID;
-    await APIServices.groupTaskUpdateTaskStatusData(
-      selectedGroupTaskID,
-      selectedTaskID,
-      selectedTaskStatusId,
-    )
-      .then(response => {
-        if (response.message == 'success') {
-          this.setState({
-            dataLoading: false,
-            taskStatusValue: selectedTaskStatusName,
-          });
-        } else {
-          this.setState({dataLoading: false});
-        }
-      })
-      .catch(error => {
-        //if (error.status == 401 || error.status == 403 || error.status == 400) {
-          this.setState({dataLoading: false});
-          this.showAlert('', error.data.message);
-        //}
-      });
-  }
-
-  // change name of task API DONE
-  async onTaskNameChangeSubmit(text) {
-    try {
-      this.setState({dataLoading: true});
-      let selectedGroupTaskID = this.state.selectedGroupTaskID;
-      let selectedTaskID = this.state.selectedTaskID;
-      resultData = await APIServices.groupTaskUpdateTaskNameData(
-        selectedGroupTaskID,
-        selectedTaskID,
-        text,
-      );
-      if (resultData.message == 'success') {
-        this.setState({dataLoading: false});
-      } else {
-        this.setState({dataLoading: false});
-      }
-    } catch (e) {
-      if (e.status == 401 || e.status == 403) {
-        this.setState({dataLoading: false});
-        this.showAlert('', e.data.message);
-      }
-    }
-  }
-
   async changeTaskDueDate() {
     let duedateValue = this.state.duedateValue;
     let dueTime = this.state.dueTime;
-    let selectedGroupTaskID = this.state.selectedGroupTaskID;
-    let selectedTaskID = this.state.selectedTaskID;
+    let projectID = this.state.selectedProjectID;
+    let taskID = this.state.selectedProjectTaskID;
 
     let IsoDueDate = duedateValue
       ? moment(duedateValue + dueTime, 'DD/MM/YYYY hh:mmA').format(
@@ -1323,11 +1561,7 @@ class GroupTasksDetailsScreen extends Component {
         )
       : '';
 
-    await APIServices.groupTaskUpdateDueDateData(
-      selectedGroupTaskID,
-      selectedTaskID,
-      IsoDueDate,
-    )
+    await APIServices.updateTaskDueDateData(projectID, taskID, IsoDueDate)
       .then(response => {
         if (response.message == 'success') {
           this.setState({dataLoading: false});
@@ -1347,8 +1581,8 @@ class GroupTasksDetailsScreen extends Component {
     try {
       let remindDateValue = this.state.remindDateValue;
       let reminderTime = this.state.reminderTime;
-      let selectedGroupTaskID = this.state.selectedGroupTaskID;
-      let selectedTaskID = this.state.selectedTaskID;
+      let projectID = this.state.selectedProjectID;
+      let taskID = this.state.selectedProjectTaskID;
 
       let IsoReminderDate = remindDateValue
         ? moment(remindDateValue + reminderTime, 'DD/MM/YYYY hh:mmA').format(
@@ -1356,9 +1590,9 @@ class GroupTasksDetailsScreen extends Component {
           )
         : '';
 
-      let resultData = await APIServices.groupTaskUpdateReminderDateData(
-        selectedGroupTaskID,
-        selectedTaskID,
+      let resultData = await APIServices.updateTaskReminderDateData(
+        projectID,
+        taskID,
         IsoReminderDate,
       );
       if (resultData.message == 'success') {
@@ -1375,8 +1609,10 @@ class GroupTasksDetailsScreen extends Component {
   }
 
   deleteTask() {
-    let selectedGroupTaskID = this.state.selectedGroupTaskID;
-    let selectedTaskID = this.state.selectedTaskID;
+    let projectID = this.state.selectedProjectID;
+    let taskID = this.state.selectedProjectTaskID;
+    let tskInitiator = this.state.projectTaskInitiator;
+    let taskName = this.state.taskName;
 
     Alert.alert(
       'Delete Task',
@@ -1390,10 +1626,7 @@ class GroupTasksDetailsScreen extends Component {
         {
           text: 'Delete',
           onPress: () =>
-            this.props.deleteTaskInGroupTasks(
-              selectedGroupTaskID,
-              selectedTaskID,
-            ),
+            this.props.deleteSubTask(projectID, taskID, taskName, tskInitiator),
         },
       ],
       {cancelable: false},
@@ -1454,18 +1687,13 @@ class GroupTasksDetailsScreen extends Component {
     }
   };
 
-  navigateTo (item){
-    this.props.navigation.navigate('GroupSubTasksDetailsScreen', {
-      taskDetails: item,
-      selectedGroupTaskID: this.state.selectedGroupTaskID,
-      selectedGroupTaskName : item.taskName,
-    })
+  navigateTo (){
   }
 
   renderSubtasksList(item, index, userId, projectId) {
     return (
       <TouchableOpacity
-          onPress={() =>this.navigateTo(item)
+        onPress={() =>this.navigateTo()
         }>
       <View style={styles.subTasksListView}>
         <Image
@@ -1506,6 +1734,12 @@ class GroupTasksDetailsScreen extends Component {
     );
   }
 
+  onFilterTaskTypes = (value, index, data) => {
+    const selectedIssueTypeId = data[index].id;
+    let selectedIssueTypeName = data[index].value;
+    this.onChangeIssueType(selectedIssueTypeId, selectedIssueTypeName);
+  };
+
   onFilterTaskStatusData = (value, index, data) => {
     const selectedTaskStatusId = data[index].id;
     let selectedTaskStatusName = data[index].value;
@@ -1517,7 +1751,7 @@ class GroupTasksDetailsScreen extends Component {
   }
 
   onAddTaskPress(fromParent) {
-    let selectedProjectTaskID = this.state.selectedTaskID;
+    let selectedProjectTaskID = this.state.selectedProjectTaskID;
     let allDetails = this.state.allDetails;
 
     this.setState({
@@ -1555,31 +1789,72 @@ class GroupTasksDetailsScreen extends Component {
 
     this.setState({
       selectedTaskName: selectedTaskNameModal,
-      selectedTaskIDFromModal: selectedTaskIdModal,
+      selectedTaskID: selectedTaskIdModal,
     });
   };
 
-  async getAllTaskByGroup(selectedGroupTaskID) {
-    this.props.getAllTaskByGroup(selectedGroupTaskID);
+  async getAllTaskInProject() {
+    this.setState({
+      filterType: 'None',
+    });
+    let selectedProjectID = this.state.selectedProjectID;
+    AsyncStorage.getItem('userID').then(userID => {
+      this.props.getAllTaskInProjects(userID, selectedProjectID);
+    });
+  }
+
+  async getChildTasksOfParent(selectedProjectID, newParent, selectedTaskID) {
+    await APIServices.getChildTasksOfParentData(selectedProjectID, newParent)
+      .then(async response => {
+        if (response.message == 'success') {
+          await this.setState({
+            dataLoading: false,
+            subTaskList: response.data ? [response.data] : [],
+            subTaskListLength: response.data ? response.data.length : 0,
+            selectedProjectTaskID: newParent,
+          });
+          this.fetchData(selectedProjectID, newParent);
+          this.fetchFilesData(selectedProjectID, newParent);
+          this.getAllSprintInProject(selectedProjectID, this.state.sprintId);
+          this.getAllTaskInProject();
+          // let taskModalData = [];
+          // taskModalData = this.state.taskModalData.filter(item => {
+          //   return item.id == selectedTaskID;
+          // });
+          // this.setState({
+          //   taskModalDataID: taskModalData[0].id,
+          //   taskModalData: [],
+          // });
+        } else {
+          this.setState({dataLoading: false});
+        }
+      })
+      .catch(error => {
+        //if (error.status == 401 || error.status == 403) {
+          this.setState({dataLoading: false});
+          this.showAlert('', error.data.message);
+        //}
+      });
   }
 
   async onSavePress(fromParent) {
-    let selectedGroupTaskID = this.state.selectedGroupTaskID;
+    let selectedProjectID = this.state.selectedProjectID;
     let newParent = fromParent
-      ? this.state.selectedTaskIDFromModal
-      : this.state.selectedTaskID;
+      ? this.state.selectedTaskID
+      : this.state.selectedProjectTaskID;
 
     let selectedProjectTaskID = fromParent
-      ? this.state.selectedTaskID
-      : this.state.selectedTaskIDFromModal;
+      ? this.state.selectedProjectTaskID
+      : this.state.selectedTaskID;
 
     let selectedTaskNameModal = this.state.selectedTaskName;
     let parentTaskName = this.state.selectedTaskName;
+    let projectTaskInitiator = this.state.projectTaskInitiator;
 
     this.setState({showTaskModal: false});
 
-    await APIServices.updateParentToChildInGroup(
-      selectedGroupTaskID,
+    await APIServices.updateParentToChild(
+      selectedProjectID,
       selectedProjectTaskID,
       newParent,
     )
@@ -1587,11 +1862,25 @@ class GroupTasksDetailsScreen extends Component {
         if (response.message == 'success') {
           this.setState({dataLoading: false});
           // if (fromParent) {
-          this.fetchData(selectedGroupTaskID, this.state.selectedTaskID);
-          this.fetchFilesData(selectedGroupTaskID, this.state.selectedTaskID);
-
-          this.getAllTaskByGroup(this.state.selectedGroupTaskID);
+          this.fetchData(selectedProjectID, this.state.selectedProjectTaskID);
+          this.fetchFilesData(
+            selectedProjectID,
+            this.state.selectedProjectTaskID,
+          );
+          // this.getAllSprintInProject(selectedProjectID, this.state.sprintId);
+          this.getAllTaskInProject();
           this.setState({parentTaskName: parentTaskName});
+          // } else {
+          //   this.getChildTasksOfParent(
+          //     selectedProjectID,
+          //     this.state.selectedProjectTaskID,
+          //     this.state.selectedTaskID,
+          //   );
+          // }
+
+          // this.fetchData(selectedProjectID, this.state.selectedProjectTaskID);
+          // this.fetchFilesData(selectedProjectID, this.state.selectedProjectTaskID);
+          // this.getAllSprintInProject(selectedProjectID, this.state.sprintId);
         } else {
           this.setState({dataLoading: false});
         }
@@ -1613,8 +1902,7 @@ class GroupTasksDetailsScreen extends Component {
         onBackButtonPress={() => this.onCloseTaskModal()}
         onBackdropPress={() => this.onCloseTaskModal()}
         onRequestClose={() => this.onCloseTaskModal()}
-        // coverScreen={false}
-      >
+        coverScreen={false}>
         <View style={styles.modalMainView}>
           <View style={styles.modalHeaderView}>
             <Image
@@ -1701,19 +1989,14 @@ class GroupTasksDetailsScreen extends Component {
 
     return (
       <View style={styles.backgroundImage}>
-        <NavigationEvents onWillFocus={payload => this.pageOpen(payload)} />
         <Header
+          isTaskLog={false}
           isDelete={true}
           navigation={this.props.navigation}
-          title={this.state.taskName}
+          title={this.state.selectedProjectName}
           // drawStatus={true}
           // taskStatus={taskStatus ? taskStatus : ''}
           onPress={() => this.props.navigation.goBack()}
-          onPressTaskLog={() =>
-            this.props.navigation.navigate('TaskLogScreen', {
-              selectedProjectTaskID: this.state.selectedTaskID,
-            })
-          }
           onPressDelete={() => this.onTaskDeketePress()}
         />
         <ScrollView style={styles.backgroundImage}>
@@ -1734,10 +2017,12 @@ class GroupTasksDetailsScreen extends Component {
                 placeholder={'Task name'}
                 value={this.state.taskName}
                 editable={this.state.taskNameEditable}
+                onBlur={() => this.onTaskNameChangeSubmit(this.state.taskName)}
                 onChangeText={text => this.onTaskNameChange(text)}
                 onSubmitEditing={() =>
                   this.onTaskNameChangeSubmit(this.state.taskName)
                 }
+                maxLength={100}
               />
               <TouchableOpacity onPress={() => this.onTaskNameEditPress()}>
                 <Image
@@ -1803,6 +2088,35 @@ class GroupTasksDetailsScreen extends Component {
                 <Text style={styles.parentTaskText}>Task Type</Text>
               </View>
               <View style={styles.taskTypeDropMainView}>
+                <View style={[styles.taskTypeDropDownView, {marginRight: 5}]}>
+                  <Dropdown
+                    // style={{}}
+                    label=""
+                    labelFontSize={0}
+                    data={issueTypeList}
+                    textColor={colors.black}
+                    fontSize={14}
+                    renderAccessory={() => null}
+                    error={''}
+                    animationDuration={0.5}
+                    containerStyle={{width: '100%'}}
+                    overlayStyle={{width: '100%'}}
+                    pickerStyle={{width: '38%', marginTop: 62, marginLeft: 59}}
+                    dropdownPosition={0}
+                    value={this.state.issueType}
+                    itemColor={'black'}
+                    selectedItemColor={'black'}
+                    dropdownOffset={{top: 10}}
+                    baseColor={colors.projectBgColor}
+                    renderAccessory={this.renderBase}
+                    itemTextStyle={{
+                      marginLeft: 15,
+                      fontFamily: 'CircularStd-Book',
+                    }}
+                    itemPadding={10}
+                    onChangeText={this.onFilterTaskTypes}
+                  />
+                </View>
                 <View style={[styles.taskTypeDropDownView, {marginLeft: 5}]}>
                   <Dropdown
                     // style={{}}
@@ -1816,7 +2130,7 @@ class GroupTasksDetailsScreen extends Component {
                     animationDuration={0.5}
                     containerStyle={{width: '100%'}}
                     overlayStyle={{width: '100%'}}
-                    pickerStyle={{width: '89%', marginTop: 70, marginLeft: 15}}
+                    pickerStyle={{width: '38%', marginTop: 62, marginLeft: 225}}
                     dropdownPosition={0}
                     value={this.state.taskStatusValue}
                     itemColor={'black'}
@@ -1834,6 +2148,62 @@ class GroupTasksDetailsScreen extends Component {
                 </View>
               </View>
             </View>
+
+            <View style={styles.taskTypeMainView}>
+              <View style={styles.taskTypeNameView}>
+                <Image
+                  style={styles.iconStyle}
+                  source={icons.boardRoundedGreen}
+                  resizeMode="contain"
+                />
+                <Text style={styles.parentTaskText}>Board</Text>
+              </View>
+              <View style={styles.taskTypeDropMainView}>
+                <View style={styles.taskTypeDropDownView}>
+                  {isParent ? (
+                    <Dropdown
+                      // style={{}}
+                      label=""
+                      labelFontSize={0}
+                      data={sprints}
+                      textColor={colors.black}
+                      fontSize={14}
+                      renderAccessory={() => null}
+                      error={''}
+                      animationDuration={0.5}
+                      containerStyle={{width: '100%'}}
+                      overlayStyle={{width: '100%'}}
+                      pickerStyle={{
+                        width: '89%',
+                        marginTop: 70,
+                        marginLeft: 15,
+                      }}
+                      dropdownPosition={0}
+                      value={this.state.sprintName}
+                      itemColor={'black'}
+                      selectedItemColor={'black'}
+                      dropdownOffset={{top: 10}}
+                      baseColor={colors.projectBgColor}
+                      renderAccessory={this.renderBase}
+                      itemTextStyle={{
+                        marginLeft: 15,
+                        fontFamily: 'CircularStd-Book',
+                      }}
+                      itemPadding={10}
+                      onChangeText={this.onFilterSprintData}
+                      //disabled={isParent ? false : true}
+                    />
+                  ) : (
+                    <View style={styles.sprintNameViewMainView}>
+                      <Text style={styles.sprintNameView}>
+                        {this.state.sprintName}
+                      </Text>
+                    </View>
+                  )}
+                </View>
+              </View>
+            </View>
+
             <View style={styles.notesMainView}>
               <Image
                 style={styles.iconStyle}
@@ -2336,7 +2706,7 @@ const styles = EStyleSheet.create({
     fontFamily: 'CircularStd-Medium',
   },
   modalStyle: {
-    marginBottom: '0rem',
+    marginBottom: '250rem',
   },
   taskModalDropDownView: {
     backgroundColor: colors.projectBgColor,
@@ -2386,16 +2756,15 @@ const styles = EStyleSheet.create({
 
 const mapStateToProps = state => {
   return {
-    deleteSingleTaskInGroupLoading: state.tasks.deleteSingleTaskInGroupLoading,
-    deleteSingleTaskInGroupSuccess: state.tasks.deleteSingleTaskInGroupSuccess,
-    deleteSingleTaskInGroupError: state.tasks.deleteSingleTaskInGroupError,
-    deleteSingleTaskInGroupErrorMessage:
-      state.tasks.deleteSingleTaskInGroupErrorMessage,
-    allTaskByGroupLoading: state.tasks.allTaskByGroupLoading,
-    allTaskByGroup: state.tasks.allTaskByGroup,
+    deleteSubTaskLoading: state.project.deleteSubTaskLoading,
+    deleteSubTaskSuccess: state.project.deleteSubTaskSuccess,
+    deleteSubTaskError: state.project.deleteSubTaskError,
+    deleteSubTaskErrorMessage: state.project.deleteSubTaskErrorMessage,
+    allTaskByProjectLoading: state.project.allTaskByProjectLoading,
+    allTaskByProject: state.project.allTaskByProject,
   };
 };
 export default connect(
   mapStateToProps,
   actions,
-)(GroupTasksDetailsScreen);
+)(SubTasksDetailsScreen);

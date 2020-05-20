@@ -15,6 +15,11 @@ import {
   GET_ALL_TASK_BY_GROUP,
   GET_ALL_TASK_BY_GROUP_SUCCESS,
   GET_ALL_TASK_BY_GROUP_FAILED,
+  DELETE_SINGLE_SUB_TASK_IN_GROUP_TASKS,
+  DELETE_SINGLE_SUB_TASK_IN_GROUP_TASKS_SUCCESS,
+  DELETE_SINGLE_SUB_TASK_IN_GROUP_TASKS_FAILED,
+  DELETE_SINGLE_SUB_TASK_IN_GROUP_TASKS_FAILED_MASSAGE,
+
 } from '../types';
 
 const INITIAL_STATE = {
@@ -37,6 +42,11 @@ const INITIAL_STATE = {
 
   allTaskByGroupLoading: false,
   allTaskByGroup: [],
+
+  deleteSingleSubTaskInGroupLoading: false,
+  deleteSingleSubTaskInGroupSuccess: false,
+  deleteSingleSubTaskInGroupError: false,
+  deleteSingleSubTaskInGroupErrorMessage: '',
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -147,6 +157,39 @@ export default (state = INITIAL_STATE, action) => {
       };
     case GET_ALL_TASK_BY_GROUP_FAILED:
       return {...state, allTaskByGroupLoading: false};
+    //delete sub task
+    case DELETE_SINGLE_SUB_TASK_IN_GROUP_TASKS:
+      return {
+        ...state,
+        deleteSingleSubTaskInGroupLoading: true,
+        deleteSingleSubTaskInGroupSuccess: false,
+        deleteSingleSubTaskInGroupError: false,
+        deleteSingleSubTaskInGroupErrorMessage: '',
+      };
+    case DELETE_SINGLE_SUB_TASK_IN_GROUP_TASKS_SUCCESS:
+      return {
+        ...state,
+        deleteSingleSubTaskInGroupLoading: false,
+        deleteSingleSubTaskInGroupSuccess: true,
+        deleteSingleSubTaskInGroupError: false,
+        deleteSingleSubTaskInGroupErrorMessage: '',
+      };
+    case DELETE_SINGLE_SUB_TASK_IN_GROUP_TASKS_FAILED:
+      return {
+        ...state,
+        deleteSingleSubTaskInGroupLoading: false,
+        deleteSingleSubTaskInGroupSuccess: false,
+        deleteSingleSubTaskInGroupError: true,
+        deleteSingleSubTaskInGroupErrorMessage: '',
+      };
+    case DELETE_SINGLE_SUB_TASK_IN_GROUP_TASKS_FAILED_MASSAGE:
+      return {
+        ...state,
+        deleteSingleSubTaskInGroupLoading: false,
+        deleteSingleSubTaskInGroupSuccess: false,
+        deleteSingleSubTaskInGroupError: true,
+        deleteSingleSubTaskInGroupErrorMessage: action.payload,
+      };  
     default:
       return state;
   }

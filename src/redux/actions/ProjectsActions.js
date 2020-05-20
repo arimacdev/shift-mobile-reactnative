@@ -46,7 +46,12 @@ import {
     DELETE_TASK_FAILED_MASSAGE,
 
     MODEL_VISIBLE_CHANGE,
-    PROJECT_TASK_SUB_TASK_SUMBIT_SUCCESS
+    PROJECT_TASK_SUB_TASK_SUMBIT_SUCCESS,
+
+    DELETE_SUB_TASK,
+    DELETE_SUB_TASK_SUCCESS,
+    DELETE_SUB_TASK_FAILED,
+    DELETE_SUB_TASK_FAILED_MASSAGE
 
 } from '../types';
 import APIServices from '../../services/APIServices';
@@ -303,5 +308,35 @@ export const addEditSubTaskSuccessInProject = value => {
     return {
         type: PROJECT_TASK_SUB_TASK_SUMBIT_SUCCESS,
         payload: value
+    };
+};
+
+export const deleteSubTask =  (selectedProjectID, taskId, taskName, initiator) => {
+    return (dispatch) => {
+        dispatch({ type: DELETE_SUB_TASK });
+        APIServices.deleteSingleTask(selectedProjectID, taskId, taskName, initiator).then(response => {
+            if(response.message == 'success'){
+                dispatch({ 
+                    type: DELETE_SUB_TASK_SUCCESS,
+                    payload: response});  
+            }else{
+                dispatch({ type: DELETE_SUB_TASK_FAILED});  
+            }    
+        }).catch(error => {  
+            if(error.status == 401){
+                let errorMsg = error.data.message;
+                dispatch({ 
+                    type: DELETE_SUB_TASK_FAILED_MASSAGE,
+                    payload: errorMsg});   
+            } else if (error.status == 403) {
+                let errorMsg = error.data.message;
+                dispatch({ 
+                    type: DELETE_SUB_TASK_FAILED_MASSAGE,
+                    payload: errorMsg});   
+            }
+            else{
+                dispatch({ type: DELETE_SUB_TASK_FAILED});  
+            } 
+        });
     };
 };

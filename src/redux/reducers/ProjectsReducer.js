@@ -46,7 +46,12 @@ import {
     ADD_FILE_TO_TASK_FAILED_MASSAGE,
 
     MODEL_VISIBLE_CHANGE,
-    PROJECT_TASK_SUB_TASK_SUMBIT_SUCCESS
+    PROJECT_TASK_SUB_TASK_SUMBIT_SUCCESS,
+
+    DELETE_SUB_TASK,
+    DELETE_SUB_TASK_SUCCESS,
+    DELETE_SUB_TASK_FAILED,
+    DELETE_SUB_TASK_FAILED_MASSAGE
 
 } from '../types';
 
@@ -97,6 +102,11 @@ const INITIAL_STATE = {
 
     addPeopleModelVisible : false,
     myTaskAddEditSubTask : false,
+
+    deleteSubTaskLoading: false,
+    deleteSubTaskSuccess: false,
+    deleteSubTaskError: false,
+    deleteSubTaskErrorMessage: '',
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -337,7 +347,39 @@ export default (state = INITIAL_STATE, action) => {
             return {
                 ...state,
                 myTaskAddEditSubTask: action.payload
-            };             
+            };
+        case DELETE_SUB_TASK:
+            return {
+                ...state,
+                deleteSubTaskLoading: true,
+                deleteSubTaskSuccess: false,
+                deleteSubTaskError: false,
+                deleteSubTaskErrorMessage: ''
+            };
+        case DELETE_SUB_TASK_SUCCESS:
+            return {
+                ...state,
+                deleteSubTaskLoading: false,
+                deleteSubTaskSuccess: true,
+                deleteSubTaskError: false,
+                deleteSubTaskErrorMessage: ''
+            };
+        case DELETE_SUB_TASK_FAILED:
+            return {
+                ...state,
+                deleteSubTaskLoading: false,
+                deleteSubTaskSuccess: false,
+                deleteSubTaskError: true,
+                deleteSubTaskErrorMessage: ''
+            };
+        case DELETE_SUB_TASK_FAILED_MASSAGE:
+            return {
+                ...state,
+                deleteSubTaskLoading: false,
+                deleteSubTaskSuccess: false,
+                deleteSubTaskError: true,
+                deleteSubTaskErrorMessage: action.payload
+            };                 
         default:
             return state;
     }

@@ -37,7 +37,6 @@ import RNFetchBlob from 'rn-fetch-blob';
 import fileTypes from '../../../assest/fileTypes/fileTypes';
 import * as Animatable from 'react-native-animatable';
 import Modal from 'react-native-modal';
-import {NavigationEvents} from 'react-navigation';
 
 const Placeholder = () => (
   <View style={styles.landing}>
@@ -101,7 +100,7 @@ let taskStatusData = [
   {value: 'Closed', id: 'closed'},
 ];
 
-class GroupTasksDetailsScreen extends Component {
+class GroupSubTasksDetailsScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -171,27 +170,27 @@ class GroupTasksDetailsScreen extends Component {
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (
-      prevProps.deleteSingleTaskInGroupError !==
-        this.props.deleteSingleTaskInGroupError &&
-      this.props.deleteSingleTaskInGroupError &&
-      this.props.deleteSingleTaskInGroupErrorMessage == ''
+      prevProps.deleteSingleSubTaskInGroupError !==
+        this.props.deleteSingleSubTaskInGroupError &&
+      this.props.deleteSingleSubTaskInGroupError &&
+      this.props.deleteSingleSubTaskInGroupErrorMessage == ''
     ) {
       this.showAlert('', 'Error');
     }
 
     if (
-      prevProps.deleteSingleTaskInGroupError !==
-        this.props.deleteSingleTaskInGroupError &&
-      this.props.deleteSingleTaskInGroupError &&
-      this.props.deleteSingleTaskInGroupErrorMessage != ''
+      prevProps.deleteSingleSubTaskInGroupError !==
+        this.props.deleteSingleSubTaskInGroupError &&
+      this.props.deleteSingleSubTaskInGroupError &&
+      this.props.deleteSingleSubTaskInGroupErrorMessage != ''
     ) {
-      this.showAlert('', this.props.deleteTaskErrorMessage);
+      this.showAlert('', this.props.deleteSingleSubTaskInGroupErrorMessage);
     }
 
     if (
-      prevProps.deleteSingleTaskInGroupSuccess !==
-        this.props.deleteSingleTaskInGroupSuccess &&
-      this.props.deleteSingleTaskInGroupSuccess
+      prevProps.deleteSingleSubTaskInGroupSuccess !==
+        this.props.deleteSingleSubTaskInGroupSuccess &&
+      this.props.deleteSingleSubTaskInGroupSuccess
     ) {
       Alert.alert(
         'Success',
@@ -212,7 +211,7 @@ class GroupTasksDetailsScreen extends Component {
     }
   }
 
-  pageOpen() {
+  componentDidMount() {
     const {
       navigation: {
         state: {params},
@@ -255,7 +254,7 @@ class GroupTasksDetailsScreen extends Component {
   async gerTaskParentName(parentTaskId) {
     this.setState({dataLoading: true});
     try {
-      let taskResult = await APIServices.getProjecTaskData(
+      let taskResult = await APIServices.getGroupSingleTaskData(
         this.state.selectedGroupTaskID,
         parentTaskId,
       );
@@ -632,7 +631,7 @@ class GroupTasksDetailsScreen extends Component {
   async fetchData(selectedGroupTaskID, selectedTaskID) {
     this.setState({dataLoading: true});
     try {
-      let taskResult = await APIServices.getGroupSingleTaskData(
+      taskResult = await APIServices.getGroupSingleTaskData(
         selectedGroupTaskID,
         selectedTaskID,
       );
@@ -759,12 +758,24 @@ class GroupTasksDetailsScreen extends Component {
       .parseZone(taskResult.data.taskDueDateAt)
       .format('hh:mmA');
 
+    // console.log(
+    //   'ddddddddddddddddddddddddd',
+    //   moment(taskResult.data.taskDueDateAt).format('ddd MMM DD YYYY hh:mm:ss')+' GMT+0530 (India Standard Time)',
+    // );
+
+    // console.log(
+    //   'ddddddddddddddddddddddddd',
+    //   moment(taskResult.data.taskDueDateAt).format('ddd MMM DD YYYY hh:mm:ss')+' GMT+0530 (India Standard Time)',
+    // );
+
     if (taskDueDate != 'Invalid date') {
       this.setState({
         duedate: taskDueDate,
         dueTime: taskDueTime,
-        date: new Date(taskResult.data.taskDueDateAt),
-        time: new Date(taskResult.data.taskDueDateAt),
+        // date: moment.parseZone(taskResult.data.taskDueDateAt).format('ddd MMM DD YYYY hh:mm:ss')+' GMT+0530 (India Standard Time)',
+
+        //new Date('Tue May 11 2020 03:14:00 GMT+0530 (India Standard Time)'),
+        // time: new Date(taskDueDate),
       });
     }
   }
@@ -782,8 +793,6 @@ class GroupTasksDetailsScreen extends Component {
       this.setState({
         remindDate: taskReminderDate,
         reminderTime: taskReminderTime,
-        dateReminder: new Date(taskResult.data.taskReminderAt),
-        timeReminder: new Date(taskResult.data.taskReminderAt),
       });
     }
   }
@@ -961,11 +970,7 @@ class GroupTasksDetailsScreen extends Component {
         showPicker: false,
         showTimePicker: false,
       });
-      if (this.state.reminder) {
-        this.setReminderDate(this.state.taskResult);
-      } else {
-        this.setDueDate(this.state.taskResult);
-      }
+      this.setDueDate(this.state.taskResult);
     }
   }
 
@@ -1000,11 +1005,7 @@ class GroupTasksDetailsScreen extends Component {
         showPicker: false,
         showTimePicker: false,
       });
-      if (this.state.reminder) {
-        this.setReminderDate(this.state.taskResult);
-      } else {
-        this.setDueDate(this.state.taskResult);
-      }
+      this.setDueDate(this.state.taskResult);
     }
   }
 
@@ -1390,7 +1391,7 @@ class GroupTasksDetailsScreen extends Component {
         {
           text: 'Delete',
           onPress: () =>
-            this.props.deleteTaskInGroupTasks(
+            this.props.deleteSubTaskInGroupTasks(
               selectedGroupTaskID,
               selectedTaskID,
             ),
@@ -1455,11 +1456,6 @@ class GroupTasksDetailsScreen extends Component {
   };
 
   navigateTo (item){
-    this.props.navigation.navigate('GroupSubTasksDetailsScreen', {
-      taskDetails: item,
-      selectedGroupTaskID: this.state.selectedGroupTaskID,
-      selectedGroupTaskName : item.taskName,
-    })
   }
 
   renderSubtasksList(item, index, userId, projectId) {
@@ -1613,8 +1609,7 @@ class GroupTasksDetailsScreen extends Component {
         onBackButtonPress={() => this.onCloseTaskModal()}
         onBackdropPress={() => this.onCloseTaskModal()}
         onRequestClose={() => this.onCloseTaskModal()}
-        // coverScreen={false}
-      >
+        coverScreen={false}>
         <View style={styles.modalMainView}>
           <View style={styles.modalHeaderView}>
             <Image
@@ -1701,7 +1696,6 @@ class GroupTasksDetailsScreen extends Component {
 
     return (
       <View style={styles.backgroundImage}>
-        <NavigationEvents onWillFocus={payload => this.pageOpen(payload)} />
         <Header
           isDelete={true}
           navigation={this.props.navigation}
@@ -2336,7 +2330,7 @@ const styles = EStyleSheet.create({
     fontFamily: 'CircularStd-Medium',
   },
   modalStyle: {
-    marginBottom: '0rem',
+    marginBottom: '250rem',
   },
   taskModalDropDownView: {
     backgroundColor: colors.projectBgColor,
@@ -2386,11 +2380,10 @@ const styles = EStyleSheet.create({
 
 const mapStateToProps = state => {
   return {
-    deleteSingleTaskInGroupLoading: state.tasks.deleteSingleTaskInGroupLoading,
-    deleteSingleTaskInGroupSuccess: state.tasks.deleteSingleTaskInGroupSuccess,
-    deleteSingleTaskInGroupError: state.tasks.deleteSingleTaskInGroupError,
-    deleteSingleTaskInGroupErrorMessage:
-      state.tasks.deleteSingleTaskInGroupErrorMessage,
+    deleteSingleSubTaskInGroupLoading: state.tasks.deleteSingleSubTaskInGroupLoading,
+    deleteSingleSubTaskInGroupSuccess: state.tasks.deleteSingleSubTaskInGroupSuccess,
+    deleteSingleSubTaskInGroupError: state.tasks.deleteSingleSubTaskInGroupError,
+    deleteSingleSubTaskInGroupErrorMessage:state.tasks.deleteSingleSubTaskInGroupErrorMessage,
     allTaskByGroupLoading: state.tasks.allTaskByGroupLoading,
     allTaskByGroup: state.tasks.allTaskByGroup,
   };
@@ -2398,4 +2391,4 @@ const mapStateToProps = state => {
 export default connect(
   mapStateToProps,
   actions,
-)(GroupTasksDetailsScreen);
+)(GroupSubTasksDetailsScreen);

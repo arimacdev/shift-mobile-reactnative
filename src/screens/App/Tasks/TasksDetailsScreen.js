@@ -37,6 +37,7 @@ import RNFetchBlob from 'rn-fetch-blob';
 import fileTypes from '../../../assest/fileTypes/fileTypes';
 import * as Animatable from 'react-native-animatable';
 import Modal from 'react-native-modal';
+import {NavigationEvents} from 'react-navigation';
 
 const Placeholder = () => (
   <View style={styles.landing}>
@@ -267,7 +268,7 @@ class TasksDetailsScreen extends Component {
     }
   }
 
-  componentDidMount() {
+  pageOpen() {
     const {
       navigation: {
         state: {params},
@@ -1685,35 +1686,39 @@ class TasksDetailsScreen extends Component {
     }
   };
 
+  navigateTo (item){
+    this.props.navigation.navigate('SubTasksDetailsScreen', {
+      taskDetails: item,
+      selectedProjectID: this.state.selectedProjectID,
+      selectedProjectName: this.state.selectedProjectName,
+      isFromBoards: true,
+    })
+  }
+
   renderSubtasksList(item, index, userId, projectId) {
     return (
       <TouchableOpacity
-        onPress={() =>
-          this.props.navigation.navigate('TasksDetailsScreen', {
-            taskDetails: item,
-            selectedProjectID: this.state.selectedProjectID,
-            selectedProjectName: this.state.selectedProjectName,
-          })
+        onPress={() =>this.navigateTo(item)
         }>
-        <View style={styles.subTasksListView}>
-          <Image
-            style={styles.subTasksCompletionIcon}
-            source={
-              item.taskStatus == 'closed'
-                ? icons.rightCircule
-                : icons.whiteCircule
-            }
-          />
-          <View style={{flex: 1}}>
-            <Text style={styles.subTaskText} numberOfLines={1}>
-              {item.taskName}
-            </Text>
-          </View>
-          <View style={styles.statusView}>
-            {this.dateView(item)}
-            {this.userImage(item)}
-          </View>
+      <View style={styles.subTasksListView}>
+        <Image
+          style={styles.subTasksCompletionIcon}
+          source={
+            item.taskStatus == 'closed'
+              ? icons.rightCircule
+              : icons.whiteCircule
+          }
+        />
+        <View style={{flex: 1}}>
+          <Text style={styles.subTaskText} numberOfLines={1}>
+            {item.taskName}
+          </Text>
         </View>
+        <View style={styles.statusView}>
+          {this.dateView(item)}
+          {this.userImage(item)}
+        </View>
+      </View>
       </TouchableOpacity>
     );
   }
@@ -1990,6 +1995,7 @@ class TasksDetailsScreen extends Component {
 
     return (
       <View style={styles.backgroundImage}>
+        <NavigationEvents onWillFocus={payload => this.pageOpen(payload)} />
         <Header
           isTaskLog={true}
           isDelete={true}
