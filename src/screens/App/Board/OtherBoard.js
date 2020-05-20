@@ -314,7 +314,8 @@ const styles = EStyleSheet.create({
         alignItems: 'center',
         paddingHorizontal: '12rem',
         height: '55rem',
-        marginHorizontal: '20rem',
+        marginHorizontal: '12rem',
+        marginRight: '30rem'
     },
     buttonText: {
         fontSize: '12rem',
@@ -373,11 +374,12 @@ const styles = EStyleSheet.create({
         fontWeight: '400'
     },
     item: {
-        width: '300rem',
+        width: '340rem',
         marginHorizontal: 5,
         alignItems: 'center',
-        marginLeft: '20rem',
+        marginLeft: '10rem',
         marginTop: '20rem',
+        
 
     },
     sub_item: {

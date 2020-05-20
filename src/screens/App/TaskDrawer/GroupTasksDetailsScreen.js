@@ -288,10 +288,10 @@ class GroupTasksDetailsScreen extends Component {
         }
       })
       .catch(error => {
-        if (error.status == 401 || error.status == 403) {
+        //if (error.status == 401 || error.status == 403) {
           this.setState({dataLoading: false});
           this.showAlert('', error.data.message);
-        }
+        //}
       });
   }
 
@@ -384,10 +384,10 @@ class GroupTasksDetailsScreen extends Component {
           }
         })
         .catch(error => {
-          if (error.status == 401) {
+          //if (error.status == 401) {
             this.setState({indeterminate: false, files: [], uploading: 0});
             this.showAlert('', error.data.message);
-          }
+          //}
         });
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
@@ -489,10 +489,10 @@ class GroupTasksDetailsScreen extends Component {
         }
       })
       .catch(error => {
-        if (error.status == 401) {
+        //if (error.status == 401) {
           this.setState({dataLoading: false});
           this.showAlert('', error.data.message);
-        }
+        //}
       });
   }
 
@@ -1226,10 +1226,10 @@ class GroupTasksDetailsScreen extends Component {
         }
       })
       .catch(error => {
-        if (error.status == 401 || error.status == 403) {
+        //if (error.status == 401 || error.status == 403) {
           this.setState({dataLoading: false});
           this.showAlert('', error.data.message);
-        }
+        //}
       });
   }
 
@@ -1251,10 +1251,10 @@ class GroupTasksDetailsScreen extends Component {
         }
       })
       .catch(error => {
-        if (error.status == 401 || error.status == 403) {
+        //if (error.status == 401 || error.status == 403) {
           this.setState({dataLoading: false});
           this.showAlert('', error.data.message);
-        }
+        //}
       });
   }
 
@@ -1279,10 +1279,10 @@ class GroupTasksDetailsScreen extends Component {
         }
       })
       .catch(error => {
-        if (error.status == 401 || error.status == 403 || error.status == 400) {
+        //if (error.status == 401 || error.status == 403 || error.status == 400) {
           this.setState({dataLoading: false});
           this.showAlert('', error.data.message);
-        }
+        //}
       });
   }
 
@@ -1335,10 +1335,10 @@ class GroupTasksDetailsScreen extends Component {
         }
       })
       .catch(error => {
-        if (error.status == 401 || error.status == 403) {
+        //if (error.status == 401 || error.status == 403) {
           this.setState({dataLoading: false});
           this.showAlert('', error.data.message);
-        }
+        //}
       });
   }
 
@@ -1593,10 +1593,10 @@ class GroupTasksDetailsScreen extends Component {
         }
       })
       .catch(error => {
-        if (error.status == 401 || error.status == 403) {
+        //if (error.status == 401 || error.status == 403) {
           this.setState({dataLoading: false});
           this.showAlert('', error.data.message);
-        }
+        //}
       });
   }
 

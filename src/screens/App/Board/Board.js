@@ -98,7 +98,10 @@ class Board extends Component {
                     onPress={this.updateIndex}
                     selectedIndex={selectedIndex}
                     buttons={buttons}
-                    containerStyle={{ height: 60, marginTop: '7%', marginBottom: '1%', marginLeft: '5%', marginRight: '5%', borderRadius: 10, backgroundColor: '#edf0f5' }}
+                    containerStyle={
+                        selectedIndex == 0 ?
+                        styles.defaultBoardView : styles.otherBoardView
+                    }
                     selectedButtonStyle={{ backgroundColor: '#0bafff' }}
                     textStyle={{fontFamily: 'CircularStd-Medium',fontWeight: 'bold',fontSize: 14,}}
                     disabledTextStyle = {{color:'080848'}}
@@ -110,6 +113,24 @@ class Board extends Component {
 }
 
 const styles = EStyleSheet.create({
+    defaultBoardView:{
+        height: 60,
+        marginTop: '7%',
+        marginBottom: '1%', 
+        marginLeft: '5%', 
+        marginRight: '5%', 
+        borderRadius: 10, 
+        backgroundColor: '#edf0f5' 
+    },
+    otherBoardView:{
+        height: 60,
+        marginTop: '7%',
+        marginBottom: '1%', 
+        marginLeft: '5%', 
+        marginRight: '8%', 
+        borderRadius: 10, 
+        backgroundColor: '#edf0f5' 
+    }
 });
 
 const mapStateToProps = state => {
