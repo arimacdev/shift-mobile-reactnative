@@ -1656,7 +1656,7 @@ class GroupTasksDetailsScreen extends Component {
               animationDuration={0.5}
               containerStyle={{width: '100%'}}
               overlayStyle={{width: '100%'}}
-              pickerStyle={{width: '79%', marginTop: 62, marginLeft: 35}}
+              pickerStyle={styles.taskModalDataPicker}
               dropdownPosition={0}
               value={this.state.selectedTaskName}
               itemColor={'black'}
@@ -1820,7 +1820,7 @@ class GroupTasksDetailsScreen extends Component {
                 <Text style={styles.parentTaskText}>Task Type</Text>
               </View>
               <View style={styles.taskTypeDropMainView}>
-                <View style={[styles.taskTypeDropDownView, {marginLeft: 5}]}>
+                <View style={[styles.taskTypeDropDownView]}>
                   <Dropdown
                     // style={{}}
                     label=""
@@ -1833,7 +1833,7 @@ class GroupTasksDetailsScreen extends Component {
                     animationDuration={0.5}
                     containerStyle={{width: '100%'}}
                     overlayStyle={{width: '100%'}}
-                    pickerStyle={{width: '89%', marginTop: 70, marginLeft: 15}}
+                    pickerStyle={styles.taskStatusDataPicker}
                     dropdownPosition={0}
                     value={this.state.taskStatusValue}
                     itemColor={'black'}
@@ -2399,6 +2399,16 @@ const styles = EStyleSheet.create({
     padding: '08rem',
   },
   sprintNameViewMainView: {},
+  taskModalDataPicker: {
+    width: '79.5%',
+    marginTop: '59rem',
+    marginLeft: '32rem',
+  },
+  taskStatusDataPicker: {
+    width: '78%',
+    marginTop: '58rem',
+    marginLeft: '54rem',
+  },
 });
 
 const mapStateToProps = state => {

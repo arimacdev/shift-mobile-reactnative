@@ -1634,7 +1634,7 @@ class GroupSubTasksDetailsScreen extends Component {
               animationDuration={0.5}
               containerStyle={{width: '100%'}}
               overlayStyle={{width: '100%'}}
-              pickerStyle={{width: '79%', marginTop: 62, marginLeft: 35}}
+              pickerStyle={styles.taskModalDataPicker}
               dropdownPosition={0}
               value={this.state.selectedTaskName}
               itemColor={'black'}
@@ -2376,6 +2376,11 @@ const styles = EStyleSheet.create({
     padding: '08rem',
   },
   sprintNameViewMainView: {},
+  taskModalDataPicker: {
+    width: '79.5%',
+    marginTop: '59rem',
+    marginLeft: '32rem',
+  },
 });
 
 const mapStateToProps = state => {

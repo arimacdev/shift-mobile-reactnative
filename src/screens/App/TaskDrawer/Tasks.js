@@ -544,7 +544,7 @@ class Tasks extends Component {
               animationDuration={0.5}
               containerStyle={{width: '100%'}}
               overlayStyle={{width: '100%'}}
-              pickerStyle={{width: '89%', marginTop: 70, marginLeft: 15}}
+              pickerStyle={styles.tasksStatusPicker}
               dropdownPosition={0}
               value={selectedTypeAllTasks}
               itemColor={'black'}
@@ -855,6 +855,11 @@ const styles = EStyleSheet.create({
     position: 'absolute',
     right: -12,
     top: -22,
+  },
+  tasksStatusPicker: {
+    width: '89.5%',
+    marginTop: '60rem',
+    marginLeft: '13rem',
   },
 });
 

@@ -1143,7 +1143,7 @@ class MyTasksDetailsScreen extends Component {
                 <Text style={styles.parentTaskText}>Task Status</Text>
               </View>
               <View style={styles.taskTypeDropMainView}>
-                <View style={[styles.taskTypeDropDownView, {marginLeft: 5}]}>
+                <View style={[styles.taskTypeDropDownView]}>
                   <Dropdown
                     // style={{}}
                     label=""
@@ -1156,7 +1156,7 @@ class MyTasksDetailsScreen extends Component {
                     animationDuration={0.5}
                     containerStyle={{width: '100%'}}
                     overlayStyle={{width: '100%'}}
-                    pickerStyle={{width: '89%', marginTop: 70, marginLeft: 25}}
+                    pickerStyle={styles.myTasksStatusPicker}
                     dropdownPosition={0}
                     value={taskStatus}
                     itemColor={'black'}
@@ -1529,6 +1529,11 @@ const styles = EStyleSheet.create({
     fontSize: 11,
     color: colors.darkBlue,
     fontWeight: 'bold',
+  },
+  myTasksStatusPicker:{
+    width: '78%',
+    marginTop: '58rem',
+    marginLeft: '54rem',
   }
 });
 

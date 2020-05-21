@@ -243,7 +243,7 @@ class MyTasks extends Component {
                   animationDuration={0.5}
                   containerStyle={{width: '100%'}}
                   overlayStyle={{width: '100%'}}
-                  pickerStyle={{width: '89%', marginTop: EStyleSheet.value('50rem'), marginLeft: 15}}
+                  pickerStyle={styles.myTasksStatusPicker}
                   dropdownPosition={0}
                   value={selectedTypeAllTasks}
                   itemColor={'black'}
@@ -403,6 +403,11 @@ const styles = EStyleSheet.create({
     height: '57rem',
     marginHorizontal: '20rem',
   },
+  myTasksStatusPicker:{
+    width: '89.5%',
+    marginTop: '60rem',
+    marginLeft: '13rem',
+  }
 });
 
 const mapStateToProps = state => {

@@ -808,7 +808,7 @@ class AddNewTasksScreen extends Component {
             animationDuration={0.5}
             containerStyle={{ width: '100%' }}
             overlayStyle={{ width: '100%' }}
-            pickerStyle={{ width: '89%', marginTop: 70, marginLeft: 15 }}
+            pickerStyle={styles.dropPickerStyle}
             dropdownPosition={0}
             value={this.state.selectedAssignee}
             itemColor={'black'}
@@ -835,7 +835,7 @@ class AddNewTasksScreen extends Component {
             animationDuration={0.5}
             containerStyle={{ width: '100%' }}
             overlayStyle={{ width: '100%' }}
-            pickerStyle={{ width: '89%', marginTop: 70, marginLeft: 15 }}
+            pickerStyle={styles.dropPickerStyle}
             dropdownPosition={0}
             value={this.state.parentTaskStatus}
             itemColor={'black'}
@@ -867,7 +867,7 @@ class AddNewTasksScreen extends Component {
             animationDuration={0.5}
             containerStyle={{ width: '100%' }}
             overlayStyle={{ width: '100%' }}
-            pickerStyle={{ width: '89%', marginTop: 70, marginLeft: 15 }}
+            pickerStyle={styles.dropPickerStyle}
             dropdownPosition={0}
             value={this.state.selectedOperarionalStatus}
             itemColor={'black'}
@@ -896,7 +896,7 @@ class AddNewTasksScreen extends Component {
             animationDuration={0.5}
             containerStyle={{ width: '100%' }}
             overlayStyle={{ width: '100%' }}
-            pickerStyle={{ width: '89%', marginTop: 70, marginLeft: 15 }}
+            pickerStyle={styles.dropPickerStyle}
             dropdownPosition={0}
             value={this.state.selectedStatus}
             itemColor={'black'}
@@ -929,7 +929,7 @@ class AddNewTasksScreen extends Component {
             animationDuration={0.5}
             containerStyle={{ width: '100%' }}
             overlayStyle={{ width: '100%' }}
-            pickerStyle={{ width: '89%', marginTop: 70, marginLeft: 15 }}
+            pickerStyle={styles.dropPickerStyle}
             dropdownPosition={0}
             value={this.state.sprintStatus}
             itemColor={'black'}
@@ -1231,6 +1231,11 @@ const styles = EStyleSheet.create({
   },
   subTitleText: {
     fontFamily: 'CircularStd-Book',
+  },
+  dropPickerStyle:{
+    width: '89.5%',
+    marginTop: '64rem',
+    marginLeft: '13rem',
   }
 });
 
