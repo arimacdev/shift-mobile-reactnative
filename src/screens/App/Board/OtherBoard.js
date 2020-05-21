@@ -31,7 +31,7 @@ import Triangle from 'react-native-triangle';
 
 const menuItems = [
     {value: 0, text: 'Edit Board Names'},
-    {value: 1, text: 'Delete Board'},
+    // {value: 1, text: 'Delete Board'}, comment according to the 
 ];
   
 class OtherBoard extends Component {

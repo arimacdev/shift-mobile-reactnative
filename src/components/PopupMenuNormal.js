@@ -35,9 +35,9 @@ class PopupMenuNormal extends Component {
           text: nextProps.data[0].text,
         });
       }
-      if (nextProps.data.length === 1) {
-        this.onDefaultOptionSelect(nextProps.data[0]);
-      }
+      // if (nextProps.data.length === 1) {
+      //   this.onDefaultOptionSelect(nextProps.data[0]);
+      // }
     }
   }
 
@@ -63,12 +63,12 @@ class PopupMenuNormal extends Component {
     }
   }
 
-  onDefaultOptionSelect(item) {
-    if (this.props.onChange && !this.defaultRan) {
-      this.defaultRan = true;
-      this.props.onChange(item);
-    }
-  }
+  // onDefaultOptionSelect(item) {
+  //   if (this.props.onChange && !this.defaultRan) {
+  //     this.defaultRan = true;
+  //     this.props.onChange(item);
+  //   }
+  // }
 
   // updateDataOrder(item) {
   //   const currentIndex = this.props.data.findIndex(elem => {
@@ -126,7 +126,7 @@ class PopupMenuNormal extends Component {
             </View>
           </MenuTrigger>
           <MenuOptions customStyles={customStyles}>
-            {this.props.data.length > 1 ? (
+            {this.props.data.length > 0 ? (
               <FlatList
                 data={this.props.data}
                 keyExtractor={(item, index) => index}
