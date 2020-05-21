@@ -34,7 +34,8 @@ const request = async function (options, isHeader,headers) {
                 AsyncStorage.setItem('refreshToken', result.refreshToken);
                 AsyncStorage.setItem('accessTokenExpirationDate', result.accessTokenExpirationDate);
             }catch (error) {
-                console.log("err",error);
+                AsyncStorage.clear();
+                NavigationService.navigate('Splash'); 
             } 
         }else{
             authHeader = `Bearer ${await AsyncStorage.getItem('accessToken')}`;
