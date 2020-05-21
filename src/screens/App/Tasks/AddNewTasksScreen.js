@@ -115,7 +115,7 @@ class AddNewTasksScreen extends Component {
       selectedAssignee: 'Assignee',
       selectedParentTask: 'No Parent',
       selectedStatus: 'Status',
-      selectedOperarionalStatus: 'Operational',
+      selectedOperarionalStatus: 'General',
       initiator: null,
       assigneeId: '',
       showAlert: false,
