@@ -42,7 +42,7 @@ class WorkloadTabScreen extends Component {
       index: 0,
       routes: [
         {key: 'tasks', title: 'Tasks'},
-        {key: 'graphs', title: 'Graphs'},
+        // {key: 'graphs', title: 'Graphs'},//comment according to the #394 issue
       ],
       from: 'all',
       to: 'all',
@@ -138,14 +138,15 @@ class WorkloadTabScreen extends Component {
             isCustom={this.state.isCustom}
           />
         );
-      case 'graphs':
-        return (
-          <Projects
-            selectedProjectID={userId}
-            navigation={this.props.navigation}
-            isActive={isActive}
-          />
-        );
+      //comment according to the #394 issue
+      // case 'graphs':
+      //   return (
+      //     <Projects
+      //       selectedProjectID={userId}
+      //       navigation={this.props.navigation}
+      //       isActive={isActive}
+      //     />
+      //   );
     }
   }
 
