@@ -1013,11 +1013,7 @@ class TasksTabScreen extends Component {
         animationDuration={0.5}
         containerStyle={{width: '100%'}}
         overlayStyle={{width: '100%'}}
-        pickerStyle={{
-          width: '90%',
-          marginTop: 65,
-          marginLeft: 10,
-        }}
+        pickerStyle={styles.filterTaskTypePicker}
         dropdownPosition={0}
         value={filterTaskType}
         itemColor={'black'}
@@ -1219,11 +1215,7 @@ class TasksTabScreen extends Component {
                   animationDuration={0.5}
                   containerStyle={{width: '100%'}}
                   overlayStyle={{width: '100%'}}
-                  pickerStyle={{
-                    width: '69%',
-                    marginTop: 65,
-                    marginLeft: 97,
-                  }}
+                  pickerStyle={styles.filterMainPicker}
                   dropdownPosition={0}
                   value={filterType}
                   itemColor={'black'}
@@ -1283,7 +1275,14 @@ class TasksTabScreen extends Component {
             {/* render my tasks and task list when filter*/}
             {(index == 1 || this.state.filter) && (
               <FlatList
-                style={styles.myTasksFlatList}
+                style={[
+                  styles.myTasksFlatList,
+                  {
+                    marginBottom: this.state.filter
+                      ? EStyleSheet.value('210rem')
+                      : EStyleSheet.value('160rem'),
+                  },
+                ]}
                 data={filterdAndMyTasksData}
                 renderItem={({item, index}) =>
                   this.renderMyTasksAndFilterTaskList(item, index)
@@ -1600,7 +1599,7 @@ const styles = EStyleSheet.create({
     marginTop: '0rem',
   },
   myTasksFlatList: {
-    marginBottom: '160rem',
+    marginBottom: '210rem',
     marginTop: '0rem',
   },
   filterMainView: {
@@ -1699,7 +1698,7 @@ const styles = EStyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: '12rem',
-    marginHorizontal: '10rem',
+    marginHorizontal: '20rem',
   },
   childTasksView: {
     backgroundColor: '#edf0f5',
@@ -1709,7 +1708,17 @@ const styles = EStyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: '12rem',
-    marginHorizontal: '10rem',
+    marginHorizontal: '20rem',
+  },
+  filterMainPicker: {
+    width: '69%',
+    marginTop: '58rem',
+    marginLeft: '89rem',
+  },
+  filterTaskTypePicker: {
+    width: '89.5%',
+    marginTop: '58rem',
+    marginLeft: '13rem',
   },
 });
 

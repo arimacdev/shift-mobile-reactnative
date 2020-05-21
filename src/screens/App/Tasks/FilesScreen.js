@@ -100,17 +100,7 @@ class FilesScreen extends Component {
     
 }
 
-  renderUserListList(item) {
-    // let fileDateText = '';
-    // let fileDate = moment.parseZone(item.taskFileDate).format('Do MMMM YYYY');
-    // let fileTimeText = '';
-    // let fileTime = moment.parseZone(item.taskFileDate).format('hh:mmA');
-    // if(fileDate != 'Invalid date'){
-    //   fileDateText = fileDate;
-    //   fileTimeText = fileTime
-    // }else{
-    //   fileDateText = '';
-    // }
+  renderFileList(item) {
     let date = moment(item.taskFileDate).format('YYYY/MM/DD');
     let time = moment(item.taskFileDate).format('hh:mm a');
     let taskFileDate = date +' | '+time;
@@ -233,7 +223,7 @@ class FilesScreen extends Component {
           <FlatList
             style={styles.flalList}
             data={files}
-            renderItem={({item}) => this.renderUserListList(item)}
+            renderItem={({item}) => this.renderFileList(item)}
             keyExtractor={item => item.projId}
           />
         </View>
