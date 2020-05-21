@@ -127,7 +127,7 @@ class AddNewTasksScreen extends Component {
       sprintStatus: 'Sprint',
       isDateNeedLoading: false,
       sprintId: '',
-      parentTaskStatus: 'ParentTask',
+      parentTaskStatus: 'No parent',
       parentTaskId: '',
       selectedOperarionalId: ''
     };
@@ -228,7 +228,7 @@ class AddNewTasksScreen extends Component {
     this.setState({ dataLoading: true });
     let parentTaskData = await APIServices.getAllTaskInProjectsData(userID, selectedProjectID);
     if (parentTaskData.message == 'success') {
-      let taskModalData = [];
+      let taskModalData = [{id:0, value: 'No parent'},];
       for (let index = 0; index < parentTaskData.data.length; index++) {
         const element = parentTaskData.data[index];
         if (element.parentTask) {
@@ -238,6 +238,7 @@ class AddNewTasksScreen extends Component {
           });
         }
       }
+      console.log('taskModalData', taskModalData);
       this.setState({ dropParentData: taskModalData, dataLoading: false });
     } else {
       this.setState({ dataLoading: false });
@@ -577,7 +578,7 @@ class AddNewTasksScreen extends Component {
           style={{
             flexDirection: 'column',
             marginLeft: 10,
-            justifyContent: 'contain',
+            justifyContent: 'center',
             flex: 1,
           }}>
           <Text style={{ marginTop: -2 }}>
@@ -841,7 +842,7 @@ class AddNewTasksScreen extends Component {
             onChangeText={this.setParentTask}
             // onChangeText={(value)=>{this.selectAssignee(item.name, value)}}
             dropdownOffset={{ top: 10 }}
-            // baseColor={colors.projectBgColor}
+            baseColor={colors.projectBgColor}
             // renderBase={this.renderBase}
             renderAccessory={this.renderBase}
             itemTextStyle={{ marginLeft: 15 }}
