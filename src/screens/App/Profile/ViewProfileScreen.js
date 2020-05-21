@@ -25,6 +25,7 @@ import _ from 'lodash';
 import AwesomeAlert from 'react-native-awesome-alerts';
 import DocumentPicker from 'react-native-document-picker';
 import moment from 'moment';
+import ImagePicker from 'react-native-image-picker';
 
 const config = {
   clientId: strings.slack.clientId, // found under App Credentials
@@ -135,6 +136,24 @@ class ViewProfileScreen extends Component {
     this.setState({editEnabled: true});
   }
 
+  async setImage (){
+    const options = {
+        title: 'Select a profile picture',
+        storageOptions: {
+          skipBackup: true,
+          path: 'images',
+        },
+      };
+      ImagePicker.showImagePicker(options, (response) => {
+        if (response.didCancel) {
+        } else if (response.error) {
+        } else if (response.customButton) {
+        } else {
+          this.uploadFiles(response.uri,response.type)
+        }
+      });
+}
+
   async onProfileImageClick() {
      try {
       const results = await DocumentPicker.pickMultiple({
@@ -154,7 +173,7 @@ class ViewProfileScreen extends Component {
             moment().format('YYYY/MM/DD') + ' | ' + moment().format('HH:mm'),
         });
 
-        this.uploadFiles(this.state.files)
+        //this.uploadFiles(this.state.files)
         
       }
       this.setState({ files: this.state.files });
@@ -182,11 +201,11 @@ class ViewProfileScreen extends Component {
     );
   }
 
-  async uploadFiles(file) {
+  async uploadFiles(fileUri,fileType) {
     try {
       let userID =this.state.userID;
       this.setState({dataLoading: true});
-      let userData = await APIServices.uplaodProfilePhoto(file);
+      let userData = await APIServices.uplaodProfilePhoto(fileUri,fileType);
       if (userData.message == 'success') {
         this.setState({dataLoading: false});
         this.fetchUserData(userID);
@@ -365,7 +384,7 @@ class ViewProfileScreen extends Component {
         <View style={styles.header} />
         <View style={styles.avatarView}>
           <TouchableOpacity
-            onPress={() => this.onProfileImageClick()}
+            onPress={() => this.setImage()}
             disabled={!editEnabled}>
             {this.userIcon(userLastImage)}
           </TouchableOpacity>
