@@ -1275,7 +1275,14 @@ class TasksTabScreen extends Component {
             {/* render my tasks and task list when filter*/}
             {(index == 1 || this.state.filter) && (
               <FlatList
-                style={styles.myTasksFlatList}
+                style={[
+                  styles.myTasksFlatList,
+                  {
+                    marginBottom: this.state.filter
+                      ? EStyleSheet.value('210rem')
+                      : EStyleSheet.value('160rem'),
+                  },
+                ]}
                 data={filterdAndMyTasksData}
                 renderItem={({item, index}) =>
                   this.renderMyTasksAndFilterTaskList(item, index)
@@ -1691,7 +1698,7 @@ const styles = EStyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: '12rem',
-    marginHorizontal: '10rem',
+    marginHorizontal: '20rem',
   },
   childTasksView: {
     backgroundColor: '#edf0f5',
@@ -1701,18 +1708,18 @@ const styles = EStyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: '12rem',
-    marginHorizontal: '10rem',
+    marginHorizontal: '20rem',
   },
-  filterMainPicker:{
+  filterMainPicker: {
     width: '69%',
     marginTop: '58rem',
     marginLeft: '89rem',
   },
-  filterTaskTypePicker:{
+  filterTaskTypePicker: {
     width: '89.5%',
     marginTop: '58rem',
     marginLeft: '13rem',
-  }
+  },
 });
 
 const mapStateToProps = state => {
