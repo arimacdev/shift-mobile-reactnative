@@ -1013,11 +1013,7 @@ class TasksTabScreen extends Component {
         animationDuration={0.5}
         containerStyle={{width: '100%'}}
         overlayStyle={{width: '100%'}}
-        pickerStyle={{
-          width: '90%',
-          marginTop: 65,
-          marginLeft: 10,
-        }}
+        pickerStyle={styles.filterTaskTypePicker}
         dropdownPosition={0}
         value={filterTaskType}
         itemColor={'black'}
@@ -1219,11 +1215,7 @@ class TasksTabScreen extends Component {
                   animationDuration={0.5}
                   containerStyle={{width: '100%'}}
                   overlayStyle={{width: '100%'}}
-                  pickerStyle={{
-                    width: '69%',
-                    marginTop: 65,
-                    marginLeft: 97,
-                  }}
+                  pickerStyle={styles.filterMainPicker}
                   dropdownPosition={0}
                   value={filterType}
                   itemColor={'black'}
@@ -1600,7 +1592,7 @@ const styles = EStyleSheet.create({
     marginTop: '0rem',
   },
   myTasksFlatList: {
-    marginBottom: '160rem',
+    marginBottom: '210rem',
     marginTop: '0rem',
   },
   filterMainView: {
@@ -1711,6 +1703,16 @@ const styles = EStyleSheet.create({
     paddingHorizontal: '12rem',
     marginHorizontal: '10rem',
   },
+  filterMainPicker:{
+    width: '69%',
+    marginTop: '58rem',
+    marginLeft: '89rem',
+  },
+  filterTaskTypePicker:{
+    width: '89.5%',
+    marginTop: '58rem',
+    marginLeft: '13rem',
+  }
 });
 
 const mapStateToProps = state => {
