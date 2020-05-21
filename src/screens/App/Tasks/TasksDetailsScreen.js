@@ -2119,6 +2119,13 @@ class TasksDetailsScreen extends Component {
                   resizeMode="contain"
                 />
                 <Text style={styles.parentTaskText}>Task Type</Text>
+                <Text
+                  style={[
+                    styles.parentTaskText,
+                    {marginLeft: EStyleSheet.value('15rem')},
+                  ]}>
+                  Task Status
+                </Text>
               </View>
               <View style={styles.taskTypeDropMainView}>
                 <View style={[styles.taskTypeDropDownView, {marginRight: 5}]}>
@@ -2446,7 +2453,7 @@ const styles = EStyleSheet.create({
     fontSize: '14rem',
     fontWeight: 'bold',
     marginLeft: '20rem',
-    marginRight:'20rem',
+    marginRight: '20rem',
     marginBottom: '0rem',
     fontFamily: 'CircularStd-Medium',
   },
