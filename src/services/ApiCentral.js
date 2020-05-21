@@ -3,7 +3,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import jwtDecode from 'jwt-decode';
 import { BASE_URL, GET_NEW_TOKENS } from '../api/API';
 import NavigationService from '../services/NavigationService';
-import { authorize } from 'react-native-app-auth';
+import { authorize,refresh } from 'react-native-app-auth';
 import moment from 'moment';
 
 
@@ -14,9 +14,8 @@ const request = async function (options, isHeader,headers) {
          let currentTime = moment().format();
          const expiresIn = await AsyncStorage.getItem('accessTokenExpirationDate');
          const refreshToken = await AsyncStorage.getItem('refreshToken');
-        //if(!(moment(expiresIn).isAfter(currentTime))){
-        if(false){    
-            let config= {
+        if(!(moment(expiresIn).isAfter(currentTime))){
+            let config = {
                 issuer : 'https://pmtool.devops.arimac.xyz/auth',
                 serviceConfiguration  : {
                     authorizationEndpoint : 'https://pmtool.devops.arimac.xyz/auth/realms/pm-tool/protocol/openid-connect/auth',
@@ -26,14 +25,17 @@ const request = async function (options, isHeader,headers) {
                 redirectUrl  : 'io.identityserver.demo:/oauthredirect',
                 scopes : ['openid', 'roles', 'profile'],
                 dangerouslyAllowInsecureHttpRequests: true
-            }
-            console.log(config);
-            const result = await refresh(config, {
-                refreshToken: refreshToken,
-              });
-            AsyncStorage.setItem('accessToken', result.accessToken);
-            AsyncStorage.setItem('refreshToken', result.refreshToken);
-            AsyncStorage.setItem('accessTokenExpirationDate', result.accessTokenExpirationDate);
+            };
+            try {
+                const result = await refresh(config, {
+                    refreshToken: refreshToken,
+                  });
+                AsyncStorage.setItem('accessToken', result.accessToken);
+                AsyncStorage.setItem('refreshToken', result.refreshToken);
+                AsyncStorage.setItem('accessTokenExpirationDate', result.accessTokenExpirationDate);
+            }catch (error) {
+                console.log("err",error);
+            } 
         }else{
             authHeader = `Bearer ${await AsyncStorage.getItem('accessToken')}`;
             headers.Authorization = authHeader;
