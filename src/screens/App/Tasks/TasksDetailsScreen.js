@@ -1953,7 +1953,7 @@ class TasksDetailsScreen extends Component {
               animationDuration={0.5}
               containerStyle={{width: '100%'}}
               overlayStyle={{width: '100%'}}
-              pickerStyle={{width: '79%', marginTop: 62, marginLeft: 35}}
+              pickerStyle={styles.taskModalDataPicker}
               dropdownPosition={0}
               value={this.state.selectedTaskName}
               itemColor={'black'}
@@ -2133,7 +2133,7 @@ class TasksDetailsScreen extends Component {
                     animationDuration={0.5}
                     containerStyle={{width: '100%'}}
                     overlayStyle={{width: '100%'}}
-                    pickerStyle={{width: '38%', marginTop: 62, marginLeft: 59}}
+                    pickerStyle={styles.issueTypePicker}
                     dropdownPosition={0}
                     value={this.state.issueType}
                     itemColor={'black'}
@@ -2162,7 +2162,7 @@ class TasksDetailsScreen extends Component {
                     animationDuration={0.5}
                     containerStyle={{width: '100%'}}
                     overlayStyle={{width: '100%'}}
-                    pickerStyle={{width: '38%', marginTop: 62, marginLeft: 225}}
+                    pickerStyle={styles.taskStatusDataPicker}
                     dropdownPosition={0}
                     value={this.state.taskStatusValue}
                     itemColor={'black'}
@@ -2205,11 +2205,7 @@ class TasksDetailsScreen extends Component {
                       animationDuration={0.5}
                       containerStyle={{width: '100%'}}
                       overlayStyle={{width: '100%'}}
-                      pickerStyle={{
-                        width: '89%',
-                        marginTop: 70,
-                        marginLeft: 15,
-                      }}
+                      pickerStyle={styles.sprintPicker}
                       dropdownPosition={0}
                       value={this.state.sprintName}
                       itemColor={'black'}
@@ -2784,6 +2780,26 @@ const styles = EStyleSheet.create({
     padding: '08rem',
   },
   sprintNameViewMainView: {},
+  taskModalDataPicker: {
+    width: '79.5%',
+    marginTop: '59rem',
+    marginLeft: '32rem',
+  },
+  issueTypePicker: {
+    width: '38%',
+    marginTop: '58rem',
+    marginLeft: '54rem',
+  },
+  taskStatusDataPicker: {
+    width: '38%',
+    marginTop: '58rem',
+    marginLeft: '208rem',
+  },
+  sprintPicker: {
+    width: '78%',
+    marginTop: '58rem',
+    marginLeft: '54rem',
+  },
 });
 
 const mapStateToProps = state => {
