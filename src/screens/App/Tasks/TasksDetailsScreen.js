@@ -2055,6 +2055,7 @@ class TasksDetailsScreen extends Component {
                   this.onTaskNameChangeSubmit(this.state.taskName)
                 }
                 maxLength={100}
+                multiline={true}
               />
               <TouchableOpacity onPress={() => this.onTaskNameEditPress()}>
                 <Image
@@ -2445,6 +2446,7 @@ const styles = EStyleSheet.create({
     fontSize: '14rem',
     fontWeight: 'bold',
     marginLeft: '20rem',
+    marginRight:'20rem',
     marginBottom: '0rem',
     fontFamily: 'CircularStd-Medium',
   },
