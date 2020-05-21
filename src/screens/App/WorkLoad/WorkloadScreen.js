@@ -56,12 +56,12 @@ class WorkloadScreen extends Component {
 
   async fetchData(userID) {
     this.setState({dataLoading: true});
-    projectPeopleData = await APIServices.getWorkloadWithCompletion(userID);
+    let workloadData = await APIServices.getWorkloadWithCompletion(userID);
 
-    if (projectPeopleData.message == 'success') {
+    if (workloadData.message == 'success') {
       this.setState({dataLoading: false});
       let workloadArray = [];
-      workloadArray = projectPeopleData.data;
+      workloadArray = workloadData.data;
       this.setState({workload: workloadArray});
     } else {
       this.setState({dataLoading: false});
@@ -75,16 +75,6 @@ class WorkloadScreen extends Component {
       }
     });
   }
-
-  goToAddPeople = () => {
-    NavigationService.navigate('AddPeopleScreen', {
-      projectItem: this.props.selectedProjectID,
-    });
-  };
-
-  goToEditPeople = item => {
-    NavigationService.navigate('EditPeople', {userItem: item});
-  };
 
   userIcon = function(item) {
     let userImage = item.profileImage;
@@ -113,7 +103,7 @@ class WorkloadScreen extends Component {
     });
   }
 
-  renderPeopleList(item) {
+  renderWorkloadList(item) {
     let progress = 0;
     if (item.totalTasks > 0) {
       progress = item.tasksCompleted / item.totalTasks;
@@ -131,21 +121,6 @@ class WorkloadScreen extends Component {
             </Text>
             <Text style={styles.subText}>{item.email}</Text>
           </View>
-          {/* <View style={styles.controlView}>
-            <TouchableOpacity onPress={() => this.goToEditPeople(item)}>
-              <Image
-                style={{width: 28, height: 28, borderRadius: 28 / 2}}
-                source={require('../../../asserts/img/edit_user.png')}
-              />
-            </TouchableOpacity>
-
-            <TouchableOpacity style={{marginLeft: EStyleSheet.value('24rem')}}>
-              <Image
-                style={{width: 28, height: 28, borderRadius: 28 / 2}}
-                source={require('../../../asserts/img/bin.png')}
-              />
-            </TouchableOpacity>
-          </View> */}
         </View>
         <Text style={styles.subText}>
           {item.tasksCompleted + ' / ' + item.totalTasks + ' Tasks Completed'}
@@ -171,35 +146,14 @@ class WorkloadScreen extends Component {
 
     return (
       <View style={styles.container}>
-        {/* <TouchableOpacity onPress={() => this.goToAddPeople()}>
-          <View style={styles.button}>
-            <Image
-              style={[styles.bottomBarIcon, {marginRight: 15, marginLeft: 10}]}
-              source={icons.userWhite}
-              resizeMode={'center'}
-            />
-            <View style={{flex: 1}}>
-              <Text style={styles.buttonText}>Add new</Text>
-            </View>
-
-            <Image
-              style={[styles.addIcon, {marginRight: 10}]}
-              source={icons.add}
-              resizeMode={'center'}
-            />
-          </View>
-        </TouchableOpacity> */}
-
-        {/* <ScrollView style={styles.subContainer}> */}
         <FlatList
           style={styles.flalList}
           data={this.state.workload}
-          renderItem={({item}) => this.renderPeopleList(item)}
+          renderItem={({item}) => this.renderWorkloadList(item)}
           keyExtractor={item => item.projId}
           // onRefresh={() => this.onRefresh()}
           // refreshing={isFetching}
         />
-        {/* </ScrollView> */}
         {dataLoading && <Loader />}
       </View>
     );
