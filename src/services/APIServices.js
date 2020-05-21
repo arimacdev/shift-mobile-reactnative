@@ -274,6 +274,7 @@ function updateProjectData(
   IsoStartDate,
   IsoSEndDate,
   projectStatus,
+  projectAlias
 ) {
   let headers = {
     Accept: 'application/json',
@@ -291,6 +292,7 @@ function updateProjectData(
         projectStatus: projectStatus,
         projectStartDate: IsoStartDate,
         projectEndDate: IsoSEndDate,
+        projectAlias: projectAlias,
       },
     },
     true,

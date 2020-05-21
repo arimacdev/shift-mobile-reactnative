@@ -178,16 +178,19 @@ class DefaultBoard extends Component {
             <View>
                 <NavigationEvents onWillFocus={payload => this.loadDefulatBords(payload)} />
                 <View>
-                    <ScrollView style={styles.subContainer}>
-                        <FlatList
-                            style={styles.flalList}
-                            data={this.state.tasks}
-                            renderItem={({ item }) => this.renderTaskList(item)}
-                            keyExtractor={item => item.projId}
-                        // onRefresh={() => this.onRefresh()}
-                        // refreshing={isFetching}
-                        />
-                    </ScrollView>
+                    { this.state.tasks.length > 0 &&
+                        <ScrollView style={styles.subContainer}>
+                            <FlatList
+                                style={styles.flalList}
+                                data={this.state.tasks}
+                                renderItem={({ item }) => this.renderTaskList(item)}
+                                keyExtractor={item => item.projId}
+                            // onRefresh={() => this.onRefresh()}
+                            // refreshing={isFetching}
+                            />
+                        </ScrollView>
+                    }
+                    
                 </View>
                 {dataLoading && <Loader/>}
             </View>

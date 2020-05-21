@@ -394,12 +394,18 @@ class CreateNewProjectScreen extends Component {
       let startDate = moment(projectStartDateValue, "DD MM YYYY");
       let endDate = moment(projectEndDateValue, "DD MM YYYY");
       let totalDates = endDate.diff(startDate, "days");
-      if (totalDates > 0) {
+      if (totalDates > 0 && totalDates < 30) {
         let weeksText = Math.floor((parseInt(totalDates) / 7));
         let dateText = Math.floor((parseInt(totalDates) % 7));
         console.log(weeksText, dateText);
         estimateDatesText = weeksText.toString() + 'week(s)' + ' ' + dateText.toString() + 'day(s)'
-      } else {
+      }else if(totalDates > 0 && totalDates >= 30){
+        let monthsText = Math.floor((parseInt(totalDates) / 30));
+        let dateText = Math.floor((parseInt(totalDates) % 30));
+        console.log(monthsText, dateText);
+        estimateDatesText = monthsText.toString() + 'month(s)' + ' ' + dateText.toString() + 'day(s)'
+      } 
+      else {
         estimateDatesText = '0 days'
       }
 

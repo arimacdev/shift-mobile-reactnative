@@ -65,7 +65,7 @@ export const TasksStackNavigator = createStackNavigator(
       navigationOptions: ({navigation}) => ({
         header: (
           <Header
-            title={ 'My personal Tasks'
+            title={ 'My personal tasks'
             }
             onPress={() => navigation.pop()}
           />

@@ -120,7 +120,8 @@ class MyTasksDetailsScreen extends Component {
       files: [],
       uploading: 0,
       indeterminate: false,
-      selectedTaskID : ''
+      selectedTaskID : '',
+      taskNameEditable: false,
     };
   }
 
@@ -1097,6 +1098,11 @@ class MyTasksDetailsScreen extends Component {
     );
   }
 
+  async onTaskNameEditPress() {
+    await this.setState({taskNameEditable: true});
+    this.taskNameTextInput.focus();
+  }
+
   render() {
     let taskStatus = this.state.taskStatus;
     let dataLoading = this.state.dataLoading;
@@ -1110,7 +1116,7 @@ class MyTasksDetailsScreen extends Component {
         <Header
           isDelete={true}
           navigation={this.props.navigation}
-          title={'My personal Tasks'}
+          title={'My personal tasks'}
           onPress={() => this.props.navigation.goBack()}
           onPressDelete={() => this.onTaskDeketePress()}
         />
@@ -1121,16 +1127,28 @@ class MyTasksDetailsScreen extends Component {
                 <Text style={styles.statusText}>{taskStatus}</Text>
               </View>
             </View>
-            <View>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <TextInput
+                ref={input => {
+                  this.taskNameTextInput = input;
+                }}
                 style={[styles.taskNameStyle]}
                 placeholder={'Task name'}
+                multiline={true}
+                editable={this.state.taskNameEditable}
                 value={this.state.taskName}
                 onChangeText={text => this.onTaskNameChange(text)}
                 onSubmitEditing={() =>
                   this.onTaskNameChangeSubmit(this.state.taskName)
                 }
               />
+              <TouchableOpacity onPress={() => this.onTaskNameEditPress()}>
+                <Image
+                  style={styles.iconEdit}
+                  source={icons.editRoundedBlue}
+                  resizeMode="contain"
+                />
+              </TouchableOpacity>
             </View>
             <View style={styles.borderStyle} />
             <View style={styles.taskTypeMainView}>
@@ -1326,11 +1344,14 @@ const styles = EStyleSheet.create({
     marginTop: '20rem',
   },
   taskNameStyle: {
+    flex: 1,
     color: colors.colorLightSlateGrey,
     fontSize: '14rem',
     fontWeight: 'bold',
-    marginHorizontal: '20rem',
+    marginLeft: '20rem',
+    marginRight: '20rem',
     marginBottom: '0rem',
+    fontFamily: 'CircularStd-Medium',
   },
   borderStyle: {
     borderWidth: '0.4rem',
@@ -1534,7 +1555,12 @@ const styles = EStyleSheet.create({
     width: '78%',
     marginTop: '58rem',
     marginLeft: '54rem',
-  }
+  },
+  iconEdit: {
+    width: '20rem',
+    height: '20rem',
+    marginRight: '20rem',
+  },
 });
 
 const mapStateToProps = state => {

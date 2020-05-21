@@ -124,11 +124,11 @@ export const addproject =  (projectName,projectClient,IsoStartDate,IsoSEndDate,p
     };
 };
 
-export const updateproject =  (projectID,userID,projectName,projectClient,IsoStartDate,IsoSEndDate,projectStatus) => {
+export const updateproject =  (projectID,userID,projectName,projectClient,IsoStartDate,IsoSEndDate,projectStatus,projectAlias) => {
     return (dispatch) => {
         dispatch({ type: EDIT_PROJECT });
         APIServices.updateProjectData(projectID,userID,projectName,projectClient,
-            IsoStartDate,IsoSEndDate,projectStatus).then(response => {
+            IsoStartDate,IsoSEndDate,projectStatus,projectAlias).then(response => {
             if(response.message == 'success'){
                 dispatch({ 
                     type: EDIT_PROJECT_SUCCESS,

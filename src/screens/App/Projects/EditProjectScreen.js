@@ -105,6 +105,7 @@ class EditProjectScreen extends Component {
       projectStatusValue: '',
       startDateChanged: false,
       endDateChanged: false,
+      projectAlias:'',
     };
   }
 
@@ -175,6 +176,7 @@ class EditProjectScreen extends Component {
         projectID: projectData.data.projectId,
         projectName: projectData.data.projectName,
         projectClient: projectData.data.clientId,
+        projectAlias : projectData.data.projectAlias,
         //projectStartDate : startDate,
         //projectEndDate : endDate,
         //projectStatus : projectStatus,
@@ -487,6 +489,7 @@ class EditProjectScreen extends Component {
     let startDateChanged = this.state.startDateChanged;
     let endDateChanged = this.state.endDateChanged;
     let projectStatusValue = this.state.projectStatusValue;
+    let projectAlias = this.state.projectAlias;
 
     if (
       this.validateProject(
@@ -497,6 +500,7 @@ class EditProjectScreen extends Component {
         projectStatus,
         startDateChanged,
         endDateChanged,
+        projectAlias
       )
     ) {
       let IsoStartDate = projectStartDateValue
@@ -520,6 +524,7 @@ class EditProjectScreen extends Component {
           IsoStartDate,
           IsoSEndDate,
           projectStatusValue,
+          projectAlias
         );
       });
     }
@@ -533,6 +538,7 @@ class EditProjectScreen extends Component {
     projectStatus,
     startDateChanged,
     endDateChanged,
+    projectAlias
   ) {
     if (!projectName && _.isEmpty(projectName)) {
       this.showAlert('', 'Please Enter the Project Name');
@@ -540,6 +546,11 @@ class EditProjectScreen extends Component {
     }
     if (!projectClient && _.isEmpty(projectClient)) {
       this.showAlert('', 'Please Enter the Project Client');
+      return false;
+    }
+
+    if (!projectAlias && _.isEmpty(projectAlias)) {
+      this.showAlert("", "Please enter the project alias");
       return false;
     }
 
@@ -657,6 +668,7 @@ class EditProjectScreen extends Component {
     let projectStatus = this.state.projectStatus;
     let updateProjectLoading = this.state.updateProjectLoading;
     let deleteProjectErrorMessage = this.state.deleteProjectErrorMessage;
+    let projectAlias = this.state.projectAlias;
 
     return (
       <View style={{flex: 1}}>
@@ -675,6 +687,14 @@ class EditProjectScreen extends Component {
               placeholder={'Client'}
               value={projectClient}
               onChangeText={projectClient => this.setState({projectClient})}
+            />
+          </View>
+          <View style={[styles.taskFieldView]}>
+            <TextInput
+              style={[styles.textInput, { width: '95%' }]}
+              placeholder={'Project Alias'}
+              value={projectAlias}
+              onChangeText={projectAlias => this.setState({ projectAlias })}
             />
           </View>
           <View style={styles.taskFieldView}>

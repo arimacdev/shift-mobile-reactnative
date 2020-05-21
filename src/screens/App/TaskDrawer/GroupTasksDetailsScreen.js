@@ -1749,6 +1749,7 @@ class GroupTasksDetailsScreen extends Component {
                 }}
                 style={[styles.taskNameStyle]}
                 placeholder={'Task name'}
+                multiline={true}
                 value={this.state.taskName}
                 editable={this.state.taskNameEditable}
                 onChangeText={text => this.onTaskNameChange(text)}
@@ -2064,6 +2065,7 @@ const styles = EStyleSheet.create({
     fontSize: '14rem',
     fontWeight: 'bold',
     marginLeft: '20rem',
+    marginRight: '20rem',
     marginBottom: '0rem',
     fontFamily: 'CircularStd-Medium',
   },

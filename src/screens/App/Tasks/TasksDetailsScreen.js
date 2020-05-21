@@ -94,7 +94,81 @@ let development = [
   {value: 'Implementing', id: 'implementing'},
   {value: 'Deployed', id: 'deployed'},
   {value: 'Closed', id: 'closed'},
-];
+ ];
+ let qa = [
+  {value: 'Pending', id: 'pending'},
+  {value: 'Testing', id: 'testing'},
+  {value: 'Review', id: 'review'},
+  {value: 'Closed', id: 'closed'},
+ ];
+ let design = [
+  {value: 'Pending', id: 'pending'},
+  {value: 'On hold', id: 'onHold'},
+  {value: 'Cancel', id: 'cancel'},
+  {value: 'Fixing', id: 'fixing'},
+  {value: 'Resolved', id: 'resolved'},
+  {value: 'In progress', id: 'inprogress'},
+  {value: 'Completed', id: 'completed'},
+  {value: 'Under review', id: 'underReview'},
+  {value: 'Weiting for approval', id: 'waitingForApproval'},
+  {value: 'Review', id: 'review'},
+  {value: 'Waiting response', id: 'waitingResponse'},
+  {value: 'Rejected', id: 'rejected'},
+  {value: 'Closed', id: 'closed'},
+ ];
+ let bug = [
+  {value: 'Pending', id: 'pending'},
+  {value: 'On hold', id: 'onHold'},
+  {value: 'Open', id: 'open'},
+  {value: 'Cancel', id: 'cancel'},
+  {value: 'Reopened', id: 'reopened'},
+  {value: 'Fixing', id: 'fixing'},
+  {value: 'Testing', id: 'testing'},
+  {value: 'Resolved', id: 'resolved'},
+  {value: 'Under review', id: 'underReview'},
+  {value: 'Review', id: 'review'},
+  {value: 'Waiting response', id: 'waitingResponse'},
+  {value: 'Closed', id: 'closed'},
+ ];
+ let operational = [
+  {value: 'Pending', id: 'pending'},
+  {value: 'On hold', id: 'onHold'},
+  {value: 'Open', id: 'open'},
+  {value: 'Cancel', id: 'cancel'},
+  {value: 'Resolved', id: 'resolved'},
+  {value: 'In progress', id: 'inprogress'},
+  {value: 'Completed', id: 'completed'},
+  {value: 'Under review', id: 'underReview'},
+  {value: 'Weiting for approval', id: 'waitingForApproval'},
+  {value: 'Discussion', id: 'discussion'},
+  {value: 'Waiting response', id: 'waitingResponse'},
+  {value: 'Ready', id: 'ready'},
+  {value: 'Rejected', id: 'rejected'},
+  {value: 'Closed', id: 'closed'},
+ ];
+ let preSales = [
+  {value: 'Pending', id: 'pending'},
+  {value: 'On hold', id: 'onHold'},
+  {value: 'Open', id: 'open'},
+  {value: 'Cancel', id: 'cancel'},
+  {value: 'Resolved', id: 'resolved'},
+  {value: 'In progress', id: 'inprogress'},
+  {value: 'Under review', id: 'underReview'},
+  {value: 'Weiting for approval', id: 'waitingForApproval'},
+  {value: 'Discussion', id: 'discussion'},
+  {value: 'Waiting response', id: 'waitingResponse'},
+  {value: 'Rejected', id: 'rejected'},
+  {value: 'Closed', id: 'closed'},
+ ];
+ let general = [
+  {value: 'Pending', id: 'pending'},
+  {value: 'On hold', id: 'onHold'},
+  {value: 'Open', id: 'open'},
+  {value: 'Cancel', id: 'cancel'},
+  {value: 'In progress', id: 'inprogress'},
+  {value: 'Completed', id: 'completed'},
+  {value: 'Closed', id: 'closed'},
+ ];
 
 let taskStatusData = [
   {value: 'Pending', id: 'pending'},
@@ -224,6 +298,7 @@ class TasksDetailsScreen extends Component {
       taskModalDataID: '',
       fromMyTask: false,
       parentTaskName: '',
+      selectdList : development
     };
   }
 
@@ -811,17 +886,23 @@ class TasksDetailsScreen extends Component {
   setTaskStatus(taskResult) {
     let statusValue = '';
     switch (taskResult.data.taskStatus) {
+      case 'open':
+        statusValue = 'Open';
+        break;
       case 'pending':
         statusValue = 'Pending';
         break;
       case 'onHold':
-        statusValue = 'On hold';
+        statusValue = 'On Hold';
         break;
       case 'cancel':
         statusValue = 'Cancel';
         break;
       case 'fixing':
         statusValue = 'Fixing';
+        break;
+      case 'testing':
+        statusValue = 'Testing';
         break;
       case 'resolved':
         statusValue = 'Resolved';
@@ -831,23 +912,48 @@ class TasksDetailsScreen extends Component {
         break;
       case 'completed':
         statusValue = 'Completed';
+        break;
+      case 'implementing':
+        statusValue = 'Implementing';
+        break;
       case 'underReview':
-        statusValue = 'Under review';
+        statusValue = 'Under Review';
         break;
       case 'waitingForApproval':
-        statusValue = 'Wating for approval';
+        statusValue = 'Waiting For Approval';
         break;
       case 'review':
         statusValue = 'Review';
         break;
+      case 'discussion':
+        statusValue = 'Discussion';
+        break;
       case 'waitingResponse':
-        statusValue = 'Wating response';
+        statusValue = 'Waiting Response';
+        break;
+      case 'ready':
+        statusValue = 'Ready';
+        break;
+      case 'fixed':
+        statusValue = 'Fixed';
         break;
       case 'rejected':
         statusValue = 'Rejected';
+        break;
+      case 'qa':
+        statusValue = 'QA';
+        break;
+      case 'readyToDeploy':
+        statusValue = 'Ready To Deploy';
+        break;
+      case 'reOpened':
+        statusValue = 'Reopened';
+        break;
+      case 'deployed':
+        statusValue = 'Deployed';
       case 'closed':
         statusValue = 'Closed';
-        break;
+        break;               
     }
     this.setState({
       taskStatusValue: statusValue,
@@ -935,31 +1041,40 @@ class TasksDetailsScreen extends Component {
   setIssueType(taskResult) {
     let value = taskResult.data.issueType;
     let issueTypeValue = '';
+    let taskTypeArray = [];
     switch (value) {
       case 'development':
         issueTypeValue = 'Development';
+        taskTypeArray = development;
         break;
       case 'qa':
         issueTypeValue = 'QA';
+        taskTypeArray = qa;
         break;
       case 'design':
         issueTypeValue = 'Design';
+        taskTypeArray = design;
         break;
       case 'bug':
         issueTypeValue = 'Bug';
+        taskTypeArray = bug;
         break;
       case 'operational':
         issueTypeValue = 'Operational';
+        taskTypeArray = operational;
         break;
       case 'preSales':
         issueTypeValue = 'Pre-sales';
+        taskTypeArray = preSales;
         break;
       case 'general':
         issueTypeValue = 'General';
+        taskTypeArray = general;
         break;
     }
     this.setState({
       issueType: issueTypeValue,
+      selectdList : taskTypeArray,
     });
   }
 
@@ -1463,6 +1578,7 @@ class TasksDetailsScreen extends Component {
             dataLoading: false,
             issueType: selectedIssueTypeName,
           });
+          this.changeTaskStatusDropDown(selectedIssueTypeId);
         } else {
           this.setState({dataLoading: false});
           this.showAlert('', response.message);
@@ -1475,6 +1591,45 @@ class TasksDetailsScreen extends Component {
         // }
       });
   }
+
+  async changeTaskStatusDropDown(selectedIssueTypeId){
+    let taskTypeArray = [];
+    let taskStatusValue = this.state.taskStatusValue;
+    switch (selectedIssueTypeId) {
+      case 'development':
+        taskTypeArray = development;
+        break;
+      case 'qa':
+        taskTypeArray = qa;
+        break;
+      case 'design':
+        taskTypeArray = design;
+        break;
+      case 'bug':
+        taskTypeArray = bug;
+        break;
+      case 'operational':
+        taskTypeArray = operational;
+        break;
+      case 'preSales':
+        taskTypeArray = preSales;
+        break;
+      case 'general':
+        taskTypeArray = general;
+        break;
+      default:
+        break;
+    };
+
+    this.setState({
+      selectdList : taskTypeArray,
+      taskStatusValue : taskTypeArray[0].value
+    });
+
+    this.onChangeTaskStatus(taskTypeArray[0].id,taskTypeArray[0].value);
+  }
+  
+
 
   // change assignee of task API
   async changeTaskAssignee(name, userID) {
@@ -2017,7 +2172,7 @@ class TasksDetailsScreen extends Component {
       <View style={styles.backgroundImage}>
         <NavigationEvents onWillFocus={payload => this.pageOpen(payload)} />
         <Header
-          isTaskLog={true}
+          isTaskLog={false}
           isDelete={true}
           navigation={this.props.navigation}
           title={this.state.selectedProjectName}
@@ -2047,6 +2202,7 @@ class TasksDetailsScreen extends Component {
                 }}
                 style={[styles.taskNameStyle]}
                 placeholder={'Task name'}
+                multiline={true}
                 value={this.state.taskName}
                 editable={this.state.taskNameEditable}
                 onBlur={() => this.onTaskNameChangeSubmit(this.state.taskName)}
@@ -2162,7 +2318,7 @@ class TasksDetailsScreen extends Component {
                     // style={{}}
                     label=""
                     labelFontSize={0}
-                    data={taskStatusData}
+                    data={this.state.selectdList}
                     textColor={colors.black}
                     fontSize={14}
                     renderAccessory={() => null}
