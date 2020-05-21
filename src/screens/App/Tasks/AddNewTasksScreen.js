@@ -129,7 +129,8 @@ class AddNewTasksScreen extends Component {
       sprintId: '',
       parentTaskStatus: 'No parent',
       parentTaskId: '',
-      selectedOperarionalId: ''
+      selectedOperarionalId: '',
+      selectedOperarionalId: 'general'
     };
   }
 
