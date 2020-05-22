@@ -94,14 +94,14 @@ let development = [
   {value: 'Implementing', id: 'implementing'},
   {value: 'Deployed', id: 'deployed'},
   {value: 'Closed', id: 'closed'},
- ];
- let qa = [
+];
+let qa = [
   {value: 'Pending', id: 'pending'},
   {value: 'Testing', id: 'testing'},
   {value: 'Review', id: 'review'},
   {value: 'Closed', id: 'closed'},
- ];
- let design = [
+];
+let design = [
   {value: 'Pending', id: 'pending'},
   {value: 'On hold', id: 'onHold'},
   {value: 'Cancel', id: 'cancel'},
@@ -115,8 +115,8 @@ let development = [
   {value: 'Waiting response', id: 'waitingResponse'},
   {value: 'Rejected', id: 'rejected'},
   {value: 'Closed', id: 'closed'},
- ];
- let bug = [
+];
+let bug = [
   {value: 'Pending', id: 'pending'},
   {value: 'On hold', id: 'onHold'},
   {value: 'Open', id: 'open'},
@@ -129,8 +129,8 @@ let development = [
   {value: 'Review', id: 'review'},
   {value: 'Waiting response', id: 'waitingResponse'},
   {value: 'Closed', id: 'closed'},
- ];
- let operational = [
+];
+let operational = [
   {value: 'Pending', id: 'pending'},
   {value: 'On hold', id: 'onHold'},
   {value: 'Open', id: 'open'},
@@ -145,8 +145,8 @@ let development = [
   {value: 'Ready', id: 'ready'},
   {value: 'Rejected', id: 'rejected'},
   {value: 'Closed', id: 'closed'},
- ];
- let preSales = [
+];
+let preSales = [
   {value: 'Pending', id: 'pending'},
   {value: 'On hold', id: 'onHold'},
   {value: 'Open', id: 'open'},
@@ -159,8 +159,8 @@ let development = [
   {value: 'Waiting response', id: 'waitingResponse'},
   {value: 'Rejected', id: 'rejected'},
   {value: 'Closed', id: 'closed'},
- ];
- let general = [
+];
+let general = [
   {value: 'Pending', id: 'pending'},
   {value: 'On hold', id: 'onHold'},
   {value: 'Open', id: 'open'},
@@ -168,7 +168,7 @@ let development = [
   {value: 'In progress', id: 'inprogress'},
   {value: 'Completed', id: 'completed'},
   {value: 'Closed', id: 'closed'},
- ];
+];
 
 let taskStatusData = [
   {value: 'Pending', id: 'pending'},
@@ -298,7 +298,7 @@ class TasksDetailsScreen extends Component {
       taskModalDataID: '',
       fromMyTask: false,
       parentTaskName: '',
-      selectdList : development
+      selectdList: development,
     };
   }
 
@@ -953,7 +953,7 @@ class TasksDetailsScreen extends Component {
         statusValue = 'Deployed';
       case 'closed':
         statusValue = 'Closed';
-        break;               
+        break;
     }
     this.setState({
       taskStatusValue: statusValue,
@@ -1074,7 +1074,7 @@ class TasksDetailsScreen extends Component {
     }
     this.setState({
       issueType: issueTypeValue,
-      selectdList : taskTypeArray,
+      selectdList: taskTypeArray,
     });
   }
 
@@ -1592,7 +1592,7 @@ class TasksDetailsScreen extends Component {
       });
   }
 
-  async changeTaskStatusDropDown(selectedIssueTypeId){
+  async changeTaskStatusDropDown(selectedIssueTypeId) {
     let taskTypeArray = [];
     let taskStatusValue = this.state.taskStatusValue;
     switch (selectedIssueTypeId) {
@@ -1619,17 +1619,15 @@ class TasksDetailsScreen extends Component {
         break;
       default:
         break;
-    };
+    }
 
     this.setState({
-      selectdList : taskTypeArray,
-      taskStatusValue : taskTypeArray[0].value
+      selectdList: taskTypeArray,
+      taskStatusValue: taskTypeArray[0].value,
     });
 
-    this.onChangeTaskStatus(taskTypeArray[0].id,taskTypeArray[0].value);
+    this.onChangeTaskStatus(taskTypeArray[0].id, taskTypeArray[0].value);
   }
-  
-
 
   // change assignee of task API
   async changeTaskAssignee(name, userID) {
@@ -1872,7 +1870,7 @@ class TasksDetailsScreen extends Component {
     });
   }
 
-  navigateToSubTask(){
+  navigateToSubTask() {
     // this.props.navigation.navigate('TasksSubDetailsScreen', {
     //   taskDetails: item,
     //   selectedProjectID: this.state.selectedProjectID,
@@ -2268,8 +2266,7 @@ class TasksDetailsScreen extends Component {
                   onChange={this._updateSections}
                 />
               ) : (
-                <TouchableOpacity
-                  onPress={() => this.navigateToSubTask()}>
+                <TouchableOpacity onPress={() => this.navigateToSubTask()}>
                   <View style={{flex: 1}}>
                     <Text style={styles.parentTaskText}>Parent Task</Text>
                     <Text style={styles.childTaskText}>
