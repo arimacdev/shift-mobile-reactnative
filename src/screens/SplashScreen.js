@@ -1,5 +1,12 @@
 import React, {Component} from 'react';
-import {Dimensions, View, Text, TouchableOpacity, Platform} from 'react-native';
+import {
+  Dimensions,
+  View,
+  Text,
+  TouchableOpacity,
+  Platform,
+  AppState,
+} from 'react-native';
 import {connect} from 'react-redux';
 import * as actions from '../redux/actions';
 import colors from '../config/colors';
@@ -37,14 +44,26 @@ class SplashScreen extends Component {
       forceUpdate: false,
       details: [],
       dataLoading: false,
+      appState: AppState.currentState,
     };
   }
 
   componentDidMount() {
-    this.getMobileVersionStatus();
+    AppState.addEventListener('change', this._handleAppStateChange);
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {}
+
+  componentWillUnmount() {
+    AppState.removeEventListener('change', this._handleAppStateChange);
+  }
+
+  _handleAppStateChange = nextAppState => {
+    if (nextAppState === 'active') {
+      this.getMobileVersionStatus();
+    }
+    this.setState({appState: nextAppState});
+  };
 
   getMobileVersionStatus() {
     let platform = Platform.OS;
@@ -62,8 +81,8 @@ class SplashScreen extends Component {
             dataLoading: false,
           });
         } else {
+          this.setState({dataLoading: false, forceUpdate: false});
           this.checkUserStatus();
-          this.setState({dataLoading: false});
         }
       })
       .catch(err => {
