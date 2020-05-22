@@ -2269,7 +2269,7 @@ class TasksDetailsScreen extends Component {
                 />
               ) : (
                 <TouchableOpacity
-                  onPress={() => this.navigateToSubTask(false)}>
+                  onPress={() => this.navigateToSubTask()}>
                   <View style={{flex: 1}}>
                     <Text style={styles.parentTaskText}>Parent Task</Text>
                     <Text style={styles.childTaskText}>
