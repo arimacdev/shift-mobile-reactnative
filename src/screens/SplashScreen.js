@@ -53,11 +53,11 @@ class SplashScreen extends Component {
     APIServices.getMobileVersionStatusData(platform, version)
       .then(response => {
         if (
-          !response.force_update &&
-          response.latest_version == response.current_version
+          response.force_update &&
+          response.latest_version > response.current_version
         ) {
           this.setState({
-            forceUpdate: true,
+            forceUpdate: response.force_update,
             details: response.data,
             dataLoading: false,
           });

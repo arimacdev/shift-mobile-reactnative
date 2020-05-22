@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Image,
   Linking,
+  Platform,
 } from 'react-native';
 import {connect} from 'react-redux';
 import * as actions from '../redux/actions';
@@ -42,7 +43,19 @@ class ForceUpdateModal extends Component {
   }
 
   onUpdatePress() {
-    Linking.openURL('market://details?id=com.whatsapp');
+    let link = '';
+    if (Platform.OS == 'android') {
+      link = 'market://details?id=com.arimacpmtool';
+    } else {
+      link =
+        'itms-apps://itunes.apple.com/us/app/apple-store/arimacpmtool?mt=8';
+    }
+    Linking.canOpenURL(link).then(
+      supported => {
+        supported && Linking.openURL(link);
+      },
+      err => console.log(err),
+    );
     // this.onCloseTaskModal();
   }
 
