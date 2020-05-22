@@ -14,6 +14,7 @@ import {
     ADD_PROJECT,
     ADD_PROJECT_SUCCESS,
     ADD_PROJECT_FAILED,
+    ADD_PROJECT_FAILED_MASSAGE,
 
     EDIT_PROJECT,
     EDIT_PROJECT_SUCCESS,
@@ -119,7 +120,14 @@ export const addproject =  (projectName,projectClient,IsoStartDate,IsoSEndDate,p
                 dispatch({ type: ADD_PROJECT_FAILED});  
             }    
         }).catch(error => {   
-            dispatch({ type: ADD_PROJECT_FAILED});  
+            if(error.status == 422){
+                let errorMsg = error.data.message;
+                dispatch({ 
+                    type: ADD_PROJECT_FAILED_MASSAGE,
+                    payload: errorMsg});   
+            }else{
+                dispatch({ type: ADD_PROJECT_FAILED});  
+            } 
         });
     };
 };
@@ -137,7 +145,7 @@ export const updateproject =  (projectID,userID,projectName,projectClient,IsoSta
                 dispatch({ type: EDIT_PROJECT_FAILED});  
             }    
         }).catch(error => {  
-            if(error.status == 403){
+            if(error.status == 403 || error.status == 422){
                 let errorMsg = error.data.message;
                 dispatch({ 
                     type: EDIT_PROJECT_FAILED_MASSAGE,

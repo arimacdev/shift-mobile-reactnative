@@ -1872,6 +1872,15 @@ class TasksDetailsScreen extends Component {
     });
   }
 
+  navigateToSubTask(){
+    // this.props.navigation.navigate('TasksSubDetailsScreen', {
+    //   taskDetails: item,
+    //   selectedProjectID: this.state.selectedProjectID,
+    //   selectedProjectName: this.state.selectedProjectName,
+    //   isFromBoards: true,
+    // });
+  }
+
   renderSubtasksList(item, index, userId, projectId) {
     return (
       <TouchableOpacity onPress={() => this.navigateTo(item)}>
@@ -2259,12 +2268,15 @@ class TasksDetailsScreen extends Component {
                   onChange={this._updateSections}
                 />
               ) : (
-                <View style={{flex: 1}}>
-                  <Text style={styles.parentTaskText}>Parent Task</Text>
-                  <Text style={styles.childTaskText}>
-                    {this.state.parentTaskName}
-                  </Text>
-                </View>
+                <TouchableOpacity
+                  onPress={() => this.navigateToSubTask(false)}>
+                  <View style={{flex: 1}}>
+                    <Text style={styles.parentTaskText}>Parent Task</Text>
+                    <Text style={styles.childTaskText}>
+                      {this.state.parentTaskName}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
               )}
             </View>
             <View style={styles.taskTypeMainView}>

@@ -791,7 +791,7 @@ class AddNewTasksScreen extends Component {
         <View style={[styles.taskFieldView, { marginTop: 30 }]}>
           <TextInput
             style={[styles.textInput, { width: '95%' }]}
-            placeholder={'Task name'}
+            placeholder={'Task name*'}
             value={this.state.taskName}
             onChangeText={text => this.onTaskNameChange(text)}
           />
