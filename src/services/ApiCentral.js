@@ -36,7 +36,9 @@ const request = async function (options, isHeader,headers) {
             }catch (error) {
                 AsyncStorage.clear();
                 NavigationService.navigate('Splash'); 
-            } 
+            }
+            authHeader = `Bearer ${await AsyncStorage.getItem('accessToken')}`;
+            headers.Authorization = authHeader; 
         }else{
             authHeader = `Bearer ${await AsyncStorage.getItem('accessToken')}`;
             headers.Authorization = authHeader;
