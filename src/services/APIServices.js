@@ -69,7 +69,8 @@ import {
   DELETE_TASK_IN_GROUP,
   GET_CHILD_TASK_OF_TASK_GROUP,
   UPDATE_PARENT_TO_CHILD_IN_GROUP,
-  GET_ALL_USERS_WORKLOAD_WITH_COMPLETION
+  GET_ALL_USERS_WORKLOAD_WITH_COMPLETION,
+  GET_MOBILE_VERSION_STATUS
 } from '../api/API';
 import AsyncStorage from '@react-native-community/async-storage';
 import {SET_UPLOAD_PROGRESS} from '../redux/types';
@@ -2471,6 +2472,22 @@ async function getWorkloadWithCompletionUser() {
   );
 }
 
+async function getMobileVersionStatusData(platform, version) {
+  let headers = {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+  };
+
+  return request(
+    {
+      url: GET_MOBILE_VERSION_STATUS + '/' + platform + '/' + version,
+      method: 'GET',
+    },
+    true,
+    headers,
+  );
+}
+
 const APIServices = {
   getAllProjectsByUserData,
   getUserData,
@@ -2568,7 +2585,8 @@ const APIServices = {
   addFileToGroupTask,
   getChildTasksOfTaskGroupData,
   updateParentToChildInGroup,
-  getWorkloadWithCompletionUser
+  getWorkloadWithCompletionUser,
+  getMobileVersionStatusData
 };
 
 export default APIServices;
