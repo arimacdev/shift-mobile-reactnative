@@ -73,7 +73,7 @@ class WorkloadTasksDetailsScreen extends Component {
     this.setState({
       workloadTasksDetails: workloadTasksDetails,
       duedate: 'Due on ' + date,
-      taskNotes: workloadTasksDetails.taskNotes,
+      taskNotes: workloadTasksDetails.taskNote,
     });
     this.setTaskStatus(workloadTasksDetails);
     this.fetchSubTasksData(
@@ -91,10 +91,9 @@ class WorkloadTasksDetailsScreen extends Component {
   async fetchSubTasksData(selectedProjectID, selectedProjectTaskID, userID) {
     this.setState({dataLoading: true});
     try {
-      subTaskData = await APIServices.getSubTaskData(
+      subTaskData = await APIServices.getChildTasksOfParentData(
         selectedProjectID,
         selectedProjectTaskID,
-        userID,
       );
       if (subTaskData.message == 'success') {
         this.setState({
@@ -130,27 +129,74 @@ class WorkloadTasksDetailsScreen extends Component {
   setTaskStatus(workloadTasksDetails) {
     let statusValue = '';
     switch (workloadTasksDetails.taskStatus) {
+      case 'open':
+        statusValue = 'Open';
+        break;
       case 'pending':
         statusValue = 'Pending';
         break;
+      case 'onHold':
+        statusValue = 'On Hold';
+        break;
+      case 'cancel':
+        statusValue = 'Cancel';
+        break;
+      case 'fixing':
+        statusValue = 'Fixing';
+        break;
+      case 'testing':
+        statusValue = 'Testing';
+        break;
+      case 'resolved':
+        statusValue = 'Resolved';
+        break;
+      case 'inprogress':
+        statusValue = 'In progress';
+        break;
+      case 'completed':
+        statusValue = 'Completed';
+        break;
       case 'implementing':
         statusValue = 'Implementing';
+        break;
+      case 'underReview':
+        statusValue = 'Under Review';
+        break;
+      case 'waitingForApproval':
+        statusValue = 'Waiting For Approval';
+        break;
+      case 'review':
+        statusValue = 'Review';
+        break;
+      case 'discussion':
+        statusValue = 'Discussion';
+        break;
+      case 'waitingResponse':
+        statusValue = 'Waiting Response';
+        break;
+      case 'ready':
+        statusValue = 'Ready';
+        break;
+      case 'fixed':
+        statusValue = 'Fixed';
+        break;
+      case 'rejected':
+        statusValue = 'Rejected';
         break;
       case 'qa':
         statusValue = 'QA';
         break;
       case 'readyToDeploy':
-        statusValue = 'Ready to Deploy';
+        statusValue = 'Ready To Deploy';
         break;
       case 'reOpened':
-        statusValue = 'Re-Opened';
+        statusValue = 'Reopened';
         break;
       case 'deployed':
         statusValue = 'Deployed';
-        break;
       case 'closed':
         statusValue = 'Closed';
-        break;
+        break;   
     }
     this.setState({
       taskStatus: statusValue,
@@ -214,7 +260,7 @@ class WorkloadTasksDetailsScreen extends Component {
                       source={icons.subTask}
                       resizeMode="contain"
                     />
-                    <Text style={styles.baseInnerText}>{item.subtaskName}</Text>
+                    <Text style={styles.baseInnerText}>{item.taskName}</Text>
                   </View>
                 );
               })
