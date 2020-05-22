@@ -68,7 +68,9 @@ import {
   GET_CHILD_TASK_OF_PARENT,
   DELETE_TASK_IN_GROUP,
   GET_CHILD_TASK_OF_TASK_GROUP,
-  UPDATE_PARENT_TO_CHILD_IN_GROUP
+  UPDATE_PARENT_TO_CHILD_IN_GROUP,
+  GET_ALL_USERS_WORKLOAD_WITH_COMPLETION,
+  GET_MOBILE_VERSION_STATUS
 } from '../api/API';
 import AsyncStorage from '@react-native-community/async-storage';
 import {SET_UPLOAD_PROGRESS} from '../redux/types';
@@ -920,7 +922,7 @@ async function addSlackID(userID, authedUserID) {
   );
 }
 
-async function getWorkloadWithCompletion(userID) {
+async function getWorkloadWithCompletionAll() {
   let userIDHeder = null;
   userIDHeder = await AsyncStorage.getItem('userID');
 
@@ -928,11 +930,13 @@ async function getWorkloadWithCompletion(userID) {
     Accept: 'application/json',
     'Content-Type': 'application/json',
     user: userIDHeder,
+    from : 'all',
+    to : 'all',
   };
 
   return request(
     {
-      url: GET_WORKLOAD_WITH_COMPLETION + '/workload',
+      url: GET_ALL_USERS_WORKLOAD_WITH_COMPLETION + '/workload?assignee=all',
       method: 'GET',
     },
     true,
@@ -2444,6 +2448,44 @@ async function updateParentToChildInGroup(selectedGroupTaskID, taskId, newParent
     true,
     headers,
   );
+};
+
+async function getWorkloadWithCompletionUser() {
+  let userIDHeder = null;
+  userIDHeder = await AsyncStorage.getItem('userID');
+
+  let headers = {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+    user: userIDHeder,
+    from : 'all',
+    to : 'all',
+  };
+
+  return request(
+    {
+      url: GET_ALL_USERS_WORKLOAD_WITH_COMPLETION + '/workload?assignee='+userIDHeder,
+      method: 'GET',
+    },
+    true,
+    headers,
+  );
+}
+
+async function getMobileVersionStatusData(platform, version) {
+  let headers = {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+  };
+
+  return request(
+    {
+      url: GET_MOBILE_VERSION_STATUS + '/' + platform + '/' + version,
+      method: 'GET',
+    },
+    true,
+    headers,
+  );
 }
 
 const APIServices = {
@@ -2481,7 +2523,7 @@ const APIServices = {
   getFilesInTaskData,
   deleteFileInTaskData,
   addSlackID,
-  getWorkloadWithCompletion,
+  getWorkloadWithCompletionAll,
   getWorkloadWithAssignTasksCompletion,
   updateRolePeopleData,
   getGroupTaskData,
@@ -2542,7 +2584,9 @@ const APIServices = {
   deleteFileInGroupTaskData,
   addFileToGroupTask,
   getChildTasksOfTaskGroupData,
-  updateParentToChildInGroup
+  updateParentToChildInGroup,
+  getWorkloadWithCompletionUser,
+  getMobileVersionStatusData
 };
 
 export default APIServices;

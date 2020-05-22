@@ -47,16 +47,39 @@ class WorkloadScreen extends Component {
   //   }
 
   componentDidMount() {
-    AsyncStorage.getItem('userID').then(userID => {
-      if (userID) {
-        this.fetchData(userID);
-      }
-    });
+    let loginUserType = this.props.loginUserType;
+    if(loginUserType == 'SUPER_ADMIN'){
+      this.fetchDataAdmin();
+    }else{
+      this.fetchDataUser();
+    }
   }
 
-  async fetchData(userID) {
+  async fetchDataAdmin() {
     this.setState({dataLoading: true});
-    let workloadData = await APIServices.getWorkloadWithCompletion(userID);
+    let workloadData = await APIServices.getWorkloadWithCompletionAll();
+
+    if (workloadData.message == 'success') {
+      this.setState({dataLoading: false});
+      let userIDHeder = null;
+      userIDHeder = await AsyncStorage.getItem('userID');
+      let workloadArray = [];
+      workloadArray = workloadData.data;
+      workloadArray.forEach(function(item,i){
+        if(item.userId === userIDHeder){
+          workloadArray.splice(i, 1);
+          workloadArray.unshift(item);
+        }
+      });
+      this.setState({workload: workloadArray});
+    } else {
+      this.setState({dataLoading: false});
+    }
+  }
+
+  async fetchDataUser() {
+    this.setState({dataLoading: true});
+    let workloadData = await APIServices.getWorkloadWithCompletionUser();
 
     if (workloadData.message == 'success') {
       this.setState({dataLoading: false});
@@ -69,11 +92,11 @@ class WorkloadScreen extends Component {
   }
 
   async tabOpen() {
-    AsyncStorage.getItem('userID').then(userID => {
-      if (userID) {
-        this.fetchData(userID);
-      }
-    });
+    // AsyncStorage.getItem('userID').then(userID => {
+    //   if (userID) {
+    //     this.fetchData(userID);
+    //   }
+    // });
   }
 
   userIcon = function(item) {
@@ -103,26 +126,26 @@ class WorkloadScreen extends Component {
     });
   }
 
-  renderWorkloadList(item) {
+  renderWorkloadList(item,index) {
     let progress = 0;
     if (item.totalTasks > 0) {
       progress = item.tasksCompleted / item.totalTasks;
     }
     return (
       <TouchableOpacity
-        style={styles.mainContainer}
+        style={index == 0 ? styles.mainContainerMy : styles.mainContainer}
         onPress={() => this.navigateToWorkloadTabScreen(item)}>
         {/* <NavigationEvents onWillFocus={payload => this.tabOpen(payload)} /> */}
-        <View style={styles.userView}>
+        <View style={index == 0 ? styles.userViewMy : styles.userView }>
           {this.userIcon(item)}
           <View style={{flex: 1}}>
-            <Text style={styles.text}>
+            <Text style={index == 0 ? styles.textMy : styles.text}>
               {item.firstName + ' ' + item.lastName}
             </Text>
-            <Text style={styles.subText}>{item.email}</Text>
+            <Text style={ index == 0 ? styles.subTextMy:styles.subText}>{item.email}</Text>
           </View>
         </View>
-        <Text style={styles.subText}>
+        <Text style={index == 0 ? styles.subTextMy:styles.subText}>
           {item.tasksCompleted + ' / ' + item.totalTasks + ' Tasks Completed'}
         </Text>
         <View style={styles.progressBarContainer}>
@@ -149,7 +172,7 @@ class WorkloadScreen extends Component {
         <FlatList
           style={styles.flalList}
           data={this.state.workload}
-          renderItem={({item}) => this.renderWorkloadList(item)}
+          renderItem={({item,index}) => this.renderWorkloadList(item,index)}
           keyExtractor={item => item.projId}
           // onRefresh={() => this.onRefresh()}
           // refreshing={isFetching}
@@ -163,6 +186,12 @@ class WorkloadScreen extends Component {
 const styles = EStyleSheet.create({
   container: {
     flex: 1,
+  },
+  mainContainerMy: {
+    backgroundColor: colors.darkBlue,
+    borderRadius: 5,
+    marginHorizontal: '20rem',
+    marginVertical: '7rem',
   },
   mainContainer: {
     backgroundColor: colors.projectBgColor,
@@ -199,6 +228,14 @@ const styles = EStyleSheet.create({
     width: '20rem',
     height: '20rem',
   },
+  userViewMy: {
+    backgroundColor: colors.darkBlue,
+    borderRadius: 5,
+    height: '60rem',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: '12rem',
+  },
   userView: {
     backgroundColor: colors.projectBgColor,
     borderRadius: 5,
@@ -212,8 +249,18 @@ const styles = EStyleSheet.create({
     height: '45rem',
   },
   text: {
-    fontSize: '12rem',
+    fontSize: '15rem',
     color: colors.userListUserNameColor,
+    textAlign: 'center',
+    lineHeight: '17rem',
+    fontFamily: 'CircularStd-Medium',
+    textAlign: 'left',
+    marginLeft: '10rem',
+    fontWeight: '400',
+  },
+  textMy : {
+    fontSize: '15rem',
+    color: colors.white,
     textAlign: 'center',
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
@@ -230,6 +277,17 @@ const styles = EStyleSheet.create({
     textAlign: 'left',
     marginLeft: '10rem',
     fontWeight: '400',
+  },
+  subTextMy: {
+    fontSize: '10rem',
+    color: colors.white,
+    textAlign: 'center',
+    lineHeight: '17rem',
+    fontFamily: 'CircularStd-Medium',
+    textAlign: 'left',
+    marginLeft: '10rem',
+    fontWeight: '400',
+    opacity: 0.8,
   },
   controlView: {
     alignItems: 'center',
@@ -255,7 +313,9 @@ const styles = EStyleSheet.create({
 });
 
 const mapStateToProps = state => {
-  return {};
+  return {
+    loginUserType: state.users.loginUserType,
+  };
 };
 export default connect(
   mapStateToProps,

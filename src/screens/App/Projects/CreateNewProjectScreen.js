@@ -64,8 +64,13 @@ class CreateNewProjectScreen extends Component {
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (prevProps.addProjectError !== this.props.addProjectError
-      && this.props.addProjectError) {
+      && this.props.addProjectError && this.props.addProjectErrorMassage == '') {
       this.showAlert("", "Error While Project Creation");
+    }
+
+    if (prevProps.addProjectError !== this.props.addProjectError
+      && this.props.addProjectError && this.props.addProjectErrorMassage != '') {
+      this.showAlert("",  this.props.addProjectErrorMassage);
     }
 
     if (prevProps.addProjectrSuccess !== this.props.addProjectrSuccess
@@ -423,7 +428,7 @@ class CreateNewProjectScreen extends Component {
         <View style={[styles.taskFieldView, { marginTop: 20 }]}>
           <TextInput
             style={[styles.textInput, { width: '95%' }]}
-            placeholder={'Project Name'}
+            placeholder={'Project Name*'}
             value={projectName}
             onChangeText={projectName => this.setState({ projectName })}
           />
@@ -431,7 +436,7 @@ class CreateNewProjectScreen extends Component {
         <View style={[styles.taskFieldView]}>
           <TextInput
             style={[styles.textInput, { width: '95%' }]}
-            placeholder={'Client'}
+            placeholder={'Client*'}
             value={projectClient}
             onChangeText={projectClient => this.setState({ projectClient })}
           />
@@ -439,7 +444,7 @@ class CreateNewProjectScreen extends Component {
         <View style={[styles.taskFieldView]}>
           <TextInput
             style={[styles.textInput, { width: '95%' }]}
-            placeholder={'Project Alias'}
+            placeholder={'Project Alias*'}
             value={projectAlias}
             maxLength={6}
             onChangeText={projectAlias => this.setState({ projectAlias })}
@@ -718,6 +723,7 @@ const mapStateToProps = state => {
     addProjectLoading: state.project.addProjectLoading,
     addProjectError: state.project.addProjectError,
     addProjectrSuccess: state.project.addProjectrSuccess,
+    addProjectErrorMassage : state.project.addProjectErrorMassage,
   };
 };
 export default connect(

@@ -39,21 +39,36 @@ class WorkloadSearchScreen extends Component {
   }
 
   componentDidMount() {
-    AsyncStorage.getItem('userID').then(userID => {
-      if (userID) {
-        this.fetchData(userID);
-      }
-    });
+    let loginUserType = this.props.loginUserType;
+    if(loginUserType == 'SUPER_ADMIN'){
+      this.fetchDataAdmin();
+    }else{
+      this.fetchDataUser();
+    }
   }
 
-  async fetchData(userID) {
+  async fetchDataAdmin() {
     this.setState({dataLoading: true});
-    projectPeopleData = await APIServices.getWorkloadWithCompletion(userID);
+    let workloadData = await APIServices.getWorkloadWithCompletionAll();
 
-    if (projectPeopleData.message == 'success') {
+    if (workloadData.message == 'success') {
       this.setState({dataLoading: false});
       let workloadArray = [];
-      workloadArray = projectPeopleData.data;
+      workloadArray = workloadData.data;
+      this.setState({workload: workloadArray, allWorkload: workloadArray});
+    } else {
+      this.setState({dataLoading: false});
+    }
+  }
+
+  async fetchDataUser() {
+    this.setState({dataLoading: true});
+    let workloadData = await APIServices.getWorkloadWithCompletionUser();
+
+    if (workloadData.message == 'success') {
+      this.setState({dataLoading: false});
+      let workloadArray = [];
+      workloadArray = workloadData.data;
       this.setState({workload: workloadArray, allWorkload: workloadArray});
     } else {
       this.setState({dataLoading: false});
@@ -61,11 +76,7 @@ class WorkloadSearchScreen extends Component {
   }
 
   async tabOpen() {
-    AsyncStorage.getItem('userID').then(userID => {
-      if (userID) {
-        this.fetchData(userID);
-      }
-    });
+    
   }
 
   userIcon = function(item) {
@@ -295,7 +306,9 @@ const styles = EStyleSheet.create({
 });
 
 const mapStateToProps = state => {
-  return {};
+  return {
+    loginUserType: state.users.loginUserType,
+  };
 };
 export default connect(
   mapStateToProps,

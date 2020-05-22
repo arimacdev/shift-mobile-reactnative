@@ -14,6 +14,7 @@ import {
     ADD_PROJECT,
     ADD_PROJECT_SUCCESS,
     ADD_PROJECT_FAILED,
+    ADD_PROJECT_FAILED_MASSAGE,
 
     EDIT_PROJECT,
     EDIT_PROJECT_SUCCESS,
@@ -68,6 +69,7 @@ const INITIAL_STATE = {
     addProjectLoading: false,
     addProjectError: false,
     addProjectrSuccess: false,
+    addProjectErrorMassage: false,
 
     updateProjectLoading: false,
     updateProjectSuccess: false,
@@ -133,7 +135,7 @@ export default (state = INITIAL_STATE, action) => {
             return { ...state, myTaskByProjectLoading: false };
         // add project
         case ADD_PROJECT:
-            return { ...state, addProjectLoading: true, addProjectrSuccess: false, addProjectError: false };
+            return { ...state, addProjectLoading: true, addProjectrSuccess: false, addProjectError: false ,addProjectErrorMassage:''};
         case ADD_PROJECT_SUCCESS:
             let newProject = action.payload.data;
             //const existingProjects = [...(state.projects)];
@@ -143,10 +145,13 @@ export default (state = INITIAL_STATE, action) => {
                 addProjectLoading: false,
                 addProjectrSuccess: true,
                 addProjectError: false,
+                addProjectErrorMassage:''
                 //projects :  [...(state.projects)];,
             };
         case ADD_PROJECT_FAILED:
-            return { ...state, addProjectLoading: false, addProjectrSuccess: false, addProjectError: true };
+            return { ...state, addProjectLoading: false, addProjectrSuccess: false, addProjectError: true,addProjectErrorMassage:'' };
+        case ADD_PROJECT_FAILED_MASSAGE:
+            return { ...state, addProjectLoading: false, addProjectrSuccess: false, addProjectError: true,addProjectErrorMassage:action.payload};    
         // update project
         case EDIT_PROJECT:
             return {

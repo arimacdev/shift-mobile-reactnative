@@ -94,12 +94,12 @@ class SearchUserScreen extends Component {
                 />
             </TouchableOpacity>
             
-            <TouchableOpacity style={{marginLeft: EStyleSheet.value('24rem')}}>
+            {/* <TouchableOpacity style={{marginLeft: EStyleSheet.value('24rem')}}>
                 <Image 
                   style={{width: 28, height: 28,borderRadius: 28/ 2 }} 
                   source={require('../../../asserts/img/block_user.png')}
                 />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
            
           </View>
         </View>

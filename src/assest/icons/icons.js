@@ -68,5 +68,6 @@ const icons = {
     arrowDownRoundedGreen: require('./arrow_down_rounded_green.png'),
     circuleWhite: require('./circule_white.png'),
     taskLogWhite: require('./task_log_white.png'),
+    appIcon: require('./app_icon.png'),
 };
 export default icons;

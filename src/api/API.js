@@ -82,7 +82,10 @@ export const DELETE_TASK_IN_GROUP = `${PROTOCOL}${HOST}taskgroup`;
 
 export const GET_CHILD_TASK_OF_TASK_GROUP = `${PROTOCOL}${HOST}taskgroup`;
 export const UPDATE_PARENT_TO_CHILD_IN_GROUP = `${PROTOCOL}${HOST}taskgroup`;
+export const GET_ALL_USERS_WORKLOAD_WITH_COMPLETION = `${PROTOCOL}${HOST}projects/tasks/users/`;
 
+
+export const GET_MOBILE_VERSION_STATUS = `${PROTOCOL}${HOST}health`;
 
 
 

@@ -185,20 +185,30 @@ class ProjectsDetailsScreen extends Component {
     let todatMomentValue  = moment(todayValue, "DD MM YYYY");
 
     let totalDatesEsstimated = endDateMomentValue.diff(startDateMomentValue, "days");
-    if(totalDatesEsstimated > 0){
+    if (totalDatesEsstimated > 0 && totalDatesEsstimated < 30) {
       let weeksTextEsstimated = Math.floor((parseInt(totalDatesEsstimated) / 7));
       let dateTextEsstimated =  Math.floor((parseInt(totalDatesEsstimated) % 7));
       datesTextEsstimated = weeksTextEsstimated.toString() + ' week(s)' + ' ' + dateTextEsstimated.toString() + ' day(s)'
-    }else{
+    }else if(totalDatesEsstimated > 0 && totalDatesEsstimated >= 30){
+      let monthsText = Math.floor((parseInt(totalDatesEsstimated) / 30));
+      let dateTextEsstimated = Math.floor((parseInt(totalDatesEsstimated) % 30));
+      datesTextEsstimated = monthsText.toString() + 'month(s)' + ' ' + dateTextEsstimated.toString() + 'day(s)'
+    }
+    else{
       datesTextEsstimated = '0 days'
     }
 
     let totalDatesAcctual = todatMomentValue.diff(startDateMomentValue, "days");
-    if(totalDatesAcctual > 0){
+    if (totalDatesAcctual > 0 && totalDatesAcctual < 30) {
       let weeksTextAcctual = Math.floor((parseInt(totalDatesAcctual) / 7));
       let dateTextAcctual =  Math.floor((parseInt(totalDatesAcctual) % 7));
       datesTextAcctual = weeksTextAcctual.toString() + ' week(s)' + ' ' + dateTextAcctual.toString() + ' day(s)'
-    }else{
+    }else if(totalDatesAcctual > 0 && totalDatesAcctual >= 30){
+      let monthsText = Math.floor((parseInt(totalDatesAcctual) / 30));
+      let dateTextAcctual = Math.floor((parseInt(totalDatesAcctual) % 30));
+      dateTextAcctual = monthsText.toString() + 'month(s)' + ' ' + dateTextAcctual.toString() + 'day(s)'
+    }
+    else{
       datesTextAcctual = '0 days'
     }
 
