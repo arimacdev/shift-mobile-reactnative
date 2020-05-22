@@ -421,6 +421,7 @@ class CreateNewProjectScreen extends Component {
 
 
     return (
+      <View style={{flex: 1}}>
       <ScrollView style={{ marginBottom: EStyleSheet.value('02rem') }}>
         <View style={styles.titleView}>
           <Text style={styles.titleText}>You’re about to start a new project</Text>
@@ -493,7 +494,12 @@ class CreateNewProjectScreen extends Component {
             editable={false}
           />
         </View>
-        <TouchableOpacity onPress={() => this.saveProject()}>
+        {this.state.showPicker ? this.renderDatePicker() : null}
+        {this.state.showTimePicker ? this.renderTimePicker() : null}
+        {this.state.isDateNeedLoading && <Loader />}
+      </ScrollView>
+      <View style={styles.bottomContainer}>
+      <TouchableOpacity onPress={() => this.saveProject()}>
           <View style={styles.button}>
             <Image
               style={[styles.bottomBarIcon, { marginRight: 15, marginLeft: 10 }]}
@@ -512,10 +518,8 @@ class CreateNewProjectScreen extends Component {
             />
           </View>
         </TouchableOpacity>
-        {this.state.showPicker ? this.renderDatePicker() : null}
-        {this.state.showTimePicker ? this.renderTimePicker() : null}
-        {this.state.isDateNeedLoading && <Loader />}
-        {addProjectLoading && <Loader />}
+      </View>
+      {addProjectLoading && <Loader />}
         <AwesomeAlert
           show={showAlert}
           showProgress={false}
@@ -532,7 +536,7 @@ class CreateNewProjectScreen extends Component {
             this.hideAlert();
           }}
         />
-      </ScrollView>
+      </View>
     );
   }
 }
