@@ -52,7 +52,9 @@ import {
     DELETE_SUB_TASK,
     DELETE_SUB_TASK_SUCCESS,
     DELETE_SUB_TASK_FAILED,
-    DELETE_SUB_TASK_FAILED_MASSAGE
+    DELETE_SUB_TASK_FAILED_MASSAGE,
+
+    VIEW_SECOND_DETAILS_SCREEN
 
 } from '../types';
 import APIServices from '../../services/APIServices';
@@ -346,5 +348,12 @@ export const deleteSubTask =  (selectedProjectID, taskId, taskName, initiator) =
                 dispatch({ type: DELETE_SUB_TASK_FAILED});  
             } 
         });
+    };
+};
+
+export const secondDetailViewOpen = value => {
+    return {
+        type: VIEW_SECOND_DETAILS_SCREEN,
+        payload: value
     };
 };

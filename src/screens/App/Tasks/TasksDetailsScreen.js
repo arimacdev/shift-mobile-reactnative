@@ -11,6 +11,7 @@ import {
   Alert,
   PermissionsAndroid,
   Platform,
+  BackHandler
 } from 'react-native';
 import {connect} from 'react-redux';
 import * as actions from '../../../redux/actions';
@@ -298,7 +299,8 @@ class TasksDetailsScreen extends Component {
       taskModalDataID: '',
       fromMyTask: false,
       parentTaskName: '',
-      selectdList: development,
+      selectdList : development,
+      taskItem : {},
     };
   }
 
@@ -326,7 +328,7 @@ class TasksDetailsScreen extends Component {
       Alert.alert(
         'Success',
         'Task Deleted',
-        [{text: 'OK', onPress: () => this.props.navigation.goBack()}],
+        [{text: 'OK', onPress: () => this.onBackPress()}],
         {cancelable: false},
       );
     }
@@ -375,6 +377,7 @@ class TasksDetailsScreen extends Component {
       // allDetails: allDetails,
       sprintId: sprintId,
       fromMyTask: fromMyTask,
+      taskItem : params.taskDetails
     });
 
     this.fetchData(selectedProjectID, selectedProjectTaskID);
@@ -384,6 +387,9 @@ class TasksDetailsScreen extends Component {
       // let sprintId = params.taskDetails.sprintId;
       this.getAllSprintInProject(selectedProjectID, sprintId);
     }
+    this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+      return true;
+  });
   }
 
   async fetchFilesData(projectID, taskID) {
@@ -1807,8 +1813,9 @@ class TasksDetailsScreen extends Component {
       });
   }
 
-  onBackPress() {
-    this.props.navigation.goBack();
+  async onBackPress() {
+    await this.props.secondDetailViewOpen(false);
+    this.props.navigation.goBack()
   }
 
   _renderHeader() {
@@ -1861,22 +1868,50 @@ class TasksDetailsScreen extends Component {
     }
   };
 
-  navigateTo(item) {
-    this.props.navigation.navigate('TasksSubDetailsScreen', {
-      taskDetails: item,
-      selectedProjectID: this.state.selectedProjectID,
-      selectedProjectName: this.state.selectedProjectName,
-      isFromBoards: true,
-    });
+  async navigateTo(item) {
+    let isSecondDetailViewOpen = this.props.isSecondDetailViewOpen;
+    if(!isSecondDetailViewOpen){
+      this.props.navigation.navigate('TasksSubDetailsScreen', {
+        taskDetails: item,
+        selectedProjectID: this.state.selectedProjectID,
+        selectedProjectName: this.state.selectedProjectName,
+        isFromBoards: true,
+      });
+      await this.props.secondDetailViewOpen(true);
+    }
   }
 
-  navigateToSubTask() {
-    // this.props.navigation.navigate('TasksSubDetailsScreen', {
-    //   taskDetails: item,
-    //   selectedProjectID: this.state.selectedProjectID,
-    //   selectedProjectName: this.state.selectedProjectName,
-    //   isFromBoards: true,
-    // });
+  async navigateToSubTask(){
+    let taskItem = this.state.taskItem;
+    let parentID = taskItem.parentId;
+    this.setState({dataLoading: false});
+    try {
+      let taskResult = await APIServices.getProjecTaskData(
+        this.state.selectedProjectID,
+        parentID,
+      );
+      if (taskResult.message == 'success') {
+        this.setState({dataLoading: false});
+        this.changeScreen(taskResult.data);
+      } else {
+        this.setState({dataLoading: false});
+      }
+    } catch (error) {
+      this.setState({dataLoading: false});
+    } 
+  }
+
+  async changeScreen (item){
+    let isSecondDetailViewOpen = this.props.isSecondDetailViewOpen;
+    if(!isSecondDetailViewOpen){
+      this.props.navigation.navigate('TasksSubDetailsScreen', {
+        taskDetails: item,
+        selectedProjectID: this.state.selectedProjectID,
+        selectedProjectName: this.state.selectedProjectName,
+        isFromBoards: true,
+      });
+      await this.props.secondDetailViewOpen(true);
+    }
   }
 
   renderSubtasksList(item, index, userId, projectId) {
@@ -2161,6 +2196,11 @@ class TasksDetailsScreen extends Component {
     this.taskNameTextInput.focus();
   }
 
+  async backPress() {
+    await this.props.secondDetailViewOpen(false);
+    this.props.navigation.goBack()
+  }
+
   render() {
     let taskStatusValue = this.state.taskStatusValue;
     let dataLoading = this.state.dataLoading;
@@ -2185,7 +2225,7 @@ class TasksDetailsScreen extends Component {
           title={this.state.selectedProjectName}
           // drawStatus={true}
           // taskStatus={taskStatus ? taskStatus : ''}
-          onPress={() => this.props.navigation.goBack()}
+          onPress={() => this.backPress()}
           onPressTaskLog={() =>
             this.props.navigation.navigate('TaskLogScreen', {
               selectedProjectTaskID: this.state.selectedProjectTaskID,
@@ -2984,6 +3024,7 @@ const mapStateToProps = state => {
     deleteTaskErrorMessage: state.project.deleteTaskErrorMessage,
     allTaskByProjectLoading: state.project.allTaskByProjectLoading,
     allTaskByProject: state.project.allTaskByProject,
+    isSecondDetailViewOpen : state.project.isSecondDetailViewOpen,
   };
 };
 export default connect(
