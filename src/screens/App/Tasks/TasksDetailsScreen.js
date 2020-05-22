@@ -301,6 +301,7 @@ class TasksDetailsScreen extends Component {
       parentTaskName: '',
       selectdList : development,
       taskItem : {},
+      parentTaskStatus: '',
     };
   }
 
@@ -413,7 +414,9 @@ class TasksDetailsScreen extends Component {
         parentTaskId,
       );
       if (taskResult.message == 'success') {
-        this.setState({parentTaskName: taskResult.data.taskName});
+        this.setState({
+          parentTaskName: taskResult.data.taskName,
+          parentTaskStatus : taskResult.data.taskStatus});
       } else {
         this.setState({dataLoading: false});
       }
@@ -2309,9 +2312,19 @@ class TasksDetailsScreen extends Component {
                 <TouchableOpacity onPress={() => this.navigateToSubTask()}>
                   <View style={{flex: 1}}>
                     <Text style={styles.parentTaskText}>Parent Task</Text>
-                    <Text style={styles.childTaskText}>
-                      {this.state.parentTaskName}
-                    </Text>
+                    <View style={{flex: 1},{flexDirection:'row'}}>
+                      <Image
+                          style={styles.parentTasksCompletionIcon}
+                          source={
+                            this.state.parentTaskStatus == 'closed'
+                              ? icons.rightCircule
+                              : icons.greyOutlineCircule
+                          }
+                        />
+                      <Text style={styles.childTaskText}>
+                        {this.state.parentTaskName}
+                      </Text>
+                    </View>
                   </View>
                 </TouchableOpacity>
               )}
@@ -3013,6 +3026,11 @@ const styles = EStyleSheet.create({
     width: '78%',
     marginTop: '58rem',
     marginLeft: '54rem',
+  },
+  parentTasksCompletionIcon: {
+    width: '15rem',
+    height: '15rem',
+    marginRight : '5rem'
   },
 });
 
