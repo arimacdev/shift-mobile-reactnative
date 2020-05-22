@@ -40,7 +40,7 @@ class WorkloadSearchScreen extends Component {
 
   componentDidMount() {
     let loginUserType = this.props.loginUserType;
-    if(false){
+    if(loginUserType == 'SUPER_ADMIN'){
       this.fetchDataAdmin();
     }else{
       this.fetchDataUser();
