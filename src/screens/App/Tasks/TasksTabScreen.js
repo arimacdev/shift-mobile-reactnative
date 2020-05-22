@@ -403,20 +403,27 @@ class TasksTabScreen extends Component {
     }
   };
 
+  async subTaskClick(item,parentTaskName){
+    let selectedProjectID = this.state.selectedProjectID;
+    let selectedProjectName = this.state.selectedProjectName;
+    await this.props.secondDetailViewOpen(false);
+    this.props.navigation.navigate('TasksDetailsScreen', {
+      taskDetails: item,
+      selectedProjectID: selectedProjectID,
+      isFromBoards: true,
+      selectedProjectName: selectedProjectName,
+      parentTaskName: parentTaskName,
+      allDetails: this.state.filterdDataAllTaks,
+    })
+  }
+
   renderSubTasksList(item, parentTaskName) {
     let selectedProjectID = this.state.selectedProjectID;
     let selectedProjectName = this.state.selectedProjectName;
     return (
       <TouchableOpacity
         onPress={() =>
-          this.props.navigation.navigate('TasksDetailsScreen', {
-            taskDetails: item,
-            selectedProjectID: selectedProjectID,
-            isFromBoards: true,
-            selectedProjectName: selectedProjectName,
-            parentTaskName: parentTaskName,
-            allDetails: this.state.filterdDataAllTaks,
-          })
+           this.subTaskClick(item,parentTaskName)
         }>
         <View style={styles.subTasksView}>
           <Image
@@ -455,6 +462,19 @@ class TasksTabScreen extends Component {
     );
   }
 
+  async MainTaskClick(item,selectedProjectID,selectedProjectName,parentTaskName){
+    await this.props.secondDetailViewOpen(false); 
+    this.props.navigation.navigate('TasksDetailsScreen', {
+      taskDetails: item.parentTask,
+      // subTaskDetails: item.childTasks,
+      selectedProjectID: selectedProjectID,
+      selectedProjectName: selectedProjectName,
+      isFromBoards: true,
+      parentTaskName: parentTaskName,
+      allDetails: this.state.filterdDataAllTaks,
+    })
+  }
+
   renderTaskList(item, indexMain) {
     let index = this.state.index;
     let selectedProjectID = this.state.selectedProjectID;
@@ -464,16 +484,7 @@ class TasksTabScreen extends Component {
     return (
       <View>
         <TouchableOpacity
-          onPress={() =>
-            this.props.navigation.navigate('TasksDetailsScreen', {
-              taskDetails: item.parentTask,
-              // subTaskDetails: item.childTasks,
-              selectedProjectID: selectedProjectID,
-              selectedProjectName: selectedProjectName,
-              isFromBoards: true,
-              parentTaskName: parentTaskName,
-              allDetails: this.state.filterdDataAllTaks,
-            })
+          onPress={() => this.MainTaskClick(item,selectedProjectID,selectedProjectName,parentTaskName)
           }>
           <View
             style={[
@@ -578,6 +589,22 @@ class TasksTabScreen extends Component {
     );
   }
 
+  async filterTaskClick(item){
+    let selectedProjectID = this.state.selectedProjectID;
+    let selectedProjectName = this.state.selectedProjectName;
+    let parentTaskName = '';
+    await this.props.secondDetailViewOpen(false);
+    this.props.navigation.navigate('TasksDetailsScreen', {
+      taskDetails: item,
+      selectedProjectID: selectedProjectID,
+      isFromBoards: true,
+      selectedProjectName: selectedProjectName,
+      parentTaskName: parentTaskName,
+      allDetails: this.state.filterdDataAllTaks,
+      fromMyTask: this.state.filter ? false : true,
+    })
+  }
+
   renderMyTasksAndFilterTaskList(item, indexMain) {
     let selectedProjectID = this.state.selectedProjectID;
     let selectedProjectName = this.state.selectedProjectName;
@@ -586,15 +613,7 @@ class TasksTabScreen extends Component {
     return (
       <TouchableOpacity
         onPress={() =>
-          this.props.navigation.navigate('TasksDetailsScreen', {
-            taskDetails: item,
-            selectedProjectID: selectedProjectID,
-            isFromBoards: true,
-            selectedProjectName: selectedProjectName,
-            parentTaskName: parentTaskName,
-            allDetails: this.state.filterdDataAllTaks,
-            fromMyTask: this.state.filter ? false : true,
-          })
+          this.filterTaskClick(item)
         }>
         <View
           style={item.isParent ? styles.parentTaskView : styles.childTasksView}>

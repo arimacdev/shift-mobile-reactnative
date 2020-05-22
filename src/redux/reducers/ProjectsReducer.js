@@ -52,7 +52,9 @@ import {
     DELETE_SUB_TASK,
     DELETE_SUB_TASK_SUCCESS,
     DELETE_SUB_TASK_FAILED,
-    DELETE_SUB_TASK_FAILED_MASSAGE
+    DELETE_SUB_TASK_FAILED_MASSAGE,
+
+    VIEW_SECOND_DETAILS_SCREEN
 
 } from '../types';
 
@@ -109,6 +111,8 @@ const INITIAL_STATE = {
     deleteSubTaskSuccess: false,
     deleteSubTaskError: false,
     deleteSubTaskErrorMessage: '',
+
+    isSecondDetailViewOpen : false,
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -384,7 +388,9 @@ export default (state = INITIAL_STATE, action) => {
                 deleteSubTaskSuccess: false,
                 deleteSubTaskError: true,
                 deleteSubTaskErrorMessage: action.payload
-            };                 
+            }; 
+        case VIEW_SECOND_DETAILS_SCREEN:
+            return { ...state, isSecondDetailViewOpen: action.payload  };                    
         default:
             return state;
     }
