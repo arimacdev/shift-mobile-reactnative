@@ -2483,7 +2483,7 @@ async function getMobileVersionStatusData(platform, version) {
       url: GET_MOBILE_VERSION_STATUS + '/' + platform + '/' + version,
       method: 'GET',
     },
-    true,
+    false,
     headers,
   );
 }
