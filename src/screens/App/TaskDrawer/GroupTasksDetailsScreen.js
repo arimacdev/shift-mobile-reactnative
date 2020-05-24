@@ -2073,6 +2073,7 @@ const styles = EStyleSheet.create({
     borderWidth: '0.4rem',
     borderColor: colors.lightgray,
     marginBottom: '8rem',
+    top: '10rem'
   },
   parentTaskView: {
     flexDirection: 'row',
@@ -2268,6 +2269,7 @@ const styles = EStyleSheet.create({
     alignItems: 'center',
     borderRadius: '5rem',
     marginBottom: '20rem',
+    top: '10rem',
   },
   updateNotesText: {
     color: colors.white,

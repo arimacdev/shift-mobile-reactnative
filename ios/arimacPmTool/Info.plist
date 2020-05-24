@@ -58,6 +58,8 @@
 	<string>'PM Tool' would like access to your photo gallery to upload files to tasks</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>'PM Tool' would like access to your photo gallery to upload files to tasks</string>
+	<key>NSCameraUsageDescription</key>
+	<string>'PM Tool' would like to access the camera to update profile.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>CircularStd-Medium.ttf</string>
