@@ -65,29 +65,32 @@ class SplashScreen extends Component {
     this.setState({appState: nextAppState});
   };
 
-  getMobileVersionStatus() {
+  async getMobileVersionStatus() {
     let platform = Platform.OS;
     let version = DeviceInfo.getBuildNumber();
     this.setState({dataLoading: true});
-    APIServices.getMobileVersionStatusData(platform, version)
-      .then(response => {
-        if (
-          response.force_update &&
-          response.latest_version > response.current_version
-        ) {
+    try {
+      let result = await APIServices.getMobileVersionStatusData(platform, version);
+      if (result.message == 'success') {
+        let response = result.data;
+        if (response.force_update && response.latest_version > response.current_version) {
+        //if(true){  
           this.setState({
             forceUpdate: response.force_update,
-            details: response.data,
+            details: response,
             dataLoading: false,
           });
         } else {
           this.setState({dataLoading: false, forceUpdate: false});
           this.checkUserStatus();
         }
-      })
-      .catch(err => {
+      } else {
         this.setState({dataLoading: false});
-      });
+      }
+    }catch(error){
+      this.setState({dataLoading: false});
+    }
+
   }
 
   async checkUserStatus() {
