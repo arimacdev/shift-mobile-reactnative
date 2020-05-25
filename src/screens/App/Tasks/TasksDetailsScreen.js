@@ -122,7 +122,7 @@ let bug = [
   {value: 'On hold', id: 'onHold'},
   {value: 'Open', id: 'open'},
   {value: 'Cancel', id: 'cancel'},
-  {value: 'Reopened', id: 'reopened'},
+  {value: 'Reopened', id: 'reOpened'},
   {value: 'Fixing', id: 'fixing'},
   {value: 'Testing', id: 'testing'},
   {value: 'Resolved', id: 'resolved'},
