@@ -834,7 +834,7 @@ const styles = EStyleSheet.create({
     flex: 1,
   },
   scrollView: {
-    marginBottom: height - 500,
+    marginBottom: height - 600,
     flex: 1,
   },
   titleView: {

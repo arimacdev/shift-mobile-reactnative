@@ -143,6 +143,7 @@ class ViewProfileScreen extends Component {
           skipBackup: true,
           path: 'images',
         },
+	    quality: 0.2
       };
       ImagePicker.showImagePicker(options, (response) => {
         if (response.didCancel) {

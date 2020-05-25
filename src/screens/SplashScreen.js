@@ -50,6 +50,9 @@ class SplashScreen extends Component {
 
   componentDidMount() {
     AppState.addEventListener('change', this._handleAppStateChange);
+    if(Platform.OS == 'ios') {
+      this.getMobileVersionStatus();
+    }
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {}
@@ -59,7 +62,7 @@ class SplashScreen extends Component {
   }
 
   _handleAppStateChange = nextAppState => {
-    if (nextAppState === 'active') {
+    if (this.state.appState.match(/inactive|background/) || nextAppState === "active") {
       this.getMobileVersionStatus();
     }
     this.setState({appState: nextAppState});
