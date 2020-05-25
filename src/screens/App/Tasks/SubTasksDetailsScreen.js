@@ -978,14 +978,14 @@ class SubTasksDetailsScreen extends Component {
     } else if (taskStatus != 'closed' && date) {
       if (moment.parseZone(date).isAfter(currentTime)) {
         dateText = moment.parseZone(date).format('YYYY-MM-DD');
-        color = '#0bafff';
+        color = colors.colorDeepSkyBlue;
       } else {
         dateText = moment.parseZone(date).format('YYYY-MM-DD');
         color = colors.colorBittersweet;
       }
     } else {
       dateText = 'Add Due Date';
-      color = '#000000';
+      color = colors.black;
     }
 
     return <Text style={[styles.textDate, {color: color}]}>{dateText}</Text>;

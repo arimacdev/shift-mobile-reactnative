@@ -55,7 +55,8 @@ const colors = {
   colorMidnightExpress: '#080848',
   colorShuttleGrey: '#576377',
   colorForestGreen: '#2E9027',
-  colorMidnightBlue:'#0C0C5A',
-  colorBittersweet:'#FF6161'
+  colorMidnightBlue: '#0C0C5A',
+  colorBittersweet: '#FF6161',
+  colorDeepSkyBlue: '#0BAFFF',
 };
 export default colors;

@@ -268,7 +268,7 @@ class TasksTabScreen extends Component {
       }
     } else {
       dateText = 'Add Due Date';
-      color = item.isParent ? '#ffffff' : '#000000';
+      color = item.isParent ? colors.white : colors.black;
     }
 
     return <Text style={[styles.textDate, {color: color}]}>{dateText}</Text>;
@@ -294,7 +294,7 @@ class TasksTabScreen extends Component {
       }
     } else {
       dateText = 'Add Due Date';
-      color = item.isParent ? '#ffffff' : '#000000';
+      color = item.isParent ? colors.white : colors.black;
     }
 
     return <Text style={[styles.textDate, {color: color}]}>{dateText}</Text>;
@@ -314,14 +314,14 @@ class TasksTabScreen extends Component {
     } else if (taskStatus != 'closed' && date) {
       if (moment.parseZone(date).isAfter(currentTime)) {
         dateText = moment.parseZone(date).format('YYYY-MM-DD');
-        color = '#0bafff';
+        color = colors.colorDeepSkyBlue;
       } else {
         dateText = moment.parseZone(date).format('YYYY-MM-DD');
         color = colors.colorBittersweet;
       }
     } else {
       dateText = 'Add Due Date';
-      color = item.parentTask.isParent ? '#ffffff' : '#000000';
+      color = item.parentTask.isParent ? colors.white : colors.black;
     }
 
     return <Text style={[styles.textDate, {color: color}]}>{dateText}</Text>;

@@ -142,7 +142,7 @@ class WorkloadTabTasksScreen extends Component {
       }
     } else {
       dateText = 'Add Due Date';
-      color = '#000000';
+      color = colors.black;
     }
 
     return <Text style={[styles.textDate, {color: color}]}>{dateText}</Text>;

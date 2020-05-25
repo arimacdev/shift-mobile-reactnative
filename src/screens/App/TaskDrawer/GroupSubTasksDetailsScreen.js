@@ -837,7 +837,7 @@ class GroupSubTasksDetailsScreen extends Component {
     } else if (taskStatus != 'closed' && date) {
       if (moment.parseZone(date).isAfter(currentTime)) {
         dateText = moment.parseZone(date).format('YYYY-MM-DD');
-        color = '#0bafff';
+        color = colors.colorDeepSkyBlue;
       } else {
         dateText = moment.parseZone(date).format('YYYY-MM-DD');
         color = colors.colorBittersweet;
