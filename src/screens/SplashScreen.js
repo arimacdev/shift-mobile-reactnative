@@ -123,7 +123,6 @@ class SplashScreen extends Component {
   async initialUserLogin() {
     try {
       const result = await authorize(config);
-      console.log('result.accessToken', result.accessToken);
       AsyncStorage.setItem('accessToken', result.accessToken);
       AsyncStorage.setItem('refreshToken', result.refreshToken);
       AsyncStorage.setItem(

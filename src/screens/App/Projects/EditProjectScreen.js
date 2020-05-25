@@ -694,6 +694,7 @@ class EditProjectScreen extends Component {
               style={[styles.textInput, { width: '95%' }]}
               placeholder={'Project Alias'}
               value={projectAlias}
+              maxLength={6}
               onChangeText={projectAlias => this.setState({ projectAlias })}
             />
           </View>

@@ -1919,8 +1919,11 @@ class TasksDetailsScreen extends Component {
   }
 
   renderSubtasksList(item, index, userId, projectId) {
+    let isSecondDetailViewOpen = this.props.isSecondDetailViewOpen;
     return (
-      <TouchableOpacity onPress={() => this.navigateTo(item)}>
+      <TouchableOpacity 
+      disabled={isSecondDetailViewOpen} 
+      onPress={() => this.navigateTo(item)}>
         <View style={styles.subTasksListView}>
           <Image
             style={styles.subTasksCompletionIcon}
@@ -2218,6 +2221,7 @@ class TasksDetailsScreen extends Component {
     let isParent = this.state.isParent;
     let addParentTaskShow = this.state.addParentTaskShow;
     let addChildTaskShow = this.state.addChildTaskShow;
+    let isSecondDetailViewOpen = this.props.isSecondDetailViewOpen;
 
     return (
       <View style={styles.backgroundImage}>
@@ -2310,7 +2314,9 @@ class TasksDetailsScreen extends Component {
                   onChange={this._updateSections}
                 />
               ) : (
-                <TouchableOpacity onPress={() => this.navigateToSubTask()}>
+                <TouchableOpacity
+                  disabled={isSecondDetailViewOpen} 
+                  onPress={() => this.navigateToSubTask()}>
                   <View style={{flex: 1}}>
                     <Text style={styles.parentTaskText}>Parent Task</Text>
                     <View style={({flex: 1}, {flexDirection: 'row'})}>
