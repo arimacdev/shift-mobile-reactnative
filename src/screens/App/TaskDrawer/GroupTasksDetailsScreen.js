@@ -100,7 +100,7 @@ let taskStatusData = [
   {value: 'Open', id: 'open'},
   {value: 'Closed', id: 'closed'},
 ];
-
+let MS_PER_MINUTE = 60000;
 class GroupTasksDetailsScreen extends Component {
   constructor(props) {
     super(props);
@@ -646,7 +646,7 @@ class GroupTasksDetailsScreen extends Component {
         this.setSecondaryTaskId(taskResult);
         this.setIsParent(taskResult);
 
-        setState({dataLoading: false, taskResult: taskResult});
+        this.setState({dataLoading: false, taskResult: taskResult});
       } else {
         this.setState({dataLoading: false});
       }
@@ -759,9 +759,17 @@ class GroupTasksDetailsScreen extends Component {
       .parseZone(taskResult.data.taskDueDateAt)
       .format('hh:mmA');
 
-    let dateTime = moment
+    let dateTimeMilliseconds = moment
       .parseZone(taskResult.data.taskDueDateAt)
-      .format('YYYY-MM-DD hh:mm:ss a');
+      .valueOf();
+
+    let dateTime = new Date(
+      dateTimeMilliseconds - moment().utcOffset() * MS_PER_MINUTE,
+    );
+
+    // let dateTime = moment
+    //   .parseZone(taskResult.data.taskDueDateAt)
+    //   .format('YYYY-MM-DD hh:mm:ss a');
 
     if (taskDueDate != 'Invalid date') {
       this.setState({
@@ -782,9 +790,17 @@ class GroupTasksDetailsScreen extends Component {
       .parseZone(taskResult.data.taskReminderAt)
       .format('hh:mmA');
 
-    let dateTime = moment
+    let dateTimeMilliseconds = moment
       .parseZone(taskResult.data.taskReminderAt)
-      .format('YYYY-MM-DD hh:mm:ss a');
+      .valueOf();
+
+    let dateTime = new Date(
+      dateTimeMilliseconds - moment().utcOffset() * MS_PER_MINUTE,
+    );
+
+    // let dateTime = moment
+    //   .parseZone(taskResult.data.taskReminderAt)
+    //   .format('YYYY-MM-DD hh:mm:ss a');
 
     if (taskReminderDate != 'Invalid date') {
       this.setState({
@@ -1301,7 +1317,7 @@ class GroupTasksDetailsScreen extends Component {
       this.setState({dataLoading: true});
       let selectedGroupTaskID = this.state.selectedGroupTaskID;
       let selectedTaskID = this.state.selectedTaskID;
-      resultData = await APIServices.groupTaskUpdateTaskNameData(
+      let resultData = await APIServices.groupTaskUpdateTaskNameData(
         selectedGroupTaskID,
         selectedTaskID,
         text,

@@ -78,7 +78,7 @@ let dropData = [
     value: 'Closed',
   },
 ];
-
+let MS_PER_MINUTE = 60000;
 class MyTasksDetailsScreen extends Component {
   constructor(props) {
     super(props);
@@ -174,7 +174,7 @@ class MyTasksDetailsScreen extends Component {
 
   async fetchData(selectedTaskID) {
     this.setState({dataLoading: true});
-    taskResult = await APIServices.getMySingleTaskData(selectedTaskID);
+    let taskResult = await APIServices.getMySingleTaskData(selectedTaskID);
     if (taskResult.message == 'success') {
       this.setTaskName(taskResult);
       this.setTaskStatus(taskResult);
@@ -216,9 +216,17 @@ class MyTasksDetailsScreen extends Component {
       .parseZone(taskResult.data.taskDueDateAt)
       .format('hh:mmA');
 
-    let dateTime = moment
+    let dateTimeMilliseconds = moment
       .parseZone(taskResult.data.taskDueDateAt)
-      .format('YYYY-MM-DD hh:mm:ss a');
+      .valueOf();
+
+    let dateTime = new Date(
+      dateTimeMilliseconds - moment().utcOffset() * MS_PER_MINUTE,
+    );
+
+    // let dateTime = moment
+    //   .parseZone(taskResult.data.taskDueDateAt)
+    //   .format('YYYY-MM-DD hh:mm:ss a');
 
     if (taskDueDate != 'Invalid date') {
       this.setState({
@@ -239,9 +247,17 @@ class MyTasksDetailsScreen extends Component {
       .parseZone(taskResult.data.taskReminderAt)
       .format('hh:mmA');
 
-    let dateTime = moment
+    let dateTimeMilliseconds = moment
       .parseZone(taskResult.data.taskReminderAt)
-      .format('YYYY-MM-DD hh:mm:ss a');
+      .valueOf();
+
+    let dateTime = new Date(
+      dateTimeMilliseconds - moment().utcOffset() * MS_PER_MINUTE,
+    );
+
+    // let dateTime = moment
+    //   .parseZone(taskResult.data.taskReminderAt)
+    //   .format('YYYY-MM-DD hh:mm:ss a');
 
     if (taskReminderDate != 'Invalid date') {
       this.setState({

@@ -231,7 +231,7 @@ let taskDataWhenParentIsBoard = [
     renderImage: true,
   },
 ];
-
+let MS_PER_MINUTE = 60000;
 class TasksDetailsScreen extends Component {
   constructor(props) {
     super(props);
@@ -799,7 +799,7 @@ class TasksDetailsScreen extends Component {
   async fetchData(selectedProjectID, selectedProjectTaskID) {
     this.setState({dataLoading: true});
     try {
-      taskResult = await APIServices.getProjecTaskData(
+      let taskResult = await APIServices.getProjecTaskData(
         selectedProjectID,
         selectedProjectTaskID,
       );
@@ -993,11 +993,17 @@ class TasksDetailsScreen extends Component {
       .format('hh:mmA');
 
     //To get the milliseconds
-    // let dateTimeMilliseconds = moment.parseZone(taskResult.data.taskDueDateAt).valueOf();
-
-    let dateTime = moment
+    let dateTimeMilliseconds = moment
       .parseZone(taskResult.data.taskDueDateAt)
-      .format('YYYY-MM-DD hh:mm:ss a');
+      .valueOf();
+      
+    let dateTime = new Date(
+      dateTimeMilliseconds - moment().utcOffset() * MS_PER_MINUTE,
+    );
+
+    // let dateTime = moment
+    //   .parseZone(taskResult.data.taskDueDateAt)
+    //   .format('YYYY-MM-DD hh:mm:ss a');
 
     if (taskDueDate != 'Invalid date') {
       this.setState({
@@ -1018,9 +1024,17 @@ class TasksDetailsScreen extends Component {
       .parseZone(taskResult.data.taskReminderAt)
       .format('hh:mmA');
 
-    let dateTime = moment
+    let dateTimeMilliseconds = moment
       .parseZone(taskResult.data.taskReminderAt)
-      .format('YYYY-MM-DD hh:mm:ss a');
+      .valueOf();
+
+    let dateTime = new Date(
+      dateTimeMilliseconds - moment().utcOffset() * MS_PER_MINUTE,
+    );
+
+    // let dateTime = moment
+    //   .parseZone(taskResult.data.taskReminderAt)
+    //   .format('YYYY-MM-DD hh:mm:ss a');
 
     if (taskReminderDate != 'Invalid date') {
       this.setState({
@@ -1936,9 +1950,9 @@ class TasksDetailsScreen extends Component {
   renderSubtasksList(item, index, userId, projectId) {
     let isSecondDetailViewOpen = this.props.isSecondDetailViewOpen;
     return (
-      <TouchableOpacity 
-      disabled={isSecondDetailViewOpen} 
-      onPress={() => this.navigateTo(item)}>
+      <TouchableOpacity
+        disabled={isSecondDetailViewOpen}
+        onPress={() => this.navigateTo(item)}>
         <View style={styles.subTasksListView}>
           <Image
             style={styles.subTasksCompletionIcon}
@@ -2330,7 +2344,7 @@ class TasksDetailsScreen extends Component {
                 />
               ) : (
                 <TouchableOpacity
-                  disabled={isSecondDetailViewOpen} 
+                  disabled={isSecondDetailViewOpen}
                   onPress={() => this.navigateToSubTask()}>
                   <View style={{flex: 1}}>
                     <Text style={styles.parentTaskText}>Parent Task</Text>
