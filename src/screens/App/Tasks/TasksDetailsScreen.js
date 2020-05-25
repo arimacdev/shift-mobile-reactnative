@@ -986,18 +986,25 @@ class TasksDetailsScreen extends Component {
   setDueDate(taskResult) {
     let taskDueDate = moment
       .parseZone(taskResult.data.taskDueDateAt)
-      .format('Do MMMM YYYY');
+      .format('MMMM DD, YYYY');
 
     let taskDueTime = moment
       .parseZone(taskResult.data.taskDueDateAt)
       .format('hh:mmA');
 
+    //To get the milliseconds
+    // let dateTimeMilliseconds = moment.parseZone(taskResult.data.taskDueDateAt).valueOf();
+
+    let dateTime = moment
+      .parseZone(taskResult.data.taskDueDateAt)
+      .format('YYYY-MM-DD hh:mm:ss a');
+
     if (taskDueDate != 'Invalid date') {
       this.setState({
         duedate: taskDueDate,
         dueTime: taskDueTime,
-        date: new Date(taskResult.data.taskDueDateAt),
-        time: new Date(taskResult.data.taskDueDateAt),
+        date: new Date(dateTime),
+        time: new Date(dateTime),
       });
     }
   }
@@ -1005,18 +1012,22 @@ class TasksDetailsScreen extends Component {
   setReminderDate(taskResult) {
     let taskReminderDate = moment
       .parseZone(taskResult.data.taskReminderAt)
-      .format('Do MMMM YYYY');
+      .format('MMMM DD, YYYY');
 
     let taskReminderTime = moment
       .parseZone(taskResult.data.taskReminderAt)
       .format('hh:mmA');
 
+    let dateTime = moment
+      .parseZone(taskResult.data.taskReminderAt)
+      .format('YYYY-MM-DD hh:mm:ss a');
+
     if (taskReminderDate != 'Invalid date') {
       this.setState({
         remindDate: taskReminderDate,
         reminderTime: taskReminderTime,
-        dateReminder: new Date(taskResult.data.taskReminderAt),
-        timeReminder: new Date(taskResult.data.taskReminderAt),
+        dateReminder: new Date(dateTime),
+        timeReminder: new Date(dateTime),
       });
     }
   }
@@ -1729,12 +1740,14 @@ class TasksDetailsScreen extends Component {
           this.setState({dataLoading: false});
         } else {
           this.setState({dataLoading: false});
+          this.setDueDate(this.state.taskResult);
         }
       })
       .catch(error => {
         //if (error.status == 401 || error.status == 403) {
         this.setState({dataLoading: false});
         this.showAlert('', error.data.message);
+        this.setDueDate(this.state.taskResult);
         //}
       });
   }
@@ -1761,11 +1774,13 @@ class TasksDetailsScreen extends Component {
         this.setState({dataLoading: false});
       } else {
         this.setState({dataLoading: false});
+        this.setReminderDate(this.state.taskResult);
       }
     } catch (e) {
       if (e.status == 401 || e.status == 403) {
         this.setState({dataLoading: false});
         this.showAlert('', e.data.message);
+        this.setReminderDate(this.state.taskResult);
       }
     }
   }

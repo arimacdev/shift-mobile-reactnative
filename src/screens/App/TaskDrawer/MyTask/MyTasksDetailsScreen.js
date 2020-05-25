@@ -45,7 +45,6 @@ const Placeholder = () => (
 );
 
 let taskData = [
-  
   {
     id: 2,
     name: 'Due Date',
@@ -78,7 +77,7 @@ let dropData = [
     id: 'closed',
     value: 'Closed',
   },
-]
+];
 
 class MyTasksDetailsScreen extends Component {
   constructor(props) {
@@ -120,93 +119,113 @@ class MyTasksDetailsScreen extends Component {
       files: [],
       uploading: 0,
       indeterminate: false,
-      selectedTaskID : '',
+      selectedTaskID: '',
       taskNameEditable: false,
+      taskResult: [],
     };
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    if (prevProps.deleteSingleTaskInMyError !== this.props.deleteSingleTaskInMyError
-      && this.props.deleteSingleTaskInMyError && this.props.deleteSingleTaskInMyErrorMessage == '') {
-      this.showAlert("","Error");
+    if (
+      prevProps.deleteSingleTaskInMyError !==
+        this.props.deleteSingleTaskInMyError &&
+      this.props.deleteSingleTaskInMyError &&
+      this.props.deleteSingleTaskInMyErrorMessage == ''
+    ) {
+      this.showAlert('', 'Error');
     }
 
-    if (prevProps.deleteSingleTaskInMyError !== this.props.deleteSingleTaskInMyError
-      && this.props.deleteSingleTaskInMyError && this.props.deleteSingleTaskInMyErrorMessage != '') {
-      this.showAlert("", this.props.deleteSingleTaskInMyErrorMessage);
+    if (
+      prevProps.deleteSingleTaskInMyError !==
+        this.props.deleteSingleTaskInMyError &&
+      this.props.deleteSingleTaskInMyError &&
+      this.props.deleteSingleTaskInMyErrorMessage != ''
+    ) {
+      this.showAlert('', this.props.deleteSingleTaskInMyErrorMessage);
     }
 
-    if (prevProps.deleteSingleTaskInMySuccess !== this.props.deleteSingleTaskInMySuccess
-      && this.props.deleteSingleTaskInMySuccess) {
-        Alert.alert(
-          "Success",
-          "Task Deleted",
-          [
-            { text: "OK", onPress: () => this.props.navigation.goBack() }
-          ],
-          { cancelable: false }
-        );
+    if (
+      prevProps.deleteSingleTaskInMySuccess !==
+        this.props.deleteSingleTaskInMySuccess &&
+      this.props.deleteSingleTaskInMySuccess
+    ) {
+      Alert.alert(
+        'Success',
+        'Task Deleted',
+        [{text: 'OK', onPress: () => this.props.navigation.goBack()}],
+        {cancelable: false},
+      );
     }
   }
 
   componentDidMount() {
-    const {navigation: {state: {params}}} = this.props;
+    const {
+      navigation: {
+        state: {params},
+      },
+    } = this.props;
     let selectedTaskID = params.taskDetails.taskId;
     this.setState({
-        selectedTaskID : selectedTaskID,
+      selectedTaskID: selectedTaskID,
     });
 
     this.fetchData(selectedTaskID);
   }
 
   async fetchData(selectedTaskID) {
-    this.setState({dataLoading:true});
+    this.setState({dataLoading: true});
     taskResult = await APIServices.getMySingleTaskData(selectedTaskID);
-    if(taskResult.message == 'success'){
-        this.setTaskName(taskResult);
-        this.setTaskStatus(taskResult);
-        this.setDueDate(taskResult);
-        this.setReminderDate(taskResult);
-        this.setTaskNote(taskResult);
-        this.setFiles();
-        this.setState({dataLoading:false}); 
-    }else{
-        this.setState({dataLoading:false});
+    if (taskResult.message == 'success') {
+      this.setTaskName(taskResult);
+      this.setTaskStatus(taskResult);
+      this.setDueDate(taskResult);
+      this.setReminderDate(taskResult);
+      this.setTaskNote(taskResult);
+      this.setFiles();
+      this.setState({dataLoading: false, taskResult: taskResult});
+    } else {
+      this.setState({dataLoading: false});
     }
   }
 
-  setTaskName(taskResult){
-    this.setState({taskName : taskResult.data.taskName});
-  };
+  setTaskName(taskResult) {
+    this.setState({taskName: taskResult.data.taskName});
+  }
 
-  setTaskStatus(taskResult){
+  setTaskStatus(taskResult) {
     let statusValue = '';
     switch (taskResult.data.taskStatus) {
-        case 'open':
-              statusValue = 'Open'
-              break;
-        case 'closed':
-              statusValue = 'Closed'
-              break;
-      }
-      this.setState({
-        taskStatus : statusValue
-      })
-  };
+      case 'open':
+        statusValue = 'Open';
+        break;
+      case 'closed':
+        statusValue = 'Closed';
+        break;
+    }
+    this.setState({
+      taskStatus: statusValue,
+    });
+  }
 
   setDueDate(taskResult) {
     let taskDueDate = moment
       .parseZone(taskResult.data.taskDueDateAt)
-      .format('Do MMMM YYYY');
+      .format('MMMM DD, YYYY');
 
     let taskDueTime = moment
       .parseZone(taskResult.data.taskDueDateAt)
       .format('hh:mmA');
 
+    let dateTime = moment
+      .parseZone(taskResult.data.taskDueDateAt)
+      .format('YYYY-MM-DD hh:mm:ss a');
+
     if (taskDueDate != 'Invalid date') {
       this.setState({
         duedate: taskDueDate,
         dueTime: taskDueTime,
+        date: new Date(dateTime),
+        time: new Date(dateTime),
       });
     }
   }
@@ -214,16 +233,22 @@ class MyTasksDetailsScreen extends Component {
   setReminderDate(taskResult) {
     let taskReminderDate = moment
       .parseZone(taskResult.data.taskReminderAt)
-      .format('Do MMMM YYYY');
+      .format('MMMM DD, YYYY');
 
     let taskReminderTime = moment
       .parseZone(taskResult.data.taskReminderAt)
       .format('hh:mmA');
 
+    let dateTime = moment
+      .parseZone(taskResult.data.taskReminderAt)
+      .format('YYYY-MM-DD hh:mm:ss a');
+
     if (taskReminderDate != 'Invalid date') {
       this.setState({
         remindDate: taskReminderDate,
         reminderTime: taskReminderTime,
+        dateReminder: new Date(dateTime),
+        timeReminder: new Date(dateTime),
       });
     }
   }
@@ -233,13 +258,13 @@ class MyTasksDetailsScreen extends Component {
   }
 
   async setFiles() {
-    let selectedTaskID = this.state.selectedTaskID
-    this.setState({dataLoading:true});
-    resultData = await APIServices.getFilesInMyTaskData(selectedTaskID,);
-    if(resultData.message == 'success'){
-      this.setState({filesData : resultData.data,dataLoading:false});
-    }else{
-      this.setState({dataLoading:false});
+    let selectedTaskID = this.state.selectedTaskID;
+    this.setState({dataLoading: true});
+    resultData = await APIServices.getFilesInMyTaskData(selectedTaskID);
+    if (resultData.message == 'success') {
+      this.setState({filesData: resultData.data, dataLoading: false});
+    } else {
+      this.setState({dataLoading: false});
     }
   }
 
@@ -252,7 +277,7 @@ class MyTasksDetailsScreen extends Component {
         let filesArray = this.state.files.filter(item => {
           return item.uri !== uri;
         });
-        this.setState({ files: filesArray });
+        this.setState({files: filesArray});
       },
     );
   }
@@ -389,24 +414,26 @@ class MyTasksDetailsScreen extends Component {
     );
   }
 
-  async deleteFile(item){
+  async deleteFile(item) {
     let selectedTaskID = this.state.selectedTaskID;
     let taskFileId = item.taskFileId;
 
-    this.setState({dataLoading:true});
+    this.setState({dataLoading: true});
     try {
-      resultObj = await APIServices.deleteFileInMyTaskData(selectedTaskID,taskFileId);
-      if(resultObj.message == 'success'){
-        this.setState({dataLoading:false});
+      resultObj = await APIServices.deleteFileInMyTaskData(
+        selectedTaskID,
+        taskFileId,
+      );
+      if (resultObj.message == 'success') {
+        this.setState({dataLoading: false});
         this.setFiles();
-      }else{
-        this.setState({dataLoading:false});
+      } else {
+        this.setState({dataLoading: false});
       }
-    }
-    catch(e) {
-      if(e.status == 401){
-        this.setState({dataLoading:false});
-        this.showAlert("",e.data.message);
+    } catch (e) {
+      if (e.status == 401) {
+        this.setState({dataLoading: false});
+        this.showAlert('', e.data.message);
       }
     }
   }
@@ -484,7 +511,7 @@ class MyTasksDetailsScreen extends Component {
     let details = '';
     let size = this.bytesToSize(item.taskFileSize);
     let date = moment(item.taskFileDate).format('YYYY-MM-DD');
-    let name = item.taskFileName ;
+    let name = item.taskFileName;
 
     details = size + ' | ' + date + ' by ' + name;
 
@@ -587,10 +614,10 @@ class MyTasksDetailsScreen extends Component {
     let newDate = '';
     let newDateValue = '';
     if (this.state.reminder) {
-      newDate = moment(date1).format('Do MMMM YYYY');
+      newDate = moment(date1).format('MMMM DD, YYYY');
       newDateValue = moment(date1).format('DD MM YYYY');
     } else {
-      newDate = moment(date1).format('Do MMMM YYYY');
+      newDate = moment(date1).format('MMMM DD, YYYY');
       newDateValue = moment(date1).format('DD MM YYYY');
     }
     if (this.state.reminder) {
@@ -692,6 +719,11 @@ class MyTasksDetailsScreen extends Component {
         showPicker: false,
         showTimePicker: false,
       });
+      if (this.state.reminder) {
+        this.setReminderDate(this.state.taskResult);
+      } else {
+        this.setDueDate(this.state.taskResult);
+      }
     }
   }
 
@@ -726,6 +758,11 @@ class MyTasksDetailsScreen extends Component {
         showPicker: false,
         showTimePicker: false,
       });
+      if (this.state.reminder) {
+        this.setReminderDate(this.state.taskResult);
+      } else {
+        this.setDueDate(this.state.taskResult);
+      }
     }
   }
 
@@ -993,108 +1030,146 @@ class MyTasksDetailsScreen extends Component {
     );
   }
 
-  // change task status 
+  // change task status
   onFilterTaskStatus = (value, index, data) => {
     let selectedTaskStatusID = data[index].id;
     let selectedTaskStatusName = data[index].value;
-    this.changeTaskStatus(selectedTaskStatusID,selectedTaskStatusName)
+    this.changeTaskStatus(selectedTaskStatusID, selectedTaskStatusName);
   };
 
   //API change task status
-  async changeTaskStatus(selectedTaskStatusID,selectedTaskStatusName){
-    this.setState({dataLoading:true});
+  async changeTaskStatus(selectedTaskStatusID, selectedTaskStatusName) {
+    this.setState({dataLoading: true});
     let selectedTaskID = this.state.selectedTaskID;
-    resultData = await APIServices.myTaskUpdateTaskStatusData(selectedTaskID,selectedTaskStatusID);
-    if(resultData.message == 'success'){
-      this.setState({dataLoading:false,taskStatus : selectedTaskStatusName});
-    }else{
-      this.setState({dataLoading:false});
+    resultData = await APIServices.myTaskUpdateTaskStatusData(
+      selectedTaskID,
+      selectedTaskStatusID,
+    );
+    if (resultData.message == 'success') {
+      this.setState({dataLoading: false, taskStatus: selectedTaskStatusName});
+    } else {
+      this.setState({dataLoading: false});
     }
-  };
+  }
 
-  // change name of task 
+  // change name of task
   onTaskNameChange(text) {
     this.setState({taskName: text});
   }
 
   //API change name of task API
-  async onTaskNameChangeSubmit(text){
-    this.setState({dataLoading:true});
+  async onTaskNameChangeSubmit(text) {
+    this.setState({dataLoading: true});
     let selectedTaskID = this.state.selectedTaskID;
-    resultData = await APIServices.myTaskUpdateTaskNameData(selectedTaskID,text);
-    if(resultData.message == 'success'){
-      this.setState({dataLoading:false});
-    }else{
-      this.setState({dataLoading:false});
+    resultData = await APIServices.myTaskUpdateTaskNameData(
+      selectedTaskID,
+      text,
+    );
+    if (resultData.message == 'success') {
+      this.setState({dataLoading: false});
+    } else {
+      this.setState({dataLoading: false});
     }
   }
 
-  // change note of task 
+  // change note of task
   changeTaskNote(note) {
     this.setState({note: note});
   }
 
   // change note of task API
-  async onSubmitTaskNote(note){
-    this.setState({dataLoading:true});
+  async onSubmitTaskNote(note) {
+    this.setState({dataLoading: true});
     let selectedTaskID = this.state.selectedTaskID;
-    resultData = await APIServices.myTaskUpdateTaskNoteData(selectedTaskID,note);
-    if(resultData.message == 'success'){
-      this.setState({dataLoading:false,note: note});
-    }else{
-      this.setState({dataLoading:false});
+    resultData = await APIServices.myTaskUpdateTaskNoteData(
+      selectedTaskID,
+      note,
+    );
+    if (resultData.message == 'success') {
+      this.setState({dataLoading: false, note: note});
+    } else {
+      this.setState({dataLoading: false});
     }
   }
 
   // change due date of task API DONE
-  async changeTaskDueDate(){
-      let duedateValue = this.state.duedateValue;
-      let dueTime = this.state.dueTime;
-      let selectedTaskID = this.state.selectedTaskID;
+  async changeTaskDueDate() {
+    let duedateValue = this.state.duedateValue;
+    let dueTime = this.state.dueTime;
+    let selectedTaskID = this.state.selectedTaskID;
 
-      let IsoDueDate = duedateValue ?
-      moment(duedateValue + dueTime,'DD/MM/YYYY hh:mmA').format('YYYY-MM-DD[T]HH:mm:ss') : '';
+    let IsoDueDate = duedateValue
+      ? moment(duedateValue + dueTime, 'DD/MM/YYYY hh:mmA').format(
+          'YYYY-MM-DD[T]HH:mm:ss',
+        )
+      : '';
 
-      resultData = await APIServices.myTaskUpdateDueDateData(selectedTaskID,IsoDueDate);
-      if(resultData.message == 'success'){
-        this.setState({dataLoading:false});
-      }else{
-        this.setState({dataLoading:false});
-      }
-  };
+    await APIServices.myTaskUpdateDueDateData(selectedTaskID, IsoDueDate)
+      .then(response => {
+        if (response.message == 'success') {
+          this.setState({dataLoading: false});
+        } else {
+          this.setState({dataLoading: false});
+          this.setDueDate(this.state.taskResult);
+        }
+      })
+      .catch(error => {
+        //if (error.status == 401 || error.status == 403) {
+        this.setState({dataLoading: false});
+        this.showAlert('', error.data.message);
+        this.setDueDate(this.state.taskResult);
+        //}
+      });
+  }
 
-    // change reminder date of task API DONE
-  async changeTaskReminderDate(){
+  // change reminder date of task API DONE
+  async changeTaskReminderDate() {
     let remindDateValue = this.state.remindDateValue;
     let reminderTime = this.state.reminderTime;
     let selectedTaskID = this.state.selectedTaskID;
 
-    let IsoReminderDate = remindDateValue ?
-    moment(remindDateValue + reminderTime,'DD/MM/YYYY hh:mmA').format('YYYY-MM-DD[T]HH:mm:ss') : '';
+    let IsoReminderDate = remindDateValue
+      ? moment(remindDateValue + reminderTime, 'DD/MM/YYYY hh:mmA').format(
+          'YYYY-MM-DD[T]HH:mm:ss',
+        )
+      : '';
 
-    resultData = await APIServices.myTaskUpdateReminderDateData(selectedTaskID,IsoReminderDate);
-    if(resultData.message == 'success'){
-      this.setState({dataLoading:false});
-    }else{
-      this.setState({dataLoading:false});
-    }
-  };
+    await APIServices.myTaskUpdateReminderDateData(
+      selectedTaskID,
+      IsoReminderDate,
+    )
+      .then(response => {
+        if (response.message == 'success') {
+          this.setState({dataLoading: false});
+        } else {
+          this.setState({dataLoading: false});
+          this.setReminderDate(this.state.taskResult);
+        }
+      })
+      .catch(error => {
+        //if (error.status == 401 || error.status == 403) {
+        this.setState({dataLoading: false});
+        this.showAlert('', error.data.message);
+        this.setReminderDate(this.state.taskResult);
+        //}
+      });
+  }
 
   onTaskDeketePress() {
     let taskID = this.state.selectedTaskID;
 
     Alert.alert(
-      "Delete Task",
+      'Delete Task',
       "You're about to permanently delete this task, its comments\n and attachments, and all of its data.\nIf you're not sure, you can close this pop up.",
       [
         {
-          text: "Cancel",
-          onPress: () => console.log("Cancel Pressed"),
-          style: "cancel"
+          text: 'Cancel',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
         },
-        { text: "Delete", onPress: () => this.props.deleteTaskInMyTasks(taskID)}
+        {text: 'Delete', onPress: () => this.props.deleteTaskInMyTasks(taskID)},
       ],
-      { cancelable: false }
+      {cancelable: false},
     );
   }
 
@@ -1553,7 +1628,7 @@ const styles = EStyleSheet.create({
     color: colors.darkBlue,
     fontWeight: 'bold',
   },
-  myTasksStatusPicker:{
+  myTasksStatusPicker: {
     width: '78%',
     marginTop: '58rem',
     marginLeft: '54rem',
@@ -1568,9 +1643,10 @@ const styles = EStyleSheet.create({
 const mapStateToProps = state => {
   return {
     deleteSingleTaskInMyLoading: state.tasks.deleteSingleTaskInMyLoading,
-    deleteSingleTaskInMySuccess: state.tasks.deleteSingleTaskInMySuccess, 
+    deleteSingleTaskInMySuccess: state.tasks.deleteSingleTaskInMySuccess,
     deleteSingleTaskInMyError: state.tasks.deleteSingleTaskInMyError,
-    deleteSingleTaskInMyErrorMessage: state.tasks.deleteSingleTaskInMyErrorMessage
+    deleteSingleTaskInMyErrorMessage:
+      state.tasks.deleteSingleTaskInMyErrorMessage,
   };
 };
 export default connect(
