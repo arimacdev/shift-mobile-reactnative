@@ -8,6 +8,7 @@ import ReduxThunk from 'redux-thunk';
 import reducers from '../src/redux/reducers';
 import NavigationService from './services/NavigationService';
 import { MainSwitchNavigator } from './navigators/MainSwitchNavigator';
+import { OfflineNotice } from './components/OfflineNotice';
 
 console.disableYellowBox = true;
 
@@ -35,6 +36,7 @@ export default class App extends Component {
               }}
           />
         }
+        <OfflineNotice />
       </Provider>
     );
   }

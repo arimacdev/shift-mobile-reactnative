@@ -210,16 +210,29 @@ class ViewProfileScreen extends Component {
       if (userData.message == 'success') {
         this.setState({dataLoading: false});
         this.fetchUserData(userID);
+        this.fetchDataUserData(userID);
       } else {
         this.setState({dataLoading: false});
       }
     }catch(e) {
-      if(e.status == 500){
-        console.log('error', e);
+      //if(e.status == 500){
+        //console.log('error', e);
         this.setState({dataLoading:false});
-        this.showAlert("",e.data.message);
-      }
+        this.showAlert("","error");
+      //}
     }
+  }
+
+  fetchDataUserData(userID) {
+    this.setState({dataLoading: true});
+    APIServices.getUserData(userID)
+      .then(responseUser => {
+        this.setState({dataLoading: false});
+        this.props.UserInfoSuccess(responseUser);
+      })
+      .catch(err => {
+        this.setState({dataLoading: false});
+      });
   }
 
   onFirstNameChange(text) {

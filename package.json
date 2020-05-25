@@ -12,6 +12,7 @@
   "dependencies": {
     "@react-native-community/async-storage": "^1.6.1",
     "@react-native-community/datetimepicker": "^2.3.2",
+    "@react-native-community/netinfo": "^5.9.1",
     "@react-navigation/material-top-tabs": "^5.1.1",
     "@react-navigation/native": "^5.0.9",
     "@valdio/react-native-scrollable-tabview": "^0.8.12",
