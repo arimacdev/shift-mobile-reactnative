@@ -73,7 +73,7 @@ class MyTasks extends Component {
       selectedTypeAllTasks: 'All',
     });
     this.setState({dataLoading: true});
-    myTaskData = await APIServices.getAllTaskByMySelf();
+    let myTaskData = await APIServices.getAllTaskByMySelf();
     if (myTaskData.message == 'success') {
       this.setState({
         dataLoading: false,
@@ -98,19 +98,19 @@ class MyTasks extends Component {
     let taskStatus = item.taskStatus;
     if (taskStatus == 'closed' && date) {
       // task complete
-      dateText = moment(date).format('YYYY-MM-DD');
-      color = '#36DD5B';
+      dateText = moment.parseZone(date).format('YYYY-MM-DD');
+      color = colors.colorForestGreen;
     } else if (taskStatus != 'closed' && date) {
-      if (moment(date).isAfter(currentTime)) {
-        dateText = moment(date).format('YYYY-MM-DD');
-        color = '#0C0C5A';
+      if (moment.parseZone(date).isAfter(currentTime)) {
+        dateText = moment.parseZone(date).format('YYYY-MM-DD');
+        color = colors.colorMidnightBlue;
       } else {
-        dateText = moment(date).format('YYYY-MM-DD');
-        color = '#ff6161';
+        dateText = moment.parseZone(date).format('YYYY-MM-DD');
+        color = colors.colorBittersweet;
       }
     } else {
       dateText = 'Add Due Date';
-      color = '#000000';
+      color = colors.black;
     }
 
     return <Text style={[styles.textDate, {color: color}]}>{dateText}</Text>;

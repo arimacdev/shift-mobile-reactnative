@@ -48,11 +48,14 @@ const colors = {
   colorTangerine: '#FF7A00',
   colorCaribbeanGreen: '#00c29f',
   colorHeliotrope: '#DD6DEF',
-  colorApple:'#4EBC44',
-  colorCoralRed:'#FB3F3F',
+  colorApple: '#4EBC44',
+  colorCoralRed: '#FB3F3F',
   colorsNavyBlue: '#0083E2',
   colorLightSlateGrey: '#7A8B9F',
-  colorMidnightExpress:'#080848',
-  colorShuttleGrey:'#576377'
+  colorMidnightExpress: '#080848',
+  colorShuttleGrey: '#576377',
+  colorForestGreen: '#2E9027',
+  colorMidnightBlue:'#0C0C5A',
+  colorBittersweet:'#FF6161'
 };
 export default colors;

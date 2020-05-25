@@ -130,15 +130,15 @@ class WorkloadTabTasksScreen extends Component {
     let taskStatus = item.taskStatus;
     if (taskStatus == 'closed' && date) {
       // task complete
-      dateText = moment(date).format('DD/MM/YYYY');
-      color = '#36DD5B';
+      dateText = moment.parseZone(date).format('DD/MM/YYYY');
+      color = colors.colorForestGreen;
     } else if (taskStatus != 'closed' && date) {
-      if (moment(date).isAfter(currentTime)) {
-        dateText = moment(date).format('DD/MM/YYYY');
-        color = '#0C0C5A';
+      if (moment.parseZone(date).isAfter(currentTime)) {
+        dateText = moment.parseZone(date).format('DD/MM/YYYY');
+        color = colors.colorMidnightBlue;
       } else {
-        dateText = moment(date).format('DD/MM/YYYY');
-        color = '#ff6161';
+        dateText = moment.parseZone(date).format('DD/MM/YYYY');
+        color = colors.colorBittersweet;
       }
     } else {
       dateText = 'Add Due Date';

@@ -97,7 +97,7 @@ class Tasks extends Component {
     });
     let selectedTaskGroupId = this.state.selectedTaskGroupId;
     this.setState({dataLoading: true});
-    allTaskData = await APIServices.getAllTaskByGroup(selectedTaskGroupId);
+    let allTaskData = await APIServices.getAllTaskByGroup(selectedTaskGroupId);
     console.log(allTaskData);
     if (allTaskData.message == 'success') {
       this.setState({
@@ -132,19 +132,19 @@ class Tasks extends Component {
     let taskStatus = item.parentTask.taskStatus;
     if (taskStatus == 'closed' && date) {
       // task complete
-      dateText = moment(date).format('YYYY-MM-DD');
-      color = '#36DD5B';
+      dateText = moment.parseZone(date).format('YYYY-MM-DD');
+      color = colors.colorForestGreen;
     } else if (taskStatus != 'closed' && date) {
-      if (moment(date).isAfter(currentTime)) {
-        dateText = moment(date).format('YYYY-MM-DD');
+      if (moment.parseZone(date).isAfter(currentTime)) {
+        dateText = moment.parseZone(date).format('YYYY-MM-DD');
         color = '#0bafff';
       } else {
-        dateText = moment(date).format('YYYY-MM-DD');
-        color = '#ff6161';
+        dateText = moment.parseZone(date).format('YYYY-MM-DD');
+        color = colors.colorBittersweet;
       }
     } else {
       dateText = 'Add Due Date';
-      color = '#ffffff';
+      color = colors.white;
     }
 
     return <Text style={[styles.textDate, {color: color}]}>{dateText}</Text>;
@@ -159,19 +159,19 @@ class Tasks extends Component {
     let taskStatus = item.taskStatus;
     if (taskStatus == 'closed' && date) {
       // task complete
-      dateText = moment(date).format('YYYY-MM-DD');
-      color = '#36DD5B';
+      dateText = moment.parseZone(date).format('YYYY-MM-DD');
+      color = colors.colorForestGreen;
     } else if (taskStatus != 'closed' && date) {
-      if (moment(date).isAfter(currentTime)) {
-        dateText = moment(date).format('YYYY-MM-DD');
-        color = '#0C0C5A';
+      if (moment.parseZone(date).isAfter(currentTime)) {
+        dateText = moment.parseZone(date).format('YYYY-MM-DD');
+        color = colors.colorMidnightBlue;
       } else {
-        dateText = moment(date).format('YYYY-MM-DD');
-        color = '#ff6161';
+        dateText = moment.parseZone(date).format('YYYY-MM-DD');
+        color = colors.colorBittersweet;
       }
     } else {
       dateText = 'Add Due Date';
-      color = '#000000';
+      color = colors.black;
     }
 
     return <Text style={[styles.textDate, {color: color}]}>{dateText}</Text>;

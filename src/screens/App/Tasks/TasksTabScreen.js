@@ -256,15 +256,15 @@ class TasksTabScreen extends Component {
     let taskStatus = item.taskStatus;
     if (taskStatus == 'closed' && date) {
       // task complete
-      dateText = moment(date).format('YYYY-MM-DD');
-      color = '#36DD5B';
+      dateText = moment.parseZone(date).format('YYYY-MM-DD');
+      color = colors.colorForestGreen;
     } else if (taskStatus != 'closed' && date) {
-      if (moment(date).isAfter(currentTime)) {
-        dateText = moment(date).format('YYYY-MM-DD');
-        color = '#0C0C5A';
+      if (moment.parseZone(date).isAfter(currentTime)) {
+        dateText = moment.parseZone(date).format('YYYY-MM-DD');
+        color = colors.colorMidnightBlue;
       } else {
-        dateText = moment(date).format('YYYY-MM-DD');
-        color = '#ff6161';
+        dateText = moment.parseZone(date).format('YYYY-MM-DD');
+        color = colors.colorBittersweet;
       }
     } else {
       dateText = 'Add Due Date';
@@ -279,19 +279,18 @@ class TasksTabScreen extends Component {
     let currentTime = moment().format();
     let dateText = '';
     let color = '';
-
     let taskStatus = item.taskStatus;
     if (taskStatus == 'closed' && date) {
       // task complete
-      dateText = moment(date).format('YYYY-MM-DD');
-      color = '#36DD5B';
+      dateText = moment.parseZone(date).format('YYYY-MM-DD');
+      color = colors.colorForestGreen;
     } else if (taskStatus != 'closed' && date) {
-      if (moment(date).isAfter(currentTime)) {
-        dateText = moment(date).format('YYYY-MM-DD');
-        color = '#0C0C5A';
+      if (moment.parseZone(date).isAfter(currentTime)) {
+        dateText = moment.parseZone(date).format('YYYY-MM-DD');
+        color = colors.colorMidnightBlue;
       } else {
-        dateText = moment(date).format('YYYY-MM-DD');
-        color = '#ff6161';
+        dateText = moment.parseZone(date).format('YYYY-MM-DD');
+        color = colors.colorBittersweet;
       }
     } else {
       dateText = 'Add Due Date';
@@ -310,15 +309,15 @@ class TasksTabScreen extends Component {
     let taskStatus = item.parentTask.taskStatus;
     if (taskStatus == 'closed' && date) {
       // task complete
-      dateText = moment(date).format('YYYY-MM-DD');
-      color = '#36DD5B';
+      dateText = moment.parseZone(date).format('YYYY-MM-DD');
+      color = colors.colorForestGreen;
     } else if (taskStatus != 'closed' && date) {
-      if (moment(date).isAfter(currentTime)) {
-        dateText = moment(date).format('YYYY-MM-DD');
+      if (moment.parseZone(date).isAfter(currentTime)) {
+        dateText = moment.parseZone(date).format('YYYY-MM-DD');
         color = '#0bafff';
       } else {
-        dateText = moment(date).format('YYYY-MM-DD');
-        color = '#ff6161';
+        dateText = moment.parseZone(date).format('YYYY-MM-DD');
+        color = colors.colorBittersweet;
       }
     } else {
       dateText = 'Add Due Date';
@@ -350,7 +349,7 @@ class TasksTabScreen extends Component {
         color = colors.colorCaribbeanGreen;
         break;
       case 'general':
-        color = colors.colorFreeSpeechGreen; //needs color
+        color = colors.colorsNavyBlue;
         break;
       default:
         break;
