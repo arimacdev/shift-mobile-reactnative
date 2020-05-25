@@ -7,6 +7,7 @@ import {
   ScrollView,
   TouchableOpacity,
   Switch,
+  Alert
 } from 'react-native';
 import {connect} from 'react-redux';
 import * as actions from '../../../redux/actions';
@@ -137,23 +138,60 @@ class ViewProfileScreen extends Component {
   }
 
   async setImage (){
+
+    Alert.alert(
+      'Profile Picture', 'Change Profile Picture',
+      [
+        {text: 'Back', onPress: () => console.log('Back')},
+        {text: 'Camera', onPress: () => this.selectCamera()},
+        {text: 'Gallery', onPress: () =>  this.selectGallery()},
+      ],
+      { 
+        cancelable: true 
+      }
+    );
+    
+  }
+
+  async selectCamera(){
     const options = {
-        title: 'Select a profile picture',
-        storageOptions: {
-          skipBackup: true,
-          path: 'images',
-        },
-	    quality: 0.2
-      };
-      ImagePicker.showImagePicker(options, (response) => {
-        if (response.didCancel) {
-        } else if (response.error) {
-        } else if (response.customButton) {
-        } else {
-          this.uploadFiles(response.uri,response.type)
-        }
-      });
-}
+      title: 'Select a profile picture',
+      storageOptions: {
+        skipBackup: true,
+        path: 'images',
+      },
+    quality: 0.2
+    };
+
+    ImagePicker.launchCamera(options, (response) => {
+      if (response.didCancel) {
+      } else if (response.error) {
+      } else if (response.customButton) {
+      } else {
+        this.uploadFiles(response.uri,response.type)
+      }
+    });
+  }
+
+  async selectGallery(){
+    const options = {
+      title: 'Select a profile picture',
+      storageOptions: {
+        skipBackup: true,
+        path: 'images',
+      },
+      quality: 0.2
+    };
+
+    ImagePicker.launchImageLibrary(options, (response) => {
+      if (response.didCancel) {
+      } else if (response.error) {
+      } else if (response.customButton) {
+      } else {
+        this.uploadFiles(response.uri,response.type)
+      }
+    });
+  }
 
   async onProfileImageClick() {
      try {
