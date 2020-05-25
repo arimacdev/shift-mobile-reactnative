@@ -1357,7 +1357,7 @@ const styles = EStyleSheet.create({
     borderWidth: '0.4rem',
     borderColor: colors.lightgray,
     marginBottom: '8rem',
-    top: '10rem'
+    top: Platform.OS === 'ios' ? '10rem' : '0rem',
   },
   parentTaskText: {
     flex: 1,
@@ -1504,7 +1504,7 @@ const styles = EStyleSheet.create({
     alignItems: 'center',
     borderRadius: 5,
     marginBottom: 20,
-    top: '10rem',
+    top: Platform.OS === 'ios' ? '10rem' : '0rem',
   },
   updateNotesText: {
     color: colors.white,

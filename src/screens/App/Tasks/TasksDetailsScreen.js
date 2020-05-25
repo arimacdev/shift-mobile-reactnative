@@ -11,7 +11,7 @@ import {
   Alert,
   PermissionsAndroid,
   Platform,
-  BackHandler
+  BackHandler,
 } from 'react-native';
 import {connect} from 'react-redux';
 import * as actions from '../../../redux/actions';
@@ -299,8 +299,8 @@ class TasksDetailsScreen extends Component {
       taskModalDataID: '',
       fromMyTask: false,
       parentTaskName: '',
-      selectdList : development,
-      taskItem : {},
+      selectdList: development,
+      taskItem: {},
       parentTaskStatus: '',
     };
   }
@@ -378,7 +378,7 @@ class TasksDetailsScreen extends Component {
       // allDetails: allDetails,
       sprintId: sprintId,
       fromMyTask: fromMyTask,
-      taskItem : params.taskDetails
+      taskItem: params.taskDetails,
     });
 
     this.fetchData(selectedProjectID, selectedProjectTaskID);
@@ -390,7 +390,7 @@ class TasksDetailsScreen extends Component {
     }
     this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
       return true;
-  });
+    });
   }
 
   async fetchFilesData(projectID, taskID) {
@@ -416,7 +416,8 @@ class TasksDetailsScreen extends Component {
       if (taskResult.message == 'success') {
         this.setState({
           parentTaskName: taskResult.data.taskName,
-          parentTaskStatus : taskResult.data.taskStatus});
+          parentTaskStatus: taskResult.data.taskStatus,
+        });
       } else {
         this.setState({dataLoading: false});
       }
@@ -1818,7 +1819,7 @@ class TasksDetailsScreen extends Component {
 
   async onBackPress() {
     await this.props.secondDetailViewOpen(false);
-    this.props.navigation.goBack()
+    this.props.navigation.goBack();
   }
 
   _renderHeader() {
@@ -1873,7 +1874,7 @@ class TasksDetailsScreen extends Component {
 
   async navigateTo(item) {
     let isSecondDetailViewOpen = this.props.isSecondDetailViewOpen;
-    if(!isSecondDetailViewOpen){
+    if (!isSecondDetailViewOpen) {
       this.props.navigation.navigate('TasksSubDetailsScreen', {
         taskDetails: item,
         selectedProjectID: this.state.selectedProjectID,
@@ -1884,7 +1885,7 @@ class TasksDetailsScreen extends Component {
     }
   }
 
-  async navigateToSubTask(){
+  async navigateToSubTask() {
     let taskItem = this.state.taskItem;
     let parentID = taskItem.parentId;
     this.setState({dataLoading: false});
@@ -1901,12 +1902,12 @@ class TasksDetailsScreen extends Component {
       }
     } catch (error) {
       this.setState({dataLoading: false});
-    } 
+    }
   }
 
-  async changeScreen (item){
+  async changeScreen(item) {
     let isSecondDetailViewOpen = this.props.isSecondDetailViewOpen;
-    if(!isSecondDetailViewOpen){
+    if (!isSecondDetailViewOpen) {
       this.props.navigation.navigate('TasksSubDetailsScreen', {
         taskDetails: item,
         selectedProjectID: this.state.selectedProjectID,
@@ -2201,7 +2202,7 @@ class TasksDetailsScreen extends Component {
 
   async backPress() {
     await this.props.secondDetailViewOpen(false);
-    this.props.navigation.goBack()
+    this.props.navigation.goBack();
   }
 
   render() {
@@ -2312,15 +2313,15 @@ class TasksDetailsScreen extends Component {
                 <TouchableOpacity onPress={() => this.navigateToSubTask()}>
                   <View style={{flex: 1}}>
                     <Text style={styles.parentTaskText}>Parent Task</Text>
-                    <View style={{flex: 1},{flexDirection:'row'}}>
+                    <View style={({flex: 1}, {flexDirection: 'row'})}>
                       <Image
-                          style={styles.parentTasksCompletionIcon}
-                          source={
-                            this.state.parentTaskStatus == 'closed'
-                              ? icons.rightCircule
-                              : icons.greyOutlineCircule
-                          }
-                        />
+                        style={styles.parentTasksCompletionIcon}
+                        source={
+                          this.state.parentTaskStatus == 'closed'
+                            ? icons.rightCircule
+                            : icons.greyOutlineCircule
+                        }
+                      />
                       <Text style={styles.childTaskText}>
                         {this.state.parentTaskName}
                       </Text>
@@ -2679,7 +2680,7 @@ const styles = EStyleSheet.create({
     borderWidth: '0.4rem',
     borderColor: colors.lightgray,
     marginBottom: '8rem',
-    top: '10rem'
+    top: Platform.OS === 'ios' ? '10rem' : '0rem',
   },
   parentTaskView: {
     flexDirection: 'row',
@@ -2875,7 +2876,7 @@ const styles = EStyleSheet.create({
     alignItems: 'center',
     borderRadius: '5rem',
     marginBottom: '20rem',
-    top: '10rem',
+    top: Platform.OS === 'ios' ? '10rem' : '0rem',
   },
   updateNotesText: {
     color: colors.white,
@@ -3032,7 +3033,7 @@ const styles = EStyleSheet.create({
   parentTasksCompletionIcon: {
     width: '15rem',
     height: '15rem',
-    marginRight : '5rem'
+    marginRight: '5rem',
   },
 });
 
@@ -3044,7 +3045,7 @@ const mapStateToProps = state => {
     deleteTaskErrorMessage: state.project.deleteTaskErrorMessage,
     allTaskByProjectLoading: state.project.allTaskByProjectLoading,
     allTaskByProject: state.project.allTaskByProject,
-    isSecondDetailViewOpen : state.project.isSecondDetailViewOpen,
+    isSecondDetailViewOpen: state.project.isSecondDetailViewOpen,
   };
 };
 export default connect(
