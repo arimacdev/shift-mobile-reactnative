@@ -58,11 +58,13 @@ class NoInternetModal extends Component {
         style={styles.modalStyle}>
         <View style={styles.modalMainView}>
           <View style={styles.modalHeaderView}>
+          <View>
             <Image
               style={styles.iconStyle}
               source={icons.appIcon}
               resizeMode="contain"
             />
+            </View>
             <View>
               <Text style={styles.modalHeadderText}>No Internet</Text>
             </View>
@@ -105,7 +107,7 @@ const styles = EStyleSheet.create({
   modalHeadderText: {
     fontSize: '20rem',
     fontFamily: 'CircularStd-Medium',
-    marginLeft: '20rem',
+    marginLeft: Platform.OS=='ios'? '30rem': '20rem',
   },
   currentVersion: {
     marginTop: '10rem',

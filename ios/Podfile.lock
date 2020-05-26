@@ -245,6 +245,8 @@ PODS:
     - React
   - react-native-image-picker (2.3.1):
     - React
+  - react-native-netinfo (5.9.1):
+    - React
   - React-RCTActionSheet (0.62.1):
     - React-Core/RCTActionSheetHeaders (= 0.62.1)
   - React-RCTAnimation (0.62.1):
@@ -350,6 +352,7 @@ DEPENDENCIES:
   - react-native-app-auth (from `../node_modules/react-native-app-auth`)
   - react-native-document-picker (from `../node_modules/react-native-document-picker`)
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
+  - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../node_modules/react-native/Libraries/NativeAnimation`)
   - React-RCTBlob (from `../node_modules/react-native/Libraries/Blob`)
@@ -422,6 +425,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-document-picker"
   react-native-image-picker:
     :path: "../node_modules/react-native-image-picker"
+  react-native-netinfo:
+    :path: "../node_modules/@react-native-community/netinfo"
   React-RCTActionSheet:
     :path: "../node_modules/react-native/Libraries/ActionSheetIOS"
   React-RCTAnimation:
@@ -491,6 +496,7 @@ SPEC CHECKSUMS:
   react-native-app-auth: 048f9ea8c2358ce1207207a0e74fb16563a3a2bd
   react-native-document-picker: dd96ce05bf1453b110d7a3912097bf6d298d2cb6
   react-native-image-picker: 668e72d0277dc8c12ae90e835507c1eddd2e4f85
+  react-native-netinfo: fdb53d6a0638f5cf46eea07e84dc991adae982cd
   React-RCTActionSheet: af8f28dd82fec89b8fe29637b8c779829e016a88
   React-RCTAnimation: 0d21fff7c20fb8ee41de5f2ebb63221127febd96
   React-RCTBlob: 9496bd93130b22069bfbc5d35e98653dae7c35c6
