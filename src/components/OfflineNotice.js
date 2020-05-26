@@ -4,6 +4,7 @@ import { View, Text, Dimensions,Image } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import NetInfo from "@react-native-community/netinfo";
 import colors from '../config/colors';
+import NoInternetModal from '../components/NoInternetModal';
 
 const { width,height } = Dimensions.get('window');
 const entireScreenWidth = Dimensions.get('window').width;
@@ -50,7 +51,9 @@ class OfflineNotice extends Component {
 
     render() {
         if (!this.state.isConnected) {
-            return <MiniOfflineSign />;
+            return <NoInternetModal
+            showModal={this.state.isConnected}
+          />;
         }
         return null;
     }
@@ -58,7 +61,7 @@ class OfflineNotice extends Component {
 
 const styles = EStyleSheet.create({
     offlineContainer: {
-        backgroundColor: colors.white,
+        backgroundColor: 'rgba(0,0,0,0.8)',
         height: height,
         elevation: 8,
         justifyContent: 'center',
