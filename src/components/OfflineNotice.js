@@ -52,7 +52,7 @@ class OfflineNotice extends Component {
     render() {
         if (!this.state.isConnected) {
             return <NoInternetModal
-            showModal={this.state.isConnected}
+            showModal={!this.state.isConnected}
           />;
         }
         return null;

@@ -16,6 +16,7 @@ const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
 import Modal from 'react-native-modal';
 import icons from '../assest/icons/icons';
+import AndroidOpenSettings from 'react-native-android-open-settings'
 
 class NoInternetModal extends Component {
   constructor(props) {
@@ -44,7 +45,7 @@ class NoInternetModal extends Component {
 
   onSettingsPress() {
     if (Platform.OS == 'android') {
-        Linking.openURL('app-settings:');
+        AndroidOpenSettings.generalSettings()
       } else {
         Linking.openURL('app-settings:');
       }  
