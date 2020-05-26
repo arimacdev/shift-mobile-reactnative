@@ -19,6 +19,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import Loader from '../../../components/Loader';
 import {NavigationEvents} from 'react-navigation';
 import {Icon} from 'native-base';
+import EmptyListView from '../../../components/EmptyListView';
 
 let dropData = [
   {
@@ -268,6 +269,9 @@ class ProjectsScreen extends Component {
           data={projects}
           renderItem={({item}) => this.renderProjectList(item)}
           keyExtractor={item => item.projId}
+          // ListEmptyComponent={
+          //   <EmptyListView/>
+          // }
         />
         {projectsLoading && <Loader />}
       </View>

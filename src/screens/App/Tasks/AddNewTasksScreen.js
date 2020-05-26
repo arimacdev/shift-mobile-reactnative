@@ -130,7 +130,9 @@ class AddNewTasksScreen extends Component {
       parentTaskStatus: 'No parent',
       parentTaskId: '',
       selectedOperarionalId: '',
-      selectedOperarionalId: 'general'
+      selectedOperarionalId: 'general',
+      viewSprint: true,
+      selectSprintName : ''
     };
   }
 
@@ -474,10 +476,6 @@ class AddNewTasksScreen extends Component {
     }
   }
 
-
-
-
-
   renderDatePicker() {
     if (Platform.OS == 'ios') {
       return (
@@ -675,7 +673,49 @@ class AddNewTasksScreen extends Component {
     let parentTaskId = data[index].id;
     let parentTaskName = data[index].value;
     this.setState({ parentTaskStatus: parentTaskName, parentTaskId: parentTaskId });
+    if(parentTaskName && parentTaskName == 'No parent'){
+      this.setState({ viewSprint: true })
+    }else{
+      this.setState({ viewSprint: false,sprintId : '' });
+      this.setRelevantSprint(parentTaskId);
+    }
   };
+
+  async setRelevantSprint(parentTaskId){
+    let selectedProjectID = this.props.selectedProjectID;
+    this.setState({dataLoading: true});
+    try {
+      let taskResult = await APIServices.getProjecTaskData(
+        selectedProjectID,
+        parentTaskId,
+      );
+      if (taskResult.message == 'success') {
+        this.setSprintId(taskResult);
+        this.setState({dataLoading: false});
+      } else {
+        this.setState({dataLoading: false});
+      }
+    } catch (error) {
+      this.setState({dataLoading: false});
+    }
+  };
+
+  setSprintId (taskResult){
+    let dropSprintData = this.state.dropSprintData;
+    let sprintId = taskResult.data.sprintId;
+    this.setState({sprintId: sprintId});
+    let result = dropSprintData.find( ({ id }) => id == sprintId );
+    if(result != undefined){
+      this.setState({
+        selectSprintName : result.value
+      });
+    }
+    if(sprintId == 'default'){
+      this.setState({
+        selectSprintName : 'Default'
+      });
+    }
+  }
 
   selectSprintStatus = (value, index, data) => {
     let sprintId = data[index].id;
@@ -785,6 +825,8 @@ class AddNewTasksScreen extends Component {
     let addFileTaskLoading = this.props.addFileTaskLoading;
     let addTaskToProjectLoading = this.props.addTaskToProjectLoading;
     let dropSprintData = this.props.dropSprintData;
+    let viewSprint = this.state.viewSprint;
+    let selectSprintName = this.state.selectSprintName;
 
     return (
       <ScrollView style={{ marginBottom: 90 }}>
@@ -918,31 +960,39 @@ class AddNewTasksScreen extends Component {
         </View>
 
         <View style={styles.taskFieldView}>
-          <Dropdown
-            style={{ paddingLeft: 5 }}
-            label=""
-            labelFontSize={0}
-            fontSize={13}
-            data={this.state.dropSprintData}
-            textColor={colors.gray}
-            error={''}
-            animationDuration={0.5}
-            containerStyle={{ width: '100%' }}
-            overlayStyle={{ width: '100%' }}
-            pickerStyle={styles.dropPickerStyle}
-            dropdownPosition={0}
-            value={this.state.sprintStatus}
-            itemColor={'black'}
-            selectedItemColor={'black'}
-            dropdownOffset={{ top: 10 }}
-            baseColor={colors.projectBgColor}
-            // onChangeText={value => this.selectSprintStatus(value)}
-            onChangeText={this.selectSprintStatus}
-            // renderBase={this.renderBase}
-            renderAccessory={this.renderBase}
-            itemTextStyle={{ marginLeft: 15 }}
-            itemPadding={10}
-          />
+          {
+            viewSprint ? 
+              <Dropdown
+                style={{ paddingLeft: 5 }}
+                label=""
+                labelFontSize={0}
+                fontSize={13}
+                data={this.state.dropSprintData}
+                textColor={colors.gray}
+                error={''}
+                animationDuration={0.5}
+                containerStyle={{ width: '100%' }}
+                overlayStyle={{ width: '100%' }}
+                pickerStyle={styles.dropPickerStyle}
+                dropdownPosition={0}
+                value={this.state.sprintStatus}
+                itemColor={'black'}
+                selectedItemColor={'black'}
+                dropdownOffset={{ top: 10 }}
+                baseColor={colors.projectBgColor}
+                // onChangeText={value => this.selectSprintStatus(value)}
+                onChangeText={this.selectSprintStatus}
+                // renderBase={this.renderBase}
+                renderAccessory={this.renderBase}
+                itemTextStyle={{ marginLeft: 15 }}
+                itemPadding={10}
+              />
+              :
+              <Text style={styles.sprintText}>
+                {selectSprintName}
+              </Text>
+          }
+          
         </View>
 
         <TouchableOpacity
@@ -1236,7 +1286,12 @@ const styles = EStyleSheet.create({
     width: '89.5%',
     marginTop: '64rem',
     marginLeft: '13rem',
-  }
+  },
+  sprintText: {
+    fontSize: '12rem',
+    color: colors.gray,
+    fontFamily: 'CircularStd-Book',
+  },
 });
 
 const mapStateToProps = state => {

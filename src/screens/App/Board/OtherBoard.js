@@ -216,14 +216,14 @@ class OtherBoard extends Component {
                 <FadeIn>
                     <Image
                         source={{ uri: userImage }}
-                        style={{ width: 24, height: 24, borderRadius: 24 / 2, top: 50, left: 4 }}
+                        style={{ width: 24, height: 24, borderRadius: 24 / 2, top: EStyleSheet.value('50rem'), left: 4 }}
                     />
                 </FadeIn>
             );
         } else {
             return (
                 <Image
-                    style={{ width: 24, height: 24, borderRadius: 24 / 2, top: 50, left: 4 }}
+                    style={{ width: 24, height: 24, borderRadius: 24 / 2, top:  EStyleSheet.value('50rem'), left: 4 }}
                     source={require('../../../asserts/img/defult_user.png')}
                 />
             );
