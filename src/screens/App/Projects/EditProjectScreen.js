@@ -77,7 +77,9 @@ class EditProjectScreen extends Component {
       showPicker: false,
       showTimePicker: false,
       selectedDate: '',
+      selectedTime: '',
       date: new Date(),
+      time: new Date(),
       selectedDateReminder: '',
       selectedTimeReminder: '',
       dateReminder: new Date(),
@@ -105,7 +107,7 @@ class EditProjectScreen extends Component {
       projectStatusValue: '',
       startDateChanged: false,
       endDateChanged: false,
-      projectAlias:'',
+      projectAlias: '',
     };
   }
 
@@ -176,7 +178,7 @@ class EditProjectScreen extends Component {
         projectID: projectData.data.projectId,
         projectName: projectData.data.projectName,
         projectClient: projectData.data.clientId,
-        projectAlias : projectData.data.projectAlias,
+        projectAlias: projectData.data.projectAlias,
         //projectStartDate : startDate,
         //projectEndDate : endDate,
         //projectStatus : projectStatus,
@@ -365,6 +367,11 @@ class EditProjectScreen extends Component {
           startDateChanged: true,
         });
       }
+    } else {
+      this.setState({
+        showPicker: false,
+        showTimePicker: false,
+      });
     }
   }
 
@@ -385,12 +392,17 @@ class EditProjectScreen extends Component {
       } else {
         this.setState({
           projectStartTime: newTime,
-          selectedTimeReminder: newTime,
+          selectedTime: newTime,
           showPicker: false,
           showTimePicker: false,
-          timeReminder: new Date(selectedTime),
+          time: new Date(selectedTime),
         });
       }
+    } else {
+      this.setState({
+        showPicker: false,
+        showTimePicker: false,
+      });
     }
   }
 
@@ -411,7 +423,11 @@ class EditProjectScreen extends Component {
         <DateTimePicker
           testID="dateTimePicker"
           timeZoneOffsetInMinutes={0}
-          value={this.state.date}
+          value={
+            this.state.reminder == true
+              ? this.state.timeReminder
+              : this.state.time
+          }
           mode={'time'}
           is24Hour={true}
           display="default"
@@ -500,7 +516,7 @@ class EditProjectScreen extends Component {
         projectStatus,
         startDateChanged,
         endDateChanged,
-        projectAlias
+        projectAlias,
       )
     ) {
       let IsoStartDate = projectStartDateValue
@@ -524,7 +540,7 @@ class EditProjectScreen extends Component {
           IsoStartDate,
           IsoSEndDate,
           projectStatusValue,
-          projectAlias
+          projectAlias,
         );
       });
     }
@@ -538,7 +554,7 @@ class EditProjectScreen extends Component {
     projectStatus,
     startDateChanged,
     endDateChanged,
-    projectAlias
+    projectAlias,
   ) {
     if (!projectName && _.isEmpty(projectName)) {
       this.showAlert('', 'Please Enter the Project Name');
@@ -550,7 +566,7 @@ class EditProjectScreen extends Component {
     }
 
     if (!projectAlias && _.isEmpty(projectAlias)) {
-      this.showAlert("", "Please enter the project alias");
+      this.showAlert('', 'Please enter the project alias');
       return false;
     }
 
@@ -691,11 +707,11 @@ class EditProjectScreen extends Component {
           </View>
           <View style={[styles.taskFieldView]}>
             <TextInput
-              style={[styles.textInput, { width: '95%' }]}
+              style={[styles.textInput, {width: '95%'}]}
               placeholder={'Project Alias'}
               value={projectAlias}
               maxLength={6}
-              onChangeText={projectAlias => this.setState({ projectAlias })}
+              onChangeText={projectAlias => this.setState({projectAlias})}
             />
           </View>
           <View style={styles.taskFieldView}>
@@ -834,7 +850,7 @@ const styles = EStyleSheet.create({
     flex: 1,
   },
   scrollView: {
-    marginBottom: height - 600,
+    marginBottom: Platform.OS == 'ios' ? height - 600 : height - 510,
     flex: 1,
   },
   titleView: {
@@ -1014,7 +1030,7 @@ const styles = EStyleSheet.create({
     position: 'absolute',
     bottom: 0,
     width: '100%',
-    marginBottom: 15,
+    marginBottom: '15rem',
   },
   projectFilterStyle: {
     width: '89.5%',
