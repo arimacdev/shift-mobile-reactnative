@@ -59,6 +59,11 @@ class ForceUpdateModal extends Component {
     // this.onCloseTaskModal();
   }
 
+  onCanclePress() {
+    this.props.checkUserStatus();
+    this.onCloseTaskModal();
+  }
+
   render() {
     return (
       <Modal
@@ -66,13 +71,18 @@ class ForceUpdateModal extends Component {
         style={styles.modalStyle}>
         <View style={styles.modalMainView}>
           <View style={styles.modalHeaderView}>
-            <Image
-              style={styles.iconStyle}
-              source={icons.appIcon}
-              resizeMode="contain"
-            />
+            <View style={styles.iconBorderStyle}>
+              <Image
+                style={styles.iconStyle}
+                source={icons.appIcon}
+                resizeMode="contain"
+              />
+            </View>
             <View>
-              <Text style={styles.modalHeadderText}>Force Update</Text>
+              <Text style={styles.modalHeadderText}>
+                {this.props.details.force_update ? 'Force Update' : 'Update'} -
+                Arimac PM tool
+              </Text>
               <Text style={styles.currentVersion}>
                 Current version : {this.props.details.current_version}
               </Text>
@@ -93,6 +103,13 @@ class ForceUpdateModal extends Component {
               onPress={() => this.onUpdatePress()}>
               <Text style={styles.updateTextStyle}>Update</Text>
             </TouchableOpacity>
+            {!this.props.details.force_update && (
+              <TouchableOpacity
+                style={styles.cancelStyle}
+                onPress={() => this.onCanclePress()}>
+                <Text style={styles.cancelTextStyle}>Cancel</Text>
+              </TouchableOpacity>
+            )}
           </View>
         </View>
       </Modal>
@@ -120,7 +137,8 @@ const styles = EStyleSheet.create({
   modalHeadderText: {
     fontSize: '16rem',
     fontFamily: 'CircularStd-Medium',
-    marginLeft: '20rem',
+    marginHorizontal: '20rem',
+    fontWeight: 'bold',
   },
   currentVersion: {
     marginTop: '10rem',
@@ -140,7 +158,7 @@ const styles = EStyleSheet.create({
     marginBottom: '20rem',
     fontSize: '12rem',
     fontFamily: 'CircularStd-Medium',
-    marginLeft: '20rem',
+    marginHorizontal: '20rem',
     color: colors.black,
   },
   ButtonViewStyle: {
@@ -165,6 +183,27 @@ const styles = EStyleSheet.create({
     color: colors.white,
     textAlign: 'center',
     fontFamily: 'CircularStd-Medium',
+  },
+  cancelStyle: {
+    flex: 1,
+    height: '45rem',
+    marginLeft: '10rem',
+    backgroundColor: colors.lightRed,
+    borderRadius: '5rem',
+    paddingHorizontal: '40rem',
+    paddingVertical: '10rem',
+    justifyContent: 'center',
+  },
+  cancelTextStyle: {
+    fontSize: '15rem',
+    color: colors.white,
+    textAlign: 'center',
+    fontFamily: 'CircularStd-Medium',
+  },
+  iconBorderStyle: {
+    borderRadius: '10rem',
+    borderColor: colors.gray,
+    borderWidth: '0.5rem',
   },
   iconStyle: {
     width: '60rem',

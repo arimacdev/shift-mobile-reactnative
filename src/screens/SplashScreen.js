@@ -82,13 +82,9 @@ class SplashScreen extends Component {
       );
       if (result.message == 'success') {
         let response = result.data;
-        if (
-          response.force_update &&
-          response.latest_version > response.current_version
-        ) {
-          //if(true){
+        if (response.latest_version > response.current_version) {
           this.setState({
-            forceUpdate: response.force_update,
+            forceUpdate: true,
             details: response,
             dataLoading: false,
           });
@@ -173,6 +169,7 @@ class SplashScreen extends Component {
         <ForceUpdateModal
           showForceUpdateModal={this.state.forceUpdate}
           details={this.state.details}
+          checkUserStatus={() => this.checkUserStatus(this)}
         />
         {this.state.dataLoading && <Loader />}
       </View>
