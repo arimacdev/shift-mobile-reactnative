@@ -50,7 +50,7 @@ class SplashScreen extends Component {
 
   componentDidMount() {
     AppState.addEventListener('change', this._handleAppStateChange);
-    if(Platform.OS == 'ios') {
+    if (Platform.OS == 'ios') {
       this.getMobileVersionStatus();
     }
   }
@@ -62,7 +62,10 @@ class SplashScreen extends Component {
   }
 
   _handleAppStateChange = nextAppState => {
-    if (this.state.appState.match(/inactive|background/) || nextAppState === "active") {
+    if (
+      this.state.appState.match(/inactive|background/) ||
+      nextAppState === 'active'
+    ) {
       this.getMobileVersionStatus();
     }
     this.setState({appState: nextAppState});
@@ -73,11 +76,17 @@ class SplashScreen extends Component {
     let version = DeviceInfo.getBuildNumber();
     this.setState({dataLoading: true});
     try {
-      let result = await APIServices.getMobileVersionStatusData(platform, version);
+      let result = await APIServices.getMobileVersionStatusData(
+        platform,
+        version,
+      );
       if (result.message == 'success') {
         let response = result.data;
-        if (response.force_update && response.latest_version > response.current_version) {
-        //if(true){  
+        if (
+          response.force_update &&
+          response.latest_version > response.current_version
+        ) {
+          //if(true){
           this.setState({
             forceUpdate: response.force_update,
             details: response,
@@ -90,10 +99,9 @@ class SplashScreen extends Component {
       } else {
         this.setState({dataLoading: false});
       }
-    }catch(error){
+    } catch (error) {
       this.setState({dataLoading: false});
     }
-
   }
 
   async checkUserStatus() {
