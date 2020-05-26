@@ -25,20 +25,19 @@ class ProjectsDetailsScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      dataLoading : false,
-      projectDatesDetails : [],
-      projectTaskDetails : [],
-      projectName : '',
-      projectClient : '',
-      projectStatus : '',
+      dataLoading: false,
+      projectDatesDetails: [],
+      projectTaskDetails: [],
+      projectName: '',
+      projectClient: '',
+      projectStatus: '',
       projectID: '',
     };
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    if(prevProps.isActive !== this.props.isActive
-      && this.props.isActive){
-        this.fetchData();
+    if (prevProps.isActive !== this.props.isActive && this.props.isActive) {
+      this.fetchData();
     }
   }
 
@@ -46,120 +45,116 @@ class ProjectsDetailsScreen extends Component {
     this.fetchData();
   }
 
-  async fetchData (){
-
+  async fetchData() {
     let selectedProjectID = this.props.selectedProjectID;
-    this.setState({dataLoading:true});
-    projectTaskDetailsData = await APIServices.getProjectTaskDetails(selectedProjectID);
-    if(projectTaskDetailsData.message == 'success'){
+    this.setState({dataLoading: true});
+    projectTaskDetailsData = await APIServices.getProjectTaskDetails(
+      selectedProjectID,
+    );
+    if (projectTaskDetailsData.message == 'success') {
       this.setProjectTaskData(projectTaskDetailsData.data);
       projectData = await APIServices.getProjectData(selectedProjectID);
-      if(projectData.message == 'success'){
+      if (projectData.message == 'success') {
         this.setProjectData(projectData.data);
-        this.setState({dataLoading:false});
-      }else{
-        this.setState({dataLoading:false});
-      }  
-    }else{
-      this.setState({dataLoading:false});
+        this.setState({dataLoading: false});
+      } else {
+        this.setState({dataLoading: false});
+      }
+    } else {
+      this.setState({dataLoading: false});
     }
   }
 
-  setProjectTaskData(data){
-     //set projectTaskData to state
-     let taskData = [];
-     // today due task
-     taskData.push({
-       text: data.tasksDueToday.toString(),
-       details: 'Due today',
-       icon: icons.calenderWhite,
-       color: '#ffb129',
-     }),
-
-     // Overdue task
-     taskData.push({
-       text: data.tasksOverDue.toString(),
-       details: 'Overdue',
-       icon: icons.warningWhite,
-       color: '#e65c62',
-     }),
-
-     // left task
-     taskData.push({
-       text: data.tasksLeft.toString(),
-       details: 'Left',
-       icon: icons.clockWhite,
-       color: '#704cf1',
-     }),
-
-     // today due task
-     taskData.push({
-       text: data.tasksAssigned.toString(),
-       details: 'Assigned to you',
-       icon: icons.userWhiteProj,
-       color: '#67d2e0',
-     }),
-
-     // Completed task
-     taskData.push({
-       text: data.tasksCompleted.toString(),
-       details: 'Completed',
-       icon: icons.rightWhite,
-       color: '#6fcd17',
-     }),
-
-     this.setState({
-       projectTaskDetails : taskData
-     });
+  setProjectTaskData(data) {
+    //set projectTaskData to state
+    let taskData = [];
+    // today due task
+    taskData.push({
+      text: data.tasksDueToday.toString(),
+      details: 'Due today',
+      icon: icons.calenderWhite,
+      color: '#ffb129',
+    }),
+      // Overdue task
+      taskData.push({
+        text: data.tasksOverDue.toString(),
+        details: 'Overdue',
+        icon: icons.warningWhite,
+        color: '#e65c62',
+      }),
+      // left task
+      taskData.push({
+        text: data.tasksLeft.toString(),
+        details: 'Left',
+        icon: icons.clockWhite,
+        color: '#704cf1',
+      }),
+      // today due task
+      taskData.push({
+        text: data.tasksAssigned.toString(),
+        details: 'Assigned to you',
+        icon: icons.userWhiteProj,
+        color: '#67d2e0',
+      }),
+      // Completed task
+      taskData.push({
+        text: data.tasksCompleted.toString(),
+        details: 'Completed',
+        icon: icons.rightWhite,
+        color: '#6fcd17',
+      }),
+      this.setState({
+        projectTaskDetails: taskData,
+      });
   }
 
-  setProjectData(data){
+  setProjectData(data) {
     this.setState({
-      projectName : data.projectName,
-      projectClient : data.clientId,
-      projectID  : data.projectId
+      projectName: data.projectName,
+      projectClient: data.clientId,
+      projectID: data.projectId,
     });
-    this.setProjectStatus(data.projectStatus)
+    this.setProjectStatus(data.projectStatus);
     this.setProjectsDatesView(data);
   }
 
-  setProjectStatus(status){
+  setProjectStatus(status) {
     let statusValue = '';
     switch (status) {
-        case 'ongoing':
-              statusValue = 'Ongoing'
-              break;
-        case 'support':
-              statusValue = 'Support'
-              break;
-        case 'finished':
-              statusValue = 'Finished'
-              break;
-        case 'presales':
-              statusValue = 'Presales'
-              break;      
-        case 'presalesPD':  
-              statusValue = 'Project Discovery'
-              break;
-        case 'preSalesQS':
-              statusValue = 'Quotation Submission'
-              break;
-        case 'preSalesN':
-              statusValue = 'Negotiation'
-              break;
-        case 'preSalesC':
-              statusValue = 'Confirmed'
-              break;
-        case 'preSalesL' : 
-              statusValue = 'Lost'
-              break;
-      }
-      this.setState({
-        projectStatus : statusValue
-      })
+      case 'ongoing':
+        statusValue = 'Ongoing';
+        break;
+      case 'support':
+        statusValue = 'Support';
+        break;
+      case 'finished':
+        statusValue = 'Finished';
+        break;
+      case 'presales':
+        statusValue = 'Presales';
+        break;
+      case 'presalesPD':
+        statusValue = 'Project Discovery';
+        break;
+      case 'preSalesQS':
+        statusValue = 'Quotation Submission';
+        break;
+      case 'preSalesN':
+        statusValue = 'Negotiation';
+        break;
+      case 'preSalesC':
+        statusValue = 'Confirmed';
+        break;
+      case 'preSalesL':
+        statusValue = 'Lost';
+        break;
+    }
+    this.setState({
+      projectStatus: statusValue,
+    });
   }
 
-  setProjectsDatesView(data){
+  setProjectsDatesView(data) {
     //set project dates to state
     let projectsDatesArray = [];
     let startDate = data.projectStartDate;
@@ -178,44 +173,65 @@ class ProjectsDetailsScreen extends Component {
     endNewDate = moment.parseZone(endDate).format('Do MMMM YYYY');
     endNewDateValue = moment.parseZone(endDate).format('DD MM YYYY');
 
-    todayValue =  moment.parseZone(new Date()).format('DD MM YYYY');
+    todayValue = moment.parseZone(new Date()).format('DD MM YYYY');
 
-    let startDateMomentValue  = moment(startNewDateValue, "DD MM YYYY");
-    let endDateMomentValue  = moment(endNewDateValue, "DD MM YYYY");
-    let todatMomentValue  = moment(todayValue, "DD MM YYYY");
+    let startDateMomentValue = moment(startNewDateValue, 'DD MM YYYY');
+    let endDateMomentValue = moment(endNewDateValue, 'DD MM YYYY');
+    let todatMomentValue = moment(todayValue, 'DD MM YYYY');
 
-    let totalDatesEsstimated = endDateMomentValue.diff(startDateMomentValue, "days");
+    let totalDatesEsstimated = endDateMomentValue.diff(
+      startDateMomentValue,
+      'days',
+    );
     if (totalDatesEsstimated > 0 && totalDatesEsstimated < 30) {
-      let weeksTextEsstimated = Math.floor((parseInt(totalDatesEsstimated) / 7));
-      let dateTextEsstimated =  Math.floor((parseInt(totalDatesEsstimated) % 7));
-      datesTextEsstimated = weeksTextEsstimated.toString() + ' week(s)' + ' ' + dateTextEsstimated.toString() + ' day(s)'
-    }else if(totalDatesEsstimated > 0 && totalDatesEsstimated >= 30){
-      let monthsText = Math.floor((parseInt(totalDatesEsstimated) / 30));
-      let dateTextEsstimated = Math.floor((parseInt(totalDatesEsstimated) % 30));
-      datesTextEsstimated = monthsText.toString() + 'month(s)' + ' ' + dateTextEsstimated.toString() + 'day(s)'
-    }
-    else{
-      datesTextEsstimated = '0 days'
+      let weeksTextEsstimated = Math.floor(parseInt(totalDatesEsstimated) / 7);
+      let dateTextEsstimated = Math.floor(parseInt(totalDatesEsstimated) % 7);
+      datesTextEsstimated =
+        weeksTextEsstimated.toString() +
+        ' week(s)' +
+        ' ' +
+        dateTextEsstimated.toString() +
+        ' day(s)';
+    } else if (totalDatesEsstimated > 0 && totalDatesEsstimated >= 30) {
+      let monthsText = Math.floor(parseInt(totalDatesEsstimated) / 30);
+      let dateTextEsstimated = Math.floor(parseInt(totalDatesEsstimated) % 30);
+      datesTextEsstimated =
+        monthsText.toString() +
+        'month(s)' +
+        ' ' +
+        dateTextEsstimated.toString() +
+        'day(s)';
+    } else {
+      datesTextEsstimated = '0 days';
     }
 
-    let totalDatesAcctual = todatMomentValue.diff(startDateMomentValue, "days");
+    let totalDatesAcctual = todatMomentValue.diff(startDateMomentValue, 'days');
     if (totalDatesAcctual > 0 && totalDatesAcctual < 30) {
-      let weeksTextAcctual = Math.floor((parseInt(totalDatesAcctual) / 7));
-      let dateTextAcctual =  Math.floor((parseInt(totalDatesAcctual) % 7));
-      datesTextAcctual = weeksTextAcctual.toString() + ' week(s)' + ' ' + dateTextAcctual.toString() + ' day(s)'
-    }else if(totalDatesAcctual > 0 && totalDatesAcctual >= 30){
-      let monthsText = Math.floor((parseInt(totalDatesAcctual) / 30));
-      let dateTextAcctual = Math.floor((parseInt(totalDatesAcctual) % 30));
-      dateTextAcctual = monthsText.toString() + 'month(s)' + ' ' + dateTextAcctual.toString() + 'day(s)'
-    }
-    else{
-      datesTextAcctual = '0 days'
+      let weeksTextAcctual = Math.floor(parseInt(totalDatesAcctual) / 7);
+      let dateTextAcctual = Math.floor(parseInt(totalDatesAcctual) % 7);
+      datesTextAcctual =
+        weeksTextAcctual.toString() +
+        ' week(s)' +
+        ' ' +
+        dateTextAcctual.toString() +
+        ' day(s)';
+    } else if (totalDatesAcctual > 0 && totalDatesAcctual >= 30) {
+      let monthsText = Math.floor(parseInt(totalDatesAcctual) / 30);
+      let dateTextAcctual = Math.floor(parseInt(totalDatesAcctual) % 30);
+      dateTextAcctual =
+        monthsText.toString() +
+        'month(s)' +
+        ' ' +
+        dateTextAcctual.toString() +
+        'day(s)';
+    } else {
+      datesTextAcctual = '0 days';
     }
 
     projectsDatesArray.push(
       {
-      text: 'Project start date',
-      details: startNewDate,
+        text: 'Project start date',
+        details: startNewDate,
       },
       {
         text: 'Project end date',
@@ -232,9 +248,8 @@ class ProjectsDetailsScreen extends Component {
     );
 
     this.setState({
-      projectDatesDetails : projectsDatesArray
+      projectDatesDetails: projectsDatesArray,
     });
-
   }
 
   renderInnerList(item) {
@@ -286,16 +301,16 @@ class ProjectsDetailsScreen extends Component {
     this.fetchData();
   }
 
-  navigateToEditProject(){
+  navigateToEditProject() {
     let projectID = this.state.projectID;
     //props.navigation.navigate('EditProjectScreen',{projDetails:projectID});
-    NavigationService.navigate('EditProjectScreen', { projDetails: projectID });
+    NavigationService.navigate('EditProjectScreen', {projDetails: projectID});
   }
 
   render() {
     let projectDatesDetails = this.state.projectDatesDetails;
     let projectTaskDetails = this.state.projectTaskDetails;
-    let projectName = this.state.projectName
+    let projectName = this.state.projectName;
     let projectClient = this.state.projectClient;
     let projectStatus = this.state.projectStatus;
     let dataLoading = this.state.dataLoading;
@@ -310,7 +325,7 @@ class ProjectsDetailsScreen extends Component {
               <Text style={styles.textProjCompany}>{projectClient}</Text>
             </View>
             <View>
-              <TouchableOpacity onPress={()=>this.navigateToEditProject()}>
+              <TouchableOpacity onPress={() => this.navigateToEditProject()}>
                 <Image style={styles.editIcon} source={icons.editUser} />
               </TouchableOpacity>
             </View>
@@ -345,7 +360,7 @@ class ProjectsDetailsScreen extends Component {
           renderItem={({item, index}) => this.renderOuterList(item, index)}
           keyExtractor={item => item.projId}
         />
-        {dataLoading && <Loader/>}
+        {dataLoading && <Loader />}
       </ScrollView>
     );
   }
@@ -435,15 +450,15 @@ const styles = EStyleSheet.create({
   projectInnerText: {
     marginBottom: '3rem',
     fontSize: '10rem',
-    color : colors.loginGray,
+    color: colors.loginGray,
     fontFamily: 'CircularStd-Bold',
-    fontWeight: '400'
+    fontWeight: '400',
   },
   projectInnerDetailText: {
     color: colors.projectDetailsDate,
     fontSize: '10rem',
     fontFamily: 'CircularStd-Book',
-    fontWeight: '400'
+    fontWeight: '400',
   },
   projectOuterView: {
     backgroundColor: colors.projDetails,

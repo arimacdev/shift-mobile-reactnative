@@ -243,7 +243,6 @@ class ProjectsScreen extends Component {
         <NavigationEvents onWillFocus={payload => this.loadProjects(payload)} />
         <View style={styles.projectFilerView}>
           <Dropdown
-            // style={{}}
             label=""
             labelFontSize={0}
             data={dropData}
@@ -259,17 +258,11 @@ class ProjectsScreen extends Component {
             selectedItemColor={'black'}
             dropdownOffset={{top: 10}}
             baseColor={colors.lightBlue}
-            // renderBase={this.renderBase}
             renderAccessory={this.renderBase}
             itemTextStyle={{marginLeft: 15, fontFamily: 'CircularStd-Book'}}
             itemPadding={10}
             onChangeText={value => this.onFilter(value)}
           />
-          {/* <TouchableOpacity>
-                <View>
-                    <Text style={styles.textFilter}>Ongoing</Text>
-                </View>
-            </TouchableOpacity> */}
         </View>
         <FlatList
           data={projects}
@@ -285,17 +278,14 @@ class ProjectsScreen extends Component {
 const styles = EStyleSheet.create({
   backgroundImage: {
     flex: 1,
-    // backgroundColor: colors.pageBackGroundColor,
   },
   projectFilerView: {
     backgroundColor: colors.lightBlue,
     borderRadius: 5,
-    // width: '330rem',
     marginTop: '17rem',
     marginBottom: '12rem',
     flexDirection: 'row',
     alignItems: 'center',
-    // justifyContent: 'center',
     paddingHorizontal: '12rem',
     height: '45rem',
     marginHorizontal: '20rem',
@@ -307,7 +297,6 @@ const styles = EStyleSheet.create({
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'center',
-    // fontWeight: 'bold',
   },
   projectView: {
     backgroundColor: colors.projectBgColor,
