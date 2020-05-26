@@ -1124,6 +1124,7 @@ class MyTasksDetailsScreen extends Component {
       .then(response => {
         if (response.message == 'success') {
           this.setState({dataLoading: false});
+          this.fetchData(selectedTaskID);
         } else {
           this.setState({dataLoading: false});
           this.setDueDate(this.state.taskResult);
@@ -1157,6 +1158,7 @@ class MyTasksDetailsScreen extends Component {
       .then(response => {
         if (response.message == 'success') {
           this.setState({dataLoading: false});
+          this.fetchData(selectedTaskID);
         } else {
           this.setState({dataLoading: false});
           this.setReminderDate(this.state.taskResult);

@@ -996,7 +996,7 @@ class TasksDetailsScreen extends Component {
     let dateTimeMilliseconds = moment
       .parseZone(taskResult.data.taskDueDateAt)
       .valueOf();
-      
+
     let dateTime = new Date(
       dateTimeMilliseconds - moment().utcOffset() * MS_PER_MINUTE,
     );
@@ -1752,6 +1752,7 @@ class TasksDetailsScreen extends Component {
       .then(response => {
         if (response.message == 'success') {
           this.setState({dataLoading: false});
+          this.fetchData(projectID, taskID);
         } else {
           this.setState({dataLoading: false});
           this.setDueDate(this.state.taskResult);
@@ -1786,6 +1787,7 @@ class TasksDetailsScreen extends Component {
       );
       if (resultData.message == 'success') {
         this.setState({dataLoading: false});
+        this.fetchData(projectID, taskID);
       } else {
         this.setState({dataLoading: false});
         this.setReminderDate(this.state.taskResult);

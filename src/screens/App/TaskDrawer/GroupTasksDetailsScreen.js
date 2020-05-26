@@ -1355,6 +1355,7 @@ class GroupTasksDetailsScreen extends Component {
       .then(response => {
         if (response.message == 'success') {
           this.setState({dataLoading: false});
+          this.fetchData(selectedGroupTaskID, selectedTaskID);
         } else {
           this.setState({dataLoading: false});
           this.setDueDate(this.state.taskResult);
@@ -1389,6 +1390,7 @@ class GroupTasksDetailsScreen extends Component {
       );
       if (resultData.message == 'success') {
         this.setState({dataLoading: false});
+        this.fetchData(selectedGroupTaskID, selectedTaskID);
       } else {
         this.setState({dataLoading: false});
         this.setReminderDate(this.state.taskResult);
