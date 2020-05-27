@@ -8,6 +8,7 @@ import {
     TouchableOpacity,
     ScrollView,
     Dimensions,
+    Platform,
 } from 'react-native';
 import { connect } from 'react-redux';
 import * as actions from '../../../redux/actions';
@@ -295,7 +296,7 @@ class OtherBoard extends Component {
                     horizontal={true}
                     renderItem={this.renderItemMainTile.bind(this)}
                     keyExtractor={item => item.id}
-                    style={{marginBottom: EStyleSheet.value('260rem')}}
+                    style={{marginBottom: Platform.OS=='ios'? EStyleSheet.value('25rem'): EStyleSheet.value('260rem')}}
                 />
                 {this.state.dataLoading && <Loader/>}
             </View>
