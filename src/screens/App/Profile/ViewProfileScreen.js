@@ -29,13 +29,13 @@ import moment from 'moment';
 import ImagePicker from 'react-native-image-picker';
 
 const config = {
-  clientId: strings.slack.clientId, // found under App Credentials
-  clientSecret: strings.slack.clientSecret, // found under App Credentials
-  scopes: ['incoming-webhook,chat:write'], // choose any of the scopes set up in step 1
-  redirectUrl: 'io.identityserver.demo://oauthSlackredirect', // set up in step 2
+  clientId: strings.slack.clientId,
+  clientSecret: strings.slack.clientSecret,
+  scopes: ['incoming-webhook,chat:write'],
+  redirectUrl: strings.slack.redirectUrl,
   serviceConfiguration: {
-    authorizationEndpoint: 'https://slack.com/oauth/v2/authorize',
-    tokenEndpoint: 'https://slack.com/api/oauth.v2.access',
+    authorizationEndpoint: strings.slack.authorizationEndpoint,
+    tokenEndpoint: strings.slack.tokenEndpoint,
   },
   dangerouslyAllowInsecureHttpRequests: true,
 };
