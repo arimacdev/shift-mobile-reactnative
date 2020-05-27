@@ -31,7 +31,7 @@ import ImagePicker from 'react-native-image-picker';
 const config = {
   clientId: strings.slack.clientId,
   clientSecret: strings.slack.clientSecret,
-  scopes: ['incoming-webhook,chat:write'],
+  scopes: strings.slack.scopes,
   redirectUrl: strings.slack.redirectUrl,
   serviceConfiguration: {
     authorizationEndpoint: strings.slack.authorizationEndpoint,
