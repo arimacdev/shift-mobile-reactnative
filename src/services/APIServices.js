@@ -907,6 +907,11 @@ async function addSlackID(userID, authedUserID) {
   let userIDHeder = null;
   userIDHeder = await AsyncStorage.getItem('userID');
 
+  let headers = {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+  };
+
   return request(
     {
       url: ADD_SLACK_ID + '/' + userIDHeder + '/slack',

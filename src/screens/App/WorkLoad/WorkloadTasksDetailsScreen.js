@@ -67,14 +67,18 @@ class WorkloadTasksDetailsScreen extends Component {
     } = this.props;
     let workloadTasksDetails = params.workloadTasksDetails;
     let date =
-      workloadTasksDetails.dueDate !== null
-        ? moment(workloadTasksDetails.dueDate).format('Do MMMM YYYY')
+      workloadTasksDetails.taskDueDateAt !== null
+        ? moment(workloadTasksDetails.taskDueDateAt).format('Do MMMM YYYY')
         : '';
     this.setState({
       workloadTasksDetails: workloadTasksDetails,
-      duedate: 'Due on ' + date,
       taskNotes: workloadTasksDetails.taskNote,
     });
+    if(date == ''){
+      this.setState({duedate: 'Add Due Date'})
+    }else{
+      this.setState({duedate: 'Due on ' + date})
+    }
     this.setTaskStatus(workloadTasksDetails);
     this.fetchSubTasksData(
       params.projectId,

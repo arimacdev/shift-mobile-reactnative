@@ -17,8 +17,7 @@ const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
 import AsyncStorage from '@react-native-community/async-storage';
 import Loader from '../../../components/Loader';
-import { Icon } from 'native-base';
-
+import {Icon} from 'native-base';
 
 class ProjectsSearchScreen extends Component {
   constructor(props) {
@@ -66,69 +65,70 @@ class ProjectsSearchScreen extends Component {
     );
   }
 
-  folderIcon = function (item) {
+  folderIcon = function(item) {
     let color = '';
     switch (item.projectStatus) {
       case 'presales':
-            color = '#ff7043'
+        color = '#ff7043';
       case 'presalesPD':
-            color = '#ff7043'
+        color = '#ff7043';
       case 'preSalesQS':
-            color = '#ff7043'
+        color = '#ff7043';
       case 'preSalesN':
-            color = '#ff7043'
-      case 'preSalesC':  
-            color = '#ff7043'    
-          break;
+        color = '#ff7043';
+      case 'preSalesC':
+        color = '#ff7043';
+        break;
       case 'preSalesL':
-          color = '#ff7043' 
-          break;
+        color = '#ff7043';
+        break;
       case 'ongoing':
-          color = '#ffc212' 
-          break;
+        color = '#ffc212';
+        break;
       case 'support':
-          color = '#ed5ed1'   
-          break;
-      case 'finished' : 
-          color = '#0bafff' 
-          break    
+        color = '#ed5ed1';
+        break;
+      case 'finished':
+        color = '#0bafff';
+        break;
     }
     return (
-      <Icon name={'folder'} type={'Feather'} style={{ fontSize: EStyleSheet.value('22rem'), color: color, }} />
+      <Icon
+        name={'folder'}
+        type={'Feather'}
+        style={{fontSize: EStyleSheet.value('22rem'), color: color}}
+      />
     );
-   
-  }
+  };
 
-  colorCode = function (item) {
+  colorCode = function(item) {
     let color = '';
     switch (item.projectStatus) {
       case 'presales':
-            color = '#ff7043'
+        color = '#ff7043';
       case 'presalesPD':
-            color = '#ff7043'
+        color = '#ff7043';
       case 'preSalesQS':
-            color = '#ff7043'
+        color = '#ff7043';
       case 'preSalesN':
-            color = '#ff7043'
-      case 'preSalesC':  
-            color = '#ff7043'    
-          break;
+        color = '#ff7043';
+      case 'preSalesC':
+        color = '#ff7043';
+        break;
       case 'preSalesL':
-          color = '#ff7043' 
-          break;
+        color = '#ff7043';
+        break;
       case 'ongoing':
-          color = '#ffc212' 
-          break;
+        color = '#ffc212';
+        break;
       case 'support':
-          color = '#ed5ed1'   
-          break;
-      case 'finished' : 
-          color = '#0bafff' 
-          break    
-  }
-    return (
-      <View style={[styles.statusView, {backgroundColor: color}]}/>
-    );
+        color = '#ed5ed1';
+        break;
+      case 'finished':
+        color = '#0bafff';
+        break;
+    }
+    return <View style={[styles.statusView, {backgroundColor: color}]} />;
   };
 
   renderBase() {
@@ -179,7 +179,6 @@ class ProjectsSearchScreen extends Component {
 const styles = EStyleSheet.create({
   backgroundImage: {
     flex: 1,
-
   },
   projectFilerView: {
     backgroundColor: colors.projectBgColor,
@@ -200,7 +199,6 @@ const styles = EStyleSheet.create({
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'center',
-    // fontWeight: 'bold',
   },
   projectView: {
     backgroundColor: colors.projectBgColor,
