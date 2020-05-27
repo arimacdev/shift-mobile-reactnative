@@ -82,7 +82,7 @@ class SplashScreen extends Component {
       );
       if (result.message == 'success') {
         let response = result.data;
-        if (response.latest_version > version) {
+        if (response.latest_version > response.current_version) {
           this.setState({
             forceUpdate: true,
             details: response,
