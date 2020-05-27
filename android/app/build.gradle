@@ -135,7 +135,7 @@ android {
         versionCode 10000
         versionName "1.0"
         manifestPlaceholders = [
-             appAuthRedirectScheme: 'io.identityserver.demo'
+             appAuthRedirectScheme: 'com.arimacpmtool'
         ]
     }
     splits {
