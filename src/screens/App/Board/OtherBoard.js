@@ -154,7 +154,7 @@ class OtherBoard extends Component {
                 })
               }>
                 <View style={styles.sub_item}>
-                    <View style={{ flex: 1 }}>
+                    <View style={{ flex: 1,marginRight: EStyleSheet.value('5rem')}}>
                         {this.userIcon(data.item)}
                     </View>
                     <View style={{ flex: 6 }}>
