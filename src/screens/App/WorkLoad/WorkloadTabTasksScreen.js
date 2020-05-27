@@ -122,7 +122,7 @@ class WorkloadTabTasksScreen extends Component {
   };
 
   dateView = function(item) {
-    let date = item.dueDate;
+    let date = item.taskDueDateAt;
     let currentTime = moment().format();
     let dateText = '';
     let color = '';
