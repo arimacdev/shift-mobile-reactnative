@@ -37,6 +37,20 @@ const config = {
   dangerouslyAllowInsecureHttpRequests: true,
 };
 
+const configLive = {
+  issuer: 'https://project.arimaclanka.com/auth/realms/pm-tool',
+  serviceConfiguration: {
+    authorizationEndpoint:
+      'https://project.arimaclanka.com/auth/realms/pm-tool/protocol/openid-connect/auth',
+    tokenEndpoint:
+      'https://project.arimaclanka.com/auth/realms/pm-tool/protocol/openid-connect/token',
+  },
+  clientId: 'pmtool-frontend',
+  redirectUrl: 'com.arimacpmtool:/oauthredirect',
+  scopes: ['openid', 'roles', 'profile'],
+  dangerouslyAllowInsecureHttpRequests: true,
+};
+
 class SplashScreen extends Component {
   constructor(props) {
     super(props);
@@ -129,7 +143,7 @@ class SplashScreen extends Component {
 
   async initialUserLogin() {
     try {
-      const result = await authorize(config);
+      const result = await authorize(configLive);
       AsyncStorage.setItem('accessToken', result.accessToken);
       AsyncStorage.setItem('refreshToken', result.refreshToken);
       let decoded = jwtDecode(result.accessToken);

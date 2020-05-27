@@ -25,8 +25,21 @@ const request = async function (options, isHeader,headers) {
                 scopes : ['openid', 'roles', 'profile'],
                 dangerouslyAllowInsecureHttpRequests: true
             };
+            const configLive = {
+                issuer: 'https://project.arimaclanka.com/auth/realms/pm-tool',
+                serviceConfiguration: {
+                  authorizationEndpoint:
+                    'https://project.arimaclanka.com/auth/realms/pm-tool/protocol/openid-connect/auth',
+                  tokenEndpoint:
+                    'https://project.arimaclanka.com/auth/realms/pm-tool/protocol/openid-connect/token',
+                },
+                clientId: 'pmtool-frontend',
+                redirectUrl: 'com.arimacpmtool:/oauthredirect',
+                scopes: ['openid', 'roles', 'profile'],
+                dangerouslyAllowInsecureHttpRequests: true,
+            };
             try {
-                const result = await refresh(config, {
+                const result = await refresh(configLive, {
                     refreshToken: refreshToken,
                   });
                 AsyncStorage.setItem('accessToken', result.accessToken);
