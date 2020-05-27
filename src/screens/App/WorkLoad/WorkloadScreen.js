@@ -92,11 +92,12 @@ class WorkloadScreen extends Component {
   }
 
   async tabOpen() {
-    // AsyncStorage.getItem('userID').then(userID => {
-    //   if (userID) {
-    //     this.fetchData(userID);
-    //   }
-    // });
+    let loginUserType = this.props.loginUserType;
+    if(loginUserType == 'SUPER_ADMIN'){
+      this.fetchDataAdmin();
+    }else{
+      this.fetchDataUser();
+    }
   }
 
   userIcon = function(item) {
@@ -135,7 +136,7 @@ class WorkloadScreen extends Component {
       <TouchableOpacity
         style={index == 0 ? styles.mainContainerMy : styles.mainContainer}
         onPress={() => this.navigateToWorkloadTabScreen(item)}>
-        {/* <NavigationEvents onWillFocus={payload => this.tabOpen(payload)} /> */}
+        <NavigationEvents onWillFocus={payload => this.tabOpen(payload)} />
         <View style={index == 0 ? styles.userViewMy : styles.userView }>
           {this.userIcon(item)}
           <View style={{flex: 1}}>
