@@ -132,11 +132,12 @@ class SplashScreen extends Component {
       const result = await authorize(config);
       AsyncStorage.setItem('accessToken', result.accessToken);
       AsyncStorage.setItem('refreshToken', result.refreshToken);
+      let decoded = jwtDecode(result.accessToken);
+      let accessTokenExpirationDate = decoded.exp.toString();
       AsyncStorage.setItem(
         'accessTokenExpirationDate',
-        result.accessTokenExpirationDate,
+        accessTokenExpirationDate,
       );
-      let decoded = jwtDecode(result.accessToken);
       AsyncStorage.setItem('userID', decoded.userId);
       AsyncStorage.setItem('userLoggedIn', 'true');
       let userType = decoded.realm_access.roles[0]
