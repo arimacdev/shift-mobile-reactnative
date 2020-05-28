@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   PermissionsAndroid,
   Alert,
-  TextInput
+  TextInput,
 } from 'react-native';
 import {connect} from 'react-redux';
 import * as actions from '../../../redux/actions';
@@ -71,7 +71,7 @@ class ProjectFilesScreen extends Component {
       isFetching: false,
       Uploading: 0,
       indeterminate: false,
-      searchText : '',
+      searchText: '',
     };
   }
 
@@ -87,7 +87,7 @@ class ProjectFilesScreen extends Component {
     if (filesData.message == 'success') {
       this.setState({
         filesData: filesData.data,
-        allFilesData : filesData.data,
+        allFilesData: filesData.data,
         dataLoading: false,
         isFetching: false,
       });
@@ -150,7 +150,7 @@ class ProjectFilesScreen extends Component {
     }
   }
 
-  deleteFileAlert (item){
+  deleteFileAlert(item) {
     Alert.alert(
       'Delete File',
       'You are about to permanantly delete this file,\n If you are not sure, you can cancel this action.',
@@ -229,9 +229,12 @@ class ProjectFilesScreen extends Component {
   }
 
   onRefresh() {
-    this.setState({isFetching: false, filesData: [],allFilesData:[]}, function() {
-      this.fetchData(this.props.selectedProjectID);
-    });
+    this.setState(
+      {isFetching: false, filesData: [], allFilesData: []},
+      function() {
+        this.fetchData(this.props.selectedProjectID);
+      },
+    );
   }
 
   renderFilesList(item) {
