@@ -29,6 +29,7 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import DocumentPicker from 'react-native-document-picker';
 import moment from 'moment';
 import Loader from '../../../components/Loader';
+import ImagePicker from 'react-native-image-picker';
 
 let dropData = [
   {
@@ -79,13 +80,13 @@ let operationalData = [
 ];
 
 let issueTypeList = [
-  {value: 'Development', id: 'development'},
-  {value: 'QA', id: 'qa'},
-  {value: 'Design', id: 'design'},
-  {value: 'Bug', id: 'bug'},
-  {value: 'Operational', id: 'operational'},
-  {value: 'Pre-sales', id: 'preSales'},
-  {value: 'General', id: 'general'},
+  { value: 'Development', id: 'development' },
+  { value: 'QA', id: 'qa' },
+  { value: 'Design', id: 'design' },
+  { value: 'Bug', id: 'bug' },
+  { value: 'Operational', id: 'operational' },
+  { value: 'Pre-sales', id: 'preSales' },
+  { value: 'General', id: 'general' },
 ];
 
 class AddNewTasksScreen extends Component {
@@ -132,7 +133,7 @@ class AddNewTasksScreen extends Component {
       selectedOperarionalId: '',
       selectedOperarionalId: 'general',
       viewSprint: true,
-      selectSprintName : ''
+      selectSprintName: ''
     };
   }
 
@@ -231,7 +232,7 @@ class AddNewTasksScreen extends Component {
     this.setState({ dataLoading: true });
     let parentTaskData = await APIServices.getAllTaskInProjectsData(userID, selectedProjectID);
     if (parentTaskData.message == 'success') {
-      let taskModalData = [{id:0, value: 'No parent'},];
+      let taskModalData = [{ id: 0, value: 'No parent' },];
       for (let index = 0; index < parentTaskData.data.length; index++) {
         const element = parentTaskData.data[index];
         if (element.parentTask) {
@@ -607,6 +608,73 @@ class AddNewTasksScreen extends Component {
     );
   }
 
+  async iOSFilePicker() {
+    Alert.alert(
+      'Add Files', 'Select the file source',
+      [
+        { text: 'Camera', onPress: () => this.selectCamera() },
+        { text: 'Gallery', onPress: () => this.selectGallery() },
+        { text: 'Files', onPress: () => this.doumentPicker() },
+        { text: 'Cancel', onPress: () => console.log('Back') },
+      ],
+      {
+        cancelable: true
+      }
+    );
+  }
+
+  async selectCamera() {
+    const options = {
+      title: 'Select pictures',
+      storageOptions: {
+        skipBackup: true,
+        path: 'images',
+      },
+      quality: 0.2
+    };
+    ImagePicker.launchCamera(options, (res) => {
+      if (res.didCancel) {
+      } else if (res.error) {
+      } else if (res.customButton) {
+      } else {
+        this.setImageForFile(res)
+      }
+    });
+  }
+
+  async selectGallery() {
+    const options = {
+      title: 'Select pictures',
+      storageOptions: {
+        skipBackup: true,
+        path: 'images',
+      },
+      quality: 0.2
+    };
+
+    ImagePicker.launchImageLibrary(options, (res) => {
+      if (res.didCancel) {
+      } else if (res.error) {
+      } else if (res.customButton) {
+      } else {
+        this.setImageForFile(res)
+      }
+    });
+  }
+
+  async setImageForFile(res) {
+    this.onFilesCrossPress(res.uri);
+    await this.state.files.push({
+      uri: res.uri,
+      type: res.type, // mime type
+      name: 'Img ' + new Date().getTime(),
+      size: res.fileSize,
+      dateTime:
+        moment().format('YYYY/MM/DD') + ' | ' + moment().format('HH:mm'),
+    });
+    this.setState({ files: this.state.files });
+  }
+
   async doumentPicker() {
     // Pick multiple files
     try {
@@ -673,17 +741,17 @@ class AddNewTasksScreen extends Component {
     let parentTaskId = data[index].id;
     let parentTaskName = data[index].value;
     this.setState({ parentTaskStatus: parentTaskName, parentTaskId: parentTaskId });
-    if(parentTaskName && parentTaskName == 'No parent'){
+    if (parentTaskName && parentTaskName == 'No parent') {
       this.setState({ viewSprint: true })
-    }else{
-      this.setState({ viewSprint: false,sprintId : '' });
+    } else {
+      this.setState({ viewSprint: false, sprintId: '' });
       this.setRelevantSprint(parentTaskId);
     }
   };
 
-  async setRelevantSprint(parentTaskId){
+  async setRelevantSprint(parentTaskId) {
     let selectedProjectID = this.props.selectedProjectID;
-    this.setState({dataLoading: true});
+    this.setState({ dataLoading: true });
     try {
       let taskResult = await APIServices.getProjecTaskData(
         selectedProjectID,
@@ -691,28 +759,28 @@ class AddNewTasksScreen extends Component {
       );
       if (taskResult.message == 'success') {
         this.setSprintId(taskResult);
-        this.setState({dataLoading: false});
+        this.setState({ dataLoading: false });
       } else {
-        this.setState({dataLoading: false});
+        this.setState({ dataLoading: false });
       }
     } catch (error) {
-      this.setState({dataLoading: false});
+      this.setState({ dataLoading: false });
     }
   };
 
-  setSprintId (taskResult){
+  setSprintId(taskResult) {
     let dropSprintData = this.state.dropSprintData;
     let sprintId = taskResult.data.sprintId;
-    this.setState({sprintId: sprintId});
-    let result = dropSprintData.find( ({ id }) => id == sprintId );
-    if(result != undefined){
+    this.setState({ sprintId: sprintId });
+    let result = dropSprintData.find(({ id }) => id == sprintId);
+    if (result != undefined) {
       this.setState({
-        selectSprintName : result.value
+        selectSprintName: result.value
       });
     }
-    if(sprintId == 'default'){
+    if (sprintId == 'default') {
       this.setState({
-        selectSprintName : 'Default'
+        selectSprintName: 'Default'
       });
     }
   }
@@ -961,7 +1029,7 @@ class AddNewTasksScreen extends Component {
 
         <View style={styles.taskFieldView}>
           {
-            viewSprint ? 
+            viewSprint ?
               <Dropdown
                 style={{ paddingLeft: 5 }}
                 label=""
@@ -992,7 +1060,7 @@ class AddNewTasksScreen extends Component {
                 {selectSprintName}
               </Text>
           }
-          
+
         </View>
 
         <TouchableOpacity
@@ -1031,7 +1099,7 @@ class AddNewTasksScreen extends Component {
             />
           </View>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => this.doumentPicker()}>
+        <TouchableOpacity onPress={() => Platform.OS == 'ios' ? this.iOSFilePicker() : this.doumentPicker()}>
           {this.state.files.length > 0 ? (
             <View
               style={[
@@ -1282,7 +1350,7 @@ const styles = EStyleSheet.create({
   subTitleText: {
     fontFamily: 'CircularStd-Book',
   },
-  dropPickerStyle:{
+  dropPickerStyle: {
     width: '89.5%',
     marginTop: '64rem',
     marginLeft: '13rem',

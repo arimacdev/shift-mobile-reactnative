@@ -21,7 +21,7 @@ import APIServices from '../../../../services/APIServices';
 import moment from 'moment';
 import AwesomeAlert from 'react-native-awesome-alerts';
 import DocumentPicker from 'react-native-document-picker';
-
+import ImagePicker from 'react-native-image-picker';
 
 class MyTasksFilesScreen extends Component {
   constructor(props) {
@@ -137,6 +137,99 @@ class MyTasksFilesScreen extends Component {
     })
   };
 
+  async iOSFilePicker() {
+    Alert.alert(
+      'Add Files', 'Select the file source',
+      [
+        { text: 'Camera', onPress: () => this.selectCamera() },
+        { text: 'Gallery', onPress: () => this.selectGallery() },
+        { text: 'Files', onPress: () => this.doumentPicker() },
+        { text: 'Cancel', onPress: () => console.log('Back') },
+      ],
+      {
+        cancelable: true
+      }
+    );
+  }
+
+  async selectCamera() {
+    const options = {
+      title: 'Select pictures',
+      storageOptions: {
+        skipBackup: true,
+        path: 'images',
+      },
+      quality: 0.2
+    };
+    ImagePicker.launchCamera(options, (res) => {
+      if (res.didCancel) {
+      } else if (res.error) {
+      } else if (res.customButton) {
+      } else {
+        this.setImageForFile(res)
+      }
+    });
+  }
+
+  async selectGallery() {
+    const options = {
+      title: 'Select pictures',
+      storageOptions: {
+        skipBackup: true,
+        path: 'images',
+      },
+      quality: 0.2
+    };
+
+    ImagePicker.launchImageLibrary(options, (res) => {
+      if (res.didCancel) {
+      } else if (res.error) {
+      } else if (res.customButton) {
+      } else {
+        this.setImageForFile(res)
+      }
+    });
+  }
+
+  async setImageForFile(res) {
+    this.onFilesCrossPress(res.uri);
+    await this.state.files.push({
+      uri: res.uri,
+      type: res.type, // mime type
+      name: 'Img ' + new Date().getTime(),
+      size: res.fileSize,
+      dateTime:
+        moment().format('YYYY/MM/DD') + ' | ' + moment().format('HH:mm'),
+    });
+    // this.setState({ files: this.state.files });
+    
+    await this.setState({
+      files: this.state.files,
+      indeterminate: true,
+      Uploading: 0,
+    });
+
+    await APIServices.uploadFileData(
+      this.state.files,
+      this.props.selectedProjectID,
+    )
+      .then(response => {
+        if (response.message == 'success') {
+          this.setState({indeterminate: false, files: [], Uploading: 100});
+          this.fetchData(this.props.selectedProjectID);
+        } else {
+          this.setState({indeterminate: false, files: [], Uploading: 0});
+        }
+      })
+      .catch(error => {
+        if (error.status == 401) {
+          this.setState({indeterminate: false, files: [], Uploading: 0});
+          this.showAlert('', error.data.message);
+        }
+      });
+      
+  }
+
   async doumentPicker() {
     // Pick multiple files
     try {
@@ -212,7 +305,7 @@ class MyTasksFilesScreen extends Component {
         <View flex={1}>
           <TouchableOpacity
             style={{}} 
-            onPress={() => this.doumentPicker()}>
+            onPress={() => Platform.OS == 'ios' ? this.iOSFilePicker() : this.doumentPicker()}>
             <View style={styles.button}>
               <Image
                 style={styles.bottomBarIcon}

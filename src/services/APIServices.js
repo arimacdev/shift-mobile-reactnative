@@ -1273,14 +1273,14 @@ async function uploadFileData(file, selectedProjectID, dispatch) {
       url: ADD_FILE_TO_PROJECT + '/' + selectedProjectID + '/files/upload',
       method: 'POST',
       data: formData,
-      onUploadProgress: progress => {
-        const {loaded, total} = progress;
-        const percentageProgress = Math.floor((loaded / total) * 100);
-        dispatch({
-          type: SET_UPLOAD_PROGRESS,
-          payload: {uri, percentageProgress},
-        });
-      },
+      // onUploadProgress: progress => {
+      //   const {loaded, total} = progress;
+      //   const percentageProgress = Math.floor((loaded / total) * 100);
+      //   dispatch({
+      //     type: SET_UPLOAD_PROGRESS,
+      //     payload: {uri, percentageProgress},
+      //   });
+      // },
     },
     true,
     headers,

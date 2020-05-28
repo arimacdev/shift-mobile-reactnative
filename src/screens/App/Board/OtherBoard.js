@@ -426,7 +426,12 @@ const styles = EStyleSheet.create({
         height: '20rem',
     },
     sub_scrollView: {
-        height: '70%',
+        // borderRadius: 5,
+        // marginHorizontal: '20rem',
+        marginTop: '7rem',
+        // marginBottom: 50,
+
+        height: '300rem',
         backgroundColor: '#edf0f5'
     },
     userView: {

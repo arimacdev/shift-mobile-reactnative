@@ -201,7 +201,7 @@ class DefaultBoard extends Component {
 const styles = EStyleSheet.create({
 
     subContainer: {
-        marginBottom: '65rem',
+        // marginBottom: '65rem',
         backgroundColor: colors.projectBgColor,
         borderRadius: 5,
         marginHorizontal: '20rem',

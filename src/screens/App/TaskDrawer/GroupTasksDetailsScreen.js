@@ -38,6 +38,7 @@ import fileTypes from '../../../assest/fileTypes/fileTypes';
 import * as Animatable from 'react-native-animatable';
 import Modal from 'react-native-modal';
 import {NavigationEvents} from 'react-navigation';
+import ImagePicker from 'react-native-image-picker';
 
 const Placeholder = () => (
   <View style={styles.landing}>
@@ -333,6 +334,98 @@ class GroupTasksDetailsScreen extends Component {
       });
       this.setState({files: filesArray});
     });
+  }
+  async iOSFilePicker() {
+    Alert.alert(
+      'Add Files', 'Select the file source',
+      [
+        { text: 'Camera', onPress: () => this.selectCamera() },
+        { text: 'Gallery', onPress: () => this.selectGallery() },
+        { text: 'Files', onPress: () => this.doumentPicker() },
+        { text: 'Cancel', onPress: () => console.log('Back') },
+      ],
+      {
+        cancelable: true
+      }
+    );
+  }
+
+  async selectCamera() {
+    const options = {
+      title: 'Select pictures',
+      storageOptions: {
+        skipBackup: true,
+        path: 'images',
+      },
+      quality: 0.2
+    };
+    ImagePicker.launchCamera(options, (res) => {
+      if (res.didCancel) {
+      } else if (res.error) {
+      } else if (res.customButton) {
+      } else {
+        this.setImageForFile(res)
+      }
+    });
+  }
+
+  async selectGallery() {
+    const options = {
+      title: 'Select pictures',
+      storageOptions: {
+        skipBackup: true,
+        path: 'images',
+      },
+      quality: 0.2
+    };
+
+    ImagePicker.launchImageLibrary(options, (res) => {
+      if (res.didCancel) {
+      } else if (res.error) {
+      } else if (res.customButton) {
+      } else {
+        this.setImageForFile(res)
+      }
+    });
+  }
+
+  async setImageForFile(res) {
+    this.onFilesCrossPress(res.uri);
+    await this.state.files.push({
+      uri: res.uri,
+      type: res.type, // mime type
+      name: 'Img ' + new Date().getTime(),
+      size: res.fileSize,
+      dateTime:
+        moment().format('YYYY/MM/DD') + ' | ' + moment().format('HH:mm'),
+    });
+    // this.setState({ files: this.state.files });
+    
+    await this.setState({
+      files: this.state.files,
+      indeterminate: true,
+      Uploading: 0,
+    });
+
+    await APIServices.uploadFileData(
+      this.state.files,
+      this.props.selectedProjectID,
+    )
+      .then(response => {
+        if (response.message == 'success') {
+          this.setState({indeterminate: false, files: [], Uploading: 100});
+          this.fetchData(this.props.selectedProjectID);
+        } else {
+          this.setState({indeterminate: false, files: [], Uploading: 0});
+        }
+      })
+      .catch(error => {
+        if (error.status == 401) {
+          this.setState({indeterminate: false, files: [], Uploading: 0});
+          this.showAlert('', error.data.message);
+        }
+      });
+      
   }
 
   async doumentPicker() {
@@ -1913,7 +2006,7 @@ class GroupTasksDetailsScreen extends Component {
               keyExtractor={item => item.taskId}
             />
             <TouchableOpacity
-              onPress={() => this.doumentPicker()}
+              onPress={() => Platform.OS == 'ios' ? this.iOSFilePicker() : this.doumentPicker()}
               disabled={this.state.indeterminate}>
               {this.state.files.length > 0 ? (
                 <View
