@@ -28,56 +28,54 @@ class SearchGruopTaskScreen extends Component {
       groupTasks: [],
       allgroupTasks: [],
       searchText: '',
-      dataLoading : false,
+      dataLoading: false,
     };
   }
 
-  componentDidUpdate(prevProps, prevState, snapshot) {
-  }
+  componentDidUpdate(prevProps, prevState, snapshot) {}
 
   componentDidMount() {
     this.fetchData();
   }
 
-  loadData () {
-  }
+  loadData() {}
 
   async fetchData() {
-    this.setState({dataLoading:true});
+    this.setState({dataLoading: true});
     groupTaskData = await APIServices.getGroupTaskData();
-    if(groupTaskData.message == 'success'){
+    if (groupTaskData.message == 'success') {
       this.setState({
-          dataLoading:false,
-          groupTasks:groupTaskData.data, 
-          allgroupTasks: groupTaskData.data, 
-          searchText: '',});   
-    }else{
-      this.setState({dataLoading:false, searchText: '',});
+        dataLoading: false,
+        groupTasks: groupTaskData.data,
+        allgroupTasks: groupTaskData.data,
+        searchText: '',
+      });
+    } else {
+      this.setState({dataLoading: false, searchText: ''});
     }
   }
 
   renderGroupTasks(item) {
     return (
-        <TouchableOpacity onPress={()=>this.props.navigation.navigate('TasksTabScreen',{taskDetails:item})}>
+      <TouchableOpacity
+        onPress={() =>
+          this.props.navigation.navigate('TasksTabScreen', {taskDetails: item})
+        }>
         <View style={styles.groupTaskView}>
-            <Image 
-                  style={{width: 20, height: 20}} 
-                  source={icons.taskBlue}
-            />
-            <View style={{flex: 1}}>
-              <Text style={styles.textGroupName}>{item.taskGroupName}</Text>
-            </View>
-            <View style={styles.controlView}>
-              <Image 
-                style={{width: 18, height: 18,marginRight:17}} 
-                source={icons.users}
-              />
-            </View>
+          <Image style={{width: 20, height: 20}} source={icons.taskBlue} />
+          <View style={{flex: 1}}>
+            <Text style={styles.textGroupName}>{item.taskGroupName}</Text>
           </View>
+          <View style={styles.controlView}>
+            <Image
+              style={{width: 18, height: 18, marginRight: 17}}
+              source={icons.users}
+            />
+          </View>
+        </View>
       </TouchableOpacity>
     );
   }
-
 
   onSearchTextChange(text) {
     this.setState({searchText: text});
@@ -96,8 +94,7 @@ class SearchGruopTaskScreen extends Component {
     let dataLoading = this.state.dataLoading;
     return (
       <View style={styles.backgroundImage}>
-          <NavigationEvents
-                onWillFocus={(payload) => this.loadData(payload)}/>
+        <NavigationEvents onWillFocus={payload => this.loadData(payload)} />
         <View style={styles.projectFilerView}>
           <Image style={styles.searchIcon} source={icons.searchGray} />
           <TextInput
@@ -121,7 +118,6 @@ class SearchGruopTaskScreen extends Component {
 const styles = EStyleSheet.create({
   backgroundImage: {
     flex: 1,
-
   },
   projectFilerView: {
     backgroundColor: colors.projectBgColor,
@@ -211,7 +207,7 @@ const styles = EStyleSheet.create({
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
     marginLeft: '10rem',
-    fontWeight: '600'
+    fontWeight: '600',
   },
 });
 

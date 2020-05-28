@@ -38,7 +38,6 @@ class TasksTabScreen extends Component {
 
   componentDidMount() {}
 
-
   renderScene(route) {
     const {
       navigation: {
@@ -57,7 +56,7 @@ class TasksTabScreen extends Component {
             isActive={isActive}
           />
         );
-    case 'settings':
+      case 'settings':
         return (
           <EditTask
             selectedTaskGroupId={taskGroupId}
@@ -65,14 +64,14 @@ class TasksTabScreen extends Component {
             isActive={isActive}
           />
         );
-    case 'people':
+      case 'people':
         return (
           <PeopleScreen
             selectedTaskGroupId={taskGroupId}
             navigation={this.props.navigation}
             isActive={isActive}
           />
-        );      
+        );
     }
   }
 
@@ -84,10 +83,10 @@ class TasksTabScreen extends Component {
         style={styles.tabBarStyle}
         tabStyle={{width: 120}}
         scrollEnabled={true}
-        labelStyle={{fontWeight: 'bold'},{fontFamily: 'CircularStd-Medium'}}
+        labelStyle={({fontWeight: 'bold'}, {fontFamily: 'CircularStd-Medium'})}
         activeColor={colors.darkBlue}
         inactiveColor={'gray'}
-        getLabelText={({ route }) => route.title}
+        getLabelText={({route}) => route.title}
       />
     );
   }
