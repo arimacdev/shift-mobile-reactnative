@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {
-  StyleSheet,
   View,
   FlatList,
   Image,
@@ -14,19 +13,14 @@ import {connect} from 'react-redux';
 import * as actions from '../../../redux/actions';
 import colors from '../../../config/colors';
 import icons from '../../../assest/icons/icons';
-import NavigationService from '../../../services/NavigationService';
 import APIServices from '../../../services/APIServices';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import FadeIn from 'react-native-fade-in-image';
-import * as Progress from 'react-native-progress';
-import {ButtonGroup} from 'react-native-elements';
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
 import {NavigationEvents} from 'react-navigation';
 import Loader from '../../../components/Loader';
 import moment from 'moment';
-const initialLayout = {width: entireScreenWidth};
-import {Icon} from 'native-base';
 import PopupMenuNormal from '../../../components/PopupMenuNormal';
 import Triangle from 'react-native-triangle';
 
@@ -53,7 +47,7 @@ class OtherBoard extends Component {
   async getAllTaskDataInProject() {
     let selectedProjectID = this.props.selectedProjectID;
     this.setState({dataLoading: true});
-    taskData = await APIServices.getAllTaskInDefaultBoardData(
+    let taskData = await APIServices.getAllTaskInDefaultBoardData(
       selectedProjectID,
     );
     if (taskData.message == 'success') {
@@ -481,7 +475,7 @@ const styles = EStyleSheet.create({
   },
 });
 
-const mapStateToProps = state => {
+const mapStateToProps = () => {
   return {};
 };
 export default connect(

@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {
   View,
-  FlatList,
   Text,
   Dimensions,
   Image,
@@ -16,12 +15,11 @@ import icons from '../../../assest/icons/icons';
 import EStyleSheet from 'react-native-extended-stylesheet';
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
-import {Dropdown} from 'react-native-material-dropdown';
 import RoundCheckbox from 'rn-round-checkbox';
 import _ from 'lodash';
 import AwesomeAlert from 'react-native-awesome-alerts';
 import APIServices from '../../../services/APIServices';
-const {height, width} = Dimensions.get('window');
+const {height} = Dimensions.get('window');
 
 class EditPeople extends Component {
   constructor(props) {
@@ -127,7 +125,7 @@ class EditPeople extends Component {
     } else {
       this.setState({dataLoading: true});
       try {
-        resultObj = await APIServices.updateRolePeopleData(
+        let resultObj = await APIServices.updateRolePeopleData(
           isSelected,
           role,
           userType,
@@ -155,7 +153,6 @@ class EditPeople extends Component {
   }
 
   render() {
-    let assigneeProjectRole = this.state.assigneeProjectRole;
     let showAlert = this.state.showAlert;
     let alertTitle = this.state.alertTitle;
     let alertMsg = this.state.alertMsg;
@@ -405,7 +402,7 @@ const styles = EStyleSheet.create({
   },
 });
 
-const mapStateToProps = state => {
+const mapStateToProps = () => {
   return {};
 };
 export default connect(
