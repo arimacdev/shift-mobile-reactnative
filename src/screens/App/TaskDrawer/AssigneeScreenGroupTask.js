@@ -28,36 +28,41 @@ class AssigneeScreenGroupTask extends Component {
       allUsers: [],
       isFetching: false,
       searchText: '',
-      selectedGroupTaskID : '',
+      selectedGroupTaskID: '',
     };
   }
 
-
   componentDidMount() {
-    const {navigation: {state: {params}}} = this.props;
-    let selectedGroupTaskID = params.selectedGroupTaskID
-    this.setState({selectedGroupTaskID : selectedGroupTaskID}, function() {
+    const {
+      navigation: {
+        state: {params},
+      },
+    } = this.props;
+    let selectedGroupTaskID = params.selectedGroupTaskID;
+    this.setState({selectedGroupTaskID: selectedGroupTaskID}, function() {
       this.fetchData();
     });
   }
 
   async fetchData() {
-      let selectedGroupTaskID = this.state.selectedGroupTaskID;
-      const activeUsers = await APIServices.getTaskPeopleData(selectedGroupTaskID);
-      if (activeUsers.message == 'success') {
-          this.setState({
-            users: activeUsers.data,
-            allUsers: activeUsers.data,
-            dataLoading : false
-          })
-      } else {
-          this.setState({ dataLoading: false });
-      }
+    let selectedGroupTaskID = this.state.selectedGroupTaskID;
+    const activeUsers = await APIServices.getTaskPeopleData(
+      selectedGroupTaskID,
+    );
+    if (activeUsers.message == 'success') {
+      this.setState({
+        users: activeUsers.data,
+        allUsers: activeUsers.data,
+        dataLoading: false,
+      });
+    } else {
+      this.setState({dataLoading: false});
+    }
   }
 
-  onSelectUser(userName,userID) {
+  onSelectUser(userName, userID) {
     const {navigation} = this.props;
-    navigation.state.params.onSelectUser(userName,userID);
+    navigation.state.params.onSelectUser(userName, userID);
     navigation.goBack();
   }
 
@@ -85,7 +90,12 @@ class AssigneeScreenGroupTask extends Component {
     const {navigation} = this.props;
     return (
       <TouchableOpacity
-        onPress={() => this.onSelectUser(item.assigneeFirstName + ' ' + item.assigneeLastName,item.assigneeId)}>
+        onPress={() =>
+          this.onSelectUser(
+            item.assigneeFirstName + ' ' + item.assigneeLastName,
+            item.assigneeId,
+          )
+        }>
         <View
           style={[
             styles.projectView,
@@ -234,8 +244,7 @@ const styles = EStyleSheet.create({
 });
 
 const mapStateToProps = state => {
-  return {
-  };
+  return {};
 };
 export default connect(
   mapStateToProps,

@@ -28,65 +28,73 @@ class MyTasksFilesScreen extends Component {
     super(props);
     this.state = {
       files: [],
-      dataLoading : false,
-      taskID : '',
-      userID : '',
-      addedUser : '',
-      showAlert : false,
-      alertTitle : '',
-      alertMsg : '',
+      dataLoading: false,
+      taskID: '',
+      userID: '',
+      addedUser: '',
+      showAlert: false,
+      alertTitle: '',
+      alertMsg: '',
     };
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    if (prevProps.addFileTaskSuccess !== this.props.addFileTaskSuccess
-      && this.props.addFileTaskSuccess) {
-        this.fetchData();
-      }
+    if (
+      prevProps.addFileTaskSuccess !== this.props.addFileTaskSuccess &&
+      this.props.addFileTaskSuccess
+    ) {
+      this.fetchData();
+    }
   }
 
   componentDidMount() {
-    const {navigation: {state: {params}}} = this.props;
-    let taskID = params.selectedTaskID
-    this.setState({
-        taskID : taskID}, function() {
+    const {
+      navigation: {
+        state: {params},
+      },
+    } = this.props;
+    let taskID = params.selectedTaskID;
+    this.setState(
+      {
+        taskID: taskID,
+      },
+      function() {
         this.fetchData();
-    });
+      },
+    );
   }
 
   async fetchData() {
-      let taskID = this.state.taskID
-      this.setState({dataLoading:true});
-      filesData = await APIServices.getFilesInMyTaskData(taskID,);
-      if(filesData.message == 'success'){
-        this.setState({files : filesData.data,dataLoading:false});
-      }else{
-        this.setState({dataLoading:false});
-      }
+    let taskID = this.state.taskID;
+    this.setState({dataLoading: true});
+    filesData = await APIServices.getFilesInMyTaskData(taskID);
+    if (filesData.message == 'success') {
+      this.setState({files: filesData.data, dataLoading: false});
+    } else {
+      this.setState({dataLoading: false});
+    }
   }
 
-  async deleteFile(item){
+  async deleteFile(item) {
     let taskID = this.state.taskID;
     let taskFileId = item.taskFileId;
 
-    this.setState({dataLoading:true});
+    this.setState({dataLoading: true});
     try {
-      resultObj = await APIServices.deleteFileInMyTaskData(taskID,taskFileId);
-      if(resultObj.message == 'success'){
-        this.setState({dataLoading:false});
+      resultObj = await APIServices.deleteFileInMyTaskData(taskID, taskFileId);
+      if (resultObj.message == 'success') {
+        this.setState({dataLoading: false});
         this.fetchData();
-      }else{
-        this.setState({dataLoading:false});
+      } else {
+        this.setState({dataLoading: false});
+      }
+    } catch (e) {
+      if (e.status == 401) {
+        this.setState({dataLoading: false});
+        this.showAlert('', e.data.message);
       }
     }
-    catch(e) {
-      if(e.status == 401){
-        this.setState({dataLoading:false});
-        this.showAlert("",e.data.message);
-      }
-    }
-    
-}
+  }
 
   renderUserListList(item) {
     return (
@@ -94,61 +102,57 @@ class MyTasksFilesScreen extends Component {
         <View style={styles.filesView}>
           <Image source={icons.gallary} style={styles.taskStateIcon} />
           <View style={{flex: 1}}>
-            <Text style={styles.text}>
-              {item.taskFileName}
-            </Text>
-            <Text style={styles.textDate}>
-            </Text>
+            <Text style={styles.text}>{item.taskFileName}</Text>
+            <Text style={styles.textDate} />
           </View>
           <View style={styles.controlView}>
-            <TouchableOpacity 
+            <TouchableOpacity
               onPress={() => this.deleteFile(item)}
               style={{marginLeft: EStyleSheet.value('24rem')}}>
-                  <Image 
-                    style={{width: 40, height: 40,borderRadius: 40/ 2 }} 
-                    source={require('../../../../asserts/img/bin.png')}
-                  />
-              </TouchableOpacity>
+              <Image
+                style={{width: 40, height: 40, borderRadius: 40 / 2}}
+                source={require('../../../../asserts/img/bin.png')}
+              />
+            </TouchableOpacity>
           </View>
         </View>
       </TouchableOpacity>
     );
   }
 
-  
-
   onBackPress() {
     this.props.navigation.goBack();
-  };
-
-  hideAlert (){
-    this.setState({
-      showAlert : false,
-      alertTitle : '',
-      alertMsg : '',
-    })
   }
 
-  showAlert(title,msg){
+  hideAlert() {
     this.setState({
-      showAlert : true,
-      alertTitle : title,
-      alertMsg : msg,
-    })
-  };
+      showAlert: false,
+      alertTitle: '',
+      alertMsg: '',
+    });
+  }
+
+  showAlert(title, msg) {
+    this.setState({
+      showAlert: true,
+      alertTitle: title,
+      alertMsg: msg,
+    });
+  }
 
   async iOSFilePicker() {
     Alert.alert(
-      'Add Files', 'Select the file source',
+      'Add Files',
+      'Select the file source',
       [
-        { text: 'Camera', onPress: () => this.selectCamera() },
-        { text: 'Gallery', onPress: () => this.selectGallery() },
-        { text: 'Files', onPress: () => this.doumentPicker() },
-        { text: 'Cancel', onPress: () => console.log('Back') },
+        {text: 'Camera', onPress: () => this.selectCamera()},
+        {text: 'Gallery', onPress: () => this.selectGallery()},
+        {text: 'Files', onPress: () => this.doumentPicker()},
+        {text: 'Cancel', onPress: () => console.log('Back')},
       ],
       {
-        cancelable: true
-      }
+        cancelable: true,
+      },
     );
   }
 
@@ -159,14 +163,14 @@ class MyTasksFilesScreen extends Component {
         skipBackup: true,
         path: 'images',
       },
-      quality: 0.2
+      quality: 0.2,
     };
-    ImagePicker.launchCamera(options, (res) => {
+    ImagePicker.launchCamera(options, res => {
       if (res.didCancel) {
       } else if (res.error) {
       } else if (res.customButton) {
       } else {
-        this.setImageForFile(res)
+        this.setImageForFile(res);
       }
     });
   }
@@ -178,15 +182,15 @@ class MyTasksFilesScreen extends Component {
         skipBackup: true,
         path: 'images',
       },
-      quality: 0.2
+      quality: 0.2,
     };
 
-    ImagePicker.launchImageLibrary(options, (res) => {
+    ImagePicker.launchImageLibrary(options, res => {
       if (res.didCancel) {
       } else if (res.error) {
       } else if (res.customButton) {
       } else {
-        this.setImageForFile(res)
+        this.setImageForFile(res);
       }
     });
   }
@@ -202,15 +206,12 @@ class MyTasksFilesScreen extends Component {
         moment().format('YYYY/MM/DD') + ' | ' + moment().format('HH:mm'),
     });
     // this.setState({ files: this.state.files });
-    
+
     await this.setState({
       files: this.state.files,
       indeterminate: true,
       Uploading: 0,
-    });
-
-   
-      
+    });   
   }
 
   async doumentPicker() {
@@ -220,7 +221,7 @@ class MyTasksFilesScreen extends Component {
         type: [
           DocumentPicker.types.images,
           DocumentPicker.types.plainText,
-          DocumentPicker.types.pdf
+          DocumentPicker.types.pdf,
         ],
       });
       for (const res of results) {
@@ -235,10 +236,9 @@ class MyTasksFilesScreen extends Component {
             moment().format('YYYY/MM/DD') + ' | ' + moment().format('HH:mm'),
         });
 
-        this.uploadFiles(this.state.files)
-        
+        this.uploadFiles(this.state.files);
       }
-      this.setState({ files: this.state.files });
+      this.setState({files: this.state.files});
       console.log(this.state.files);
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
@@ -258,13 +258,13 @@ class MyTasksFilesScreen extends Component {
         let filesArray = this.state.files.filter(item => {
           return item.uri !== uri;
         });
-        this.setState({ files: filesArray });
+        this.setState({files: filesArray});
       },
     );
   }
 
   uploadFiles(file) {
-    let taskID = this.state.taskID
+    let taskID = this.state.taskID;
     this.props.addFileToMyTask(file, taskID);
   }
 
@@ -287,8 +287,10 @@ class MyTasksFilesScreen extends Component {
         </View>
         <View flex={1}>
           <TouchableOpacity
-            style={{}} 
-            onPress={() => Platform.OS == 'ios' ? this.iOSFilePicker() : this.doumentPicker()}>
+            style={{}}
+            onPress={() =>
+              Platform.OS == 'ios' ? this.iOSFilePicker() : this.doumentPicker()
+            }>
             <View style={styles.button}>
               <Image
                 style={styles.bottomBarIcon}
@@ -356,7 +358,7 @@ const styles = EStyleSheet.create({
     marginLeft: '10rem',
     fontWeight: '400',
   },
-  textDate:{
+  textDate: {
     fontSize: '10rem',
     color: colors.lightgray,
     textAlign: 'center',
@@ -409,17 +411,17 @@ const styles = EStyleSheet.create({
     marginRight: '15rem',
     marginLeft: '10rem',
   },
-  userIcon:{
+  userIcon: {
     width: '28rem',
     height: '28rem',
     borderRadius: 56 / 2,
-  }
+  },
 });
 
 const mapStateToProps = state => {
   return {
-    addFileTaskLoading : state.tasks.addFileTaskLoading,
-    addFileTaskSuccess  : state.tasks.addFileTaskSuccess,
+    addFileTaskLoading: state.tasks.addFileTaskLoading,
+    addFileTaskSuccess: state.tasks.addFileTaskSuccess,
   };
 };
 export default connect(

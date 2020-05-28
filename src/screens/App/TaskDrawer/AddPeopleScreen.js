@@ -27,7 +27,6 @@ import {MenuProvider} from 'react-native-popup-menu';
 import PopupMenu from '../../../components/PopupMenu';
 import FadeIn from 'react-native-fade-in-image';
 
-
 class AddPeopleScreen extends Component {
   constructor(props) {
     super(props);
@@ -45,12 +44,11 @@ class AddPeopleScreen extends Component {
       alertTitle: '',
       alertMsg: '',
       taskItemID: '',
-      popupMenuOpen:false
+      popupMenuOpen: false,
     };
   }
 
-  componentDidUpdate(prevProps, prevState, snapshot) {
-  }
+  componentDidUpdate(prevProps, prevState, snapshot) {}
 
   componentDidMount() {
     const {
@@ -104,7 +102,7 @@ class AddPeopleScreen extends Component {
     console.log(newValue);
   }
 
-  cancelUserSave (){
+  cancelUserSave() {
     this.props.navigation.goBack();
   }
 
@@ -113,7 +111,7 @@ class AddPeopleScreen extends Component {
       visiblePeopleModal: false,
       userName: item.label,
       userID: item.key,
-      popupMenuOpen:false
+      popupMenuOpen: false,
     });
     await this.props.addPeopleModal(false);
   };
@@ -134,32 +132,32 @@ class AddPeopleScreen extends Component {
     let userID = this.state.userID;
     let taskItemID = this.state.taskItemID;
     if (this.validateUser(userID)) {
-        this.addUser(userID,taskItemID);
-        //this.props.addUserToGroupTask(userID,taskItemID);
+      this.addUser(userID, taskItemID);
+      //this.props.addUserToGroupTask(userID,taskItemID);
     }
   }
 
-  async addUser(userID,taskItemID){
-    this.setState({dataLoading:true});
+  async addUser(userID, taskItemID) {
+    this.setState({dataLoading: true});
     try {
-        resultObj = await APIServices.addUserToGroupTask(userID,taskItemID);
-        if(resultObj.message == 'success'){
-          this.setState({dataLoading:false});
-          this.showAlert('', 'Successfully completed');
-          this.setState({
-            name: '',
-            role: '',
-            userName: '',
-            userID: '',
-          })
-        }else{
-          this.setState({dataLoading:false});
-          this.showAlert("","Error");
-        }
-    }catch(e) {
-      if(e.status == 400 || e.status == 401 || e.status == 403){
-        this.setState({dataLoading:false});
-        this.showAlert("",e.data.message);
+      resultObj = await APIServices.addUserToGroupTask(userID, taskItemID);
+      if (resultObj.message == 'success') {
+        this.setState({dataLoading: false});
+        this.showAlert('', 'Successfully completed');
+        this.setState({
+          name: '',
+          role: '',
+          userName: '',
+          userID: '',
+        });
+      } else {
+        this.setState({dataLoading: false});
+        this.showAlert('', 'Error');
+      }
+    } catch (e) {
+      if (e.status == 400 || e.status == 401 || e.status == 403) {
+        this.setState({dataLoading: false});
+        this.showAlert('', e.data.message);
       }
     }
   }
@@ -191,10 +189,9 @@ class AddPeopleScreen extends Component {
 
   async onSearchTextChange(text) {
     await this.props.addPeopleModal(true);
-    this.setState({userName: text, popupMenuOpen:true});
-    let result = this.state.allActiveUsers.filter(
-      data =>
-        data.label.toLowerCase().includes(text.toLowerCase())
+    this.setState({userName: text, popupMenuOpen: true});
+    let result = this.state.allActiveUsers.filter(data =>
+      data.label.toLowerCase().includes(text.toLowerCase()),
     );
     if (text == '') {
       this.setState({activeUsers: this.state.allActiveUsers});
@@ -207,12 +204,12 @@ class AddPeopleScreen extends Component {
     return (
       <View style={[styles.taskFieldView, {marginTop: 30}]}>
         <TextInput
-            style={[styles.textInput, {width: '95%'}]}
-            placeholder={'Type a name to add'}
-            value={this.state.userName}
-            placeholderTextColor={colors.placeholder}
-            onChangeText={text => this.onSearchTextChange(text)}
-          />
+          style={[styles.textInput, {width: '95%'}]}
+          placeholder={'Type a name to add'}
+          value={this.state.userName}
+          placeholderTextColor={colors.placeholder}
+          onChangeText={text => this.onSearchTextChange(text)}
+        />
       </View>
     );
   }
@@ -249,17 +246,14 @@ class AddPeopleScreen extends Component {
           styles.projectView,
           {
             backgroundColor:
-              item.label ==
-              navigation.state.params.userName
+              item.label == navigation.state.params.userName
                 ? colors.projectBgColor
                 : '',
           },
         ]}>
         {this.userImage(item)}
         <View style={{flex: 1}}>
-          <Text style={styles.text}>
-            {item.label}
-          </Text>
+          <Text style={styles.text}>{item.label}</Text>
         </View>
         {/* {this.colorCode(item)} */}
       </View>
@@ -286,7 +280,7 @@ class AddPeopleScreen extends Component {
               menuTrigger={this.renderMenuTrugger()}
               menuOptions={item => this.renderUserList(item)}
               data={activeUsers}
-              onSelect={(item)=>this.onSelectUser(item)}
+              onSelect={item => this.onSelectUser(item)}
               open={this.state.popupMenuOpen}
             />
           </ScrollView>
@@ -335,21 +329,21 @@ class AddPeopleScreen extends Component {
             </TouchableOpacity>
           </View>
           <AwesomeAlert
-              show={showAlert}
-              showProgress={false}
-              title={alertTitle}
-              message={alertMsg}
-              closeOnTouchOutside={true}
-              closeOnHardwareBackPress={false}
-              showCancelButton={false}
-              showConfirmButton={true}
-              cancelText=""
-              confirmText="OK"
-              confirmButtonColor={colors.primary}
-              onConfirmPressed={() => {
-                this.hideAlert();
-              }}
-            />
+            show={showAlert}
+            showProgress={false}
+            title={alertTitle}
+            message={alertMsg}
+            closeOnTouchOutside={true}
+            closeOnHardwareBackPress={false}
+            showCancelButton={false}
+            showConfirmButton={true}
+            cancelText=""
+            confirmText="OK"
+            confirmButtonColor={colors.primary}
+            onConfirmPressed={() => {
+              this.hideAlert();
+            }}
+          />
         </View>
       </MenuProvider>
     );
@@ -463,7 +457,7 @@ const styles = EStyleSheet.create({
     fontSize: '16rem',
   },
   inputsText: {
-    fontFamily:  Platform.OS =='ios'? 'CircularStd-Medium':'Product Sans',
+    fontFamily: Platform.OS == 'ios' ? 'CircularStd-Medium' : 'Product Sans',
     height: 45,
     flex: 1,
     marginTop: '28rem',
@@ -504,8 +498,7 @@ const styles = EStyleSheet.create({
 });
 
 const mapStateToProps = state => {
-  return {
-  };
+  return {};
 };
 export default connect(
   mapStateToProps,

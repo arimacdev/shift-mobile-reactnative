@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {
   View,
-  FlatList,
   Text,
   Dimensions,
   Image,
@@ -16,17 +15,15 @@ import icons from '../../../assest/icons/icons';
 import EStyleSheet from 'react-native-extended-stylesheet';
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
-import ModalFilterPicker from 'react-native-modal-filter-picker';
 import RoundCheckbox from 'rn-round-checkbox';
 import APIServices from '../../../services/APIServices';
 import AwesomeAlert from 'react-native-awesome-alerts';
 import _ from 'lodash';
 import AsyncStorage from '@react-native-community/async-storage';
-const {height, width} = Dimensions.get('window');
+const {height} = Dimensions.get('window');
 import {MenuProvider} from 'react-native-popup-menu';
 import PopupMenu from '../../../components/PopupMenu';
 import FadeIn from 'react-native-fade-in-image';
-
 
 class AddPeopleScreen extends Component {
   constructor(props) {
@@ -45,7 +42,7 @@ class AddPeopleScreen extends Component {
       alertTitle: '',
       alertMsg: '',
       projectID: '',
-      popupMenuOpen:false
+      popupMenuOpen: false,
     };
   }
 
@@ -77,7 +74,7 @@ class AddPeopleScreen extends Component {
         role: '',
         userName: '',
         userID: '',
-      })
+      });
     }
   }
 
@@ -138,7 +135,7 @@ class AddPeopleScreen extends Component {
       visiblePeopleModal: false,
       userName: item.label,
       userID: item.key,
-      popupMenuOpen:false
+      popupMenuOpen: false,
     });
     await this.props.addPeopleModal(false);
   };
@@ -215,10 +212,9 @@ class AddPeopleScreen extends Component {
 
   async onSearchTextChange(text) {
     await this.props.addPeopleModal(true);
-    this.setState({userName: text, popupMenuOpen:true});
-    let result = this.state.allActiveUsers.filter(
-      data =>
-        data.label.toLowerCase().includes(text.toLowerCase())
+    this.setState({userName: text, popupMenuOpen: true});
+    let result = this.state.allActiveUsers.filter(data =>
+      data.label.toLowerCase().includes(text.toLowerCase()),
     );
     if (text == '') {
       this.setState({activeUsers: this.state.allActiveUsers});
@@ -240,12 +236,12 @@ class AddPeopleScreen extends Component {
         </Text> */}
 
         <TextInput
-            style={[styles.textInput, {width: '95%'}]}
-            placeholder={'Type a name to add'}
-            value={this.state.userName}
-            placeholderTextColor={colors.placeholder}
-            onChangeText={text => this.onSearchTextChange(text)}
-          />
+          style={[styles.textInput, {width: '95%'}]}
+          placeholder={'Type a name to add'}
+          value={this.state.userName}
+          placeholderTextColor={colors.placeholder}
+          onChangeText={text => this.onSearchTextChange(text)}
+        />
       </View>
     );
   }
@@ -282,17 +278,14 @@ class AddPeopleScreen extends Component {
           styles.projectView,
           {
             backgroundColor:
-              item.label ==
-              navigation.state.params.userName
+              item.label == navigation.state.params.userName
                 ? colors.projectBgColor
                 : '',
           },
         ]}>
         {this.userImage(item)}
         <View style={{flex: 1}}>
-          <Text style={styles.text}>
-            {item.label}
-          </Text>
+          <Text style={styles.text}>{item.label}</Text>
         </View>
         {/* {this.colorCode(item)} */}
       </View>
@@ -300,15 +293,12 @@ class AddPeopleScreen extends Component {
     );
   }
 
-  cancelUserSave (){
+  cancelUserSave() {
     this.props.navigation.goBack();
   }
 
-
   render() {
-    let visiblePeopleModal = this.state.visiblePeopleModal;
     let activeUsers = this.state.activeUsers;
-    let userName = this.state.userName;
     let userID = this.state.userID;
     let role = this.state.role;
     let showAlert = this.state.showAlert;
@@ -324,7 +314,7 @@ class AddPeopleScreen extends Component {
               menuTrigger={this.renderMenuTrugger()}
               menuOptions={item => this.renderUserList(item)}
               data={activeUsers}
-              onSelect={(item)=>this.onSelectUser(item)}
+              onSelect={item => this.onSelectUser(item)}
               open={this.state.popupMenuOpen}
             />
             <View style={[styles.taskFieldView]}>
@@ -407,21 +397,21 @@ class AddPeopleScreen extends Component {
             </TouchableOpacity>
           </View>
           <AwesomeAlert
-              show={showAlert}
-              showProgress={false}
-              title={alertTitle}
-              message={alertMsg}
-              closeOnTouchOutside={true}
-              closeOnHardwareBackPress={false}
-              showCancelButton={false}
-              showConfirmButton={true}
-              cancelText=""
-              confirmText="OK"
-              confirmButtonColor={colors.primary}
-              onConfirmPressed={() => {
-                this.hideAlert();
-              }}
-            />
+            show={showAlert}
+            showProgress={false}
+            title={alertTitle}
+            message={alertMsg}
+            closeOnTouchOutside={true}
+            closeOnHardwareBackPress={false}
+            showCancelButton={false}
+            showConfirmButton={true}
+            cancelText=""
+            confirmText="OK"
+            confirmButtonColor={colors.primary}
+            onConfirmPressed={() => {
+              this.hideAlert();
+            }}
+          />
         </View>
       </MenuProvider>
     );
@@ -535,7 +525,7 @@ const styles = EStyleSheet.create({
     fontSize: '16rem',
   },
   inputsText: {
-    fontFamily:  Platform.OS=='ios'? 'CircularStd-Medium':'Product Sans',
+    fontFamily: Platform.OS == 'ios' ? 'CircularStd-Medium' : 'Product Sans',
     height: 45,
     flex: 1,
     marginTop: '28rem',

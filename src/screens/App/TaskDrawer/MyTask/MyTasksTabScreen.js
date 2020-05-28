@@ -24,16 +24,13 @@ class MyTasksTabScreen extends Component {
     super(props);
     this.state = {
       index: 0,
-      routes: [
-        {key: 'tasks', title: 'Tasks'},
-      ],
+      routes: [{key: 'tasks', title: 'Tasks'}],
     };
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {}
 
   componentDidMount() {}
-
 
   renderScene(route) {
     const {
@@ -47,11 +44,8 @@ class MyTasksTabScreen extends Component {
     switch (route.route.key) {
       case 'tasks':
         return (
-          <MyTasks
-            navigation={this.props.navigation}
-            isActive={isActive}
-          />
-        ); 
+          <MyTasks navigation={this.props.navigation} isActive={isActive} />
+        );
     }
   }
 
@@ -63,10 +57,10 @@ class MyTasksTabScreen extends Component {
         style={styles.tabBarStyle}
         tabStyle={{width: 120}}
         scrollEnabled={true}
-        labelStyle={{fontWeight: 'bold'},{fontFamily: 'CircularStd-Medium'}}
+        labelStyle={({fontWeight: 'bold'}, {fontFamily: 'CircularStd-Medium'})}
         activeColor={colors.darkBlue}
         inactiveColor={'gray'}
-        getLabelText={({ route }) => route.title}
+        getLabelText={({route}) => route.title}
       />
     );
   }

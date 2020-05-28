@@ -17,9 +17,7 @@ import icons from '../../../assest/icons/icons';
 import EStyleSheet from 'react-native-extended-stylesheet';
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
-import FadeIn from 'react-native-fade-in-image';
 import Loader from '../../../components/Loader';
-import AsyncStorage from '@react-native-community/async-storage';
 import APIServices from '../../../services/APIServices';
 import moment from 'moment';
 import AwesomeAlert from 'react-native-awesome-alerts';
@@ -29,29 +27,6 @@ import RNFetchBlob from 'rn-fetch-blob';
 import fileTypes from '../../../assest/fileTypes/fileTypes';
 import ImagePicker from 'react-native-image-picker';
 
-const a = [
-  {
-    uri: 'res.uri',
-    type: 'res.type', // mime type
-    name: 'aaaaa.jpg',
-    size: 11445,
-    dateTime: moment().format('YYYY/MM/DD') + ' | ' + moment().format('HH:mm'),
-  },
-  {
-    uri: 'res.uri',
-    type: 'res.type', // mime type
-    name: 'ssss.jpg',
-    size: 11445,
-    dateTime: moment().format('YYYY/MM/DD') + ' | ' + moment().format('HH:mm'),
-  },
-  {
-    uri: 'res.uri',
-    type: 'res.type', // mime type
-    name: 'vvvvv.jpg',
-    size: 11445,
-    dateTime: moment().format('YYYY/MM/DD') + ' | ' + moment().format('HH:mm'),
-  },
-];
 class ProjectFilesScreen extends Component {
   constructor(props) {
     super(props);
@@ -117,7 +92,7 @@ class ProjectFilesScreen extends Component {
         console.log('progress', received / total);
         this.setState({progress: received / total});
       })
-      .then(res => {
+      .then(() => {
         this.setState({
           progress: 100,
           loading: false,
@@ -309,16 +284,17 @@ class ProjectFilesScreen extends Component {
 
   async iOSFilePicker() {
     Alert.alert(
-      'Add Files', 'Select the file source',
+      'Add Files',
+      'Select the file source',
       [
-        { text: 'Camera', onPress: () => this.selectCamera() },
-        { text: 'Gallery', onPress: () => this.selectGallery() },
-        { text: 'Files', onPress: () => this.doumentPicker() },
-        { text: 'Cancel', onPress: () => console.log('Back') },
+        {text: 'Camera', onPress: () => this.selectCamera()},
+        {text: 'Gallery', onPress: () => this.selectGallery()},
+        {text: 'Files', onPress: () => this.doumentPicker()},
+        {text: 'Cancel', onPress: () => console.log('Back')},
       ],
       {
-        cancelable: true
-      }
+        cancelable: true,
+      },
     );
   }
 
@@ -329,14 +305,14 @@ class ProjectFilesScreen extends Component {
         skipBackup: true,
         path: 'images',
       },
-      quality: 0.2
+      quality: 0.2,
     };
-    ImagePicker.launchCamera(options, (res) => {
+    ImagePicker.launchCamera(options, res => {
       if (res.didCancel) {
       } else if (res.error) {
       } else if (res.customButton) {
       } else {
-        this.setImageForFile(res)
+        this.setImageForFile(res);
       }
     });
   }
@@ -348,15 +324,15 @@ class ProjectFilesScreen extends Component {
         skipBackup: true,
         path: 'images',
       },
-      quality: 0.2
+      quality: 0.2,
     };
 
-    ImagePicker.launchImageLibrary(options, (res) => {
+    ImagePicker.launchImageLibrary(options, res => {
       if (res.didCancel) {
       } else if (res.error) {
       } else if (res.customButton) {
       } else {
-        this.setImageForFile(res)
+        this.setImageForFile(res);
       }
     });
   }
@@ -372,7 +348,7 @@ class ProjectFilesScreen extends Component {
         moment().format('YYYY/MM/DD') + ' | ' + moment().format('HH:mm'),
     });
     // this.setState({ files: this.state.files });
-    
+
     await this.setState({
       files: this.state.files,
       indeterminate: true,
@@ -397,7 +373,6 @@ class ProjectFilesScreen extends Component {
           this.showAlert('', error.data.message);
         }
       });
-      
   }
 
   async doumentPicker() {
@@ -546,7 +521,9 @@ class ProjectFilesScreen extends Component {
           />
         </View>
         <TouchableOpacity
-          onPress={() => Platform.OS == 'ios' ? this.iOSFilePicker() : this.doumentPicker()}
+          onPress={() =>
+            Platform.OS == 'ios' ? this.iOSFilePicker() : this.doumentPicker()
+          }
           disabled={this.state.indeterminate}>
           {this.state.files.length > 0 ? (
             <View
