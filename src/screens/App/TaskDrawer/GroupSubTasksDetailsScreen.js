@@ -289,8 +289,8 @@ class GroupSubTasksDetailsScreen extends Component {
       })
       .catch(error => {
         //if (error.status == 401 || error.status == 403) {
-          this.setState({dataLoading: false});
-          this.showAlert('', error.data.message);
+        this.setState({dataLoading: false});
+        this.showAlert('', error.data.message);
         //}
       });
   }
@@ -336,16 +336,17 @@ class GroupSubTasksDetailsScreen extends Component {
 
   async iOSFilePicker() {
     Alert.alert(
-      'Add Files', 'Select the file source',
+      'Add Files',
+      'Select the file source',
       [
-        { text: 'Camera', onPress: () => this.selectCamera() },
-        { text: 'Gallery', onPress: () => this.selectGallery() },
-        { text: 'Files', onPress: () => this.doumentPicker() },
-        { text: 'Cancel', onPress: () => console.log('Back') },
+        {text: 'Camera', onPress: () => this.selectCamera()},
+        {text: 'Gallery', onPress: () => this.selectGallery()},
+        {text: 'Files', onPress: () => this.doumentPicker()},
+        {text: 'Cancel', onPress: () => console.log('Back')},
       ],
       {
-        cancelable: true
-      }
+        cancelable: true,
+      },
     );
   }
 
@@ -356,14 +357,14 @@ class GroupSubTasksDetailsScreen extends Component {
         skipBackup: true,
         path: 'images',
       },
-      quality: 0.2
+      quality: 0.2,
     };
-    ImagePicker.launchCamera(options, (res) => {
+    ImagePicker.launchCamera(options, res => {
       if (res.didCancel) {
       } else if (res.error) {
       } else if (res.customButton) {
       } else {
-        this.setImageForFile(res)
+        this.setImageForFile(res);
       }
     });
   }
@@ -375,15 +376,15 @@ class GroupSubTasksDetailsScreen extends Component {
         skipBackup: true,
         path: 'images',
       },
-      quality: 0.2
+      quality: 0.2,
     };
 
-    ImagePicker.launchImageLibrary(options, (res) => {
+    ImagePicker.launchImageLibrary(options, res => {
       if (res.didCancel) {
       } else if (res.error) {
       } else if (res.customButton) {
       } else {
-        this.setImageForFile(res)
+        this.setImageForFile(res);
       }
     });
   }
@@ -399,7 +400,7 @@ class GroupSubTasksDetailsScreen extends Component {
         moment().format('YYYY/MM/DD') + ' | ' + moment().format('HH:mm'),
     });
     // this.setState({ files: this.state.files });
-    
+
     await this.setState({
       files: this.state.files,
       indeterminate: true,
@@ -424,7 +425,6 @@ class GroupSubTasksDetailsScreen extends Component {
           this.showAlert('', error.data.message);
         }
       });
-      
   }
 
   async doumentPicker() {
@@ -478,8 +478,8 @@ class GroupSubTasksDetailsScreen extends Component {
         })
         .catch(error => {
           //if (error.status == 401) {
-            this.setState({indeterminate: false, files: [], uploading: 0});
-            this.showAlert('', error.data.message);
+          this.setState({indeterminate: false, files: [], uploading: 0});
+          this.showAlert('', error.data.message);
           //}
         });
     } catch (err) {
@@ -583,8 +583,8 @@ class GroupSubTasksDetailsScreen extends Component {
       })
       .catch(error => {
         //if (error.status == 401) {
-          this.setState({dataLoading: false});
-          this.showAlert('', error.data.message);
+        this.setState({dataLoading: false});
+        this.showAlert('', error.data.message);
         //}
       });
   }
@@ -1322,8 +1322,8 @@ class GroupSubTasksDetailsScreen extends Component {
       })
       .catch(error => {
         //if (error.status == 401 || error.status == 403) {
-          this.setState({dataLoading: false});
-          this.showAlert('', error.data.message);
+        this.setState({dataLoading: false});
+        this.showAlert('', error.data.message);
         //}
       });
   }
@@ -1347,8 +1347,8 @@ class GroupSubTasksDetailsScreen extends Component {
       })
       .catch(error => {
         //if (error.status == 401 || error.status == 403) {
-          this.setState({dataLoading: false});
-          this.showAlert('', error.data.message);
+        this.setState({dataLoading: false});
+        this.showAlert('', error.data.message);
         //}
       });
   }
@@ -1375,8 +1375,8 @@ class GroupSubTasksDetailsScreen extends Component {
       })
       .catch(error => {
         //if (error.status == 401 || error.status == 403 || error.status == 400) {
-          this.setState({dataLoading: false});
-          this.showAlert('', error.data.message);
+        this.setState({dataLoading: false});
+        this.showAlert('', error.data.message);
         //}
       });
   }
@@ -1431,8 +1431,8 @@ class GroupSubTasksDetailsScreen extends Component {
       })
       .catch(error => {
         //if (error.status == 401 || error.status == 403) {
-          this.setState({dataLoading: false});
-          this.showAlert('', error.data.message);
+        this.setState({dataLoading: false});
+        this.showAlert('', error.data.message);
         //}
       });
   }
@@ -1548,33 +1548,30 @@ class GroupSubTasksDetailsScreen extends Component {
     }
   };
 
-  navigateTo (item){
-  }
+  navigateTo(item) {}
 
   renderSubtasksList(item, index, userId, projectId) {
     return (
-      <TouchableOpacity
-          onPress={() =>this.navigateTo(item)
-        }>
-      <View style={styles.subTasksListView}>
-        <Image
-          style={styles.subTasksCompletionIcon}
-          source={
-            item.taskStatus == 'closed'
-              ? icons.rightCircule
-              : icons.whiteCircule
-          }
-        />
-        <View style={{flex: 1}}>
-          <Text style={styles.subTaskText} numberOfLines={1}>
-            {item.taskName}
-          </Text>
+      <TouchableOpacity onPress={() => this.navigateTo(item)}>
+        <View style={styles.subTasksListView}>
+          <Image
+            style={styles.subTasksCompletionIcon}
+            source={
+              item.taskStatus == 'closed'
+                ? icons.rightCircule
+                : icons.whiteCircule
+            }
+          />
+          <View style={{flex: 1}}>
+            <Text style={styles.subTaskText} numberOfLines={1}>
+              {item.taskName}
+            </Text>
+          </View>
+          <View style={styles.statusView}>
+            {this.dateView(item)}
+            {this.userImage(item)}
+          </View>
         </View>
-        <View style={styles.statusView}>
-          {this.dateView(item)}
-          {this.userImage(item)}
-        </View>
-      </View>
       </TouchableOpacity>
     );
   }
@@ -1687,8 +1684,8 @@ class GroupSubTasksDetailsScreen extends Component {
       })
       .catch(error => {
         //if (error.status == 401 || error.status == 403) {
-          this.setState({dataLoading: false});
-          this.showAlert('', error.data.message);
+        this.setState({dataLoading: false});
+        this.showAlert('', error.data.message);
         //}
       });
   }
@@ -1952,7 +1949,11 @@ class GroupSubTasksDetailsScreen extends Component {
               keyExtractor={item => item.taskId}
             />
             <TouchableOpacity
-              onPress={() => Platform.OS == 'ios' ? this.iOSFilePicker() : this.doumentPicker()}
+              onPress={() =>
+                Platform.OS == 'ios'
+                  ? this.iOSFilePicker()
+                  : this.doumentPicker()
+              }
               disabled={this.state.indeterminate}>
               {this.state.files.length > 0 ? (
                 <View
@@ -2478,10 +2479,14 @@ const styles = EStyleSheet.create({
 
 const mapStateToProps = state => {
   return {
-    deleteSingleSubTaskInGroupLoading: state.tasks.deleteSingleSubTaskInGroupLoading,
-    deleteSingleSubTaskInGroupSuccess: state.tasks.deleteSingleSubTaskInGroupSuccess,
-    deleteSingleSubTaskInGroupError: state.tasks.deleteSingleSubTaskInGroupError,
-    deleteSingleSubTaskInGroupErrorMessage:state.tasks.deleteSingleSubTaskInGroupErrorMessage,
+    deleteSingleSubTaskInGroupLoading:
+      state.tasks.deleteSingleSubTaskInGroupLoading,
+    deleteSingleSubTaskInGroupSuccess:
+      state.tasks.deleteSingleSubTaskInGroupSuccess,
+    deleteSingleSubTaskInGroupError:
+      state.tasks.deleteSingleSubTaskInGroupError,
+    deleteSingleSubTaskInGroupErrorMessage:
+      state.tasks.deleteSingleSubTaskInGroupErrorMessage,
     allTaskByGroupLoading: state.tasks.allTaskByGroupLoading,
     allTaskByGroup: state.tasks.allTaskByGroup,
   };

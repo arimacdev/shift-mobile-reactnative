@@ -88,7 +88,7 @@ class Board extends Component {
             fontWeight: 'bold',
             fontSize: 14,
           }}
-          disabledTextStyle={{color: '080848'}}
+          disabledTextStyle={{color: '#080848'}}
         />
         {this.renderPage()}
       </View>

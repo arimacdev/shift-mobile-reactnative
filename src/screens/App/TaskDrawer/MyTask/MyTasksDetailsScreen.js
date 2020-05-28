@@ -39,7 +39,6 @@ import * as Animatable from 'react-native-animatable';
 import Modal from 'react-native-modal';
 import ImagePicker from 'react-native-image-picker';
 
-
 const Placeholder = () => (
   <View style={styles.landing}>
     <SkypeIndicator color={colors.primary} />
@@ -302,16 +301,17 @@ class MyTasksDetailsScreen extends Component {
 
   async iOSFilePicker() {
     Alert.alert(
-      'Add Files', 'Select the file source',
+      'Add Files',
+      'Select the file source',
       [
-        { text: 'Camera', onPress: () => this.selectCamera() },
-        { text: 'Gallery', onPress: () => this.selectGallery() },
-        { text: 'Files', onPress: () => this.doumentPicker() },
-        { text: 'Cancel', onPress: () => console.log('Back') },
+        {text: 'Camera', onPress: () => this.selectCamera()},
+        {text: 'Gallery', onPress: () => this.selectGallery()},
+        {text: 'Files', onPress: () => this.doumentPicker()},
+        {text: 'Cancel', onPress: () => console.log('Back')},
       ],
       {
-        cancelable: true
-      }
+        cancelable: true,
+      },
     );
   }
 
@@ -322,14 +322,14 @@ class MyTasksDetailsScreen extends Component {
         skipBackup: true,
         path: 'images',
       },
-      quality: 0.2
+      quality: 0.2,
     };
-    ImagePicker.launchCamera(options, (res) => {
+    ImagePicker.launchCamera(options, res => {
       if (res.didCancel) {
       } else if (res.error) {
       } else if (res.customButton) {
       } else {
-        this.setImageForFile(res)
+        this.setImageForFile(res);
       }
     });
   }
@@ -341,15 +341,15 @@ class MyTasksDetailsScreen extends Component {
         skipBackup: true,
         path: 'images',
       },
-      quality: 0.2
+      quality: 0.2,
     };
 
-    ImagePicker.launchImageLibrary(options, (res) => {
+    ImagePicker.launchImageLibrary(options, res => {
       if (res.didCancel) {
       } else if (res.error) {
       } else if (res.customButton) {
       } else {
-        this.setImageForFile(res)
+        this.setImageForFile(res);
       }
     });
   }
@@ -365,7 +365,7 @@ class MyTasksDetailsScreen extends Component {
         moment().format('YYYY/MM/DD') + ' | ' + moment().format('HH:mm'),
     });
     // this.setState({ files: this.state.files });
-    
+
     await this.setState({
       files: this.state.files,
       indeterminate: true,
@@ -390,7 +390,6 @@ class MyTasksDetailsScreen extends Component {
           this.showAlert('', error.data.message);
         }
       });
-      
   }
 
   async doumentPicker() {
@@ -1412,7 +1411,11 @@ class MyTasksDetailsScreen extends Component {
               keyExtractor={item => item.taskId}
             />
             <TouchableOpacity
-              onPress={() => Platform.OS == 'ios' ? this.iOSFilePicker() : this.doumentPicker()}
+              onPress={() =>
+                Platform.OS == 'ios'
+                  ? this.iOSFilePicker()
+                  : this.doumentPicker()
+              }
               disabled={this.state.indeterminate}>
               {this.state.files.length > 0 ? (
                 <View

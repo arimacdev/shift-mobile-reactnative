@@ -57,7 +57,7 @@ class PeopleScreen extends Component {
   async fetchData(userID) {
     let selectedProjectID = this.props.selectedProjectID;
     this.setState({dataLoading: true});
-    projectPeopleData = await APIServices.getProjectPeopleData(
+    let projectPeopleData = await APIServices.getProjectPeopleData(
       selectedProjectID,
       userID,
     );
