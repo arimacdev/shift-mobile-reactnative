@@ -406,23 +406,24 @@ class GroupSubTasksDetailsScreen extends Component {
       Uploading: 0,
     });
 
-    await APIServices.uploadFileData(
+    await APIServices.addFileToGroupTask(
       this.state.files,
-      this.props.selectedProjectID,
+      selectedGroupTaskID,
+      selectedTaskID,
     )
       .then(response => {
         if (response.message == 'success') {
-          this.setState({indeterminate: false, files: [], Uploading: 100});
-          this.fetchData(this.props.selectedProjectID);
+          this.setState({indeterminate: false, files: [], uploading: 100});
+          this.fetchFilesData(selectedGroupTaskID, selectedTaskID);
         } else {
-          this.setState({indeterminate: false, files: [], Uploading: 0});
+          this.setState({indeterminate: false, files: [], uploading: 0});
         }
       })
       .catch(error => {
-        if (error.status == 401) {
-          this.setState({indeterminate: false, files: [], Uploading: 0});
+        //if (error.status == 401) {
+          this.setState({indeterminate: false, files: [], uploading: 0});
           this.showAlert('', error.data.message);
-        }
+        //}
       });
       
   }

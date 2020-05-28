@@ -555,6 +555,8 @@ class TasksDetailsScreen extends Component {
   }
 
   async setImageForFile(res) {
+    let selectedProjectID = this.state.selectedProjectID;
+    let selectedProjectTaskID = this.state.selectedProjectTaskID;
     this.onFilesCrossPress(res.uri);
     await this.state.files.push({
       uri: res.uri,
@@ -572,23 +574,24 @@ class TasksDetailsScreen extends Component {
       Uploading: 0,
     });
 
-    await APIServices.uploadFileData(
+    await APIServices.addFileToTask(
       this.state.files,
-      this.props.selectedProjectID,
+      selectedProjectTaskID,
+      selectedProjectID,
     )
       .then(response => {
         if (response.message == 'success') {
-          this.setState({indeterminate: false, files: [], Uploading: 100});
-          this.fetchData(this.props.selectedProjectID);
+          this.setState({indeterminate: false, files: [], uploading: 100});
+          this.fetchFilesData(selectedProjectID, selectedProjectTaskID);
         } else {
-          this.setState({indeterminate: false, files: [], Uploading: 0});
+          this.setState({indeterminate: false, files: [], uploading: 0});
         }
       })
       .catch(error => {
-        if (error.status == 401) {
-          this.setState({indeterminate: false, files: [], Uploading: 0});
-          this.showAlert('', error.data.message);
-        }
+        //if (error.status == 401) {
+        this.setState({indeterminate: false, files: [], uploading: 0});
+        this.showAlert('', error.data.message);
+        //}
       });
       
   }

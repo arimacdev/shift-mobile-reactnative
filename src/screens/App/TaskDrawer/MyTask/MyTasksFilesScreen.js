@@ -209,24 +209,7 @@ class MyTasksFilesScreen extends Component {
       Uploading: 0,
     });
 
-    await APIServices.uploadFileData(
-      this.state.files,
-      this.props.selectedProjectID,
-    )
-      .then(response => {
-        if (response.message == 'success') {
-          this.setState({indeterminate: false, files: [], Uploading: 100});
-          this.fetchData(this.props.selectedProjectID);
-        } else {
-          this.setState({indeterminate: false, files: [], Uploading: 0});
-        }
-      })
-      .catch(error => {
-        if (error.status == 401) {
-          this.setState({indeterminate: false, files: [], Uploading: 0});
-          this.showAlert('', error.data.message);
-        }
-      });
+   
       
   }
 
