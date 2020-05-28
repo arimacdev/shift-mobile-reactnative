@@ -135,7 +135,8 @@ android {
         versionCode 10000
         versionName "1.0"
         manifestPlaceholders = [
-             appAuthRedirectScheme: 'io.identityserver.demo'
+             //appAuthRedirectScheme: 'io.identityserver.demo'
+             appAuthRedirectScheme: 'com.arimacpmtool'
         ]
     }
     splits {
@@ -169,7 +170,7 @@ android {
         release {
             // Caution! In production, you need to generate your own keystore file.
             // see https://facebook.github.io/react-native/docs/signed-apk-android.
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }

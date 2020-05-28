@@ -6,15 +6,14 @@ import NavigationService from '../services/NavigationService';
 import { authorize,refresh } from 'react-native-app-auth';
 import moment from 'moment';
 
-
 const request = async function (options, isHeader,headers) {
     let authHeader = null;
 
     if (isHeader) {
          let currentTime = moment().format();
-         const expiresIn = await AsyncStorage.getItem('accessTokenExpirationDate');
+         const accessTokenExpirationDate = parseInt(await AsyncStorage.getItem('accessTokenExpirationDate'));
          const refreshToken = await AsyncStorage.getItem('refreshToken');
-        if(!(moment(expiresIn).isAfter(currentTime))){
+         if ((Date.now() / 1000) >= accessTokenExpirationDate) {
             let config = {
                 issuer : 'https://pmtool.devops.arimac.xyz/auth',
                 serviceConfiguration  : {
@@ -26,13 +25,31 @@ const request = async function (options, isHeader,headers) {
                 scopes : ['openid', 'roles', 'profile'],
                 dangerouslyAllowInsecureHttpRequests: true
             };
+            const configLive = {
+                issuer: 'https://project.arimaclanka.com/auth/realms/pm-tool',
+                serviceConfiguration: {
+                  authorizationEndpoint:
+                    'https://project.arimaclanka.com/auth/realms/pm-tool/protocol/openid-connect/auth',
+                  tokenEndpoint:
+                    'https://project.arimaclanka.com/auth/realms/pm-tool/protocol/openid-connect/token',
+                },
+                clientId: 'pmtool-frontend',
+                redirectUrl: 'com.arimacpmtool:/oauthredirect',
+                scopes: ['openid', 'roles', 'profile'],
+                dangerouslyAllowInsecureHttpRequests: true,
+            };
             try {
-                const result = await refresh(config, {
+                const result = await refresh(configLive, {
                     refreshToken: refreshToken,
                   });
                 AsyncStorage.setItem('accessToken', result.accessToken);
                 AsyncStorage.setItem('refreshToken', result.refreshToken);
-                AsyncStorage.setItem('accessTokenExpirationDate', result.accessTokenExpirationDate);
+                let decoded = jwtDecode(result.accessToken);
+                let accessTokenExpirationDate = decoded.exp.toString();
+                AsyncStorage.setItem(
+                  'accessTokenExpirationDate',
+                  accessTokenExpirationDate,
+                );
             }catch (error) {
                 AsyncStorage.clear();
                 NavigationService.navigate('Splash'); 

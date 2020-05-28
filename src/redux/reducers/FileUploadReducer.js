@@ -8,7 +8,7 @@ const INITIAL_STATE = {
   fileProgress: {
     1: {
       uri: '',
-      file:[],
+      file: [],
       progress: 0,
       cancelSource: '',
       status: 0,

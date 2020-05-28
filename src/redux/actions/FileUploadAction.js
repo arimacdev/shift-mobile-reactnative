@@ -23,18 +23,20 @@ export const failureUploadFile = id => ({
   payload: id,
 });
 
-export const uploadFile =  (file, selectedProjectID) => {
-    return (dispatch) => {
-        APIServices.uploadFileData(file, selectedProjectID, dispatch).then(response => {
-            if(response.message == 'success'){
-                dispatch(successUploadFile(file[0].uri));
-            }else{
-                dispatch(failureUploadFile(file[0].uri));
-            }    
-        }).catch(error => {   
-            dispatch(failureUploadFile(file[0].uri));
-        });
-    };
+export const uploadFile = (file, selectedProjectID) => {
+  return dispatch => {
+    APIServices.uploadFileData(file, selectedProjectID, dispatch)
+      .then(response => {
+        if (response.message == 'success') {
+          dispatch(successUploadFile(file[0].uri));
+        } else {
+          dispatch(failureUploadFile(file[0].uri));
+        }
+      })
+      .catch(error => {
+        dispatch(failureUploadFile(file[0].uri));
+      });
+  };
 };
 
 // export const uploadFile = files => dispatch => {

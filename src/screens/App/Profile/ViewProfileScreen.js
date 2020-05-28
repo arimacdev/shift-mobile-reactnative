@@ -7,7 +7,7 @@ import {
   ScrollView,
   TouchableOpacity,
   Switch,
-  Alert
+  Alert,
 } from 'react-native';
 import {connect} from 'react-redux';
 import * as actions from '../../../redux/actions';
@@ -28,17 +28,7 @@ import DocumentPicker from 'react-native-document-picker';
 import moment from 'moment';
 import ImagePicker from 'react-native-image-picker';
 
-const config = {
-  clientId: strings.slack.clientId,
-  clientSecret: strings.slack.clientSecret,
-  scopes: strings.slack.scopes,
-  redirectUrl: strings.slack.redirectUrl,
-  serviceConfiguration: {
-    authorizationEndpoint: strings.slack.authorizationEndpoint,
-    tokenEndpoint: strings.slack.tokenEndpoint,
-  },
-  dangerouslyAllowInsecureHttpRequests: true,
-};
+const config = strings.slack;
 
 class ViewProfileScreen extends Component {
   constructor(props) {
@@ -60,7 +50,7 @@ class ViewProfileScreen extends Component {
       alertMsg: '',
       dataLoading: false,
       files: [],
-      userID :  '',
+      userID: '',
       // switchValue: false,
     };
   }
@@ -137,68 +127,65 @@ class ViewProfileScreen extends Component {
     this.setState({editEnabled: true});
   }
 
-  async setImage (){
-
+  async setImage() {
     Alert.alert(
-      'Profile Picture', 'Change Profile Picture',
+      'Profile Picture',
+      'Change Profile Picture',
       [
         {text: 'Back', onPress: () => console.log('Back')},
         {text: 'Camera', onPress: () => this.selectCamera()},
-        {text: 'Gallery', onPress: () =>  this.selectGallery()},
+        {text: 'Gallery', onPress: () => this.selectGallery()},
       ],
-      { 
-        cancelable: true 
-      }
+      {
+        cancelable: true,
+      },
     );
-    
   }
 
-  async selectCamera(){
+  async selectCamera() {
     const options = {
       title: 'Select a profile picture',
       storageOptions: {
         skipBackup: true,
         path: 'images',
       },
-    quality: 0.2
+      quality: 0.2,
     };
 
-    ImagePicker.launchCamera(options, (response) => {
+    ImagePicker.launchCamera(options, response => {
       if (response.didCancel) {
       } else if (response.error) {
       } else if (response.customButton) {
       } else {
-        this.uploadFiles(response.uri,response.type)
+        this.uploadFiles(response.uri, response.type);
       }
     });
   }
 
-  async selectGallery(){
+  async selectGallery() {
     const options = {
       title: 'Select a profile picture',
       storageOptions: {
         skipBackup: true,
         path: 'images',
       },
-      quality: 0.2
+      quality: 0.2,
     };
 
-    ImagePicker.launchImageLibrary(options, (response) => {
+    ImagePicker.launchImageLibrary(options, response => {
       if (response.didCancel) {
       } else if (response.error) {
       } else if (response.customButton) {
       } else {
-        this.uploadFiles(response.uri,response.type)
+        this.uploadFiles(response.uri, response.type);
       }
     });
   }
 
   async onProfileImageClick() {
-     try {
+    try {
       const results = await DocumentPicker.pickMultiple({
-        type: [
-          DocumentPicker.types.images,
-        ],
+        type: [DocumentPicker.types.images],
       });
       for (const res of results) {
         this.onFilesCrossPress(res.uri);
@@ -213,9 +200,8 @@ class ViewProfileScreen extends Component {
         });
 
         //this.uploadFiles(this.state.files)
-        
       }
-      this.setState({ files: this.state.files });
+      this.setState({files: this.state.files});
       console.log(this.state.files);
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
@@ -240,11 +226,11 @@ class ViewProfileScreen extends Component {
     );
   }
 
-  async uploadFiles(fileUri,fileType) {
+  async uploadFiles(fileUri, fileType) {
     try {
-      let userID =this.state.userID;
+      let userID = this.state.userID;
       this.setState({dataLoading: true});
-      let userData = await APIServices.uplaodProfilePhoto(fileUri,fileType);
+      let userData = await APIServices.uplaodProfilePhoto(fileUri, fileType);
       if (userData.message == 'success') {
         this.setState({dataLoading: false});
         this.fetchUserData(userID);
@@ -252,11 +238,11 @@ class ViewProfileScreen extends Component {
       } else {
         this.setState({dataLoading: false});
       }
-    }catch(e) {
+    } catch (e) {
       //if(e.status == 500){
-        //console.log('error', e);
-        this.setState({dataLoading:false});
-        this.showAlert("","error");
+      //console.log('error', e);
+      this.setState({dataLoading: false});
+      this.showAlert('', 'error');
       //}
     }
   }
@@ -320,30 +306,43 @@ class ViewProfileScreen extends Component {
   }
 
   async saveUser() {
-    let userFirstName =this.state.userFirstName;
-    let userLastName =this.state.userLastName; 
-    let userEmail =this.state.userEmail; 
-    let userNewPassword =this.state.userNewPassword; 
-    let userConfirmPassword =this.state.userConfirmPassword;  
-    if (this.validateUser(userFirstName,userLastName,userEmail,userNewPassword,userConfirmPassword)) {
+    let userFirstName = this.state.userFirstName;
+    let userLastName = this.state.userLastName;
+    let userEmail = this.state.userEmail;
+    let userNewPassword = this.state.userNewPassword;
+    let userConfirmPassword = this.state.userConfirmPassword;
+    if (
+      this.validateUser(
+        userFirstName,
+        userLastName,
+        userEmail,
+        userNewPassword,
+        userConfirmPassword,
+      )
+    ) {
       try {
         this.setState({dataLoading: true});
-        let userData = await APIServices.updateMyDetails(userFirstName,userLastName,userEmail,userNewPassword);
+        let userData = await APIServices.updateMyDetails(
+          userFirstName,
+          userLastName,
+          userEmail,
+          userNewPassword,
+        );
         if (userData.message == 'success') {
           this.setState({dataLoading: false});
         } else {
           this.setState({dataLoading: false});
         }
-      }catch(e) {
-        if(e.status == 500){
-          this.setState({dataLoading:false});
-          this.showAlert("",e.data.message);
+      } catch (e) {
+        if (e.status == 500) {
+          this.setState({dataLoading: false});
+          this.showAlert('', e.data.message);
         }
       }
     }
   }
 
-  validateUser(firstName,lastName,email,password,confirmPassword) {
+  validateUser(firstName, lastName, email, password, confirmPassword) {
     if (!firstName && _.isEmpty(firstName)) {
       this.showAlert('', 'Please Enter the First Name');
       return false;
@@ -368,8 +367,13 @@ class ViewProfileScreen extends Component {
         this.showAlert('', 'Please Enter a valid Password');
         return false;
       }
-    } 
-    if (password && !_.isEmpty(password) && !confirmPassword && _.isEmpty(confirmPassword)) {
+    }
+    if (
+      password &&
+      !_.isEmpty(password) &&
+      !confirmPassword &&
+      _.isEmpty(confirmPassword)
+    ) {
       this.showAlert('', 'Please confirm the password');
       return false;
     } else {
@@ -428,7 +432,7 @@ class ViewProfileScreen extends Component {
       editEnabled,
       showAlert,
       alertTitle,
-      alertMsg
+      alertMsg,
     } = this.state;
 
     return (
@@ -541,7 +545,7 @@ class ViewProfileScreen extends Component {
               thumbColor={notification ? colors.switchColor : colors.gray}
             />
           </View>
-          <TouchableOpacity 
+          <TouchableOpacity
             disabled={!editEnabled}
             onPress={() => this.saveUser()}>
             <View style={styles.button}>

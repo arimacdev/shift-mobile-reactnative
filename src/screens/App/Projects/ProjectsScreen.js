@@ -236,7 +236,7 @@ class ProjectsScreen extends Component {
 
   render() {
     let projects = this.state.projects;
-    let projectsLoading = this.state.projectsLoading;
+    let projectsLoading = this.props.projectsLoading;
     let selectedType = this.state.selectedType;
 
     return (
