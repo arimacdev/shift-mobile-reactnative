@@ -20,6 +20,7 @@ import Loader from '../../../components/Loader';
 import moment from 'moment';
 import {NavigationEvents} from 'react-navigation';
 import Triangle from 'react-native-triangle';
+import EmptyListView from '../../../components/EmptyListView';
 
 class DefaultBoard extends Component {
   constructor(props) {
@@ -193,6 +194,7 @@ class DefaultBoard extends Component {
                 data={this.state.tasks}
                 renderItem={({item}) => this.renderTaskList(item)}
                 keyExtractor={item => item.projId}
+                // ListEmptyComponent={<EmptyListView />}
                 // onRefresh={() => this.onRefresh()}
                 // refreshing={isFetching}
               />

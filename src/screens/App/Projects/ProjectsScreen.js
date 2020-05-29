@@ -269,9 +269,7 @@ class ProjectsScreen extends Component {
           data={projects}
           renderItem={({item}) => this.renderProjectList(item)}
           keyExtractor={item => item.projId}
-          // ListEmptyComponent={
-          //   <EmptyListView/>
-          // }
+          ListEmptyComponent={<EmptyListView />}
         />
         {projectsLoading && <Loader />}
       </View>

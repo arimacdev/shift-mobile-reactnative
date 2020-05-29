@@ -159,6 +159,7 @@ class AssigneeScreenGroupTask extends Component {
           data={users}
           renderItem={({item}) => this.renderUserList(item)}
           keyExtractor={item => item.projId}
+          ListEmptyComponent={<EmptyListView />}
           //onRefresh={() => this.onRefresh()}
           //refreshing={isFetching}
         />

@@ -23,6 +23,7 @@ import Loader from '../../../components/Loader';
 import moment from 'moment';
 import PopupMenuNormal from '../../../components/PopupMenuNormal';
 import Triangle from 'react-native-triangle';
+import EmptyListView from '../../../components/EmptyListView';
 
 const menuItems = [
   {value: 0, text: 'Edit Board Names'},
@@ -130,6 +131,7 @@ class OtherBoard extends Component {
               data={data.item.tasks}
               renderItem={this.renderItemSubTile.bind(this)}
               keyExtractor={item => item.id}
+              // ListEmptyComponent={<EmptyListView />}
             />
           </ScrollView>
         </View>
@@ -311,6 +313,7 @@ class OtherBoard extends Component {
                 ? EStyleSheet.value('25rem')
                 : EStyleSheet.value('260rem'),
           }}
+          // ListEmptyComponent={<EmptyListView />}
         />
         {this.state.dataLoading && <Loader />}
       </View>

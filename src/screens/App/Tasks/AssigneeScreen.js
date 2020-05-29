@@ -19,6 +19,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import Loader from '../../../components/Loader';
 import FadeIn from 'react-native-fade-in-image';
 import APIServices from '../../../services/APIServices';
+import EmptyListView from '../../../components/EmptyListView';
 
 class AssigneeScreen extends Component {
   constructor(props) {
@@ -156,6 +157,7 @@ class AssigneeScreen extends Component {
           data={users}
           renderItem={({item}) => this.renderUserList(item)}
           keyExtractor={item => item.projId}
+          ListEmptyComponent={<EmptyListView />}
           //onRefresh={() => this.onRefresh()}
           //refreshing={isFetching}
         />

@@ -18,6 +18,7 @@ EStyleSheet.build({$rem: entireScreenWidth / 380});
 import AsyncStorage from '@react-native-community/async-storage';
 import Loader from '../../../components/Loader';
 import {Icon} from 'native-base';
+import EmptyListView from '../../../components/EmptyListView';
 
 class ProjectsSearchScreen extends Component {
   constructor(props) {
@@ -169,6 +170,7 @@ class ProjectsSearchScreen extends Component {
           data={projects}
           renderItem={({item}) => this.renderProjectList(item)}
           keyExtractor={item => item.projId}
+          ListEmptyComponent={<EmptyListView />}
         />
         {projectsLoading && <Loader />}
       </View>

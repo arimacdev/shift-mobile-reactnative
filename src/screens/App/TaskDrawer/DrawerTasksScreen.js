@@ -19,6 +19,7 @@ import APIServices from '../../../services/APIServices';
 import Header from '../../../components/Header';
 import Loader from '../../../components/Loader';
 import {NavigationEvents} from 'react-navigation';
+import EmptyListView from '../../../components/EmptyListView';
 
 class DrawerTasksScreen extends Component {
   constructor(props) {
@@ -132,6 +133,7 @@ class DrawerTasksScreen extends Component {
           data={groupTasks}
           renderItem={({item}) => this.renderGroupTasks(item)}
           keyExtractor={item => item.projId}
+          ListEmptyComponent={<EmptyListView />}
         />
         {dataLoading && <Loader />}
       </View>

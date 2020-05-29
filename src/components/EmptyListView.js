@@ -35,7 +35,7 @@ class EmptyListView extends Component {
           resizeMode={'contain'}
         />
         <Text style={styles.noResultText}>
-          No results found. Give another try
+          No data found
         </Text>
       </View>
     );
@@ -46,7 +46,7 @@ const styles = EStyleSheet.create({
   listEmptyContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: entireScreenHeight * 0.1,
+    marginTop: entireScreenHeight * 0.2,
     alignSelf: 'center',
   },
   emptyIcon: {

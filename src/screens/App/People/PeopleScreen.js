@@ -23,6 +23,7 @@ EStyleSheet.build({$rem: entireScreenWidth / 380});
 import AsyncStorage from '@react-native-community/async-storage';
 import Loader from '../../../components/Loader';
 import {NavigationEvents} from 'react-navigation';
+import EmptyListView from '../../../components/EmptyListView';
 const initialLayout = {width: entireScreenWidth};
 
 class PeopleScreen extends Component {
@@ -211,6 +212,7 @@ class PeopleScreen extends Component {
             data={this.state.owner}
             renderItem={({item}) => this.renderPeopleList(item)}
             keyExtractor={item => item.projId}
+            ListEmptyComponent={<EmptyListView />}
             // onRefresh={() => this.onRefresh()}
             // refreshing={isFetching}
           />
@@ -220,6 +222,7 @@ class PeopleScreen extends Component {
             data={this.state.admins}
             renderItem={({item}) => this.renderPeopleList(item)}
             keyExtractor={item => item.projId}
+            ListEmptyComponent={<EmptyListView />}
             // onRefresh={() => this.onRefresh()}
             // refreshing={isFetching}
           />
@@ -229,6 +232,7 @@ class PeopleScreen extends Component {
             data={this.state.users}
             renderItem={({item}) => this.renderPeopleList(item)}
             keyExtractor={item => item.projId}
+            ListEmptyComponent={<EmptyListView />}
             // onRefresh={() => this.onRefresh()}
             // refreshing={isFetching}
           />

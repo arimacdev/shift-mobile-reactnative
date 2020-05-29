@@ -720,14 +720,15 @@ class TasksTabScreen extends Component {
                     }
                   />
                   <Text
-                    style={{
-                      marginTop: 10,
-                      fontSize: 12,
-                      color:
-                        index == this.state.index
-                          ? colors.white
-                          : item.bottomBarColor,
-                    }}>
+                    style={[
+                      styles.bottomBarText,
+                      {
+                        color:
+                          index == this.state.index
+                            ? colors.white
+                            : item.bottomBarColor,
+                      },
+                    ]}>
                     {item.value}
                   </Text>
                 </TouchableOpacity>
@@ -1504,6 +1505,10 @@ const styles = EStyleSheet.create({
     justifyContent: 'center',
     height: '100%',
   },
+  bottomBarText: {
+    marginTop: '10rem',
+    fontSize: '11rem',
+  },
   horizontalLine: {
     backgroundColor: colors.gray,
     width: 1,
@@ -1656,7 +1661,7 @@ const styles = EStyleSheet.create({
   selectedDates: {
     flexDirection: 'row',
     marginTop: '0rem',
-    height: '50rem',
+    height: '45rem',
     backgroundColor: colors.projectBgColor,
     borderRadius: '5rem',
     justifyContent: 'center',
@@ -1705,7 +1710,8 @@ const styles = EStyleSheet.create({
   },
   modalStyle: {
     backgroundColor: colors.white,
-    marginVertical: '50rem',
+    marginVertical: '45rem',
+    borderRadius:'5rem'
   },
   parentTaskView: {
     backgroundColor: colors.darkBlue,
