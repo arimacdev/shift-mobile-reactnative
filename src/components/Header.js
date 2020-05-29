@@ -226,16 +226,16 @@ class Header extends Component {
                 </TouchableOpacity>
               )}
               {isWorkloadFilter && (
-                <TouchableOpacity
-                  style={{alignItems: 'flex-end'}}
-                  onPress={() => this.openPopup()}>
+                // <TouchableOpacity
+                //   style={{alignItems: 'flex-end'}}
+                //   onPress={() => this.openPopup()}>
                   <MenuItems
                     // customStyle={styles.menuItems}
                     data={this.props.menuItems}
                     onChange={item => this.props.onMenuItemChange(item)}
-                    // disabledOpt={this.props.notificationsList.length <= 0}
+                    // disabledOpt={this.props.dataList.length <= 0}
                   />
-                </TouchableOpacity>
+                // </TouchableOpacity>
               )}
               {isCustom && (
                 <TouchableOpacity

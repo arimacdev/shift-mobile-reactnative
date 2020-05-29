@@ -20,6 +20,7 @@ import Loader from '../../../components/Loader';
 import NavigationService from '../../../services/NavigationService';
 import APIServices from '../../../services/APIServices';
 import {NavigationEvents} from 'react-navigation';
+import EmptyListView from '../../../components/EmptyListView';
 
 class SearchGruopTaskScreen extends Component {
   constructor(props) {
@@ -108,6 +109,7 @@ class SearchGruopTaskScreen extends Component {
           data={groupTasks}
           renderItem={({item}) => this.renderGroupTasks(item)}
           keyExtractor={item => item.taskGroupId}
+          ListEmptyComponent={<EmptyListView />}
         />
         {dataLoading && <Loader />}
       </View>

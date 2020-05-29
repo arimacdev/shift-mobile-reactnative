@@ -11,6 +11,7 @@ import FadeIn from 'react-native-fade-in-image';
 import Loader from '../../../components/Loader';
 import Header from '../../../components/Header';
 import { NavigationEvents } from 'react-navigation';
+import EmptyListView from '../../../components/EmptyListView';
 
 class UsersScreen extends Component {
   constructor(props) {
@@ -137,6 +138,7 @@ class UsersScreen extends Component {
           keyExtractor={item => item.projId}
           onRefresh={() => this.onRefresh()}
           refreshing={isFetching}
+          ListEmptyComponent={<EmptyListView />}
         />
         {usersLoading && <Loader/>}
       </View>

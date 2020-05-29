@@ -25,6 +25,7 @@ import {SkypeIndicator} from 'react-native-indicators';
 import {NavigationEvents} from 'react-navigation';
 import APIServices from '../../../services/APIServices';
 import Triangle from 'react-native-triangle';
+import EmptyListView from '../../../components/EmptyListView';
 
 const Placeholder = () => (
   <View style={styles.landing}>
@@ -585,6 +586,7 @@ class Tasks extends Component {
               data={filterdDataAllTaks}
               renderItem={({item, index}) => this.renderTaskList(item, index)}
               keyExtractor={item => item.parentTask.taskId}
+              ListEmptyComponent={<EmptyListView />}
             />
           </View>
         )}
@@ -599,6 +601,7 @@ class Tasks extends Component {
               data={filterdDataAllTaks}
               renderItem={({item}) => this.renderTaskListFilter(item)}
               keyExtractor={item => item.taskId}
+              ListEmptyComponent={<EmptyListView />}
             />
           </View>
         )}

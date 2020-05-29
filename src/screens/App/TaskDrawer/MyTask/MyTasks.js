@@ -22,6 +22,7 @@ import FadeIn from 'react-native-fade-in-image';
 import {SkypeIndicator} from 'react-native-indicators';
 import {NavigationEvents} from 'react-navigation';
 import APIServices from '../../../../services/APIServices';
+import EmptyListView from '../../../../components/EmptyListView';
 
 const Placeholder = () => (
   <View style={styles.landing}>
@@ -273,6 +274,7 @@ class MyTasks extends Component {
             data={filterdDataAllTaks}
             renderItem={({item}) => this.renderTaskList(item)}
             keyExtractor={item => item.taskId}
+            ListEmptyComponent={<EmptyListView />}
           />
         </View>
         {dataLoading && <Loader />}

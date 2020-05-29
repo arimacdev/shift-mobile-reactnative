@@ -28,6 +28,7 @@ import APIServices from '../../../services/APIServices';
 import Accordion from 'react-native-collapsible/Accordion';
 import * as Animatable from 'react-native-animatable';
 import Collapsible from '../../../components/CollapsibleView';
+import EmptyListView from '../../../components/EmptyListView';
 const {height, width} = Dimensions.get('window');
 
 const Placeholder = () => (
@@ -455,9 +456,10 @@ class WorkloadTabTasksScreen extends Component {
             />
           ) : (
             <View style={styles.noDataStyle}>
-              <Text style={{color: colors.gray, fontSize: 20}}>
+              {/* <Text style={{color: colors.gray, fontSize: 20}}>
                 {this.state.noData}
-              </Text>
+              </Text> */}
+              {this.state.noData !== '' ? <EmptyListView /> : null}
             </View>
           )}
         </ScrollView>
@@ -478,17 +480,14 @@ class WorkloadTabTasksScreen extends Component {
 const styles = EStyleSheet.create({
   backgroundImage: {
     flex: 1,
-    // backgroundColor: colors.pageBackGroundColor,
   },
   projectFilerView: {
     backgroundColor: colors.projectBgColor,
-    borderRadius: 5,
-    // width: '330rem',
+    borderRadius: '5rem',
     marginTop: '17rem',
     marginBottom: '12rem',
     flexDirection: 'row',
     alignItems: 'center',
-    // justifyContent: 'center',
     paddingHorizontal: '12rem',
     height: '45rem',
     marginHorizontal: '20rem',
@@ -496,15 +495,13 @@ const styles = EStyleSheet.create({
   textFilter: {
     fontSize: '14rem',
     color: colors.white,
-    textAlign: 'center',
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'center',
-    // fontWeight: 'bold',
   },
   projectView: {
     backgroundColor: colors.white,
-    borderRadius: 5,
+    borderRadius: '5rem',
     height: '60rem',
     marginBottom: '7rem',
     flexDirection: 'row',
@@ -515,8 +512,6 @@ const styles = EStyleSheet.create({
   text: {
     fontSize: '11rem',
     color: colors.projectTaskNameColor,
-    textAlign: 'center',
-    fontWeight: 'bold',
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
@@ -524,10 +519,8 @@ const styles = EStyleSheet.create({
     fontWeight: '400',
   },
   textDate: {
-    fontFamily: 'CircularStd-Book',
     fontSize: '9rem',
     fontWeight: '400',
-    textAlign: 'center',
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
@@ -537,16 +530,11 @@ const styles = EStyleSheet.create({
   avatarIcon: {
     width: '20rem',
     height: '20rem',
-    marginLeft: 10,
+    marginLeft: '10rem',
   },
   statusView: {
-    // backgroundColor: colors.gray,
-    // width:'5rem',
-    // height:'60rem',
     alignItems: 'center',
     flexDirection: 'row',
-    // borderTopRightRadius: 5,
-    // borderBottomRightRadius: 5,
   },
   dropIcon: {
     width: '20rem',
@@ -556,121 +544,44 @@ const styles = EStyleSheet.create({
     width: '40rem',
     height: '40rem',
   },
-  bottomBarContainer: {
-    position: 'absolute',
-    bottom: 0,
-    height: 80,
-    width: '100%',
-    backgroundColor: colors.projectBgColor,
-  },
-  bottomBarInnerContainer: {
-    flexDirection: 'row',
-    height: 80,
-  },
-  bottomItemView: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'row',
-  },
-  bottomItemTouch: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: '100%',
-  },
-  horizontalLine: {
-    backgroundColor: colors.gray,
-    width: 1,
-    height: 40,
-  },
-  bottomBarIcon: {
-    width: '20rem',
-    height: '20rem',
-  },
   landing: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
-
-  container: {
-    flex: 1,
-    backgroundColor: '#F5FCFF',
-    paddingTop: 20,
-  },
   title: {
     textAlign: 'center',
-    fontSize: 22,
+    fontSize: '21rem',
     fontWeight: '300',
-    marginBottom: 20,
+    marginBottom: '20rem',
   },
   header: {
-    padding: 20,
-    marginHorizontal: 20,
-    marginTop: 10,
-    borderTopStartRadius: 5,
-    borderTopEndRadius: 5,
+    padding: '20rem',
+    marginHorizontal: '20rem',
+    marginTop: '10rem',
+    borderTopStartRadius: '5rem',
+    borderTopEndRadius: '5rem',
     flexDirection: 'row',
     alignItems: 'center',
   },
   headerText: {
     textAlign: 'left',
-    fontSize: 16,
+    fontSize: '15rem',
     fontWeight: '500',
     color: colors.white,
-  },
-  content: {
-    padding: 0,
-    backgroundColor: '#fff',
-  },
-  active: {
-    backgroundColor: 'rgba(255,255,255,1)',
-  },
-  inactive: {
-    backgroundColor: 'rgba(245,252,255,1)',
-  },
-  selectors: {
-    marginBottom: 10,
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
-  selector: {
-    backgroundColor: '#F5FCFF',
-    padding: 10,
-  },
-  activeSelector: {
-    fontWeight: 'bold',
-  },
-  selectTitle: {
-    fontSize: 14,
-    fontWeight: '500',
-    padding: 10,
-  },
-  multipleToggle: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginVertical: 30,
-    alignItems: 'center',
-  },
-  multipleToggle__title: {
-    fontSize: 16,
-    marginRight: 8,
   },
   flatListStyle: {
     marginBottom: '10rem',
     marginTop: '10rem',
   },
   flatListView: {
-    // height: 300,
-    marginHorizontal: 20,
-    borderBottomEndRadius: 5,
-    borderBottomStartRadius: 5,
+    marginHorizontal: '20rem',
+    borderBottomEndRadius: '5rem',
+    borderBottomStartRadius: '5rem',
     backgroundColor: colors.projectBgColor,
   },
   noDataStyle: {
     flex: 1,
-    height: height - 200,
     alignItems: 'center',
     justifyContent: 'center',
   },

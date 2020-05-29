@@ -19,6 +19,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import Loader from '../../../components/Loader';
 import FadeIn from 'react-native-fade-in-image';
 import APIServices from '../../../services/APIServices';
+import EmptyListView from '../../../components/EmptyListView';
 
 class SearchUserScreen extends Component {
   constructor(props) {
@@ -162,6 +163,7 @@ class SearchUserScreen extends Component {
           keyExtractor={item => item.projId}
           onRefresh={() => this.onRefresh()}
           refreshing={isFetching}
+          ListEmptyComponent={<EmptyListView />}
         />
         {usersLoading && <Loader/>}
       </View>

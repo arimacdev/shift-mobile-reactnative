@@ -239,7 +239,7 @@ class WorkloadTasksDetailsScreen extends Component {
     );
   }
 
-  renderProjectList(item) {
+  renderList(item) {
     return (
       <View style={styles.projectMainView}>
         <View style={styles.projectView}>
@@ -317,7 +317,7 @@ class WorkloadTasksDetailsScreen extends Component {
           </View>
           <FlatList
             data={taskData}
-            renderItem={({item}) => this.renderProjectList(item)}
+            renderItem={({item}) => this.renderList(item)}
             keyExtractor={item => item.taskId}
           />
         </View>
@@ -332,11 +332,11 @@ const styles = EStyleSheet.create({
     flex: 1,
   },
   innerContainer: {
-    marginBottom: 10,
+    marginBottom: '10rem',
   },
   projectFilerView: {
     backgroundColor: colors.lightBlue,
-    borderRadius: 5,
+    borderRadius: '5rem',
     marginTop: '17rem',
     marginBottom: '12rem',
     flexDirection: 'row',
@@ -347,14 +347,14 @@ const styles = EStyleSheet.create({
   },
   projectView: {
     backgroundColor: colors.projectBgColor,
-    borderRadius: 5,
+    borderRadius: '5rem',
     height: '60rem',
     flexDirection: 'row',
     alignItems: 'center',
   },
   projectMainView: {
     backgroundColor: colors.projectBgColor,
-    borderRadius: 5,
+    borderRadius: '5rem',
     marginTop: '7rem',
     paddingHorizontal: '12rem',
     marginHorizontal: '20rem',
@@ -396,14 +396,13 @@ const styles = EStyleSheet.create({
     height: '13rem',
   },
   baseView: {
-    marginTop: -5,
-    marginBottom: 10,
+    marginTop: '-5rem',
+    marginBottom: '10rem',
   },
   baseInnerContent: {
     flexDirection: 'row',
-    // alignItems: 'center',
-    marginBottom: 10,
-    marginLeft: 45,
+    marginBottom: '10rem',
+    marginLeft: '45rem',
   },
   baseInnerText: {
     fontSize: '10rem',

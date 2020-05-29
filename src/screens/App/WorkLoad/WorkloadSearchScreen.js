@@ -24,6 +24,7 @@ EStyleSheet.build({$rem: entireScreenWidth / 380});
 import AsyncStorage from '@react-native-community/async-storage';
 import Loader from '../../../components/Loader';
 import {NavigationEvents} from 'react-navigation';
+import EmptyListView from '../../../components/EmptyListView';
 const initialLayout = {width: entireScreenWidth};
 
 class WorkloadSearchScreen extends Component {
@@ -177,6 +178,7 @@ class WorkloadSearchScreen extends Component {
           data={this.state.workload}
           renderItem={({item}) => this.renderPeopleList(item)}
           keyExtractor={item => item.projId}
+          ListEmptyComponent={<EmptyListView />}
           // onRefresh={() => this.onRefresh()}
           // refreshing={isFetching}
         />
@@ -192,7 +194,7 @@ const styles = EStyleSheet.create({
   },
   mainContainer: {
     backgroundColor: colors.projectBgColor,
-    borderRadius: 5,
+    borderRadius: '5rem',
     marginHorizontal: '20rem',
     marginVertical: '7rem',
   },
@@ -202,7 +204,7 @@ const styles = EStyleSheet.create({
   button: {
     flexDirection: 'row',
     backgroundColor: colors.lightBlue,
-    borderRadius: 5,
+    borderRadius: '5rem',
     marginTop: '17rem',
     flexDirection: 'row',
     alignItems: 'center',
@@ -227,7 +229,7 @@ const styles = EStyleSheet.create({
   },
   userView: {
     backgroundColor: colors.projectBgColor,
-    borderRadius: 5,
+    borderRadius: '5rem',
     height: '60rem',
     flexDirection: 'row',
     alignItems: 'center',
@@ -280,7 +282,7 @@ const styles = EStyleSheet.create({
   },
   workloadFilerView: {
     backgroundColor: colors.projectBgColor,
-    borderRadius: 5,
+    borderRadius: '5rem',
     marginTop: '17rem',
     marginBottom: '12rem',
     flexDirection: 'row',

@@ -22,6 +22,7 @@ const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
 import {MenuProvider} from 'react-native-popup-menu';
 import APIServices from '../../../services/APIServices';
+import EmptyListView from '../../../components/EmptyListView';
 
 const initialLayout = {width: entireScreenWidth};
 
@@ -141,6 +142,7 @@ class TasksLogScreen extends Component {
           data={taskLogData}
           renderItem={({item}) => this.renderTaskLogList(item)}
           keyExtractor={item => item.id}
+          ListEmptyComponent={<EmptyListView />}
         />
       </View>
     );
