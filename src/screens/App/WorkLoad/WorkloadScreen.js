@@ -48,9 +48,9 @@ class WorkloadScreen extends Component {
 
   componentDidMount() {
     let loginUserType = this.props.loginUserType;
-    if(loginUserType == 'SUPER_ADMIN'){
+    if (loginUserType == 'SUPER_ADMIN') {
       this.fetchDataAdmin();
-    }else{
+    } else {
       this.fetchDataUser();
     }
   }
@@ -65,8 +65,8 @@ class WorkloadScreen extends Component {
       userIDHeder = await AsyncStorage.getItem('userID');
       let workloadArray = [];
       workloadArray = workloadData.data;
-      workloadArray.forEach(function(item,i){
-        if(item.userId === userIDHeder){
+      workloadArray.forEach(function(item, i) {
+        if (item.userId === userIDHeder) {
           workloadArray.splice(i, 1);
           workloadArray.unshift(item);
         }
@@ -93,9 +93,9 @@ class WorkloadScreen extends Component {
 
   async tabOpen() {
     let loginUserType = this.props.loginUserType;
-    if(loginUserType == 'SUPER_ADMIN'){
+    if (loginUserType == 'SUPER_ADMIN') {
       this.fetchDataAdmin();
-    }else{
+    } else {
       this.fetchDataUser();
     }
   }
@@ -127,7 +127,7 @@ class WorkloadScreen extends Component {
     });
   }
 
-  renderWorkloadList(item,index) {
+  renderWorkloadList(item, index) {
     let progress = 0;
     if (item.totalTasks > 0) {
       progress = item.tasksCompleted / item.totalTasks;
@@ -136,17 +136,18 @@ class WorkloadScreen extends Component {
       <TouchableOpacity
         style={index == 0 ? styles.mainContainerMy : styles.mainContainer}
         onPress={() => this.navigateToWorkloadTabScreen(item)}>
-        <NavigationEvents onWillFocus={payload => this.tabOpen(payload)} />
-        <View style={index == 0 ? styles.userViewMy : styles.userView }>
+        <View style={index == 0 ? styles.userViewMy : styles.userView}>
           {this.userIcon(item)}
           <View style={{flex: 1}}>
             <Text style={index == 0 ? styles.textMy : styles.text}>
               {item.firstName + ' ' + item.lastName}
             </Text>
-            <Text style={ index == 0 ? styles.subTextMy:styles.subText}>{item.email}</Text>
+            <Text style={index == 0 ? styles.subTextMy : styles.subText}>
+              {item.email}
+            </Text>
           </View>
         </View>
-        <Text style={index == 0 ? styles.subTextMy:styles.subText}>
+        <Text style={index == 0 ? styles.subTextMy : styles.subText}>
           {item.tasksCompleted + ' / ' + item.totalTasks + ' Tasks Completed'}
         </Text>
         <View style={styles.progressBarContainer}>
@@ -170,10 +171,11 @@ class WorkloadScreen extends Component {
 
     return (
       <View style={styles.container}>
+        <NavigationEvents onWillFocus={payload => this.tabOpen(payload)} />
         <FlatList
           style={styles.flalList}
           data={this.state.workload}
-          renderItem={({item,index}) => this.renderWorkloadList(item,index)}
+          renderItem={({item, index}) => this.renderWorkloadList(item, index)}
           keyExtractor={item => item.projId}
           // onRefresh={() => this.onRefresh()}
           // refreshing={isFetching}
@@ -259,7 +261,7 @@ const styles = EStyleSheet.create({
     marginLeft: '10rem',
     fontWeight: '400',
   },
-  textMy : {
+  textMy: {
     fontSize: '15rem',
     color: colors.white,
     textAlign: 'center',
