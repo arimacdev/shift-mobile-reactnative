@@ -17,7 +17,6 @@ const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
 import FadeIn from 'react-native-fade-in-image';
 import Loader from '../../../components/Loader';
-import Header from '../../../components/Header';
 import {NavigationEvents} from 'react-navigation';
 
 class ChatScreen extends Component {
@@ -61,7 +60,7 @@ class ChatScreen extends Component {
     });
   }
 
-  userImage = function(item) {
+  userImage = function() {
     let userImage =
       'https://i.pinimg.com/originals/3d/40/6a/3d406aa185eb1845276ecf3a8c963fce.jpg';
     // let userImage = item.taskAssigneeProfileImage;
@@ -82,7 +81,7 @@ class ChatScreen extends Component {
     }
   };
 
-  renderUserListList(item) {
+  renderUserListList() {
     return (
       <View style={styles.chatView}>
         {this.userImage()}
@@ -147,7 +146,7 @@ class ChatScreen extends Component {
         <FlatList
           style={styles.flalList}
           data={users}
-          renderItem={({item}) => this.renderUserListList(item)}
+          renderItem={({item}) => this.renderUserListList()}
           keyExtractor={item => item.projId}
           onRefresh={() => this.onRefresh()}
           refreshing={isFetching}

@@ -69,6 +69,7 @@ const icons = {
     circuleWhite: require('./circule_white.png'),
     taskLogWhite: require('./task_log_white.png'),
     appIcon: require('./app_icon.png'),
-    greyOutlineCircule: require('./grey_outline_circule.png'),    
+    greyOutlineCircule: require('./grey_outline_circule.png'),
+    emptyResult: require('./empty_result.png'),
 };
 export default icons;
