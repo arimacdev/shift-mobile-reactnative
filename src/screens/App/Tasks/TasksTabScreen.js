@@ -1711,7 +1711,7 @@ const styles = EStyleSheet.create({
   modalStyle: {
     backgroundColor: colors.white,
     marginVertical: '45rem',
-    borderRadius:'5rem'
+    borderRadius: '5rem',
   },
   parentTaskView: {
     backgroundColor: colors.darkBlue,

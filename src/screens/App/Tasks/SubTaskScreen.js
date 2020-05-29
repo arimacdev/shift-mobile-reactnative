@@ -38,13 +38,15 @@ class SubTasksScreen extends Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    if (prevProps.myTaskAddEditSubTask !== this.props.myTaskAddEditSubTask && this.props.myTaskAddEditSubTask) {
+    if (
+      prevProps.myTaskAddEditSubTask !== this.props.myTaskAddEditSubTask &&
+      this.props.myTaskAddEditSubTask
+    ) {
       let userID = this.state.userID;
       this.fetchData(userID);
       this.props.addEditSubTaskSuccessInProject(false);
     }
   }
-
 
   componentDidMount() {
     AsyncStorage.getItem('userID').then(userID => {
@@ -152,8 +154,7 @@ class SubTasksScreen extends Component {
     });
   }
 
-  loadSubtasks(){
-  }
+  loadSubtasks() {}
 
   renderSubTaskListList(item) {
     return (
@@ -336,7 +337,7 @@ const styles = EStyleSheet.create({
 
 const mapStateToProps = state => {
   return {
-    myTaskAddEditSubTask : state.project.myTaskAddEditSubTask,
+    myTaskAddEditSubTask: state.project.myTaskAddEditSubTask,
   };
 };
 export default connect(
