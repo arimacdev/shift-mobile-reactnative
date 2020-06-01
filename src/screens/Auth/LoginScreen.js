@@ -82,7 +82,7 @@ class LoginScreen extends Component {
       this.state.appState.match(/inactive|background/) ||
       nextAppState === 'active'
     ) {
-      this.getMobileVersionStatus();
+      // this.getMobileVersionStatus();
     }
     this.setState({appState: nextAppState});
   };
