@@ -6,7 +6,8 @@ import {
   TouchableOpacity,
   Platform,
   AppState,
-  Image
+  Image,
+  StatusBar
 } from 'react-native';
 import {connect} from 'react-redux';
 import * as actions from '../redux/actions';
@@ -83,6 +84,7 @@ class SplashScreen extends Component {
       nextAppState === 'active'
     ) {
       this.getMobileVersionStatus();
+      // AsyncStorage.setItem('baseURL','https://project.arimaclanka.com/api/pm-service/');
     }
     this.setState({appState: nextAppState});
   };
@@ -136,7 +138,7 @@ class SplashScreen extends Component {
         this.setState({dataLoading: false});
         this.props.UserInfoSuccess(responseUser);
         this.props.UserType(userType);
-        NavigationService.navigate('App');
+        NavigationService.navigate('Auth');
       })
       .catch(err => {
         this.setState({dataLoading: false});
@@ -168,28 +170,29 @@ class SplashScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
+        <StatusBar hidden />
         <View style={styles.imageContainer}>
             <Image
                 style={styles.iconStyle}
                 source={icons.appIcon}
                 resizeMode="contain"
               />
-               <Text style={styles.textTitle}>{strings.login.loginMainTitle}</Text>
+               {/* <Text style={styles.textTitle}>{strings.login.loginMainTitle}</Text> */}
         </View>
-        <View style={styles.bottomContainer}>
+        {/* <View style={styles.bottomContainer}>
             <TouchableOpacity
               style={styles.loginButton}
               onPress={() => this.initialUserLogin()}>
               <Text style={styles.textLogin}>{strings.login.loginButton}</Text>
             </TouchableOpacity>
             <Text style={styles.copyRights}>{strings.login.copyRights}</Text>
-        </View>
+        </View> */}
         <ForceUpdateModal
           showForceUpdateModal={this.state.forceUpdate}
           details={this.state.details}
           checkUserStatus={() => this.checkUserStatus(this)}
         />
-        {this.state.dataLoading && <Loader />}
+        {/* {this.state.dataLoading && <Loader />} */}
       </View>
     );
   }

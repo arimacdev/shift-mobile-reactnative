@@ -1,12 +1,14 @@
 import React from 'react';
 import { createStackNavigator } from 'react-navigation-stack';
 import Home from '../screens/Auth/Home';
+import ConfigurationScreen from '../screens/Auth/ConfigurationScreen';
+import LoginScreen from '../screens/Auth/LoginScreen';
 
 
 export const AuthStackNavigator = createStackNavigator(
     {
-        Home: {
-            screen: Home,
+        ConfigurationScreen: {
+            screen: ConfigurationScreen,
             headerMode: 'Home',
             header: null,
             navigationOptions: {
@@ -14,8 +16,17 @@ export const AuthStackNavigator = createStackNavigator(
                 gesturesEnabled: false
             }
         },
+        LoginScreen:{
+            screen: LoginScreen,
+            headerMode: 'Home',
+            header: null,
+            navigationOptions: {
+                header: null,
+                gesturesEnabled: false
+            }
+        }
     },
     {
-        initialRouteName: 'Home'
+        initialRouteName: 'ConfigurationScreen'
     }
 );

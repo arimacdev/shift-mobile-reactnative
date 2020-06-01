@@ -3,91 +3,91 @@ export const PROTOCOL = 'https://';
 export const HOST = 'project.arimaclanka.com/api/pm-service/';
 
 
-export const GET_ALL_PROJECTS_BY_USER = `${PROTOCOL}${HOST}projects?`;
-export const GET_ALL_TASKS_BY_PROJECT = `${PROTOCOL}${HOST}projects/`;
-export const GET_MY_TASKS_BY_PROJECT = `${PROTOCOL}${HOST}projects/`;
-export const GET_ALL_USERS = `${PROTOCOL}${HOST}users`;
-export const GET_ALL_USER = `${PROTOCOL}${HOST}users`;
-export const CREATE_USER = `${PROTOCOL}${HOST}users`;
-export const UPDATE_USER = `${PROTOCOL}${HOST}users`;
-export const ADD_PROJECT = `${PROTOCOL}${HOST}projects`;
-export const GET_PROJECT = `${PROTOCOL}${HOST}projects`;
-export const UPDATE_PROJECT = `${PROTOCOL}${HOST}projects`;
-export const DELETE_PROJECT = `${PROTOCOL}${HOST}projects`;
-export const GET_PROJECT_DETAILS_TASK = `${PROTOCOL}${HOST}projects`;
-export const GET_PROJECT_PEOPLE = `${PROTOCOL}${HOST}projects`;
-export const ADD_PEOPLE_TO_PROJECT = `${PROTOCOL}${HOST}projects`;
-export const ADD_TASK_TO_PROJECT = `${PROTOCOL}${HOST}projects`;
-export const ADD_FILE_TO_TASK = `${PROTOCOL}${HOST}projects`;
+export const GET_ALL_PROJECTS_BY_USER = `projects?`;
+export const GET_ALL_TASKS_BY_PROJECT = `projects/`;
+export const GET_MY_TASKS_BY_PROJECT = `projects/`;
+export const GET_ALL_USERS = `users`;
+export const GET_ALL_USER = `users`;
+export const CREATE_USER = `users`;
+export const UPDATE_USER = `users`;
+export const ADD_PROJECT = `projects`;
+export const GET_PROJECT = `projects`;
+export const UPDATE_PROJECT = `projects`;
+export const DELETE_PROJECT = `projects`;
+export const GET_PROJECT_DETAILS_TASK = `projects`;
+export const GET_PROJECT_PEOPLE = `projects`;
+export const ADD_PEOPLE_TO_PROJECT = `projects`;
+export const ADD_TASK_TO_PROJECT = `projects`;
+export const ADD_FILE_TO_TASK = `projects`;
 
-export const GET_ALL_USERS_BY_PROJECT_ID = `${PROTOCOL}${HOST}users/project`;
-export const GET_TASK_IN_PROJECT = `${PROTOCOL}${HOST}projects`;
-export const UPDATE_PROJECT_TASK = `${PROTOCOL}${HOST}projects`;
-export const DELETE_TASK = `${PROTOCOL}${HOST}projects`;
-export const GET_ALL_SUB_TASKS = `${PROTOCOL}${HOST}projects`;
-export const DELETE_SUB_TASK = `${PROTOCOL}${HOST}projects`;
-export const ADD_SUB_TASK = `${PROTOCOL}${HOST}projects`;
-export const UPDATE_SUB_TASK = `${PROTOCOL}${HOST}projects`;
-export const GET_FILES_IN_TASK = `${PROTOCOL}${HOST}projects`;
-export const DELETE_FILE_IN_TASK = `${PROTOCOL}${HOST}projects`;
-export const UPDATE_PEOPLE_PROJECT = `${PROTOCOL}${HOST}projects`;
-
-
-export const ADD_SLACK_ID = `${PROTOCOL}${HOST}users`;
-
-export const GET_WORKLOAD_WITH_COMPLETION = `${PROTOCOL}${HOST}projects/tasks/users`
-
-export const GET_GROUP_TASK_DATA = `${PROTOCOL}${HOST}taskgroup`;
-export const ADD_GROUP_TASK_DATA = `${PROTOCOL}${HOST}taskgroup`;
-export const ADD_ALL_TASK_BY_GROUP_DATA = `${PROTOCOL}${HOST}projects`;
-export const ADD_TASK_TO_GROUP_TASK_DATA = `${PROTOCOL}${HOST}taskgroup`;
-export const DELETE_GROUP_TASK_DATA = `${PROTOCOL}${HOST}taskgroup`;
-export const UPDATE_GROUP_TASK_DATA = `${PROTOCOL}${HOST}taskgroup`;
-export const GET_SINGLE_GROUP_TASK_DATA = `${PROTOCOL}${HOST}taskgroup`;
-export const GET_PEOPLE_IN_TASK = `${PROTOCOL}${HOST}taskgroup`; 
-export const ADD_ALL_TASK_BY_ME_DATA = `${PROTOCOL}${HOST}non-project/tasks/personal/user`;
-export const ADD_TASK_TO_MY_TASK_DATA = `${PROTOCOL}${HOST}non-project/tasks/personal`;
-
-export const ADD_FILE_TO_PROJECT = `${PROTOCOL}${HOST}projects`;
-export const GET_PROJECT_FILES = `${PROTOCOL}${HOST}projects`;
-export const DELETE_PROJECT_FILES = `${PROTOCOL}${HOST}projects`;
-
-export const ADD_PEOPLE_TO_TASK_GROUP = `${PROTOCOL}${HOST}taskgroup/add`;
-export const GET_GROUP_SINGLE_TASK_DATA  = `${PROTOCOL}${HOST}taskgroup`;
-export const UPDATE_GROUP_TASK_SINGLE_TASK = `${PROTOCOL}${HOST}taskgroup`;
-export const GET_MY_SINGLE_TASK_DATA  = `${PROTOCOL}${HOST}non-project/tasks/personal`;
-export const UPDATE_MY_SINGLE_TASK_DATA  = `${PROTOCOL}${HOST}non-project/tasks/personal`;
-export const GET_ALL_PERSONAL_TASK_FILES  = `${PROTOCOL}${HOST}non-project/tasks/personal`;
-export const DELETE_PERSONAL_TASK_FILE  = `${PROTOCOL}${HOST}non-project/tasks/personal`;
-export const ADD_FILE_TO_MY_TASK = `${PROTOCOL}${HOST}personal/tasks`;
-export const DELETE_MY_TASK = `${PROTOCOL}${HOST}non-project/tasks/personal`;
-export const GET_ALL_SUB_TASKS_IN_MY_TASK = `${PROTOCOL}${HOST}non-project/tasks/personal`
-export const DELETE_SUB_TASKS_IN_MY_TASK = `${PROTOCOL}${HOST}non-project/tasks/personal`
-export const MY_TASK_ADD_SUB_TASK = `${PROTOCOL}${HOST}non-project/tasks/personal`;
-export const MY_TASK_UPDATE_SUB_TASK = `${PROTOCOL}${HOST}non-project/tasks/personal`;
-export const GET_SPRINTS_BY_PROJECT = `${PROTOCOL}${HOST}sprints`;
-export const ADD_EDIT_SPRINT_BY_PROJECT = `${PROTOCOL}${HOST}sprints`;
-export const UPDATE_SPRINT = `${PROTOCOL}${HOST}projects`;
-
-export const ADD_MAIN_TASK_TO_PROJECT = `${PROTOCOL}${HOST}projects`;
-export const ADD_SUB_TASK_TO_PROJECT = `${PROTOCOL}${HOST}projects`;
-export const FILTER_TASK_IN_PROJECT = `${PROTOCOL}${HOST}projects`;
-
-export const VIEW_ALL_TASK_BY_GROUP_DATA = `${PROTOCOL}${HOST}taskgroup`;
-export const UPLOAD_USER_PROFILE = `${PROTOCOL}${HOST}user/profile/upload`;
-
-export const UPDATE_PARENT_TO_CHILD = `${PROTOCOL}${HOST}projects`;
-export const GET_TASK_LOG = `${PROTOCOL}${HOST}log`;
-
-export const GET_CHILD_TASK_OF_PARENT = `${PROTOCOL}${HOST}projects`;
-export const DELETE_TASK_IN_GROUP = `${PROTOCOL}${HOST}taskgroup`;
-
-export const GET_CHILD_TASK_OF_TASK_GROUP = `${PROTOCOL}${HOST}taskgroup`;
-export const UPDATE_PARENT_TO_CHILD_IN_GROUP = `${PROTOCOL}${HOST}taskgroup`;
-export const GET_ALL_USERS_WORKLOAD_WITH_COMPLETION = `${PROTOCOL}${HOST}projects/tasks/users/`;
+export const GET_ALL_USERS_BY_PROJECT_ID = `users/project`;
+export const GET_TASK_IN_PROJECT = `projects`;
+export const UPDATE_PROJECT_TASK = `projects`;
+export const DELETE_TASK = `projects`;
+export const GET_ALL_SUB_TASKS = `projects`;
+export const DELETE_SUB_TASK = `projects`;
+export const ADD_SUB_TASK = `projects`;
+export const UPDATE_SUB_TASK = `projects`;
+export const GET_FILES_IN_TASK = `projects`;
+export const DELETE_FILE_IN_TASK = `projects`;
+export const UPDATE_PEOPLE_PROJECT = `projects`;
 
 
-export const GET_MOBILE_VERSION_STATUS = `${PROTOCOL}${HOST}health`;
+export const ADD_SLACK_ID = `users`;
+
+export const GET_WORKLOAD_WITH_COMPLETION = `projects/tasks/users`
+
+export const GET_GROUP_TASK_DATA = `taskgroup`;
+export const ADD_GROUP_TASK_DATA = `taskgroup`;
+export const ADD_ALL_TASK_BY_GROUP_DATA = `projects`;
+export const ADD_TASK_TO_GROUP_TASK_DATA = `taskgroup`;
+export const DELETE_GROUP_TASK_DATA = `taskgroup`;
+export const UPDATE_GROUP_TASK_DATA = `taskgroup`;
+export const GET_SINGLE_GROUP_TASK_DATA = `taskgroup`;
+export const GET_PEOPLE_IN_TASK = `taskgroup`; 
+export const ADD_ALL_TASK_BY_ME_DATA = `non-project/tasks/personal/user`;
+export const ADD_TASK_TO_MY_TASK_DATA = `non-project/tasks/personal`;
+
+export const ADD_FILE_TO_PROJECT = `projects`;
+export const GET_PROJECT_FILES = `projects`;
+export const DELETE_PROJECT_FILES = `projects`;
+
+export const ADD_PEOPLE_TO_TASK_GROUP = `taskgroup/add`;
+export const GET_GROUP_SINGLE_TASK_DATA  = `taskgroup`;
+export const UPDATE_GROUP_TASK_SINGLE_TASK = `taskgroup`;
+export const GET_MY_SINGLE_TASK_DATA  = `non-project/tasks/personal`;
+export const UPDATE_MY_SINGLE_TASK_DATA  = `non-project/tasks/personal`;
+export const GET_ALL_PERSONAL_TASK_FILES  = `non-project/tasks/personal`;
+export const DELETE_PERSONAL_TASK_FILE  = `non-project/tasks/personal`;
+export const ADD_FILE_TO_MY_TASK = `personal/tasks`;
+export const DELETE_MY_TASK = `non-project/tasks/personal`;
+export const GET_ALL_SUB_TASKS_IN_MY_TASK = `non-project/tasks/personal`
+export const DELETE_SUB_TASKS_IN_MY_TASK = `non-project/tasks/personal`
+export const MY_TASK_ADD_SUB_TASK = `non-project/tasks/personal`;
+export const MY_TASK_UPDATE_SUB_TASK = `non-project/tasks/personal`;
+export const GET_SPRINTS_BY_PROJECT = `sprints`;
+export const ADD_EDIT_SPRINT_BY_PROJECT = `sprints`;
+export const UPDATE_SPRINT = `projects`;
+
+export const ADD_MAIN_TASK_TO_PROJECT = `projects`;
+export const ADD_SUB_TASK_TO_PROJECT = `projects`;
+export const FILTER_TASK_IN_PROJECT = `projects`;
+
+export const VIEW_ALL_TASK_BY_GROUP_DATA = `taskgroup`;
+export const UPLOAD_USER_PROFILE = `user/profile/upload`;
+
+export const UPDATE_PARENT_TO_CHILD = `projects`;
+export const GET_TASK_LOG = `log`;
+
+export const GET_CHILD_TASK_OF_PARENT = `projects`;
+export const DELETE_TASK_IN_GROUP = `taskgroup`;
+
+export const GET_CHILD_TASK_OF_TASK_GROUP = `taskgroup`;
+export const UPDATE_PARENT_TO_CHILD_IN_GROUP = `taskgroup`;
+export const GET_ALL_USERS_WORKLOAD_WITH_COMPLETION = `projects/tasks/users/`;
+
+
+export const GET_MOBILE_VERSION_STATUS = `health`;
 
 
 

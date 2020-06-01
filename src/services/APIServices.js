@@ -77,6 +77,8 @@ import {SET_UPLOAD_PROGRESS} from '../redux/types';
 import _ from 'lodash';
 
 async function getAllProjectsByUserData(userID) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
   userIDHeder = await AsyncStorage.getItem('userID');
   let headers = {
@@ -86,7 +88,7 @@ async function getAllProjectsByUserData(userID) {
 
   return request(
     {
-      url: GET_ALL_PROJECTS_BY_USER + 'userId=' + userID,
+      url: baseURL + GET_ALL_PROJECTS_BY_USER + 'userId=' + userID,
       method: 'GET',
     },
     true,
@@ -94,7 +96,9 @@ async function getAllProjectsByUserData(userID) {
   );
 }
 
-function getUserData(userID) {
+async function getUserData(userID) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let headers = {
     Accept: 'application/json',
     'Content-Type': 'application/json',
@@ -102,7 +106,7 @@ function getUserData(userID) {
 
   return request(
     {
-      url: GET_ALL_USER + '/' + userID,
+      url: baseURL + GET_ALL_USER + '/' + userID,
       method: 'GET',
     },
     true,
@@ -110,7 +114,9 @@ function getUserData(userID) {
   );
 }
 
-function getAllTaskInProjectsData(userID, projectID) {
+async function getAllTaskInProjectsData(userID, projectID) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let headers = {
     Accept: 'application/json',
     'Content-Type': 'application/json',
@@ -119,7 +125,7 @@ function getAllTaskInProjectsData(userID, projectID) {
 
   return request(
     {
-      url: GET_MY_TASKS_BY_PROJECT + projectID + '/tasks?userId=' + userID,
+      url: baseURL + GET_MY_TASKS_BY_PROJECT + projectID + '/tasks?userId=' + userID,
       method: 'GET',
     },
     true,
@@ -127,7 +133,9 @@ function getAllTaskInProjectsData(userID, projectID) {
   );
 }
 
-function getMyTaskInProjectsData(userID, projectID) {
+async function getMyTaskInProjectsData(userID, projectID) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let headers = {
     Accept: 'application/json',
     'Content-Type': 'application/json',
@@ -144,7 +152,9 @@ function getMyTaskInProjectsData(userID, projectID) {
   );
 }
 
-function getAllUsersData() {
+async function getAllUsersData() {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let headers = {
     Accept: 'application/json',
     'Content-Type': 'application/json',
@@ -152,7 +162,7 @@ function getAllUsersData() {
 
   return request(
     {
-      url: GET_ALL_USERS,
+      url: baseURL + GET_ALL_USERS,
       method: 'GET',
     },
     true,
@@ -160,7 +170,7 @@ function getAllUsersData() {
   );
 }
 
-function addUserData(
+async function addUserData(
   firstName,
   lastName,
   userName,
@@ -168,13 +178,15 @@ function addUserData(
   password,
   confirmPassword,
 ) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let headers = {
     Accept: 'application/json',
     'Content-Type': 'application/json',
   };
   return request(
     {
-      url: CREATE_USER,
+      url: baseURL + CREATE_USER,
       method: 'POST',
       data: {
         firstName: firstName,
@@ -189,7 +201,7 @@ function addUserData(
   );
 }
 
-function editUserData(
+async function editUserData(
   firstName,
   lastName,
   userName,
@@ -198,13 +210,15 @@ function editUserData(
   confirmPassword,
   userID,
 ) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let headers = {
     Accept: 'application/json',
     'Content-Type': 'application/json',
   };
   return request(
     {
-      url: UPDATE_USER + '/' + userID,
+      url: baseURL + UPDATE_USER + '/' + userID,
       method: 'PUT',
       data: {
         firstName: firstName,
@@ -219,7 +233,7 @@ function editUserData(
   );
 }
 
-function addprojectData(
+async function addprojectData(
   projectName,
   projectClient,
   IsoStartDate,
@@ -227,13 +241,15 @@ function addprojectData(
   projectOwner,
   projectAlias,
 ) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let headers = {
     Accept: 'application/json',
     'Content-Type': 'application/json',
   };
   return request(
     {
-      url: ADD_PROJECT,
+      url: baseURL + ADD_PROJECT,
       method: 'POST',
       data: {
         projectOwner: projectOwner,
@@ -250,6 +266,8 @@ function addprojectData(
 }
 
 async function getProjectData(projectID) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
   userIDHeder = await AsyncStorage.getItem('userID');
 
@@ -260,7 +278,7 @@ async function getProjectData(projectID) {
   };
   return request(
     {
-      url: GET_PROJECT + '/' + projectID,
+      url: baseURL + GET_PROJECT + '/' + projectID,
       method: 'GET',
     },
     true,
@@ -268,7 +286,7 @@ async function getProjectData(projectID) {
   );
 }
 
-function updateProjectData(
+async function updateProjectData(
   projectID,
   userID,
   projectName,
@@ -278,6 +296,8 @@ function updateProjectData(
   projectStatus,
   projectAlias
 ) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let headers = {
     Accept: 'application/json',
     'Content-Type': 'application/json',
@@ -285,7 +305,7 @@ function updateProjectData(
 
   return request(
     {
-      url: UPDATE_PROJECT + '/' + projectID,
+      url: baseURL + UPDATE_PROJECT + '/' + projectID,
       method: 'PUT',
       data: {
         modifierId: userID,
@@ -303,6 +323,8 @@ function updateProjectData(
 }
 
 async function deleteProjectData(projectID) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
   userIDHeder = await AsyncStorage.getItem('userID');
 
@@ -314,7 +336,7 @@ async function deleteProjectData(projectID) {
 
   return request(
     {
-      url: DELETE_PROJECT + '/' + projectID,
+      url: baseURL + DELETE_PROJECT + '/' + projectID,
       method: 'DELETE',
     },
     true,
@@ -323,6 +345,8 @@ async function deleteProjectData(projectID) {
 }
 
 async function getProjectTaskDetails(projectID) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
   userIDHeder = await AsyncStorage.getItem('userID');
 
@@ -334,7 +358,7 @@ async function getProjectTaskDetails(projectID) {
 
   return request(
     {
-      url: GET_PROJECT_DETAILS_TASK + '/' + projectID + '/tasks/completion',
+      url: baseURL + GET_PROJECT_DETAILS_TASK + '/' + projectID + '/tasks/completion',
       method: 'GET',
     },
     true,
@@ -343,6 +367,8 @@ async function getProjectTaskDetails(projectID) {
 }
 
 async function getProjectPeopleData(projectID, userID) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
   userIDHeder = await AsyncStorage.getItem('userID');
 
@@ -369,14 +395,16 @@ async function getProjectPeopleData(projectID, userID) {
   );
 }
 
-function getActiveUsers() {
+async function getActiveUsers() {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let headers = {
     Accept: 'application/json',
     'Content-Type': 'application/json',
   };
   return request(
     {
-      url: GET_ALL_USERS,
+      url: baseURL + GET_ALL_USERS,
       method: 'GET',
     },
     true,
@@ -384,13 +412,15 @@ function getActiveUsers() {
   );
 }
 
-function addUserToProjectData(
+async function addUserToProjectData(
   assignerId,
   userID,
   role,
   assigneeProjectRole,
   projectID,
 ) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let headers = {
     Accept: 'application/json',
     'Content-Type': 'application/json',
@@ -398,7 +428,7 @@ function addUserToProjectData(
 
   return request(
     {
-      url: ADD_PEOPLE_TO_PROJECT + '/' + projectID + '/users',
+      url: baseURL + ADD_PEOPLE_TO_PROJECT + '/' + projectID + '/users',
       method: 'POST',
       data: {
         assignerId: assignerId,
@@ -413,6 +443,8 @@ function addUserToProjectData(
 }
 
 async function getAllUsersByProjectId(projectID) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
   userIDHeder = await AsyncStorage.getItem('userID');
 
@@ -425,7 +457,7 @@ async function getAllUsersByProjectId(projectID) {
 
   return request(
     {
-      url: GET_ALL_USERS_BY_PROJECT_ID + '/' + projectID,
+      url: baseURL + GET_ALL_USERS_BY_PROJECT_ID + '/' + projectID,
       method: 'GET',
     },
     true,
@@ -434,6 +466,8 @@ async function getAllUsersByProjectId(projectID) {
 }
 
 async function getProjecTaskData(projectID, selectedProjectTaskID) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
   userIDHeder = await AsyncStorage.getItem('userID');
 
@@ -459,6 +493,8 @@ async function getProjecTaskData(projectID, selectedProjectTaskID) {
 }
 
 async function updateTaskNameData(projectID, taskID, text) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
   userIDHeder = await AsyncStorage.getItem('userID');
 
@@ -470,7 +506,7 @@ async function updateTaskNameData(projectID, taskID, text) {
 
   return request(
     {
-      url: UPDATE_PROJECT_TASK + '/' + projectID + '/tasks/' + taskID,
+      url: baseURL + UPDATE_PROJECT_TASK + '/' + projectID + '/tasks/' + taskID,
       method: 'PUT',
       data: {
         taskName: text,
@@ -483,6 +519,8 @@ async function updateTaskNameData(projectID, taskID, text) {
 }
 
 async function updateTaskStatusData(projectID, taskID, searchValue) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
   userIDHeder = await AsyncStorage.getItem('userID');
 
@@ -494,7 +532,7 @@ async function updateTaskStatusData(projectID, taskID, searchValue) {
 
   return request(
     {
-      url: UPDATE_PROJECT_TASK + '/' + projectID + '/tasks/' + taskID,
+      url: baseURL + UPDATE_PROJECT_TASK + '/' + projectID + '/tasks/' + taskID,
       method: 'PUT',
       data: {
         taskStatus: searchValue,
@@ -507,6 +545,8 @@ async function updateTaskStatusData(projectID, taskID, searchValue) {
 }
 
 async function updateTaskDueDateData(projectID, taskID, dueDate) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
   userIDHeder = await AsyncStorage.getItem('userID');
 
@@ -518,7 +558,7 @@ async function updateTaskDueDateData(projectID, taskID, dueDate) {
 
   return request(
     {
-      url: UPDATE_PROJECT_TASK + '/' + projectID + '/tasks/' + taskID,
+      url: baseURL + UPDATE_PROJECT_TASK + '/' + projectID + '/tasks/' + taskID,
       method: 'PUT',
       data: {
         taskDueDate: dueDate,
@@ -531,6 +571,8 @@ async function updateTaskDueDateData(projectID, taskID, dueDate) {
 }
 
 async function updateTaskReminderDateData(projectID, taskID, reminderDate) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
   userIDHeder = await AsyncStorage.getItem('userID');
 
@@ -542,7 +584,7 @@ async function updateTaskReminderDateData(projectID, taskID, reminderDate) {
 
   return request(
     {
-      url: UPDATE_PROJECT_TASK + '/' + projectID + '/tasks/' + taskID,
+      url: baseURL + UPDATE_PROJECT_TASK + '/' + projectID + '/tasks/' + taskID,
       method: 'PUT',
       data: {
         taskRemindOnDate: reminderDate,
@@ -555,6 +597,8 @@ async function updateTaskReminderDateData(projectID, taskID, reminderDate) {
 }
 
 async function updateTaskAssigneeData(projectID, taskID, userID) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
   userIDHeder = await AsyncStorage.getItem('userID');
 
@@ -566,7 +610,7 @@ async function updateTaskAssigneeData(projectID, taskID, userID) {
 
   return request(
     {
-      url: UPDATE_PROJECT_TASK + '/' + projectID + '/tasks/' + taskID,
+      url: baseURL + UPDATE_PROJECT_TASK + '/' + projectID + '/tasks/' + taskID,
       method: 'PUT',
       data: {
         taskAssignee: userID,
@@ -579,6 +623,8 @@ async function updateTaskAssigneeData(projectID, taskID, userID) {
 }
 
 async function updateTaskNoteData(projectID, taskID, note) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
   userIDHeder = await AsyncStorage.getItem('userID');
 
@@ -590,7 +636,7 @@ async function updateTaskNoteData(projectID, taskID, note) {
 
   return request(
     {
-      url: UPDATE_PROJECT_TASK + '/' + projectID + '/tasks/' + taskID,
+      url: baseURL + UPDATE_PROJECT_TASK + '/' + projectID + '/tasks/' + taskID,
       method: 'PUT',
       data: {
         taskNotes: note,
@@ -602,7 +648,7 @@ async function updateTaskNoteData(projectID, taskID, note) {
   );
 }
 
-function addTaskToProjectData(
+async function addTaskToProjectData(
   taskName,
   initiator,
   assigneeId,
@@ -615,6 +661,8 @@ function addTaskToProjectData(
   parentTaskId,
   sprintId,
 ) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   console.log('issueType,', issueType);
   console.log(' parentTaskId,', parentTaskId);
   console.log(' sprintId,', sprintId);
@@ -627,7 +675,7 @@ function addTaskToProjectData(
   console.log(selectedDateReminder, 'selectedDateReminder');
   return request(
     {
-      url: ADD_TASK_TO_PROJECT + '/' + selectedProjectID + '/tasks',
+      url: baseURL + ADD_TASK_TO_PROJECT + '/' + selectedProjectID + '/tasks',
       method: 'POST',
       data: {
         taskName: taskName,
@@ -651,6 +699,8 @@ function addTaskToProjectData(
 }
 
 async function addFileToTask(file, taskId, selectedProjectID) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
   userIDHeder = await AsyncStorage.getItem('userID');
 
@@ -692,6 +742,8 @@ async function deleteSingleTask(
   taskName,
   initiator,
 ) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
   userIDHeder = await AsyncStorage.getItem('userID');
 
@@ -704,7 +756,7 @@ async function deleteSingleTask(
 
   return request(
     {
-      url: DELETE_TASK + '/' + selectedProjectID + '/tasks/' + taskId,
+      url: baseURL + DELETE_TASK + '/' + selectedProjectID + '/tasks/' + taskId,
       method: 'DELETE',
       data: {
         taskName: taskName,
@@ -718,7 +770,9 @@ async function deleteSingleTask(
   );
 }
 
-function updateSlackNotificationStatus(userID, email, value) {
+async function updateSlackNotificationStatus(userID, email, value) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let headers = {
     Accept: 'application/json',
     'Content-Type': 'application/json',
@@ -726,7 +780,7 @@ function updateSlackNotificationStatus(userID, email, value) {
 
   return request(
     {
-      url: UPDATE_USER + '/' + userID + '/slack/status',
+      url: baseURL + UPDATE_USER + '/' + userID + '/slack/status',
       method: 'PUT',
       data: {
         slackAssignerId: userID,
@@ -740,7 +794,9 @@ function updateSlackNotificationStatus(userID, email, value) {
   );
 }
 
-function getSubTaskData(projectID, taskID, userID) {
+async function getSubTaskData(projectID, taskID, userID) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let headers = {
     Accept: 'application/json',
     'Content-Type': 'application/json',
@@ -765,6 +821,8 @@ function getSubTaskData(projectID, taskID, userID) {
 }
 
 async function deleteSubTask(projectID, taskID, subtaskId) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
   userIDHeder = await AsyncStorage.getItem('userID');
 
@@ -792,7 +850,9 @@ async function deleteSubTask(projectID, taskID, subtaskId) {
   );
 }
 
-function addSubTask(userID, projectID, taskID, subTaskName) {
+async function addSubTask(userID, projectID, taskID, subTaskName) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let headers = {
     Accept: 'application/json',
     'Content-Type': 'application/json',
@@ -800,7 +860,7 @@ function addSubTask(userID, projectID, taskID, subTaskName) {
 
   return request(
     {
-      url: ADD_SUB_TASK + '/' + projectID + '/tasks/' + taskID + '/subtask',
+      url: baseURL + ADD_SUB_TASK + '/' + projectID + '/tasks/' + taskID + '/subtask',
       method: 'POST',
       data: {
         taskId: taskID,
@@ -822,6 +882,8 @@ async function updateSubTask(
   subTaskName,
   isSelected,
 ) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
   userIDHeder = await AsyncStorage.getItem('userID');
 
@@ -855,6 +917,8 @@ async function updateSubTask(
 }
 
 async function getFilesInTaskData(projectID, taskID) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
   userIDHeder = await AsyncStorage.getItem('userID');
 
@@ -867,7 +931,7 @@ async function getFilesInTaskData(projectID, taskID) {
 
   return request(
     {
-      url: GET_FILES_IN_TASK + '/' + projectID + '/tasks/' + taskID + '/files',
+      url: baseURL + GET_FILES_IN_TASK + '/' + projectID + '/tasks/' + taskID + '/files',
       method: 'GET',
     },
     true,
@@ -876,6 +940,8 @@ async function getFilesInTaskData(projectID, taskID) {
 }
 
 async function deleteFileInTaskData(projectID, taskID, taskFileId) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
   userIDHeder = await AsyncStorage.getItem('userID');
 
@@ -904,6 +970,8 @@ async function deleteFileInTaskData(projectID, taskID, taskFileId) {
 }
 
 async function addSlackID(userID, authedUserID) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
   userIDHeder = await AsyncStorage.getItem('userID');
 
@@ -914,7 +982,7 @@ async function addSlackID(userID, authedUserID) {
 
   return request(
     {
-      url: ADD_SLACK_ID + '/' + userIDHeder + '/slack',
+      url: baseURL + ADD_SLACK_ID + '/' + userIDHeder + '/slack',
       method: 'PUT',
       data: {
         slackAssignerId: userID,
@@ -928,6 +996,8 @@ async function addSlackID(userID, authedUserID) {
 }
 
 async function getWorkloadWithCompletionAll() {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
   userIDHeder = await AsyncStorage.getItem('userID');
 
@@ -941,7 +1011,7 @@ async function getWorkloadWithCompletionAll() {
 
   return request(
     {
-      url: GET_ALL_USERS_WORKLOAD_WITH_COMPLETION + '/workload?assignee=all',
+      url: baseURL + GET_ALL_USERS_WORKLOAD_WITH_COMPLETION + '/workload?assignee=all',
       method: 'GET',
     },
     true,
@@ -956,6 +1026,8 @@ async function updateRolePeopleData(
   projectID,
   assignerId,
 ) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
   userID = await AsyncStorage.getItem('userID');
 
@@ -965,7 +1037,7 @@ async function updateRolePeopleData(
   };
   return request(
     {
-      url: UPDATE_PEOPLE_PROJECT + '/' + projectID + '/users/' + assignerId,
+      url: baseURL + UPDATE_PEOPLE_PROJECT + '/' + projectID + '/users/' + assignerId,
       method: 'PUT',
       data: {
         assignerId: userID,
@@ -979,6 +1051,8 @@ async function updateRolePeopleData(
 }
 
 async function getWorkloadWithAssignTasksCompletion(userID, from, to) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
   userIDHeder = await AsyncStorage.getItem('userID');
 
@@ -992,7 +1066,7 @@ async function getWorkloadWithAssignTasksCompletion(userID, from, to) {
 
   return request(
     {
-      url: GET_WORKLOAD_WITH_COMPLETION + '/' + userID + '/workload',
+      url: baseURL + GET_WORKLOAD_WITH_COMPLETION + '/' + userID + '/workload',
       method: 'GET',
     },
     true,
@@ -1001,6 +1075,8 @@ async function getWorkloadWithAssignTasksCompletion(userID, from, to) {
 }
 
 async function getGroupTaskData() {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
   userIDHeder = await AsyncStorage.getItem('userID');
 
@@ -1011,7 +1087,7 @@ async function getGroupTaskData() {
   };
   return request(
     {
-      url: GET_GROUP_TASK_DATA,
+      url: baseURL + GET_GROUP_TASK_DATA,
       method: 'GET',
     },
     true,
@@ -1020,6 +1096,8 @@ async function getGroupTaskData() {
 }
 
 async function addGroupTaskData(groupName) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let taskGroupCreator = null;
   taskGroupCreator = await AsyncStorage.getItem('userID');
 
@@ -1030,7 +1108,7 @@ async function addGroupTaskData(groupName) {
 
   return request(
     {
-      url: ADD_GROUP_TASK_DATA,
+      url: baseURL + ADD_GROUP_TASK_DATA,
       method: 'POST',
       data: {
         taskGroupName: groupName,
@@ -1043,6 +1121,8 @@ async function addGroupTaskData(groupName) {
 }
 
 async function getAllTaskByGroup(selectedTaskGroupId) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
   userIDHeder = await AsyncStorage.getItem('userID');
 
@@ -1067,6 +1147,8 @@ async function getAllTaskByGroup(selectedTaskGroupId) {
 }
 
 async function addTaskGroupTaskData(taskName, taskGroupId) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let taskGroupCreator = null;
   taskInitiator = await AsyncStorage.getItem('userID');
 
@@ -1077,7 +1159,7 @@ async function addTaskGroupTaskData(taskName, taskGroupId) {
 
   return request(
     {
-      url: ADD_TASK_TO_GROUP_TASK_DATA + '/' + taskGroupId + '/task',
+      url: baseURL + ADD_TASK_TO_GROUP_TASK_DATA + '/' + taskGroupId + '/task',
       method: 'POST',
       data: {
         taskName: taskName,
@@ -1092,6 +1174,8 @@ async function addTaskGroupTaskData(taskName, taskGroupId) {
 }
 
 async function deleteGroupTaskData(selectedTaskGroupId) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
   userIDHeder = await AsyncStorage.getItem('userID');
 
@@ -1103,7 +1187,7 @@ async function deleteGroupTaskData(selectedTaskGroupId) {
 
   return request(
     {
-      url: DELETE_GROUP_TASK_DATA + '/' + selectedTaskGroupId,
+      url: baseURL + DELETE_GROUP_TASK_DATA + '/' + selectedTaskGroupId,
       method: 'DELETE',
     },
     true,
@@ -1112,6 +1196,8 @@ async function deleteGroupTaskData(selectedTaskGroupId) {
 }
 
 async function updateGroupTaskData(selectedTaskGroupId, groupName) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let user = null;
   user = await AsyncStorage.getItem('userID');
 
@@ -1122,7 +1208,7 @@ async function updateGroupTaskData(selectedTaskGroupId, groupName) {
 
   return request(
     {
-      url: UPDATE_GROUP_TASK_DATA + '/' + selectedTaskGroupId,
+      url: baseURL + UPDATE_GROUP_TASK_DATA + '/' + selectedTaskGroupId,
       method: 'PUT',
       data: {
         taskGroupName: groupName,
@@ -1135,6 +1221,8 @@ async function updateGroupTaskData(selectedTaskGroupId, groupName) {
 }
 
 async function getSingleGroupTaskData(selectedTaskGroupId) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
   userIDHeder = await AsyncStorage.getItem('userID');
 
@@ -1145,7 +1233,7 @@ async function getSingleGroupTaskData(selectedTaskGroupId) {
   };
   return request(
     {
-      url: GET_SINGLE_GROUP_TASK_DATA + '/' + selectedTaskGroupId,
+      url: baseURL + GET_SINGLE_GROUP_TASK_DATA + '/' + selectedTaskGroupId,
       method: 'GET',
     },
     true,
@@ -1154,6 +1242,8 @@ async function getSingleGroupTaskData(selectedTaskGroupId) {
 }
 
 async function getTaskPeopleData(selectedTaskGroupId) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
   userIDHeder = await AsyncStorage.getItem('userID');
 
@@ -1180,6 +1270,8 @@ async function getTaskPeopleData(selectedTaskGroupId) {
 }
 
 async function getAllTaskByMySelf() {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
   userIDHeder = await AsyncStorage.getItem('userID');
 
@@ -1190,7 +1282,7 @@ async function getAllTaskByMySelf() {
   };
   return request(
     {
-      url: ADD_ALL_TASK_BY_ME_DATA + '/' + userIDHeder,
+      url: baseURL + ADD_ALL_TASK_BY_ME_DATA + '/' + userIDHeder,
       method: 'GET',
     },
     true,
@@ -1199,6 +1291,8 @@ async function getAllTaskByMySelf() {
 }
 
 async function addNewMyTaskData(taskName) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let taskAssignee = null;
   taskAssignee = await AsyncStorage.getItem('userID');
 
@@ -1209,7 +1303,7 @@ async function addNewMyTaskData(taskName) {
 
   return request(
     {
-      url: ADD_TASK_TO_MY_TASK_DATA,
+      url: baseURL + ADD_TASK_TO_MY_TASK_DATA,
       method: 'POST',
       data: {
         taskName: taskName,
@@ -1225,6 +1319,8 @@ async function addNewMyTaskData(taskName) {
 }
 
 async function getGroupSingleTaskData(selectedTaskGroupId, selectedTaskID) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
   userIDHeder = await AsyncStorage.getItem('userID');
 
@@ -1250,6 +1346,8 @@ async function getGroupSingleTaskData(selectedTaskGroupId, selectedTaskID) {
 };
 
 async function uploadFileData(file, selectedProjectID, dispatch) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
   userIDHeder = await AsyncStorage.getItem('userID');
 
@@ -1270,7 +1368,7 @@ async function uploadFileData(file, selectedProjectID, dispatch) {
   formData.append('files', file1);
   return request(
     {
-      url: ADD_FILE_TO_PROJECT + '/' + selectedProjectID + '/files/upload',
+      url: baseURL + ADD_FILE_TO_PROJECT + '/' + selectedProjectID + '/files/upload',
       method: 'POST',
       data: formData,
       // onUploadProgress: progress => {
@@ -1293,7 +1391,7 @@ async function uploadFileData(file, selectedProjectID, dispatch) {
   //       try {
   //         await axios({
   //           baseURL: 'http://localhost:5000',
-  //           url: '/file',
+  //           url: baseURL + '/file',
   //           method: 'post',
   //           data: formPayload,
   //           onUploadProgress: progress => {
@@ -1311,6 +1409,8 @@ async function uploadFileData(file, selectedProjectID, dispatch) {
 }
 
 async function getProjectFiles(selectedProjectID) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
   userIDHeder = await AsyncStorage.getItem('userID');
 
@@ -1321,7 +1421,7 @@ async function getProjectFiles(selectedProjectID) {
   };
   return request(
     {
-      url: GET_PROJECT_FILES + '/' + selectedProjectID + '/files',
+      url: baseURL + GET_PROJECT_FILES + '/' + selectedProjectID + '/files',
       method: 'GET',
     },
     true,
@@ -1330,6 +1430,8 @@ async function getProjectFiles(selectedProjectID) {
 }
 
 async function deleteProjectFile(selectedProjectID, fileId) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
   userIDHeder = await AsyncStorage.getItem('userID');
 
@@ -1341,7 +1443,7 @@ async function deleteProjectFile(selectedProjectID, fileId) {
 
   return request(
     {
-      url: DELETE_PROJECT_FILES + '/' + selectedProjectID + '/files/' + fileId,
+      url: baseURL + DELETE_PROJECT_FILES + '/' + selectedProjectID + '/files/' + fileId,
       method: 'DELETE',
     },
     true,
@@ -1350,6 +1452,8 @@ async function deleteProjectFile(selectedProjectID, fileId) {
 }
 
 async function addUserToGroupTask(userID, taskGroupId) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let assignerId = null;
   assignerId = await AsyncStorage.getItem('userID');
   let headers = {
@@ -1359,7 +1463,7 @@ async function addUserToGroupTask(userID, taskGroupId) {
 
   return request(
     {
-      url: ADD_PEOPLE_TO_TASK_GROUP,
+      url: baseURL + ADD_PEOPLE_TO_TASK_GROUP,
       method: 'POST',
       data: {
         taskGroupId: taskGroupId,
@@ -1377,6 +1481,8 @@ async function groupTaskUpdateTaskNameData(
   selectedTaskID,
   text,
 ) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
   userIDHeder = await AsyncStorage.getItem('userID');
 
@@ -1409,6 +1515,8 @@ async function groupTaskUpdateTaskStatusData(
   selectedTaskID,
   selectedTaskStatusId,
 ) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
   userIDHeder = await AsyncStorage.getItem('userID');
 
@@ -1441,6 +1549,8 @@ async function groupTaskUpdateTaskAssigneeData(
   selectedTaskID,
   userID,
 ) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
   userIDHeder = await AsyncStorage.getItem('userID');
 
@@ -1473,6 +1583,8 @@ async function groupTaskUpdateDueDateData(
   selectedTaskID,
   IsoDueDate,
 ) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
   userIDHeder = await AsyncStorage.getItem('userID');
 
@@ -1505,6 +1617,8 @@ async function groupTaskUpdateReminderDateData(
   selectedTaskID,
   IsoReminderDate,
 ) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
   userIDHeder = await AsyncStorage.getItem('userID');
 
@@ -1537,6 +1651,8 @@ async function groupTaskUpdateTaskNoteData(
   selectedTaskID,
   note,
 ) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
   userIDHeder = await AsyncStorage.getItem('userID');
 
@@ -1565,6 +1681,8 @@ async function groupTaskUpdateTaskNoteData(
 }
 
 async function deleteSingleInGroupTaskData(selectedTaskGroupId, taskID) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
   userIDHeder = await AsyncStorage.getItem('userID');
 
@@ -1577,7 +1695,7 @@ async function deleteSingleInGroupTaskData(selectedTaskGroupId, taskID) {
 
   return request(
     {
-      url: DELETE_TASK_IN_GROUP + '/' + selectedTaskGroupId + '/tasks/' + taskID,
+      url: baseURL + DELETE_TASK_IN_GROUP + '/' + selectedTaskGroupId + '/tasks/' + taskID,
       method: 'DELETE',
     },
     true,
@@ -1586,6 +1704,8 @@ async function deleteSingleInGroupTaskData(selectedTaskGroupId, taskID) {
 }
 
 async function getMySingleTaskData(selectedTaskID) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
   userIDHeder = await AsyncStorage.getItem('userID');
 
@@ -1596,7 +1716,7 @@ async function getMySingleTaskData(selectedTaskID) {
   };
   return request(
     {
-      url: GET_MY_SINGLE_TASK_DATA + '/' + selectedTaskID,
+      url: baseURL + GET_MY_SINGLE_TASK_DATA + '/' + selectedTaskID,
       method: 'GET',
     },
     true,
@@ -1605,6 +1725,8 @@ async function getMySingleTaskData(selectedTaskID) {
 }
 
 async function myTaskUpdateTaskNoteData(selectedTaskID, note) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
   userIDHeder = await AsyncStorage.getItem('userID');
 
@@ -1616,7 +1738,7 @@ async function myTaskUpdateTaskNoteData(selectedTaskID, note) {
 
   return request(
     {
-      url: UPDATE_MY_SINGLE_TASK_DATA + '/' + selectedTaskID,
+      url: baseURL + UPDATE_MY_SINGLE_TASK_DATA + '/' + selectedTaskID,
       method: 'PUT',
       data: {
         taskNotes: note,
@@ -1628,6 +1750,8 @@ async function myTaskUpdateTaskNoteData(selectedTaskID, note) {
 }
 
 async function myTaskUpdateTaskStatusData(selectedTaskID, searchValue) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
   userIDHeder = await AsyncStorage.getItem('userID');
 
@@ -1639,7 +1763,7 @@ async function myTaskUpdateTaskStatusData(selectedTaskID, searchValue) {
 
   return request(
     {
-      url: UPDATE_MY_SINGLE_TASK_DATA + '/' + selectedTaskID,
+      url: baseURL + UPDATE_MY_SINGLE_TASK_DATA + '/' + selectedTaskID,
       method: 'PUT',
       data: {
         taskStatus: searchValue,
@@ -1651,6 +1775,8 @@ async function myTaskUpdateTaskStatusData(selectedTaskID, searchValue) {
 }
 
 async function myTaskUpdateTaskNameData(selectedTaskID, text) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
   userIDHeder = await AsyncStorage.getItem('userID');
 
@@ -1662,7 +1788,7 @@ async function myTaskUpdateTaskNameData(selectedTaskID, text) {
 
   return request(
     {
-      url: UPDATE_MY_SINGLE_TASK_DATA + '/' + selectedTaskID,
+      url: baseURL + UPDATE_MY_SINGLE_TASK_DATA + '/' + selectedTaskID,
       method: 'PUT',
       data: {
         taskName: text,
@@ -1674,6 +1800,8 @@ async function myTaskUpdateTaskNameData(selectedTaskID, text) {
 }
 
 async function myTaskUpdateDueDateData(selectedTaskID, IsoDueDate) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
   userIDHeder = await AsyncStorage.getItem('userID');
 
@@ -1685,7 +1813,7 @@ async function myTaskUpdateDueDateData(selectedTaskID, IsoDueDate) {
 
   return request(
     {
-      url: UPDATE_MY_SINGLE_TASK_DATA + '/' + selectedTaskID,
+      url: baseURL + UPDATE_MY_SINGLE_TASK_DATA + '/' + selectedTaskID,
       method: 'PUT',
       data: {
         taskDueDate: IsoDueDate,
@@ -1697,6 +1825,8 @@ async function myTaskUpdateDueDateData(selectedTaskID, IsoDueDate) {
 }
 
 async function myTaskUpdateReminderDateData(selectedTaskID, IsoReminderDate) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
   userIDHeder = await AsyncStorage.getItem('userID');
 
@@ -1708,7 +1838,7 @@ async function myTaskUpdateReminderDateData(selectedTaskID, IsoReminderDate) {
 
   return request(
     {
-      url: UPDATE_MY_SINGLE_TASK_DATA + '/' + selectedTaskID,
+      url: baseURL + UPDATE_MY_SINGLE_TASK_DATA + '/' + selectedTaskID,
       method: 'PUT',
       data: {
         taskRemindOnDate: IsoReminderDate,
@@ -1720,6 +1850,8 @@ async function myTaskUpdateReminderDateData(selectedTaskID, IsoReminderDate) {
 }
 
 async function getFilesInMyTaskData(taskID) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
   userIDHeder = await AsyncStorage.getItem('userID');
 
@@ -1731,7 +1863,7 @@ async function getFilesInMyTaskData(taskID) {
 
   return request(
     {
-      url: GET_ALL_PERSONAL_TASK_FILES + '/' + taskID + '/files',
+      url: baseURL + GET_ALL_PERSONAL_TASK_FILES + '/' + taskID + '/files',
       method: 'GET',
     },
     true,
@@ -1740,6 +1872,8 @@ async function getFilesInMyTaskData(taskID) {
 }
 
 async function deleteFileInMyTaskData(taskID, taskFileId) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
   userIDHeder = await AsyncStorage.getItem('userID');
 
@@ -1751,7 +1885,7 @@ async function deleteFileInMyTaskData(taskID, taskFileId) {
 
   return request(
     {
-      url: DELETE_PERSONAL_TASK_FILE + '/' + taskID + '/files/' + taskFileId,
+      url: baseURL + DELETE_PERSONAL_TASK_FILE + '/' + taskID + '/files/' + taskFileId,
       method: 'DELETE',
     },
     true,
@@ -1760,6 +1894,8 @@ async function deleteFileInMyTaskData(taskID, taskFileId) {
 }
 
 async function addFileToMyTaskData(file, taskId) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
   userIDHeder = await AsyncStorage.getItem('userID');
 
@@ -1779,7 +1915,7 @@ async function addFileToMyTaskData(file, taskId) {
   formData.append('files', file1);
   return request(
     {
-      url: ADD_FILE_TO_MY_TASK + '/' + taskId + '/upload',
+      url: baseURL + ADD_FILE_TO_MY_TASK + '/' + taskId + '/upload',
       method: 'POST',
       data: formData,
     },
@@ -1789,6 +1925,8 @@ async function addFileToMyTaskData(file, taskId) {
 }
 
 async function deleteSingleInMyTaskData(taskID) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
   userIDHeder = await AsyncStorage.getItem('userID');
 
@@ -1800,7 +1938,7 @@ async function deleteSingleInMyTaskData(taskID) {
 
   return request(
     {
-      url: DELETE_MY_TASK + '/' + taskID,
+      url: baseURL + DELETE_MY_TASK + '/' + taskID,
       method: 'DELETE',
     },
     true,
@@ -1809,6 +1947,8 @@ async function deleteSingleInMyTaskData(taskID) {
 }
 
 async function getMyTaskSubTaskData(selectedTaskID) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
   userIDHeder = await AsyncStorage.getItem('userID');
 
@@ -1833,6 +1973,8 @@ async function getMyTaskSubTaskData(selectedTaskID) {
 }
 
 async function myTaskdeleteSubTask(taskID, subtaskId) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
   userIDHeder = await AsyncStorage.getItem('userID');
 
@@ -1844,7 +1986,7 @@ async function myTaskdeleteSubTask(taskID, subtaskId) {
 
   return request(
     {
-      url: DELETE_SUB_TASKS_IN_MY_TASK + '/' + taskID + '/subtask/' + subtaskId,
+      url: baseURL + DELETE_SUB_TASKS_IN_MY_TASK + '/' + taskID + '/subtask/' + subtaskId,
       method: 'DELETE',
     },
     true,
@@ -1852,7 +1994,9 @@ async function myTaskdeleteSubTask(taskID, subtaskId) {
   );
 }
 
-function myTaskAddSubTask(userID, taskID, subTaskName) {
+async function myTaskAddSubTask(userID, taskID, subTaskName) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let headers = {
     Accept: 'application/json',
     'Content-Type': 'application/json',
@@ -1860,7 +2004,7 @@ function myTaskAddSubTask(userID, taskID, subTaskName) {
 
   return request(
     {
-      url: MY_TASK_ADD_SUB_TASK + '/' + taskID + '/subtask',
+      url: baseURL + MY_TASK_ADD_SUB_TASK + '/' + taskID + '/subtask',
       method: 'POST',
       data: {
         taskId: taskID,
@@ -1881,6 +2025,8 @@ async function myTaskUpdateSubTask(
   subTaskName,
   isSelected,
 ) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
   userIDHeder = await AsyncStorage.getItem('userID');
 
@@ -1892,7 +2038,7 @@ async function myTaskUpdateSubTask(
 
   return request(
     {
-      url: MY_TASK_UPDATE_SUB_TASK + '/' + taskID + '/subtask/' + subTaskID,
+      url: baseURL + MY_TASK_UPDATE_SUB_TASK + '/' + taskID + '/subtask/' + subTaskID,
       method: 'PUT',
       data: {
         subtaskName: subTaskName, //
@@ -1907,6 +2053,8 @@ async function myTaskUpdateSubTask(
 }
 
 async function getAllTaskInDefaultBoardData(projectID) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let userID = null;
   userID = await AsyncStorage.getItem('userID');
 
@@ -1918,7 +2066,7 @@ async function getAllTaskInDefaultBoardData(projectID) {
 
   return request(
     {
-      url: GET_MY_TASKS_BY_PROJECT + projectID + '/tasks?userId=' + userID,
+      url: baseURL + GET_MY_TASKS_BY_PROJECT + projectID + '/tasks?userId=' + userID,
       method: 'GET',
     },
     true,
@@ -1927,6 +2075,8 @@ async function getAllTaskInDefaultBoardData(projectID) {
 }
 
 async function getAllSprintInProject(projectID) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let userID = null;
   userID = await AsyncStorage.getItem('userID');
 
@@ -1938,7 +2088,7 @@ async function getAllSprintInProject(projectID) {
 
   return request(
     {
-      url: GET_SPRINTS_BY_PROJECT + '/' + projectID,
+      url: baseURL + GET_SPRINTS_BY_PROJECT + '/' + projectID,
       method: 'GET',
     },
     true,
@@ -1947,6 +2097,8 @@ async function getAllSprintInProject(projectID) {
 }
 
 async function addSprintData(projectID, sprintName, sprintDescription) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let userID = null;
   userID = await AsyncStorage.getItem('userID');
 
@@ -1957,7 +2109,7 @@ async function addSprintData(projectID, sprintName, sprintDescription) {
 
   return request(
     {
-      url: ADD_EDIT_SPRINT_BY_PROJECT,
+      url: baseURL + ADD_EDIT_SPRINT_BY_PROJECT,
       method: 'POST',
       data: {
         projectId: projectID,
@@ -1977,6 +2129,8 @@ async function editSprintData(
   sprintDescription,
   sprintId,
 ) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let userID = null;
   userID = await AsyncStorage.getItem('userID');
 
@@ -1988,7 +2142,7 @@ async function editSprintData(
 
   return request(
     {
-      url: ADD_EDIT_SPRINT_BY_PROJECT + '/' + projectID + '/' + sprintId,
+      url: baseURL + ADD_EDIT_SPRINT_BY_PROJECT + '/' + projectID + '/' + sprintId,
       method: 'PUT',
       data: {
         sprintName: sprintName,
@@ -2006,6 +2160,8 @@ async function changeSprint(
   selectedProjectID,
   selectedProjectTaskID,
 ) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let userID = null;
   userID = await AsyncStorage.getItem('userID');
 
@@ -2036,6 +2192,8 @@ async function changeSprint(
 }
 
 async function addMainTaskToProjectData(taskName, selectedProjectID) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let userID = null;
   userID = await AsyncStorage.getItem('userID');
 
@@ -2046,7 +2204,7 @@ async function addMainTaskToProjectData(taskName, selectedProjectID) {
 
   return request(
     {
-      url: ADD_MAIN_TASK_TO_PROJECT + '/' + selectedProjectID + '/tasks',
+      url: baseURL + ADD_MAIN_TASK_TO_PROJECT + '/' + selectedProjectID + '/tasks',
       method: 'POST',
       data: {
         taskName: taskName,
@@ -2062,6 +2220,8 @@ async function addMainTaskToProjectData(taskName, selectedProjectID) {
 }
 
 async function addSubTaskToProjectData(taskName, selectedProjectID, taskID) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let userID = null;
   userID = await AsyncStorage.getItem('userID');
 
@@ -2072,7 +2232,7 @@ async function addSubTaskToProjectData(taskName, selectedProjectID, taskID) {
 
   return request(
     {
-      url: ADD_MAIN_TASK_TO_PROJECT + '/' + selectedProjectID + '/tasks',
+      url: baseURL + ADD_MAIN_TASK_TO_PROJECT + '/' + selectedProjectID + '/tasks',
       method: 'POST',
       data: {
         taskName: taskName,
@@ -2093,6 +2253,8 @@ async function filterTaskByDate(
   selectedStartDate,
   selectedEndDate,
 ) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let userID = null;
   userID = await AsyncStorage.getItem('userID');
 
@@ -2109,7 +2271,7 @@ async function filterTaskByDate(
 
   return request(
     {
-      url: FILTER_TASK_IN_PROJECT + '/' + selectedProjectID + '/tasks/filter',
+      url: baseURL + FILTER_TASK_IN_PROJECT + '/' + selectedProjectID + '/tasks/filter',
       method: 'GET',
     },
     true,
@@ -2118,6 +2280,8 @@ async function filterTaskByDate(
 }
 
 async function filterTaskByUser(selectedProjectID, assignee) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let userID = null;
   userID = await AsyncStorage.getItem('userID');
 
@@ -2134,7 +2298,7 @@ async function filterTaskByUser(selectedProjectID, assignee) {
 
   return request(
     {
-      url: FILTER_TASK_IN_PROJECT + '/' + selectedProjectID + '/tasks/filter',
+      url: baseURL + FILTER_TASK_IN_PROJECT + '/' + selectedProjectID + '/tasks/filter',
       method: 'GET',
     },
     true,
@@ -2143,6 +2307,8 @@ async function filterTaskByUser(selectedProjectID, assignee) {
 }
 
 async function filterTaskByTaskTypeData(selectedProjectID, issueType) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let userID = null;
   userID = await AsyncStorage.getItem('userID');
 
@@ -2159,7 +2325,7 @@ async function filterTaskByTaskTypeData(selectedProjectID, issueType) {
 
   return request(
     {
-      url: FILTER_TASK_IN_PROJECT + '/' + selectedProjectID + '/tasks/filter',
+      url: baseURL + FILTER_TASK_IN_PROJECT + '/' + selectedProjectID + '/tasks/filter',
       method: 'GET',
     },
     true,
@@ -2168,6 +2334,8 @@ async function filterTaskByTaskTypeData(selectedProjectID, issueType) {
 }
 
 async function addSubTaskGroupTaskData(taskName, taskGroupId, parentTaskId) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   taskInitiator = await AsyncStorage.getItem('userID');
 
   let headers = {
@@ -2177,7 +2345,7 @@ async function addSubTaskGroupTaskData(taskName, taskGroupId, parentTaskId) {
 
   return request(
     {
-      url: ADD_TASK_TO_GROUP_TASK_DATA + '/' + taskGroupId + '/task',
+      url: baseURL + ADD_TASK_TO_GROUP_TASK_DATA + '/' + taskGroupId + '/task',
       method: 'POST',
       data: {
         taskName: taskName,
@@ -2192,6 +2360,8 @@ async function addSubTaskGroupTaskData(taskName, taskGroupId, parentTaskId) {
 }
 
 async function updateMyDetails(firstName, lastName, email, password) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let userID = null;
   userID = await AsyncStorage.getItem('userID');
 
@@ -2218,7 +2388,7 @@ async function updateMyDetails(firstName, lastName, email, password) {
 
   return request(
     {
-      url: UPDATE_USER + '/' + userID,
+      url: baseURL + UPDATE_USER + '/' + userID,
       method: 'PUT',
       data: data,
     },
@@ -2228,6 +2398,8 @@ async function updateMyDetails(firstName, lastName, email, password) {
 }
 
 async function uplaodProfilePhoto(fileUri,fileType) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
   userIDHeder = await AsyncStorage.getItem('userID');
 
@@ -2247,7 +2419,7 @@ async function uplaodProfilePhoto(fileUri,fileType) {
   formData.append('type', 'profileImage');
   return request(
     {
-      url: UPLOAD_USER_PROFILE,
+      url: baseURL + UPLOAD_USER_PROFILE,
       method: 'POST',
       data: formData,
     },
@@ -2257,6 +2429,8 @@ async function uplaodProfilePhoto(fileUri,fileType) {
 }
 
 async function updateParentToChild(projectId, taskId, newParent) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
   userIDHeder = await AsyncStorage.getItem('userID');
 
@@ -2268,7 +2442,7 @@ async function updateParentToChild(projectId, taskId, newParent) {
 
   return request(
     {
-      url: UPDATE_PARENT_TO_CHILD + '/' + projectId + '/tasks/' + taskId + '/parent/transition',
+      url: baseURL + UPDATE_PARENT_TO_CHILD + '/' + projectId + '/tasks/' + taskId + '/parent/transition',
       method: 'PUT',
       data: {
          newParent: newParent,
@@ -2280,6 +2454,8 @@ async function updateParentToChild(projectId, taskId, newParent) {
 }
 
 async function getTaskLogData(taskId) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
     let userID = null;
     userID = await AsyncStorage.getItem('userID');
   
@@ -2290,7 +2466,7 @@ async function getTaskLogData(taskId) {
   
     return request(
       {
-        url: GET_TASK_LOG + '/' + taskId,
+        url: baseURL + GET_TASK_LOG + '/' + taskId,
         method: 'GET',
       },
       true,
@@ -2299,6 +2475,8 @@ async function getTaskLogData(taskId) {
   }
 
   async function updateTaskIssueTypeData(projectID, taskID, selectedIssueTypeId) {
+    let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
     let userIDHeder = null;
     userIDHeder = await AsyncStorage.getItem('userID');
   
@@ -2310,7 +2488,7 @@ async function getTaskLogData(taskId) {
   
     return request(
       {
-        url: UPDATE_PROJECT_TASK + '/' + projectID + '/tasks/' + taskID,
+        url: baseURL + UPDATE_PROJECT_TASK + '/' + projectID + '/tasks/' + taskID,
         method: 'PUT',
         data: {
           issueType: selectedIssueTypeId,
@@ -2323,6 +2501,8 @@ async function getTaskLogData(taskId) {
   }
 
   async function getChildTasksOfParentData(selectedProjectID, taskId) {
+    let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
     let userID = null;
     userID = await AsyncStorage.getItem('userID');
   
@@ -2334,7 +2514,7 @@ async function getTaskLogData(taskId) {
   
     return request(
       {
-        url: GET_CHILD_TASK_OF_PARENT + '/' + selectedProjectID + '/tasks/'+ taskId +'/children',
+        url: baseURL + GET_CHILD_TASK_OF_PARENT + '/' + selectedProjectID + '/tasks/'+ taskId +'/children',
         method: 'GET',
       },
       true,
@@ -2343,6 +2523,8 @@ async function getTaskLogData(taskId) {
   };
 
 async function getFilesInGroupTaskData(selectedGroupTaskID, selectedTaskID) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
     let userIDHeder = null;
     userIDHeder = await AsyncStorage.getItem('userID');
   
@@ -2354,7 +2536,7 @@ async function getFilesInGroupTaskData(selectedGroupTaskID, selectedTaskID) {
   
     return request(
       {
-        url: GET_GROUP_TASK_DATA + '/' + selectedGroupTaskID + '/tasks/' + selectedTaskID + '/files',
+        url: baseURL + GET_GROUP_TASK_DATA + '/' + selectedGroupTaskID + '/tasks/' + selectedTaskID + '/files',
         method: 'GET',
       },
       true,
@@ -2363,6 +2545,8 @@ async function getFilesInGroupTaskData(selectedGroupTaskID, selectedTaskID) {
 };
 
 async function deleteFileInGroupTaskData(selectedGroupTaskID, selectedTaskID,taskFileId) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
   userIDHeder = await AsyncStorage.getItem('userID');
 
@@ -2374,7 +2558,7 @@ async function deleteFileInGroupTaskData(selectedGroupTaskID, selectedTaskID,tas
 
   return request(
     {
-      url: GET_GROUP_TASK_DATA + '/' + selectedGroupTaskID + '/tasks/' + selectedTaskID + '/upload/'+taskFileId,
+      url: baseURL + GET_GROUP_TASK_DATA + '/' + selectedGroupTaskID + '/tasks/' + selectedTaskID + '/upload/'+taskFileId,
       method: 'DELETE',
     },
     true,
@@ -2383,6 +2567,8 @@ async function deleteFileInGroupTaskData(selectedGroupTaskID, selectedTaskID,tas
 };
 
 async function addFileToGroupTask(file,selectedGroupTaskID, selectedTaskID) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
   userIDHeder = await AsyncStorage.getItem('userID');
 
@@ -2403,7 +2589,7 @@ async function addFileToGroupTask(file,selectedGroupTaskID, selectedTaskID) {
 
   return request(
     {
-      url: GET_GROUP_TASK_DATA + '/' + selectedGroupTaskID + '/tasks/' + selectedTaskID + '/upload',
+      url: baseURL + GET_GROUP_TASK_DATA + '/' + selectedGroupTaskID + '/tasks/' + selectedTaskID + '/upload',
       method: 'POST',
       data: formData,
     },
@@ -2413,6 +2599,8 @@ async function addFileToGroupTask(file,selectedGroupTaskID, selectedTaskID) {
 };
 
 async function getChildTasksOfTaskGroupData(selectedGroupTaskID, taskId) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let userID = null;
   userID = await AsyncStorage.getItem('userID');
 
@@ -2424,7 +2612,7 @@ async function getChildTasksOfTaskGroupData(selectedGroupTaskID, taskId) {
 
   return request(
     {
-      url: GET_CHILD_TASK_OF_TASK_GROUP + '/' + selectedGroupTaskID + '/tasks/'+ taskId +'/children',
+      url: baseURL + GET_CHILD_TASK_OF_TASK_GROUP + '/' + selectedGroupTaskID + '/tasks/'+ taskId +'/children',
       method: 'GET',
     },
     true,
@@ -2433,6 +2621,8 @@ async function getChildTasksOfTaskGroupData(selectedGroupTaskID, taskId) {
 };
 
 async function updateParentToChildInGroup(selectedGroupTaskID, taskId, newParent) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
   userIDHeder = await AsyncStorage.getItem('userID');
 
@@ -2444,7 +2634,7 @@ async function updateParentToChildInGroup(selectedGroupTaskID, taskId, newParent
 
   return request(
     {
-      url: UPDATE_PARENT_TO_CHILD_IN_GROUP + '/' + selectedGroupTaskID + '/tasks/' + taskId + '/parent/transition',
+      url: baseURL + UPDATE_PARENT_TO_CHILD_IN_GROUP + '/' + selectedGroupTaskID + '/tasks/' + taskId + '/parent/transition',
       method: 'PUT',
       data: {
          newParent: newParent,
@@ -2456,6 +2646,8 @@ async function updateParentToChildInGroup(selectedGroupTaskID, taskId, newParent
 };
 
 async function getWorkloadWithCompletionUser() {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
   userIDHeder = await AsyncStorage.getItem('userID');
 
@@ -2469,7 +2661,7 @@ async function getWorkloadWithCompletionUser() {
 
   return request(
     {
-      url: GET_ALL_USERS_WORKLOAD_WITH_COMPLETION + '/workload?assignee='+userIDHeder,
+      url: baseURL + GET_ALL_USERS_WORKLOAD_WITH_COMPLETION + '/workload?assignee='+userIDHeder,
       method: 'GET',
     },
     true,
@@ -2478,6 +2670,8 @@ async function getWorkloadWithCompletionUser() {
 }
 
 async function getMobileVersionStatusData(platform, version) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
   let headers = {
     Accept: 'application/json',
     'Content-Type': 'application/json',
@@ -2485,7 +2679,7 @@ async function getMobileVersionStatusData(platform, version) {
 
   return request(
     {
-      url: GET_MOBILE_VERSION_STATUS + '/' + platform + '/' + version,
+      url: baseURL + GET_MOBILE_VERSION_STATUS + '/' + platform + '/' + version,
       method: 'GET',
     },
     false,

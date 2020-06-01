@@ -1,10 +1,19 @@
 const strings = {
+  config: {
+    configMainTitle: 'Welcome to Arimac SHIFT',
+    configSubTitle: 'Please enter your Organization URL to continue.',
+    configBottomText:
+      'Contact your organization administrator to get the organization URL',
+    configButton: 'OK',
+    configError:'Sorry, we did not find such organization' 
+  },
   login: {
     loginButton: 'Login',
-    loginMainTitle: 'Manage your projects, tasks and workload at one place easily.',
+    loginMainTitle:
+      'Manage your projects, tasks and workload at one place easily.',
     loginSubMainTitle:
       'Enter your email address and password to get access your account',
-    copyRights : '© Arimac Digital',  
+    copyRights: '© Arimac Digital',
   },
   slack: {
     clientId: '345426929140.1020110511447', // found under App Credentials
