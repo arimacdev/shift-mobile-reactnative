@@ -156,7 +156,7 @@ class ProjectsSearchScreen extends Component {
     let projects = this.state.projects;
     let projectsLoading = this.state.projectsLoading;
     return (
-      <View style={styles.backgroundImage}>
+      <View style={styles.container}>
         <View style={styles.projectFilerView}>
           <Image style={styles.searchIcon} source={icons.searchGray} />
           <TextInput
@@ -179,7 +179,7 @@ class ProjectsSearchScreen extends Component {
 }
 
 const styles = EStyleSheet.create({
-  backgroundImage: {
+  container: {
     flex: 1,
   },
   projectFilerView: {

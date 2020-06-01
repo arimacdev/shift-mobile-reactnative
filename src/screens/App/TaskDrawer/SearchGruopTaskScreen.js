@@ -94,7 +94,7 @@ class SearchGruopTaskScreen extends Component {
     let groupTasks = this.state.groupTasks;
     let dataLoading = this.state.dataLoading;
     return (
-      <View style={styles.backgroundImage}>
+      <View style={styles.container}>
         <NavigationEvents onWillFocus={payload => this.loadData(payload)} />
         <View style={styles.projectFilerView}>
           <Image style={styles.searchIcon} source={icons.searchGray} />
@@ -118,7 +118,7 @@ class SearchGruopTaskScreen extends Component {
 }
 
 const styles = EStyleSheet.create({
-  backgroundImage: {
+  container: {
     flex: 1,
   },
   projectFilerView: {

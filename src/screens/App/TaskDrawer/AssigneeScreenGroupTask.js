@@ -145,7 +145,7 @@ class AssigneeScreenGroupTask extends Component {
     let dataLoading = this.state.dataLoading;
 
     return (
-      <View style={styles.backgroundImage}>
+      <View style={styles.container}>
         <View style={styles.projectFilerView}>
           <Image style={styles.searchIcon} source={icons.searchGray} />
           <TextInput
@@ -170,7 +170,7 @@ class AssigneeScreenGroupTask extends Component {
 }
 
 const styles = EStyleSheet.create({
-  backgroundImage: {
+  container: {
     flex: 1,
   },
   projectFilerView: {

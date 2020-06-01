@@ -97,7 +97,7 @@ class DrawerTasksScreen extends Component {
     let dataLoading = this.state.dataLoading;
 
     return (
-      <View style={styles.backgroundImage}>
+      <View style={styles.container}>
         <NavigationEvents onWillFocus={payload => this.loadData(payload)} />
         <TouchableOpacity
           onPress={() => this.props.navigation.navigate('MyTasksTabScreen')}>
@@ -142,7 +142,7 @@ class DrawerTasksScreen extends Component {
 }
 
 const styles = EStyleSheet.create({
-  backgroundImage: {
+  container: {
     flex: 1,
     //  backgroundColor: colors.pageBackGroundColor,
   },

@@ -1786,7 +1786,7 @@ class GroupSubTasksDetailsScreen extends Component {
     let addChildTaskShow = this.state.addChildTaskShow;
 
     return (
-      <View style={styles.backgroundImage}>
+      <View style={styles.container}>
         <Header
           isDelete={true}
           navigation={this.props.navigation}
@@ -1801,7 +1801,7 @@ class GroupSubTasksDetailsScreen extends Component {
           }
           onPressDelete={() => this.onTaskDeketePress()}
         />
-        <ScrollView style={styles.backgroundImage}>
+        <ScrollView style={styles.container}>
           <View>
             <View style={styles.headerView}>
               <Text style={styles.headerTaskText}>Task - </Text>
@@ -2013,7 +2013,7 @@ class GroupSubTasksDetailsScreen extends Component {
 }
 
 const styles = EStyleSheet.create({
-  backgroundImage: {
+  container: {
     flex: 1,
   },
   projectFilerView: {

@@ -605,7 +605,7 @@ class CreateNewProjectScreen extends Component {
 }
 
 const styles = EStyleSheet.create({
-  backgroundImage: {
+  container: {
     flex: 1,
   },
   titleView: {

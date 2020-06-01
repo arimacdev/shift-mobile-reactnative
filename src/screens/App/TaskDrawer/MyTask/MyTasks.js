@@ -227,7 +227,7 @@ class MyTasks extends Component {
     let taskName = this.state.taskName;
 
     return (
-      <View style={styles.backgroundImage}>
+      <View style={styles.container}>
         <NavigationEvents
           onWillFocus={payload => this.tabOpenTaskTab(payload)}
         />
@@ -284,7 +284,7 @@ class MyTasks extends Component {
 }
 
 const styles = EStyleSheet.create({
-  backgroundImage: {
+  container: {
     flex: 1,
   },
   projectFilerView: {

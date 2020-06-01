@@ -1299,7 +1299,7 @@ class MyTasksDetailsScreen extends Component {
     let taskName = this.state.taskName;
 
     return (
-      <View style={styles.backgroundImage}>
+      <View style={styles.container}>
         <Header
           isDelete={true}
           navigation={this.props.navigation}
@@ -1307,7 +1307,7 @@ class MyTasksDetailsScreen extends Component {
           onPress={() => this.props.navigation.goBack()}
           onPressDelete={() => this.onTaskDeketePress()}
         />
-        <ScrollView style={styles.backgroundImage}>
+        <ScrollView style={styles.container}>
           <View>
             <View style={styles.headerView}>
               <View style={styles.projectFilerView}>
@@ -1471,7 +1471,7 @@ class MyTasksDetailsScreen extends Component {
 }
 
 const styles = EStyleSheet.create({
-  backgroundImage: {
+  container: {
     flex: 1,
   },
   projectFilerView: {
