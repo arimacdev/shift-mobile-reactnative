@@ -83,11 +83,22 @@ class SplashScreen extends Component {
       this.state.appState.match(/inactive|background/) ||
       nextAppState === 'active'
     ) {
-      this.getMobileVersionStatus();
+      if(this.getBaseUrl() == null){
+        NavigationService.navigate('Auth');
+      } else {
+        this.getMobileVersionStatus();
+      }
+      
       // AsyncStorage.setItem('baseURL','https://project.arimaclanka.com/api/pm-service/');
     }
     this.setState({appState: nextAppState});
   };
+
+  async getBaseUrl(){
+    let baseURL = null;
+    baseURL = await AsyncStorage.getItem('baseURL');
+    return baseURL;
+  }
 
   async getMobileVersionStatus() {
     let platform = Platform.OS;
@@ -138,7 +149,7 @@ class SplashScreen extends Component {
         this.setState({dataLoading: false});
         this.props.UserInfoSuccess(responseUser);
         this.props.UserType(userType);
-        NavigationService.navigate('Auth');
+        NavigationService.navigate('App');
       })
       .catch(err => {
         this.setState({dataLoading: false});

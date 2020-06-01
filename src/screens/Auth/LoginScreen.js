@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   Platform,
   AppState,
-  Image
+  Image,
 } from 'react-native';
 import {connect} from 'react-redux';
 import * as actions from '../../redux/actions';
@@ -66,9 +66,9 @@ class LoginScreen extends Component {
 
   componentDidMount() {
     AppState.addEventListener('change', this._handleAppStateChange);
-    if (Platform.OS == 'ios') {
-      this.getMobileVersionStatus();
-    }
+    // if (Platform.OS == 'ios') {
+    // this.getMobileVersionStatus();
+    // }
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {}
@@ -169,20 +169,36 @@ class LoginScreen extends Component {
     return (
       <View style={styles.container}>
         <View style={styles.imageContainer}>
+          <Image
+            style={styles.iconStyle}
+            source={icons.appIcon}
+            resizeMode="contain"
+          />
+        </View>
+        <View style={styles.imageContainer}>
+          <Text style={styles.textTitle}>{strings.login.loginText}</Text>
+          <View style={styles.companyImageContainer}>
             <Image
-                style={styles.iconStyle}
-                source={icons.appIcon}
-                resizeMode="contain"
-              />
-               <Text style={styles.textTitle}>{strings.login.loginMainTitle}</Text>
+              style={styles.compantIconStyle}
+              source={{uri: 'https://arimaclanka.com/images/logo.png'}}
+              resizeMode="contain"
+            />
+          </View>
+          <Text style={styles.companyNameText}>Arimac Digital</Text>
+          <Text style={styles.companyNameSubText}>Arimac Lanka PVT LTD</Text>
+          <TouchableOpacity
+            style={styles.loginButton}
+            onPress={() => this.initialUserLogin()}>
+            <Text style={styles.textLogin}>{strings.login.loginButton}</Text>
+          </TouchableOpacity>
         </View>
         <View style={styles.bottomContainer}>
-            <TouchableOpacity
-              style={styles.loginButton}
-              onPress={() => this.initialUserLogin()}>
-              <Text style={styles.textLogin}>{strings.login.loginButton}</Text>
-            </TouchableOpacity>
-            <Text style={styles.copyRights}>{strings.login.copyRights}</Text>
+          <TouchableOpacity
+            style={styles.goBackButton}
+            onPress={() => this.props.navigation.goBack()}>
+            <Text style={styles.textGoBack}>{strings.login.goBack}</Text>
+          </TouchableOpacity>
+          {/* <Text style={styles.copyRights}>{strings.login.copyRights}</Text> */}
         </View>
         <ForceUpdateModal
           showForceUpdateModal={this.state.forceUpdate}
@@ -200,22 +216,32 @@ const styles = EStyleSheet.create({
     width: '100%',
     height: '100%',
     alignItems: 'center',
-    justifyContent: 'center',
-    flex : 1,
+    // justifyContent: 'center',
+    flex: 1,
     backgroundColor: colors.white,
   },
-  imageContainer:{
+  imageContainer: {
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
+    marginTop: '30rem',
+  },
+  companyImageContainer: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: '0.5rem',
+    paddingHorizontal: '25rem',
+    paddingVertical: '20rem',
+    marginTop: '5rem',
+    marginBottom: '10rem',
   },
   textTitle: {
     fontSize: '14rem',
     color: colors.loginBlue,
     textAlign: 'center',
     fontFamily: 'CircularStd-Black',
-    marginLeft : '30rem',
-    marginRight : '30rem'
+    marginHorizontal: '30rem',
   },
   userIcon: {
     width: '20rem',
@@ -223,30 +249,28 @@ const styles = EStyleSheet.create({
   },
   loginButton: {
     backgroundColor: colors.loginButton,
-    borderRadius: 5,
-    width: '330rem',
+    borderRadius: '5rem',
+    width: '240rem',
     marginTop: '17rem',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: '12rem',
-    height: '50rem',
+    height: '45rem',
     marginHorizontal: '20rem',
   },
   textLogin: {
-    fontSize: '15rem',
+    fontSize: '14rem',
     color: colors.white,
-    textAlign: 'center',
     lineHeight: '17rem',
-    fontFamily: 'CircularStd-Black',
+    fontFamily: 'CircularStd-Medium',
     textAlign: 'center',
-    fontWeight: 'bold',
   },
   bottomContainer: {
     position: 'absolute',
     bottom: 0,
     width: '100%',
-    marginBottom: 15,
+    marginBottom: '15rem',
   },
   iconStyle: {
     width: '175rem',
@@ -261,6 +285,42 @@ const styles = EStyleSheet.create({
     fontFamily: 'CircularStd-Black',
     marginHorizontal: '50rem',
     marginBottom: '10rem',
+  },
+  compantIconStyle: {
+    width: '100rem',
+    height: '100rem',
+  },
+  companyNameText: {
+    fontSize: '15rem',
+    color: colors.loginGray,
+    textAlign: 'center',
+    fontFamily: 'CircularStd-Black',
+    marginHorizontal: '50rem',
+    marginBottom: '3rem',
+  },
+  companyNameSubText: {
+    fontSize: '11rem',
+    color: colors.gray,
+    textAlign: 'center',
+    fontFamily: 'CircularStd-Medium',
+    marginHorizontal: '50rem',
+    marginBottom: '10rem',
+  },
+  goBackButton: {
+    marginTop: '17rem',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: '12rem',
+    height: '45rem',
+    marginHorizontal: '20rem',
+  },
+  textGoBack: {
+    fontSize: '14rem',
+    color: colors.colorMidnightBlue,
+    lineHeight: '17rem',
+    fontFamily: 'CircularStd-Medium',
+    textAlign: 'center',
   },
 });
 

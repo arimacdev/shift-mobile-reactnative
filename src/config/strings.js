@@ -14,6 +14,8 @@ const strings = {
     loginSubMainTitle:
       'Enter your email address and password to get access your account',
     copyRights: '© Arimac Digital',
+    loginText:'You are logging in to',
+    goBack:'Go Back'
   },
   slack: {
     clientId: '345426929140.1020110511447', // found under App Credentials
