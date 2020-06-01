@@ -143,7 +143,7 @@ class AssigneeScreen extends Component {
     let dataLoading = this.state.dataLoading;
 
     return (
-      <View style={styles.backgroundImage}>
+      <View style={styles.container}>
         <View style={styles.projectFilerView}>
           <Image style={styles.searchIcon} source={icons.searchGray} />
           <TextInput
@@ -168,12 +168,12 @@ class AssigneeScreen extends Component {
 }
 
 const styles = EStyleSheet.create({
-  backgroundImage: {
+  container: {
     flex: 1,
   },
   projectFilerView: {
     backgroundColor: colors.projectBgColor,
-    borderRadius: 5,
+    borderRadius: '5rem',
     marginTop: '17rem',
     marginBottom: '12rem',
     flexDirection: 'row',
@@ -190,14 +190,13 @@ const styles = EStyleSheet.create({
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'center',
-    // fontWeight: 'bold',
   },
   projectView: {
     height: '70rem',
     flexDirection: 'row',
     alignItems: 'center',
     marginHorizontal: '20rem',
-    borderBottomWidth: 1,
+    borderBottomWidth: '1rem',
     borderBottomColor: colors.lighterGray,
   },
   text: {
@@ -220,8 +219,8 @@ const styles = EStyleSheet.create({
     width: '5rem',
     height: '60rem',
     alignItems: 'flex-end',
-    borderTopRightRadius: 5,
-    borderBottomRightRadius: 5,
+    borderTopRightRadius: '5rem',
+    borderBottomRightRadius: '5rem',
   },
   dropIcon: {
     width: '13rem',

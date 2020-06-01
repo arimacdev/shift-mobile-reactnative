@@ -58,7 +58,7 @@ const styles = EStyleSheet.create({
   },
   taskFieldView: {
     backgroundColor: colors.projectBgColor,
-    borderRadius: 5,
+    borderRadius: '5rem',
     marginTop: '10rem',
     marginBottom: '7rem',
     flexDirection: 'row',
@@ -82,7 +82,6 @@ const styles = EStyleSheet.create({
     marginTop: '17rem',
     flexDirection: 'row',
     alignItems: 'center',
-    // justifyContent: 'center',
     paddingHorizontal: '12rem',
     height: '55rem',
     marginHorizontal: '20rem',

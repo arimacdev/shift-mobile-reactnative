@@ -1221,7 +1221,7 @@ class TasksTabScreen extends Component {
     let dataLoading = this.state.dataLoading;
 
     return (
-      <View style={styles.backgroundImage}>
+      <View style={styles.container}>
         <NavigationEvents
           onWillFocus={payload => this.tabOpenTaskTab(payload)}
         />
@@ -1339,9 +1339,8 @@ class TasksTabScreen extends Component {
 }
 
 const styles = EStyleSheet.create({
-  backgroundImage: {
+  container: {
     flex: 1,
-    // backgroundColor: colors.pageBackGroundColor,
   },
   projectFilerView: {
     backgroundColor: colors.projectBgColor,
@@ -1355,7 +1354,7 @@ const styles = EStyleSheet.create({
     marginHorizontal: '20rem',
   },
   filterByText: {
-    fontSize: 16,
+    fontSize: '15rem',
     color: colors.gray,
     fontWeight: 'bold',
   },
@@ -1366,7 +1365,7 @@ const styles = EStyleSheet.create({
   },
   tasksFilerView: {
     backgroundColor: colors.lightgray,
-    borderRadius: 5,
+    borderRadius: '5rem',
     width: '264rem',
     marginTop: '17rem',
     marginBottom: '12rem',
@@ -1553,7 +1552,7 @@ const styles = EStyleSheet.create({
   tasksHeaderView: {
     flexDirection: 'row',
     alignItems: 'baseline',
-    marginBottom: 5,
+    marginBottom: '5rem',
   },
   tasksLabelView: {
     width: '75rem',

@@ -439,7 +439,7 @@ class WorkloadTabScreen extends Component {
 }
 
 const styles = EStyleSheet.create({
-  backgroundImage: {
+  container: {
     flex: 1,
     backgroundColor: colors.pageBackGroundColor,
   },

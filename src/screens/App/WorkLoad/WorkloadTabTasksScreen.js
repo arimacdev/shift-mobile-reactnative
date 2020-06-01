@@ -417,7 +417,7 @@ class WorkloadTabTasksScreen extends Component {
 
     return (
       <View
-        style={styles.backgroundImage}
+        style={styles.container}
         // onStartShouldSetResponderCapture={() => {
         //   this.setState({enableScrollViewScroll: true});
         // }}
@@ -478,7 +478,7 @@ class WorkloadTabTasksScreen extends Component {
 }
 
 const styles = EStyleSheet.create({
-  backgroundImage: {
+  container: {
     flex: 1,
   },
   projectFilerView: {

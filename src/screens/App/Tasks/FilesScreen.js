@@ -280,8 +280,8 @@ const styles = EStyleSheet.create({
   },
   filesView: {
     backgroundColor: colors.white,
-    borderRadius: 5,
-    borderWidth: 1,
+    borderRadius: '5rem',
+    borderWidth: '1rem',
     borderColor: colors.lighterGray,
     height: '60rem',
     marginTop: '7rem',
@@ -327,10 +327,9 @@ const styles = EStyleSheet.create({
   button: {
     flexDirection: 'row',
     backgroundColor: colors.lightBlue,
-    borderRadius: 5,
+    borderRadius: '5rem',
     flexDirection: 'row',
     alignItems: 'center',
-    // justifyContent: 'center',
     paddingHorizontal: '12rem',
     height: '55rem',
     marginHorizontal: '20rem',

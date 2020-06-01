@@ -2079,7 +2079,7 @@ class SubTasksDetailsScreen extends Component {
     let addChildTaskShow = this.state.addChildTaskShow;
 
     return (
-      <View style={styles.backgroundImage}>
+      <View style={styles.container}>
         <Header
           isTaskLog={false}
           isDelete={true}
@@ -2090,7 +2090,7 @@ class SubTasksDetailsScreen extends Component {
           onPress={() => this.props.navigation.goBack()}
           onPressDelete={() => this.onTaskDeketePress()}
         />
-        <ScrollView style={styles.backgroundImage}>
+        <ScrollView style={styles.container}>
           <View>
             <View style={styles.headerView}>
               <Text style={styles.headerTaskText}>Task - </Text>
@@ -2389,7 +2389,7 @@ class SubTasksDetailsScreen extends Component {
 }
 
 const styles = EStyleSheet.create({
-  backgroundImage: {
+  container: {
     flex: 1,
   },
   projectFilerView: {
@@ -2470,7 +2470,7 @@ const styles = EStyleSheet.create({
   buttonDelete: {
     flexDirection: 'row',
     backgroundColor: colors.lightRed,
-    borderRadius: 5,
+    borderRadius: '5rem',
     marginTop: '40rem',
     marginBottom: '30rem',
     flexDirection: 'row',

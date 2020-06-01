@@ -185,11 +185,9 @@ const styles = EStyleSheet.create({
   chatView: {
     backgroundColor: colors.white,
     borderColor: colors.lighterGray,
-    // height: '60rem',
     marginTop: '13rem',
     marginBottom: '13rem',
     flexDirection: 'row',
-    // alignItems: 'center',
     paddingHorizontal: '12rem',
     marginHorizontal: '20rem',
   },
@@ -228,7 +226,7 @@ const styles = EStyleSheet.create({
   button: {
     flexDirection: 'row',
     backgroundColor: colors.lightBlue,
-    borderRadius: 5,
+    borderRadius: '5rem',
     marginTop: '17rem',
     marginBottom: '17rem',
     flexDirection: 'row',
@@ -270,7 +268,7 @@ const styles = EStyleSheet.create({
   },
   chatFieldView: {
     backgroundColor: colors.projectBgColor,
-    borderRadius: 5,
+    borderRadius: '5rem',
     marginBottom: '15rem',
     flexDirection: 'row',
     alignItems: 'center',

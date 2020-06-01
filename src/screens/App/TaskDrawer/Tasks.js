@@ -530,7 +530,7 @@ class Tasks extends Component {
     let filter = this.state.filter;
 
     return (
-      <View style={styles.backgroundImage}>
+      <View style={styles.container}>
         <NavigationEvents
           onWillFocus={payload => this.tabOpenTaskTab(payload)}
         />
@@ -612,9 +612,8 @@ class Tasks extends Component {
 }
 
 const styles = EStyleSheet.create({
-  backgroundImage: {
+  container: {
     flex: 1,
-    // backgroundColor: colors.pageBackGroundColor,
   },
   subContainerWhite: {
     marginBottom: '65rem',
