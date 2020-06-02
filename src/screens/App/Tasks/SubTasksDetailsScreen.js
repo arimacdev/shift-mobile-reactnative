@@ -1335,10 +1335,7 @@ class SubTasksDetailsScreen extends Component {
     if (item.renderImage) {
       return (
         <FadeIn>
-          <Image
-            source={icons.forwordGray}
-            style={{width: 24, height: 24, borderRadius: 24 / 2}}
-          />
+          <Image source={icons.forwordGray} style={styles.imageStyle} />
         </FadeIn>
       );
     } else {
@@ -1765,19 +1762,11 @@ class SubTasksDetailsScreen extends Component {
     if (userImage) {
       return (
         <FadeIn>
-          <Image
-            source={{uri: userImage}}
-            style={{width: 24, height: 24, borderRadius: 24 / 2}}
-          />
+          <Image source={{uri: userImage}} style={styles.imageStyle} />
         </FadeIn>
       );
     } else {
-      return (
-        <Image
-          style={{width: 24, height: 24, borderRadius: 24 / 2}}
-          source={require('../../../asserts/img/defult_user.png')}
-        />
-      );
+      return <Image style={styles.imageStyle} source={icons.defultUser} />;
     }
   };
 
@@ -2847,6 +2836,11 @@ const styles = EStyleSheet.create({
     padding: '08rem',
   },
   sprintNameViewMainView: {},
+  imageStyle: {
+    width: '22rem',
+    height: '22rem',
+    borderRadius: 50 / 2,
+  },
 });
 
 const mapStateToProps = state => {

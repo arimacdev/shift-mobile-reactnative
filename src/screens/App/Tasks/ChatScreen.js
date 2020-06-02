@@ -61,9 +61,7 @@ class ChatScreen extends Component {
   }
 
   userImage = function() {
-    let userImage =
-      'https://i.pinimg.com/originals/3d/40/6a/3d406aa185eb1845276ecf3a8c963fce.jpg';
-    // let userImage = item.taskAssigneeProfileImage;
+    let userImage = item.taskAssigneeProfileImage;
 
     if (userImage) {
       return (
@@ -72,12 +70,7 @@ class ChatScreen extends Component {
         </FadeIn>
       );
     } else {
-      return (
-        <Image
-          style={styles.userIcon}
-          source={require('../../../asserts/img/defult_user.png')}
-        />
-      );
+      return <Image style={styles.userIcon} source={icons.defultUser} />;
     }
   };
 
