@@ -2336,7 +2336,7 @@ async function filterTaskByTaskTypeData(selectedProjectID, issueType) {
 async function addSubTaskGroupTaskData(taskName, taskGroupId, parentTaskId) {
   let baseURL = null;
   baseURL = await AsyncStorage.getItem('baseURL');
-  taskInitiator = await AsyncStorage.getItem('userID');
+  let taskInitiator = await AsyncStorage.getItem('userID');
 
   let headers = {
     Accept: 'application/json',
@@ -2687,6 +2687,25 @@ async function getMobileVersionStatusData(platform, version) {
   );
 }
 
+async function getOrganizationData(platform, version) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
+  let headers = {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+  };
+
+  return request(
+    {
+      url: baseURL + GET_MOBILE_VERSION_STATUS + '/' + platform + '/' + version,
+      method: 'GET',
+    },
+    false,
+    headers,
+  );
+}
+
+
 const APIServices = {
   getAllProjectsByUserData,
   getUserData,
@@ -2785,7 +2804,8 @@ const APIServices = {
   getChildTasksOfTaskGroupData,
   updateParentToChildInGroup,
   getWorkloadWithCompletionUser,
-  getMobileVersionStatusData
+  getMobileVersionStatusData,
+  getOrganizationData
 };
 
 export default APIServices;

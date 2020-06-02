@@ -67,7 +67,7 @@ class LoginScreen extends Component {
   componentDidMount() {
     AppState.addEventListener('change', this._handleAppStateChange);
     // if (Platform.OS == 'ios') {
-    // this.getMobileVersionStatus();
+    this.getMobileVersionStatus();
     // }
   }
 
@@ -82,7 +82,7 @@ class LoginScreen extends Component {
       this.state.appState.match(/inactive|background/) ||
       nextAppState === 'active'
     ) {
-      // this.getMobileVersionStatus();
+      this.getMobileVersionStatus();
     }
     this.setState({appState: nextAppState});
   };
@@ -106,7 +106,7 @@ class LoginScreen extends Component {
           });
         } else {
           this.setState({dataLoading: false, forceUpdate: false});
-          this.checkUserStatus();
+          // this.checkUserStatus();
         }
       } else {
         this.setState({dataLoading: false});
@@ -116,18 +116,18 @@ class LoginScreen extends Component {
     }
   }
 
-  async checkUserStatus() {
-    AsyncStorage.getItem('userID').then(userID => {
-      if (userID) {
-        AsyncStorage.getItem('userType').then(userType => {
-          if (userType) {
-            this.fetchDataUserData(userID, userType);
-            //NavigationService.navigate('App');
-          }
-        });
-      }
-    });
-  }
+  // async checkUserStatus() {
+  //   AsyncStorage.getItem('userID').then(userID => {
+  //     if (userID) {
+  //       AsyncStorage.getItem('userType').then(userType => {
+  //         if (userType) {
+  //           this.fetchDataUserData(userID, userType);
+  //           //NavigationService.navigate('App');
+  //         }
+  //       });
+  //     }
+  //   });
+  // }
 
   fetchDataUserData(userID, userType) {
     this.setState({dataLoading: true});

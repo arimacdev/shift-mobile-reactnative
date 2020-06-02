@@ -26,6 +26,36 @@ import DeviceInfo from 'react-native-device-info';
 import Loader from '../../components/Loader';
 import icons from '../../assest/icons/icons';
 
+let data = {
+  status: 200,
+  message: 'Organization Retrieved Successfully',
+  data: {
+    _id: '5ed5f7bbec09d162941984aa',
+    workspace: 'arimac-digital',
+    organizationName: 'Arimac',
+    company: 'Arimac Lanka',
+    organizationLogo: 'https://arimaclanka.com/images/logo.png',
+    workspaceUrl: 'https://project.arimaclanka.com/api/pm-service/',
+    android: {
+      currentVersion: 100,
+      latestVersion: 101,
+      isForceUpdate: true,
+    },
+    ios: {
+      currentVersion: 100,
+      latestVersion: 101,
+      isForceUpdate: true,
+    },
+    idpEndpoints: {
+      authorization: 'https://project.arimaclanka.com/auth/realms/pm-tool/protocol/openid-connect/auth',
+      token: 'https://project.arimaclanka.com/auth/realms/pm-tool/protocol/openid-connect/token',
+    },
+    notification: {
+      slack: 'http://',
+    },
+    __v: 0,
+  },
+};
 class ConfigurationScreen extends Component {
   constructor(props) {
     super(props);
@@ -41,11 +71,14 @@ class ConfigurationScreen extends Component {
 
   async initialUserLogin() {
     this.setState({dataLoading: true});
-    APIServices.getData()
+    let platform = Platform.OS;
+    let version = DeviceInfo.getBuildNumber();
+    APIServices.getOrganizationData(platform, version)
       .then(response => {
         if (response.message == 'success') {
           this.setState({dataLoading: false, error: false});
-          AsyncStorage.setItem('baseURL', this.state.url);
+          AsyncStorage.setItem('baseURL', data.data.workspaceUrl);
+          AsyncStorage.setItem('workspace', data.data.workspace);
           NavigationService.navigate('LoginScreen');
         } else {
           this.setState({dataLoading: false, error: true});
