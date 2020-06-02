@@ -17,6 +17,7 @@ import colors from '../config/colors';
 import NavigationService from '../services/NavigationService';
 import * as actions from '../redux/actions';
 import FadeIn from 'react-native-fade-in-image';
+import icons from '../assest/icons/icons';
 
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
@@ -38,14 +39,11 @@ const CustomDrawerContentComponent = props => (
             <FadeIn>
               <Image
                 source={{uri: props.loginUser.profileImage}}
-                style={{width: 64, height: 64, borderRadius: 64 / 2}}
+                style={styles.userIcon}
               />
             </FadeIn>
           ) : (
-            <Image
-              style={{width: 64, height: 64, borderRadius: 64 / 2}}
-              source={require('../asserts/img/defult_user.png')}
-            />
+            <Image style={styles.userIcon} source={icons.defultUser} />
           )}
         </View>
         <View style={styles.headerRight}>
@@ -54,20 +52,21 @@ const CustomDrawerContentComponent = props => (
           </View>
           <View style={{}}>
             <Text style={styles.textNameUser}>
-              {props.loginUser.firstName ? ` ${props.loginUser.firstName}` : ''}
+              {props.loginUser.firstName ? `${props.loginUser.firstName}` : ''}
               {props.loginUser.lastName ? ` ${props.loginUser.lastName}` : ''}
             </Text>
           </View>
         </View>
-        <TouchableOpacity 
-            onPress={() =>
-              props.navigation.closeDrawer()
-            }
+        <TouchableOpacity
+          onPress={() => props.navigation.closeDrawer()}
           style={styles.headerClose}>
           <Image
-              source={require('../asserts/img/drawer_close.png')}
-              style={{ width:  EStyleSheet.value('18rem'),height:EStyleSheet.value('18rem')}}
-            />
+            source={require('../asserts/img/drawer_close.png')}
+            style={{
+              width: EStyleSheet.value('18rem'),
+              height: EStyleSheet.value('18rem'),
+            }}
+          />
         </TouchableOpacity>
       </TouchableOpacity>
       <View
@@ -78,87 +77,153 @@ const CustomDrawerContentComponent = props => (
       />
       <DrawerNavigatorItems {...props} />
       {/* DrawerTasksScreen */}
-      {true &&
-        <TouchableOpacity style={styles.custtomButton} 
-          onPress={() => {  NavigationService.navigate('Projects'); props.drawerItemSelect("projects") }}>
-          {
-            props.selectedDrawerItem == 'projects' ?
+      {true && (
+        <TouchableOpacity
+          style={styles.custtomButton}
+          onPress={() => {
+            NavigationService.navigate('Projects');
+            props.drawerItemSelect('projects');
+          }}>
+          {props.selectedDrawerItem == 'projects' ? (
             <Image
-              tintColor='#FFFFFF'
+              tintColor="#FFFFFF"
               source={require('../asserts/img/drawer_projects.png')}
-              style={{ width:  EStyleSheet.value('25rem'),height:EStyleSheet.value('23rem')}}
-            /> : 
-            <Image
-              tintColor='#4d4f85'
-              source={require('../asserts/img/drawer_projects.png')}
-              style={{ width:  EStyleSheet.value('25rem'),height:EStyleSheet.value('23rem')}}
+              style={{
+                width: EStyleSheet.value('25rem'),
+                height: EStyleSheet.value('23rem'),
+              }}
             />
-          }  
-          <Text style={[ props.selectedDrawerItem == 'projects' ? styles.textSelected : styles.text]}>Projects</Text>
+          ) : (
+            <Image
+              tintColor="#4d4f85"
+              source={require('../asserts/img/drawer_projects.png')}
+              style={{
+                width: EStyleSheet.value('25rem'),
+                height: EStyleSheet.value('23rem'),
+              }}
+            />
+          )}
+          <Text
+            style={[
+              props.selectedDrawerItem == 'projects'
+                ? styles.textSelected
+                : styles.text,
+            ]}>
+            Projects
+          </Text>
         </TouchableOpacity>
-      }
-      {true &&
-        <TouchableOpacity style={styles.custtomButton1} 
-          onPress={() => {  NavigationService.navigate('DrawerTasksScreen'); props.drawerItemSelect("tasks") }}>
-          {
-            props.selectedDrawerItem == 'tasks' ?
+      )}
+      {true && (
+        <TouchableOpacity
+          style={styles.custtomButton1}
+          onPress={() => {
+            NavigationService.navigate('DrawerTasksScreen');
+            props.drawerItemSelect('tasks');
+          }}>
+          {props.selectedDrawerItem == 'tasks' ? (
             <Image
-              tintColor='#FFFFFF'
-                source={require('../asserts/img/drawer_projects.png')}
-                style={{ width:  EStyleSheet.value('25rem'),height:EStyleSheet.value('23rem')}}
-            /> : 
+              tintColor="#FFFFFF"
+              source={require('../asserts/img/drawer_projects.png')}
+              style={{
+                width: EStyleSheet.value('25rem'),
+                height: EStyleSheet.value('23rem'),
+              }}
+            />
+          ) : (
             <Image
-              tintColor='#4d4f85'
+              tintColor="#4d4f85"
               source={require('../asserts/img/drawer_tasks.png')}
-              style={{ width:  EStyleSheet.value('25rem'),height:EStyleSheet.value('23rem')}}
+              style={{
+                width: EStyleSheet.value('25rem'),
+                height: EStyleSheet.value('23rem'),
+              }}
             />
-          }    
-          <Text style={[ props.selectedDrawerItem == 'tasks' ? styles.textSelected : styles.text]}>Tasks</Text>
+          )}
+          <Text
+            style={[
+              props.selectedDrawerItem == 'tasks'
+                ? styles.textSelected
+                : styles.text,
+            ]}>
+            Tasks
+          </Text>
         </TouchableOpacity>
-      }
+      )}
       {/* WorkLoad */}
-      {true &&
-        <TouchableOpacity style={styles.custtomButton1} 
-          onPress={() => {  NavigationService.navigate('WorkloadScreen'); props.drawerItemSelect("workload")}}>
-          {
-            props.selectedDrawerItem == 'workload' ?
+      {true && (
+        <TouchableOpacity
+          style={styles.custtomButton1}
+          onPress={() => {
+            NavigationService.navigate('WorkloadScreen');
+            props.drawerItemSelect('workload');
+          }}>
+          {props.selectedDrawerItem == 'workload' ? (
             <Image
-              tintColor='#FFFFFF'
+              tintColor="#FFFFFF"
               source={require('../asserts/img/drawer_workload.png')}
-              style={{ width:  EStyleSheet.value('25rem'),height:EStyleSheet.value('23rem')}}
-            /> : 
-            <Image
-              tintColor='#4d4f85'
-              source={require('../asserts/img/drawer_workload.png')}
-              style={{ width:  EStyleSheet.value('25rem'),height:EStyleSheet.value('23rem')}}
+              style={{
+                width: EStyleSheet.value('25rem'),
+                height: EStyleSheet.value('23rem'),
+              }}
             />
-          }  
-          <Text style={[ props.selectedDrawerItem == 'workload' ? styles.textSelected : styles.text]}>Workload</Text>
+          ) : (
+            <Image
+              tintColor="#4d4f85"
+              source={require('../asserts/img/drawer_workload.png')}
+              style={{
+                width: EStyleSheet.value('25rem'),
+                height: EStyleSheet.value('23rem'),
+              }}
+            />
+          )}
+          <Text
+            style={[
+              props.selectedDrawerItem == 'workload'
+                ? styles.textSelected
+                : styles.text,
+            ]}>
+            Workload
+          </Text>
         </TouchableOpacity>
-      }
+      )}
       {/* UsersScreen */}
-      {props.loginUserType == 'SUPER_ADMIN' &&
-        <TouchableOpacity style={styles.custtomButton1} 
-          onPress={() => {  NavigationService.navigate('UsersScreen'); props.drawerItemSelect("users")}}>
-          {
-            props.selectedDrawerItem == 'users' ?
+      {props.loginUserType == 'SUPER_ADMIN' && (
+        <TouchableOpacity
+          style={styles.custtomButton1}
+          onPress={() => {
+            NavigationService.navigate('UsersScreen');
+            props.drawerItemSelect('users');
+          }}>
+          {props.selectedDrawerItem == 'users' ? (
             <Image
-              tintColor='#FFFFFF'
+              tintColor="#FFFFFF"
               source={require('../asserts/img/drawer_users.png')}
-              style={{ width:  EStyleSheet.value('25rem'),height:EStyleSheet.value('23rem')}}
-            /> : 
-            <Image
-              tintColor='#4d4f85'
-              source={require('../asserts/img/drawer_users.png')}
-              style={{ width:  EStyleSheet.value('25rem'),height:EStyleSheet.value('23rem')}}
+              style={{
+                width: EStyleSheet.value('25rem'),
+                height: EStyleSheet.value('23rem'),
+              }}
             />
-          }
-          
-          <Text style={[ props.selectedDrawerItem == 'users' ? styles.textSelected : styles.text]}>Users</Text>
+          ) : (
+            <Image
+              tintColor="#4d4f85"
+              source={require('../asserts/img/drawer_users.png')}
+              style={{
+                width: EStyleSheet.value('25rem'),
+                height: EStyleSheet.value('23rem'),
+              }}
+            />
+          )}
+
+          <Text
+            style={[
+              props.selectedDrawerItem == 'users'
+                ? styles.textSelected
+                : styles.text,
+            ]}>
+            Users
+          </Text>
         </TouchableOpacity>
-      }
-      
-     
+      )}
     </SafeAreaView>
   </ScrollView>
 );
@@ -236,13 +301,18 @@ const styles = EStyleSheet.create({
     color: colors.yellow,
     fontWeight: '800',
   },
-  headerClose : {
+  headerClose: {
     position: 'absolute',
     right: 0,
     top: 0,
-    marginTop : '20rem',
-    marginRight : '20rem'
-  }
+    marginTop: '20rem',
+    marginRight: '20rem',
+  },
+  userIcon: {
+    width: '62rem',
+    height: '62rem',
+    borderRadius: 120 / 2,
+  },
 });
 
 const mapStateToProps = state => {

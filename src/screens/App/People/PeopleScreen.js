@@ -112,19 +112,11 @@ class PeopleScreen extends Component {
     if (userImage) {
       return (
         <FadeIn>
-          <Image
-            source={{uri: userImage}}
-            style={{width: 45, height: 45, borderRadius: 45 / 2}}
-          />
+          <Image source={{uri: userImage}} style={styles.userIconStyle} />
         </FadeIn>
       );
     } else {
-      return (
-        <Image
-          style={{width: 45, height: 45, borderRadius: 45 / 2}}
-          source={require('../../../asserts/img/defult_user.png')}
-        />
-      );
+      return <Image style={styles.userIconStyle} source={icons.defultUser} />;
     }
   };
 
@@ -212,7 +204,7 @@ class PeopleScreen extends Component {
             data={this.state.owner}
             renderItem={({item}) => this.renderPeopleList(item)}
             keyExtractor={item => item.projId}
-            ListEmptyComponent={<EmptyListView />}
+            // ListEmptyComponent={<EmptyListView />}
             // onRefresh={() => this.onRefresh()}
             // refreshing={isFetching}
           />
@@ -222,7 +214,7 @@ class PeopleScreen extends Component {
             data={this.state.admins}
             renderItem={({item}) => this.renderPeopleList(item)}
             keyExtractor={item => item.projId}
-            ListEmptyComponent={<EmptyListView />}
+            // ListEmptyComponent={<EmptyListView />}
             // onRefresh={() => this.onRefresh()}
             // refreshing={isFetching}
           />
@@ -232,7 +224,7 @@ class PeopleScreen extends Component {
             data={this.state.users}
             renderItem={({item}) => this.renderPeopleList(item)}
             keyExtractor={item => item.projId}
-            ListEmptyComponent={<EmptyListView />}
+            // ListEmptyComponent={<EmptyListView />}
             // onRefresh={() => this.onRefresh()}
             // refreshing={isFetching}
           />
@@ -341,6 +333,11 @@ const styles = EStyleSheet.create({
   progressBarContainer: {
     marginHorizontal: '10rem',
     marginVertical: '7rem',
+  },
+  userIconStyle: {
+    width: '42rem',
+    height: '42rem',
+    borderRadius: 80 / 2,
   },
 });
 

@@ -210,55 +210,19 @@ class OtherBoard extends Component {
     if (userImage) {
       return (
         <FadeIn>
-          <Image
-            source={{uri: userImage}}
-            style={{
-              width: 24,
-              height: 24,
-              borderRadius: 24 / 2,
-              top: EStyleSheet.value('50rem'),
-              left: 4,
-            }}
-          />
+          <Image source={{uri: userImage}} style={styles.userImageStyle} />
         </FadeIn>
       );
     } else {
-      return (
-        <Image
-          style={{
-            width: 24,
-            height: 24,
-            borderRadius: 24 / 2,
-            top: EStyleSheet.value('50rem'),
-            left: 4,
-          }}
-          source={require('../../../asserts/img/defult_user.png')}
-        />
-      );
+      return <Image style={styles.userImageStyle} source={icons.defultUser} />;
     }
   };
 
   userIcon = function(item) {
     if (item.taskStatus == 'closed') {
-      return (
-        <FadeIn>
-          <Image
-            source={require('../../../assest/icons/task_complete.png')}
-            style={{width: 40, height: 40, borderRadius: 40 / 2}}
-          />
-        </FadeIn>
-      );
+      return <Image source={icons.rightCircule} style={styles.userIconStyle} />;
     } else {
-      return (
-        <Image
-          style={{
-            width: 40,
-            height: 40,
-            borderRadius: 40 / 2,
-            backgroundColor: '#edf0f5',
-          }}
-        />
-      );
+      return <Image source={icons.circuleGray} style={styles.userIconStyle} />;
     }
   };
 
@@ -475,6 +439,18 @@ const styles = EStyleSheet.create({
     position: 'absolute',
     right: 0,
     top: 0,
+  },
+  userImageStyle: {
+    width: '22rem',
+    height: '24rem',
+    borderRadius: 50 / 2,
+    top: '50rem',
+    left: '4rem',
+  },
+  userIconStyle: {
+    width: '40rem',
+    height: '40rem',
+    borderRadius: 80 / 2,
   },
 });
 

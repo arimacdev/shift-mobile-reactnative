@@ -144,7 +144,7 @@ async function getMyTaskInProjectsData(userID, projectID) {
   return request(
     {
       url:
-        GET_ALL_TASKS_BY_PROJECT + projectID + '/tasks/user?userId=' + userID,
+      baseURL + GET_ALL_TASKS_BY_PROJECT + projectID + '/tasks/user?userId=' + userID,
       method: 'GET',
     },
     true,
@@ -382,7 +382,7 @@ async function getProjectPeopleData(projectID, userID) {
   return request(
     {
       url:
-        GET_PROJECT_PEOPLE +
+      baseURL + GET_PROJECT_PEOPLE +
         '/' +
         projectID +
         '/tasks/' +
@@ -480,7 +480,7 @@ async function getProjecTaskData(projectID, selectedProjectTaskID) {
   return request(
     {
       url:
-        GET_TASK_IN_PROJECT +
+        baseURL + GET_TASK_IN_PROJECT +
         '/' +
         projectID +
         '/tasks/' +
@@ -722,7 +722,7 @@ async function addFileToTask(file, taskId, selectedProjectID) {
   return request(
     {
       url:
-        ADD_FILE_TO_TASK +
+        baseURL + ADD_FILE_TO_TASK +
         '/' +
         selectedProjectID +
         '/tasks/' +
@@ -806,7 +806,7 @@ async function getSubTaskData(projectID, taskID, userID) {
   return request(
     {
       url:
-        GET_ALL_SUB_TASKS +
+        baseURL + GET_ALL_SUB_TASKS +
         '/' +
         projectID +
         '/tasks/' +
@@ -836,7 +836,7 @@ async function deleteSubTask(projectID, taskID, subtaskId) {
   return request(
     {
       url:
-        DELETE_SUB_TASK +
+        baseURL + DELETE_SUB_TASK +
         '/' +
         projectID +
         '/tasks/' +
@@ -896,7 +896,7 @@ async function updateSubTask(
   return request(
     {
       url:
-        UPDATE_SUB_TASK +
+        baseURL + UPDATE_SUB_TASK +
         '/' +
         projectID +
         '/tasks/' +
@@ -955,7 +955,7 @@ async function deleteFileInTaskData(projectID, taskID, taskFileId) {
   return request(
     {
       url:
-        DELETE_FILE_IN_TASK +
+        baseURL + DELETE_FILE_IN_TASK +
         '/' +
         projectID +
         '/tasks/' +
@@ -1134,7 +1134,7 @@ async function getAllTaskByGroup(selectedTaskGroupId) {
   return request(
     {
       url:
-        VIEW_ALL_TASK_BY_GROUP_DATA +
+        baseURL + VIEW_ALL_TASK_BY_GROUP_DATA +
         '/' +
         selectedTaskGroupId +
         '/tasks?userId=' +
@@ -1256,7 +1256,7 @@ async function getTaskPeopleData(selectedTaskGroupId) {
   return request(
     {
       url:
-        GET_PEOPLE_IN_TASK +
+        baseURL + GET_PEOPLE_IN_TASK +
         '/' +
         selectedTaskGroupId +
         '/tasks/' +
@@ -1333,7 +1333,7 @@ async function getGroupSingleTaskData(selectedTaskGroupId, selectedTaskID) {
   return request(
     {
       url:
-        GET_GROUP_SINGLE_TASK_DATA +
+        baseURL + GET_GROUP_SINGLE_TASK_DATA +
         '/' +
         selectedTaskGroupId +
         '/tasks/' +
@@ -1495,7 +1495,7 @@ async function groupTaskUpdateTaskNameData(
   return request(
     {
       url:
-        UPDATE_GROUP_TASK_SINGLE_TASK +
+        baseURL + UPDATE_GROUP_TASK_SINGLE_TASK +
         '/' +
         selectedTaskGroupId +
         '/tasks/' +
@@ -1529,7 +1529,7 @@ async function groupTaskUpdateTaskStatusData(
   return request(
     {
       url:
-        UPDATE_GROUP_TASK_SINGLE_TASK +
+        baseURL + UPDATE_GROUP_TASK_SINGLE_TASK +
         '/' +
         selectedTaskGroupId +
         '/tasks/' +
@@ -1563,7 +1563,7 @@ async function groupTaskUpdateTaskAssigneeData(
   return request(
     {
       url:
-        UPDATE_GROUP_TASK_SINGLE_TASK +
+        baseURL + UPDATE_GROUP_TASK_SINGLE_TASK +
         '/' +
         selectedTaskGroupId +
         '/tasks/' +
@@ -1597,7 +1597,7 @@ async function groupTaskUpdateDueDateData(
   return request(
     {
       url:
-        UPDATE_GROUP_TASK_SINGLE_TASK +
+        baseURL + UPDATE_GROUP_TASK_SINGLE_TASK +
         '/' +
         selectedTaskGroupId +
         '/tasks/' +
@@ -1631,7 +1631,7 @@ async function groupTaskUpdateReminderDateData(
   return request(
     {
       url:
-        UPDATE_GROUP_TASK_SINGLE_TASK +
+        baseURL + UPDATE_GROUP_TASK_SINGLE_TASK +
         '/' +
         selectedTaskGroupId +
         '/tasks/' +
@@ -1665,7 +1665,7 @@ async function groupTaskUpdateTaskNoteData(
   return request(
     {
       url:
-        UPDATE_GROUP_TASK_SINGLE_TASK +
+        baseURL + UPDATE_GROUP_TASK_SINGLE_TASK +
         '/' +
         selectedTaskGroupId +
         '/tasks/' +
@@ -1960,7 +1960,7 @@ async function getMyTaskSubTaskData(selectedTaskID) {
   return request(
     {
       url:
-        GET_ALL_SUB_TASKS_IN_MY_TASK +
+        baseURL + GET_ALL_SUB_TASKS_IN_MY_TASK +
         '/' +
         selectedTaskID +
         '/subtask?userId=' +
@@ -2174,7 +2174,7 @@ async function changeSprint(
   return request(
     {
       url:
-        UPDATE_SPRINT +
+        baseURL + UPDATE_SPRINT +
         '/' +
         selectedProjectID +
         '/tasks/' +

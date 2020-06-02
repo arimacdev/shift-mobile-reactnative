@@ -21,6 +21,7 @@ import moment from 'moment';
 import {NavigationEvents} from 'react-navigation';
 import Triangle from 'react-native-triangle';
 import EmptyListView from '../../../components/EmptyListView';
+import icons from '../../../assest/icons/icons';
 
 class DefaultBoard extends Component {
   constructor(props) {
@@ -107,44 +108,19 @@ class DefaultBoard extends Component {
     if (userImage) {
       return (
         <FadeIn>
-          <Image
-            source={{uri: userImage}}
-            style={{width: 24, height: 24, borderRadius: 24 / 2, top: 20}}
-          />
+          <Image source={{uri: userImage}} style={styles.userImageStyle} />
         </FadeIn>
       );
     } else {
-      return (
-        <Image
-          style={{width: 24, height: 24, borderRadius: 24 / 2, top: 20}}
-          source={require('../../../asserts/img/defult_user.png')}
-        />
-      );
+      return <Image style={styles.userImageStyle} source={icons.defultUser} />;
     }
   };
 
   userIcon = function(item) {
     if (item.taskStatus == 'closed') {
-      return (
-        <FadeIn>
-          <Image
-            source={require('../../../assest/icons/task_complete.png')}
-            style={{width: 40, height: 40, borderRadius: 40 / 2, bottom: 15}}
-          />
-        </FadeIn>
-      );
+      return <Image source={icons.rightCircule} style={styles.userIconStyle} />;
     } else {
-      return (
-        <Image
-          style={{
-            width: 40,
-            height: 40,
-            borderRadius: 40 / 2,
-            backgroundColor: '#edf0f5',
-            bottom: 15,
-          }}
-        />
-      );
+      return <Image source={icons.circuleGray} style={styles.userIconStyle} />;
     }
   };
 
@@ -209,12 +185,11 @@ class DefaultBoard extends Component {
 
 const styles = EStyleSheet.create({
   subContainer: {
-    // marginBottom: '65rem',
     backgroundColor: colors.projectBgColor,
-    borderRadius: 5,
+    borderRadius: '5rem',
     marginHorizontal: '20rem',
     marginTop: '7rem',
-    marginBottom: 200,
+    marginBottom: '200rem',
   },
   flalList: {
     marginTop: '8rem',
@@ -222,7 +197,7 @@ const styles = EStyleSheet.create({
   },
   mainContainer: {
     backgroundColor: colors.projectBgColor,
-    borderRadius: 5,
+    borderRadius: '5rem',
     marginHorizontal: '8rem',
     marginBottom: '8rem',
   },
@@ -246,7 +221,7 @@ const styles = EStyleSheet.create({
   },
   subText: {
     fontSize: '10rem',
-    color: '#b9b9b9',
+    color: colors.textPlaceHolderColor,
     textAlign: 'center',
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
@@ -258,6 +233,18 @@ const styles = EStyleSheet.create({
     position: 'absolute',
     right: 0,
     top: 0,
+  },
+  userImageStyle: {
+    width: '22rem',
+    height: '22rem',
+    borderRadius: 60 / 2,
+    top: '20rem',
+  },
+  userIconStyle: {
+    width: '40rem',
+    height: '40rem',
+    borderRadius: 80 / 2,
+    bottom: '15rem',
   },
 });
 

@@ -16,8 +16,6 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
 import {Dropdown} from 'react-native-material-dropdown';
-import AddNewTasksScreen from '../Tasks/AddNewTasksScreen';
-import AsyncStorage from '@react-native-community/async-storage';
 import Loader from '../../../components/Loader';
 import moment from 'moment';
 import FadeIn from 'react-native-fade-in-image';
@@ -26,12 +24,6 @@ import {NavigationEvents} from 'react-navigation';
 import APIServices from '../../../services/APIServices';
 import Triangle from 'react-native-triangle';
 import EmptyListView from '../../../components/EmptyListView';
-
-const Placeholder = () => (
-  <View style={styles.landing}>
-    <SkypeIndicator color={colors.primary} />
-  </View>
-);
 
 let dropData = [
   {
@@ -184,19 +176,11 @@ class Tasks extends Component {
     if (userImage) {
       return (
         <FadeIn>
-          <Image
-            source={{uri: userImage}}
-            style={{width: 24, height: 24, borderRadius: 24 / 2}}
-          />
+          <Image source={{uri: userImage}} style={styles.iconStyle} />
         </FadeIn>
       );
     } else {
-      return (
-        <Image
-          style={{width: 24, height: 24, borderRadius: 24 / 2}}
-          source={require('../../../asserts/img/defult_user.png')}
-        />
-      );
+      return <Image style={styles.iconStyle} source={icons.defultUser} />;
     }
   };
 
@@ -206,19 +190,11 @@ class Tasks extends Component {
     if (userImage) {
       return (
         <FadeIn>
-          <Image
-            source={{uri: userImage}}
-            style={{width: 24, height: 24, borderRadius: 24 / 2}}
-          />
+          <Image source={{uri: userImage}} style={styles.iconStyle} />
         </FadeIn>
       );
     } else {
-      return (
-        <Image
-          style={{width: 24, height: 24, borderRadius: 24 / 2}}
-          source={require('../../../asserts/img/defult_user.png')}
-        />
-      );
+      return <Image style={styles.iconStyle} source={icons.defultUser} />;
     }
   };
 
@@ -233,7 +209,6 @@ class Tasks extends Component {
   onFilterAllTasks(key) {
     let value = key;
     let searchValue = '';
-    let index = this.state.index;
     switch (value) {
       case 'All':
         searchValue = '';
@@ -282,7 +257,7 @@ class Tasks extends Component {
     this.setState({taskName: text});
   }
 
-  async onNewTaskNameSubmit(text) {
+  async onNewTaskNameSubmit() {
     try {
       let taskName = this.state.taskName;
       let selectedTaskGroupId = this.state.selectedTaskGroupId;
@@ -306,7 +281,7 @@ class Tasks extends Component {
     this.setState({subTasksName: text});
   }
 
-  async onNewSubTasksNameSubmit(text, item, indexMain) {
+  async onNewSubTasksNameSubmit(item, indexMain) {
     try {
       let subTasksName = this.state.textInputs[indexMain];
       let selectedTaskGroupId = this.state.selectedTaskGroupId;
@@ -331,7 +306,6 @@ class Tasks extends Component {
   // render main list without filter
   renderTaskList(item, indexMain) {
     let index = this.state.index;
-    let subTasksName = this.state.subTasksName;
     let selectedTaskGroupId = this.props.selectedTaskGroupId;
     let parentTaskName = item.parentTask.taskName;
     return (
@@ -409,11 +383,7 @@ class Tasks extends Component {
                 }}
                 value={this.state.textInputs[indexMain]}
                 onSubmitEditing={() =>
-                  this.onNewSubTasksNameSubmit(
-                    this.state.subTasksName,
-                    item,
-                    indexMain,
-                  )
+                  this.onNewSubTasksNameSubmit(item, indexMain)
                 }
               />
             </View>
@@ -568,9 +538,7 @@ class Tasks extends Component {
                 placeholder={'Add a task'}
                 value={taskName}
                 onChangeText={taskName => this.onNewTaskNameChange(taskName)}
-                onSubmitEditing={() =>
-                  this.onNewTaskNameSubmit(this.state.taskName)
-                }
+                onSubmitEditing={() => this.onNewTaskNameSubmit()}
               />
             </View>
           )}
@@ -863,9 +831,14 @@ const styles = EStyleSheet.create({
     marginTop: '60rem',
     marginLeft: '13rem',
   },
+  iconStyle: {
+    width: '24rem',
+    height: '24rem',
+    borderRadius: 50 / 2,
+  },
 });
 
-const mapStateToProps = state => {
+const mapStateToProps = () => {
   return {};
 };
 export default connect(
