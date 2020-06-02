@@ -73,7 +73,7 @@ class SearchUserScreen extends Component {
       return (
         <Image
           style={styles.userIcon}
-          source={require('../../../asserts/img/defult_user.png')}
+          source={icons.defultUser}
           resizeMode="contain"
         />
       );

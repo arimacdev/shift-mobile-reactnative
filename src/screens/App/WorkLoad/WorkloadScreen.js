@@ -20,6 +20,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import Loader from '../../../components/Loader';
 import {NavigationEvents} from 'react-navigation';
 import EmptyListView from '../../../components/EmptyListView';
+import icons from '../../../assest/icons/icons';
 
 class WorkloadScreen extends Component {
   constructor(props) {
@@ -91,19 +92,11 @@ class WorkloadScreen extends Component {
     if (userImage) {
       return (
         <FadeIn>
-          <Image
-            source={{uri: userImage}}
-            style={{width: 45, height: 45, borderRadius: 45 / 2}}
-          />
+          <Image source={{uri: userImage}} style={styles.imageStyle} />
         </FadeIn>
       );
     } else {
-      return (
-        <Image
-          style={{width: 45, height: 45, borderRadius: 45 / 2}}
-          source={require('../../../asserts/img/defult_user.png')}
-        />
-      );
+      return <Image style={styles.imageStyle} source={icons.defultUser} />;
     }
   };
 
@@ -299,6 +292,11 @@ const styles = EStyleSheet.create({
   progressBarContainer: {
     marginHorizontal: '10rem',
     marginVertical: '7rem',
+  },
+  imageStyle: {
+    width: '43rem',
+    height: '43rem',
+    borderRadius: 90 / 2,
   },
 });
 

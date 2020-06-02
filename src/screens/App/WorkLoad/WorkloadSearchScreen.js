@@ -41,9 +41,9 @@ class WorkloadSearchScreen extends Component {
 
   componentDidMount() {
     let loginUserType = this.props.loginUserType;
-    if(loginUserType == 'SUPER_ADMIN'){
+    if (loginUserType == 'SUPER_ADMIN') {
       this.fetchDataAdmin();
-    }else{
+    } else {
       this.fetchDataUser();
     }
   }
@@ -76,28 +76,18 @@ class WorkloadSearchScreen extends Component {
     }
   }
 
-  async tabOpen() {
-    
-  }
+  async tabOpen() {}
 
   userIcon = function(item) {
     let userImage = item.profileImage;
     if (userImage) {
       return (
         <FadeIn>
-          <Image
-            source={{uri: userImage}}
-            style={{width: 45, height: 45, borderRadius: 45 / 2}}
-          />
+          <Image source={{uri: userImage}} style={styles.imageStyle} />
         </FadeIn>
       );
     } else {
-      return (
-        <Image
-          style={{width: 45, height: 45, borderRadius: 45 / 2}}
-          source={require('../../../asserts/img/defult_user.png')}
-        />
-      );
+      return <Image style={styles.imageStyle} source={icons.defultUser} />;
     }
   };
 
@@ -304,6 +294,11 @@ const styles = EStyleSheet.create({
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
     marginLeft: '7rem',
+  },
+  imageStyle: {
+    width: '43rem',
+    height: '43rem',
+    borderRadius: 90 / 2,
   },
 });
 

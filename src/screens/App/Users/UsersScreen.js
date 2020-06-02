@@ -17,6 +17,7 @@ import FadeIn from 'react-native-fade-in-image';
 import Loader from '../../../components/Loader';
 import {NavigationEvents} from 'react-navigation';
 import EmptyListView from '../../../components/EmptyListView';
+import icons from '../../../assest/icons/icons';
 
 class UsersScreen extends Component {
   constructor(props) {
@@ -63,19 +64,11 @@ class UsersScreen extends Component {
     if (userImage) {
       return (
         <FadeIn>
-          <Image
-            source={{uri: userImage}}
-            style={{width: 45, height: 45, borderRadius: 45 / 2}}
-          />
+          <Image source={{uri: userImage}} style={styles.imageStyle} />
         </FadeIn>
       );
     } else {
-      return (
-        <Image
-          style={{width: 45, height: 45, borderRadius: 45 / 2}}
-          source={require('../../../asserts/img/defult_user.png')}
-        />
-      );
+      return <Image style={styles.imageStyle} source={icons.defultUser} />;
     }
   };
 
@@ -184,6 +177,11 @@ const styles = EStyleSheet.create({
   flalList: {
     marginTop: '30rem',
     marginBottom: '10rem',
+  },
+  imageStyle: {
+    width: '43rem',
+    height: '43rem',
+    borderRadius: 90 / 2,
   },
 });
 
