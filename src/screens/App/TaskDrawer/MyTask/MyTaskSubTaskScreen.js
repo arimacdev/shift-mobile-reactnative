@@ -15,11 +15,8 @@ import icons from '../../../../assest/icons/icons';
 import EStyleSheet from 'react-native-extended-stylesheet';
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
-import FadeIn from 'react-native-fade-in-image';
 import Loader from '../../../../components/Loader';
-import Header from '../../../../components/Header';
 import APIServices from '../../../../services/APIServices';
-import AsyncStorage from '@react-native-community/async-storage';
 import {NavigationEvents} from 'react-navigation';
 import AwesomeAlert from 'react-native-awesome-alerts';
 

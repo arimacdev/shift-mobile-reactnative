@@ -123,19 +123,11 @@ class MyTasks extends Component {
     if (userImage) {
       return (
         <FadeIn>
-          <Image
-            source={{uri: userImage}}
-            style={{width: 24, height: 24, borderRadius: 24 / 2}}
-          />
+          <Image source={{uri: userImage}} style={styles.iconStyle} />
         </FadeIn>
       );
     } else {
-      return (
-        <Image
-          style={{width: 24, height: 24, borderRadius: 24 / 2}}
-          source={require('../../../../asserts/img/defult_user.png')}
-        />
-      );
+      return <Image style={styles.iconStyle} source={icons.defultUser} />;
     }
   };
 
@@ -410,6 +402,11 @@ const styles = EStyleSheet.create({
     width: '89.5%',
     marginTop: '60rem',
     marginLeft: '13rem',
+  },
+  iconStyle: {
+    width: '22rem',
+    height: '22rem',
+    borderRadius: 80 / 2,
   },
 });
 
