@@ -237,7 +237,7 @@ const styles = EStyleSheet.create({
   },
   loginButton: {
     backgroundColor: colors.loginButton,
-    borderRadius: 5,
+    borderRadius: '5rem',
     width: '330rem',
     marginTop: '17rem',
     flexDirection: 'row',
@@ -260,7 +260,7 @@ const styles = EStyleSheet.create({
     position: 'absolute',
     bottom: 0,
     width: '100%',
-    marginBottom: 15,
+    marginBottom: '15rem',
   },
   iconStyle: {
     width: '175rem',

@@ -41,17 +41,9 @@ class WorkloadTabTasksScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      filterdDataAllTaks: [],
-      allDataAllTaks: [],
-      filterdDataMyTasks: [],
-      allDataMyTasks: [],
       index: 0,
-      bottomItemPressColor: colors.darkBlue,
       selectedProjectID: 0,
       isActive: this.props.isActive,
-      selectedTypeAllTasks: 'Pending',
-      selectedTypeMyTasks: 'Pending',
-
       workloadTasks: [],
       dataLoading: false,
       isCollapsed: true,
@@ -239,12 +231,6 @@ class WorkloadTabTasksScreen extends Component {
     );
   };
 
-  // onEnableScroll= (value: boolean) => {
-  //   this.setState({
-  //     enableScrollViewScroll: value,
-  //   });
-  // };
-
   _renderContent(item, userId, projectId, isActive) {
     return (
       <Animatable.View
@@ -253,12 +239,6 @@ class WorkloadTabTasksScreen extends Component {
         style={styles.flatListView}>
         <FlatList
           style={styles.flatListStyle}
-          //   onTouchStart={() => {
-          //     this.setState({enableScrollViewScroll:false})
-          //  }}
-          //  onMomentumScrollEnd={() => {
-          //   this.setState({enableScrollViewScroll:true})
-          //  }}
           data={item}
           renderItem={({item, index}) =>
             this.renderProjectList(item, index, userId, projectId)
@@ -276,17 +256,6 @@ class WorkloadTabTasksScreen extends Component {
       this._myScroll.scrollTo({x: 0, y: fy, animated: true});
     }
   };
-
-  // _updateSections = activeSections => {
-  //   this.setState({activeSections});
-
-  //   let activeSectionPostion = activeSections[0];
-  //   let px = activeSectionPostion.x ? activeSectionPostion.x - 50 : 150;
-  //   console.log('dddddddddddddddddd', activeSectionPostion.x);
-  //   setTimeout(() => {
-  //     this._myScroll.scrollTo(px, 0, true);
-  //   }, 50);
-  // };
 
   renderProjectList(item, index, userId, projectId) {
     return (
@@ -319,109 +288,11 @@ class WorkloadTabTasksScreen extends Component {
     );
   }
 
-  renderBase() {
-    return (
-      <View style={{justifyContent: 'center', flex: 1}}>
-        <Image style={styles.dropIcon} source={icons.arrowDark} />
-      </View>
-    );
-  }
-
-  onFilterAllTasks(key) {
-    let value = key;
-    let searchValue = '';
-    let index = this.state.index;
-    switch (value) {
-      case 'Pending':
-        searchValue = 'pending';
-        break;
-      case 'Implementing':
-        searchValue = 'implementing';
-        break;
-      case 'QA':
-        searchValue = 'qa';
-        break;
-      case 'Ready to Deploy':
-        searchValue = 'readyToDeploy';
-        break;
-      case 'Re-Opened':
-        searchValue = 'reOpened';
-        break;
-      case 'Deployed':
-        searchValue = 'deployed';
-        break;
-      case 'Closed':
-        searchValue = 'closed';
-        break;
-    }
-
-    let filteredData = this.state.allDataAllTaks.filter(function(item) {
-      return item.taskStatus.includes(searchValue);
-    });
-    this.setState({
-      filterdDataAllTaks: filteredData,
-      selectedTypeAllTasks: key,
-    });
-  }
-
-  onFilterMyTasks(key) {
-    let value = key;
-    let searchValue = '';
-    let index = this.state.index;
-    switch (value) {
-      case 'Pending':
-        searchValue = 'pending';
-        break;
-      case 'Implementing':
-        searchValue = 'implementing';
-        break;
-      case 'QA':
-        searchValue = 'qa';
-        break;
-      case 'Ready to Deploy':
-        searchValue = 'readyToDeploy';
-        break;
-      case 'Re-Opened':
-        searchValue = 'reOpened';
-        break;
-      case 'Deployed':
-        searchValue = 'deployed';
-        break;
-      case 'Closed':
-        searchValue = 'closed';
-        break;
-    }
-    let filteredData = this.state.allDataMyTasks.filter(function(item) {
-      return item.taskStatus.includes(searchValue);
-    });
-    this.setState({
-      filterdDataMyTasks: filteredData,
-      selectedTypeMyTasks: key,
-    });
-  }
-
-  onSuccess(text) {
-    console.log('text', text);
-  }
-
-  renderCollaps(item) {
-    console.log('item', item.item);
-    return (
-      <Collapsible title={item.item.projectName} data={item.item.taskList} />
-    );
-  }
-
   render() {
     let dataLoading = this.state.dataLoading;
-    // let filterdDataMyTasks = this.state.filterdDataMyTasks;
 
     return (
-      <View
-        style={styles.container}
-        // onStartShouldSetResponderCapture={() => {
-        //   this.setState({enableScrollViewScroll: true});
-        // }}
-      >
+      <View style={styles.container}>
         <NavigationEvents
           onWillFocus={() =>
             this.getAllWorkloadTasks(
@@ -439,13 +310,11 @@ class WorkloadTabTasksScreen extends Component {
               onRefresh={this._onRefresh}
             />
           }
-          // scrollEnabled={this.state.enableScrollViewScroll}
           ref={myScroll => (this._myScroll = myScroll)}>
           {this.state.workloadTasks.length > 0 ? (
             <Accordion
               underlayColor={colors.white}
               sections={this.state.workloadTasks}
-              // sectionContainerStyle={{height:200}}
               containerStyle={{marginBottom: 20, marginTop: 10}}
               activeSections={this.state.activeSections}
               renderHeader={this._renderHeader}
@@ -456,21 +325,10 @@ class WorkloadTabTasksScreen extends Component {
             />
           ) : (
             <View style={styles.noDataStyle}>
-              {/* <Text style={{color: colors.gray, fontSize: 20}}>
-                {this.state.noData}
-              </Text> */}
               {this.state.noData !== '' ? <EmptyListView /> : null}
             </View>
           )}
         </ScrollView>
-
-        {/* <FlatList
-          style={styles.flatListStyle}
-          data={this.state.workloadTasks}
-          renderItem={(item) => this.renderCollaps(item)}
-          keyExtractor={item => item.taskId}
-        /> */}
-
         {dataLoading && <Loader />}
       </View>
     );

@@ -195,12 +195,6 @@ class WorkloadTabScreen extends Component {
         break;
       case 2:
         this.getMonthDays();
-        // this.setState({
-        //   isCustom: false,
-        //   from: moment(new Date()).format('YYYY-MM') + '-01[T]00:00:00',
-        //   to: moment(new Date()).format('YYYY-MM') + '-31[T]23:59:59',
-        //   date: new Date(),
-        // });
         break;
       case 3:
         this.setState({
@@ -217,68 +211,6 @@ class WorkloadTabScreen extends Component {
 
   onCalendarPress(item) {
     this.setState({fromDateOpen: item, showPicker: true});
-  }
-
-  onChangeDate(event, selectedDate) {
-    let date = new Date(selectedDate);
-    let newDate = '';
-    let newDateValue = '';
-
-    if (this.state.fromDate) {
-      newDate = moment(date).format('YYYY-MM-DD[T]HH:mm:ss');
-      newDateValue = moment(date).format('YYYY-MM-DD[T]HH:mm:ss');
-    } else {
-      newDate = moment(date).format('YYYY-MM-DD[T]HH:mm:ss');
-      newDateValue = moment(date).format('YYYY-MM-DD[T]HH:mm:ss');
-    }
-    if (event.type == 'set') {
-      if (this.state.fromDateOpen) {
-        this.setState({
-          fromDateOpen: false,
-          from: newDate,
-          selectedDateReminderValue: newDateValue,
-          showPicker: true,
-          // showTimePicker: false,
-          fromDate: new Date(selectedDate),
-          // date:new Date()
-        });
-      } else {
-        this.setState({
-          to: newDate,
-          selectedDateValue: newDateValue,
-          showPicker: false,
-          // showTimePicker: false,
-          toDate: new Date(selectedDate),
-          date: new Date(),
-        });
-      }
-    } else {
-      this.setState({
-        showPicker: false,
-      });
-    }
-    // event.dismissed
-    // event.set
-  }
-
-  renderDatePicker() {
-    return (
-      <DateTimePicker
-        testID="dateTimePicker"
-        timeZoneOffsetInMinutes={0}
-        value={
-          this.state.fromDateOpen == true
-            ? this.state.fromDate
-            : this.state.toDate
-        }
-        mode={this.state.mode}
-        is24Hour={true}
-        display="default"
-        onChange={(event, selectedDate) =>
-          this.onChangeDate(event, selectedDate)
-        }
-      />
-    );
   }
 
   onCloseModel() {
@@ -420,7 +352,6 @@ class WorkloadTabScreen extends Component {
           />
           <TabView
             lazy
-            // style={{flex: 1}}
             navigationState={{
               index: this.state.index,
               routes: this.state.routes,
@@ -431,7 +362,6 @@ class WorkloadTabScreen extends Component {
             renderTabBar={props => this.renderTabBar(props)}
           />
         </View>
-        {/* {this.state.showPicker ? this.renderDatePicker() : null} */}
         {this.renderCalender()}
       </MenuProvider>
     );

@@ -216,7 +216,6 @@ const styles = EStyleSheet.create({
     width: '100%',
     height: '100%',
     alignItems: 'center',
-    // justifyContent: 'center',
     flex: 1,
     backgroundColor: colors.white,
   },

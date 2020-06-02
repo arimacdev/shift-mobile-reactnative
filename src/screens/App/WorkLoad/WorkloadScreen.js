@@ -1,19 +1,15 @@
 import React, {Component} from 'react';
 import {
-  StyleSheet,
   View,
   FlatList,
   Image,
   Text,
   TouchableOpacity,
-  ScrollView,
   Dimensions,
 } from 'react-native';
 import {connect} from 'react-redux';
 import * as actions from '../../../redux/actions';
 import colors from '../../../config/colors';
-import icons from '../../../assest/icons/icons';
-import NavigationService from '../../../services/NavigationService';
 import APIServices from '../../../services/APIServices';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import FadeIn from 'react-native-fade-in-image';
@@ -24,7 +20,6 @@ import AsyncStorage from '@react-native-community/async-storage';
 import Loader from '../../../components/Loader';
 import {NavigationEvents} from 'react-navigation';
 import EmptyListView from '../../../components/EmptyListView';
-const initialLayout = {width: entireScreenWidth};
 
 class WorkloadScreen extends Component {
   constructor(props) {
@@ -36,16 +31,6 @@ class WorkloadScreen extends Component {
       dataLoading: false,
     };
   }
-
-  //   componentDidUpdate(prevProps, prevState, snapshot) {
-  //     if (prevProps.isActive !== this.props.isActive && this.props.isActive) {
-  //       AsyncStorage.getItem('userID').then(userID => {
-  //         if (userID) {
-  //           this.fetchData(userID);
-  //         }
-  //       });
-  //     }
-  //   }
 
   componentDidMount() {
     let loginUserType = this.props.loginUserType;
