@@ -30,7 +30,7 @@ class OfflineNotice extends Component {
     }
 
     componentDidMount() {
-        const unsubscribe = NetInfo.addEventListener(state => {
+        this.unsubscribe = NetInfo.addEventListener(state => {
             //console.log("Connection type", state.type);
             //console.log("Is connected?", state.isConnected);
             this.handleConnectivityChange(state.isConnected)
@@ -38,7 +38,7 @@ class OfflineNotice extends Component {
     }
 
     componentWillUnmount() {
-        unsubscribe();
+        this.unsubscribe();
     }
 
     handleConnectivityChange = isConnected => {

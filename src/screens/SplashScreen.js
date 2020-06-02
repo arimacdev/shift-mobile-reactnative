@@ -7,7 +7,7 @@ import {
   Platform,
   AppState,
   Image,
-  StatusBar
+  StatusBar,
 } from 'react-native';
 import {connect} from 'react-redux';
 import * as actions from '../redux/actions';
@@ -83,20 +83,25 @@ class SplashScreen extends Component {
       this.state.appState.match(/inactive|background/) ||
       nextAppState === 'active'
     ) {
-      if(this.getBaseUrl() == null){
+      if (this.getBaseUrl() == null) {
         NavigationService.navigate('Auth');
       } else {
         this.getMobileVersionStatus();
       }
-      
+
       // AsyncStorage.setItem('baseURL','https://project.arimaclanka.com/api/pm-service/');
     }
     this.setState({appState: nextAppState});
   };
 
-  async getBaseUrl(){
+  async getBaseUrl() {
     let baseURL = null;
-    baseURL = await AsyncStorage.getItem('baseURL');
+    try {
+      baseURL = await AsyncStorage.getItem('baseURL');
+    } catch (error) {
+      console.log(error);
+    }
+
     return baseURL;
   }
 
@@ -183,12 +188,12 @@ class SplashScreen extends Component {
       <View style={styles.container}>
         <StatusBar hidden />
         <View style={styles.imageContainer}>
-            <Image
-                style={styles.iconStyle}
-                source={icons.appIcon}
-                resizeMode="contain"
-              />
-               {/* <Text style={styles.textTitle}>{strings.login.loginMainTitle}</Text> */}
+          <Image
+            style={styles.iconStyle}
+            source={icons.appIcon}
+            resizeMode="contain"
+          />
+          {/* <Text style={styles.textTitle}>{strings.login.loginMainTitle}</Text> */}
         </View>
         {/* <View style={styles.bottomContainer}>
             <TouchableOpacity
@@ -215,10 +220,10 @@ const styles = EStyleSheet.create({
     height: '100%',
     alignItems: 'center',
     justifyContent: 'center',
-    flex : 1,
+    flex: 1,
     backgroundColor: colors.white,
   },
-  imageContainer:{
+  imageContainer: {
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
@@ -228,8 +233,8 @@ const styles = EStyleSheet.create({
     color: colors.loginBlue,
     textAlign: 'center',
     fontFamily: 'CircularStd-Black',
-    marginLeft : '30rem',
-    marginRight : '30rem'
+    marginLeft: '30rem',
+    marginRight: '30rem',
   },
   userIcon: {
     width: '20rem',
