@@ -101,7 +101,7 @@ class LoginScreen extends Component {
         let response = result.data;
         this.baseUrl = response.workspaceUrl;
         this.configLive = {
-          issuer: 'https://project.arimaclanka.com/auth/realms/pm-tool',
+          issuer: response.idpEndpoints.issuser,
           serviceConfiguration: {
             authorizationEndpoint: response.idpEndpoints.authorization,
             tokenEndpoint: response.idpEndpoints.token,
@@ -153,7 +153,7 @@ class LoginScreen extends Component {
   async initialUserLogin() {
     try {
       const result = await authorize(this.configLive);
-      AsyncStorage.setItem('baseURL', this.baseUrl + 'api/pm-service/');
+      AsyncStorage.setItem('baseURL', this.baseUrl);
       AsyncStorage.setItem('accessToken', result.accessToken);
       AsyncStorage.setItem('refreshToken', result.refreshToken);
       let decoded = jwtDecode(result.accessToken);

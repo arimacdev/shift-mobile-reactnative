@@ -48,7 +48,7 @@ class ConfigurationScreen extends Component {
       .then(response => {
         if (response.status == 200) {
           this.setState({dataLoading: false, error: false});
-          AsyncStorage.setItem('workSpace', workSpace);
+          AsyncStorage.setItem('workSpace', response.data.workspace);
           NavigationService.navigate('LoginScreen');
         } else {
           this.setState({dataLoading: false, error: true});
