@@ -26,36 +26,6 @@ import DeviceInfo from 'react-native-device-info';
 import Loader from '../../components/Loader';
 import icons from '../../assest/icons/icons';
 
-let data = {
-  status: 200,
-  message: 'Organization Retrieved Successfully',
-  data: {
-    _id: '5ed5f7bbec09d162941984aa',
-    workspace: 'arimac-digital',
-    organizationName: 'Arimac',
-    company: 'Arimac Lanka',
-    organizationLogo: 'https://arimaclanka.com/images/logo.png',
-    workspaceUrl: 'https://project.arimaclanka.com/api/pm-service/',
-    android: {
-      currentVersion: 100,
-      latestVersion: 101,
-      isForceUpdate: true,
-    },
-    ios: {
-      currentVersion: 100,
-      latestVersion: 101,
-      isForceUpdate: true,
-    },
-    idpEndpoints: {
-      authorization: 'https://project.arimaclanka.com/auth/realms/pm-tool/protocol/openid-connect/auth',
-      token: 'https://project.arimaclanka.com/auth/realms/pm-tool/protocol/openid-connect/token',
-    },
-    notification: {
-      slack: 'http://',
-    },
-    __v: 0,
-  },
-};
 class ConfigurationScreen extends Component {
   constructor(props) {
     super(props);
@@ -64,7 +34,7 @@ class ConfigurationScreen extends Component {
       details: [],
       dataLoading: false,
       appState: AppState.currentState,
-      url: '',
+      workSpace: '',
       error: false,
     };
   }
@@ -73,12 +43,12 @@ class ConfigurationScreen extends Component {
     this.setState({dataLoading: true});
     let platform = Platform.OS;
     let version = DeviceInfo.getBuildNumber();
-    APIServices.getOrganizationData(platform, version)
+    let workSpace = this.state.workSpace;
+    APIServices.getOrganizationData(workSpace)
       .then(response => {
-        if (response.message == 'success') {
+        if (response.status == 200) {
           this.setState({dataLoading: false, error: false});
-          AsyncStorage.setItem('baseURL', data.data.workspaceUrl);
-          AsyncStorage.setItem('workspace', data.data.workspace);
+          AsyncStorage.setItem('workSpace', workSpace);
           NavigationService.navigate('LoginScreen');
         } else {
           this.setState({dataLoading: false, error: true});
@@ -90,7 +60,7 @@ class ConfigurationScreen extends Component {
   }
 
   onUrlChange(text) {
-    this.setState({url: text});
+    this.setState({workSpace: text});
   }
 
   render() {
@@ -110,8 +80,8 @@ class ConfigurationScreen extends Component {
             <TextInput
               style={styles.textInput}
               placeholder={'Eg. project.arimac.digital'}
-              value={this.state.url}
-              onChangeText={url => this.onUrlChange()(url)}
+              value={this.state.workSpace}
+              onChangeText={workSpace => this.onUrlChange(workSpace)}
               // onSubmitEditing={() =>
               //   this.onNewTasksNameSubmit(this.state.tasksName)
               // }
@@ -238,7 +208,7 @@ const styles = EStyleSheet.create({
   },
   textInput: {
     fontSize: '11rem',
-    color: colors.lightgray,
+    color: colors.black,
     lineHeight: '17rem',
     fontFamily: 'CircularStd',
     textAlign: 'left',

@@ -60,6 +60,7 @@ class SplashScreen extends Component {
     this.state = {
       forceUpdate: false,
       details: [],
+      update:[],
       dataLoading: false,
       appState: AppState.currentState,
     };
@@ -78,54 +79,54 @@ class SplashScreen extends Component {
     AppState.removeEventListener('change', this._handleAppStateChange);
   }
 
-  _handleAppStateChange = nextAppState => {
+  _handleAppStateChange = async (nextAppState) => {
     if (
       this.state.appState.match(/inactive|background/) ||
       nextAppState === 'active'
     ) {
-      if (this.getBaseUrl() == null) {
-        NavigationService.navigate('Auth');
-      } else {
-        this.getMobileVersionStatus();
+      
+      try {
+        baseURL = await AsyncStorage.getItem('baseURL');
+        if (baseURL == null) {
+          NavigationService.navigate('Auth');
+        } else {
+          this.getMobileVersionStatus();
+        }
+      } catch (error) {
+        console.log(error);
       }
-
-      // AsyncStorage.setItem('baseURL','https://project.arimaclanka.com/api/pm-service/');
     }
     this.setState({appState: nextAppState});
   };
-
-  async getBaseUrl() {
-    let baseURL = null;
-    try {
-      baseURL = await AsyncStorage.getItem('baseURL');
-    } catch (error) {
-      console.log(error);
-    }
-
-    return baseURL;
-  }
 
   async getMobileVersionStatus() {
     let platform = Platform.OS;
     let version = DeviceInfo.getBuildNumber();
     this.setState({dataLoading: true});
     try {
-      let result = await APIServices.getMobileVersionStatusData(
-        platform,
-        version,
-      );
-      if (result.message == 'success') {
+      let workSpace = await AsyncStorage.getItem('workSpace');
+      let result = await APIServices.getOrganizationData(workSpace);
+      if (result.status == 200) {
         let response = result.data;
-        if (response.latest_version > response.current_version) {
-          this.setState({
-            forceUpdate: true,
-            details: response,
-            dataLoading: false,
-          });
+        this.baseUrl = result.workspaceUrl;
+        if (
+          Platform.OS == 'android' &&
+          response.android.latestVersion > response.android.currentVersion
+        ) {
+          this.setState({forceUpdate: true, update: response.android});
+        } else if (
+          Platform.OS == 'ios' &&
+          response.ios.latestVersion > response.ios.currentVersion
+        ) {
+          this.setState({forceUpdate: true, update: response.ios});
         } else {
-          this.setState({dataLoading: false, forceUpdate: false});
+          this.setState({forceUpdate: false});
           this.checkUserStatus();
         }
+        this.setState({
+          dataLoading: false,
+          details: response,
+        });
       } else {
         this.setState({dataLoading: false});
       }
@@ -205,7 +206,7 @@ class SplashScreen extends Component {
         </View> */}
         <ForceUpdateModal
           showForceUpdateModal={this.state.forceUpdate}
-          details={this.state.details}
+          details={this.state.update}
           checkUserStatus={() => this.checkUserStatus(this)}
         />
         {/* {this.state.dataLoading && <Loader />} */}

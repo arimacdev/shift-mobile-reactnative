@@ -59,6 +59,7 @@ class LoginScreen extends Component {
     this.state = {
       forceUpdate: false,
       details: [],
+      update: [],
       dataLoading: false,
       appState: AppState.currentState,
     };
@@ -92,22 +93,39 @@ class LoginScreen extends Component {
     let version = DeviceInfo.getBuildNumber();
     this.setState({dataLoading: true});
     try {
-      let result = await APIServices.getMobileVersionStatusData(
-        platform,
-        version,
-      );
-      if (result.message == 'success') {
+      let workSpace = await AsyncStorage.getItem('workSpace');
+      let result = await APIServices.getOrganizationData(workSpace);
+      if (result.status == 200) {
         let response = result.data;
-        if (response.latest_version > response.current_version) {
-          this.setState({
-            forceUpdate: true,
-            details: response,
-            dataLoading: false,
-          });
+        this.baseUrl = response.workspaceUrl;
+        this.configLive = {
+          issuer: 'https://project.arimaclanka.com/auth/realms/pm-tool',
+          serviceConfiguration: {
+            authorizationEndpoint: response.idpEndpoints.authorization,
+            tokenEndpoint: response.idpEndpoints.token,
+          },
+          clientId: 'pmtool-frontend',
+          redirectUrl: 'com.arimacpmtool:/oauthredirect',
+          scopes: ['openid', 'roles', 'profile'],
+          dangerouslyAllowInsecureHttpRequests: true,
+        };
+        if (
+          Platform.OS == 'android' &&
+          response.android.latestVersion > response.android.currentVersion
+        ) {
+          this.setState({forceUpdate: true, update: response.android});
+        } else if (
+          Platform.OS == 'ios' &&
+          response.ios.latestVersion > response.ios.currentVersion
+        ) {
+          this.setState({forceUpdate: true, update: response.ios});
         } else {
-          this.setState({dataLoading: false, forceUpdate: false});
-          // this.checkUserStatus();
+          this.setState({forceUpdate: false});
         }
+        this.setState({
+          dataLoading: false,
+          details: response,
+        });
       } else {
         this.setState({dataLoading: false});
       }
@@ -145,7 +163,8 @@ class LoginScreen extends Component {
 
   async initialUserLogin() {
     try {
-      const result = await authorize(configLive);
+      const result = await authorize(this.configLive);
+      AsyncStorage.setItem('baseURL', this.baseUrl+'auth/realms/pm-tool/');
       AsyncStorage.setItem('accessToken', result.accessToken);
       AsyncStorage.setItem('refreshToken', result.refreshToken);
       let decoded = jwtDecode(result.accessToken);
@@ -166,6 +185,7 @@ class LoginScreen extends Component {
   }
 
   render() {
+    let details = this.state.details;
     return (
       <View style={styles.container}>
         <View style={styles.imageContainer}>
@@ -180,12 +200,12 @@ class LoginScreen extends Component {
           <View style={styles.companyImageContainer}>
             <Image
               style={styles.compantIconStyle}
-              source={{uri: 'https://arimaclanka.com/images/logo.png'}}
+              source={{uri: details.organizationLogo}}
               resizeMode="contain"
             />
           </View>
-          <Text style={styles.companyNameText}>Arimac Digital</Text>
-          <Text style={styles.companyNameSubText}>Arimac Lanka PVT LTD</Text>
+          <Text style={styles.companyNameText}>{details.organizationName}</Text>
+          <Text style={styles.companyNameSubText}>{details.company}</Text>
           <TouchableOpacity
             style={styles.loginButton}
             onPress={() => this.initialUserLogin()}>
@@ -203,7 +223,7 @@ class LoginScreen extends Component {
         <ForceUpdateModal
           showForceUpdateModal={this.state.forceUpdate}
           details={this.state.details}
-          checkUserStatus={() => this.checkUserStatus(this)}
+          checkUserStatus={() => {}}
         />
         {this.state.dataLoading && <Loader />}
       </View>

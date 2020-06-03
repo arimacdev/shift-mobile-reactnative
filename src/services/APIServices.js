@@ -70,7 +70,8 @@ import {
   GET_CHILD_TASK_OF_TASK_GROUP,
   UPDATE_PARENT_TO_CHILD_IN_GROUP,
   GET_ALL_USERS_WORKLOAD_WITH_COMPLETION,
-  GET_MOBILE_VERSION_STATUS
+  GET_MOBILE_VERSION_STATUS,
+  GET_ORGANIZATION_WORK_SPACE
 } from '../api/API';
 import AsyncStorage from '@react-native-community/async-storage';
 import {SET_UPLOAD_PROGRESS} from '../redux/types';
@@ -2687,9 +2688,7 @@ async function getMobileVersionStatusData(platform, version) {
   );
 }
 
-async function getOrganizationData(platform, version) {
-  let baseURL = null;
-  baseURL = await AsyncStorage.getItem('baseURL');
+async function getOrganizationData(workSpace) {
   let headers = {
     Accept: 'application/json',
     'Content-Type': 'application/json',
@@ -2697,7 +2696,7 @@ async function getOrganizationData(platform, version) {
 
   return request(
     {
-      url: baseURL + GET_MOBILE_VERSION_STATUS + '/' + platform + '/' + version,
+      url: GET_ORGANIZATION_WORK_SPACE + 'workspace=' + workSpace,
       method: 'GET',
     },
     false,

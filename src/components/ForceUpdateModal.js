@@ -80,14 +80,16 @@ class ForceUpdateModal extends Component {
             </View>
             <View>
               <Text style={styles.modalHeadderText}>
-                {this.props.details.force_update ? 'Force Update' : 'Update'} -
-                Arimac PM tool
+                {this.props.details.isForceUpdate == 1
+                  ? 'Force Update'
+                  : 'Update'}{' '}
+                - Arimac PM tool
               </Text>
               <Text style={styles.currentVersion}>
-                Current version : {this.props.details.current_version}
+                Current version : {this.props.details.currentVersion}
               </Text>
               <Text style={styles.latestVersion}>
-                Latest version : {this.props.details.latest_version}
+                Latest version : {this.props.details.latestVersion}
               </Text>
             </View>
           </View>
@@ -103,7 +105,7 @@ class ForceUpdateModal extends Component {
               onPress={() => this.onUpdatePress()}>
               <Text style={styles.updateTextStyle}>Update</Text>
             </TouchableOpacity>
-            {!this.props.details.force_update && (
+            {this.props.details.isForceUpdate == 0 && (
               <TouchableOpacity
                 style={styles.cancelStyle}
                 onPress={() => this.onCanclePress()}>
