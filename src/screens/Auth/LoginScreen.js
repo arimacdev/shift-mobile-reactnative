@@ -152,7 +152,7 @@ class LoginScreen extends Component {
   async initialUserLogin() {
     try {
       const result = await authorize(this.configLive);
-      AsyncStorage.setItem('baseURL', this.baseUrl+'api/pm-service/');
+      AsyncStorage.setItem('baseURL', this.baseUrl + 'api/pm-service/');
       AsyncStorage.setItem('accessToken', result.accessToken);
       AsyncStorage.setItem('refreshToken', result.refreshToken);
       let decoded = jwtDecode(result.accessToken);
@@ -186,13 +186,21 @@ class LoginScreen extends Component {
         <View style={styles.imageContainer}>
           <Text style={styles.textTitle}>{strings.login.loginText}</Text>
           <View style={styles.companyImageContainer}>
-          <FadeIn>
-            <Image
-              style={styles.compantIconStyle}
-              source={{uri: details.organizationLogo}}
-              resizeMode="contain"
-            />
-          </FadeIn>
+            {details.organizationLogo ? (
+              <FadeIn>
+                <Image
+                  style={styles.compantIconStyle}
+                  source={{uri: details.organizationLogo}}
+                  resizeMode="contain"
+                />
+              </FadeIn>
+            ) : (
+              <Image
+                style={styles.compantIconStyle}
+                source={icons.defaultOrganization}
+                resizeMode="contain"
+              />
+            )}
           </View>
           <Text style={styles.companyNameText}>{details.organizationName}</Text>
           <Text style={styles.companyNameSubText}>{details.company}</Text>
@@ -239,7 +247,8 @@ const styles = EStyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: '0.5rem',
+    borderColor: colors.colorSolitude,
+    borderWidth: '1rem',
     paddingHorizontal: '25rem',
     paddingVertical: '20rem',
     marginTop: '5rem',
@@ -259,20 +268,20 @@ const styles = EStyleSheet.create({
   loginButton: {
     backgroundColor: colors.loginButton,
     borderRadius: '5rem',
-    width: '240rem',
+    width: '210rem',
     marginTop: '17rem',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: '12rem',
-    height: '45rem',
+    height: '40rem',
     marginHorizontal: '20rem',
   },
   textLogin: {
     fontSize: '14rem',
     color: colors.white,
     lineHeight: '17rem',
-    fontFamily: 'CircularStd-Medium',
+    fontFamily: 'CircularStd-Bold',
     textAlign: 'center',
   },
   bottomContainer: {
@@ -301,9 +310,9 @@ const styles = EStyleSheet.create({
   },
   companyNameText: {
     fontSize: '15rem',
-    color: colors.loginGray,
+    color: colors.colorShuttleGrey,
     textAlign: 'center',
-    fontFamily: 'CircularStd-Black',
+    fontFamily: 'CircularStd-Bold',
     marginHorizontal: '50rem',
     marginBottom: '3rem',
   },
@@ -311,7 +320,7 @@ const styles = EStyleSheet.create({
     fontSize: '11rem',
     color: colors.gray,
     textAlign: 'center',
-    fontFamily: 'CircularStd-Medium',
+    fontFamily: 'CircularStd-Book',
     marginHorizontal: '50rem',
     marginBottom: '10rem',
   },
@@ -326,9 +335,9 @@ const styles = EStyleSheet.create({
   },
   textGoBack: {
     fontSize: '14rem',
-    color: colors.colorMidnightBlue,
+    color: colors.colorMidnightExpress,
     lineHeight: '17rem',
-    fontFamily: 'CircularStd-Medium',
+    fontFamily: 'CircularStd-Book',
     textAlign: 'center',
   },
 });

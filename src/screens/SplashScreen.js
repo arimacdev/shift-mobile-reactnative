@@ -26,34 +26,6 @@ import DeviceInfo from 'react-native-device-info';
 import Loader from '../components/Loader';
 import icons from '../assest/icons/icons';
 
-const config = {
-  issuer: 'https://pmtool.devops.arimac.xyz/auth',
-  serviceConfiguration: {
-    authorizationEndpoint:
-      'https://pmtool.devops.arimac.xyz/auth/realms/pm-tool/protocol/openid-connect/auth',
-    tokenEndpoint:
-      'https://pmtool.devops.arimac.xyz/auth/realms/pm-tool/protocol/openid-connect/token',
-  },
-  clientId: 'pmtool-frontend',
-  redirectUrl: 'io.identityserver.demo:/oauthredirect',
-  scopes: ['openid', 'roles', 'profile'],
-  dangerouslyAllowInsecureHttpRequests: true,
-};
-
-const configLive = {
-  issuer: 'https://project.arimaclanka.com/auth/realms/pm-tool',
-  serviceConfiguration: {
-    authorizationEndpoint:
-      'https://project.arimaclanka.com/auth/realms/pm-tool/protocol/openid-connect/auth',
-    tokenEndpoint:
-      'https://project.arimaclanka.com/auth/realms/pm-tool/protocol/openid-connect/token',
-  },
-  clientId: 'pmtool-frontend',
-  redirectUrl: 'com.arimacpmtool:/oauthredirect',
-  scopes: ['openid', 'roles', 'profile'],
-  dangerouslyAllowInsecureHttpRequests: true,
-};
-
 class SplashScreen extends Component {
   constructor(props) {
     super(props);
