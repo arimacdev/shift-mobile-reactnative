@@ -74,10 +74,10 @@ class WorkloadTasksDetailsScreen extends Component {
       workloadTasksDetails: workloadTasksDetails,
       taskNotes: workloadTasksDetails.taskNote,
     });
-    if(date == ''){
-      this.setState({duedate: 'Add Due Date'})
-    }else{
-      this.setState({duedate: 'Due on ' + date})
+    if (date == '') {
+      this.setState({duedate: 'Add Due Date'});
+    } else {
+      this.setState({duedate: 'Due on ' + date});
     }
     this.setTaskStatus(workloadTasksDetails);
     this.fetchSubTasksData(
@@ -200,7 +200,7 @@ class WorkloadTasksDetailsScreen extends Component {
         statusValue = 'Deployed';
       case 'closed':
         statusValue = 'Closed';
-        break;   
+        break;
     }
     this.setState({
       taskStatus: statusValue,
@@ -310,19 +310,21 @@ class WorkloadTasksDetailsScreen extends Component {
   render() {
     let dataLoading = this.state.dataLoading;
     return (
-      <ScrollView style={styles.container}>
-        <View style={styles.innerContainer}>
-          <View style={styles.projectFilerView}>
-            <Text style={{color: colors.white}}>{this.state.taskStatus}</Text>
+      <View style={{flex:1}}>
+        <ScrollView style={styles.container}>
+          <View style={styles.innerContainer}>
+            <View style={styles.projectFilerView}>
+              <Text style={{color: colors.white}}>{this.state.taskStatus}</Text>
+            </View>
+            <FlatList
+              data={taskData}
+              renderItem={({item}) => this.renderList(item)}
+              keyExtractor={item => item.taskId}
+            />
           </View>
-          <FlatList
-            data={taskData}
-            renderItem={({item}) => this.renderList(item)}
-            keyExtractor={item => item.taskId}
-          />
-        </View>
+        </ScrollView>
         {dataLoading && <Loader />}
-      </ScrollView>
+      </View>
     );
   }
 }

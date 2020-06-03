@@ -222,12 +222,12 @@ class LoginScreen extends Component {
             </TouchableOpacity>
             {/* <Text style={styles.copyRights}>{strings.login.copyRights}</Text> */}
           </View>
-          <ForceUpdateModal
-            showForceUpdateModal={this.state.forceUpdate}
-            details={this.state.update}
-            checkUserStatus={() => {}}
-          />
         </ScrollView>
+        <ForceUpdateModal
+          showForceUpdateModal={this.state.forceUpdate}
+          details={this.state.update}
+          checkUserStatus={() => {}}
+        />
         {this.state.dataLoading && <Loader />}
       </View>
     );
