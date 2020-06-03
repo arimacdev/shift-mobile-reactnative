@@ -140,14 +140,14 @@ class PeopleScreen extends Component {
             <TouchableOpacity onPress={() => this.goToEditPeople(item)}>
               <Image
                 style={{width: 28, height: 28, borderRadius: 28 / 2}}
-                source={require('../../../asserts/img/edit_user.png')}
+                source={icons.editRoundWhite}
               />
             </TouchableOpacity>
 
             <TouchableOpacity style={{marginLeft: EStyleSheet.value('24rem')}}>
               <Image
                 style={{width: 28, height: 28, borderRadius: 28 / 2}}
-                source={require('../../../asserts/img/bin.png')}
+                source={icons.deleteRoundRed}
               />
             </TouchableOpacity>
           </View>

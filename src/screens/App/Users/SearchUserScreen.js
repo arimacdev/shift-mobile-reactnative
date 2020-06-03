@@ -102,7 +102,7 @@ class SearchUserScreen extends Component {
               }>
               <Image
                 style={{width: 28, height: 28, borderRadius: 28 / 2}}
-                source={require('../../../asserts/img/edit_user.png')}
+                source={icons.editRoundWhite}
               />
             </TouchableOpacity>
 

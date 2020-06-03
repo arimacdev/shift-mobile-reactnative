@@ -567,7 +567,6 @@ class CreateNewProjectScreen extends Component {
                   {marginRight: 15, marginLeft: 10},
                 ]}
                 source={icons.folderWhite}
-                source={require('../../../assest/icons/folder_white.png')}
                 resizeMode={'contain'}
               />
               <View style={{flex: 1}}>
@@ -576,7 +575,7 @@ class CreateNewProjectScreen extends Component {
 
               <Image
                 style={[styles.addIcon, {marginRight: 10}]}
-                source={require('../../../assest/icons/add.png')}
+                source={icons.add}
                 resizeMode={'contain'}
               />
             </View>

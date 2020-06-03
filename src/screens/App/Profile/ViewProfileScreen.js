@@ -113,12 +113,7 @@ class ViewProfileScreen extends Component {
     if (userImage) {
       return <Image source={{uri: userImage}} style={styles.avatar} />;
     } else {
-      return (
-        <Image
-          style={styles.avatar}
-          source={require('../../../asserts/img/defult_user.png')}
-        />
-      );
+      return <Image style={styles.avatar} source={icons.defultUser} />;
     }
   }
 

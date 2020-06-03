@@ -8,6 +8,7 @@ const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
 import Loader from '../../../components/Loader';
 import APIServices from '../../../services/APIServices';
+import icons from '../../../assest/icons/icons';
 
 class ViewUserScreen extends Component {
   constructor(props) {
@@ -52,12 +53,7 @@ class ViewUserScreen extends Component {
     if (userImage) {
       return <Image source={{uri: userImage}} style={styles.avatar} />;
     } else {
-      return (
-        <Image
-          style={styles.avatar}
-          source={require('../../../asserts/img/defult_user.png')}
-        />
-      );
+      return <Image style={styles.avatar} source={icons.defultUser} />;
     }
   }
 
