@@ -58,6 +58,6 @@ const colors = {
   colorMidnightBlue: '#0C0C5A',
   colorBittersweet: '#FF6161',
   colorDeepSkyBlue: '#0BAFFF',
-  colorSolitude: '#E5E9EF'
+  colorSolitude: '#E5E9EF',
 };
 export default colors;

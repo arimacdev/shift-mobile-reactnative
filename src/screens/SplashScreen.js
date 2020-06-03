@@ -210,8 +210,8 @@ const styles = EStyleSheet.create({
     marginBottom: '15rem',
   },
   iconStyle: {
-    width: '175rem',
-    height: '175rem',
+    width: '250rem',
+    height: '250rem',
   },
   copyRights: {
     fontSize: '14rem',

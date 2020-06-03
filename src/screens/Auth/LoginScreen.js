@@ -7,6 +7,7 @@ import {
   Platform,
   AppState,
   Image,
+  ScrollView,
 } from 'react-native';
 import {connect} from 'react-redux';
 import * as actions from '../../redux/actions';
@@ -175,54 +176,58 @@ class LoginScreen extends Component {
   render() {
     let details = this.state.details;
     return (
-      <View style={styles.container}>
-        <View style={styles.imageContainer}>
-          <Image
-            style={styles.iconStyle}
-            source={icons.appIcon}
-            resizeMode="contain"
-          />
-        </View>
-        <View style={styles.imageContainer}>
-          <Text style={styles.textTitle}>{strings.login.loginText}</Text>
-          <View style={styles.companyImageContainer}>
-            {details.organizationLogo ? (
-              <FadeIn>
+      <View style={{flex: 1}}>
+        <ScrollView style={styles.container}>
+          <View style={styles.imageContainer}>
+            <Image
+              style={styles.iconStyle}
+              source={icons.appIcon}
+              resizeMode="contain"
+            />
+          </View>
+          <View style={styles.imageContainer}>
+            <Text style={styles.textTitle}>{strings.login.loginText}</Text>
+            <View style={styles.companyImageContainer}>
+              {details.organizationLogo ? (
+                <FadeIn>
+                  <Image
+                    style={styles.compantIconStyle}
+                    source={{uri: details.organizationLogo}}
+                    resizeMode="contain"
+                  />
+                </FadeIn>
+              ) : (
                 <Image
                   style={styles.compantIconStyle}
-                  source={{uri: details.organizationLogo}}
+                  source={icons.defaultOrganization}
                   resizeMode="contain"
                 />
-              </FadeIn>
-            ) : (
-              <Image
-                style={styles.compantIconStyle}
-                source={icons.defaultOrganization}
-                resizeMode="contain"
-              />
-            )}
+              )}
+            </View>
+            <Text style={styles.companyNameText}>
+              {details.organizationName}
+            </Text>
+            <Text style={styles.companyNameSubText}>{details.company}</Text>
+            <TouchableOpacity
+              style={styles.loginButton}
+              onPress={() => this.initialUserLogin()}>
+              <Text style={styles.textLogin}>{strings.login.loginButton}</Text>
+            </TouchableOpacity>
           </View>
-          <Text style={styles.companyNameText}>{details.organizationName}</Text>
-          <Text style={styles.companyNameSubText}>{details.company}</Text>
-          <TouchableOpacity
-            style={styles.loginButton}
-            onPress={() => this.initialUserLogin()}>
-            <Text style={styles.textLogin}>{strings.login.loginButton}</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.bottomContainer}>
-          <TouchableOpacity
-            style={styles.goBackButton}
-            onPress={() => this.props.navigation.goBack()}>
-            <Text style={styles.textGoBack}>{strings.login.goBack}</Text>
-          </TouchableOpacity>
-          {/* <Text style={styles.copyRights}>{strings.login.copyRights}</Text> */}
-        </View>
-        <ForceUpdateModal
-          showForceUpdateModal={this.state.forceUpdate}
-          details={this.state.update}
-          checkUserStatus={() => {}}
-        />
+          <View style={styles.bottomContainer}>
+            <TouchableOpacity
+              style={styles.goBackButton}
+              onPress={() => this.props.navigation.goBack()}>
+              <Text style={styles.textGoBack}>{strings.login.goBack}</Text>
+            </TouchableOpacity>
+            {/* <Text style={styles.copyRights}>{strings.login.copyRights}</Text> */}
+          </View>
+          <ForceUpdateModal
+            showForceUpdateModal={this.state.forceUpdate}
+            details={this.state.update}
+            checkUserStatus={() => {}}
+          />
+        </ScrollView>
         {this.state.dataLoading && <Loader />}
       </View>
     );
@@ -233,7 +238,6 @@ const styles = EStyleSheet.create({
   container: {
     width: '100%',
     height: '100%',
-    alignItems: 'center',
     flex: 1,
     backgroundColor: colors.white,
   },
@@ -285,10 +289,10 @@ const styles = EStyleSheet.create({
     textAlign: 'center',
   },
   bottomContainer: {
-    position: 'absolute',
-    bottom: 0,
-    width: '100%',
-    marginBottom: '15rem',
+    // position: 'absolute',
+    // bottom: 0,
+    // width: '100%',
+    marginTop: '10rem',
   },
   iconStyle: {
     width: '175rem',
@@ -325,13 +329,13 @@ const styles = EStyleSheet.create({
     marginBottom: '10rem',
   },
   goBackButton: {
-    marginTop: '17rem',
+    marginTop: '20rem',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: '12rem',
-    height: '45rem',
-    marginHorizontal: '20rem',
+    height: '30rem',
+    marginHorizontal: '130rem',
   },
   textGoBack: {
     fontSize: '14rem',
