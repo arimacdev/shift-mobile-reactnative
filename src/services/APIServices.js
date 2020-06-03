@@ -2688,7 +2688,7 @@ async function getMobileVersionStatusData(platform, version) {
   );
 }
 
-async function getOrganizationData(workSpace) {
+async function getOrganizationData(workSpace, version) {
   let headers = {
     Accept: 'application/json',
     'Content-Type': 'application/json',
@@ -2696,7 +2696,7 @@ async function getOrganizationData(workSpace) {
 
   return request(
     {
-      url: GET_ORGANIZATION_WORK_SPACE + 'workspace=' + workSpace,
+      url: GET_ORGANIZATION_WORK_SPACE + 'workspace=' + workSpace + '&current_version=' + version,
       method: 'GET',
     },
     false,

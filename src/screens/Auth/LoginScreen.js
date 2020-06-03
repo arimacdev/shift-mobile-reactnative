@@ -24,6 +24,7 @@ import ForceUpdateModal from '../../components/ForceUpdateModal';
 import DeviceInfo from 'react-native-device-info';
 import Loader from '../../components/Loader';
 import icons from '../../assest/icons/icons';
+import FadeIn from 'react-native-fade-in-image';
 
 const config = {
   issuer: 'https://pmtool.devops.arimac.xyz/auth',
@@ -94,7 +95,7 @@ class LoginScreen extends Component {
     this.setState({dataLoading: true});
     try {
       let workSpace = await AsyncStorage.getItem('workSpace');
-      let result = await APIServices.getOrganizationData(workSpace);
+      let result = await APIServices.getOrganizationData(workSpace, version);
       if (result.status == 200) {
         let response = result.data;
         this.baseUrl = response.workspaceUrl;
@@ -134,19 +135,6 @@ class LoginScreen extends Component {
     }
   }
 
-  // async checkUserStatus() {
-  //   AsyncStorage.getItem('userID').then(userID => {
-  //     if (userID) {
-  //       AsyncStorage.getItem('userType').then(userType => {
-  //         if (userType) {
-  //           this.fetchDataUserData(userID, userType);
-  //           //NavigationService.navigate('App');
-  //         }
-  //       });
-  //     }
-  //   });
-  // }
-
   fetchDataUserData(userID, userType) {
     this.setState({dataLoading: true});
     APIServices.getUserData(userID)
@@ -164,7 +152,7 @@ class LoginScreen extends Component {
   async initialUserLogin() {
     try {
       const result = await authorize(this.configLive);
-      AsyncStorage.setItem('baseURL', this.baseUrl+'auth/realms/pm-tool/');
+      AsyncStorage.setItem('baseURL', this.baseUrl+'api/pm-service/');
       AsyncStorage.setItem('accessToken', result.accessToken);
       AsyncStorage.setItem('refreshToken', result.refreshToken);
       let decoded = jwtDecode(result.accessToken);
@@ -198,11 +186,13 @@ class LoginScreen extends Component {
         <View style={styles.imageContainer}>
           <Text style={styles.textTitle}>{strings.login.loginText}</Text>
           <View style={styles.companyImageContainer}>
+          <FadeIn>
             <Image
               style={styles.compantIconStyle}
               source={{uri: details.organizationLogo}}
               resizeMode="contain"
             />
+          </FadeIn>
           </View>
           <Text style={styles.companyNameText}>{details.organizationName}</Text>
           <Text style={styles.companyNameSubText}>{details.company}</Text>
@@ -222,7 +212,7 @@ class LoginScreen extends Component {
         </View>
         <ForceUpdateModal
           showForceUpdateModal={this.state.forceUpdate}
-          details={this.state.details}
+          details={this.state.update}
           checkUserStatus={() => {}}
         />
         {this.state.dataLoading && <Loader />}
