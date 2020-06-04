@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   View,
   Dimensions,
@@ -8,25 +8,26 @@ import {
   Platform,
   Image,
 } from 'react-native';
-import {DrawerNavigatorItems} from 'react-navigation-drawer';
-import {Button, Text, Icon} from 'native-base';
+import { DrawerNavigatorItems } from 'react-navigation-drawer';
+import { Button, Text, Icon } from 'native-base';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import AsyncStorage from '@react-native-community/async-storage';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import colors from '../config/colors';
 import NavigationService from '../services/NavigationService';
 import * as actions from '../redux/actions';
 import FadeIn from 'react-native-fade-in-image';
 import icons from '../assest/icons/icons';
+import { revoke } from 'react-native-app-auth';
 
 const entireScreenWidth = Dimensions.get('window').width;
-EStyleSheet.build({$rem: entireScreenWidth / 380});
+EStyleSheet.build({ $rem: entireScreenWidth / 380 });
 
 const CustomDrawerContentComponent = props => (
   <ScrollView>
     <SafeAreaView
       style={styles.container}
-      forceInset={{top: 'always', horizontal: 'never'}}>
+      forceInset={{ top: 'always', horizontal: 'never' }}>
       <TouchableOpacity
         style={styles.header}
         onPress={() =>
@@ -38,13 +39,13 @@ const CustomDrawerContentComponent = props => (
           {props.loginUser.profileImage ? (
             <FadeIn>
               <Image
-                source={{uri: props.loginUser.profileImage}}
+                source={{ uri: props.loginUser.profileImage }}
                 style={styles.userIcon}
               />
             </FadeIn>
           ) : (
-            <Image style={styles.userIcon} source={icons.defultUser} />
-          )}
+              <Image style={styles.userIcon} source={icons.defultUser} />
+            )}
         </View>
         <View style={styles.headerRight}>
           <View style={{}}>
@@ -94,15 +95,15 @@ const CustomDrawerContentComponent = props => (
               }}
             />
           ) : (
-            <Image
-              tintColor="#4d4f85"
-              source={require('../asserts/img/drawer_projects.png')}
-              style={{
-                width: EStyleSheet.value('25rem'),
-                height: EStyleSheet.value('23rem'),
-              }}
-            />
-          )}
+              <Image
+                tintColor="#4d4f85"
+                source={require('../asserts/img/drawer_projects.png')}
+                style={{
+                  width: EStyleSheet.value('25rem'),
+                  height: EStyleSheet.value('23rem'),
+                }}
+              />
+            )}
           <Text
             style={[
               props.selectedDrawerItem == 'projects'
@@ -130,15 +131,15 @@ const CustomDrawerContentComponent = props => (
               }}
             />
           ) : (
-            <Image
-              tintColor="#4d4f85"
-              source={require('../asserts/img/drawer_tasks.png')}
-              style={{
-                width: EStyleSheet.value('25rem'),
-                height: EStyleSheet.value('23rem'),
-              }}
-            />
-          )}
+              <Image
+                tintColor="#4d4f85"
+                source={require('../asserts/img/drawer_tasks.png')}
+                style={{
+                  width: EStyleSheet.value('25rem'),
+                  height: EStyleSheet.value('23rem'),
+                }}
+              />
+            )}
           <Text
             style={[
               props.selectedDrawerItem == 'tasks'
@@ -167,15 +168,15 @@ const CustomDrawerContentComponent = props => (
               }}
             />
           ) : (
-            <Image
-              tintColor="#4d4f85"
-              source={require('../asserts/img/drawer_workload.png')}
-              style={{
-                width: EStyleSheet.value('25rem'),
-                height: EStyleSheet.value('23rem'),
-              }}
-            />
-          )}
+              <Image
+                tintColor="#4d4f85"
+                source={require('../asserts/img/drawer_workload.png')}
+                style={{
+                  width: EStyleSheet.value('25rem'),
+                  height: EStyleSheet.value('23rem'),
+                }}
+              />
+            )}
           <Text
             style={[
               props.selectedDrawerItem == 'workload'
@@ -204,15 +205,15 @@ const CustomDrawerContentComponent = props => (
               }}
             />
           ) : (
-            <Image
-              tintColor="#4d4f85"
-              source={require('../asserts/img/drawer_users.png')}
-              style={{
-                width: EStyleSheet.value('25rem'),
-                height: EStyleSheet.value('23rem'),
-              }}
-            />
-          )}
+              <Image
+                tintColor="#4d4f85"
+                source={require('../asserts/img/drawer_users.png')}
+                style={{
+                  width: EStyleSheet.value('25rem'),
+                  height: EStyleSheet.value('23rem'),
+                }}
+              />
+            )}
 
           <Text
             style={[
@@ -224,9 +225,69 @@ const CustomDrawerContentComponent = props => (
           </Text>
         </TouchableOpacity>
       )}
+
+      <TouchableOpacity
+        style={styles.custtomButton1}
+        // onPress={() => {
+        //   // NavigationService.navigate('UsersScreen');
+        //   props.drawerItemSelect('users');
+        // }}>
+        onPress={()=> logOut(props)}>
+        {props.selectedDrawerItem == 'users' ? (
+          <Image
+            tintColor="#FFFFFF"
+            source={require('../asserts/img/drawer_users.png')}
+            style={{
+              width: EStyleSheet.value('25rem'),
+              height: EStyleSheet.value('23rem'),
+            }}
+          />
+        ) : (
+            <Image
+              tintColor="#4d4f85"
+              source={require('../asserts/img/drawer_users.png')}
+              style={{
+                width: EStyleSheet.value('25rem'),
+                height: EStyleSheet.value('23rem'),
+              }}
+            />
+          )}
+
+        <Text
+          style={[
+            props.selectedDrawerItem == 'users'
+              ? styles.textSelected
+              : styles.text,
+          ]}>
+          Logout
+          </Text>
+      </TouchableOpacity>
+
     </SafeAreaView>
   </ScrollView>
 );
+
+const logOut = props => {
+  props.navigation.closeDrawer()
+
+  
+  const config = {
+    issuer: '<YOUR_ISSUER_URL>',
+    clientId: '<YOUR_CLIENT_ID>',
+    redirectUrl: '<YOUR_REDIRECT_URL>',
+    scopes: ['<YOUR_SCOPES_ARRAY>'],
+  };
+  const result = await revoke(config, {
+    tokenToRevoke: `<TOKEN_TO_REVOKE>`,
+    includeBasicAuth: true,
+    sendClientId: true,
+  });
+
+
+ 
+
+
+};
 
 const styles = EStyleSheet.create({
   container: {
