@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Platform,
   AppState,
+  Image
 } from 'react-native';
 import {connect} from 'react-redux';
 import * as actions from '../redux/actions';
@@ -22,6 +23,7 @@ import APIServices from '../services/APIServices';
 import ForceUpdateModal from '../components/ForceUpdateModal';
 import DeviceInfo from 'react-native-device-info';
 import Loader from '../components/Loader';
+import icons from '../assest/icons/icons';
 
 const config = {
   issuer: 'https://pmtool.devops.arimac.xyz/auth',
@@ -166,20 +168,21 @@ class SplashScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <View style={styles.textContainer}>
-          <Text style={styles.textTitle}>{strings.login.loginMainTitle}</Text>
-          <Text style={styles.textSubTitle}>
-            {strings.login.loginSubMainTitle}
-          </Text>
+        <View style={styles.imageContainer}>
+            <Image
+                style={styles.iconStyle}
+                source={icons.appIcon}
+                resizeMode="contain"
+              />
+               <Text style={styles.textTitle}>{strings.login.loginMainTitle}</Text>
         </View>
-        <View>
-          <View>
+        <View style={styles.bottomContainer}>
             <TouchableOpacity
               style={styles.loginButton}
               onPress={() => this.initialUserLogin()}>
               <Text style={styles.textLogin}>{strings.login.loginButton}</Text>
             </TouchableOpacity>
-          </View>
+            <Text style={styles.copyRights}>{strings.login.copyRights}</Text>
         </View>
         <ForceUpdateModal
           showForceUpdateModal={this.state.forceUpdate}
@@ -198,52 +201,21 @@ const styles = EStyleSheet.create({
     height: '100%',
     alignItems: 'center',
     justifyContent: 'center',
+    flex : 1,
+    backgroundColor: colors.white,
   },
-  logoContainer: {
-    width: '276rem',
-    height: '135rem',
-    borderRadius: '13rem',
-    backgroundColor: 'transparent',
-    alignItems: 'center',
+  imageContainer:{
+    flexDirection: 'column',
     justifyContent: 'center',
-    marginTop: '163rem',
-  },
-  logo: {
-    width: '98.2rem',
-    height: '57.8rem',
+    alignItems: 'center',
   },
   textTitle: {
     fontSize: '14rem',
     color: colors.loginBlue,
     textAlign: 'center',
     fontFamily: 'CircularStd-Black',
-  },
-  textSubTitle: {
-    fontSize: '14rem',
-    color: colors.loginGray,
-    textAlign: 'center',
-    lineHeight: '17rem',
-    marginTop: '10rem',
-    fontFamily: 'CircularStd-Black',
-    marginHorizontal: '50rem',
-    marginBottom: '10rem',
-  },
-  textInputView: {
-    backgroundColor: colors.lighterGray,
-    borderRadius: 5,
-    width: '330rem',
-    marginTop: '16rem',
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: '12rem',
-  },
-  textInput: {
-    fontSize: '12rem',
-    color: colors.gray,
-    textAlign: 'center',
-    lineHeight: '17rem',
-    fontFamily: 'CircularStd-Book',
-    textAlign: 'left',
+    marginLeft : '30rem',
+    marginRight : '30rem'
   },
   userIcon: {
     width: '20rem',
@@ -259,6 +231,7 @@ const styles = EStyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: '12rem',
     height: '50rem',
+    marginHorizontal: '20rem',
   },
   textLogin: {
     fontSize: '15rem',
@@ -268,6 +241,26 @@ const styles = EStyleSheet.create({
     fontFamily: 'CircularStd-Black',
     textAlign: 'center',
     fontWeight: 'bold',
+  },
+  bottomContainer: {
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
+    marginBottom: 15,
+  },
+  iconStyle: {
+    width: '175rem',
+    height: '175rem',
+  },
+  copyRights: {
+    fontSize: '14rem',
+    color: colors.loginGray,
+    textAlign: 'center',
+    lineHeight: '17rem',
+    marginTop: '10rem',
+    fontFamily: 'CircularStd-Black',
+    marginHorizontal: '50rem',
+    marginBottom: '10rem',
   },
 });
 

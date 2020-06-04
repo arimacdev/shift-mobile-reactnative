@@ -1,9 +1,10 @@
 const strings = {
   login: {
     loginButton: 'Login',
-    loginMainTitle: 'Welcome to Arimac PM tool',
+    loginMainTitle: 'Manage your projects, tasks and workload at one place easily.',
     loginSubMainTitle:
       'Enter your email address and password to get access your account',
+      copyRights : '© Arimac Digital',
   },
   slack: {
     clientId: '345426929140.1020110511447', // found under App Credentials
