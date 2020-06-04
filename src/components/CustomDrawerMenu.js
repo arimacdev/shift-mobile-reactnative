@@ -289,23 +289,24 @@ const confirmLogout = (props) => {
 }
 
 const logOut = async () => {
+  const accessToken = await AsyncStorage.getItem('accessToken');
+  const refreshToken = await AsyncStorage.getItem('refreshToken');
   try {
+
+    let headers = {
+      Accept: 'application/json',
+      'Content-Type': 'application/x-www-form-urlencoded',
+      client_id:'pmtool-frontend',
+      refresh_token:accessToken
+    };
+  
     let response = await axios({
       url: 'https://pmtool.devops.arimac.xyz/auth/realms/pm-tool/protocol/openid-connect/logout',
       method: 'GET',
+      headers:headers
     });
     if (response.status === 200) {
-      await AsyncStorage.setItem('baseURL', '');
-      await AsyncStorage.setItem('issuer', '');
-      await AsyncStorage.setItem('authorizationEndpoint', '');
-      await AsyncStorage.setItem('tokenEndpoint', '');
-      await AsyncStorage.setItem('accessToken', '');
-      await AsyncStorage.setItem('refreshToken', '');
-      await AsyncStorage.setItem('accessTokenExpirationDate', '' );
-      await AsyncStorage.setItem('userID', '');
-      await AsyncStorage.setItem('userLoggedIn', 'false');
-      await AsyncStorage.setItem('userType', '');
-      await AsyncStorage.setItem('workSpace', '');
+      AsyncStorage.clear();
       NavigationService.navigate('ConfigurationScreen');
     }
   } catch (error) {
