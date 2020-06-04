@@ -502,16 +502,17 @@ class TasksDetailsScreen extends Component {
 
   async iOSFilePicker() {
     Alert.alert(
-      'Add Files', 'Select the file source',
+      'Add Files',
+      'Select the file source',
       [
-        { text: 'Camera', onPress: () => this.selectCamera() },
-        { text: 'Gallery', onPress: () => this.selectGallery() },
-        { text: 'Files', onPress: () => this.doumentPicker() },
-        { text: 'Cancel', onPress: () => console.log('Back') },
+        {text: 'Camera', onPress: () => this.selectCamera()},
+        {text: 'Gallery', onPress: () => this.selectGallery()},
+        {text: 'Files', onPress: () => this.doumentPicker()},
+        {text: 'Cancel', onPress: () => console.log('Back')},
       ],
       {
-        cancelable: true
-      }
+        cancelable: true,
+      },
     );
   }
 
@@ -522,14 +523,14 @@ class TasksDetailsScreen extends Component {
         skipBackup: true,
         path: 'images',
       },
-      quality: 0.2
+      quality: 0.2,
     };
-    ImagePicker.launchCamera(options, (res) => {
+    ImagePicker.launchCamera(options, res => {
       if (res.didCancel) {
       } else if (res.error) {
       } else if (res.customButton) {
       } else {
-        this.setImageForFile(res)
+        this.setImageForFile(res);
       }
     });
   }
@@ -541,15 +542,15 @@ class TasksDetailsScreen extends Component {
         skipBackup: true,
         path: 'images',
       },
-      quality: 0.2
+      quality: 0.2,
     };
 
-    ImagePicker.launchImageLibrary(options, (res) => {
+    ImagePicker.launchImageLibrary(options, res => {
       if (res.didCancel) {
       } else if (res.error) {
       } else if (res.customButton) {
       } else {
-        this.setImageForFile(res)
+        this.setImageForFile(res);
       }
     });
   }
@@ -567,7 +568,7 @@ class TasksDetailsScreen extends Component {
         moment().format('YYYY/MM/DD') + ' | ' + moment().format('HH:mm'),
     });
     // this.setState({ files: this.state.files });
-    
+
     await this.setState({
       files: this.state.files,
       indeterminate: true,
@@ -593,7 +594,6 @@ class TasksDetailsScreen extends Component {
         this.showAlert('', error.data.message);
         //}
       });
-      
   }
 
   async doumentPicker() {
@@ -1487,10 +1487,7 @@ class TasksDetailsScreen extends Component {
     if (item.renderImage) {
       return (
         <FadeIn>
-          <Image
-            source={icons.forwordGray}
-            style={{width: 24, height: 24, borderRadius: 24 / 2}}
-          />
+          <Image source={icons.forwordGray} style={styles.imageStyle} />
         </FadeIn>
       );
     } else {
@@ -1984,19 +1981,11 @@ class TasksDetailsScreen extends Component {
     if (userImage) {
       return (
         <FadeIn>
-          <Image
-            source={{uri: userImage}}
-            style={{width: 24, height: 24, borderRadius: 24 / 2}}
-          />
+          <Image source={{uri: userImage}} style={styles.imageStyle} />
         </FadeIn>
       );
     } else {
-      return (
-        <Image
-          style={{width: 24, height: 24, borderRadius: 24 / 2}}
-          source={require('../../../asserts/img/defult_user.png')}
-        />
-      );
+      return <Image style={styles.imageStyle} source={icons.defultUser} />;
     }
   };
 
@@ -2352,7 +2341,7 @@ class TasksDetailsScreen extends Component {
     let isSecondDetailViewOpen = this.props.isSecondDetailViewOpen;
 
     return (
-      <View style={styles.backgroundImage}>
+      <View style={styles.container}>
         <NavigationEvents onWillFocus={payload => this.pageOpen(payload)} />
         <Header
           isTaskLog={false}
@@ -2369,7 +2358,7 @@ class TasksDetailsScreen extends Component {
           }
           onPressDelete={() => this.onTaskDeketePress()}
         />
-        <ScrollView style={styles.backgroundImage}>
+        <ScrollView style={styles.container}>
           <View>
             <View style={styles.headerView}>
               <Text style={styles.headerTaskText}>Task - </Text>
@@ -2624,7 +2613,11 @@ class TasksDetailsScreen extends Component {
               keyExtractor={item => item.taskId}
             />
             <TouchableOpacity
-              onPress={() => Platform.OS == 'ios' ? this.iOSFilePicker() : this.doumentPicker()}
+              onPress={() =>
+                Platform.OS == 'ios'
+                  ? this.iOSFilePicker()
+                  : this.doumentPicker()
+              }
               disabled={this.state.indeterminate}>
               {this.state.files.length > 0 ? (
                 <View
@@ -2683,7 +2676,7 @@ class TasksDetailsScreen extends Component {
 }
 
 const styles = EStyleSheet.create({
-  backgroundImage: {
+  container: {
     flex: 1,
   },
   projectFilerView: {
@@ -2764,7 +2757,7 @@ const styles = EStyleSheet.create({
   buttonDelete: {
     flexDirection: 'row',
     backgroundColor: colors.lightRed,
-    borderRadius: 5,
+    borderRadius: '5rem',
     marginTop: '40rem',
     marginBottom: '30rem',
     flexDirection: 'row',
@@ -3168,6 +3161,11 @@ const styles = EStyleSheet.create({
     width: '15rem',
     height: '15rem',
     marginRight: '5rem',
+  },
+  imageStyle: {
+    width: '22rem',
+    height: '22rem',
+    borderRadius: 50 / 2,
   },
 });
 

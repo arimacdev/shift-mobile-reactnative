@@ -15,9 +15,7 @@ import icons from '../../../assest/icons/icons';
 import EStyleSheet from 'react-native-extended-stylesheet';
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
-import FadeIn from 'react-native-fade-in-image';
 import Loader from '../../../components/Loader';
-import Header from '../../../components/Header';
 import APIServices from '../../../services/APIServices';
 import AsyncStorage from '@react-native-community/async-storage';
 import {NavigationEvents} from 'react-navigation';
@@ -38,13 +36,15 @@ class SubTasksScreen extends Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    if (prevProps.myTaskAddEditSubTask !== this.props.myTaskAddEditSubTask && this.props.myTaskAddEditSubTask) {
+    if (
+      prevProps.myTaskAddEditSubTask !== this.props.myTaskAddEditSubTask &&
+      this.props.myTaskAddEditSubTask
+    ) {
       let userID = this.state.userID;
       this.fetchData(userID);
       this.props.addEditSubTaskSuccessInProject(false);
     }
   }
-
 
   componentDidMount() {
     AsyncStorage.getItem('userID').then(userID => {
@@ -152,8 +152,7 @@ class SubTasksScreen extends Component {
     });
   }
 
-  loadSubtasks(){
-  }
+  loadSubtasks() {}
 
   renderSubTaskListList(item) {
     return (
@@ -267,7 +266,7 @@ const styles = EStyleSheet.create({
   },
   subTaskView: {
     backgroundColor: colors.projectBgColor,
-    borderRadius: 5,
+    borderRadius: '5rem',
     height: '60rem',
     marginTop: '7rem',
     flexDirection: 'row',
@@ -298,18 +297,17 @@ const styles = EStyleSheet.create({
     height: '30rem',
   },
   editDeleteIcon: {
-    width: 25,
-    height: 25,
+    width: '25rem',
+    height: '25rem',
   },
   button: {
     flexDirection: 'row',
     backgroundColor: colors.lightBlue,
-    borderRadius: 5,
+    borderRadius: '5rem',
     marginTop: '17rem',
     marginBottom: '17rem',
     flexDirection: 'row',
     alignItems: 'center',
-    // justifyContent: 'center',
     paddingHorizontal: '12rem',
     height: '55rem',
     marginHorizontal: '20rem',
@@ -324,19 +322,19 @@ const styles = EStyleSheet.create({
   addIcon: {
     width: '28rem',
     height: '28rem',
-    marginRight: 10,
+    marginRight: '10rem',
   },
   bottomBarIcon: {
     width: '20rem',
     height: '20rem',
-    marginRight: 15,
-    marginLeft: 10,
+    marginRight: '15rem',
+    marginLeft: '10rem',
   },
 });
 
 const mapStateToProps = state => {
   return {
-    myTaskAddEditSubTask : state.project.myTaskAddEditSubTask,
+    myTaskAddEditSubTask: state.project.myTaskAddEditSubTask,
   };
 };
 export default connect(

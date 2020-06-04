@@ -73,7 +73,7 @@ class TasksScreen extends Component {
         return (
           <Tasks
             selectedProjectID={projectId}
-            projDetails = {params.projDetails}
+            projDetails={params.projDetails}
             navigation={this.props.navigation}
             isActive={isActive}
           />
@@ -130,7 +130,7 @@ class TasksScreen extends Component {
 }
 
 const styles = EStyleSheet.create({
-  backgroundImage: {
+  container: {
     flex: 1,
     backgroundColor: colors.pageBackGroundColor,
   },

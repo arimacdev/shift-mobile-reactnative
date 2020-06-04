@@ -20,6 +20,7 @@ import Loader from '../../../components/Loader';
 import NavigationService from '../../../services/NavigationService';
 import APIServices from '../../../services/APIServices';
 import {NavigationEvents} from 'react-navigation';
+import EmptyListView from '../../../components/EmptyListView';
 
 class SearchGruopTaskScreen extends Component {
   constructor(props) {
@@ -93,7 +94,7 @@ class SearchGruopTaskScreen extends Component {
     let groupTasks = this.state.groupTasks;
     let dataLoading = this.state.dataLoading;
     return (
-      <View style={styles.backgroundImage}>
+      <View style={styles.container}>
         <NavigationEvents onWillFocus={payload => this.loadData(payload)} />
         <View style={styles.projectFilerView}>
           <Image style={styles.searchIcon} source={icons.searchGray} />
@@ -108,6 +109,7 @@ class SearchGruopTaskScreen extends Component {
           data={groupTasks}
           renderItem={({item}) => this.renderGroupTasks(item)}
           keyExtractor={item => item.taskGroupId}
+          ListEmptyComponent={<EmptyListView />}
         />
         {dataLoading && <Loader />}
       </View>
@@ -116,7 +118,7 @@ class SearchGruopTaskScreen extends Component {
 }
 
 const styles = EStyleSheet.create({
-  backgroundImage: {
+  container: {
     flex: 1,
   },
   projectFilerView: {

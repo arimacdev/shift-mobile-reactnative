@@ -14,7 +14,6 @@ import icons from '../../../assest/icons/icons';
 import EStyleSheet from 'react-native-extended-stylesheet';
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
-import FadeIn from 'react-native-fade-in-image';
 import Loader from '../../../components/Loader';
 import AsyncStorage from '@react-native-community/async-storage';
 import APIServices from '../../../services/APIServices';
@@ -22,137 +21,143 @@ import moment from 'moment';
 import AwesomeAlert from 'react-native-awesome-alerts';
 import DocumentPicker from 'react-native-document-picker';
 
-
 class FilesScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
       files: [],
-      dataLoading : false,
-      projectID : '',
-      taskID : '',
-      userID : '',
-      addedUser : '',
-      showAlert : false,
-      alertTitle : '',
-      alertMsg : '',
+      dataLoading: false,
+      projectID: '',
+      taskID: '',
+      userID: '',
+      addedUser: '',
+      showAlert: false,
+      alertTitle: '',
+      alertMsg: '',
     };
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    if (prevProps.addFileTaskSuccess !== this.props.addFileTaskSuccess
-      && this.props.addFileTaskSuccess) {
-        let userID = this.state.userID;
-        this.fetchData();
-      }
+    if (
+      prevProps.addFileTaskSuccess !== this.props.addFileTaskSuccess &&
+      this.props.addFileTaskSuccess
+    ) {
+      this.fetchData();
+    }
   }
 
   componentDidMount() {
     AsyncStorage.getItem('userID').then(userID => {
       if (userID) {
-        const {navigation: {state: {params}}} = this.props;
-        let projectID = params.projectID
-        let taskID = params.taskID
-        this.setState({
-          projectID : projectID,
-          taskID : taskID,
-          userID : userID}, function() {
-          this.fetchData();
-        });
-      } 
+        const {
+          navigation: {
+            state: {params},
+          },
+        } = this.props;
+        let projectID = params.projectID;
+        let taskID = params.taskID;
+        this.setState(
+          {
+            projectID: projectID,
+            taskID: taskID,
+            userID: userID,
+          },
+          function() {
+            this.fetchData();
+          },
+        );
+      }
     });
   }
 
   async fetchData() {
-      let projectID = this.state.projectID
-      let taskID = this.state.taskID
-      this.setState({dataLoading:true});
-      filesData = await APIServices.getFilesInTaskData(projectID,taskID);
-      if(filesData.message == 'success'){
-        this.setState({files : filesData.data,dataLoading:false});
-      }else{
-        this.setState({dataLoading:false});
-      }
-  }
-
-  async deleteFile(item){
     let projectID = this.state.projectID;
     let taskID = this.state.taskID;
-    let userID = this.state.userID;
+    this.setState({dataLoading: true});
+    filesData = await APIServices.getFilesInTaskData(projectID, taskID);
+    if (filesData.message == 'success') {
+      this.setState({files: filesData.data, dataLoading: false});
+    } else {
+      this.setState({dataLoading: false});
+    }
+  }
+
+  async deleteFile(item) {
+    let projectID = this.state.projectID;
+    let taskID = this.state.taskID;
     let taskFileId = item.taskFileId;
 
-    this.setState({dataLoading:true});
+    this.setState({dataLoading: true});
     try {
-      resultObj = await APIServices.deleteFileInTaskData(projectID,taskID,taskFileId);
-      if(resultObj.message == 'success'){
-        this.setState({dataLoading:false});
+      resultObj = await APIServices.deleteFileInTaskData(
+        projectID,
+        taskID,
+        taskFileId,
+      );
+      if (resultObj.message == 'success') {
+        this.setState({dataLoading: false});
         this.fetchData();
-      }else{
-        this.setState({dataLoading:false});
+      } else {
+        this.setState({dataLoading: false});
+      }
+    } catch (e) {
+      if (e.status == 401) {
+        this.setState({dataLoading: false});
+        this.showAlert('', e.data.message);
       }
     }
-    catch(e) {
-      if(e.status == 401){
-        this.setState({dataLoading:false});
-        this.showAlert("",e.data.message);
-      }
-    }
-    
-}
+  }
 
   renderFileList(item) {
     let date = moment(item.taskFileDate).format('YYYY/MM/DD');
     let time = moment(item.taskFileDate).format('hh:mm a');
-    let taskFileDate = date +' | '+time;
+    let taskFileDate = date + ' | ' + time;
 
     return (
-      <TouchableOpacity onPress={()=>this.props.navigation.navigate('FilesView',{filesData:item})}>
+      <TouchableOpacity
+        onPress={() =>
+          this.props.navigation.navigate('FilesView', {filesData: item})
+        }>
         <View style={styles.filesView}>
           <Image source={icons.gallary} style={styles.taskStateIcon} />
           <View style={{flex: 1}}>
-            <Text style={styles.text}>
-              {item.taskFileName}
-            </Text>
-            <Text style={styles.textDate}>
-              {taskFileDate}
-            </Text>
+            <Text style={styles.text}>{item.taskFileName}</Text>
+            <Text style={styles.textDate}>{taskFileDate}</Text>
           </View>
           <View style={styles.controlView}>
-            <TouchableOpacity 
+            <TouchableOpacity
               onPress={() => this.deleteFile(item)}
               style={{marginLeft: EStyleSheet.value('24rem')}}>
-                  <Image 
-                    style={{width: 40, height: 40,borderRadius: 40/ 2 }} 
-                    source={require('../../../asserts/img/bin.png')}
-                  />
-              </TouchableOpacity>
+              <Image
+                style={{width: 40, height: 40, borderRadius: 40 / 2}}
+                source={require('../../../asserts/img/bin.png')}
+              />
+            </TouchableOpacity>
           </View>
         </View>
       </TouchableOpacity>
     );
   }
 
-  
-
   onBackPress() {
     this.props.navigation.goBack();
-  };
-
-  hideAlert (){
-    this.setState({
-      showAlert : false,
-      alertTitle : '',
-      alertMsg : '',
-    })
   }
 
-  showAlert(title,msg){
+  hideAlert() {
     this.setState({
-      showAlert : true,
-      alertTitle : title,
-      alertMsg : msg,
-    })
-  };
+      showAlert: false,
+      alertTitle: '',
+      alertMsg: '',
+    });
+  }
+
+  showAlert(title, msg) {
+    this.setState({
+      showAlert: true,
+      alertTitle: title,
+      alertMsg: msg,
+    });
+  }
 
   async doumentPicker() {
     // Pick multiple files
@@ -161,7 +166,7 @@ class FilesScreen extends Component {
         type: [
           DocumentPicker.types.images,
           DocumentPicker.types.plainText,
-          DocumentPicker.types.pdf
+          DocumentPicker.types.pdf,
         ],
       });
       for (const res of results) {
@@ -176,10 +181,9 @@ class FilesScreen extends Component {
             moment().format('YYYY/MM/DD') + ' | ' + moment().format('HH:mm'),
         });
 
-        this.uploadFiles(this.state.files)
-        
+        this.uploadFiles(this.state.files);
       }
-      this.setState({ files: this.state.files });
+      this.setState({files: this.state.files});
       console.log(this.state.files);
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
@@ -199,14 +203,14 @@ class FilesScreen extends Component {
         let filesArray = this.state.files.filter(item => {
           return item.uri !== uri;
         });
-        this.setState({ files: filesArray });
+        this.setState({files: filesArray});
       },
     );
   }
 
   uploadFiles(file) {
-    let projectID = this.state.projectID
-    let taskID = this.state.taskID
+    let projectID = this.state.projectID;
+    let taskID = this.state.taskID;
     this.props.addFileToTask(file, taskID, projectID);
   }
 
@@ -228,9 +232,7 @@ class FilesScreen extends Component {
           />
         </View>
         <View flex={1}>
-          <TouchableOpacity
-            style={{}} 
-            onPress={() => this.doumentPicker()}>
+          <TouchableOpacity style={{}} onPress={() => this.doumentPicker()}>
             <View style={styles.button}>
               <Image
                 style={styles.bottomBarIcon}
@@ -278,8 +280,8 @@ const styles = EStyleSheet.create({
   },
   filesView: {
     backgroundColor: colors.white,
-    borderRadius: 5,
-    borderWidth: 1,
+    borderRadius: '5rem',
+    borderWidth: '1rem',
     borderColor: colors.lighterGray,
     height: '60rem',
     marginTop: '7rem',
@@ -298,7 +300,7 @@ const styles = EStyleSheet.create({
     marginLeft: '10rem',
     fontWeight: '400',
   },
-  textDate:{
+  textDate: {
     fontSize: '10rem',
     color: colors.lightgray,
     textAlign: 'center',
@@ -325,10 +327,9 @@ const styles = EStyleSheet.create({
   button: {
     flexDirection: 'row',
     backgroundColor: colors.lightBlue,
-    borderRadius: 5,
+    borderRadius: '5rem',
     flexDirection: 'row',
     alignItems: 'center',
-    // justifyContent: 'center',
     paddingHorizontal: '12rem',
     height: '55rem',
     marginHorizontal: '20rem',
@@ -351,19 +352,19 @@ const styles = EStyleSheet.create({
     marginRight: '15rem',
     marginLeft: '10rem',
   },
-  userIcon:{
+  userIcon: {
     width: '28rem',
     height: '28rem',
     borderRadius: 56 / 2,
-  }
+  },
 });
 
 const mapStateToProps = state => {
   return {
     usersLoading: state.users.usersLoading,
     users: state.users.users,
-    addFileTaskLoading : state.project.addFileTaskLoading,
-    addFileTaskSuccess  : state.project.addFileTaskSuccess,
+    addFileTaskLoading: state.project.addFileTaskLoading,
+    addFileTaskSuccess: state.project.addFileTaskSuccess,
   };
 };
 export default connect(

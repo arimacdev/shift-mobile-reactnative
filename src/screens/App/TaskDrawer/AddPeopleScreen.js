@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {
   View,
-  FlatList,
   Text,
   Dimensions,
   Image,
@@ -16,13 +15,10 @@ import icons from '../../../assest/icons/icons';
 import EStyleSheet from 'react-native-extended-stylesheet';
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
-import ModalFilterPicker from 'react-native-modal-filter-picker';
-import RoundCheckbox from 'rn-round-checkbox';
 import APIServices from '../../../services/APIServices';
 import AwesomeAlert from 'react-native-awesome-alerts';
 import _ from 'lodash';
-import AsyncStorage from '@react-native-community/async-storage';
-const {height, width} = Dimensions.get('window');
+const {height} = Dimensions.get('window');
 import {MenuProvider} from 'react-native-popup-menu';
 import PopupMenu from '../../../components/PopupMenu';
 import FadeIn from 'react-native-fade-in-image';
@@ -227,7 +223,7 @@ class AddPeopleScreen extends Component {
       return (
         <Image
           style={styles.userIcon}
-          source={require('../../../asserts/img/defult_user.png')}
+          source={icons.defultUser}
           resizeMode="contain"
         />
       );
@@ -262,11 +258,8 @@ class AddPeopleScreen extends Component {
   }
 
   render() {
-    let visiblePeopleModal = this.state.visiblePeopleModal;
     let activeUsers = this.state.activeUsers;
-    let userName = this.state.userName;
     let userID = this.state.userID;
-    let role = this.state.role;
     let showAlert = this.state.showAlert;
     let alertTitle = this.state.alertTitle;
     let alertMsg = this.state.alertMsg;
@@ -497,7 +490,7 @@ const styles = EStyleSheet.create({
   },
 });
 
-const mapStateToProps = state => {
+const mapStateToProps = () => {
   return {};
 };
 export default connect(

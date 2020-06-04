@@ -19,6 +19,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import Loader from '../../../components/Loader';
 import FadeIn from 'react-native-fade-in-image';
 import APIServices from '../../../services/APIServices';
+import EmptyListView from '../../../components/EmptyListView';
 
 class AssigneeScreen extends Component {
   constructor(props) {
@@ -28,36 +29,41 @@ class AssigneeScreen extends Component {
       allUsers: [],
       isFetching: false,
       searchText: '',
-      selectedProjectID : '',
+      selectedProjectID: '',
     };
   }
 
-
   componentDidMount() {
-    const {navigation: {state: {params}}} = this.props;
-    let selectedProjectID = params.selectedProjectID
-    this.setState({selectedProjectID : selectedProjectID}, function() {
+    const {
+      navigation: {
+        state: {params},
+      },
+    } = this.props;
+    let selectedProjectID = params.selectedProjectID;
+    this.setState({selectedProjectID: selectedProjectID}, function() {
       this.fetchData();
     });
   }
 
   async fetchData() {
-      let selectedProjectID = this.state.selectedProjectID;
-      const activeUsers = await APIServices.getAllUsersByProjectId(selectedProjectID);
-      if (activeUsers.message == 'success') {
-          this.setState({
-            users: activeUsers.data,
-            allUsers: activeUsers.data,
-            dataLoading : false
-          })
-      } else {
-          this.setState({ dataLoading: false });
-      }
+    let selectedProjectID = this.state.selectedProjectID;
+    const activeUsers = await APIServices.getAllUsersByProjectId(
+      selectedProjectID,
+    );
+    if (activeUsers.message == 'success') {
+      this.setState({
+        users: activeUsers.data,
+        allUsers: activeUsers.data,
+        dataLoading: false,
+      });
+    } else {
+      this.setState({dataLoading: false});
+    }
   }
 
-  onSelectUser(userName,userID) {
+  onSelectUser(userName, userID) {
     const {navigation} = this.props;
-    navigation.state.params.onSelectUser(userName,userID);
+    navigation.state.params.onSelectUser(userName, userID);
     navigation.goBack();
   }
 
@@ -74,7 +80,7 @@ class AssigneeScreen extends Component {
       return (
         <Image
           style={styles.userIcon}
-          source={require('../../../asserts/img/defult_user.png')}
+          source={icons.defultUser}
           resizeMode="contain"
         />
       );
@@ -85,7 +91,9 @@ class AssigneeScreen extends Component {
     const {navigation} = this.props;
     return (
       <TouchableOpacity
-        onPress={() => this.onSelectUser(item.firstName + ' ' + item.lastName,item.userId)}>
+        onPress={() =>
+          this.onSelectUser(item.firstName + ' ' + item.lastName, item.userId)
+        }>
         <View
           style={[
             styles.projectView,
@@ -135,7 +143,7 @@ class AssigneeScreen extends Component {
     let dataLoading = this.state.dataLoading;
 
     return (
-      <View style={styles.backgroundImage}>
+      <View style={styles.container}>
         <View style={styles.projectFilerView}>
           <Image style={styles.searchIcon} source={icons.searchGray} />
           <TextInput
@@ -149,6 +157,7 @@ class AssigneeScreen extends Component {
           data={users}
           renderItem={({item}) => this.renderUserList(item)}
           keyExtractor={item => item.projId}
+          ListEmptyComponent={<EmptyListView />}
           //onRefresh={() => this.onRefresh()}
           //refreshing={isFetching}
         />
@@ -159,12 +168,12 @@ class AssigneeScreen extends Component {
 }
 
 const styles = EStyleSheet.create({
-  backgroundImage: {
+  container: {
     flex: 1,
   },
   projectFilerView: {
     backgroundColor: colors.projectBgColor,
-    borderRadius: 5,
+    borderRadius: '5rem',
     marginTop: '17rem',
     marginBottom: '12rem',
     flexDirection: 'row',
@@ -181,14 +190,13 @@ const styles = EStyleSheet.create({
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'center',
-    // fontWeight: 'bold',
   },
   projectView: {
     height: '70rem',
     flexDirection: 'row',
     alignItems: 'center',
     marginHorizontal: '20rem',
-    borderBottomWidth: 1,
+    borderBottomWidth: '1rem',
     borderBottomColor: colors.lighterGray,
   },
   text: {
@@ -211,8 +219,8 @@ const styles = EStyleSheet.create({
     width: '5rem',
     height: '60rem',
     alignItems: 'flex-end',
-    borderTopRightRadius: 5,
-    borderBottomRightRadius: 5,
+    borderTopRightRadius: '5rem',
+    borderBottomRightRadius: '5rem',
   },
   dropIcon: {
     width: '13rem',
@@ -234,8 +242,7 @@ const styles = EStyleSheet.create({
 });
 
 const mapStateToProps = state => {
-  return {
-  };
+  return {};
 };
 export default connect(
   mapStateToProps,

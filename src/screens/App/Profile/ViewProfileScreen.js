@@ -16,7 +16,6 @@ import icons from '../../../assest/icons/icons';
 import EStyleSheet from 'react-native-extended-stylesheet';
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
-import FadeIn from 'react-native-fade-in-image';
 import Loader from '../../../components/Loader';
 import APIServices from '../../../services/APIServices';
 import {TextInput} from 'react-native-gesture-handler';
@@ -114,12 +113,7 @@ class ViewProfileScreen extends Component {
     if (userImage) {
       return <Image source={{uri: userImage}} style={styles.avatar} />;
     } else {
-      return (
-        <Image
-          style={styles.avatar}
-          source={require('../../../asserts/img/defult_user.png')}
-        />
-      );
+      return <Image style={styles.avatar} source={icons.defultUser} />;
     }
   }
 
@@ -254,7 +248,7 @@ class ViewProfileScreen extends Component {
         this.setState({dataLoading: false});
         this.props.UserInfoSuccess(responseUser);
       })
-      .catch(err => {
+      .catch(() => {
         this.setState({dataLoading: false});
       });
   }
@@ -421,7 +415,6 @@ class ViewProfileScreen extends Component {
     let {
       userFirstName,
       userLastName,
-      userNameId,
       userEmail,
       userNewPassword,
       userConfirmPassword,
@@ -698,7 +691,7 @@ const styles = EStyleSheet.create({
   },
 });
 
-const mapStateToProps = state => {
+const mapStateToProps = () => {
   return {};
 };
 export default connect(

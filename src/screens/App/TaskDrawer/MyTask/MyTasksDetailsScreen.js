@@ -959,10 +959,7 @@ class MyTasksDetailsScreen extends Component {
     if (item.renderImage) {
       return (
         <FadeIn>
-          <Image
-            source={icons.forwordGray}
-            style={{width: 24, height: 24, borderRadius: 24 / 2}}
-          />
+          <Image source={icons.forwordGray} style={styles.imageStyle} />
         </FadeIn>
       );
     } else {
@@ -1077,19 +1074,11 @@ class MyTasksDetailsScreen extends Component {
     if (userImage) {
       return (
         <FadeIn>
-          <Image
-            source={{uri: userImage}}
-            style={{width: 24, height: 24, borderRadius: 24 / 2}}
-          />
+          <Image source={{uri: userImage}} style={styles.imageStyle} />
         </FadeIn>
       );
     } else {
-      return (
-        <Image
-          style={{width: 24, height: 24, borderRadius: 24 / 2}}
-          source={require('../../../../asserts/img/defult_user.png')}
-        />
-      );
+      return <Image style={styles.imageStyle} source={icons.defultUser} />;
     }
   };
 
@@ -1299,7 +1288,7 @@ class MyTasksDetailsScreen extends Component {
     let taskName = this.state.taskName;
 
     return (
-      <View style={styles.backgroundImage}>
+      <View style={styles.container}>
         <Header
           isDelete={true}
           navigation={this.props.navigation}
@@ -1307,7 +1296,7 @@ class MyTasksDetailsScreen extends Component {
           onPress={() => this.props.navigation.goBack()}
           onPressDelete={() => this.onTaskDeketePress()}
         />
-        <ScrollView style={styles.backgroundImage}>
+        <ScrollView style={styles.container}>
           <View>
             <View style={styles.headerView}>
               <View style={styles.projectFilerView}>
@@ -1471,7 +1460,7 @@ class MyTasksDetailsScreen extends Component {
 }
 
 const styles = EStyleSheet.create({
-  backgroundImage: {
+  container: {
     flex: 1,
   },
   projectFilerView: {
@@ -1753,6 +1742,11 @@ const styles = EStyleSheet.create({
     width: '20rem',
     height: '20rem',
     marginRight: '20rem',
+  },
+  imageStyle: {
+    width: '22rem',
+    height: '22rem',
+    borderRadius: 80 / 2,
   },
 });
 

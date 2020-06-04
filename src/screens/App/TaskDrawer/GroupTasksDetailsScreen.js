@@ -1209,10 +1209,7 @@ class GroupTasksDetailsScreen extends Component {
     if (item.renderImage) {
       return (
         <FadeIn>
-          <Image
-            source={icons.forwordGray}
-            style={{width: 24, height: 24, borderRadius: 24 / 2}}
-          />
+          <Image source={icons.forwordGray} style={styles.imageStyle} />
         </FadeIn>
       );
     } else {
@@ -1581,19 +1578,11 @@ class GroupTasksDetailsScreen extends Component {
     if (userImage) {
       return (
         <FadeIn>
-          <Image
-            source={{uri: userImage}}
-            style={{width: 24, height: 24, borderRadius: 24 / 2}}
-          />
+          <Image source={{uri: userImage}} style={styles.imageStyle} />
         </FadeIn>
       );
     } else {
-      return (
-        <Image
-          style={{width: 24, height: 24, borderRadius: 24 / 2}}
-          source={require('../../../asserts/img/defult_user.png')}
-        />
-      );
+      return <Image style={styles.imageStyle} source={icons.defultUser} />;
     }
   };
 
@@ -1841,7 +1830,7 @@ class GroupTasksDetailsScreen extends Component {
     let addChildTaskShow = this.state.addChildTaskShow;
 
     return (
-      <View style={styles.backgroundImage}>
+      <View style={styles.container}>
         <NavigationEvents onWillFocus={payload => this.pageOpen(payload)} />
         <Header
           isDelete={true}
@@ -1857,7 +1846,7 @@ class GroupTasksDetailsScreen extends Component {
           }
           onPressDelete={() => this.onTaskDeketePress()}
         />
-        <ScrollView style={styles.backgroundImage}>
+        <ScrollView style={styles.container}>
           <View>
             <View style={styles.headerView}>
               <Text style={styles.headerTaskText}>Task - </Text>
@@ -2070,7 +2059,7 @@ class GroupTasksDetailsScreen extends Component {
 }
 
 const styles = EStyleSheet.create({
-  backgroundImage: {
+  container: {
     flex: 1,
   },
   projectFilerView: {
@@ -2540,6 +2529,11 @@ const styles = EStyleSheet.create({
     width: '78%',
     marginTop: '58rem',
     marginLeft: '54rem',
+  },
+  imageStyle: {
+    width: '22rem',
+    height: '22rem',
+    borderRadius: 80 / 2,
   },
 });
 

@@ -17,7 +17,6 @@ const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
 import FadeIn from 'react-native-fade-in-image';
 import Loader from '../../../components/Loader';
-import Header from '../../../components/Header';
 import {NavigationEvents} from 'react-navigation';
 
 class ChatScreen extends Component {
@@ -61,10 +60,8 @@ class ChatScreen extends Component {
     });
   }
 
-  userImage = function(item) {
-    let userImage =
-      'https://i.pinimg.com/originals/3d/40/6a/3d406aa185eb1845276ecf3a8c963fce.jpg';
-    // let userImage = item.taskAssigneeProfileImage;
+  userImage = function() {
+    let userImage = item.taskAssigneeProfileImage;
 
     if (userImage) {
       return (
@@ -73,16 +70,11 @@ class ChatScreen extends Component {
         </FadeIn>
       );
     } else {
-      return (
-        <Image
-          style={styles.userIcon}
-          source={require('../../../asserts/img/defult_user.png')}
-        />
-      );
+      return <Image style={styles.userIcon} source={icons.defultUser} />;
     }
   };
 
-  renderUserListList(item) {
+  renderUserListList() {
     return (
       <View style={styles.chatView}>
         {this.userImage()}
@@ -147,7 +139,7 @@ class ChatScreen extends Component {
         <FlatList
           style={styles.flalList}
           data={users}
-          renderItem={({item}) => this.renderUserListList(item)}
+          renderItem={({item}) => this.renderUserListList()}
           keyExtractor={item => item.projId}
           onRefresh={() => this.onRefresh()}
           refreshing={isFetching}
@@ -186,11 +178,9 @@ const styles = EStyleSheet.create({
   chatView: {
     backgroundColor: colors.white,
     borderColor: colors.lighterGray,
-    // height: '60rem',
     marginTop: '13rem',
     marginBottom: '13rem',
     flexDirection: 'row',
-    // alignItems: 'center',
     paddingHorizontal: '12rem',
     marginHorizontal: '20rem',
   },
@@ -229,7 +219,7 @@ const styles = EStyleSheet.create({
   button: {
     flexDirection: 'row',
     backgroundColor: colors.lightBlue,
-    borderRadius: 5,
+    borderRadius: '5rem',
     marginTop: '17rem',
     marginBottom: '17rem',
     flexDirection: 'row',
@@ -271,7 +261,7 @@ const styles = EStyleSheet.create({
   },
   chatFieldView: {
     backgroundColor: colors.projectBgColor,
-    borderRadius: 5,
+    borderRadius: '5rem',
     marginBottom: '15rem',
     flexDirection: 'row',
     alignItems: 'center',

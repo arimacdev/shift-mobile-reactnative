@@ -19,6 +19,7 @@ import APIServices from '../../../services/APIServices';
 import Header from '../../../components/Header';
 import Loader from '../../../components/Loader';
 import {NavigationEvents} from 'react-navigation';
+import EmptyListView from '../../../components/EmptyListView';
 
 class DrawerTasksScreen extends Component {
   constructor(props) {
@@ -96,7 +97,7 @@ class DrawerTasksScreen extends Component {
     let dataLoading = this.state.dataLoading;
 
     return (
-      <View style={styles.backgroundImage}>
+      <View style={styles.container}>
         <NavigationEvents onWillFocus={payload => this.loadData(payload)} />
         <TouchableOpacity
           onPress={() => this.props.navigation.navigate('MyTasksTabScreen')}>
@@ -132,6 +133,7 @@ class DrawerTasksScreen extends Component {
           data={groupTasks}
           renderItem={({item}) => this.renderGroupTasks(item)}
           keyExtractor={item => item.projId}
+          ListEmptyComponent={<EmptyListView />}
         />
         {dataLoading && <Loader />}
       </View>
@@ -140,7 +142,7 @@ class DrawerTasksScreen extends Component {
 }
 
 const styles = EStyleSheet.create({
-  backgroundImage: {
+  container: {
     flex: 1,
     //  backgroundColor: colors.pageBackGroundColor,
   },

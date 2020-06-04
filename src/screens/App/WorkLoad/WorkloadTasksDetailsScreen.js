@@ -74,10 +74,10 @@ class WorkloadTasksDetailsScreen extends Component {
       workloadTasksDetails: workloadTasksDetails,
       taskNotes: workloadTasksDetails.taskNote,
     });
-    if(date == ''){
-      this.setState({duedate: 'Add Due Date'})
-    }else{
-      this.setState({duedate: 'Due on ' + date})
+    if (date == '') {
+      this.setState({duedate: 'Add Due Date'});
+    } else {
+      this.setState({duedate: 'Due on ' + date});
     }
     this.setTaskStatus(workloadTasksDetails);
     this.fetchSubTasksData(
@@ -200,7 +200,7 @@ class WorkloadTasksDetailsScreen extends Component {
         statusValue = 'Deployed';
       case 'closed':
         statusValue = 'Closed';
-        break;   
+        break;
     }
     this.setState({
       taskStatus: statusValue,
@@ -239,7 +239,7 @@ class WorkloadTasksDetailsScreen extends Component {
     );
   }
 
-  renderProjectList(item) {
+  renderList(item) {
     return (
       <View style={styles.projectMainView}>
         <View style={styles.projectView}>
@@ -310,19 +310,21 @@ class WorkloadTasksDetailsScreen extends Component {
   render() {
     let dataLoading = this.state.dataLoading;
     return (
-      <ScrollView style={styles.container}>
-        <View style={styles.innerContainer}>
-          <View style={styles.projectFilerView}>
-            <Text style={{color: colors.white}}>{this.state.taskStatus}</Text>
+      <View style={{flex:1}}>
+        <ScrollView style={styles.container}>
+          <View style={styles.innerContainer}>
+            <View style={styles.projectFilerView}>
+              <Text style={{color: colors.white}}>{this.state.taskStatus}</Text>
+            </View>
+            <FlatList
+              data={taskData}
+              renderItem={({item}) => this.renderList(item)}
+              keyExtractor={item => item.taskId}
+            />
           </View>
-          <FlatList
-            data={taskData}
-            renderItem={({item}) => this.renderProjectList(item)}
-            keyExtractor={item => item.taskId}
-          />
-        </View>
+        </ScrollView>
         {dataLoading && <Loader />}
-      </ScrollView>
+      </View>
     );
   }
 }
@@ -332,11 +334,11 @@ const styles = EStyleSheet.create({
     flex: 1,
   },
   innerContainer: {
-    marginBottom: 10,
+    marginBottom: '10rem',
   },
   projectFilerView: {
     backgroundColor: colors.lightBlue,
-    borderRadius: 5,
+    borderRadius: '5rem',
     marginTop: '17rem',
     marginBottom: '12rem',
     flexDirection: 'row',
@@ -347,14 +349,14 @@ const styles = EStyleSheet.create({
   },
   projectView: {
     backgroundColor: colors.projectBgColor,
-    borderRadius: 5,
+    borderRadius: '5rem',
     height: '60rem',
     flexDirection: 'row',
     alignItems: 'center',
   },
   projectMainView: {
     backgroundColor: colors.projectBgColor,
-    borderRadius: 5,
+    borderRadius: '5rem',
     marginTop: '7rem',
     paddingHorizontal: '12rem',
     marginHorizontal: '20rem',
@@ -396,14 +398,13 @@ const styles = EStyleSheet.create({
     height: '13rem',
   },
   baseView: {
-    marginTop: -5,
-    marginBottom: 10,
+    marginTop: '-5rem',
+    marginBottom: '10rem',
   },
   baseInnerContent: {
     flexDirection: 'row',
-    // alignItems: 'center',
-    marginBottom: 10,
-    marginLeft: 45,
+    marginBottom: '10rem',
+    marginLeft: '45rem',
   },
   baseInnerText: {
     fontSize: '10rem',

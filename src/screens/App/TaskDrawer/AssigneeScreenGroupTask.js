@@ -15,10 +15,10 @@ import icons from '../../../assest/icons/icons';
 import EStyleSheet from 'react-native-extended-stylesheet';
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
-import AsyncStorage from '@react-native-community/async-storage';
 import Loader from '../../../components/Loader';
 import FadeIn from 'react-native-fade-in-image';
 import APIServices from '../../../services/APIServices';
+import EmptyListView from '../../../components/EmptyListView';
 
 class AssigneeScreenGroupTask extends Component {
   constructor(props) {
@@ -79,7 +79,7 @@ class AssigneeScreenGroupTask extends Component {
       return (
         <Image
           style={styles.userIcon}
-          source={require('../../../asserts/img/defult_user.png')}
+          source={icons.defultUser}
           resizeMode="contain"
         />
       );
@@ -141,11 +141,10 @@ class AssigneeScreenGroupTask extends Component {
 
   render() {
     let users = this.state.users;
-    let isFetching = this.state.isFetching;
     let dataLoading = this.state.dataLoading;
 
     return (
-      <View style={styles.backgroundImage}>
+      <View style={styles.container}>
         <View style={styles.projectFilerView}>
           <Image style={styles.searchIcon} source={icons.searchGray} />
           <TextInput
@@ -159,6 +158,7 @@ class AssigneeScreenGroupTask extends Component {
           data={users}
           renderItem={({item}) => this.renderUserList(item)}
           keyExtractor={item => item.projId}
+          ListEmptyComponent={<EmptyListView />}
           //onRefresh={() => this.onRefresh()}
           //refreshing={isFetching}
         />
@@ -169,7 +169,7 @@ class AssigneeScreenGroupTask extends Component {
 }
 
 const styles = EStyleSheet.create({
-  backgroundImage: {
+  container: {
     flex: 1,
   },
   projectFilerView: {
@@ -243,7 +243,7 @@ const styles = EStyleSheet.create({
   },
 });
 
-const mapStateToProps = state => {
+const mapStateToProps = () => {
   return {};
 };
 export default connect(

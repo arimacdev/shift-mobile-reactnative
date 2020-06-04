@@ -15,13 +15,10 @@ import icons from '../../../assest/icons/icons';
 import EStyleSheet from 'react-native-extended-stylesheet';
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
-import FadeIn from 'react-native-fade-in-image';
 import Loader from '../../../components/Loader';
-import Header from '../../../components/Header';
 import _ from 'lodash';
 import AwesomeAlert from 'react-native-awesome-alerts';
-const {height, width} = Dimensions.get('window');
-
+const {height} = Dimensions.get('window');
 
 class AddUserScreen extends Component {
   constructor(props) {
@@ -281,40 +278,40 @@ class AddUserScreen extends Component {
           </TouchableOpacity>
         </View>
         <AwesomeAlert
-            show={showAlert}
-            showProgress={false}
-            title={alertTitle}
-            message={alertMsg}
-            closeOnTouchOutside={true}
-            closeOnHardwareBackPress={false}
-            showCancelButton={false}
-            showConfirmButton={true}
-            cancelText=""
-            confirmText="OK"
-            confirmButtonColor={colors.primary}
-            onConfirmPressed={() => {
-              this.hideAlert();
-            }}
-          />
-          {addUserLoading && <Loader />}
+          show={showAlert}
+          showProgress={false}
+          title={alertTitle}
+          message={alertMsg}
+          closeOnTouchOutside={true}
+          closeOnHardwareBackPress={false}
+          showCancelButton={false}
+          showConfirmButton={true}
+          cancelText=""
+          confirmText="OK"
+          confirmButtonColor={colors.primary}
+          onConfirmPressed={() => {
+            this.hideAlert();
+          }}
+        />
+        {addUserLoading && <Loader />}
       </View>
     );
   }
 }
 
 const styles = EStyleSheet.create({
-  backgroundImage: {
+  container: {
     flex: 1,
     backgroundColor: colors.pageBackGroundColor,
   },
-  container:{
+  container: {
     flex: 1,
     flexDirection: 'column',
     marginBottom: height - 600,
   },
   userFieldView: {
     backgroundColor: colors.projectBgColor,
-    borderRadius: 5,
+    borderRadius: '5rem',
     marginTop: '0rem',
     marginBottom: '7rem',
     flexDirection: 'row',
@@ -336,11 +333,10 @@ const styles = EStyleSheet.create({
   button: {
     flexDirection: 'row',
     backgroundColor: colors.lightBlue,
-    borderRadius: 5,
+    borderRadius: '5rem',
     marginTop: '17rem',
     flexDirection: 'row',
     alignItems: 'center',
-    // justifyContent: 'center',
     paddingHorizontal: '12rem',
     height: '55rem',
     marginHorizontal: '20rem',
@@ -364,7 +360,7 @@ const styles = EStyleSheet.create({
     position: 'absolute',
     bottom: 0,
     width: '100%',
-    marginBottom: 15,
+    marginBottom: '15rem',
   },
 });
 

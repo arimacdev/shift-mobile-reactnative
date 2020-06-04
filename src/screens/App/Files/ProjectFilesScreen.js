@@ -26,6 +26,7 @@ import * as Progress from 'react-native-progress';
 import RNFetchBlob from 'rn-fetch-blob';
 import fileTypes from '../../../assest/fileTypes/fileTypes';
 import ImagePicker from 'react-native-image-picker';
+import EmptyListView from '../../../components/EmptyListView';
 
 class ProjectFilesScreen extends Component {
   constructor(props) {
@@ -552,6 +553,7 @@ class ProjectFilesScreen extends Component {
             keyExtractor={item => item.projId}
             onRefresh={() => this.onRefresh()}
             refreshing={isFetching}
+            ListEmptyComponent={<EmptyListView />}
           />
         </View>
         {dataLoading && <Loader />}

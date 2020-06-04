@@ -30,6 +30,7 @@ import Modal from 'react-native-modal';
 const {height, width} = Dimensions.get('window');
 import {Icon} from 'native-base';
 import APIServices from '../../../services/APIServices';
+import EmptyListView from '../../../components/EmptyListView';
 
 const Placeholder = () => (
   <View style={styles.landing}>
@@ -364,19 +365,11 @@ class TasksTabScreen extends Component {
     if (userImage) {
       return (
         <FadeIn>
-          <Image
-            source={{uri: userImage}}
-            style={{width: 24, height: 24, borderRadius: 24 / 2}}
-          />
+          <Image source={{uri: userImage}} style={styles.imageStyle} />
         </FadeIn>
       );
     } else {
-      return (
-        <Image
-          style={{width: 24, height: 24, borderRadius: 24 / 2}}
-          source={require('../../../asserts/img/defult_user.png')}
-        />
-      );
+      return <Image style={styles.imageStyle} source={icons.defultUser} />;
     }
   };
 
@@ -386,23 +379,15 @@ class TasksTabScreen extends Component {
     if (userImage) {
       return (
         <FadeIn>
-          <Image
-            source={{uri: userImage}}
-            style={{width: 24, height: 24, borderRadius: 24 / 2}}
-          />
+          <Image source={{uri: userImage}} style={styles.imageStyle} />
         </FadeIn>
       );
     } else {
-      return (
-        <Image
-          style={{width: 24, height: 24, borderRadius: 24 / 2}}
-          source={require('../../../asserts/img/defult_user.png')}
-        />
-      );
+      return <Image style={styles.imageStyle} source={icons.defultUser} />;
     }
   };
 
-  async subTaskClick(item,parentTaskName){
+  async subTaskClick(item, parentTaskName) {
     let selectedProjectID = this.state.selectedProjectID;
     let selectedProjectName = this.state.selectedProjectName;
     await this.props.secondDetailViewOpen(false);
@@ -413,17 +398,14 @@ class TasksTabScreen extends Component {
       selectedProjectName: selectedProjectName,
       parentTaskName: parentTaskName,
       allDetails: this.state.filterdDataAllTaks,
-    })
+    });
   }
 
   renderSubTasksList(item, parentTaskName) {
     let selectedProjectID = this.state.selectedProjectID;
     let selectedProjectName = this.state.selectedProjectName;
     return (
-      <TouchableOpacity
-        onPress={() =>
-           this.subTaskClick(item,parentTaskName)
-        }>
+      <TouchableOpacity onPress={() => this.subTaskClick(item, parentTaskName)}>
         <View style={styles.subTasksView}>
           <Image
             style={styles.completionIcon}
@@ -461,8 +443,13 @@ class TasksTabScreen extends Component {
     );
   }
 
-  async MainTaskClick(item,selectedProjectID,selectedProjectName,parentTaskName){
-    await this.props.secondDetailViewOpen(false); 
+  async MainTaskClick(
+    item,
+    selectedProjectID,
+    selectedProjectName,
+    parentTaskName,
+  ) {
+    await this.props.secondDetailViewOpen(false);
     this.props.navigation.navigate('TasksDetailsScreen', {
       taskDetails: item.parentTask,
       // subTaskDetails: item.childTasks,
@@ -471,7 +458,7 @@ class TasksTabScreen extends Component {
       isFromBoards: true,
       parentTaskName: parentTaskName,
       allDetails: this.state.filterdDataAllTaks,
-    })
+    });
   }
 
   renderTaskList(item, indexMain) {
@@ -483,7 +470,13 @@ class TasksTabScreen extends Component {
     return (
       <View>
         <TouchableOpacity
-          onPress={() => this.MainTaskClick(item,selectedProjectID,selectedProjectName,parentTaskName)
+          onPress={() =>
+            this.MainTaskClick(
+              item,
+              selectedProjectID,
+              selectedProjectName,
+              parentTaskName,
+            )
           }>
           <View
             style={[
@@ -588,7 +581,7 @@ class TasksTabScreen extends Component {
     );
   }
 
-  async filterTaskClick(item){
+  async filterTaskClick(item) {
     let selectedProjectID = this.state.selectedProjectID;
     let selectedProjectName = this.state.selectedProjectName;
     let parentTaskName = '';
@@ -601,7 +594,7 @@ class TasksTabScreen extends Component {
       parentTaskName: parentTaskName,
       allDetails: this.state.filterdDataAllTaks,
       fromMyTask: this.state.filter ? false : true,
-    })
+    });
   }
 
   renderMyTasksAndFilterTaskList(item, indexMain) {
@@ -610,10 +603,7 @@ class TasksTabScreen extends Component {
     let parentTaskName = '';
 
     return (
-      <TouchableOpacity
-        onPress={() =>
-          this.filterTaskClick(item)
-        }>
+      <TouchableOpacity onPress={() => this.filterTaskClick(item)}>
         <View
           style={item.isParent ? styles.parentTaskView : styles.childTasksView}>
           <Image
@@ -714,14 +704,15 @@ class TasksTabScreen extends Component {
                     }
                   />
                   <Text
-                    style={{
-                      marginTop: 10,
-                      fontSize: 12,
-                      color:
-                        index == this.state.index
-                          ? colors.white
-                          : item.bottomBarColor,
-                    }}>
+                    style={[
+                      styles.bottomBarText,
+                      {
+                        color:
+                          index == this.state.index
+                            ? colors.white
+                            : item.bottomBarColor,
+                      },
+                    ]}>
                     {item.value}
                   </Text>
                 </TouchableOpacity>
@@ -1214,7 +1205,7 @@ class TasksTabScreen extends Component {
     let dataLoading = this.state.dataLoading;
 
     return (
-      <View style={styles.backgroundImage}>
+      <View style={styles.container}>
         <NavigationEvents
           onWillFocus={payload => this.tabOpenTaskTab(payload)}
         />
@@ -1287,6 +1278,7 @@ class TasksTabScreen extends Component {
                 data={filterdDataAllTaks}
                 renderItem={({item, index}) => this.renderTaskList(item, index)}
                 keyExtractor={item => item.parentTask.taskId}
+                ListEmptyComponent={<EmptyListView />}
               />
             )}
 
@@ -1306,6 +1298,7 @@ class TasksTabScreen extends Component {
                   this.renderMyTasksAndFilterTaskList(item, index)
                 }
                 keyExtractor={item => item.taskId}
+                ListEmptyComponent={<EmptyListView />}
               />
             )}
           </View>
@@ -1330,25 +1323,22 @@ class TasksTabScreen extends Component {
 }
 
 const styles = EStyleSheet.create({
-  backgroundImage: {
+  container: {
     flex: 1,
-    // backgroundColor: colors.pageBackGroundColor,
   },
   projectFilerView: {
     backgroundColor: colors.projectBgColor,
-    borderRadius: 5,
-    // width: '330rem',
+    borderRadius: '5rem',
     marginTop: '17rem',
     marginBottom: '12rem',
     flexDirection: 'row',
     alignItems: 'center',
-    // justifyContent: 'center',
     paddingHorizontal: '12rem',
     height: '45rem',
     marginHorizontal: '20rem',
   },
   filterByText: {
-    fontSize: 16,
+    fontSize: '15rem',
     color: colors.gray,
     fontWeight: 'bold',
   },
@@ -1359,13 +1349,12 @@ const styles = EStyleSheet.create({
   },
   tasksFilerView: {
     backgroundColor: colors.lightgray,
-    borderRadius: 5,
+    borderRadius: '5rem',
     width: '264rem',
     marginTop: '17rem',
     marginBottom: '12rem',
     flexDirection: 'row',
     alignItems: 'center',
-    // justifyContent: 'center',
     paddingHorizontal: '12rem',
     height: '45rem',
     marginHorizontal: '10rem',
@@ -1416,7 +1405,7 @@ const styles = EStyleSheet.create({
   },
   subTextMain: {
     fontSize: '11rem',
-    color: '#080848',
+    color: colors.colorMidnightExpress,
     fontWeight: 'bold',
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
@@ -1424,7 +1413,7 @@ const styles = EStyleSheet.create({
   },
   parentTextMain: {
     fontSize: '11rem',
-    color: '#080848',
+    color: colors.colorMidnightExpress,
     fontWeight: 'bold',
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
@@ -1453,7 +1442,6 @@ const styles = EStyleSheet.create({
     fontFamily: 'CircularStd-Book',
     fontSize: '9rem',
     fontWeight: '400',
-    // textAlign: 'center',
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
@@ -1466,13 +1454,8 @@ const styles = EStyleSheet.create({
     marginLeft: '10rem',
   },
   statusView: {
-    // backgroundColor: colors.gray,
-    // width:'5rem',
-    // height:'60rem',
     alignItems: 'center',
     flexDirection: 'row',
-    // borderTopRightRadius: 5,
-    // borderBottomRightRadius: 5,
   },
   dropIcon: {
     width: '13rem',
@@ -1485,13 +1468,13 @@ const styles = EStyleSheet.create({
   bottomBarContainer: {
     position: 'absolute',
     bottom: 0,
-    height: 80,
+    height: '80rem',
     width: '100%',
     backgroundColor: colors.projectBgColor,
   },
   bottomBarInnerContainer: {
     flexDirection: 'row',
-    height: 80,
+    height: '80rem',
   },
   bottomItemView: {
     flex: 1,
@@ -1505,10 +1488,14 @@ const styles = EStyleSheet.create({
     justifyContent: 'center',
     height: '100%',
   },
+  bottomBarText: {
+    marginTop: '10rem',
+    fontSize: '11rem',
+  },
   horizontalLine: {
     backgroundColor: colors.gray,
     width: 1,
-    height: 40,
+    height: '40rem',
   },
   bottomBarIcon: {
     width: '20rem',
@@ -1549,7 +1536,7 @@ const styles = EStyleSheet.create({
   tasksHeaderView: {
     flexDirection: 'row',
     alignItems: 'baseline',
-    marginBottom: 5,
+    marginBottom: '5rem',
   },
   tasksLabelView: {
     width: '75rem',
@@ -1656,57 +1643,58 @@ const styles = EStyleSheet.create({
   },
   selectedDates: {
     flexDirection: 'row',
-    marginTop: 0,
-    height: 50,
+    marginTop: '0rem',
+    height: '45rem',
     backgroundColor: colors.projectBgColor,
-    borderRadius: 5,
+    borderRadius: '5rem',
     justifyContent: 'center',
     alignItems: 'center',
-    marginHorizontal: 15,
+    marginHorizontal: '15rem',
   },
   dashText: {
-    fontSize: 30,
+    fontSize: '29rem',
     color: colors.gray,
-    marginBottom: 5,
+    marginBottom: '5rem',
   },
   ButtonViewStyle: {
     flexDirection: 'row',
-    marginTop: 10,
-    marginBottom: 10,
+    marginTop: '10rem',
+    marginBottom: '10rem',
     justifyContent: 'center',
     alignItems: 'center',
-    marginHorizontal: 15,
+    marginHorizontal: '15rem',
   },
   cancelStyle: {
-    marginRight: 10,
+    marginRight: '10rem',
     backgroundColor: colors.lightRed,
-    borderRadius: 5,
-    paddingHorizontal: 40,
-    paddingVertical: 10,
+    borderRadius: '5rem',
+    paddingHorizontal: '40rem',
+    paddingVertical: '10rem',
     flex: 1,
     justifyContent: 'center',
   },
   okStyle: {
     backgroundColor: colors.lightGreen,
-    borderRadius: 5,
-    paddingHorizontal: 40,
-    paddingVertical: 10,
+    borderRadius: '5rem',
+    paddingHorizontal: '40rem',
+    paddingVertical: '10rem',
     flex: 1,
     justifyContent: 'center',
   },
   cancelTextStyle: {
-    fontSize: 16,
+    fontSize: '15rem',
     color: colors.white,
     textAlign: 'center',
   },
   saveTextStyle: {
-    fontSize: 16,
+    fontSize: '15rem',
     color: colors.white,
     textAlign: 'center',
   },
   modalStyle: {
     backgroundColor: colors.white,
-    marginVertical: 50,
+    marginVertical: '45rem',
+    borderRadius: '5rem',
   },
   parentTaskView: {
     backgroundColor: colors.darkBlue,
@@ -1719,7 +1707,7 @@ const styles = EStyleSheet.create({
     marginHorizontal: '20rem',
   },
   childTasksView: {
-    backgroundColor: '#edf0f5',
+    backgroundColor: colors.projectBgColor,
     borderRadius: '5rem',
     height: '65rem',
     marginTop: '7rem',
@@ -1737,6 +1725,11 @@ const styles = EStyleSheet.create({
     width: '89.5%',
     marginTop: '58rem',
     marginLeft: '13rem',
+  },
+  imageStyle: {
+    width: '22rem',
+    height: '22rem',
+    borderRadius: 50 / 2,
   },
 });
 

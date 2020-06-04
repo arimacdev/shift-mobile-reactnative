@@ -1,122 +1,121 @@
 import React, {Component} from 'react';
-import {View, FlatList, Text, Dimensions, Image, TouchableOpacity} from 'react-native';
+import {
+  View,
+  FlatList,
+  Text,
+  Dimensions,
+  Image,
+  TouchableOpacity,
+} from 'react-native';
 import {connect} from 'react-redux';
 import * as actions from '../../../redux/actions';
 import colors from '../../../config/colors';
-import icons from '../../../assest/icons/icons';
 import EStyleSheet from 'react-native-extended-stylesheet';
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
 import FadeIn from 'react-native-fade-in-image';
 import Loader from '../../../components/Loader';
-import Header from '../../../components/Header';
-import { NavigationEvents } from 'react-navigation';
+import {NavigationEvents} from 'react-navigation';
+import EmptyListView from '../../../components/EmptyListView';
+import icons from '../../../assest/icons/icons';
 
 class UsersScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-        users : [],
-        allUsers: [],
-        isFetching : false,
+      users: [],
+      allUsers: [],
+      isFetching: false,
     };
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    if (prevProps.usersLoading !== this.props.usersLoading && this.props.users && this.props.users.length > 0) {
+    if (
+      prevProps.usersLoading !== this.props.usersLoading &&
+      this.props.users &&
+      this.props.users.length > 0
+    ) {
       this.setState({
-        users : this.props.users,
-        allUsers : this.props.users,
-       });
+        users: this.props.users,
+        allUsers: this.props.users,
+      });
     }
 
     if (this.state.isFetching) {
       this.setState({
-          isFetching : false,
+        isFetching: false,
       });
-  }
+    }
   }
 
   componentDidMount() {
-    this.fetchData()
-     
+    this.fetchData();
   }
 
   fetchData() {
-    this.setState({ users: [],allUsers:[]}, function() {
-      this.props.getAllUsers()
+    this.setState({users: [], allUsers: []}, function() {
+      this.props.getAllUsers();
     });
   }
 
-  userIcon = function (item) {
+  userIcon = function(item) {
+    let userImage = item.profileImage;
 
-    let userImage = item.profileImage
-
-    if(userImage){
+    if (userImage) {
       return (
-          <FadeIn>
-              <Image
-                  source={{uri: userImage}}
-                  style={{width: 45, height: 45,borderRadius: 45/ 2}} 
-                />
-          </FadeIn>
+        <FadeIn>
+          <Image source={{uri: userImage}} style={styles.imageStyle} />
+        </FadeIn>
       );
-    }else{
-        return (
-          <Image 
-            style={{width: 45, height: 45,borderRadius: 45/ 2}} 
-            source={require('../../../asserts/img/defult_user.png')}
-          />
-        );
+    } else {
+      return <Image style={styles.imageStyle} source={icons.defultUser} />;
     }
-
   };
-
-
 
   renderUserListList(item) {
     return (
-    <TouchableOpacity onPress={()=>this.props.navigation.navigate('ViewUserScreen',{userItem:item})}>
-      <View style={styles.userView}>
+      <TouchableOpacity
+        onPress={() =>
+          this.props.navigation.navigate('ViewUserScreen', {userItem: item})
+        }>
+        <View style={styles.userView}>
           {this.userIcon(item)}
           <View style={{flex: 1}}>
-            <Text style={styles.text}>{item.firstName + ' ' + item.lastName}</Text>
+            <Text style={styles.text}>
+              {item.firstName + ' ' + item.lastName}
+            </Text>
           </View>
           <View style={styles.controlView}>
-            <TouchableOpacity onPress={()=>this.props.navigation.navigate('EditUserScreen',{userItem:item})}>
-                <Image 
-                  style={{width: 28, height: 28,borderRadius: 28/ 2 }} 
-                  source={require('../../../asserts/img/edit_user.png')}
-                />
+            <TouchableOpacity
+              onPress={() =>
+                this.props.navigation.navigate('EditUserScreen', {
+                  userItem: item,
+                })
+              }>
+              <Image
+                style={{width: 28, height: 28, borderRadius: 28 / 2}}
+                source={icons.editRoundWhite}
+              />
             </TouchableOpacity>
-            
-            {/* <TouchableOpacity style={{marginLeft: EStyleSheet.value('24rem')}}>
-                <Image 
-                  style={{width: 28, height: 28,borderRadius: 28/ 2 }} 
-                  source={require('../../../asserts/img/block_user.png')}
-                />
-            </TouchableOpacity> */}
-           
           </View>
         </View>
-    </TouchableOpacity>
+      </TouchableOpacity>
     );
   }
 
   onRefresh() {
-    this.setState({ isFetching: true,users: [],allUsers:[]}, function() {
-       this.fetchData();
+    this.setState({isFetching: true, users: [], allUsers: []}, function() {
+      this.fetchData();
     });
-   
   }
 
   onBackPress() {
     this.props.navigation.goBack();
   }
 
-  loadUsers () {
-    this.setState({ users: [],allUsers:[]}, function() {
-      this.props.getAllUsers()
+  loadUsers() {
+    this.setState({users: [], allUsers: []}, function() {
+      this.props.getAllUsers();
     });
   }
 
@@ -124,12 +123,10 @@ class UsersScreen extends Component {
     let users = this.state.users;
     let isFetching = this.state.isFetching;
     let usersLoading = this.props.usersLoading;
-    
+
     return (
-      <View style={styles.backgroundImage}>
-        <NavigationEvents
-                onWillFocus={(payload) => this.loadUsers(payload)}
-                />
+      <View style={styles.container}>
+        <NavigationEvents onWillFocus={payload => this.loadUsers(payload)} />
         <FlatList
           style={styles.flalList}
           data={users}
@@ -137,21 +134,21 @@ class UsersScreen extends Component {
           keyExtractor={item => item.projId}
           onRefresh={() => this.onRefresh()}
           refreshing={isFetching}
+          ListEmptyComponent={<EmptyListView />}
         />
-        {usersLoading && <Loader/>}
+        {usersLoading && <Loader />}
       </View>
     );
   }
 }
 
 const styles = EStyleSheet.create({
-  backgroundImage: {
+  container: {
     flex: 1,
-    //  backgroundColor: colors.pageBackGroundColor,
   },
   userView: {
     backgroundColor: colors.projectBgColor,
-    borderRadius: 5,
+    borderRadius: '5rem',
     height: '60rem',
     marginTop: '7rem',
     flexDirection: 'row',
@@ -171,22 +168,27 @@ const styles = EStyleSheet.create({
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
     marginLeft: '10rem',
-    fontWeight: '400'
+    fontWeight: '400',
   },
   controlView: {
     alignItems: 'center',
     flexDirection: 'row',
   },
-  flalList : {
+  flalList: {
     marginTop: '30rem',
     marginBottom: '10rem',
-  }
+  },
+  imageStyle: {
+    width: '43rem',
+    height: '43rem',
+    borderRadius: 90 / 2,
+  },
 });
 
 const mapStateToProps = state => {
   return {
-    usersLoading : state.users.usersLoading,
-    users : state.users.users
+    usersLoading: state.users.usersLoading,
+    users: state.users.users,
   };
 };
 export default connect(

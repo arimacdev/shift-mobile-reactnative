@@ -6,7 +6,8 @@ import {
   TouchableOpacity,
   Platform,
   AppState,
-  Image
+  Image,
+  StatusBar,
 } from 'react-native';
 import {connect} from 'react-redux';
 import * as actions from '../redux/actions';
@@ -59,6 +60,7 @@ class SplashScreen extends Component {
     this.state = {
       forceUpdate: false,
       details: [],
+      update: [],
       dataLoading: false,
       appState: AppState.currentState,
     };
@@ -77,12 +79,21 @@ class SplashScreen extends Component {
     AppState.removeEventListener('change', this._handleAppStateChange);
   }
 
-  _handleAppStateChange = nextAppState => {
+  _handleAppStateChange = async nextAppState => {
     if (
       this.state.appState.match(/inactive|background/) ||
       nextAppState === 'active'
     ) {
-      this.getMobileVersionStatus();
+      try {
+        baseURL = await AsyncStorage.getItem('baseURL');
+        if (baseURL == null) {
+          NavigationService.navigate('Auth');
+        } else {
+          this.getMobileVersionStatus();
+        }
+      } catch (error) {
+        console.log(error);
+      }
     }
     this.setState({appState: nextAppState});
   };
@@ -92,22 +103,29 @@ class SplashScreen extends Component {
     let version = DeviceInfo.getBuildNumber();
     this.setState({dataLoading: true});
     try {
-      let result = await APIServices.getMobileVersionStatusData(
-        platform,
-        version,
-      );
-      if (result.message == 'success') {
+      let workSpace = await AsyncStorage.getItem('workSpace');
+      let result = await APIServices.getOrganizationData(workSpace, version);
+      if (result.status == 200) {
         let response = result.data;
-        if (response.latest_version > response.current_version) {
-          this.setState({
-            forceUpdate: true,
-            details: response,
-            dataLoading: false,
-          });
+        this.baseUrl = result.workspaceUrl;
+        if (
+          platform == 'android' && response.android &&
+          response.android.latestVersion > response.android.currentVersion
+        ) {
+          this.setState({forceUpdate: true, update: response.android});
+        } else if (
+          platform == 'ios' && response.ios &&
+          response.ios.latestVersion > response.ios.currentVersion
+        ) {
+          this.setState({forceUpdate: true, update: response.ios});
         } else {
-          this.setState({dataLoading: false, forceUpdate: false});
+          this.setState({forceUpdate: false});
           this.checkUserStatus();
         }
+        this.setState({
+          dataLoading: false,
+          details: response,
+        });
       } else {
         this.setState({dataLoading: false});
       }
@@ -140,29 +158,8 @@ class SplashScreen extends Component {
       })
       .catch(err => {
         this.setState({dataLoading: false});
+        NavigationService.navigate('LoginScreen');
       });
-  }
-
-  async initialUserLogin() {
-    try {
-      const result = await authorize(configLive);
-      AsyncStorage.setItem('accessToken', result.accessToken);
-      AsyncStorage.setItem('refreshToken', result.refreshToken);
-      let decoded = jwtDecode(result.accessToken);
-      let accessTokenExpirationDate = decoded.exp.toString();
-      AsyncStorage.setItem(
-        'accessTokenExpirationDate',
-        accessTokenExpirationDate,
-      );
-      AsyncStorage.setItem('userID', decoded.userId);
-      AsyncStorage.setItem('userLoggedIn', 'true');
-      let userType = decoded.realm_access.roles[0]
-        ? decoded.realm_access.roles[0]
-        : '';
-      AsyncStorage.setItem('userType', userType);
-      this.fetchDataUserData(decoded.userId, userType);
-      //NavigationService.navigate('App');
-    } catch (error) {}
   }
 
   render() {
@@ -186,10 +183,10 @@ class SplashScreen extends Component {
         </View>
         <ForceUpdateModal
           showForceUpdateModal={this.state.forceUpdate}
-          details={this.state.details}
+          details={this.state.update}
           checkUserStatus={() => this.checkUserStatus(this)}
         />
-        {this.state.dataLoading && <Loader />}
+        {/* {this.state.dataLoading && <Loader />} */}
       </View>
     );
   }
@@ -223,7 +220,7 @@ const styles = EStyleSheet.create({
   },
   loginButton: {
     backgroundColor: colors.loginButton,
-    borderRadius: 5,
+    borderRadius: '5rem',
     width: '330rem',
     marginTop: '17rem',
     flexDirection: 'row',

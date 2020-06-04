@@ -240,7 +240,7 @@ class ProjectsScreen extends Component {
     let selectedType = this.state.selectedType;
 
     return (
-      <View style={styles.backgroundImage}>
+      <View style={styles.container}>
         <NavigationEvents onWillFocus={payload => this.loadProjects(payload)} />
         <View style={styles.projectFilerView}>
           <Dropdown
@@ -269,9 +269,7 @@ class ProjectsScreen extends Component {
           data={projects}
           renderItem={({item}) => this.renderProjectList(item)}
           keyExtractor={item => item.projId}
-          // ListEmptyComponent={
-          //   <EmptyListView/>
-          // }
+          ListEmptyComponent={<EmptyListView />}
         />
         {projectsLoading && <Loader />}
       </View>
@@ -280,7 +278,7 @@ class ProjectsScreen extends Component {
 }
 
 const styles = EStyleSheet.create({
-  backgroundImage: {
+  container: {
     flex: 1,
   },
   projectFilerView: {

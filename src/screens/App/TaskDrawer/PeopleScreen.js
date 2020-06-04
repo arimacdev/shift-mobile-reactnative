@@ -84,19 +84,11 @@ class PeopleScreen extends Component {
     if (userImage) {
       return (
         <FadeIn>
-          <Image
-            source={{uri: userImage}}
-            style={{width: 45, height: 45, borderRadius: 45 / 2}}
-          />
+          <Image source={{uri: userImage}} style={styles.iconStyle} />
         </FadeIn>
       );
     } else {
-      return (
-        <Image
-          style={{width: 45, height: 45, borderRadius: 45 / 2}}
-          source={require('../../../asserts/img/defult_user.png')}
-        />
-      );
+      return <Image style={styles.iconStyle} source={icons.defultUser} />;
     }
   };
 
@@ -118,7 +110,7 @@ class PeopleScreen extends Component {
             <TouchableOpacity style={{marginLeft: EStyleSheet.value('24rem')}}>
               <Image
                 style={{width: 28, height: 28, borderRadius: 28 / 2}}
-                source={require('../../../asserts/img/bin.png')}
+                source={icons.deleteRoundRed}
               />
             </TouchableOpacity>
           </View>
@@ -292,6 +284,11 @@ const styles = EStyleSheet.create({
   progressBarContainer: {
     marginHorizontal: '10rem',
     marginVertical: '7rem',
+  },
+  iconStyle: {
+    width: '43rem',
+    height: '43rem',
+    borderRadius: 90 / 2,
   },
 });
 

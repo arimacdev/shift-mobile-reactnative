@@ -18,6 +18,7 @@ EStyleSheet.build({$rem: entireScreenWidth / 380});
 import AsyncStorage from '@react-native-community/async-storage';
 import Loader from '../../../components/Loader';
 import {Icon} from 'native-base';
+import EmptyListView from '../../../components/EmptyListView';
 
 class ProjectsSearchScreen extends Component {
   constructor(props) {
@@ -155,7 +156,7 @@ class ProjectsSearchScreen extends Component {
     let projects = this.state.projects;
     let projectsLoading = this.state.projectsLoading;
     return (
-      <View style={styles.backgroundImage}>
+      <View style={styles.container}>
         <View style={styles.projectFilerView}>
           <Image style={styles.searchIcon} source={icons.searchGray} />
           <TextInput
@@ -169,6 +170,7 @@ class ProjectsSearchScreen extends Component {
           data={projects}
           renderItem={({item}) => this.renderProjectList(item)}
           keyExtractor={item => item.projId}
+          ListEmptyComponent={<EmptyListView />}
         />
         {projectsLoading && <Loader />}
       </View>
@@ -177,7 +179,7 @@ class ProjectsSearchScreen extends Component {
 }
 
 const styles = EStyleSheet.create({
-  backgroundImage: {
+  container: {
     flex: 1,
   },
   projectFilerView: {

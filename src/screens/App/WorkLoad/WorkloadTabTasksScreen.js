@@ -28,6 +28,7 @@ import APIServices from '../../../services/APIServices';
 import Accordion from 'react-native-collapsible/Accordion';
 import * as Animatable from 'react-native-animatable';
 import Collapsible from '../../../components/CollapsibleView';
+import EmptyListView from '../../../components/EmptyListView';
 const {height, width} = Dimensions.get('window');
 
 const Placeholder = () => (
@@ -40,17 +41,9 @@ class WorkloadTabTasksScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      filterdDataAllTaks: [],
-      allDataAllTaks: [],
-      filterdDataMyTasks: [],
-      allDataMyTasks: [],
       index: 0,
-      bottomItemPressColor: colors.darkBlue,
       selectedProjectID: 0,
       isActive: this.props.isActive,
-      selectedTypeAllTasks: 'Pending',
-      selectedTypeMyTasks: 'Pending',
-
       workloadTasks: [],
       dataLoading: false,
       isCollapsed: true,
@@ -154,19 +147,11 @@ class WorkloadTabTasksScreen extends Component {
     if (userImage) {
       return (
         <FadeIn>
-          <Image
-            source={{uri: userImage}}
-            style={{width: 24, height: 24, borderRadius: 24 / 2}}
-          />
+          <Image source={{uri: userImage}} style={styles.imageStyle} />
         </FadeIn>
       );
     } else {
-      return (
-        <Image
-          style={{width: 24, height: 24, borderRadius: 24 / 2}}
-          source={require('../../../asserts/img/defult_user.png')}
-        />
-      );
+      return <Image style={styles.imageStyle} source={icons.defultUser} />;
     }
   };
 
@@ -238,12 +223,6 @@ class WorkloadTabTasksScreen extends Component {
     );
   };
 
-  // onEnableScroll= (value: boolean) => {
-  //   this.setState({
-  //     enableScrollViewScroll: value,
-  //   });
-  // };
-
   _renderContent(item, userId, projectId, isActive) {
     return (
       <Animatable.View
@@ -252,12 +231,6 @@ class WorkloadTabTasksScreen extends Component {
         style={styles.flatListView}>
         <FlatList
           style={styles.flatListStyle}
-          //   onTouchStart={() => {
-          //     this.setState({enableScrollViewScroll:false})
-          //  }}
-          //  onMomentumScrollEnd={() => {
-          //   this.setState({enableScrollViewScroll:true})
-          //  }}
           data={item}
           renderItem={({item, index}) =>
             this.renderProjectList(item, index, userId, projectId)
@@ -275,17 +248,6 @@ class WorkloadTabTasksScreen extends Component {
       this._myScroll.scrollTo({x: 0, y: fy, animated: true});
     }
   };
-
-  // _updateSections = activeSections => {
-  //   this.setState({activeSections});
-
-  //   let activeSectionPostion = activeSections[0];
-  //   let px = activeSectionPostion.x ? activeSectionPostion.x - 50 : 150;
-  //   console.log('dddddddddddddddddd', activeSectionPostion.x);
-  //   setTimeout(() => {
-  //     this._myScroll.scrollTo(px, 0, true);
-  //   }, 50);
-  // };
 
   renderProjectList(item, index, userId, projectId) {
     return (
@@ -318,109 +280,11 @@ class WorkloadTabTasksScreen extends Component {
     );
   }
 
-  renderBase() {
-    return (
-      <View style={{justifyContent: 'center', flex: 1}}>
-        <Image style={styles.dropIcon} source={icons.arrowDark} />
-      </View>
-    );
-  }
-
-  onFilterAllTasks(key) {
-    let value = key;
-    let searchValue = '';
-    let index = this.state.index;
-    switch (value) {
-      case 'Pending':
-        searchValue = 'pending';
-        break;
-      case 'Implementing':
-        searchValue = 'implementing';
-        break;
-      case 'QA':
-        searchValue = 'qa';
-        break;
-      case 'Ready to Deploy':
-        searchValue = 'readyToDeploy';
-        break;
-      case 'Re-Opened':
-        searchValue = 'reOpened';
-        break;
-      case 'Deployed':
-        searchValue = 'deployed';
-        break;
-      case 'Closed':
-        searchValue = 'closed';
-        break;
-    }
-
-    let filteredData = this.state.allDataAllTaks.filter(function(item) {
-      return item.taskStatus.includes(searchValue);
-    });
-    this.setState({
-      filterdDataAllTaks: filteredData,
-      selectedTypeAllTasks: key,
-    });
-  }
-
-  onFilterMyTasks(key) {
-    let value = key;
-    let searchValue = '';
-    let index = this.state.index;
-    switch (value) {
-      case 'Pending':
-        searchValue = 'pending';
-        break;
-      case 'Implementing':
-        searchValue = 'implementing';
-        break;
-      case 'QA':
-        searchValue = 'qa';
-        break;
-      case 'Ready to Deploy':
-        searchValue = 'readyToDeploy';
-        break;
-      case 'Re-Opened':
-        searchValue = 'reOpened';
-        break;
-      case 'Deployed':
-        searchValue = 'deployed';
-        break;
-      case 'Closed':
-        searchValue = 'closed';
-        break;
-    }
-    let filteredData = this.state.allDataMyTasks.filter(function(item) {
-      return item.taskStatus.includes(searchValue);
-    });
-    this.setState({
-      filterdDataMyTasks: filteredData,
-      selectedTypeMyTasks: key,
-    });
-  }
-
-  onSuccess(text) {
-    console.log('text', text);
-  }
-
-  renderCollaps(item) {
-    console.log('item', item.item);
-    return (
-      <Collapsible title={item.item.projectName} data={item.item.taskList} />
-    );
-  }
-
   render() {
     let dataLoading = this.state.dataLoading;
-    // let filterdDataMyTasks = this.state.filterdDataMyTasks;
 
     return (
-      <View
-        style={styles.backgroundImage}
-        // onStartShouldSetResponderCapture={() => {
-        //   this.setState({enableScrollViewScroll: true});
-        // }}
-      >
+      <View style={styles.container}>
         <NavigationEvents
           onWillFocus={() =>
             this.getAllWorkloadTasks(
@@ -438,13 +302,11 @@ class WorkloadTabTasksScreen extends Component {
               onRefresh={this._onRefresh}
             />
           }
-          // scrollEnabled={this.state.enableScrollViewScroll}
           ref={myScroll => (this._myScroll = myScroll)}>
           {this.state.workloadTasks.length > 0 ? (
             <Accordion
               underlayColor={colors.white}
               sections={this.state.workloadTasks}
-              // sectionContainerStyle={{height:200}}
               containerStyle={{marginBottom: 20, marginTop: 10}}
               activeSections={this.state.activeSections}
               renderHeader={this._renderHeader}
@@ -455,20 +317,10 @@ class WorkloadTabTasksScreen extends Component {
             />
           ) : (
             <View style={styles.noDataStyle}>
-              <Text style={{color: colors.gray, fontSize: 20}}>
-                {this.state.noData}
-              </Text>
+              {this.state.noData !== '' ? <EmptyListView /> : null}
             </View>
           )}
         </ScrollView>
-
-        {/* <FlatList
-          style={styles.flatListStyle}
-          data={this.state.workloadTasks}
-          renderItem={(item) => this.renderCollaps(item)}
-          keyExtractor={item => item.taskId}
-        /> */}
-
         {dataLoading && <Loader />}
       </View>
     );
@@ -476,19 +328,16 @@ class WorkloadTabTasksScreen extends Component {
 }
 
 const styles = EStyleSheet.create({
-  backgroundImage: {
+  container: {
     flex: 1,
-    // backgroundColor: colors.pageBackGroundColor,
   },
   projectFilerView: {
     backgroundColor: colors.projectBgColor,
-    borderRadius: 5,
-    // width: '330rem',
+    borderRadius: '5rem',
     marginTop: '17rem',
     marginBottom: '12rem',
     flexDirection: 'row',
     alignItems: 'center',
-    // justifyContent: 'center',
     paddingHorizontal: '12rem',
     height: '45rem',
     marginHorizontal: '20rem',
@@ -496,15 +345,13 @@ const styles = EStyleSheet.create({
   textFilter: {
     fontSize: '14rem',
     color: colors.white,
-    textAlign: 'center',
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'center',
-    // fontWeight: 'bold',
   },
   projectView: {
     backgroundColor: colors.white,
-    borderRadius: 5,
+    borderRadius: '5rem',
     height: '60rem',
     marginBottom: '7rem',
     flexDirection: 'row',
@@ -515,8 +362,6 @@ const styles = EStyleSheet.create({
   text: {
     fontSize: '11rem',
     color: colors.projectTaskNameColor,
-    textAlign: 'center',
-    fontWeight: 'bold',
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
@@ -524,10 +369,8 @@ const styles = EStyleSheet.create({
     fontWeight: '400',
   },
   textDate: {
-    fontFamily: 'CircularStd-Book',
     fontSize: '9rem',
     fontWeight: '400',
-    textAlign: 'center',
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
@@ -537,16 +380,11 @@ const styles = EStyleSheet.create({
   avatarIcon: {
     width: '20rem',
     height: '20rem',
-    marginLeft: 10,
+    marginLeft: '10rem',
   },
   statusView: {
-    // backgroundColor: colors.gray,
-    // width:'5rem',
-    // height:'60rem',
     alignItems: 'center',
     flexDirection: 'row',
-    // borderTopRightRadius: 5,
-    // borderBottomRightRadius: 5,
   },
   dropIcon: {
     width: '20rem',
@@ -556,123 +394,51 @@ const styles = EStyleSheet.create({
     width: '40rem',
     height: '40rem',
   },
-  bottomBarContainer: {
-    position: 'absolute',
-    bottom: 0,
-    height: 80,
-    width: '100%',
-    backgroundColor: colors.projectBgColor,
-  },
-  bottomBarInnerContainer: {
-    flexDirection: 'row',
-    height: 80,
-  },
-  bottomItemView: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'row',
-  },
-  bottomItemTouch: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: '100%',
-  },
-  horizontalLine: {
-    backgroundColor: colors.gray,
-    width: 1,
-    height: 40,
-  },
-  bottomBarIcon: {
-    width: '20rem',
-    height: '20rem',
-  },
   landing: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
-
-  container: {
-    flex: 1,
-    backgroundColor: '#F5FCFF',
-    paddingTop: 20,
-  },
   title: {
     textAlign: 'center',
-    fontSize: 22,
+    fontSize: '21rem',
     fontWeight: '300',
-    marginBottom: 20,
+    marginBottom: '20rem',
   },
   header: {
-    padding: 20,
-    marginHorizontal: 20,
-    marginTop: 10,
-    borderTopStartRadius: 5,
-    borderTopEndRadius: 5,
+    padding: '20rem',
+    marginHorizontal: '20rem',
+    marginTop: '10rem',
+    borderTopStartRadius: '5rem',
+    borderTopEndRadius: '5rem',
     flexDirection: 'row',
     alignItems: 'center',
   },
   headerText: {
     textAlign: 'left',
-    fontSize: 16,
+    fontSize: '15rem',
     fontWeight: '500',
     color: colors.white,
-  },
-  content: {
-    padding: 0,
-    backgroundColor: '#fff',
-  },
-  active: {
-    backgroundColor: 'rgba(255,255,255,1)',
-  },
-  inactive: {
-    backgroundColor: 'rgba(245,252,255,1)',
-  },
-  selectors: {
-    marginBottom: 10,
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
-  selector: {
-    backgroundColor: '#F5FCFF',
-    padding: 10,
-  },
-  activeSelector: {
-    fontWeight: 'bold',
-  },
-  selectTitle: {
-    fontSize: 14,
-    fontWeight: '500',
-    padding: 10,
-  },
-  multipleToggle: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginVertical: 30,
-    alignItems: 'center',
-  },
-  multipleToggle__title: {
-    fontSize: 16,
-    marginRight: 8,
   },
   flatListStyle: {
     marginBottom: '10rem',
     marginTop: '10rem',
   },
   flatListView: {
-    // height: 300,
-    marginHorizontal: 20,
-    borderBottomEndRadius: 5,
-    borderBottomStartRadius: 5,
+    marginHorizontal: '20rem',
+    borderBottomEndRadius: '5rem',
+    borderBottomStartRadius: '5rem',
     backgroundColor: colors.projectBgColor,
   },
   noDataStyle: {
     flex: 1,
-    height: height - 200,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  imageStyle: {
+    width: '22rem',
+    height: '22rem',
+    borderRadius: 50 / 2,
   },
 });
 

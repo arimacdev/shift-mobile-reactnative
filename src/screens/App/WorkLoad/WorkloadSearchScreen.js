@@ -24,6 +24,7 @@ EStyleSheet.build({$rem: entireScreenWidth / 380});
 import AsyncStorage from '@react-native-community/async-storage';
 import Loader from '../../../components/Loader';
 import {NavigationEvents} from 'react-navigation';
+import EmptyListView from '../../../components/EmptyListView';
 const initialLayout = {width: entireScreenWidth};
 
 class WorkloadSearchScreen extends Component {
@@ -40,9 +41,9 @@ class WorkloadSearchScreen extends Component {
 
   componentDidMount() {
     let loginUserType = this.props.loginUserType;
-    if(loginUserType == 'SUPER_ADMIN'){
+    if (loginUserType == 'SUPER_ADMIN') {
       this.fetchDataAdmin();
-    }else{
+    } else {
       this.fetchDataUser();
     }
   }
@@ -75,28 +76,18 @@ class WorkloadSearchScreen extends Component {
     }
   }
 
-  async tabOpen() {
-    
-  }
+  async tabOpen() {}
 
   userIcon = function(item) {
     let userImage = item.profileImage;
     if (userImage) {
       return (
         <FadeIn>
-          <Image
-            source={{uri: userImage}}
-            style={{width: 45, height: 45, borderRadius: 45 / 2}}
-          />
+          <Image source={{uri: userImage}} style={styles.imageStyle} />
         </FadeIn>
       );
     } else {
-      return (
-        <Image
-          style={{width: 45, height: 45, borderRadius: 45 / 2}}
-          source={require('../../../asserts/img/defult_user.png')}
-        />
-      );
+      return <Image style={styles.imageStyle} source={icons.defultUser} />;
     }
   };
 
@@ -177,6 +168,7 @@ class WorkloadSearchScreen extends Component {
           data={this.state.workload}
           renderItem={({item}) => this.renderPeopleList(item)}
           keyExtractor={item => item.projId}
+          ListEmptyComponent={<EmptyListView />}
           // onRefresh={() => this.onRefresh()}
           // refreshing={isFetching}
         />
@@ -192,7 +184,7 @@ const styles = EStyleSheet.create({
   },
   mainContainer: {
     backgroundColor: colors.projectBgColor,
-    borderRadius: 5,
+    borderRadius: '5rem',
     marginHorizontal: '20rem',
     marginVertical: '7rem',
   },
@@ -202,7 +194,7 @@ const styles = EStyleSheet.create({
   button: {
     flexDirection: 'row',
     backgroundColor: colors.lightBlue,
-    borderRadius: 5,
+    borderRadius: '5rem',
     marginTop: '17rem',
     flexDirection: 'row',
     alignItems: 'center',
@@ -227,7 +219,7 @@ const styles = EStyleSheet.create({
   },
   userView: {
     backgroundColor: colors.projectBgColor,
-    borderRadius: 5,
+    borderRadius: '5rem',
     height: '60rem',
     flexDirection: 'row',
     alignItems: 'center',
@@ -280,7 +272,7 @@ const styles = EStyleSheet.create({
   },
   workloadFilerView: {
     backgroundColor: colors.projectBgColor,
-    borderRadius: 5,
+    borderRadius: '5rem',
     marginTop: '17rem',
     marginBottom: '12rem',
     flexDirection: 'row',
@@ -302,6 +294,11 @@ const styles = EStyleSheet.create({
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
     marginLeft: '7rem',
+  },
+  imageStyle: {
+    width: '43rem',
+    height: '43rem',
+    borderRadius: 90 / 2,
   },
 });
 

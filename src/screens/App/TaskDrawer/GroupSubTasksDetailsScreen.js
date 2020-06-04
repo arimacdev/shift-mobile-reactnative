@@ -422,8 +422,8 @@ class GroupSubTasksDetailsScreen extends Component {
       })
       .catch(error => {
         //if (error.status == 401) {
-          this.setState({indeterminate: false, files: [], uploading: 0});
-          this.showAlert('', error.data.message);
+        this.setState({indeterminate: false, files: [], uploading: 0});
+        this.showAlert('', error.data.message);
         //}
       });
   }
@@ -1186,10 +1186,7 @@ class GroupSubTasksDetailsScreen extends Component {
     if (item.renderImage) {
       return (
         <FadeIn>
-          <Image
-            source={icons.forwordGray}
-            style={{width: 24, height: 24, borderRadius: 24 / 2}}
-          />
+          <Image source={icons.forwordGray} style={styles.imageStyle} />
         </FadeIn>
       );
     } else {
@@ -1533,19 +1530,11 @@ class GroupSubTasksDetailsScreen extends Component {
     if (userImage) {
       return (
         <FadeIn>
-          <Image
-            source={{uri: userImage}}
-            style={{width: 24, height: 24, borderRadius: 24 / 2}}
-          />
+          <Image source={{uri: userImage}} style={styles.imageStyle} />
         </FadeIn>
       );
     } else {
-      return (
-        <Image
-          style={{width: 24, height: 24, borderRadius: 24 / 2}}
-          source={require('../../../asserts/img/defult_user.png')}
-        />
-      );
+      return <Image style={styles.imageStyle} source={icons.defultUser} />;
     }
   };
 
@@ -1786,7 +1775,7 @@ class GroupSubTasksDetailsScreen extends Component {
     let addChildTaskShow = this.state.addChildTaskShow;
 
     return (
-      <View style={styles.backgroundImage}>
+      <View style={styles.container}>
         <Header
           isDelete={true}
           navigation={this.props.navigation}
@@ -1801,7 +1790,7 @@ class GroupSubTasksDetailsScreen extends Component {
           }
           onPressDelete={() => this.onTaskDeketePress()}
         />
-        <ScrollView style={styles.backgroundImage}>
+        <ScrollView style={styles.container}>
           <View>
             <View style={styles.headerView}>
               <Text style={styles.headerTaskText}>Task - </Text>
@@ -2013,7 +2002,7 @@ class GroupSubTasksDetailsScreen extends Component {
 }
 
 const styles = EStyleSheet.create({
-  backgroundImage: {
+  container: {
     flex: 1,
   },
   projectFilerView: {
@@ -2475,6 +2464,11 @@ const styles = EStyleSheet.create({
     width: '79.5%',
     marginTop: '59rem',
     marginLeft: '32rem',
+  },
+  imageStyle: {
+    width: '22rem',
+    height: '22rem',
+    borderRadius: 80 / 2,
   },
 });
 

@@ -23,6 +23,7 @@ EStyleSheet.build({$rem: entireScreenWidth / 380});
 import AsyncStorage from '@react-native-community/async-storage';
 import Loader from '../../../components/Loader';
 import {NavigationEvents} from 'react-navigation';
+import EmptyListView from '../../../components/EmptyListView';
 const initialLayout = {width: entireScreenWidth};
 
 class PeopleScreen extends Component {
@@ -111,19 +112,11 @@ class PeopleScreen extends Component {
     if (userImage) {
       return (
         <FadeIn>
-          <Image
-            source={{uri: userImage}}
-            style={{width: 45, height: 45, borderRadius: 45 / 2}}
-          />
+          <Image source={{uri: userImage}} style={styles.userIconStyle} />
         </FadeIn>
       );
     } else {
-      return (
-        <Image
-          style={{width: 45, height: 45, borderRadius: 45 / 2}}
-          source={require('../../../asserts/img/defult_user.png')}
-        />
-      );
+      return <Image style={styles.userIconStyle} source={icons.defultUser} />;
     }
   };
 
@@ -147,14 +140,14 @@ class PeopleScreen extends Component {
             <TouchableOpacity onPress={() => this.goToEditPeople(item)}>
               <Image
                 style={{width: 28, height: 28, borderRadius: 28 / 2}}
-                source={require('../../../asserts/img/edit_user.png')}
+                source={icons.editRoundWhite}
               />
             </TouchableOpacity>
 
             <TouchableOpacity style={{marginLeft: EStyleSheet.value('24rem')}}>
               <Image
                 style={{width: 28, height: 28, borderRadius: 28 / 2}}
-                source={require('../../../asserts/img/bin.png')}
+                source={icons.deleteRoundRed}
               />
             </TouchableOpacity>
           </View>
@@ -211,6 +204,7 @@ class PeopleScreen extends Component {
             data={this.state.owner}
             renderItem={({item}) => this.renderPeopleList(item)}
             keyExtractor={item => item.projId}
+            // ListEmptyComponent={<EmptyListView />}
             // onRefresh={() => this.onRefresh()}
             // refreshing={isFetching}
           />
@@ -220,6 +214,7 @@ class PeopleScreen extends Component {
             data={this.state.admins}
             renderItem={({item}) => this.renderPeopleList(item)}
             keyExtractor={item => item.projId}
+            // ListEmptyComponent={<EmptyListView />}
             // onRefresh={() => this.onRefresh()}
             // refreshing={isFetching}
           />
@@ -229,6 +224,7 @@ class PeopleScreen extends Component {
             data={this.state.users}
             renderItem={({item}) => this.renderPeopleList(item)}
             keyExtractor={item => item.projId}
+            // ListEmptyComponent={<EmptyListView />}
             // onRefresh={() => this.onRefresh()}
             // refreshing={isFetching}
           />
@@ -337,6 +333,11 @@ const styles = EStyleSheet.create({
   progressBarContainer: {
     marginHorizontal: '10rem',
     marginVertical: '7rem',
+  },
+  userIconStyle: {
+    width: '42rem',
+    height: '42rem',
+    borderRadius: 80 / 2,
   },
 });
 

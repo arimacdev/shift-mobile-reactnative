@@ -15,10 +15,9 @@ import icons from '../../../assest/icons/icons';
 import EStyleSheet from 'react-native-extended-stylesheet';
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
-import AsyncStorage from '@react-native-community/async-storage';
 import Loader from '../../../components/Loader';
 import FadeIn from 'react-native-fade-in-image';
-import APIServices from '../../../services/APIServices';
+import EmptyListView from '../../../components/EmptyListView';
 
 class SearchUserScreen extends Component {
   constructor(props) {
@@ -28,33 +27,36 @@ class SearchUserScreen extends Component {
       allUsers: [],
       isFetching: false,
       searchText: '',
-      selectedProjectID : '',
+      selectedProjectID: '',
     };
   }
 
-
   componentDidMount() {
-    this.fetchData()
+    this.fetchData();
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    if (prevProps.usersLoading !== this.props.usersLoading && this.props.users && this.props.users.length > 0) {
+    if (
+      prevProps.usersLoading !== this.props.usersLoading &&
+      this.props.users &&
+      this.props.users.length > 0
+    ) {
       this.setState({
-        users : this.props.users,
-        allUsers : this.props.users,
-       });
+        users: this.props.users,
+        allUsers: this.props.users,
+      });
     }
 
     if (this.state.isFetching) {
       this.setState({
-          isFetching : false,
+        isFetching: false,
       });
-  }
+    }
   }
 
   fetchData() {
-    this.setState({ users: [],allUsers:[]}, function() {
-      this.props.getAllUsers()
+    this.setState({users: [], allUsers: []}, function() {
+      this.props.getAllUsers();
     });
   }
 
@@ -71,59 +73,66 @@ class SearchUserScreen extends Component {
       return (
         <Image
           style={styles.userIcon}
-          source={require('../../../asserts/img/defult_user.png')}
+          source={icons.defultUser}
           resizeMode="contain"
         />
       );
     }
-  };
+  }
 
   renderUserListList(item) {
     return (
-    <TouchableOpacity onPress={()=>this.props.navigation.navigate('ViewUserScreen',{userItem:item})}>
-      <View style={styles.userView}>
+      <TouchableOpacity
+        onPress={() =>
+          this.props.navigation.navigate('ViewUserScreen', {userItem: item})
+        }>
+        <View style={styles.userView}>
           {this.userImage(item)}
           <View style={{flex: 1}}>
-            <Text style={styles.text}>{item.firstName + ' ' + item.lastName}</Text>
+            <Text style={styles.text}>
+              {item.firstName + ' ' + item.lastName}
+            </Text>
           </View>
           <View style={styles.controlView}>
-            <TouchableOpacity onPress={()=>this.props.navigation.navigate('EditUserScreen',{userItem:item})}>
-                <Image 
-                  style={{width: 28, height: 28,borderRadius: 28/ 2 }} 
-                  source={require('../../../asserts/img/edit_user.png')}
-                />
+            <TouchableOpacity
+              onPress={() =>
+                this.props.navigation.navigate('EditUserScreen', {
+                  userItem: item,
+                })
+              }>
+              <Image
+                style={{width: 28, height: 28, borderRadius: 28 / 2}}
+                source={icons.editRoundWhite}
+              />
             </TouchableOpacity>
-            
+
             {/* <TouchableOpacity style={{marginLeft: EStyleSheet.value('24rem')}}>
                 <Image 
                   style={{width: 28, height: 28,borderRadius: 28/ 2 }} 
                   source={require('../../../asserts/img/block_user.png')}
                 />
             </TouchableOpacity> */}
-           
           </View>
         </View>
-    </TouchableOpacity>
+      </TouchableOpacity>
     );
   }
 
   onRefresh() {
-    this.setState({ isFetching: true,users: [],allUsers:[]}, function() {
-       this.fetchData();
+    this.setState({isFetching: true, users: [], allUsers: []}, function() {
+      this.fetchData();
     });
-   
   }
 
   onBackPress() {
     this.props.navigation.goBack();
   }
 
-  loadUsers () {
-    this.setState({ users: [],allUsers:[]}, function() {
-      this.props.getAllUsers()
+  loadUsers() {
+    this.setState({users: [], allUsers: []}, function() {
+      this.props.getAllUsers();
     });
   }
-
 
   onSearchTextChange(text) {
     this.setState({searchText: text});
@@ -145,7 +154,7 @@ class SearchUserScreen extends Component {
     let usersLoading = this.props.usersLoading;
 
     return (
-      <View style={styles.backgroundImage}>
+      <View style={styles.container}>
         <View style={styles.projectFilerView}>
           <Image style={styles.searchIcon} source={icons.searchGray} />
           <TextInput
@@ -162,20 +171,21 @@ class SearchUserScreen extends Component {
           keyExtractor={item => item.projId}
           onRefresh={() => this.onRefresh()}
           refreshing={isFetching}
+          ListEmptyComponent={<EmptyListView />}
         />
-        {usersLoading && <Loader/>}
+        {usersLoading && <Loader />}
       </View>
     );
   }
 }
 
 const styles = EStyleSheet.create({
-  backgroundImage: {
+  container: {
     flex: 1,
   },
   projectFilerView: {
     backgroundColor: colors.projectBgColor,
-    borderRadius: 5,
+    borderRadius: '5rem',
     marginTop: '17rem',
     marginBottom: '12rem',
     flexDirection: 'row',
@@ -192,14 +202,13 @@ const styles = EStyleSheet.create({
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'center',
-    // fontWeight: 'bold',
   },
   projectView: {
     height: '70rem',
     flexDirection: 'row',
     alignItems: 'center',
     marginHorizontal: '20rem',
-    borderBottomWidth: 1,
+    borderBottomWidth: '1rem',
     borderBottomColor: colors.lighterGray,
   },
   text: {
@@ -222,8 +231,8 @@ const styles = EStyleSheet.create({
     width: '5rem',
     height: '60rem',
     alignItems: 'flex-end',
-    borderTopRightRadius: 5,
-    borderBottomRightRadius: 5,
+    borderTopRightRadius: '5rem',
+    borderBottomRightRadius: '5rem',
   },
   dropIcon: {
     width: '13rem',
@@ -242,13 +251,9 @@ const styles = EStyleSheet.create({
     width: '17rem',
     height: '17rem',
   },
-  backgroundImage: {
-    flex: 1,
-    //  backgroundColor: colors.pageBackGroundColor,
-  },
   userView: {
     backgroundColor: colors.projectBgColor,
-    borderRadius: 5,
+    borderRadius: '5rem',
     height: '60rem',
     marginTop: '7rem',
     flexDirection: 'row',
@@ -264,22 +269,22 @@ const styles = EStyleSheet.create({
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
     marginLeft: '10rem',
-    fontWeight: '400'
+    fontWeight: '400',
   },
   controlView: {
     alignItems: 'center',
     flexDirection: 'row',
   },
-  flalList : {
+  flalList: {
     marginTop: '0rem',
     marginBottom: '10rem',
-  }
+  },
 });
 
 const mapStateToProps = state => {
   return {
-    usersLoading : state.users.usersLoading,
-    users : state.users.users
+    usersLoading: state.users.usersLoading,
+    users: state.users.users,
   };
 };
 export default connect(

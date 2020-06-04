@@ -1,18 +1,16 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import {
   View,
-  FlatList,
   Text,
   Dimensions,
   Image,
   TouchableOpacity,
   TextInput,
   ScrollView,
-  Button,
   Alert,
-  Platform
+  Platform,
 } from 'react-native';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import * as actions from '../../../redux/actions';
 import colors from '../../../config/colors';
 import icons from '../../../assest/icons/icons';
@@ -20,12 +18,12 @@ import APIServices from '../../../services/APIServices';
 import EStyleSheet from 'react-native-extended-stylesheet';
 const entireScreenWidth = Dimensions.get('window').width;
 import AsyncStorage from '@react-native-community/async-storage';
-EStyleSheet.build({ $rem: entireScreenWidth / 380 });
-import { Dropdown } from 'react-native-material-dropdown';
+EStyleSheet.build({$rem: entireScreenWidth / 380});
+import {Dropdown} from 'react-native-material-dropdown';
 import AwesomeAlert from 'react-native-awesome-alerts';
 import _ from 'lodash';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import DateTimePickerModal from "react-native-modal-datetime-picker";
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import DocumentPicker from 'react-native-document-picker';
 import moment from 'moment';
 import Loader from '../../../components/Loader';
@@ -80,13 +78,13 @@ let operationalData = [
 ];
 
 let issueTypeList = [
-  { value: 'Development', id: 'development' },
-  { value: 'QA', id: 'qa' },
-  { value: 'Design', id: 'design' },
-  { value: 'Bug', id: 'bug' },
-  { value: 'Operational', id: 'operational' },
-  { value: 'Pre-sales', id: 'preSales' },
-  { value: 'General', id: 'general' },
+  {value: 'Development', id: 'development'},
+  {value: 'QA', id: 'qa'},
+  {value: 'Design', id: 'design'},
+  {value: 'Bug', id: 'bug'},
+  {value: 'Operational', id: 'operational'},
+  {value: 'Pre-sales', id: 'preSales'},
+  {value: 'General', id: 'general'},
 ];
 
 class AddNewTasksScreen extends Component {
@@ -133,37 +131,44 @@ class AddNewTasksScreen extends Component {
       selectedOperarionalId: '',
       selectedOperarionalId: 'general',
       viewSprint: true,
-      selectSprintName: ''
+      selectSprintName: '',
     };
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    if (prevProps.addTaskToProjectError !== this.props.addTaskToProjectError
-      && this.props.addTaskToProjectError && this.props.addTaskToProjectErrorMessage == '') {
-      this.showAlert("", "Error While creating Task");
+    if (
+      prevProps.addTaskToProjectError !== this.props.addTaskToProjectError &&
+      this.props.addTaskToProjectError &&
+      this.props.addTaskToProjectErrorMessage == ''
+    ) {
+      this.showAlert('', 'Error While creating Task');
     }
 
-    if (prevProps.addTaskToProjectError !== this.props.addTaskToProjectError
-      && this.props.addTaskToProjectError && this.props.addTaskToProjectErrorMessage != '') {
-      this.showAlert("", this.props.addTaskToProjectErrorMessage);
+    if (
+      prevProps.addTaskToProjectError !== this.props.addTaskToProjectError &&
+      this.props.addTaskToProjectError &&
+      this.props.addTaskToProjectErrorMessage != ''
+    ) {
+      this.showAlert('', this.props.addTaskToProjectErrorMessage);
     }
 
-    if (prevProps.addTaskToProjectSuccess !== this.props.addTaskToProjectSuccess
-      && this.props.addTaskToProjectSuccess) {
+    if (
+      prevProps.addTaskToProjectSuccess !==
+        this.props.addTaskToProjectSuccess &&
+      this.props.addTaskToProjectSuccess
+    ) {
       const taskID = this.props.taskId.data.taskId;
 
       Alert.alert(
-        "Success",
-        "Task successfully added",
-        [
-          { text: "OK", onPress: () => this.onSuccess("sssssssssssssssssssss") }
-        ],
-        { cancelable: false }
+        'Success',
+        'Task successfully added',
+        [{text: 'OK', onPress: () => this.onSuccess('sssssssssssssssssssss')}],
+        {cancelable: false},
       );
 
       let files = this.state.files;
       if (files && files.length > 0) {
-        this.uploadFiles(this.state.files, taskID)
+        this.uploadFiles(this.state.files, taskID);
       }
       // this.uploadFiles(this.state.files, 'b6ba3dcf-4494-4bb5-80dc-17376c628187')
     }
@@ -176,24 +181,33 @@ class AddNewTasksScreen extends Component {
   }
 
   async componentDidMount() {
-    const { navigation: { state: { params } } } = this.props;
-    const activeUsers = await APIServices.getAllUsersByProjectId(this.props.selectedProjectID);
+    const {
+      navigation: {
+        state: {params},
+      },
+    } = this.props;
+    const activeUsers = await APIServices.getAllUsersByProjectId(
+      this.props.selectedProjectID,
+    );
     if (activeUsers.message == 'success') {
       let userList = [];
       for (let i = 0; i < activeUsers.data.length; i++) {
         if (activeUsers.data[i].firstName && activeUsers.data[i].lastName) {
           userList.push({
             id: activeUsers.data[i].userId,
-            value: activeUsers.data[i].firstName + ' ' + activeUsers.data[i].lastName,
+            value:
+              activeUsers.data[i].firstName +
+              ' ' +
+              activeUsers.data[i].lastName,
           });
         }
       }
       this.setState({
         dropPeopleData: userList,
         // dataLoading : false
-      })
+      });
     } else {
-      this.setState({ dataLoading: false });
+      this.setState({dataLoading: false});
     }
     this.getAllSprintInProject(this.props.selectedProjectID);
     this.getAllParentTasks(this.props.selectedProjectID);
@@ -201,7 +215,7 @@ class AddNewTasksScreen extends Component {
 
   async getAllSprintInProject(selectedProjectID) {
     // let selectedProjectID = this.props.selectedProjectID;
-    this.setState({ dataLoading: true });
+    this.setState({dataLoading: true});
     let sprintData = await APIServices.getAllSprintInProject(selectedProjectID);
     if (sprintData.message == 'success') {
       let sprintsArray = [];
@@ -219,20 +233,23 @@ class AddNewTasksScreen extends Component {
           value: sprintName,
         });
       }
-      this.setState({ dropSprintData: sprintsArray, dataLoading: false });
+      this.setState({dropSprintData: sprintsArray, dataLoading: false});
       // this.setState({dataLoading:false,sprints:sprintsArray});
     } else {
-      this.setState({ dataLoading: false });
+      this.setState({dataLoading: false});
     }
   }
 
   async getAllParentTasks(selectedProjectID) {
     let userID = await AsyncStorage.getItem('userID');
     // let selectedProjectID = this.props.selectedProjectID;
-    this.setState({ dataLoading: true });
-    let parentTaskData = await APIServices.getAllTaskInProjectsData(userID, selectedProjectID);
+    this.setState({dataLoading: true});
+    let parentTaskData = await APIServices.getAllTaskInProjectsData(
+      userID,
+      selectedProjectID,
+    );
     if (parentTaskData.message == 'success') {
-      let taskModalData = [{ id: 0, value: 'No parent' },];
+      let taskModalData = [{id: 0, value: 'No parent'}];
       for (let index = 0; index < parentTaskData.data.length; index++) {
         const element = parentTaskData.data[index];
         if (element.parentTask) {
@@ -243,36 +260,35 @@ class AddNewTasksScreen extends Component {
         }
       }
       console.log('taskModalData', taskModalData);
-      this.setState({ dropParentData: taskModalData, dataLoading: false });
+      this.setState({dropParentData: taskModalData, dataLoading: false});
     } else {
-      this.setState({ dataLoading: false });
+      this.setState({dataLoading: false});
     }
   }
 
-
   onTaskNameChange(text) {
-    this.setState({ taskName: text });
+    this.setState({taskName: text});
   }
 
   renderBase() {
     return (
-      <View style={{ justifyContent: 'center', flex: 1 }}>
+      <View style={{justifyContent: 'center', flex: 1}}>
         <Image style={styles.dropIcon} source={icons.arrowDark} />
       </View>
     );
   }
 
   showDatePicker = () => {
-    this.setState({ showPicker: true })
+    this.setState({showPicker: true});
   };
 
   hideDatePicker = () => {
-    this.setState({ showPicker: false })
+    this.setState({showPicker: false});
   };
 
   handleDateConfirm = date => {
     this.hideDatePicker();
-    this.setState({ isDateNeedLoading: true })
+    this.setState({isDateNeedLoading: true});
     let date1 = new Date(date);
     let newDate = '';
     let newDateValue = '';
@@ -300,20 +316,20 @@ class AddNewTasksScreen extends Component {
       this.setState({
         isDateNeedLoading: false,
         showTimePicker: true,
-      })
+      });
     }, 500);
   };
 
   showTimePicker = () => {
-    this.setState({ showTimePicker: true })
+    this.setState({showTimePicker: true});
   };
 
   hideTimePicker = () => {
-    this.setState({ showTimePicker: false })
+    this.setState({showTimePicker: false});
   };
 
   handleTimeConfirm = time1 => {
-    console.log(time1, 'time')
+    console.log(time1, 'time');
     this.hideTimePicker();
     let time = new Date(time1);
     let newTime = moment(time).format('hh:mmA');
@@ -334,16 +350,16 @@ class AddNewTasksScreen extends Component {
         time: new Date(time1),
       });
     }
-    this.setState({ showPicker: true })
+    this.setState({showPicker: true});
   };
 
   hideDatePicker = () => {
-    this.setState({ showPicker: false })
+    this.setState({showPicker: false});
   };
 
   handleDateConfirm = date => {
     this.hideDatePicker();
-    this.setState({ isDateNeedLoading: true })
+    this.setState({isDateNeedLoading: true});
     let date1 = new Date(date);
     let newDate = '';
     let newDateValue = '';
@@ -371,20 +387,20 @@ class AddNewTasksScreen extends Component {
       this.setState({
         isDateNeedLoading: false,
         showTimePicker: true,
-      })
+      });
     }, 500);
   };
 
   showTimePicker = () => {
-    this.setState({ showTimePicker: true })
+    this.setState({showTimePicker: true});
   };
 
   hideTimePicker = () => {
-    this.setState({ showTimePicker: false })
+    this.setState({showTimePicker: false});
   };
 
   handleTimeConfirm = time1 => {
-    console.log(time1, 'time')
+    console.log(time1, 'time');
     this.hideTimePicker();
     let time = new Date(time1);
     let newTime = moment(time).format('hh:mmA');
@@ -527,8 +543,11 @@ class AddNewTasksScreen extends Component {
         <DateTimePicker
           testID="dateTimePicker"
           timeZoneOffsetInMinutes={0}
-          value={this.state.reminder == true
-            ? this.state.timeReminder : this.state.time}
+          value={
+            this.state.reminder == true
+              ? this.state.timeReminder
+              : this.state.time
+          }
           mode={'time'}
           is24Hour={true}
           display="default"
@@ -549,7 +568,7 @@ class AddNewTasksScreen extends Component {
         let filesArray = this.state.files.filter(item => {
           return item.uri !== uri;
         });
-        this.setState({ files: filesArray });
+        this.setState({files: filesArray});
       },
     );
   }
@@ -566,7 +585,7 @@ class AddNewTasksScreen extends Component {
           marginRight: 5,
           marginBottom: 5,
         }}>
-        <View style={{ justifyContent: 'center', marginLeft: 10 }}>
+        <View style={{justifyContent: 'center', marginLeft: 10}}>
           <Image
             style={styles.gallaryIcon}
             source={icons.gallary}
@@ -581,10 +600,10 @@ class AddNewTasksScreen extends Component {
             justifyContent: 'center',
             flex: 1,
           }}>
-          <Text style={{ marginTop: -2 }}>
+          <Text style={{marginTop: -2}}>
             {item.name.substring(0, 5)}...{item.name.substr(-7)}
           </Text>
-          <Text style={{ fontSize: 10, marginTop: -2, color: colors.lightgray }}>
+          <Text style={{fontSize: 10, marginTop: -2, color: colors.lightgray}}>
             {item.dateTime}
           </Text>
         </View>
@@ -610,16 +629,17 @@ class AddNewTasksScreen extends Component {
 
   async iOSFilePicker() {
     Alert.alert(
-      'Add Files', 'Select the file source',
+      'Add Files',
+      'Select the file source',
       [
-        { text: 'Camera', onPress: () => this.selectCamera() },
-        { text: 'Gallery', onPress: () => this.selectGallery() },
-        { text: 'Files', onPress: () => this.doumentPicker() },
-        { text: 'Cancel', onPress: () => console.log('Back') },
+        {text: 'Camera', onPress: () => this.selectCamera()},
+        {text: 'Gallery', onPress: () => this.selectGallery()},
+        {text: 'Files', onPress: () => this.doumentPicker()},
+        {text: 'Cancel', onPress: () => console.log('Back')},
       ],
       {
-        cancelable: true
-      }
+        cancelable: true,
+      },
     );
   }
 
@@ -630,14 +650,14 @@ class AddNewTasksScreen extends Component {
         skipBackup: true,
         path: 'images',
       },
-      quality: 0.2
+      quality: 0.2,
     };
-    ImagePicker.launchCamera(options, (res) => {
+    ImagePicker.launchCamera(options, res => {
       if (res.didCancel) {
       } else if (res.error) {
       } else if (res.customButton) {
       } else {
-        this.setImageForFile(res)
+        this.setImageForFile(res);
       }
     });
   }
@@ -649,15 +669,15 @@ class AddNewTasksScreen extends Component {
         skipBackup: true,
         path: 'images',
       },
-      quality: 0.2
+      quality: 0.2,
     };
 
-    ImagePicker.launchImageLibrary(options, (res) => {
+    ImagePicker.launchImageLibrary(options, res => {
       if (res.didCancel) {
       } else if (res.error) {
       } else if (res.customButton) {
       } else {
-        this.setImageForFile(res)
+        this.setImageForFile(res);
       }
     });
   }
@@ -672,7 +692,7 @@ class AddNewTasksScreen extends Component {
       dateTime:
         moment().format('YYYY/MM/DD') + ' | ' + moment().format('HH:mm'),
     });
-    this.setState({ files: this.state.files });
+    this.setState({files: this.state.files});
   }
 
   async doumentPicker() {
@@ -682,7 +702,7 @@ class AddNewTasksScreen extends Component {
         type: [
           DocumentPicker.types.images,
           DocumentPicker.types.plainText,
-          DocumentPicker.types.pdf
+          DocumentPicker.types.pdf,
         ],
       });
       for (const res of results) {
@@ -703,7 +723,7 @@ class AddNewTasksScreen extends Component {
           res.size,
         );
       }
-      this.setState({ files: this.state.files });
+      this.setState({files: this.state.files});
       console.log(this.state.files);
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
@@ -715,43 +735,49 @@ class AddNewTasksScreen extends Component {
   }
 
   onNotesChange(text) {
-    this.setState({ notes: text });
+    this.setState({notes: text});
   }
 
-  selectAssignee = (value) => {
-    this.setState({ selectedAssignee: value })
+  selectAssignee = value => {
+    this.setState({selectedAssignee: value});
     for (let i = 0; i < this.state.dropPeopleData.length; i++) {
       if (value == this.state.dropPeopleData[i].value) {
-        this.setState({ assigneeId: this.state.dropPeopleData[i].id })
+        this.setState({assigneeId: this.state.dropPeopleData[i].id});
       }
     }
-  }
+  };
 
-  selectStatus = (value) => {
-    this.setState({ selectedStatus: value })
-  }
+  selectStatus = value => {
+    this.setState({selectedStatus: value});
+  };
 
   selectOperationalStatus = (value, index, data) => {
     let selectedIssueId = data[index].id;
     let selectedIssueName = data[index].value;
-    this.setState({ selectedOperarionalStatus: selectedIssueName, selectedOperarionalId: selectedIssueId });
+    this.setState({
+      selectedOperarionalStatus: selectedIssueName,
+      selectedOperarionalId: selectedIssueId,
+    });
   };
 
   setParentTask = (value, index, data) => {
     let parentTaskId = data[index].id;
     let parentTaskName = data[index].value;
-    this.setState({ parentTaskStatus: parentTaskName, parentTaskId: parentTaskId });
+    this.setState({
+      parentTaskStatus: parentTaskName,
+      parentTaskId: parentTaskId,
+    });
     if (parentTaskName && parentTaskName == 'No parent') {
-      this.setState({ viewSprint: true })
+      this.setState({viewSprint: true});
     } else {
-      this.setState({ viewSprint: false, sprintId: '' });
+      this.setState({viewSprint: false, sprintId: ''});
       this.setRelevantSprint(parentTaskId);
     }
   };
 
   async setRelevantSprint(parentTaskId) {
     let selectedProjectID = this.props.selectedProjectID;
-    this.setState({ dataLoading: true });
+    this.setState({dataLoading: true});
     try {
       let taskResult = await APIServices.getProjecTaskData(
         selectedProjectID,
@@ -759,28 +785,28 @@ class AddNewTasksScreen extends Component {
       );
       if (taskResult.message == 'success') {
         this.setSprintId(taskResult);
-        this.setState({ dataLoading: false });
+        this.setState({dataLoading: false});
       } else {
-        this.setState({ dataLoading: false });
+        this.setState({dataLoading: false});
       }
     } catch (error) {
-      this.setState({ dataLoading: false });
+      this.setState({dataLoading: false});
     }
-  };
+  }
 
   setSprintId(taskResult) {
     let dropSprintData = this.state.dropSprintData;
     let sprintId = taskResult.data.sprintId;
-    this.setState({ sprintId: sprintId });
-    let result = dropSprintData.find(({ id }) => id == sprintId);
+    this.setState({sprintId: sprintId});
+    let result = dropSprintData.find(({id}) => id == sprintId);
     if (result != undefined) {
       this.setState({
-        selectSprintName: result.value
+        selectSprintName: result.value,
       });
     }
     if (sprintId == 'default') {
       this.setState({
-        selectSprintName: 'Default'
+        selectSprintName: 'Default',
       });
     }
   }
@@ -788,13 +814,13 @@ class AddNewTasksScreen extends Component {
   selectSprintStatus = (value, index, data) => {
     let sprintId = data[index].id;
     let sprintName = data[index].value;
-    this.setState({ sprintStatus: sprintName, sprintId: sprintId });
+    this.setState({sprintStatus: sprintName, sprintId: sprintId});
   };
 
   async addNewTask() {
     await AsyncStorage.getItem('userID').then(userID => {
       if (userID) {
-        this.setState({ initiator: userID })
+        this.setState({initiator: userID});
       }
     });
     let taskName = this.state.taskName;
@@ -802,8 +828,8 @@ class AddNewTasksScreen extends Component {
     let assigneeId = this.state.assigneeId;
     let selectedStatus = this.state.selectedStatus;
     let issueType = this.state.selectedOperarionalId;
-    let parentTaskId = this.state.parentTaskId
-    let sprintId = this.state.sprintId
+    let parentTaskId = this.state.parentTaskId;
+    let sprintId = this.state.sprintId;
     let selectedStatusEnum = null;
     if (selectedStatus != '') {
       switch (selectedStatus) {
@@ -839,31 +865,54 @@ class AddNewTasksScreen extends Component {
     let dueDate = this.state.selectedDateValue;
     let dueTime = this.state.selectedTime;
 
-    let IsoDueDate = dueDate ?
-      moment(dueDate + dueTime, 'DD/MM/YYYY hh:mmA').format('YYYY-MM-DD[T]HH:mm:ss') : '';
-    let IsoReminderDate = selectedDateReminder ?
-      moment(selectedDateReminder + selectedTimeReminder, 'DD/MM/YYYY hh:mmA').format('YYYY-MM-DD[T]HH:mm:ss') : '';
-    if (this.validateData(taskName, assigneeId, selectedDateReminder, dueDate)) {
-      this.props.addTaskToProject(taskName, initiator, assigneeId, selectedStatusEnum, IsoDueDate, IsoReminderDate, notes, this.props.selectedProjectID, issueType, parentTaskId, sprintId);
+    let IsoDueDate = dueDate
+      ? moment(dueDate + dueTime, 'DD/MM/YYYY hh:mmA').format(
+          'YYYY-MM-DD[T]HH:mm:ss',
+        )
+      : '';
+    let IsoReminderDate = selectedDateReminder
+      ? moment(
+          selectedDateReminder + selectedTimeReminder,
+          'DD/MM/YYYY hh:mmA',
+        ).format('YYYY-MM-DD[T]HH:mm:ss')
+      : '';
+    if (
+      this.validateData(taskName, assigneeId, selectedDateReminder, dueDate)
+    ) {
+      this.props.addTaskToProject(
+        taskName,
+        initiator,
+        assigneeId,
+        selectedStatusEnum,
+        IsoDueDate,
+        IsoReminderDate,
+        notes,
+        this.props.selectedProjectID,
+        issueType,
+        parentTaskId,
+        sprintId,
+      );
     }
   }
 
   uploadFiles(file, taskId) {
-    console.log(file, taskId, 'fileeeeeeeeeeee')
+    console.log(file, taskId, 'fileeeeeeeeeeee');
     this.props.addFileToTask(file, taskId, this.props.selectedProjectID);
   }
 
   validateData(taskName, assigneeId, selectedDateReminder, dueDate) {
-    let momentDue = moment(dueDate, 'DD-MM-YYYY').format("YYYY-MM-DD");
-    let momentReminder = moment(selectedDateReminder, 'DD-MM-YYYY').format("YYYY-MM-DD");
+    let momentDue = moment(dueDate, 'DD-MM-YYYY').format('YYYY-MM-DD');
+    let momentReminder = moment(selectedDateReminder, 'DD-MM-YYYY').format(
+      'YYYY-MM-DD',
+    );
 
     if (!taskName && _.isEmpty(taskName)) {
-      this.showAlert("", "Please enter a name for the task");
+      this.showAlert('', 'Please enter a name for the task');
       return false;
     }
     if (selectedDateReminder && !_.isEmpty(selectedDateReminder)) {
-      if (!(moment(momentDue).isSameOrAfter(momentReminder, 'day'))) {
-        this.showAlert("", "Reminder date must be earlier than Due date");
+      if (!moment(momentDue).isSameOrAfter(momentReminder, 'day')) {
+        this.showAlert('', 'Reminder date must be earlier than Due date');
         return false;
       }
     }
@@ -875,7 +924,7 @@ class AddNewTasksScreen extends Component {
       showAlert: false,
       alertTitle: '',
       alertMsg: '',
-    })
+    });
   }
 
   showAlert(title, msg) {
@@ -883,7 +932,7 @@ class AddNewTasksScreen extends Component {
       showAlert: true,
       alertTitle: title,
       alertMsg: msg,
-    })
+    });
   }
 
   render() {
@@ -897,10 +946,14 @@ class AddNewTasksScreen extends Component {
     let selectSprintName = this.state.selectSprintName;
 
     return (
-      <ScrollView style={{ marginBottom: 90 }}>
-        <View style={[styles.taskFieldView, { marginTop: 30 }]}>
+      <ScrollView style={{marginBottom: EStyleSheet.value('90rem')}}>
+        <View
+          style={[
+            styles.taskFieldView,
+            {marginTop: EStyleSheet.value('25rem')},
+          ]}>
           <TextInput
-            style={[styles.textInput, { width: '95%' }]}
+            style={[styles.textInput, {width: '95%'}]}
             placeholder={'Task name*'}
             value={this.state.taskName}
             onChangeText={text => this.onTaskNameChange(text)}
@@ -908,7 +961,7 @@ class AddNewTasksScreen extends Component {
         </View>
         <View style={styles.taskFieldView}>
           <Dropdown
-            style={{ paddingLeft: 5 }}
+            style={{paddingLeft: 5}}
             label=""
             labelFontSize={0}
             fontSize={13}
@@ -916,26 +969,26 @@ class AddNewTasksScreen extends Component {
             textColor={colors.gray}
             error={''}
             animationDuration={0.5}
-            containerStyle={{ width: '100%' }}
-            overlayStyle={{ width: '100%' }}
+            containerStyle={{width: '100%'}}
+            overlayStyle={{width: '100%'}}
             pickerStyle={styles.dropPickerStyle}
             dropdownPosition={0}
             value={this.state.selectedAssignee}
             itemColor={'black'}
             selectedItemColor={'black'}
-            onChangeText={(value) => this.selectAssignee(value)}
+            onChangeText={value => this.selectAssignee(value)}
             // onChangeText={(value)=>{this.selectAssignee(item.name, value)}}
-            dropdownOffset={{ top: 10 }}
+            dropdownOffset={{top: 10}}
             baseColor={colors.projectBgColor}
             // renderBase={this.renderBase}
             renderAccessory={this.renderBase}
-            itemTextStyle={{ marginLeft: 15 }}
+            itemTextStyle={{marginLeft: 15}}
             itemPadding={10}
           />
         </View>
         <View style={styles.taskFieldView}>
           <Dropdown
-            style={{ paddingLeft: 5 }}
+            style={{paddingLeft: 5}}
             label="Parent Task"
             labelFontSize={11}
             fontSize={13}
@@ -943,8 +996,8 @@ class AddNewTasksScreen extends Component {
             textColor={colors.gray}
             error={''}
             animationDuration={0.5}
-            containerStyle={{ width: '100%' }}
-            overlayStyle={{ width: '100%' }}
+            containerStyle={{width: '100%'}}
+            overlayStyle={{width: '100%'}}
             pickerStyle={styles.dropPickerStyle}
             dropdownPosition={0}
             value={this.state.parentTaskStatus}
@@ -952,22 +1005,20 @@ class AddNewTasksScreen extends Component {
             selectedItemColor={'black'}
             onChangeText={this.setParentTask}
             // onChangeText={(value)=>{this.selectAssignee(item.name, value)}}
-            dropdownOffset={{ top: 10 }}
+            dropdownOffset={{top: 10}}
             baseColor={colors.projectBgColor}
             // renderBase={this.renderBase}
             renderAccessory={this.renderBase}
-            itemTextStyle={{ marginLeft: 15 }}
+            itemTextStyle={{marginLeft: 15}}
             itemPadding={10}
           />
         </View>
         <View style={styles.subTitleStyle}>
-          <Text style={styles.subTitleText}>
-            Task Type
-          </Text>
+          <Text style={styles.subTitleText}>Task Type</Text>
         </View>
         <View style={styles.taskFieldView}>
           <Dropdown
-            style={{ paddingLeft: 5 }}
+            style={{paddingLeft: 5}}
             label=""
             labelFontSize={0}
             fontSize={13}
@@ -975,28 +1026,26 @@ class AddNewTasksScreen extends Component {
             textColor={colors.gray}
             error={''}
             animationDuration={0.5}
-            containerStyle={{ width: '100%' }}
-            overlayStyle={{ width: '100%' }}
+            containerStyle={{width: '100%'}}
+            overlayStyle={{width: '100%'}}
             pickerStyle={styles.dropPickerStyle}
             dropdownPosition={0}
             value={this.state.selectedOperarionalStatus}
             itemColor={'black'}
             selectedItemColor={'black'}
-            dropdownOffset={{ top: 10 }}
+            dropdownOffset={{top: 10}}
             baseColor={colors.projectBgColor}
             onChangeText={this.selectOperationalStatus}
             // renderBase={this.renderBase}
             renderAccessory={this.renderBase}
-            itemTextStyle={{ marginLeft: 15 }}
+            itemTextStyle={{marginLeft: 15}}
             itemPadding={10}
           />
         </View>
 
-
-
         <View style={styles.taskFieldView}>
           <Dropdown
-            style={{ paddingLeft: 5 }}
+            style={{paddingLeft: 5}}
             label=""
             labelFontSize={0}
             fontSize={13}
@@ -1004,74 +1053,68 @@ class AddNewTasksScreen extends Component {
             textColor={colors.gray}
             error={''}
             animationDuration={0.5}
-            containerStyle={{ width: '100%' }}
-            overlayStyle={{ width: '100%' }}
+            containerStyle={{width: '100%'}}
+            overlayStyle={{width: '100%'}}
             pickerStyle={styles.dropPickerStyle}
             dropdownPosition={0}
             value={this.state.selectedStatus}
             itemColor={'black'}
             selectedItemColor={'black'}
-            dropdownOffset={{ top: 10 }}
+            dropdownOffset={{top: 10}}
             baseColor={colors.projectBgColor}
             onChangeText={value => this.selectStatus(value)}
             // renderBase={this.renderBase}
             renderAccessory={this.renderBase}
-            itemTextStyle={{ marginLeft: 15 }}
+            itemTextStyle={{marginLeft: 15}}
             itemPadding={10}
           />
         </View>
 
         <View style={styles.subTitleStyle}>
-          <Text style={styles.subTitleText}>
-            Board
-          </Text>
+          <Text style={styles.subTitleText}>Board</Text>
         </View>
 
         <View style={styles.taskFieldView}>
-          {
-            viewSprint ?
-              <Dropdown
-                style={{ paddingLeft: 5 }}
-                label=""
-                labelFontSize={0}
-                fontSize={13}
-                data={this.state.dropSprintData}
-                textColor={colors.gray}
-                error={''}
-                animationDuration={0.5}
-                containerStyle={{ width: '100%' }}
-                overlayStyle={{ width: '100%' }}
-                pickerStyle={styles.dropPickerStyle}
-                dropdownPosition={0}
-                value={this.state.sprintStatus}
-                itemColor={'black'}
-                selectedItemColor={'black'}
-                dropdownOffset={{ top: 10 }}
-                baseColor={colors.projectBgColor}
-                // onChangeText={value => this.selectSprintStatus(value)}
-                onChangeText={this.selectSprintStatus}
-                // renderBase={this.renderBase}
-                renderAccessory={this.renderBase}
-                itemTextStyle={{ marginLeft: 15 }}
-                itemPadding={10}
-              />
-              :
-              <Text style={styles.sprintText}>
-                {selectSprintName}
-              </Text>
-          }
-
+          {viewSprint ? (
+            <Dropdown
+              style={{paddingLeft: 5}}
+              label=""
+              labelFontSize={0}
+              fontSize={13}
+              data={this.state.dropSprintData}
+              textColor={colors.gray}
+              error={''}
+              animationDuration={0.5}
+              containerStyle={{width: '100%'}}
+              overlayStyle={{width: '100%'}}
+              pickerStyle={styles.dropPickerStyle}
+              dropdownPosition={0}
+              value={this.state.sprintStatus}
+              itemColor={'black'}
+              selectedItemColor={'black'}
+              dropdownOffset={{top: 10}}
+              baseColor={colors.projectBgColor}
+              // onChangeText={value => this.selectSprintStatus(value)}
+              onChangeText={this.selectSprintStatus}
+              // renderBase={this.renderBase}
+              renderAccessory={this.renderBase}
+              itemTextStyle={{marginLeft: 15}}
+              itemPadding={10}
+            />
+          ) : (
+            <Text style={styles.sprintText}>{selectSprintName}</Text>
+          )}
         </View>
 
         <TouchableOpacity
           onPress={() =>
-            this.setState({ showPicker: true, reminder: false, mode: 'date' })
+            this.setState({showPicker: true, reminder: false, mode: 'date'})
           }>
-          <View style={[styles.taskFieldView, { flexDirection: 'row' }]}>
-            <Text style={[styles.textInput, { flex: 1 }]}>
+          <View style={[styles.taskFieldView, {flexDirection: 'row'}]}>
+            <Text style={[styles.textInput, {flex: 1}]}>
               {this.state.selectedDate == ''
                 ? 'Due Date'
-                : this.state.selectedTime + " " + this.state.selectedDate}
+                : this.state.selectedTime + ' ' + this.state.selectedDate}
             </Text>
             <Image
               style={styles.calendarIcon}
@@ -1082,15 +1125,15 @@ class AddNewTasksScreen extends Component {
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() =>
-            this.setState({ showPicker: true, reminder: true, mode: 'date' })
+            this.setState({showPicker: true, reminder: true, mode: 'date'})
           }>
-          <View style={[styles.taskFieldView, { flexDirection: 'row' }]}>
-            <Text style={[styles.textInput, { flex: 1 }]}>
+          <View style={[styles.taskFieldView, {flexDirection: 'row'}]}>
+            <Text style={[styles.textInput, {flex: 1}]}>
               {this.state.selectedDateReminder == ''
                 ? 'Reminder'
                 : this.state.selectedTimeReminder +
-                ' ' +
-                this.state.selectedDateReminder}
+                  ' ' +
+                  this.state.selectedDateReminder}
             </Text>
             <Image
               style={styles.calendarIcon}
@@ -1099,33 +1142,36 @@ class AddNewTasksScreen extends Component {
             />
           </View>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => Platform.OS == 'ios' ? this.iOSFilePicker() : this.doumentPicker()}>
+        <TouchableOpacity
+          onPress={() =>
+            Platform.OS == 'ios' ? this.iOSFilePicker() : this.doumentPicker()
+          }>
           {this.state.files.length > 0 ? (
             <View
               style={[
                 styles.taskFieldDocPickView,
-                { flexDirection: 'row', flexWrap: 'wrap' },
+                {flexDirection: 'row', flexWrap: 'wrap'},
               ]}>
               {this.state.files.map(item => {
                 return this.renderDocPickeredView(item);
               })}
             </View>
           ) : (
-              <View style={[styles.taskFieldView, { flexDirection: 'row' }]}>
-                <Image
-                  style={[styles.calendarIcon, { marginRight: 10 }]}
-                  source={icons.upload}
-                  resizeMode={'contain'}
-                />
-                <Text style={[styles.textInput, { flex: 1 }]}>Add files</Text>
-              </View>
-            )}
+            <View style={[styles.taskFieldView, {flexDirection: 'row'}]}>
+              <Image
+                style={[styles.calendarIcon, {marginRight: 10}]}
+                source={icons.upload}
+                resizeMode={'contain'}
+              />
+              <Text style={[styles.textInput, {flex: 1}]}>Add files</Text>
+            </View>
+          )}
         </TouchableOpacity>
-        <View style={[styles.taskFieldView, { height: 160 }]}>
+        <View style={[styles.taskFieldView, {height: 160}]}>
           <TextInput
             style={[
               styles.textInput,
-              { width: '95%', textAlignVertical: 'top', height: 150 },
+              {width: '95%', textAlignVertical: 'top', height: 150},
             ]}
             placeholder={'Notes'}
             value={this.state.notes}
@@ -1136,18 +1182,18 @@ class AddNewTasksScreen extends Component {
         <TouchableOpacity onPress={() => this.addNewTask()}>
           <View style={styles.button}>
             <Image
-              style={[styles.bottomBarIcon, { marginRight: 15, marginLeft: 10 }]}
+              style={[styles.bottomBarIcon, {marginRight: 15, marginLeft: 10}]}
               source={icons.taskWhite}
               resizeMode={'contain'}
             />
-            <View style={{ flex: 1 }}>
+            <View style={{flex: 1}}>
               <Text style={styles.buttonText}>Add new Task</Text>
             </View>
 
             <Image
-              style={[styles.addIcon, { marginRight: 10 }]}
+              style={[styles.addIcon, {marginRight: 10}]}
               source={icons.add}
-            // resizeMode={'contain'}
+              // resizeMode={'contain'}
             />
           </View>
         </TouchableOpacity>
@@ -1178,18 +1224,16 @@ class AddNewTasksScreen extends Component {
 }
 
 const styles = EStyleSheet.create({
-  backgroundImage: {
+  container: {
     flex: 1,
   },
   taskFieldView: {
     backgroundColor: colors.projectBgColor,
-    borderRadius: 5,
-    // width: '330rem',
+    borderRadius: '5rem',
     marginTop: '0rem',
     marginBottom: '7rem',
     flexDirection: 'row',
     alignItems: 'center',
-    // justifyContent: 'center',
     paddingHorizontal: '12rem',
     height: '60rem',
     marginHorizontal: '20rem',
@@ -1201,11 +1245,10 @@ const styles = EStyleSheet.create({
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Book',
     textAlign: 'center',
-    // fontWeight: 'bold',
   },
   projectView: {
     backgroundColor: colors.projectBgColor,
-    borderRadius: 5,
+    borderRadius: '5rem',
     height: '60rem',
     marginTop: '7rem',
     flexDirection: 'row',
@@ -1216,7 +1259,6 @@ const styles = EStyleSheet.create({
   text: {
     fontSize: '12rem',
     color: colors.projectText,
-    textAlign: 'center',
     fontWeight: 'bold',
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Book',
@@ -1226,7 +1268,6 @@ const styles = EStyleSheet.create({
   textDate: {
     fontSize: '9rem',
     color: colors.projectText,
-    textAlign: 'center',
     fontWeight: 'bold',
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Book',
@@ -1236,16 +1277,11 @@ const styles = EStyleSheet.create({
   avatarIcon: {
     width: '20rem',
     height: '20rem',
-    marginLeft: 10,
+    marginLeft: '10rem',
   },
   statusView: {
-    // backgroundColor: colors.gray,
-    // width:'5rem',
-    // height:'60rem',
     alignItems: 'center',
     flexDirection: 'row',
-    // borderTopRightRadius: 5,
-    // borderBottomRightRadius: 5,
   },
   dropIcon: {
     width: '13rem',
@@ -1254,34 +1290,6 @@ const styles = EStyleSheet.create({
   completionIcon: {
     width: '40rem',
     height: '40rem',
-  },
-  bottomBarContainer: {
-    position: 'absolute',
-    bottom: 0,
-    height: 80,
-    width: '100%',
-    backgroundColor: colors.projectBgColor,
-  },
-  bottomBarInnerContainer: {
-    flexDirection: 'row',
-    height: 80,
-  },
-  bottomItemView: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'row',
-  },
-  bottomItemTouch: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: '100%',
-  },
-  horizontalLine: {
-    backgroundColor: colors.gray,
-    width: 1,
-    height: 40,
   },
   bottomBarIcon: {
     width: '20rem',
@@ -1294,7 +1302,6 @@ const styles = EStyleSheet.create({
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Book',
     textAlign: 'left',
-    // width: '95%'
   },
   calendarIcon: {
     width: '23rem',
@@ -1302,7 +1309,7 @@ const styles = EStyleSheet.create({
   },
   taskFieldDocPickView: {
     backgroundColor: colors.projectBgColor,
-    borderRadius: 5,
+    borderRadius: '5rem',
     marginTop: '0rem',
     marginBottom: '7rem',
     flexDirection: 'row',
@@ -1322,11 +1329,10 @@ const styles = EStyleSheet.create({
   button: {
     flexDirection: 'row',
     backgroundColor: colors.lightBlue,
-    borderRadius: 5,
+    borderRadius: '5rem',
     marginTop: '17rem',
     flexDirection: 'row',
     alignItems: 'center',
-    // justifyContent: 'center',
     paddingHorizontal: '12rem',
     height: '55rem',
     marginHorizontal: '20rem',
@@ -1345,7 +1351,7 @@ const styles = EStyleSheet.create({
   subTitleStyle: {
     marginLeft: '20rem',
     marginBottom: '10rem',
-    marginTop: '5rem'
+    marginTop: '5rem',
   },
   subTitleText: {
     fontFamily: 'CircularStd-Book',
