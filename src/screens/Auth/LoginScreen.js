@@ -76,7 +76,7 @@ class LoginScreen extends Component {
         this.authorizationEndpoint = response.idpEndpoints.authorization;
         this.tokenEndpoint = response.idpEndpoints.token;
 
-        this.configLive = {
+        this.config = {
           issuer: this.issuer,
           serviceConfiguration: {
             authorizationEndpoint: this.authorizationEndpoint,
@@ -130,7 +130,7 @@ class LoginScreen extends Component {
 
   async initialUserLogin() {
     try {
-      const result = await authorize(this.configLive);
+      const result = await authorize(this.config);
       AsyncStorage.setItem('baseURL', this.baseUrl);
       AsyncStorage.setItem('issuer', this.issuer);
       AsyncStorage.setItem('authorizationEndpoint', this.authorizationEndpoint);
