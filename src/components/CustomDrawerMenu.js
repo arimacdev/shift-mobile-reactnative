@@ -231,16 +231,11 @@ const CustomDrawerContentComponent = props => (
 
       <TouchableOpacity
         style={styles.custtomButton1}
-        // onPress={() => {
-        //   // NavigationService.navigate('UsersScreen');
-        //   props.drawerItemSelect('users');
-        // }}>
-        // onPress={() => logOut(props)}>
         onPress={() => confirmLogout(props)}>
         {props.selectedDrawerItem == 'users' ? (
           <Image
             tintColor="#FFFFFF"
-            source={require('../asserts/img/drawer_users.png')}
+            source={require('../asserts/img/logout.png')}
             style={{
               width: EStyleSheet.value('25rem'),
               height: EStyleSheet.value('23rem'),
@@ -249,7 +244,7 @@ const CustomDrawerContentComponent = props => (
         ) : (
             <Image
               tintColor="#4d4f85"
-              source={require('../asserts/img/drawer_users.png')}
+              source={require('../asserts/img/logout.png')}
               style={{
                 width: EStyleSheet.value('25rem'),
                 height: EStyleSheet.value('23rem'),
@@ -275,7 +270,7 @@ const confirmLogout = (props) => {
   props.navigation.closeDrawer()
   Alert.alert(
     "Log Out",
-    "Are you sure?",
+    "Are you sure you want to logout?",
     [
       {
         text: "Cancel",
