@@ -82,6 +82,7 @@ class ConfigurationScreen extends Component {
               placeholder={'Eg. project.arimac.digital'}
               value={this.state.workSpace}
               onChangeText={workSpace => this.onUrlChange(workSpace)}
+              autoCapitalize={'none'}
               // onSubmitEditing={() =>
               //   this.onNewTasksNameSubmit(this.state.tasksName)
               // }
