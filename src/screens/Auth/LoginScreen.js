@@ -112,12 +112,12 @@ class LoginScreen extends Component {
           dangerouslyAllowInsecureHttpRequests: true,
         };
         if (
-          Platform.OS == 'android' &&
+          platform == 'android' &&
           response.android.latestVersion > response.android.currentVersion
         ) {
           this.setState({forceUpdate: true, update: response.android});
         } else if (
-          Platform.OS == 'ios' &&
+          platform == 'ios' &&
           response.ios.latestVersion > response.ios.currentVersion
         ) {
           this.setState({forceUpdate: true, update: response.ios});

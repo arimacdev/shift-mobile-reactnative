@@ -81,12 +81,12 @@ class SplashScreen extends Component {
         let response = result.data;
         this.baseUrl = result.workspaceUrl;
         if (
-          Platform.OS == 'android' &&
+          platform == 'android' &&
           response.android.latestVersion > response.android.currentVersion
         ) {
           this.setState({forceUpdate: true, update: response.android});
         } else if (
-          Platform.OS == 'ios' &&
+          platform == 'ios' &&
           response.ios.latestVersion > response.ios.currentVersion
         ) {
           this.setState({forceUpdate: true, update: response.ios});

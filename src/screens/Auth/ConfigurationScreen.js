@@ -44,7 +44,7 @@ class ConfigurationScreen extends Component {
     let platform = Platform.OS;
     let version = DeviceInfo.getBuildNumber();
     let workSpace = this.state.workSpace;
-    APIServices.getOrganizationData(workSpace)
+    APIServices.getOrganizationData(workSpace, version)
       .then(response => {
         if (response.status == 200) {
           this.setState({dataLoading: false, error: false});
