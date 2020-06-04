@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Platform,
   Image,
+  Alert
 } from 'react-native';
 import { DrawerNavigatorItems } from 'react-navigation-drawer';
 import { Button, Text, Icon } from 'native-base';
@@ -16,6 +17,8 @@ import { connect } from 'react-redux';
 import colors from '../config/colors';
 import NavigationService from '../services/NavigationService';
 import * as actions from '../redux/actions';
+import axios from 'axios';
+import APIServices from '../services/APIServices';
 import FadeIn from 'react-native-fade-in-image';
 import icons from '../assest/icons/icons';
 import { revoke } from 'react-native-app-auth';
@@ -232,7 +235,8 @@ const CustomDrawerContentComponent = props => (
         //   // NavigationService.navigate('UsersScreen');
         //   props.drawerItemSelect('users');
         // }}>
-        onPress={()=> logOut(props)}>
+        // onPress={() => logOut(props)}>
+        onPress={() => confirmLogout(props)}>
         {props.selectedDrawerItem == 'users' ? (
           <Image
             tintColor="#FFFFFF"
@@ -267,27 +271,59 @@ const CustomDrawerContentComponent = props => (
   </ScrollView>
 );
 
-const logOut = props => {
+const confirmLogout = (props) => {
   props.navigation.closeDrawer()
+  Alert.alert(
+    "Log Out",
+    "Are you sure?",
+    [
+      {
+        text: "Cancel",
+        onPress: () => console.log("Cancel Pressed"),
+        style: "cancel"
+      },
+      { text: "Logout", onPress: () => logOut(props) }
+    ],
+    { cancelable: false }
+  )
+}
 
-  
-  const config = {
-    issuer: '<YOUR_ISSUER_URL>',
-    clientId: '<YOUR_CLIENT_ID>',
-    redirectUrl: '<YOUR_REDIRECT_URL>',
-    scopes: ['<YOUR_SCOPES_ARRAY>'],
-  };
-  const result = await revoke(config, {
-    tokenToRevoke: `<TOKEN_TO_REVOKE>`,
-    includeBasicAuth: true,
-    sendClientId: true,
-  });
+const logOut = async () => {
+  try {
+    let response = await axios({
+      url: 'https://pmtool.devops.arimac.xyz/auth/realms/pm-tool/protocol/openid-connect/logout',
+      method: 'GET',
+    });
+    if (response.status === 200) {
+      await AsyncStorage.setItem('baseURL', '');
+      await AsyncStorage.setItem('issuer', '');
+      await AsyncStorage.setItem('authorizationEndpoint', '');
+      await AsyncStorage.setItem('tokenEndpoint', '');
+      await AsyncStorage.setItem('accessToken', '');
+      await AsyncStorage.setItem('refreshToken', '');
+      await AsyncStorage.setItem('accessTokenExpirationDate', '' );
+      await AsyncStorage.setItem('userID', '');
+      await AsyncStorage.setItem('userLoggedIn', 'false');
+      await AsyncStorage.setItem('userType', '');
+      await AsyncStorage.setItem('workSpace', '');
+      NavigationService.navigate('ConfigurationScreen');
+    }
+  } catch (error) {
+  }
 
-
- 
-
-
+  // try {
+  //   let result = await APIServices.logOut();
+  //   if (result.status == 200) {
+  //     console.log('filesData 22', result);
+  //   } else {
+  //   }
+  // } catch (error) {
+  // }
 };
+
+
+
+
 
 const styles = EStyleSheet.create({
   container: {
