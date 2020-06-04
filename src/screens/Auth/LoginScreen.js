@@ -157,8 +157,8 @@ class LoginScreen extends Component {
   render() {
     let details = this.state.details;
     return (
-      <View style={{flex: 1}}>
-        <ScrollView style={styles.container}>
+      <View style={styles.container}>
+        {/* <ScrollView style={styles.container}> */}
           <View style={styles.imageContainer}>
             <Image
               style={styles.iconStyle}
@@ -203,7 +203,7 @@ class LoginScreen extends Component {
             </TouchableOpacity>
             {/* <Text style={styles.copyRights}>{strings.login.copyRights}</Text> */}
           </View>
-        </ScrollView>
+        {/* </ScrollView> */}
         <ForceUpdateModal
           showForceUpdateModal={this.state.forceUpdate}
           details={this.state.update}
@@ -270,10 +270,11 @@ const styles = EStyleSheet.create({
     textAlign: 'center',
   },
   bottomContainer: {
-    // position: 'absolute',
-    // bottom: 0,
-    // width: '100%',
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
     marginTop: '10rem',
+    marginBottom:'25rem'
   },
   iconStyle: {
     width: '175rem',
