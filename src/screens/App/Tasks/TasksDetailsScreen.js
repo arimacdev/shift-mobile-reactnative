@@ -768,10 +768,13 @@ class TasksDetailsScreen extends Component {
     let key = fileName.split('.')[1];
     let imageType = '';
     switch (key) {
-      case 'excel':
+      case 'xlsx':
         imageType = fileTypes.excel;
         break;
       case 'jpg':
+        imageType = fileTypes.jpg;
+        break;
+      case 'jpeg':
         imageType = fileTypes.jpg;
         break;
       case 'mp3':
@@ -783,10 +786,10 @@ class TasksDetailsScreen extends Component {
       case 'png':
         imageType = fileTypes.png;
         break;
-      case 'video':
+      case 'mp4':
         imageType = fileTypes.video;
         break;
-      case 'word':
+      case 'docx':
         imageType = fileTypes.word;
         break;
       default:
@@ -2050,7 +2053,10 @@ class TasksDetailsScreen extends Component {
                 : icons.whiteCircule
             }
           />
-          <View style={{flex: 1}}>
+          <View style={styles.subTasksNameStyle}>
+            <Text style={styles.subTaskMainText} numberOfLines={1}>
+              {item.secondaryTaskId}
+            </Text>
             <Text style={styles.subTaskText} numberOfLines={1}>
               {item.taskName}
             </Text>
@@ -2143,7 +2149,6 @@ class TasksDetailsScreen extends Component {
     this.setState({
       filterType: 'None',
     });
-    // let selectedProjectID = this.state.selectedProjectID;
     AsyncStorage.getItem('userID').then(userID => {
       this.props.getAllTaskInProjects(userID, selectedProjectID);
     });
@@ -2163,23 +2168,13 @@ class TasksDetailsScreen extends Component {
           this.fetchFilesData(selectedProjectID, newParent);
           this.getAllSprintInProject(selectedProjectID, this.state.sprintId);
           this.getAllTaskInProject(selectedProjectID);
-          // let taskModalData = [];
-          // taskModalData = this.state.taskModalData.filter(item => {
-          //   return item.id == selectedTaskID;
-          // });
-          // this.setState({
-          //   taskModalDataID: taskModalData[0].id,
-          //   taskModalData: [],
-          // });
         } else {
           this.setState({dataLoading: false});
         }
       })
       .catch(error => {
-        //if (error.status == 401 || error.status == 403) {
         this.setState({dataLoading: false});
         this.showAlert('', error.data.message);
-        //}
       });
   }
 
@@ -2207,35 +2202,20 @@ class TasksDetailsScreen extends Component {
       .then(response => {
         if (response.message == 'success') {
           this.setState({dataLoading: false});
-          // if (fromParent) {
           this.fetchData(selectedProjectID, this.state.selectedProjectTaskID);
           this.fetchFilesData(
             selectedProjectID,
             this.state.selectedProjectTaskID,
           );
-          // this.getAllSprintInProject(selectedProjectID, this.state.sprintId);
           this.getAllTaskInProject(selectedProjectID);
           this.setState({parentTaskName: parentTaskName});
-          // } else {
-          //   this.getChildTasksOfParent(
-          //     selectedProjectID,
-          //     this.state.selectedProjectTaskID,
-          //     this.state.selectedTaskID,
-          //   );
-          // }
-
-          // this.fetchData(selectedProjectID, this.state.selectedProjectTaskID);
-          // this.fetchFilesData(selectedProjectID, this.state.selectedProjectTaskID);
-          // this.getAllSprintInProject(selectedProjectID, this.state.sprintId);
         } else {
           this.setState({dataLoading: false});
         }
       })
       .catch(error => {
-        //if (error.status == 401 || error.status == 403) {
         this.setState({dataLoading: false});
         this.showAlert('', error.data.message);
-        //}
       });
   }
 
@@ -2849,13 +2829,25 @@ const styles = EStyleSheet.create({
     width: '26rem',
     height: '26rem',
   },
+  subTasksNameStyle: {
+    flex: 1,
+    flexDirection: 'row',
+  },
+  subTaskMainText: {
+    fontSize: '11rem',
+    color: colors.projectTaskNameColor,
+    lineHeight: '17rem',
+    fontFamily: 'CircularStd-Bold',
+    textAlign: 'left',
+    marginLeft: '10rem',
+  },
   subTaskText: {
     fontSize: '10rem',
     color: colors.projectTaskNameColor,
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
-    marginLeft: '10rem',
+    marginLeft: '5rem',
   },
   iconStyle: {
     width: '30rem',
