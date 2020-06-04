@@ -26,34 +26,6 @@ import DeviceInfo from 'react-native-device-info';
 import Loader from '../components/Loader';
 import icons from '../assest/icons/icons';
 
-const config = {
-  issuer: 'https://pmtool.devops.arimac.xyz/auth',
-  serviceConfiguration: {
-    authorizationEndpoint:
-      'https://pmtool.devops.arimac.xyz/auth/realms/pm-tool/protocol/openid-connect/auth',
-    tokenEndpoint:
-      'https://pmtool.devops.arimac.xyz/auth/realms/pm-tool/protocol/openid-connect/token',
-  },
-  clientId: 'pmtool-frontend',
-  redirectUrl: 'io.identityserver.demo:/oauthredirect',
-  scopes: ['openid', 'roles', 'profile'],
-  dangerouslyAllowInsecureHttpRequests: true,
-};
-
-const configLive = {
-  issuer: 'https://project.arimaclanka.com/auth/realms/pm-tool',
-  serviceConfiguration: {
-    authorizationEndpoint:
-      'https://project.arimaclanka.com/auth/realms/pm-tool/protocol/openid-connect/auth',
-    tokenEndpoint:
-      'https://project.arimaclanka.com/auth/realms/pm-tool/protocol/openid-connect/token',
-  },
-  clientId: 'pmtool-frontend',
-  redirectUrl: 'com.arimacpmtool:/oauthredirect',
-  scopes: ['openid', 'roles', 'profile'],
-  dangerouslyAllowInsecureHttpRequests: true,
-};
-
 class SplashScreen extends Component {
   constructor(props) {
     super(props);
@@ -165,21 +137,13 @@ class SplashScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
+        <StatusBar hidden />
         <View style={styles.imageContainer}>
-            <Image
-                style={styles.iconStyle}
-                source={icons.appIcon}
-                resizeMode="contain"
-              />
-               <Text style={styles.textTitle}>{strings.login.loginMainTitle}</Text>
-        </View>
-        <View style={styles.bottomContainer}>
-            <TouchableOpacity
-              style={styles.loginButton}
-              onPress={() => this.initialUserLogin()}>
-              <Text style={styles.textLogin}>{strings.login.loginButton}</Text>
-            </TouchableOpacity>
-            <Text style={styles.copyRights}>{strings.login.copyRights}</Text>
+          <Image
+            style={styles.iconStyle}
+            source={icons.appIcon}
+            resizeMode="contain"
+          />
         </View>
         <ForceUpdateModal
           showForceUpdateModal={this.state.forceUpdate}
@@ -198,10 +162,10 @@ const styles = EStyleSheet.create({
     height: '100%',
     alignItems: 'center',
     justifyContent: 'center',
-    flex : 1,
+    flex: 1,
     backgroundColor: colors.white,
   },
-  imageContainer:{
+  imageContainer: {
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
@@ -211,8 +175,8 @@ const styles = EStyleSheet.create({
     color: colors.loginBlue,
     textAlign: 'center',
     fontFamily: 'CircularStd-Black',
-    marginLeft : '30rem',
-    marginRight : '30rem'
+    marginLeft: '30rem',
+    marginRight: '30rem',
   },
   userIcon: {
     width: '20rem',
@@ -243,11 +207,11 @@ const styles = EStyleSheet.create({
     position: 'absolute',
     bottom: 0,
     width: '100%',
-    marginBottom: 15,
+    marginBottom: '15rem',
   },
   iconStyle: {
-    width: '175rem',
-    height: '175rem',
+    width: '250rem',
+    height: '250rem',
   },
   copyRights: {
     fontSize: '14rem',
