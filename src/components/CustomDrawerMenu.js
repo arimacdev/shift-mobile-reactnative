@@ -290,20 +290,11 @@ const confirmLogout = (props) => {
 
 const logOut = async () => {
   const accessToken = await AsyncStorage.getItem('accessToken');
-  const refreshToken = await AsyncStorage.getItem('refreshToken');
+  const baseURL = await AsyncStorage.getItem('baseURL');
   try {
-
-    let headers = {
-      Accept: 'application/json',
-      'Content-Type': 'application/x-www-form-urlencoded',
-      client_id:'pmtool-frontend',
-      refresh_token:accessToken
-    };
-  
     let response = await axios({
-      url: 'https://pmtool.devops.arimac.xyz/auth/realms/pm-tool/protocol/openid-connect/logout',
+      url: 'https://pmtool.devops.arimac.xyz/auth/realms/pm-tool/protocol/openid-connect/logout?id_token_hint=' + accessToken,
       method: 'GET',
-      headers:headers
     });
     if (response.status === 200) {
       AsyncStorage.clear();
@@ -311,20 +302,7 @@ const logOut = async () => {
     }
   } catch (error) {
   }
-
-  // try {
-  //   let result = await APIServices.logOut();
-  //   if (result.status == 200) {
-  //     console.log('filesData 22', result);
-  //   } else {
-  //   }
-  // } catch (error) {
-  // }
 };
-
-
-
-
 
 const styles = EStyleSheet.create({
   container: {
