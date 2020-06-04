@@ -210,7 +210,7 @@ const styles = EStyleSheet.create({
     fontSize: '11rem',
     color: colors.black,
     lineHeight: '17rem',
-    fontFamily: 'CircularStd',
+    fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
     marginLeft: '5rem',
     width: '95%',
