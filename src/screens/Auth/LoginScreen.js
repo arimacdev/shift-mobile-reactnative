@@ -72,11 +72,15 @@ class LoginScreen extends Component {
       if (result.status == 200) {
         let response = result.data;
         this.baseUrl = response.workspaceUrl;
+        this.issuer = response.idpEndpoints.issuser;
+        this.authorizationEndpoint = response.idpEndpoints.authorization;
+        this.tokenEndpoint = response.idpEndpoints.token;
+
         this.configLive = {
-          issuer: response.idpEndpoints.issuser,
+          issuer: this.issuer,
           serviceConfiguration: {
-            authorizationEndpoint: response.idpEndpoints.authorization,
-            tokenEndpoint: response.idpEndpoints.token,
+            authorizationEndpoint: this.authorizationEndpoint,
+            tokenEndpoint: this.tokenEndpoint,
           },
           clientId: 'pmtool-frontend',
           redirectUrl: 'com.arimacpmtool:/oauthredirect',
@@ -84,12 +88,14 @@ class LoginScreen extends Component {
           dangerouslyAllowInsecureHttpRequests: true,
         };
         if (
-          platform == 'android' && response.android &&
+          platform == 'android' &&
+          response.android &&
           response.android.latestVersion > response.android.currentVersion
         ) {
           this.setState({forceUpdate: true, update: response.android});
         } else if (
-          platform == 'ios' && response.ios &&
+          platform == 'ios' &&
+          response.ios &&
           response.ios.latestVersion > response.ios.currentVersion
         ) {
           this.setState({forceUpdate: true, update: response.ios});
@@ -126,6 +132,9 @@ class LoginScreen extends Component {
     try {
       const result = await authorize(this.configLive);
       AsyncStorage.setItem('baseURL', this.baseUrl);
+      AsyncStorage.setItem('issuer', this.issuer);
+      AsyncStorage.setItem('authorizationEndpoint', this.authorizationEndpoint);
+      AsyncStorage.setItem('tokenEndpoint', this.tokenEndpoint);
       AsyncStorage.setItem('accessToken', result.accessToken);
       AsyncStorage.setItem('refreshToken', result.refreshToken);
       let decoded = jwtDecode(result.accessToken);
