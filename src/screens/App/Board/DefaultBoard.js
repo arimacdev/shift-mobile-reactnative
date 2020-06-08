@@ -203,7 +203,7 @@ const styles = EStyleSheet.create({
   },
   userView: {
     backgroundColor: 'white',
-    borderRadius: 5,
+    borderRadius: '5rem',
     height: '80rem',
     flexDirection: 'row',
     alignItems: 'center',

@@ -226,15 +226,6 @@ class AddPeopleScreen extends Component {
   renderMenuTrugger() {
     return (
       <View style={[styles.taskFieldView, {marginTop: 30}]}>
-        {/* <Text
-          style={
-            this.props.userID == ''
-              ? styles.inputsTextDefualt
-              : styles.inputsText
-          }>
-          {this.state.userName}
-        </Text> */}
-
         <TextInput
           style={[styles.textInput, {width: '95%'}]}
           placeholder={'Type a name to add'}
@@ -269,10 +260,6 @@ class AddPeopleScreen extends Component {
   renderUserList(item) {
     const {navigation} = this.props;
     return (
-      // <TouchableOpacity
-      //   onPress={() =>
-      //     this.onSelectUser(item.firstName + ' ' + item.lastName, item.userId)
-      //   }>
       <View
         style={[
           styles.projectView,
@@ -287,9 +274,7 @@ class AddPeopleScreen extends Component {
         <View style={{flex: 1}}>
           <Text style={styles.text}>{item.label}</Text>
         </View>
-        {/* {this.colorCode(item)} */}
       </View>
-      // </TouchableOpacity>
     );
   }
 
@@ -340,17 +325,6 @@ class AddPeopleScreen extends Component {
                 <Text style={styles.checkBoxText}>Add as an Admin</Text>
               </View>
             </View>
-            {/* <ModalFilterPicker
-              visible={visiblePeopleModal}
-              keyboardShouldPersistTaps="handled"
-              onSelect={this.onSelectUser}
-              onCancel={this.onCancelUser}
-              options={activeUsers}
-              cancelButtonStyle={styles.modelCancel}
-              cancelButtonTextStyle={styles.modelCancelText}
-              title={'Select a User'}
-              titleTextStyle={styles.titleTextStyle}
-            /> */}
           </ScrollView>
           <View style={styles.bottomContainer}>
             <TouchableOpacity onPress={() => this.saveUser()}>
@@ -426,7 +400,7 @@ const styles = EStyleSheet.create({
   },
   taskFieldView: {
     backgroundColor: colors.projectBgColor,
-    borderRadius: 5,
+    borderRadius: '5rem',
     marginTop: '0rem',
     marginBottom: '7rem',
     flexDirection: 'row',
@@ -458,7 +432,7 @@ const styles = EStyleSheet.create({
   button: {
     flexDirection: 'row',
     backgroundColor: colors.lightGreen,
-    borderRadius: 5,
+    borderRadius: '5rem',
     marginTop: '17rem',
     flexDirection: 'row',
     alignItems: 'center',
@@ -469,7 +443,7 @@ const styles = EStyleSheet.create({
   buttonDelete: {
     flexDirection: 'row',
     backgroundColor: colors.lightRed,
-    borderRadius: 5,
+    borderRadius: '5rem',
     marginTop: '10rem',
     marginBottom: '5rem',
     flexDirection: 'row',
@@ -493,7 +467,7 @@ const styles = EStyleSheet.create({
     position: 'absolute',
     bottom: 0,
     width: '100%',
-    marginBottom: 15,
+    marginBottom: '15rem',
   },
   checkBoxContainer: {
     flex: 1,
@@ -506,7 +480,7 @@ const styles = EStyleSheet.create({
   },
   modelCancel: {
     backgroundColor: colors.primary,
-    borderRadius: 3,
+    borderRadius: '3rem',
     height: 36,
     width: 136,
     justifyContent: 'center',

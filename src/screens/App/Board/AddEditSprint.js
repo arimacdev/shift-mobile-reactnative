@@ -248,7 +248,7 @@ const styles = EStyleSheet.create({
   },
   taskFieldView: {
     backgroundColor: colors.projectBgColor,
-    borderRadius: 5,
+    borderRadius: '5rem',
     marginTop: '0rem',
     marginBottom: '7rem',
     flexDirection: 'row',
@@ -267,7 +267,7 @@ const styles = EStyleSheet.create({
   },
   projectView: {
     backgroundColor: colors.projectBgColor,
-    borderRadius: 5,
+    borderRadius: '5rem',
     height: '60rem',
     marginTop: '7rem',
     flexDirection: 'row',
@@ -298,7 +298,7 @@ const styles = EStyleSheet.create({
   avatarIcon: {
     width: '20rem',
     height: '20rem',
-    marginLeft: 10,
+    marginLeft: '10rem',
   },
   statusView: {
     alignItems: 'center',
@@ -311,34 +311,6 @@ const styles = EStyleSheet.create({
   completionIcon: {
     width: '40rem',
     height: '40rem',
-  },
-  bottomBarContainer: {
-    position: 'absolute',
-    bottom: 0,
-    height: 80,
-    width: '100%',
-    backgroundColor: colors.projectBgColor,
-  },
-  bottomBarInnerContainer: {
-    flexDirection: 'row',
-    height: 80,
-  },
-  bottomItemView: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'row',
-  },
-  bottomItemTouch: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: '100%',
-  },
-  horizontalLine: {
-    backgroundColor: colors.gray,
-    width: 1,
-    height: 40,
   },
   bottomBarIcon: {
     width: '20rem',
@@ -358,7 +330,7 @@ const styles = EStyleSheet.create({
   },
   taskFieldDocPickView: {
     backgroundColor: colors.projectBgColor,
-    borderRadius: 5,
+    borderRadius: '5rem',
     marginTop: '0rem',
     marginBottom: '7rem',
     flexDirection: 'row',
@@ -378,7 +350,7 @@ const styles = EStyleSheet.create({
   button: {
     flexDirection: 'row',
     backgroundColor: colors.lightBlue,
-    borderRadius: 5,
+    borderRadius: '5rem',
     marginTop: '17rem',
     flexDirection: 'row',
     alignItems: 'center',
@@ -401,7 +373,7 @@ const styles = EStyleSheet.create({
     position: 'absolute',
     bottom: 0,
     width: '100%',
-    marginBottom: 15,
+    marginBottom: '15rem',
   },
 });
 
