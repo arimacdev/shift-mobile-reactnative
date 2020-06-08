@@ -92,4 +92,6 @@ target 'arimacPmTool' do
 
   pod 'RNDeviceInfo', :path => '../node_modules/react-native-device-info'
 
+  pod 'react-native-onesignal', :path => '../node_modules/react-native-onesignal'
+
 end

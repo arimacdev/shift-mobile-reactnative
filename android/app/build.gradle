@@ -1,3 +1,13 @@
+buildscript {
+    repositories {
+        maven { url 'https://plugins.gradle.org/m2/' } // Gradle Plugin Portal 
+    }
+    dependencies {
+        classpath 'gradle.plugin.com.onesignal:onesignal-gradle-plugin:[0.12.6, 0.99.99]'
+    }
+}
+
+apply plugin: 'com.onesignal.androidsdk.onesignal-gradle-plugin'
 apply plugin: "com.android.application"
 
 import com.android.build.OutputFile
@@ -138,6 +148,7 @@ android {
              //appAuthRedirectScheme: 'io.identityserver.demo'
              appAuthRedirectScheme: 'com.arimacpmtool'
         ]
+        multiDexEnabled true
     }
     splits {
         abi {
@@ -205,6 +216,8 @@ dependencies {
     implementation "com.facebook.react:react-native:+"  // From node_modules
 
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
+
+    implementation 'com.android.support:multidex:1.0.3'
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
       exclude group:'com.facebook.fbjni'

@@ -9,6 +9,7 @@ import reducers from '../src/redux/reducers';
 import NavigationService from './services/NavigationService';
 import { MainSwitchNavigator } from './navigators/MainSwitchNavigator';
 import { OfflineNotice } from './components/OfflineNotice';
+import OneSignal from 'react-native-onesignal';
 
 console.disableYellowBox = true;
 
