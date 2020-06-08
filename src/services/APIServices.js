@@ -1908,7 +1908,7 @@ async function addFileToMyTaskData(file, taskId) {
 
   const file1 = {
     uri: file[0].uri,
-    name: 'image-pmtool' + new Date().getTime(),
+    name: file[0].name,
     type: file[0].type,
   };
   const formData = new FormData();
@@ -2581,7 +2581,7 @@ async function addFileToGroupTask(file,selectedGroupTaskID, selectedTaskID) {
 
   const file1 = {
     uri: file[0].uri,
-    name: 'image-pmtool' + new Date().getTime(),
+    name: file[0].name,
     type: file[0].type,
   };
   const formData = new FormData();
