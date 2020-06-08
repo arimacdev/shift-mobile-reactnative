@@ -75,7 +75,7 @@ class LoginScreen extends Component {
         this.issuer = response.idpEndpoints.issuser;
         this.authorizationEndpoint = response.idpEndpoints.authorization;
         this.tokenEndpoint = response.idpEndpoints.token;
-        this.logoutEndpoint = 'https://pmtool.devops.arimac.xyz/auth/realms/pm-tool/protocol/openid-connect/logout'
+        this.logoutEndpoint = 'https://project.arimaclanka.com/auth/realms/pm-tool/protocol/openid-connect/logout'
 
         this.config = {
           issuer: this.issuer,

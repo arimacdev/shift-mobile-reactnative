@@ -1,8 +1,8 @@
 export const PROTOCOL = 'https://';
 //export const HOST = 'pmtool.devops.arimac.xyz/api/pm-service/';
 // export const HOST = 'project.arimaclanka.com/api/pm-service/';
-// export const WORKSPACE = `${PROTOCOL}project.arimaclanka.com/api/bff/`
-export const WORKSPACE = `${PROTOCOL}pmtool.devops.arimac.xyz/api/bff/`
+export const WORKSPACE = `${PROTOCOL}project.arimaclanka.com/api/bff/`
+// export const WORKSPACE = `${PROTOCOL}pmtool.devops.arimac.xyz/api/bff/`
 
 
 export const GET_ALL_PROJECTS_BY_USER = `projects?`;

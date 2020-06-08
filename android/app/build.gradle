@@ -132,8 +132,8 @@ android {
         applicationId "com.arimacpmtool"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 10000
-        versionName "1.0"
+        versionCode 10001
+        versionName "1.1"
         manifestPlaceholders = [
              //appAuthRedirectScheme: 'io.identityserver.demo'
              appAuthRedirectScheme: 'com.arimacpmtool'
