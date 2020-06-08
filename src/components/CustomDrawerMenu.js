@@ -85,19 +85,16 @@ const CustomDrawerContentComponent = props => (
             NavigationService.navigate('Projects');
             props.drawerItemSelect('projects');
           }}>
-          {props.selectedDrawerItem == 'projects' ? (
-            <Image
-              tintColor={colors.white}
-              source={require('../asserts/img/drawer_projects.png')}
-              style={styles.iconStyle}
-            />
-          ) : (
-            <Image
-              tintColor={colors.colorGovernorBay}
-              source={require('../asserts/img/drawer_projects.png')}
-              style={styles.iconStyle}
-            />
-          )}
+          <Image
+            tintColor={
+              props.selectedDrawerItem == 'projects'
+                ? colors.white
+                : colors.colorGovernorBay
+            }
+            source={require('../asserts/img/drawer_projects.png')}
+            style={styles.iconStyle}
+            resizeMode={'contain'}
+          />
           <Text
             style={[
               props.selectedDrawerItem == 'projects'
@@ -115,19 +112,16 @@ const CustomDrawerContentComponent = props => (
             NavigationService.navigate('DrawerTasksScreen');
             props.drawerItemSelect('tasks');
           }}>
-          {props.selectedDrawerItem == 'tasks' ? (
-            <Image
-              tintColor={colors.white}
-              source={require('../asserts/img/drawer_projects.png')}
-              style={styles.iconStyle}
-            />
-          ) : (
-            <Image
-              tintColor={colors.colorGovernorBay}
-              source={require('../asserts/img/drawer_tasks.png')}
-              style={styles.iconStyle}
-            />
-          )}
+          <Image
+            tintColor={
+              props.selectedDrawerItem == 'tasks'
+                ? colors.white
+                : colors.colorGovernorBay
+            }
+            source={require('../asserts/img/drawer_tasks.png')}
+            style={styles.iconStyle}
+            resizeMode={'contain'}
+          />
           <Text
             style={[
               props.selectedDrawerItem == 'tasks'
@@ -146,19 +140,17 @@ const CustomDrawerContentComponent = props => (
             NavigationService.navigate('WorkloadScreen');
             props.drawerItemSelect('workload');
           }}>
-          {props.selectedDrawerItem == 'workload' ? (
-            <Image
-              tintColor={colors.white}
-              source={require('../asserts/img/drawer_workload.png')}
-              style={styles.iconStyle}
-            />
-          ) : (
-            <Image
-              tintColor={colors.colorGovernorBay}
-              source={require('../asserts/img/drawer_workload.png')}
-              style={styles.iconStyle}
-            />
-          )}
+          <Image
+            tintColor={
+              props.selectedDrawerItem == 'workload'
+                ? colors.white
+                : colors.colorGovernorBay
+            }
+            source={require('../asserts/img/drawer_workload.png')}
+            style={styles.iconStyle}
+            resizeMode={'contain'}
+          />
+
           <Text
             style={[
               props.selectedDrawerItem == 'workload'
@@ -177,20 +169,16 @@ const CustomDrawerContentComponent = props => (
             NavigationService.navigate('UsersScreen');
             props.drawerItemSelect('users');
           }}>
-          {props.selectedDrawerItem == 'users' ? (
-            <Image
-              tintColor={colors.white}
-              source={require('../asserts/img/drawer_users.png')}
-              style={styles.iconStyle}
-            />
-          ) : (
-            <Image
-              tintColor={colors.colorGovernorBay}
-              source={require('../asserts/img/drawer_users.png')}
-              style={styles.iconStyle}
-            />
-          )}
-
+          <Image
+            tintColor={
+              props.selectedDrawerItem == 'users'
+                ? colors.white
+                : colors.colorGovernorBay
+            }
+            source={require('../asserts/img/drawer_users.png')}
+            style={styles.iconStyle}
+            resizeMode={'contain'}
+          />
           <Text
             style={[
               props.selectedDrawerItem == 'users'
@@ -210,12 +198,14 @@ const CustomDrawerContentComponent = props => (
             tintColor={colors.white}
             source={require('../asserts/img/logout.png')}
             style={styles.iconStyle}
+            resizeMode={'contain'}
           />
         ) : (
           <Image
             tintColor={colors.colorGovernorBay}
             source={require('../asserts/img/logout.png')}
             style={styles.iconStyle}
+            resizeMode={'contain'}
           />
         )}
 

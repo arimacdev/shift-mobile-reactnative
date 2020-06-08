@@ -713,7 +713,7 @@ async function addFileToTask(file, taskId, selectedProjectID) {
 
   const file1 = {
     uri: file[0].uri,
-    name: 'image-pmtool' + new Date().getTime(),
+    name: file[0].name,
     type: file[0].type,
   };
   const formData = new FormData();
@@ -1360,7 +1360,7 @@ async function uploadFileData(file, selectedProjectID, dispatch) {
 
   const file1 = {
     uri: file[0].uri,
-    name: 'image-pmtool' + new Date().getTime(),
+    name: file[0].name,
     type: file[0].type,
   };
   let uri = file[0].uri;
