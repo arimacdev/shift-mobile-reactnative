@@ -75,6 +75,7 @@ class LoginScreen extends Component {
         this.issuer = response.idpEndpoints.issuser;
         this.authorizationEndpoint = response.idpEndpoints.authorization;
         this.tokenEndpoint = response.idpEndpoints.token;
+        this.logoutEndpoint = 'https://pmtool.devops.arimac.xyz/auth/realms/pm-tool/protocol/openid-connect/logout'
 
         this.config = {
           issuer: this.issuer,
@@ -135,6 +136,7 @@ class LoginScreen extends Component {
       AsyncStorage.setItem('issuer', this.issuer);
       AsyncStorage.setItem('authorizationEndpoint', this.authorizationEndpoint);
       AsyncStorage.setItem('tokenEndpoint', this.tokenEndpoint);
+      AsyncStorage.setItem('logoutEndpoint', this.logoutEndpoint);
       AsyncStorage.setItem('accessToken', result.accessToken);
       AsyncStorage.setItem('refreshToken', result.refreshToken);
       let decoded = jwtDecode(result.accessToken);

@@ -72,7 +72,6 @@ import {
   GET_ALL_USERS_WORKLOAD_WITH_COMPLETION,
   GET_MOBILE_VERSION_STATUS,
   GET_ORGANIZATION_WORK_SPACE,
-  LOGOUT
 } from '../api/API';
 import AsyncStorage from '@react-native-community/async-storage';
 import {SET_UPLOAD_PROGRESS} from '../redux/types';
@@ -2705,31 +2704,6 @@ async function getOrganizationData(workSpace, version) {
   );
 }
 
-async function logOut() {
-  // let baseURL = null;
-  // baseURL = await AsyncStorage.getItem('baseURL');
-  // let user = null;
-  // user = await AsyncStorage.getItem('userID');
-
-  let headers = {
-    Accept: 'application/json',
-    'Content-Type': 'application/json',
-  };
-  return request(
-    {
-      url: LOGOUT,
-      method: 'GET',
-      // data: {
-      //   taskGroupName: groupName,
-      //   taskGroupEditor: user,
-      // },
-    },
-    true,
-    headers,
-  );
-}
-
-
 const APIServices = {
   getAllProjectsByUserData,
   getUserData,
@@ -2830,7 +2804,6 @@ const APIServices = {
   getWorkloadWithCompletionUser,
   getMobileVersionStatusData,
   getOrganizationData,
-  logOut
 };
 
 export default APIServices;

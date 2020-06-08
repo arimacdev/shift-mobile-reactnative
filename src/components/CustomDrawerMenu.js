@@ -1,16 +1,15 @@
-import React, {Component} from 'react';
+import React from 'react';
 import {
   View,
   Dimensions,
   SafeAreaView,
   ScrollView,
   TouchableOpacity,
-  Platform,
   Image,
   Alert,
 } from 'react-native';
 import {DrawerNavigatorItems} from 'react-navigation-drawer';
-import {Button, Text, Icon} from 'native-base';
+import {Text} from 'native-base';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import AsyncStorage from '@react-native-community/async-storage';
 import {connect} from 'react-redux';
@@ -18,10 +17,8 @@ import colors from '../config/colors';
 import NavigationService from '../services/NavigationService';
 import * as actions from '../redux/actions';
 import axios from 'axios';
-import APIServices from '../services/APIServices';
 import FadeIn from 'react-native-fade-in-image';
 import icons from '../asserts/icons/icons';
-import {revoke} from 'react-native-app-auth';
 
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
@@ -254,12 +251,10 @@ const confirmLogout = props => {
 
 const logOut = async () => {
   const accessToken = await AsyncStorage.getItem('accessToken');
-  const baseURL = await AsyncStorage.getItem('baseURL');
+  const logoutEndpoint = await AsyncStorage.getItem('logoutEndpoint');
   try {
     let response = await axios({
-      url:
-        'https://pmtool.devops.arimac.xyz/auth/realms/pm-tool/protocol/openid-connect/logout?id_token_hint=' +
-        accessToken,
+      url: logoutEndpoint + '?id_token_hint=' + accessToken,
       method: 'GET',
     });
     if (response.status === 200) {

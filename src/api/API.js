@@ -93,9 +93,6 @@ export const GET_MOBILE_VERSION_STATUS = `health`;
 
 export const GET_ORGANIZATION_WORK_SPACE = `${WORKSPACE}organization?`;
 
-export const LOGOUT = `https://pmtool.devops.arimac.xyz/auth/realms/pm-tool/protocol/openid-connect/logout`;
-
-
 
 
 
