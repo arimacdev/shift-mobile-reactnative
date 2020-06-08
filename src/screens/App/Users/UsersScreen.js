@@ -17,7 +17,7 @@ import FadeIn from 'react-native-fade-in-image';
 import Loader from '../../../components/Loader';
 import {NavigationEvents} from 'react-navigation';
 import EmptyListView from '../../../components/EmptyListView';
-import icons from '../../../assest/icons/icons';
+import icons from '../../../asserts/icons/icons';
 
 class UsersScreen extends Component {
   constructor(props) {

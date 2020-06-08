@@ -15,7 +15,7 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 const entireScreenWidth = Dimensions.get('window').width;
 const entireScreenHeight = Dimensions.get('window').height;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
-import icons from '../assest/icons/icons';
+import icons from '../asserts/icons/icons';
 
 class EmptyListView extends Component {
   constructor(props) {

@@ -12,7 +12,7 @@ import colors from '../config/colors';
 import Header from '../components/Header';
 import CustomDrawerContentComponent from '../components/CustomDrawerMenu';
 import { WorkloadStackNavigator } from './WorkloadStackNavigator';
-import icons from '../assest/icons/icons';
+import icons from '../asserts/icons/icons';
 
 
 const entireScreenWidth = Dimensions.get('window').width;

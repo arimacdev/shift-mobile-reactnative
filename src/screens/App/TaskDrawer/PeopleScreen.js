@@ -12,7 +12,7 @@ import {
 import {connect} from 'react-redux';
 import * as actions from '../../../redux/actions';
 import colors from '../../../config/colors';
-import icons from '../../../assest/icons/icons';
+import icons from '../../../asserts/icons/icons';
 import NavigationService from '../../../services/NavigationService';
 import APIServices from '../../../services/APIServices';
 import EStyleSheet from 'react-native-extended-stylesheet';

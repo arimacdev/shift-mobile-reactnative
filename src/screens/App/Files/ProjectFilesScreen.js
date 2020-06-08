@@ -13,7 +13,7 @@ import {
 import {connect} from 'react-redux';
 import * as actions from '../../../redux/actions';
 import colors from '../../../config/colors';
-import icons from '../../../assest/icons/icons';
+import icons from '../../../asserts/icons/icons';
 import EStyleSheet from 'react-native-extended-stylesheet';
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
@@ -24,7 +24,7 @@ import AwesomeAlert from 'react-native-awesome-alerts';
 import DocumentPicker from 'react-native-document-picker';
 import * as Progress from 'react-native-progress';
 import RNFetchBlob from 'rn-fetch-blob';
-import fileTypes from '../../../assest/fileTypes/fileTypes';
+import fileTypes from '../../../asserts/fileTypes/fileTypes';
 import ImagePicker from 'react-native-image-picker';
 import EmptyListView from '../../../components/EmptyListView';
 

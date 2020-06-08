@@ -6,7 +6,7 @@ import {
   MenuOption,
   MenuTrigger,
 } from 'react-native-popup-menu';
-import icons from '../assest/icons/icons';
+import icons from '../asserts/icons/icons';
 import colors from '../config/colors';
 
 const shadow = Platform.select({

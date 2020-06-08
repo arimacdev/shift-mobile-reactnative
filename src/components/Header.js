@@ -15,7 +15,7 @@ import {connect} from 'react-redux';
 import colors from '../config/colors';
 import * as actions from '../redux/actions';
 import NavigationService from '../services/NavigationService';
-import icons from '../assest/icons/icons';
+import icons from '../asserts/icons/icons';
 import MenuItems from './MenuItems';
 
 const entireScreenWidth = Dimensions.get('window').width;

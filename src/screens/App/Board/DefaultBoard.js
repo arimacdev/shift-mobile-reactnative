@@ -21,7 +21,7 @@ import moment from 'moment';
 import {NavigationEvents} from 'react-navigation';
 import Triangle from 'react-native-triangle';
 import EmptyListView from '../../../components/EmptyListView';
-import icons from '../../../assest/icons/icons';
+import icons from '../../../asserts/icons/icons';
 
 class DefaultBoard extends Component {
   constructor(props) {

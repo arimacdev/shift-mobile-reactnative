@@ -24,7 +24,7 @@ import APIServices from '../../services/APIServices';
 import ForceUpdateModal from '../../components/ForceUpdateModal';
 import DeviceInfo from 'react-native-device-info';
 import Loader from '../../components/Loader';
-import icons from '../../assest/icons/icons';
+import icons from '../../asserts/icons/icons';
 import FadeIn from 'react-native-fade-in-image';
 
 class LoginScreen extends Component {

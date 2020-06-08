@@ -8,7 +8,7 @@ import ProjectsSearchScreen from '../screens/App/Projects/ProjectsSearchScreen';
 import EditProjectScreen from '../screens/App/Projects/EditProjectScreen';
 import AddPeopleScreen from '../screens/App/People/AddPeopleScreen';
 import EditPeople from '../screens/App/People/EditPeople';
-import icons from '../assest/icons/icons';
+import icons from '../asserts/icons/icons';
 
 import {TouchableOpacity, Image} from 'react-native';
 import TasksScreen from '../screens/App/Tasks/TasksScreen';

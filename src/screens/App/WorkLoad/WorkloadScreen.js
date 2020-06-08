@@ -20,7 +20,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import Loader from '../../../components/Loader';
 import {NavigationEvents} from 'react-navigation';
 import EmptyListView from '../../../components/EmptyListView';
-import icons from '../../../assest/icons/icons';
+import icons from '../../../asserts/icons/icons';
 
 class WorkloadScreen extends Component {
   constructor(props) {

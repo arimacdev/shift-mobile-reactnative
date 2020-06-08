@@ -8,7 +8,7 @@ const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
 import Loader from '../../../components/Loader';
 import APIServices from '../../../services/APIServices';
-import icons from '../../../assest/icons/icons';
+import icons from '../../../asserts/icons/icons';
 
 class ViewUserScreen extends Component {
   constructor(props) {

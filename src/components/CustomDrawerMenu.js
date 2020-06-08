@@ -20,7 +20,7 @@ import * as actions from '../redux/actions';
 import axios from 'axios';
 import APIServices from '../services/APIServices';
 import FadeIn from 'react-native-fade-in-image';
-import icons from '../assest/icons/icons';
+import icons from '../asserts/icons/icons';
 import {revoke} from 'react-native-app-auth';
 
 const entireScreenWidth = Dimensions.get('window').width;

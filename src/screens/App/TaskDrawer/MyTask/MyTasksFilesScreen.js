@@ -10,7 +10,7 @@ import {
 import {connect} from 'react-redux';
 import * as actions from '../../../../redux/actions';
 import colors from '../../../../config/colors';
-import icons from '../../../../assest/icons/icons';
+import icons from '../../../../asserts/icons/icons';
 import EStyleSheet from 'react-native-extended-stylesheet';
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
