@@ -601,6 +601,8 @@ const styles = EStyleSheet.create({
     fontWeight: '400',
     color: colors.userViewHeader,
     marginTop: '14rem',
+    textAlign: 'center',
+    lineHeight: '30rem',
   },
   body: {
     marginTop: '25rem',

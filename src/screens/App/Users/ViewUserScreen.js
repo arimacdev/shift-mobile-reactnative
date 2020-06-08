@@ -74,7 +74,7 @@ class ViewUserScreen extends Component {
               {userFirstName + ' ' + userLastName}
             </Text>
           </View>
-          <View style={[styles.taskFieldView, {marginTop: 30}]}>
+          <View style={[styles.taskFieldView, {marginTop: 0}]}>
             <Text style={styles.textBottom}>{userFirstName}</Text>
           </View>
           <View style={[styles.taskFieldView]}>
@@ -91,6 +91,9 @@ class ViewUserScreen extends Component {
 }
 
 const styles = EStyleSheet.create({
+  container: {
+    flex: 1,
+  },
   header: {
     backgroundColor: colors.userViewHeader,
     height: '124rem',
@@ -99,30 +102,33 @@ const styles = EStyleSheet.create({
     width: '130rem',
     height: '130rem',
     borderRadius: '75rem',
-    marginBottom: '40rem',
     alignSelf: 'center',
     position: 'absolute',
-    marginTop: '85rem',
+    marginTop: '30rem',
+    borderRadius: '75rem',
+    borderWidth: '3rem',
+    borderColor: colors.white,
   },
   name: {
     fontFamily: 'CircularStd-Bold',
     fontSize: '24rem',
     fontWeight: '400',
     color: colors.userViewHeader,
-    marginTop: '14rem',
+    textAlign: 'center',
+    lineHeight: '30rem',
   },
   body: {
-    marginTop: '56rem',
+    marginTop: '20rem',
   },
   bodyContent: {
-    flex: 1,
     alignItems: 'center',
-    padding: '30rem',
+    marginHorizontal: '30rem',
+    marginTop: '30rem',
+    marginBottom: '20rem',
   },
   taskFieldView: {
     backgroundColor: colors.projectBgColor,
     borderRadius: '5rem',
-    marginTop: '0rem',
     marginBottom: '7rem',
     flexDirection: 'row',
     alignItems: 'center',
