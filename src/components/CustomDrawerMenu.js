@@ -193,22 +193,16 @@ const CustomDrawerContentComponent = props => (
       <TouchableOpacity
         style={styles.custtomButton1}
         onPress={() => confirmLogout(props)}>
-        {props.selectedDrawerItem == 'logout' ? (
-          <Image
-            tintColor={colors.white}
-            source={require('../asserts/img/logout.png')}
-            style={styles.iconStyle}
-            resizeMode={'contain'}
-          />
-        ) : (
-          <Image
-            tintColor={colors.colorGovernorBay}
-            source={require('../asserts/img/logout.png')}
-            style={styles.iconStyle}
-            resizeMode={'contain'}
-          />
-        )}
-
+        <Image
+          tintColor={
+            props.selectedDrawerItem == 'logout'
+              ? colors.white
+              : colors.colorGovernorBay
+          }
+          source={require('../asserts/img/logout.png')}
+          style={styles.iconStyle}
+          resizeMode={'contain'}
+        />
         <Text
           style={[
             props.selectedDrawerItem == 'logout'
