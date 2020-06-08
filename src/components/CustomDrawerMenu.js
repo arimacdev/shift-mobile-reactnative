@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import {
   View,
   Dimensions,
@@ -7,13 +7,13 @@ import {
   TouchableOpacity,
   Platform,
   Image,
-  Alert
+  Alert,
 } from 'react-native';
-import { DrawerNavigatorItems } from 'react-navigation-drawer';
-import { Button, Text, Icon } from 'native-base';
+import {DrawerNavigatorItems} from 'react-navigation-drawer';
+import {Button, Text, Icon} from 'native-base';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import AsyncStorage from '@react-native-community/async-storage';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import colors from '../config/colors';
 import NavigationService from '../services/NavigationService';
 import * as actions from '../redux/actions';
@@ -21,16 +21,16 @@ import axios from 'axios';
 import APIServices from '../services/APIServices';
 import FadeIn from 'react-native-fade-in-image';
 import icons from '../assest/icons/icons';
-import { revoke } from 'react-native-app-auth';
+import {revoke} from 'react-native-app-auth';
 
 const entireScreenWidth = Dimensions.get('window').width;
-EStyleSheet.build({ $rem: entireScreenWidth / 380 });
+EStyleSheet.build({$rem: entireScreenWidth / 380});
 
 const CustomDrawerContentComponent = props => (
   <ScrollView>
     <SafeAreaView
       style={styles.container}
-      forceInset={{ top: 'always', horizontal: 'never' }}>
+      forceInset={{top: 'always', horizontal: 'never'}}>
       <TouchableOpacity
         style={styles.header}
         onPress={() =>
@@ -42,13 +42,13 @@ const CustomDrawerContentComponent = props => (
           {props.loginUser.profileImage ? (
             <FadeIn>
               <Image
-                source={{ uri: props.loginUser.profileImage }}
+                source={{uri: props.loginUser.profileImage}}
                 style={styles.userIcon}
               />
             </FadeIn>
           ) : (
-              <Image style={styles.userIcon} source={icons.defultUser} />
-            )}
+            <Image style={styles.userIcon} source={icons.defultUser} />
+          )}
         </View>
         <View style={styles.headerRight}>
           <View style={{}}>
@@ -90,23 +90,17 @@ const CustomDrawerContentComponent = props => (
           }}>
           {props.selectedDrawerItem == 'projects' ? (
             <Image
-              tintColor="#FFFFFF"
+              tintColor={colors.white}
               source={require('../asserts/img/drawer_projects.png')}
-              style={{
-                width: EStyleSheet.value('25rem'),
-                height: EStyleSheet.value('23rem'),
-              }}
+              style={styles.iconStyle}
             />
           ) : (
-              <Image
-                tintColor="#4d4f85"
-                source={require('../asserts/img/drawer_projects.png')}
-                style={{
-                  width: EStyleSheet.value('25rem'),
-                  height: EStyleSheet.value('23rem'),
-                }}
-              />
-            )}
+            <Image
+              tintColor={colors.colorGovernorBay}
+              source={require('../asserts/img/drawer_projects.png')}
+              style={styles.iconStyle}
+            />
+          )}
           <Text
             style={[
               props.selectedDrawerItem == 'projects'
@@ -126,23 +120,17 @@ const CustomDrawerContentComponent = props => (
           }}>
           {props.selectedDrawerItem == 'tasks' ? (
             <Image
-              tintColor="#FFFFFF"
+              tintColor={colors.white}
               source={require('../asserts/img/drawer_projects.png')}
-              style={{
-                width: EStyleSheet.value('25rem'),
-                height: EStyleSheet.value('23rem'),
-              }}
+              style={styles.iconStyle}
             />
           ) : (
-              <Image
-                tintColor="#4d4f85"
-                source={require('../asserts/img/drawer_tasks.png')}
-                style={{
-                  width: EStyleSheet.value('25rem'),
-                  height: EStyleSheet.value('23rem'),
-                }}
-              />
-            )}
+            <Image
+              tintColor={colors.colorGovernorBay}
+              source={require('../asserts/img/drawer_tasks.png')}
+              style={styles.iconStyle}
+            />
+          )}
           <Text
             style={[
               props.selectedDrawerItem == 'tasks'
@@ -163,23 +151,17 @@ const CustomDrawerContentComponent = props => (
           }}>
           {props.selectedDrawerItem == 'workload' ? (
             <Image
-              tintColor="#FFFFFF"
+              tintColor={colors.white}
               source={require('../asserts/img/drawer_workload.png')}
-              style={{
-                width: EStyleSheet.value('25rem'),
-                height: EStyleSheet.value('23rem'),
-              }}
+              style={styles.iconStyle}
             />
           ) : (
-              <Image
-                tintColor="#4d4f85"
-                source={require('../asserts/img/drawer_workload.png')}
-                style={{
-                  width: EStyleSheet.value('25rem'),
-                  height: EStyleSheet.value('23rem'),
-                }}
-              />
-            )}
+            <Image
+              tintColor={colors.colorGovernorBay}
+              source={require('../asserts/img/drawer_workload.png')}
+              style={styles.iconStyle}
+            />
+          )}
           <Text
             style={[
               props.selectedDrawerItem == 'workload'
@@ -200,23 +182,17 @@ const CustomDrawerContentComponent = props => (
           }}>
           {props.selectedDrawerItem == 'users' ? (
             <Image
-              tintColor="#FFFFFF"
+              tintColor={colors.white}
               source={require('../asserts/img/drawer_users.png')}
-              style={{
-                width: EStyleSheet.value('25rem'),
-                height: EStyleSheet.value('23rem'),
-              }}
+              style={styles.iconStyle}
             />
           ) : (
-              <Image
-                tintColor="#4d4f85"
-                source={require('../asserts/img/drawer_users.png')}
-                style={{
-                  width: EStyleSheet.value('25rem'),
-                  height: EStyleSheet.value('23rem'),
-                }}
-              />
-            )}
+            <Image
+              tintColor={colors.colorGovernorBay}
+              source={require('../asserts/img/drawer_users.png')}
+              style={styles.iconStyle}
+            />
+          )}
 
           <Text
             style={[
@@ -232,71 +208,65 @@ const CustomDrawerContentComponent = props => (
       <TouchableOpacity
         style={styles.custtomButton1}
         onPress={() => confirmLogout(props)}>
-        {props.selectedDrawerItem == 'users' ? (
+        {props.selectedDrawerItem == 'logout' ? (
           <Image
-            tintColor="#FFFFFF"
+            tintColor={colors.white}
             source={require('../asserts/img/logout.png')}
-            style={{
-              width: EStyleSheet.value('25rem'),
-              height: EStyleSheet.value('23rem'),
-            }}
+            style={styles.iconStyle}
           />
         ) : (
-            <Image
-              tintColor="#4d4f85"
-              source={require('../asserts/img/logout.png')}
-              style={{
-                width: EStyleSheet.value('25rem'),
-                height: EStyleSheet.value('23rem'),
-              }}
-            />
-          )}
+          <Image
+            tintColor={colors.colorGovernorBay}
+            source={require('../asserts/img/logout.png')}
+            style={styles.iconStyle}
+          />
+        )}
 
         <Text
           style={[
-            props.selectedDrawerItem == 'users'
+            props.selectedDrawerItem == 'logout'
               ? styles.textSelected
               : styles.text,
           ]}>
           Logout
-          </Text>
+        </Text>
       </TouchableOpacity>
-
     </SafeAreaView>
   </ScrollView>
 );
 
-const confirmLogout = (props) => {
-  props.navigation.closeDrawer()
+const confirmLogout = props => {
+  props.navigation.closeDrawer();
   Alert.alert(
-    "Log Out",
-    "Are you sure you want to logout?",
+    'Log Out',
+    'Are you sure you want to logout?',
     [
       {
-        text: "Cancel",
-        onPress: () => console.log("Cancel Pressed"),
-        style: "cancel"
+        text: 'Cancel',
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel',
       },
-      { text: "Logout", onPress: () => logOut(props) }
+      {text: 'Logout', onPress: () => logOut(props)},
     ],
-    { cancelable: false }
-  )
-}
+    {cancelable: false},
+  );
+};
 
 const logOut = async () => {
   const accessToken = await AsyncStorage.getItem('accessToken');
   const baseURL = await AsyncStorage.getItem('baseURL');
   try {
     let response = await axios({
-      url: 'https://pmtool.devops.arimac.xyz/auth/realms/pm-tool/protocol/openid-connect/logout?id_token_hint=' + accessToken,
+      url:
+        'https://pmtool.devops.arimac.xyz/auth/realms/pm-tool/protocol/openid-connect/logout?id_token_hint=' +
+        accessToken,
       method: 'GET',
     });
     if (response.status === 200) {
       AsyncStorage.clear();
       NavigationService.navigate('ConfigurationScreen');
     }
-  } catch (error) {
-  }
+  } catch (error) {}
 };
 
 const styles = EStyleSheet.create({
@@ -323,49 +293,40 @@ const styles = EStyleSheet.create({
     flex: 2,
   },
   textName: {
-    color: '#ffffff',
+    color: colors.white,
     fontFamily: 'CircularStd-Bold',
     fontSize: 20,
     fontWeight: '400',
   },
   textNameUser: {
-    color: '#ffffff',
+    color: colors.white,
     fontFamily: 'CircularStd-Medium',
     fontSize: 15,
     fontWeight: '400',
   },
-  textEmail: {
-    opacity: 0.75,
-    color: 'rgba(255, 255, 255, 0.5)',
-    fontFamily: 'CircularStd-Medium',
-    fontSize: '15rem',
-    fontWeight: Platform.OS === 'ios' ? '500' : '400',
-  },
   text: {
-    //opacity: 0.5,
-    color: '#4d4f85',
+    color: colors.colorGovernorBay,
     fontFamily: 'CircularStd-Book',
     fontSize: 19,
     fontWeight: '400',
-    marginLeft: 34,
+    marginLeft: 20,
   },
   textSelected: {
-    //opacity: 0.5,
-    color: '#ffffff',
-    fontFamily: 'CircularStd-Medium',
+    color: colors.white,
+    fontFamily: 'CircularStd-Book',
     fontSize: 19,
-    fontWeight: 'bold',
-    marginLeft: 34,
+    marginLeft: 20,
   },
   custtomButton: {
     flexDirection: 'row',
-    paddingHorizontal: 18,
-    marginTop: 15,
+    paddingHorizontal: '18rem',
+    marginTop: '15rem',
   },
   custtomButton1: {
     flexDirection: 'row',
-    paddingHorizontal: 18,
-    marginTop: '20rem',
+    paddingHorizontal: '18rem',
+    marginTop: '30rem',
+    alignItems: 'center',
   },
   iconBack: {
     fontSize: '32rem',
@@ -383,6 +344,10 @@ const styles = EStyleSheet.create({
     width: '62rem',
     height: '62rem',
     borderRadius: 120 / 2,
+  },
+  iconStyle: {
+    width: '18rem',
+    height: '18rem',
   },
 });
 
