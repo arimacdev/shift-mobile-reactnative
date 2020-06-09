@@ -21,7 +21,7 @@ export default class App extends Component {
     OneSignal.setLogLevel(6, 0);
 
     // Replace 'YOUR_ONESIGNAL_APP_ID' with your OneSignal App ID.
-    OneSignal.init(strings.oneSignalId, {
+    OneSignal.init(strings.oneSignal.oneSignalAppId, {
       kOSSettingsKeyAutoPrompt: false,
       kOSSettingsKeyInAppLaunchURL: false,
       kOSSettingsKeyInFocusDisplayOption: 2,
@@ -29,7 +29,9 @@ export default class App extends Component {
     OneSignal.inFocusDisplaying(2); // Controls what should happen if a notification is received while the app is open. 2 means that the notification will go directly to the device's notification center.
 
     // The promptForPushNotifications function code will show the iOS push notification prompt. We recommend removing the following code and instead using an In-App Message to prompt for notification permission (See step below)
-    OneSignal.promptForPushNotificationsWithUserResponse(this.myiOSPromptCallback);
+    OneSignal.promptForPushNotificationsWithUserResponse(
+      this.myiOSPromptCallback,
+    );
 
     OneSignal.addEventListener('received', this.onReceived);
     OneSignal.addEventListener('opened', this.onOpened);
