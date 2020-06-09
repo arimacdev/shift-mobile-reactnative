@@ -12,11 +12,37 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		A00B200FA07E184C7546A8BA /* libPods-arimacPmTool.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 84488E1DD923BFDC167FE0C0 /* libPods-arimacPmTool.a */; };
+		CE562388248F456B009C4BBC /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE562387248F456B009C4BBC /* NotificationService.swift */; };
+		CE56238C248F456B009C4BBC /* OneSignalNotificationServiceExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = CE562385248F456B009C4BBC /* OneSignalNotificationServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		CECB8775244F3BC400A463C2 /* CircularStd-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CECB8771244F3BC400A463C2 /* CircularStd-Black.ttf */; };
 		CECB8776244F3BC400A463C2 /* CircularStd-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CECB8772244F3BC400A463C2 /* CircularStd-Bold.ttf */; };
 		CECB8777244F3BC400A463C2 /* CircularStd-Book.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CECB8773244F3BC400A463C2 /* CircularStd-Book.ttf */; };
 		CECB8778244F3BC400A463C2 /* CircularStd-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CECB8774244F3BC400A463C2 /* CircularStd-Medium.ttf */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		CE56238A248F456B009C4BBC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CE562384248F456B009C4BBC;
+			remoteInfo = OneSignalNotificationServiceExtension;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		CE562390248F456B009C4BBC /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				CE56238C248F456B009C4BBC /* OneSignalNotificationServiceExtension.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		008F07F21AC5B25A0029DE68 /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = main.jsbundle; sourceTree = "<group>"; };
@@ -43,6 +69,10 @@
 		A83FCF156C2C448689025385 /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/native-base/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
 		CC9C3F7174CB40358A5632FC /* Feather.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Feather.ttf; path = "../node_modules/native-base/Fonts/Feather.ttf"; sourceTree = "<group>"; };
 		CCF1F370FAAB42E3AFB7D2A6 /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/native-base/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
+		CE562380248F44C3009C4BBC /* SHIFT.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = SHIFT.entitlements; path = arimacPmTool/SHIFT.entitlements; sourceTree = "<group>"; };
+		CE562385248F456B009C4BBC /* OneSignalNotificationServiceExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = OneSignalNotificationServiceExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		CE562387248F456B009C4BBC /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
+		CE562389248F456B009C4BBC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CE61A35C244EDB0C006E3B9C /* libAppAuth.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libAppAuth.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE61A35E244EDCF7006E3B9C /* libAppAuth.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libAppAuth.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		CECB8753244F366800A463C2 /* Product Sans.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Product Sans.ttf"; path = "fonts/Product Sans.ttf"; sourceTree = "<group>"; };
@@ -70,12 +100,20 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		CE562382248F456B009C4BBC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		13B07FAE1A68108700A75B9A /* arimacPmTool */ = {
 			isa = PBXGroup;
 			children = (
+				CE562380248F44C3009C4BBC /* SHIFT.entitlements */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -115,6 +153,7 @@
 				CECB8774244F3BC400A463C2 /* CircularStd-Medium.ttf */,
 				13B07FAE1A68108700A75B9A /* arimacPmTool */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
+				CE562386248F456B009C4BBC /* OneSignalNotificationServiceExtension */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				F091D458B8384C54B560C434 /* Resources */,
@@ -129,6 +168,7 @@
 			isa = PBXGroup;
 			children = (
 				13B07F961A680F5B00A75B9A /* SHIFT.app */,
+				CE562385248F456B009C4BBC /* OneSignalNotificationServiceExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -140,6 +180,15 @@
 				9B18B0C1DFF28E32C96099FA /* Pods-arimacPmTool.release.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		CE562386248F456B009C4BBC /* OneSignalNotificationServiceExtension */ = {
+			isa = PBXGroup;
+			children = (
+				CE562387248F456B009C4BBC /* NotificationService.swift */,
+				CE562389248F456B009C4BBC /* Info.plist */,
+			);
+			path = OneSignalNotificationServiceExtension;
 			sourceTree = "<group>";
 		};
 		F091D458B8384C54B560C434 /* Resources */ = {
@@ -184,15 +233,34 @@
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				6738CC5AB536DCCE9E563101 /* [CP] Copy Pods Resources */,
+				CE562390248F456B009C4BBC /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				CE56238B248F456B009C4BBC /* PBXTargetDependency */,
 			);
 			name = arimacPmTool;
 			productName = arimacPmTool;
 			productReference = 13B07F961A680F5B00A75B9A /* SHIFT.app */;
 			productType = "com.apple.product-type.application";
+		};
+		CE562384248F456B009C4BBC /* OneSignalNotificationServiceExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CE56238D248F456B009C4BBC /* Build configuration list for PBXNativeTarget "OneSignalNotificationServiceExtension" */;
+			buildPhases = (
+				CE562381248F456B009C4BBC /* Sources */,
+				CE562382248F456B009C4BBC /* Frameworks */,
+				CE562383248F456B009C4BBC /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = OneSignalNotificationServiceExtension;
+			productName = OneSignalNotificationServiceExtension;
+			productReference = CE562385248F456B009C4BBC /* OneSignalNotificationServiceExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -200,11 +268,17 @@
 		83CBB9F71A601CBA00E9B192 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 1130;
 				LastUpgradeCheck = 1130;
 				TargetAttributes = {
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = 2DM2ML5VBH;
 						LastSwiftMigration = 1120;
+					};
+					CE562384248F456B009C4BBC = {
+						CreatedOnToolsVersion = 11.3.1;
+						DevelopmentTeam = 2DM2ML5VBH;
+						ProvisioningStyle = Automatic;
 					};
 				};
 			};
@@ -222,6 +296,7 @@
 			projectRoot = "";
 			targets = (
 				13B07F861A680F5B00A75B9A /* arimacPmTool */,
+				CE562384248F456B009C4BBC /* OneSignalNotificationServiceExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -237,6 +312,13 @@
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				CECB8776244F3BC400A463C2 /* CircularStd-Bold.ttf in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CE562383248F456B009C4BBC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -358,7 +440,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		CE562381248F456B009C4BBC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CE562388248F456B009C4BBC /* NotificationService.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		CE56238B248F456B009C4BBC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CE562384248F456B009C4BBC /* OneSignalNotificationServiceExtension */;
+			targetProxy = CE56238A248F456B009C4BBC /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		13B07FB11A68108700A75B9A /* LaunchScreen.xib */ = {
@@ -377,8 +475,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D7DBC06EA513BE22128207FF /* Pods-arimacPmTool.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = arimacPmTool/SHIFT.entitlements;
 				CURRENT_PROJECT_VERSION = 10006;
 				DEVELOPMENT_TEAM = 2DM2ML5VBH;
 				ENABLE_BITCODE = NO;
@@ -446,8 +546,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9B18B0C1DFF28E32C96099FA /* Pods-arimacPmTool.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = arimacPmTool/SHIFT.entitlements;
 				CURRENT_PROJECT_VERSION = 10006;
 				DEVELOPMENT_TEAM = 2DM2ML5VBH;
 				INFOPLIST_FILE = arimacPmTool/Info.plist;
@@ -618,6 +720,61 @@
 			};
 			name = Release;
 		};
+		CE56238E248F456B009C4BBC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 2DM2ML5VBH;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = OneSignalNotificationServiceExtension/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.arimac.arimacPmTool.OneSignalNotificationServiceExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		CE56238F248F456B009C4BBC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 2DM2ML5VBH;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = OneSignalNotificationServiceExtension/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.arimac.arimacPmTool.OneSignalNotificationServiceExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -635,6 +792,15 @@
 			buildConfigurations = (
 				83CBBA201A601CBA00E9B192 /* Debug */,
 				83CBBA211A601CBA00E9B192 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CE56238D248F456B009C4BBC /* Build configuration list for PBXNativeTarget "OneSignalNotificationServiceExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CE56238E248F456B009C4BBC /* Debug */,
+				CE56238F248F456B009C4BBC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
