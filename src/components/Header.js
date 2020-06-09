@@ -229,12 +229,12 @@ class Header extends Component {
                 // <TouchableOpacity
                 //   style={{alignItems: 'flex-end'}}
                 //   onPress={() => this.openPopup()}>
-                  <MenuItems
-                    // customStyle={styles.menuItems}
-                    data={this.props.menuItems}
-                    onChange={item => this.props.onMenuItemChange(item)}
-                    // disabledOpt={this.props.dataList.length <= 0}
-                  />
+                <MenuItems
+                  // customStyle={styles.menuItems}
+                  data={this.props.menuItems}
+                  onChange={item => this.props.onMenuItemChange(item)}
+                  // disabledOpt={this.props.dataList.length <= 0}
+                />
                 // </TouchableOpacity>
               )}
               {isCustom && (

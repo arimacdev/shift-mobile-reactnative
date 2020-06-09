@@ -30,26 +30,32 @@ class PopupMenu extends Component {
   constructor(props) {
     super(props);
     this.state = {
-        opened:false
+      opened: false,
     };
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    if(prevProps.addPeopleModelVisible !== this.props.addPeopleModelVisible && this.props.addPeopleModelVisible){
-      this.setState({ opened: this.props.addPeopleModelVisible });
+    if (
+      prevProps.addPeopleModelVisible !== this.props.addPeopleModelVisible &&
+      this.props.addPeopleModelVisible
+    ) {
+      this.setState({opened: this.props.addPeopleModelVisible});
     }
 
-    if(prevProps.addPeopleModelVisible !== this.props.addPeopleModelVisible && !this.props.addPeopleModelVisible){
-      this.setState({ opened: this.props.addPeopleModelVisible });
+    if (
+      prevProps.addPeopleModelVisible !== this.props.addPeopleModelVisible &&
+      !this.props.addPeopleModelVisible
+    ) {
+      this.setState({opened: this.props.addPeopleModelVisible});
     }
-}
+  }
 
   componentDidMount() {
-    this.setState({ opened: this.props.open });
+    this.setState({opened: this.props.open});
   }
 
   async onBackdropPress() {
-    this.setState({ opened: false });
+    this.setState({opened: false});
     await this.props.addPeopleModal(false);
   }
 
@@ -123,7 +129,7 @@ const styles = EStyleSheet.create({
     marginHorizontal: '20rem',
   },
   inputsText: {
-    fontFamily: Platform.OS=='ios'? 'CircularStd-Medium':'Product Sans',
+    fontFamily: Platform.OS == 'ios' ? 'CircularStd-Medium' : 'Product Sans',
     height: 45,
     flex: 1,
     marginTop: '28rem',

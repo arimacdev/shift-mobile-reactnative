@@ -72,8 +72,8 @@ class PopupMenuAssignee extends Component {
   componentDidMount() {
     let projectID = this.props.projectID;
     this.getActiveUsers(projectID);
-    if(this.state.userName != ''){
-      this.onSearchTextChange(this.state.userName)
+    if (this.state.userName != '') {
+      this.onSearchTextChange(this.state.userName);
     }
     this.setState({opened: false});
   }
@@ -195,9 +195,9 @@ class PopupMenuAssignee extends Component {
     );
   }
 
-  onSelect(item){
+  onSelect(item) {
     this.setState({userName: item.label, opened: false});
-    this.props.onSelect(item)
+    this.props.onSelect(item);
   }
 
   render() {
@@ -216,9 +216,7 @@ class PopupMenuAssignee extends Component {
         opened={this.state.opened}
         onBackdropPress={() => this.onBackdropPress()}
         onSelect={value => this.onOptionSelect(value)}>
-        <MenuTrigger>
-          {this.menuTrigger()}
-        </MenuTrigger>
+        <MenuTrigger>{this.menuTrigger()}</MenuTrigger>
         <MenuOptions customStyles={optionsStyles}>
           <ScrollView style={scrollStyle.scrollViewMenuOption}>
             {this.state.activeUsers.map(item => {
@@ -239,7 +237,7 @@ const optionsStyles = {
   optionsContainer: {
     marginTop: -5,
     width: '88%',
-    marginLeft:-18,
+    marginLeft: -18,
     backgroundColor: colors.projectBgColor,
   },
 };
@@ -263,7 +261,7 @@ const styles = EStyleSheet.create({
     marginRight: '0rem',
   },
   inputsText: {
-    fontFamily:  Platform.OS=='ios'? 'CircularStd-Medium':'Product Sans',
+    fontFamily: Platform.OS == 'ios' ? 'CircularStd-Medium' : 'Product Sans',
     height: 45,
     flex: 1,
     marginTop: '28rem',
