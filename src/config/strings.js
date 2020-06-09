@@ -29,6 +29,8 @@ const strings = {
     },
     dangerouslyAllowInsecureHttpRequests: true,
   },
+
+  oneSignalId:'45e39e49-0bb3-4d57-a9f9-9c6dcbe2e118'
 };
 
 export default strings;
