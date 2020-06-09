@@ -50,23 +50,31 @@ export default class App extends Component {
     console.log('Notification received: ', notification);
   }
 
-  onOpened(openResult) {
+  async onOpened(openResult) {
     console.log('Message: ', openResult.notification.payload.body);
     console.log('Data: ', openResult.notification.payload.additionalData);
     console.log('isActive: ', openResult.notification.isAppInFocus);
     console.log('openResult: ', openResult);
 
-    let additionalData = openResult.notification.payload.additionalData;
-    if(additionalData !== null){
-      let taskDetails = JSON.parse(additionalData.taskDetails);
-      NavigationService.navigate(additionalData.screen,{
-        taskDetails: taskDetails,
-        selectedProjectID: additionalData.selectedProjectID,
-        selectedProjectName: additionalData.selectedProjectName,
-        isFromBoards: true,
-      })
+    try {
+      let baseURL = await AsyncStorage.getItem('baseURL');
+      if (baseURL == null) {
+        NavigationService.navigate('Auth');
+      } else {
+        let additionalData = openResult.notification.payload.additionalData;
+        if (additionalData !== null) {
+          let taskDetails = JSON.parse(additionalData.taskDetails);
+          NavigationService.navigate(additionalData.screen, {
+            taskDetails: taskDetails,
+            selectedProjectID: additionalData.selectedProjectID,
+            selectedProjectName: additionalData.selectedProjectName,
+            isFromBoards: true,
+          });
+        }
+      }
+    } catch (error) {
+      console.log(error);
     }
-    
   }
 
   onIds(device) {
