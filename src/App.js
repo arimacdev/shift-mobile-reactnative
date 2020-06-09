@@ -55,6 +55,18 @@ export default class App extends Component {
     console.log('Data: ', openResult.notification.payload.additionalData);
     console.log('isActive: ', openResult.notification.isAppInFocus);
     console.log('openResult: ', openResult);
+
+    let additionalData = openResult.notification.payload.additionalData;
+    if(additionalData !== null){
+      let taskDetails = JSON.parse(additionalData.taskDetails);
+      NavigationService.navigate(additionalData.screen,{
+        taskDetails: taskDetails,
+        selectedProjectID: additionalData.selectedProjectID,
+        selectedProjectName: additionalData.selectedProjectName,
+        isFromBoards: true,
+      })
+    }
+    
   }
 
   onIds(device) {
