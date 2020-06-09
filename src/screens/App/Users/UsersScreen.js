@@ -93,7 +93,7 @@ class UsersScreen extends Component {
                 })
               }>
               <Image
-                style={{width: 28, height: 28, borderRadius: 28 / 2}}
+                style={styles.editIconStyle}
                 source={icons.editRoundWhite}
               />
             </TouchableOpacity>
@@ -182,6 +182,10 @@ const styles = EStyleSheet.create({
     width: '43rem',
     height: '43rem',
     borderRadius: 90 / 2,
+  },
+  editIconStyle: {
+    width: '26rem',
+    height: '26rem',
   },
 });
 

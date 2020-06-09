@@ -139,14 +139,14 @@ class PeopleScreen extends Component {
           <View style={styles.controlView}>
             <TouchableOpacity onPress={() => this.goToEditPeople(item)}>
               <Image
-                style={{width: 28, height: 28, borderRadius: 28 / 2}}
+                style={styles.controlIcon}
                 source={icons.editRoundWhite}
               />
             </TouchableOpacity>
 
             <TouchableOpacity style={{marginLeft: EStyleSheet.value('24rem')}}>
               <Image
-                style={{width: 28, height: 28, borderRadius: 28 / 2}}
+                style={styles.controlIcon}
                 source={icons.deleteRoundRed}
               />
             </TouchableOpacity>
@@ -338,6 +338,10 @@ const styles = EStyleSheet.create({
     width: '42rem',
     height: '42rem',
     borderRadius: 80 / 2,
+  },
+  controlIcon: {
+    width: '28rem',
+    height: '28rem',
   },
 });
 

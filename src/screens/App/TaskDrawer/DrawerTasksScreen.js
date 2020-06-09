@@ -72,15 +72,12 @@ class DrawerTasksScreen extends Component {
           this.props.navigation.navigate('TasksTabScreen', {taskDetails: item})
         }>
         <View style={styles.groupTaskView}>
-          <Image style={{width: 20, height: 20}} source={icons.taskBlue} />
+          <Image style={styles.taskIconStyle} source={icons.taskBlue} />
           <View style={{flex: 1}}>
             <Text style={styles.textGroupName}>{item.taskGroupName}</Text>
           </View>
           <View style={styles.controlView}>
-            <Image
-              style={{width: 18, height: 18, marginRight: 17}}
-              source={icons.users}
-            />
+            <Image style={styles.userIconStyle} source={icons.users} />
           </View>
         </View>
       </TouchableOpacity>
@@ -222,6 +219,15 @@ const styles = EStyleSheet.create({
     textAlign: 'left',
     marginLeft: '10rem',
     fontWeight: '600',
+  },
+  taskIconStyle: {
+    width: '18rem',
+    height: '18rem',
+  },
+  userIconStyle: {
+    width: '16rem',
+    height: '16rem',
+    marginRight: '16rem',
   },
 });
 

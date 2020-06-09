@@ -108,8 +108,8 @@ class MyTasksFilesScreen extends Component {
               onPress={() => this.deleteFile(item)}
               style={{marginLeft: EStyleSheet.value('24rem')}}>
               <Image
-                style={{width: 40, height: 40, borderRadius: 40 / 2}}
-                source={require('../../../../asserts/img/bin.png')}
+                style={styles.deleteIconStyle}
+                source={icons.deleteRoundRed}
               />
             </TouchableOpacity>
           </View>
@@ -209,7 +209,7 @@ class MyTasksFilesScreen extends Component {
       files: this.state.files,
       indeterminate: true,
       Uploading: 0,
-    });   
+    });
   }
 
   async doumentPicker() {
@@ -413,6 +413,10 @@ const styles = EStyleSheet.create({
     width: '28rem',
     height: '28rem',
     borderRadius: 56 / 2,
+  },
+  deleteIconStyle: {
+    width: '38rem',
+    height: '38rem',
   },
 });
 

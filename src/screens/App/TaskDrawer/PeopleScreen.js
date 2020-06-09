@@ -108,10 +108,7 @@ class PeopleScreen extends Component {
           </View>
           <View style={styles.controlView}>
             <TouchableOpacity style={{marginLeft: EStyleSheet.value('24rem')}}>
-              <Image
-                style={{width: 28, height: 28, borderRadius: 28 / 2}}
-                source={icons.deleteRoundRed}
-              />
+              <Image style={styles.deleteIcon} source={icons.deleteRoundRed} />
             </TouchableOpacity>
           </View>
         </View>
@@ -289,6 +286,10 @@ const styles = EStyleSheet.create({
     width: '43rem',
     height: '43rem',
     borderRadius: 90 / 2,
+  },
+  deleteIcon: {
+    width: '26rem',
+    height: '26rem',
   },
 });
 

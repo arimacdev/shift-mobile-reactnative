@@ -167,10 +167,7 @@ class SubTasksScreen extends Component {
         </View>
         <View style={styles.controlView}>
           <TouchableOpacity onPress={() => this.editSubTask(item)}>
-            <Image
-              style={{width: 28, height: 28, borderRadius: 28 / 2}}
-              source={require('../../../asserts/img/edit_user.png')}
-            />
+            <Image style={styles.editIconStyle} source={icons.editRoundWhite} />
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => this.deleteSubTaskAlert(item)}
@@ -329,6 +326,10 @@ const styles = EStyleSheet.create({
     height: '20rem',
     marginRight: '15rem',
     marginLeft: '10rem',
+  },
+  editIconStyle: {
+    width: '26rem',
+    height: '26rem',
   },
 });
 
