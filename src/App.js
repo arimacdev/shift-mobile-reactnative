@@ -8,6 +8,7 @@ import NavigationService from './services/NavigationService';
 import {MainSwitchNavigator} from './navigators/MainSwitchNavigator';
 import {OfflineNotice} from './components/OfflineNotice';
 import OneSignal from 'react-native-onesignal';
+import strings from './config/strings';
 
 console.disableYellowBox = true;
 
@@ -20,7 +21,7 @@ export default class App extends Component {
     OneSignal.setLogLevel(6, 0);
 
     // Replace 'YOUR_ONESIGNAL_APP_ID' with your OneSignal App ID.
-    OneSignal.init('YOUR_ONESIGNAL_APP_ID', {
+    OneSignal.init(strings.oneSignalId, {
       kOSSettingsKeyAutoPrompt: false,
       kOSSettingsKeyInAppLaunchURL: false,
       kOSSettingsKeyInFocusDisplayOption: 2,
