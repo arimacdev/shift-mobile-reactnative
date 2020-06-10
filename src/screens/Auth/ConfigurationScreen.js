@@ -79,7 +79,7 @@ class ConfigurationScreen extends Component {
           <View style={styles.addNewFieldView}>
             <TextInput
               style={styles.textInput}
-              placeholder={'Eg. project.arimac.digital'}
+              placeholder={'Eg. organization-name'}
               value={this.state.workSpace}
               onChangeText={workSpace => this.onUrlChange(workSpace)}
               autoCapitalize={'none'}
