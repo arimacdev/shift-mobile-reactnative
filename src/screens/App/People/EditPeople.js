@@ -19,8 +19,16 @@ import RoundCheckbox from 'rn-round-checkbox';
 import _ from 'lodash';
 import AwesomeAlert from 'react-native-awesome-alerts';
 import APIServices from '../../../services/APIServices';
+import MessageShowModal from '../../../components/MessageShowModal';
 const {height} = Dimensions.get('window');
 
+let successDetails = {
+  icon: icons.userGreen,
+  type: 'success',
+  title: 'Success',
+  description: 'User have been edited successfully',
+  buttons: {},
+};
 class EditPeople extends Component {
   constructor(props) {
     super(props);
@@ -35,6 +43,7 @@ class EditPeople extends Component {
       showAlert: false,
       alertTitle: '',
       alertMsg: '',
+      showMessageModal: false
     };
   }
 
@@ -134,7 +143,7 @@ class EditPeople extends Component {
         );
         if (resultObj.message == 'success') {
           this.setState({dataLoading: false});
-          this.props.navigation.goBack();
+          this.setState({showMessageModal: true});
         } else {
           this.setState({dataLoading: false});
           this.showAlert('', 'Error');
@@ -146,6 +155,11 @@ class EditPeople extends Component {
         }
       }
     }
+  }
+
+  onPressCancel() {
+    this.setState({showMessageModal: false});
+    this.props.navigation.goBack();
   }
 
   cancelUser() {
@@ -265,6 +279,12 @@ class EditPeople extends Component {
             </View>
           </TouchableOpacity>
         </View>
+        <MessageShowModal
+          showMessageModal={this.state.showMessageModal}
+          details={successDetails}
+          onPress={() => {}}
+          onPressCancel={() => this.onPressCancel(this)}
+        />
       </View>
     );
   }

@@ -76,7 +76,15 @@ let deleteDetails = {
   title: 'Delete Project',
   description:
     "You're about to permanently delete this project, its comments and attachments, and all of its data.\nIf you're not sure, you can close this pop up.",
-  buttons:{positive:'Delete', negative:'Cancel'}
+  buttons: {positive: 'Delete', negative: 'Cancel'},
+};
+
+let successDetails = {
+  icon: icons.folderGreen,
+  type: 'success',
+  title: 'Success',
+  description: 'Project details have been edited successfully',
+  buttons: {},
 };
 
 class EditProjectScreen extends Component {
@@ -119,6 +127,7 @@ class EditProjectScreen extends Component {
       endDateChanged: false,
       projectAlias: '',
       showMessageModal: false,
+      deleteButtonPress: false,
     };
   }
 
@@ -143,8 +152,8 @@ class EditProjectScreen extends Component {
       prevProps.updateProjectSuccess !== this.props.updateProjectSuccess &&
       this.props.updateProjectSuccess
     ) {
-      this.showAlert('', 'Project Updated');
-      this.props.navigation.goBack();
+      // this.showAlert('', 'Project Updated');
+      this.setState({showMessageModal: true});
     }
     // delete project
     if (
@@ -484,7 +493,7 @@ class EditProjectScreen extends Component {
   }
 
   reomoveProject() {
-    this.setState({showMessageModal: true});
+    this.setState({deleteButtonPress: true, showMessageModal: true});
     // Alert.alert(
     //   'Delete Project',
     //   'Are you sure you want to delete this project',
@@ -506,6 +515,7 @@ class EditProjectScreen extends Component {
   };
 
   saveProject() {
+    this.setState({deleteButtonPress: false});
     let projectID = this.state.projectID;
     let projectName = this.state.projectName;
     let projectClient = this.state.projectClient;
@@ -682,8 +692,12 @@ class EditProjectScreen extends Component {
     });
   }
 
-  onPressCancel(){
-    this.setState({showMessageModal:false})
+  onPressCancel() {
+    if (this.state.deleteButtonPress) {
+    } else {
+      this.props.navigation.goBack();
+    }
+    this.setState({showMessageModal: false});
   }
 
   render() {
@@ -701,6 +715,7 @@ class EditProjectScreen extends Component {
     let updateProjectLoading = this.state.updateProjectLoading;
     let deleteProjectErrorMessage = this.state.deleteProjectErrorMessage;
     let projectAlias = this.state.projectAlias;
+    let deleteButtonPress = this.state.deleteButtonPress;
 
     return (
       <View style={{flex: 1}}>
@@ -858,7 +873,7 @@ class EditProjectScreen extends Component {
         </View>
         <MessageShowModal
           showMessageModal={this.state.showMessageModal}
-          details={deleteDetails}
+          details={deleteButtonPress ? deleteDetails : successDetails}
           onPress={() => this.reomoveProjectSuccess(this)}
           onPressCancel={() => this.onPressCancel(this)}
         />
