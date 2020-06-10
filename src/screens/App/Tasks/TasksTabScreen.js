@@ -1133,7 +1133,8 @@ class TasksTabScreen extends Component {
         onBackButtonPress={() => this.onCloseModel()}
         onBackdropPress={() => this.onCloseModel()}
         onRequestClose={() => this.onCloseModel()}
-        coverScreen={false}>
+        coverScreen={false}
+        backdropTransitionOutTiming={0}>
         <View style={{margin: 10}}>
           <View>
             <CalendarPicker

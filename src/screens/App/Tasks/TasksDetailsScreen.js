@@ -2265,6 +2265,7 @@ class TasksDetailsScreen extends Component {
         onBackdropPress={() => this.onCloseTaskModal()}
         onRequestClose={() => this.onCloseTaskModal()}
         // coverScreen={false}
+        backdropTransitionOutTiming={0}
       >
         <View style={styles.modalMainView}>
           <View style={styles.modalHeaderView}>

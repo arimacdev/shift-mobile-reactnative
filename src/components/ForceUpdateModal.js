@@ -68,7 +68,8 @@ class ForceUpdateModal extends Component {
     return (
       <Modal
         isVisible={this.state.showForceUpdateModal}
-        style={styles.modalStyle}>
+        style={styles.modalStyle}
+        backdropTransitionOutTiming={0}>
         <View style={styles.modalMainView}>
           <View style={styles.modalHeaderView}>
             <View style={styles.iconBorderStyle}>
