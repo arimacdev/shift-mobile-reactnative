@@ -71,7 +71,7 @@ let dropData = [
 ];
 
 let deleteDetails = {
-  image: icons.deleteRoundRed,
+  icon: icons.alertRed,
   type: 'confirm',
   title: 'Delete Project',
   description:

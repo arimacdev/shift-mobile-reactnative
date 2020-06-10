@@ -26,6 +26,15 @@ import AwesomeAlert from 'react-native-awesome-alerts';
 import AsyncStorage from '@react-native-community/async-storage';
 import Loader from '../../../components/Loader';
 import NavigationService from '../../../services/NavigationService';
+import MessageShowModal from '../../../components/MessageShowModal';
+
+let successDetails = {
+  icon: icons.folderGreen,
+  type: 'success',
+  title: 'Success',
+  description: 'You have created a project successfully',
+  buttons: {},
+};
 
 class CreateNewProjectScreen extends Component {
   constructor(props) {
@@ -60,6 +69,7 @@ class CreateNewProjectScreen extends Component {
       alertMsg: '',
       isDateNeedLoading: false,
       projectAlias: '',
+      showMessageModal: false,
     };
   }
 
@@ -84,12 +94,17 @@ class CreateNewProjectScreen extends Component {
       prevProps.addProjectrSuccess !== this.props.addProjectrSuccess &&
       this.props.addProjectrSuccess
     ) {
-      this.showAlert('', 'Project Created');
-      NavigationService.navigate('ProjectsScreen');
+      // this.showAlert('', 'Project Created');
+      this.setState({showMessageModal: true});
     }
   }
 
   componentDidMount() {}
+
+  onPressCancel(){
+    this.setState({showMessageModal:false})
+    NavigationService.navigate('ProjectsScreen');
+  }
 
   renderBase() {
     return (
@@ -597,6 +612,12 @@ class CreateNewProjectScreen extends Component {
           onConfirmPressed={() => {
             this.hideAlert();
           }}
+        />
+        <MessageShowModal
+          showMessageModal={this.state.showMessageModal}
+          details={successDetails}
+          onPress={() => {}}
+          onPressCancel={() => this.onPressCancel(this)}
         />
       </View>
     );

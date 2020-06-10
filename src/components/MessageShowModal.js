@@ -70,14 +70,43 @@ class MessageShowModal extends Component {
               resizeMode="contain"
             />
           </TouchableOpacity>
-          <View style={styles.imageContainer}>
+          <View
+            style={[
+              styles.imageContainer,
+              {
+                marginBottom:
+                  details.type == 'success' ? EStyleSheet.value('15rem') : 0,
+              },
+            ]}>
             <Image
               style={styles.iconStyle}
-              source={icons.alertRed}
+              source={details.icon}
               resizeMode="contain"
             />
-            <Text style={styles.modalHeadderText}>{details.title}</Text>
-            <Text style={styles.textDescription}>{details.description}</Text>
+            <Text
+              style={[
+                styles.modalHeadderText,
+                {
+                  color:
+                    details.type == 'success'
+                      ? colors.colorLightSlateGrey
+                      : colors.colorBlackRussian,
+                },
+              ]}>
+              {details.title}
+            </Text>
+            <Text
+              style={[
+                styles.textDescription,
+                {
+                  color:
+                    details.type == 'success'
+                      ? colors.colorSilver
+                      : colors.colorShuttleGrey,
+                },
+              ]}>
+              {details.description}
+            </Text>
           </View>
           {details.type == 'confirm' && (
             <View style={styles.ButtonViewStyle}>
@@ -130,6 +159,7 @@ const styles = EStyleSheet.create({
     fontFamily: 'CircularStd-Bold',
     marginHorizontal: '20rem',
     textAlign: 'center',
+    color: colors.colorBlackRussian,
   },
   textDescription: {
     marginTop: '10rem',

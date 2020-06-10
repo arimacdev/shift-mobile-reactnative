@@ -59,6 +59,8 @@ const colors = {
   colorBittersweet: '#FF6161',
   colorDeepSkyBlue: '#0BAFFF',
   colorSolitude: '#E5E9EF',
-  colorGovernorBay: '#4D4F85'
+  colorGovernorBay: '#4D4F85',
+  colorSilver: '#B9B9B9',
+  colorBlackRussian: '#040428'
 };
 export default colors;
