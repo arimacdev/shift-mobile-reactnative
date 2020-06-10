@@ -75,7 +75,7 @@ let deleteDetails = {
   type: 'confirm',
   title: 'Delete Project',
   description:
-    "You're about to permanently delete this project, its comments and attachments, and all of its data. If you're not sure, you can close this pop up.",
+    "You're about to permanently delete this project, its comments and attachments, and all of its data.\nIf you're not sure, you can close this pop up.",
   buttons:{positive:'Delete', negative:'Cancel'}
 };
 
