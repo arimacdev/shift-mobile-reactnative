@@ -28,6 +28,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import Loader from '../../../components/Loader';
 import APIServices from '../../../services/APIServices';
 import NavigationService from '../../../services/NavigationService';
+import MessageShowModal from '../../../components/MessageShowModal';
 const {height, width} = Dimensions.get('window');
 
 let dropData = [
@@ -69,6 +70,15 @@ let dropData = [
   },
 ];
 
+let deleteDetails = {
+  image: icons.deleteRoundRed,
+  type: 'confirm',
+  title: 'Delete Project',
+  description:
+    "You're about to permanently delete this project, its comments and attachments, and all of its data. If you're not sure, you can close this pop up.",
+  buttons:{positive:'Delete', negative:'Cancel'}
+};
+
 class EditProjectScreen extends Component {
   constructor(props) {
     super(props);
@@ -108,6 +118,7 @@ class EditProjectScreen extends Component {
       startDateChanged: false,
       endDateChanged: false,
       projectAlias: '',
+      showMessageModal: false,
     };
   }
 
@@ -473,19 +484,20 @@ class EditProjectScreen extends Component {
   }
 
   reomoveProject() {
-    Alert.alert(
-      'Delete Project',
-      'Are you sure you want to delete this project',
-      [
-        {
-          text: 'Cancel',
-          onPress: () => console.log('Cancel Pressed'),
-          style: 'cancel',
-        },
-        {text: 'Ok', onPress: () => this.reomoveProjectSuccess()},
-      ],
-      {cancelable: false},
-    );
+    this.setState({showMessageModal: true});
+    // Alert.alert(
+    //   'Delete Project',
+    //   'Are you sure you want to delete this project',
+    //   [
+    //     {
+    //       text: 'Cancel',
+    //       onPress: () => console.log('Cancel Pressed'),
+    //       style: 'cancel',
+    //     },
+    //     {text: 'Ok', onPress: () => this.reomoveProjectSuccess()},
+    //   ],
+    //   {cancelable: false},
+    // );
   }
 
   reomoveProjectSuccess = () => {
@@ -670,6 +682,10 @@ class EditProjectScreen extends Component {
     });
   }
 
+  onPressCancel(){
+    this.setState({showMessageModal:false})
+  }
+
   render() {
     let projectName = this.state.projectName;
     let projectClient = this.state.projectClient;
@@ -840,6 +856,12 @@ class EditProjectScreen extends Component {
             </View>
           </TouchableOpacity>
         </View>
+        <MessageShowModal
+          showMessageModal={this.state.showMessageModal}
+          details={deleteDetails}
+          onPress={() => this.reomoveProjectSuccess(this)}
+          onPressCancel={() => this.onPressCancel(this)}
+        />
       </View>
     );
   }

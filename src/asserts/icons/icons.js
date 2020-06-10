@@ -72,5 +72,6 @@ const icons = {
   greyOutlineCircule: require('./grey_outline_circule.png'),
   emptyResult: require('./empty_result.png'),
   defaultOrganization: require('./default_organization.png'),
+  alertRed: require('./alert_red.png'),
 };
 export default icons;
