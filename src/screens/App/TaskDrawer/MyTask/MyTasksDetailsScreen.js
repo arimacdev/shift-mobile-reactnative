@@ -38,6 +38,7 @@ import fileTypes from '../../../../asserts/fileTypes/fileTypes';
 import * as Animatable from 'react-native-animatable';
 import Modal from 'react-native-modal';
 import ImagePicker from 'react-native-image-picker';
+import MessageShowModal from '../../../../components/MessageShowModal';
 
 const Placeholder = () => (
   <View style={styles.landing}>
@@ -81,6 +82,15 @@ let dropData = [
 ];
 let MS_PER_MINUTE = 60000;
 class MyTasksDetailsScreen extends Component {
+  deleteDetails = {
+    icon: icons.alertRed,
+    type: 'confirm',
+    title: 'Delete My Task',
+    description:
+      "You're about to permanently delete this task, its comments and attachments, and all of its data.\nIf you're not sure, you can close this pop up.",
+    buttons: {positive: 'Delete', negative: 'Cancel'},
+  };
+
   constructor(props) {
     super(props);
     this.state = {
@@ -123,6 +133,8 @@ class MyTasksDetailsScreen extends Component {
       selectedTaskID: '',
       taskNameEditable: false,
       taskResult: [],
+      showMessageModal: false,
+      deleteTaskSuccess: false,
     };
   }
 
@@ -133,6 +145,7 @@ class MyTasksDetailsScreen extends Component {
       this.props.deleteSingleTaskInMyError &&
       this.props.deleteSingleTaskInMyErrorMessage == ''
     ) {
+      this.setState({deleteTaskSuccess: false});
       this.showAlert('', 'Error');
     }
 
@@ -142,7 +155,16 @@ class MyTasksDetailsScreen extends Component {
       this.props.deleteSingleTaskInMyError &&
       this.props.deleteSingleTaskInMyErrorMessage != ''
     ) {
+      this.setState({deleteTaskSuccess: false});
       this.showAlert('', this.props.deleteSingleTaskInMyErrorMessage);
+    }
+
+    if (
+      prevProps.deleteSingleTaskInMyLoading !==
+        this.props.deleteSingleTaskInMyLoading &&
+      this.props.deleteSingleTaskInMyLoading
+    ) {
+      this.setState({showMessageModal: false});
     }
 
     if (
@@ -150,12 +172,21 @@ class MyTasksDetailsScreen extends Component {
         this.props.deleteSingleTaskInMySuccess &&
       this.props.deleteSingleTaskInMySuccess
     ) {
-      Alert.alert(
-        'Success',
-        'Task Deleted',
-        [{text: 'OK', onPress: () => this.props.navigation.goBack()}],
-        {cancelable: false},
-      );
+      this.deleteDetails = {
+        icon: icons.taskBlue,
+        type: 'success',
+        title: 'Sucsess',
+        description: 'Task deleted successfully',
+        buttons: {},
+      };
+      this.setState({deleteTaskSuccess: true, showMessageModal: true});
+
+      // Alert.alert(
+      //   'Success',
+      //   'Task Deleted',
+      //   [{text: 'OK', onPress: () => this.props.navigation.goBack()}],
+      //   {cancelable: false},
+      // );
     }
   }
 
@@ -1250,22 +1281,34 @@ class MyTasksDetailsScreen extends Component {
       });
   }
 
-  onTaskDeketePress() {
+  deleteMyTask() {
     let taskID = this.state.selectedTaskID;
+    this.props.deleteTaskInMyTasks(taskID);
+  }
 
-    Alert.alert(
-      'Delete Task',
-      "You're about to permanently delete this task, its comments\n and attachments, and all of its data.\nIf you're not sure, you can close this pop up.",
-      [
-        {
-          text: 'Cancel',
-          onPress: () => console.log('Cancel Pressed'),
-          style: 'cancel',
-        },
-        {text: 'Delete', onPress: () => this.props.deleteTaskInMyTasks(taskID)},
-      ],
-      {cancelable: false},
-    );
+  onTaskDeketePress() {
+    this.setState({showMessageModal: true});
+
+    // Alert.alert(
+    //   'Delete Task',
+    //   "You're about to permanently delete this task, its comments\n and attachments, and all of its data.\nIf you're not sure, you can close this pop up.",
+    //   [
+    //     {
+    //       text: 'Cancel',
+    //       onPress: () => console.log('Cancel Pressed'),
+    //       style: 'cancel',
+    //     },
+    //     {text: 'Delete', onPress: () => this.props.deleteTaskInMyTasks(taskID)},
+    //   ],
+    //   {cancelable: false},
+    // );
+  }
+
+  onPressCancel() {
+    if (this.state.deleteTaskSuccess) {
+      this.props.navigation.goBack();
+    }
+    this.setState({showMessageModal: false});
   }
 
   async onTaskNameEditPress() {
@@ -1448,6 +1491,12 @@ class MyTasksDetailsScreen extends Component {
             }}
           />
         </ScrollView>
+        <MessageShowModal
+          showMessageModal={this.state.showMessageModal}
+          details={this.deleteDetails}
+          onPress={() => this.deleteMyTask(this)}
+          onPressCancel={() => this.onPressCancel(this)}
+        />
       </View>
     );
   }

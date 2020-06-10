@@ -39,6 +39,7 @@ import * as Animatable from 'react-native-animatable';
 import Modal from 'react-native-modal';
 import {NavigationEvents} from 'react-navigation';
 import ImagePicker from 'react-native-image-picker';
+import MessageShowModal from '../../../components/MessageShowModal';
 
 const Placeholder = () => (
   <View style={styles.landing}>
@@ -103,6 +104,15 @@ let taskStatusData = [
 ];
 let MS_PER_MINUTE = 60000;
 class GroupTasksDetailsScreen extends Component {
+  deleteDetails = {
+    icon: icons.alertRed,
+    type: 'confirm',
+    title: 'Delete Group Task',
+    description:
+      "You're about to permanently delete this group task, its comments and attachments, and all of its data.\nIf you're not sure, you can close this pop up.",
+    buttons: {positive: 'Delete', negative: 'Cancel'},
+  };
+
   constructor(props) {
     super(props);
     this.state = {
@@ -167,6 +177,8 @@ class GroupTasksDetailsScreen extends Component {
       sprintId: '',
       taskModalDataID: '',
       parentTaskName: '',
+      showMessageModal: false,
+      deleteTaskSuccess: false,
     };
   }
 
@@ -690,18 +702,12 @@ class GroupTasksDetailsScreen extends Component {
           <TouchableOpacity
             onPress={() => this.downloadFile(item)}
             style={{marginLeft: EStyleSheet.value('24rem')}}>
-            <Image
-              style={styles.controlIcon}
-              source={icons.downloadIcon}
-            />
+            <Image style={styles.controlIcon} source={icons.downloadIcon} />
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => this.deleteFileAlert(item)}
             style={{marginLeft: EStyleSheet.value('10rem')}}>
-            <Image
-              style={styles.controlIcon}
-              source={icons.deleteRoundRed}
-            />
+            <Image style={styles.controlIcon} source={icons.deleteRoundRed} />
           </TouchableOpacity>
         </View>
       </View>
@@ -930,6 +936,19 @@ class GroupTasksDetailsScreen extends Component {
     if (isParent) {
       this.getSubTAskDetails();
     }
+
+    let descriptionTask =
+      "You're about to permanently delete this group task, its comments and attachments, and all of its data.\nIf you're not sure, you can close this pop up.";
+    let descriptionSubTask =
+      "You're about to permanently delete this group sub task and all of its data.\nIf you're not sure, you can close this pop up.";
+
+    this.deleteDetails = {
+      icon: icons.alertRed,
+      type: 'confirm',
+      title: isParent ? 'Delete Group Task' : 'Delete Group Sub Task',
+      description: isParent ? descriptionTask : descriptionSubTask,
+      buttons: {positive: 'Delete', negative: 'Cancel'},
+    };
   }
 
   dateView = function(item) {
@@ -1499,49 +1518,71 @@ class GroupTasksDetailsScreen extends Component {
     let selectedGroupTaskID = this.state.selectedGroupTaskID;
     let selectedTaskID = this.state.selectedTaskID;
 
-    Alert.alert(
-      'Delete Task',
-      "You're about to permanently delete this task, its comments\n and attachments, and all of its data.\nIf you're not sure, you can close this pop up.",
-      [
-        {
-          text: 'Cancel',
-          onPress: () => console.log('Cancel Pressed'),
-          style: 'cancel',
-        },
-        {
-          text: 'Delete',
-          onPress: () =>
-            this.onGroupSubTaskDeletePress(selectedGroupTaskID, selectedTaskID),
-        },
-      ],
-      {cancelable: false},
-    );
+    this.onGroupSubTaskDeletePress(selectedGroupTaskID, selectedTaskID);
+
+    // Alert.alert(
+    //   'Delete Task',
+    //   "You're about to permanently delete this task, its comments\n and attachments, and all of its data.\nIf you're not sure, you can close this pop up.",
+    //   [
+    //     {
+    //       text: 'Cancel',
+    //       onPress: () => console.log('Cancel Pressed'),
+    //       style: 'cancel',
+    //     },
+    //     {
+    //       text: 'Delete',
+    //       onPress: () =>
+    //         this.onGroupSubTaskDeletePress(selectedGroupTaskID, selectedTaskID),
+    //     },
+    //   ],
+    //   {cancelable: false},
+    // );
   }
 
   onGroupSubTaskDeletePress(selectedGroupTaskID, selectedTaskID) {
-    this.setState({dataLoading: true});
+    this.deleteDetails = {
+      icon: icons.taskBlue,
+      type: 'success',
+      title: 'Sucsess',
+      description: this.state.isParent
+        ? 'Task deleted successfully'
+        : 'Sub task deleted successfully',
+      buttons: {},
+    };
+    this.setState({dataLoading: true, showMessageModal: false});
     APIServices.deleteSingleInGroupTaskData(selectedGroupTaskID, selectedTaskID)
       .then(response => {
         if (response.message == 'success') {
-          this.setState({dataLoading: false});
-          Alert.alert(
-            'Success',
-            'Task Deleted',
-            [{text: 'OK', onPress: () => this.props.navigation.goBack()}],
-            {cancelable: false},
-          );
+          this.setState({
+            dataLoading: false,
+            deleteTaskSuccess: true,
+            showMessageModal: true,
+          });
+          // Alert.alert(
+          //   'Success',
+          //   'Task Deleted',
+          //   [{text: 'OK', onPress: () => this.props.navigation.goBack()}],
+          //   {cancelable: false},
+          // );
         } else {
-          this.setState({dataLoading: false});
+          this.setState({dataLoading: false, deleteTaskSuccess: false});
         }
       })
       .catch(error => {
-        this.setState({dataLoading: false});
+        this.setState({dataLoading: false, deleteTaskSuccess: false});
         this.showAlert('', error.data.message);
       });
   }
 
   onBackPress() {
     this.props.navigation.goBack();
+  }
+
+  onPressCancel() {
+    if (this.state.deleteTaskSuccess) {
+      this.props.navigation.goBack();
+    }
+    this.setState({showMessageModal: false});
   }
 
   _renderHeader() {
@@ -1643,7 +1684,8 @@ class GroupTasksDetailsScreen extends Component {
   };
 
   onTaskDeketePress() {
-    this.deleteTask();
+    // this.deleteTask();
+    this.setState({showMessageModal: true});
   }
 
   onAddTaskPress(fromParent) {
@@ -2051,6 +2093,12 @@ class GroupTasksDetailsScreen extends Component {
           onConfirmPressed={() => {
             this.hideAlert();
           }}
+        />
+        <MessageShowModal
+          showMessageModal={this.state.showMessageModal}
+          details={this.deleteDetails}
+          onPress={() => this.deleteTask(this)}
+          onPressCancel={() => this.onPressCancel(this)}
         />
         {dataLoading && <Loader />}
       </View>
