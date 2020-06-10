@@ -19,8 +19,16 @@ import Loader from '../../../components/Loader';
 import _ from 'lodash';
 import AwesomeAlert from 'react-native-awesome-alerts';
 import APIServices from '../../../services/APIServices';
+import MessageShowModal from '../../../components/MessageShowModal';
 const {height} = Dimensions.get('window');
 
+let successDetails = {
+  icon: icons.userGreen,
+  type: 'success',
+  title: 'Success',
+  description: 'User updated successfully',
+  buttons: {},
+};
 class EditUserScreen extends Component {
   constructor(props) {
     super(props);
@@ -36,6 +44,7 @@ class EditUserScreen extends Component {
       alertTitle: '',
       alertMsg: '',
       dataLoading: false,
+      showMessageModal: false
     };
   }
 
@@ -60,8 +69,8 @@ class EditUserScreen extends Component {
       prevProps.editUserSuccess !== this.props.editUserSuccess &&
       this.props.editUserSuccess
     ) {
-      this.showAlert('', 'User updated successfully');
-      this.props.navigation.goBack();
+      // this.showAlert('', 'User updated successfully');
+      this.setState({showMessageModal: true});
     }
   }
 
@@ -91,6 +100,11 @@ class EditUserScreen extends Component {
     } else {
       this.setState({dataLoading: false});
     }
+  }
+
+  onPressCancel(){
+    this.setState({showMessageModal:false});
+    this.props.navigation.goBack();
   }
 
   saveUser() {
@@ -315,7 +329,12 @@ class EditUserScreen extends Component {
             this.hideAlert();
           }}
         />
-
+        <MessageShowModal
+          showMessageModal={this.state.showMessageModal}
+          details={successDetails}
+          onPress={() => {}}
+          onPressCancel={() => this.onPressCancel(this)}
+        />
         {editUserLoading && <Loader />}
         {dataLoading && <Loader />}
       </View>

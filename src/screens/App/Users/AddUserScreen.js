@@ -18,8 +18,16 @@ EStyleSheet.build({$rem: entireScreenWidth / 380});
 import Loader from '../../../components/Loader';
 import _ from 'lodash';
 import AwesomeAlert from 'react-native-awesome-alerts';
+import MessageShowModal from '../../../components/MessageShowModal';
 const {height} = Dimensions.get('window');
 
+let successDetails = {
+  icon: icons.userGreen,
+  type: 'success',
+  title: 'Success',
+  description: 'A new user has been created successfully',
+  buttons: {},
+};
 class AddUserScreen extends Component {
   constructor(props) {
     super(props);
@@ -33,6 +41,7 @@ class AddUserScreen extends Component {
       showAlert: false,
       alertTitle: '',
       alertMsg: '',
+      showMessageModal: false
     };
   }
 
@@ -57,7 +66,8 @@ class AddUserScreen extends Component {
       prevProps.addUserSuccess !== this.props.addUserSuccess &&
       this.props.addUserSuccess
     ) {
-      this.showAlert('', 'User created successfully');
+      // this.showAlert('', 'User created successfully');
+      this.setState({showMessageModal: true});
       this.resetState();
     }
   }
@@ -73,6 +83,10 @@ class AddUserScreen extends Component {
       password: '',
       confirmPassword: '',
     });
+  }
+
+  onPressCancel(){
+    this.setState({showMessageModal:false});
   }
 
   saveUser() {
@@ -292,6 +306,12 @@ class AddUserScreen extends Component {
           onConfirmPressed={() => {
             this.hideAlert();
           }}
+        />
+        <MessageShowModal
+          showMessageModal={this.state.showMessageModal}
+          details={successDetails}
+          onPress={() => {}}
+          onPressCancel={() => this.onPressCancel(this)}
         />
         {addUserLoading && <Loader />}
       </View>

@@ -74,5 +74,6 @@ const icons = {
   defaultOrganization: require('./default_organization.png'),
   alertRed: require('./alert_red.png'),
   folderGreen: require('./folder_green.png'),
+  userGreen: require('./user_green.png'),
 };
 export default icons;
