@@ -28,6 +28,7 @@ import DocumentPicker from 'react-native-document-picker';
 import moment from 'moment';
 import Loader from '../../../components/Loader';
 import ImagePicker from 'react-native-image-picker';
+import MessageShowModal from '../../../components/MessageShowModal';
 
 let dropData = [
   {
@@ -87,6 +88,14 @@ let issueTypeList = [
   {value: 'General', id: 'general'},
 ];
 
+let successDetails = {
+  icon: icons.taskBlue,
+  type: 'success',
+  title: 'Success',
+  description: 'You have created a task successfully',
+  buttons: {},
+};
+
 class AddNewTasksScreen extends Component {
   constructor(props) {
     super(props);
@@ -132,6 +141,7 @@ class AddNewTasksScreen extends Component {
       selectedOperarionalId: 'general',
       viewSprint: true,
       selectSprintName: '',
+      showMessageModal: false
     };
   }
 
@@ -159,12 +169,14 @@ class AddNewTasksScreen extends Component {
     ) {
       const taskID = this.props.taskId.data.taskId;
 
-      Alert.alert(
-        'Success',
-        'Task successfully added',
-        [{text: 'OK', onPress: () => this.onSuccess('sssssssssssssssssssss')}],
-        {cancelable: false},
-      );
+      // Alert.alert(
+      //   'Success',
+      //   'Task successfully added',
+      //   [{text: 'OK', onPress: () => this.onSuccess('sssssssssssssssssssss')}],
+      //   {cancelable: false},
+      // );
+
+      this.setState({showMessageModal: true});
 
       let files = this.state.files;
       if (files && files.length > 0) {
@@ -172,6 +184,11 @@ class AddNewTasksScreen extends Component {
       }
       // this.uploadFiles(this.state.files, 'b6ba3dcf-4494-4bb5-80dc-17376c628187')
     }
+  }
+
+  onPressCancel(){
+    this.setState({showMessageModal:false});
+    this.onSuccess('success')
   }
 
   onSuccess(text) {
@@ -896,7 +913,6 @@ class AddNewTasksScreen extends Component {
   }
 
   uploadFiles(file, taskId) {
-    console.log(file, taskId, 'fileeeeeeeeeeee');
     this.props.addFileToTask(file, taskId, this.props.selectedProjectID);
   }
 
@@ -1217,6 +1233,12 @@ class AddNewTasksScreen extends Component {
           onConfirmPressed={() => {
             this.hideAlert();
           }}
+        />
+        <MessageShowModal
+          showMessageModal={this.state.showMessageModal}
+          details={successDetails}
+          onPress={() => {}}
+          onPressCancel={() => this.onPressCancel(this)}
         />
       </ScrollView>
     );
