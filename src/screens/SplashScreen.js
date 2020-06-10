@@ -57,7 +57,7 @@ class SplashScreen extends Component {
       nextAppState === 'active'
     ) {
       try {
-        baseURL = await AsyncStorage.getItem('baseURL');
+        let baseURL = await AsyncStorage.getItem('baseURL');
         if (baseURL == null) {
           NavigationService.navigate('Auth');
         } else {

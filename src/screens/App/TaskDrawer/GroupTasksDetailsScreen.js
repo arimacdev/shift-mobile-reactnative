@@ -691,7 +691,7 @@ class GroupTasksDetailsScreen extends Component {
             onPress={() => this.downloadFile(item)}
             style={{marginLeft: EStyleSheet.value('24rem')}}>
             <Image
-              style={{width: 30, height: 30}}
+              style={styles.controlIcon}
               source={icons.downloadIcon}
             />
           </TouchableOpacity>
@@ -699,7 +699,7 @@ class GroupTasksDetailsScreen extends Component {
             onPress={() => this.deleteFileAlert(item)}
             style={{marginLeft: EStyleSheet.value('10rem')}}>
             <Image
-              style={{width: 30, height: 30}}
+              style={styles.controlIcon}
               source={icons.deleteRoundRed}
             />
           </TouchableOpacity>
@@ -2534,6 +2534,10 @@ const styles = EStyleSheet.create({
     width: '22rem',
     height: '22rem',
     borderRadius: 80 / 2,
+  },
+  controlIcon: {
+    width: '28rem',
+    height: '28rem',
   },
 });
 

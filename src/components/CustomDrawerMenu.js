@@ -19,6 +19,7 @@ import * as actions from '../redux/actions';
 import axios from 'axios';
 import FadeIn from 'react-native-fade-in-image';
 import icons from '../asserts/icons/icons';
+import OneSignal from 'react-native-onesignal';
 
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
@@ -243,6 +244,7 @@ const logOut = async () => {
     });
     if (response.status === 200) {
       AsyncStorage.clear();
+      OneSignal.setSubscription(false);
       NavigationService.navigate('ConfigurationScreen');
     }
   } catch (error) {}

@@ -26,6 +26,7 @@ import DeviceInfo from 'react-native-device-info';
 import Loader from '../../components/Loader';
 import icons from '../../asserts/icons/icons';
 import FadeIn from 'react-native-fade-in-image';
+import OneSignal from 'react-native-onesignal';
 
 class LoginScreen extends Component {
   constructor(props) {
@@ -75,7 +76,7 @@ class LoginScreen extends Component {
         this.issuer = response.idpEndpoints.issuser;
         this.authorizationEndpoint = response.idpEndpoints.authorization;
         this.tokenEndpoint = response.idpEndpoints.token;
-        this.logoutEndpoint = 'https://pmtool.devops.arimac.xyz/auth/realms/pm-tool/protocol/openid-connect/logout'
+        this.logoutEndpoint = response.idpEndpoints.logout;
 
         this.config = {
           issuer: this.issuer,
@@ -122,6 +123,7 @@ class LoginScreen extends Component {
         this.setState({dataLoading: false});
         this.props.UserInfoSuccess(responseUser);
         this.props.UserType(userType);
+        OneSignal.setSubscription(true);
         NavigationService.navigate('App');
       })
       .catch(err => {

@@ -101,17 +101,10 @@ class SearchUserScreen extends Component {
                 })
               }>
               <Image
-                style={{width: 28, height: 28, borderRadius: 28 / 2}}
+                style={styles.editIconStyle}
                 source={icons.editRoundWhite}
               />
             </TouchableOpacity>
-
-            {/* <TouchableOpacity style={{marginLeft: EStyleSheet.value('24rem')}}>
-                <Image 
-                  style={{width: 28, height: 28,borderRadius: 28/ 2 }} 
-                  source={require('../../../asserts/img/block_user.png')}
-                />
-            </TouchableOpacity> */}
           </View>
         </View>
       </TouchableOpacity>
@@ -278,6 +271,10 @@ const styles = EStyleSheet.create({
   flalList: {
     marginTop: '0rem',
     marginBottom: '10rem',
+  },
+  editIconStyle: {
+    width: '26rem',
+    height: '26rem',
   },
 });
 

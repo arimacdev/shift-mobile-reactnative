@@ -4,6 +4,7 @@ import ProjectsReducer from './ProjectsReducer';
 import UsersReducer from './UsersReducer';
 import fileUploadReducer from './FileUploadReducer';
 import TasksReducer from './TasksReducer';
+import OneSignalReducer from './OneSignalReducer'
 
 export default combineReducers({
     auth : AuthReducer,
@@ -11,4 +12,5 @@ export default combineReducers({
     users : UsersReducer,
     fileUpload: fileUploadReducer,
     tasks : TasksReducer,
+    oneSignal: OneSignalReducer,
 });
