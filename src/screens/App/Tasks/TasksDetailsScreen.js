@@ -40,6 +40,7 @@ import * as Animatable from 'react-native-animatable';
 import Modal from 'react-native-modal';
 import {NavigationEvents} from 'react-navigation';
 import ImagePicker from 'react-native-image-picker';
+import MessageShowModal from '../../../components/MessageShowModal';
 
 const Placeholder = () => (
   <View style={styles.landing}>
@@ -233,7 +234,17 @@ let taskDataWhenParentIsBoard = [
   },
 ];
 let MS_PER_MINUTE = 60000;
+
 class TasksDetailsScreen extends Component {
+  deleteDetails = {
+    icon: icons.alertRed,
+    type: 'confirm',
+    title: 'Delete Task',
+    description:
+      "You're about to permanently delete this task, its comments and attachments, and all of its data.\nIf you're not sure, you can close this pop up.",
+    buttons: {positive: 'Delete', negative: 'Cancel'},
+  };
+
   constructor(props) {
     super(props);
     this.state = {
@@ -303,6 +314,8 @@ class TasksDetailsScreen extends Component {
       selectdList: development,
       taskItem: {},
       parentTaskStatus: '',
+      showMessageModal: false,
+      deleteTaskSuccess: false,
     };
   }
 
@@ -1165,6 +1178,19 @@ class TasksDetailsScreen extends Component {
     if (isParent) {
       this.getSubTAskDetails();
     }
+
+    let descriptionTask =
+      "You're about to permanently delete this task, its comments and attachments, and all of its data.\nIf you're not sure, you can close this pop up.";
+    let descriptionSubTask =
+      "You're about to permanently delete this sub task and all of its data.\nIf you're not sure, you can close this pop up.";
+
+    this.deleteDetails = {
+      icon: icons.alertRed,
+      type: 'confirm',
+      title: isParent ? 'Delete Task' : 'Delete Sub Task',
+      description: isParent ? descriptionTask : descriptionSubTask,
+      buttons: {positive: 'Delete', negative: 'Cancel'},
+    };
   }
 
   setIssueType(taskResult) {
@@ -1898,43 +1924,58 @@ class TasksDetailsScreen extends Component {
     let tskInitiator = this.state.projectTaskInitiator;
     let taskName = this.state.taskName;
 
-    Alert.alert(
-      'Delete Task',
-      "You're about to permanently delete this task, its comments\n and attachments, and all of its data.\nIf you're not sure, you can close this pop up.",
-      [
-        {
-          text: 'Cancel',
-          onPress: () => console.log('Cancel Pressed'),
-          style: 'cancel',
-        },
-        {
-          text: 'Delete',
-          onPress: () =>
-            this.deleteTsakOkPress(projectID, taskID, taskName, tskInitiator),
-        },
-      ],
-      {cancelable: false},
-    );
+    this.deleteTsakOkPress(projectID, taskID, taskName, tskInitiator);
+
+    // Alert.alert(
+    //   'Delete Task',
+    //   "You're about to permanently delete this task, its comments\n and attachments, and all of its data.\nIf you're not sure, you can close this pop up.",
+    //   [
+    //     {
+    //       text: 'Cancel',
+    //       onPress: () => console.log('Cancel Pressed'),
+    //       style: 'cancel',
+    //     },
+    //     {
+    //       text: 'Delete',
+    //       onPress: () =>
+    //         this.deleteTsakOkPress(projectID, taskID, taskName, tskInitiator),
+    //     },
+    //   ],
+    //   {cancelable: false},
+    // );
   }
 
   deleteTsakOkPress(projectID, taskId, taskName, tskInitiator) {
-    this.setState({dataLoading: true});
+    this.deleteDetails = {
+      icon: icons.taskBlue,
+      type: 'success',
+      title: 'Sucsess',
+      description: this.state.isParent
+        ? 'Task deleted successfully'
+        : 'Sub task deleted successfully',
+      buttons: {},
+    };
+    this.setState({dataLoading: true, showMessageModal: false});
     APIServices.deleteSingleTask(projectID, taskId, taskName, tskInitiator)
       .then(response => {
         if (response.message == 'success') {
-          this.setState({dataLoading: false});
-          Alert.alert(
-            'Success',
-            'Task Deleted',
-            [{text: 'OK', onPress: () => this.props.navigation.goBack()}],
-            {cancelable: false},
-          );
+          this.setState({
+            dataLoading: false,
+            deleteTaskSuccess: true,
+            showMessageModal: true,
+          });
+          // Alert.alert(
+          //   'Success',
+          //   'Task Deleted',
+          //   [{text: 'OK', onPress: () => this.props.navigation.goBack()}],
+          //   {cancelable: false},
+          // );
         } else {
-          this.setState({dataLoading: false});
+          this.setState({dataLoading: false, deleteTaskSuccess: false});
         }
       })
       .catch(error => {
-        this.setState({dataLoading: false});
+        this.setState({dataLoading: false, deleteTaskSuccess: false});
         this.showAlert('', error.data.message);
       });
   }
@@ -2093,7 +2134,8 @@ class TasksDetailsScreen extends Component {
   };
 
   onTaskDeketePress() {
-    this.deleteTask();
+    // this.deleteTask();
+    this.setState({showMessageModal: true});
   }
 
   onAddTaskPress(fromParent) {
@@ -2297,6 +2339,13 @@ class TasksDetailsScreen extends Component {
   async backPress() {
     await this.props.secondDetailViewOpen(false);
     this.props.navigation.goBack();
+  }
+
+  onPressCancel() {
+    if (this.state.deleteTaskSuccess) {
+      this.props.navigation.goBack();
+    }
+    this.setState({showMessageModal: false});
   }
 
   render() {
@@ -2642,6 +2691,12 @@ class TasksDetailsScreen extends Component {
           onConfirmPressed={() => {
             this.hideAlert();
           }}
+        />
+        <MessageShowModal
+          showMessageModal={this.state.showMessageModal}
+          details={this.deleteDetails}
+          onPress={() => this.deleteTask(this)}
+          onPressCancel={() => this.onPressCancel(this)}
         />
         {dataLoading && <Loader />}
       </View>
