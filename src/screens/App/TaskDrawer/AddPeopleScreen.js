@@ -22,7 +22,15 @@ const {height} = Dimensions.get('window');
 import {MenuProvider} from 'react-native-popup-menu';
 import PopupMenu from '../../../components/PopupMenu';
 import FadeIn from 'react-native-fade-in-image';
+import MessageShowModal from '../../../components/MessageShowModal';
 
+let successDetails = {
+  icon: icons.userGreen,
+  type: 'success',
+  title: 'Success',
+  description: 'User have been added successfully',
+  buttons: {},
+};
 class AddPeopleScreen extends Component {
   constructor(props) {
     super(props);
@@ -41,6 +49,7 @@ class AddPeopleScreen extends Component {
       alertMsg: '',
       taskItemID: '',
       popupMenuOpen: false,
+      showMessageModal: false,
     };
   }
 
@@ -138,8 +147,8 @@ class AddPeopleScreen extends Component {
     try {
       resultObj = await APIServices.addUserToGroupTask(userID, taskItemID);
       if (resultObj.message == 'success') {
-        this.setState({dataLoading: false});
-        this.showAlert('', 'Successfully completed');
+        this.setState({dataLoading: false, showMessageModal: true});
+        // this.showAlert('', 'Successfully completed');
         this.setState({
           name: '',
           role: '',
@@ -156,6 +165,10 @@ class AddPeopleScreen extends Component {
         this.showAlert('', e.data.message);
       }
     }
+  }
+
+  onPressCancel() {
+    this.setState({showMessageModal: false});
   }
 
   validateUser(userID) {
@@ -336,6 +349,12 @@ class AddPeopleScreen extends Component {
             onConfirmPressed={() => {
               this.hideAlert();
             }}
+          />
+          <MessageShowModal
+            showMessageModal={this.state.showMessageModal}
+            details={successDetails}
+            onPress={() => {}}
+            onPressCancel={() => this.onPressCancel(this)}
           />
         </View>
       </MenuProvider>
