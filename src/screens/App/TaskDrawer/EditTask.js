@@ -19,8 +19,18 @@ import AwesomeAlert from 'react-native-awesome-alerts';
 import APIServices from '../../../services/APIServices';
 import {NavigationEvents} from 'react-navigation';
 import Loader from '../../../components/Loader';
+import icons from '../../../asserts/icons/icons';
+import MessageShowModal from '../../../components/MessageShowModal';
 
 class EditTask extends Component {
+  details = {
+    icon: icons.alertRed,
+    type: 'confirm',
+    title: 'Delete Group',
+    description:
+      "You're about to permanently delete this group, its comments and attachments, and all of its data.\nIf you're not sure, you can close this pop up.",
+    buttons: {positive: 'Delete', negative: 'Cancel'},
+  };
   constructor(props) {
     super(props);
     this.state = {
@@ -31,6 +41,8 @@ class EditTask extends Component {
       groupName: '',
       selectedTaskGroupId: '',
       isChange: true,
+      showMessageModal: false,
+      deleteTaskSuccess: false,
     };
   }
 
@@ -66,15 +78,22 @@ class EditTask extends Component {
     if (!groupName && _.isEmpty(groupName)) {
       this.showAlert('', 'Please Enter the Sub Task Name');
     } else {
-      this.setState({dataLoading: true});
+      this.setState({dataLoading: true, showMessageModal:false});
       try {
-        resultObj = await APIServices.updateGroupTaskData(
+        let resultObj = await APIServices.updateGroupTaskData(
           selectedTaskGroupId,
           groupName,
         );
         if (resultObj.message == 'success') {
-          this.setState({dataLoading: false});
-          this.showAlert('', 'Successfully Updated');
+          this.details = {
+            icon: icons.taskBlue,
+            type: 'success',
+            title: 'Sucsess',
+            description: 'Group have been renamed successfully',
+            buttons: {},
+          };
+          this.setState({dataLoading: false, showMessageModal:true});
+          // this.showAlert('', 'Successfully Updated');
         } else {
           this.setState({dataLoading: false});
           this.showAlert('', 'Error');
@@ -89,38 +108,68 @@ class EditTask extends Component {
   }
 
   deleteGroupdeleteGroupAlert() {
-    Alert.alert(
-      'Delete Group',
-      'You are about to permanantly delete this group and all of its data.\n If you are not sure, you can cancel this action.',
-      [
-        {
-          text: 'Cancel',
-          onPress: () => console.log('Cancel Pressed'),
-          style: 'cancel',
-        },
-        {text: 'Ok', onPress: () => this.deleteGroupdeleteGroup()},
-      ],
-      {cancelable: false},
-    );
+    // Alert.alert(
+    //   'Delete Group',
+    //   'You are about to permanantly delete this group and all of its data.\n If you are not sure, you can cancel this action.',
+    //   [
+    //     {
+    //       text: 'Cancel',
+    //       onPress: () => console.log('Cancel Pressed'),
+    //       style: 'cancel',
+    //     },
+    //     {text: 'Ok', onPress: () => this.deleteGroupdeleteGroup()},
+    //   ],
+    //   {cancelable: false},
+    // );
+    this.details = {
+      icon: icons.alertRed,
+      type: 'confirm',
+      title: 'Delete Group',
+      description:
+        "You're about to permanently delete this group, its comments and attachments, and all of its data.\nIf you're not sure, you can close this pop up.",
+      buttons: {positive: 'Delete', negative: 'Cancel'},
+    };
+    this.setState({showMessageModal: true});
   }
 
   async deleteGroupdeleteGroup() {
     let selectedTaskGroupId = this.state.selectedTaskGroupId;
     try {
-      resultObj = await APIServices.deleteGroupTaskData(selectedTaskGroupId);
+      this.setState({dataLoading: true, showMessageModal: false});
+      let resultObj = await APIServices.deleteGroupTaskData(
+        selectedTaskGroupId,
+      );
       if (resultObj.message == 'success') {
-        this.setState({dataLoading: false, isChange: true});
-        this.props.navigation.goBack();
+        this.details = {
+          icon: icons.taskBlue,
+          type: 'success',
+          title: 'Sucsess',
+          description: 'Group have been deleted successfully',
+          buttons: {},
+        };
+        this.setState({
+          dataLoading: false,
+          isChange: true,
+          deleteTaskSuccess: true,
+          showMessageModal: true,
+        });
       } else {
-        this.setState({dataLoading: false});
+        this.setState({dataLoading: false, deleteTaskSuccess: false});
         this.showAlert('', 'Error');
       }
     } catch (e) {
       if (e.status == 401) {
-        this.setState({dataLoading: false});
+        this.setState({dataLoading: false, deleteTaskSuccess: false});
         this.showAlert('', e.data.message);
       }
     }
+  }
+
+  onPressCancel() {
+    if (this.state.deleteTaskSuccess) {
+      this.props.navigation.goBack();
+    }
+    this.setState({showMessageModal: false});
   }
 
   onChangeTextName(text) {
@@ -146,7 +195,7 @@ class EditTask extends Component {
   async getGroupDetails() {
     let selectedTaskGroupId = this.state.selectedTaskGroupId;
     this.setState({dataLoading: true, isChange: true});
-    dataResult = await APIServices.getSingleGroupTaskData(selectedTaskGroupId);
+    let dataResult = await APIServices.getSingleGroupTaskData(selectedTaskGroupId);
     if (dataResult.message == 'success') {
       this.setState({
         dataLoading: false,
@@ -227,6 +276,12 @@ class EditTask extends Component {
           onConfirmPressed={() => {
             this.hideAlert();
           }}
+        />
+        <MessageShowModal
+          showMessageModal={this.state.showMessageModal}
+          details={this.details}
+          onPress={() => this.deleteGroupdeleteGroup(this)}
+          onPressCancel={() => this.onPressCancel(this)}
         />
       </View>
     );

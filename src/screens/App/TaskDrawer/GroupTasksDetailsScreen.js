@@ -1540,19 +1540,19 @@ class GroupTasksDetailsScreen extends Component {
   }
 
   onGroupSubTaskDeletePress(selectedGroupTaskID, selectedTaskID) {
-    this.deleteDetails = {
-      icon: icons.taskBlue,
-      type: 'success',
-      title: 'Sucsess',
-      description: this.state.isParent
-        ? 'Task deleted successfully'
-        : 'Sub task deleted successfully',
-      buttons: {},
-    };
     this.setState({dataLoading: true, showMessageModal: false});
     APIServices.deleteSingleInGroupTaskData(selectedGroupTaskID, selectedTaskID)
       .then(response => {
         if (response.message == 'success') {
+          this.deleteDetails = {
+            icon: icons.taskBlue,
+            type: 'success',
+            title: 'Sucsess',
+            description: this.state.isParent
+              ? 'Task deleted successfully'
+              : 'Sub task deleted successfully',
+            buttons: {},
+          };
           this.setState({
             dataLoading: false,
             deleteTaskSuccess: true,

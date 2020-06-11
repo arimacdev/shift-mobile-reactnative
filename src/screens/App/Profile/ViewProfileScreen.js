@@ -230,13 +230,7 @@ class ViewProfileScreen extends Component {
   }
 
   async uploadFiles(fileUri, filename, fileType) {
-    this.successDetails = {
-      icon: icons.userGreen,
-      type: 'success',
-      title: 'Success',
-      description: 'Profile image updated successfully',
-      buttons: {},
-    };
+    
     try {
       let userID = this.state.userID;
       this.setState({dataLoading: true, showMessageModal: false});
@@ -246,6 +240,13 @@ class ViewProfileScreen extends Component {
         fileType,
       );
       if (userData.message == 'success') {
+        this.successDetails = {
+          icon: icons.userGreen,
+          type: 'success',
+          title: 'Success',
+          description: 'Profile image updated successfully',
+          buttons: {},
+        };
         this.setState({dataLoading: false, showMessageModal: true});
         this.fetchUserData(userID);
         this.fetchDataUserData(userID);
@@ -320,14 +321,6 @@ class ViewProfileScreen extends Component {
   }
 
   async saveUser() {
-    this.successDetails = {
-      icon: icons.userGreen,
-      type: 'success',
-      title: 'Success',
-      description: 'Profile details updated successfully',
-      buttons: {},
-    };
-
     let userFirstName = this.state.userFirstName;
     let userLastName = this.state.userLastName;
     let userEmail = this.state.userEmail;
@@ -351,6 +344,13 @@ class ViewProfileScreen extends Component {
           userNewPassword,
         );
         if (userData.message == 'success') {
+          this.successDetails = {
+            icon: icons.userGreen,
+            type: 'success',
+            title: 'Success',
+            description: 'Profile details updated successfully',
+            buttons: {},
+          };
           this.setState({dataLoading: false, showMessageModal: true});
         } else {
           this.setState({dataLoading: false});
