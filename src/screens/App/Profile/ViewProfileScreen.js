@@ -26,10 +26,18 @@ import AwesomeAlert from 'react-native-awesome-alerts';
 import DocumentPicker from 'react-native-document-picker';
 import moment from 'moment';
 import ImagePicker from 'react-native-image-picker';
+import MessageShowModal from '../../../components/MessageShowModal';
 
 const config = strings.slack;
 
 class ViewProfileScreen extends Component {
+  successDetails = {
+    icon: icons.userGreen,
+    type: 'success',
+    title: 'Success',
+    description: 'Profile details updated successfully',
+    buttons: {},
+  };
   constructor(props) {
     super(props);
     this.state = {
@@ -51,6 +59,7 @@ class ViewProfileScreen extends Component {
       files: [],
       userID: '',
       // switchValue: false,
+      showMessageModal: false,
     };
   }
 
@@ -151,7 +160,7 @@ class ViewProfileScreen extends Component {
       } else if (response.error) {
       } else if (response.customButton) {
       } else {
-        this.uploadFiles(response.uri, response.type);
+        this.uploadFiles(response.uri, response.name, response.type);
       }
     });
   }
@@ -171,7 +180,7 @@ class ViewProfileScreen extends Component {
       } else if (response.error) {
       } else if (response.customButton) {
       } else {
-        this.uploadFiles(response.uri, response.type);
+        this.uploadFiles(response.uri, response.name, response.type);
       }
     });
   }
@@ -220,13 +229,24 @@ class ViewProfileScreen extends Component {
     );
   }
 
-  async uploadFiles(fileUri, fileType) {
+  async uploadFiles(fileUri, filename, fileType) {
+    this.successDetails = {
+      icon: icons.userGreen,
+      type: 'success',
+      title: 'Success',
+      description: 'Profile image updated successfully',
+      buttons: {},
+    };
     try {
       let userID = this.state.userID;
-      this.setState({dataLoading: true});
-      let userData = await APIServices.uplaodProfilePhoto(fileUri, fileType);
+      this.setState({dataLoading: true, showMessageModal: false});
+      let userData = await APIServices.uplaodProfilePhoto(
+        fileUri,
+        filename,
+        fileType,
+      );
       if (userData.message == 'success') {
-        this.setState({dataLoading: false});
+        this.setState({dataLoading: false, showMessageModal: true});
         this.fetchUserData(userID);
         this.fetchDataUserData(userID);
       } else {
@@ -300,6 +320,14 @@ class ViewProfileScreen extends Component {
   }
 
   async saveUser() {
+    this.successDetails = {
+      icon: icons.userGreen,
+      type: 'success',
+      title: 'Success',
+      description: 'Profile details updated successfully',
+      buttons: {},
+    };
+
     let userFirstName = this.state.userFirstName;
     let userLastName = this.state.userLastName;
     let userEmail = this.state.userEmail;
@@ -315,7 +343,7 @@ class ViewProfileScreen extends Component {
       )
     ) {
       try {
-        this.setState({dataLoading: true});
+        this.setState({dataLoading: true, showMessageModal: false});
         let userData = await APIServices.updateMyDetails(
           userFirstName,
           userLastName,
@@ -323,7 +351,7 @@ class ViewProfileScreen extends Component {
           userNewPassword,
         );
         if (userData.message == 'success') {
-          this.setState({dataLoading: false});
+          this.setState({dataLoading: false, showMessageModal: true});
         } else {
           this.setState({dataLoading: false});
         }
@@ -405,6 +433,10 @@ class ViewProfileScreen extends Component {
       alertTitle: title,
       alertMsg: msg,
     });
+  }
+
+  onPressCancel() {
+    this.setState({showMessageModal: false});
   }
 
   // toggleSwitch = value => {
@@ -570,6 +602,12 @@ class ViewProfileScreen extends Component {
             onConfirmPressed={() => {
               this.hideAlert();
             }}
+          />
+          <MessageShowModal
+            showMessageModal={this.state.showMessageModal}
+            details={this.successDetails}
+            onPress={() => {}}
+            onPressCancel={() => this.onPressCancel(this)}
           />
         </View>
         {dataLoading && <Loader />}

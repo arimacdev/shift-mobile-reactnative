@@ -2398,7 +2398,7 @@ async function updateMyDetails(firstName, lastName, email, password) {
   );
 }
 
-async function uplaodProfilePhoto(fileUri,fileType) {
+async function uplaodProfilePhoto(fileUri, filename, fileType) {
   let baseURL = null;
   baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
@@ -2412,7 +2412,7 @@ async function uplaodProfilePhoto(fileUri,fileType) {
 
   const file1 = {
     uri: fileUri,
-    name: 'image-pmtool-user' + new Date().getTime(),
+    name: filename,
     type: fileType,
   };
   const formData = new FormData();
