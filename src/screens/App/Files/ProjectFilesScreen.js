@@ -27,8 +27,17 @@ import RNFetchBlob from 'rn-fetch-blob';
 import fileTypes from '../../../asserts/fileTypes/fileTypes';
 import ImagePicker from 'react-native-image-picker';
 import EmptyListView from '../../../components/EmptyListView';
+import MessageShowModal from '../../../components/MessageShowModal';
 
 class ProjectFilesScreen extends Component {
+  deleteDetails = {
+    icon: icons.alertRed,
+    type: 'confirm',
+    title: 'Delete File',
+    description:
+      "You are about to permanantly delete this file,\n If you are not sure, you can cancel this action.",
+    buttons: {positive: 'Delete', negative: 'Cancel'},
+  };
   constructor(props) {
     super(props);
     this.state = {
@@ -49,6 +58,8 @@ class ProjectFilesScreen extends Component {
       Uploading: 0,
       indeterminate: false,
       searchText: '',
+      showMessageModal: false,
+      item:[]
     };
   }
 
@@ -128,31 +139,47 @@ class ProjectFilesScreen extends Component {
   }
 
   deleteFileAlert(item) {
-    Alert.alert(
-      'Delete File',
-      'You are about to permanantly delete this file,\n If you are not sure, you can cancel this action.',
-      [
-        {
-          text: 'Cancel',
-          onPress: () => console.log('Cancel Pressed'),
-          style: 'cancel',
-        },
-        {text: 'Ok', onPress: () => this.deleteFile(item)},
-      ],
-      {cancelable: false},
-    );
+    // Alert.alert(
+    //   'Delete File',
+    //   'You are about to permanantly delete this file,\n If you are not sure, you can cancel this action.',
+    //   [
+    //     {
+    //       text: 'Cancel',
+    //       onPress: () => console.log('Cancel Pressed'),
+    //       style: 'cancel',
+    //     },
+    //     {text: 'Ok', onPress: () => this.deleteFile(item)},
+    //   ],
+    //   {cancelable: false},
+    // );
+    this.deleteDetails = {
+      icon: icons.alertRed,
+      type: 'confirm',
+      title: 'Delete File',
+      description:
+        "You are about to permanantly delete this file,\n If you are not sure, you can cancel this action.",
+      buttons: {positive: 'Delete', negative: 'Cancel'},
+    };
+    this.setState({showMessageModal: true, item:item});
   }
 
-  async deleteFile(item) {
+  async deleteFile() {
     let projectID = this.props.selectedProjectID;
-    let projectFileId = item.projectFileId;
+    let projectFileId = this.state.item.projectFileId;
 
-    this.setState({dataLoading: true});
+    this.setState({dataLoading: true, showMessageModal: false});
 
     await APIServices.deleteProjectFile(projectID, projectFileId)
       .then(response => {
         if (response.message == 'success') {
-          this.setState({dataLoading: false});
+          this.deleteDetails = {
+            icon: icons.taskBlue,
+            type: 'success',
+            title: 'Sucsess',
+            description: 'File has been deleted successfully',
+            buttons: {},
+          };
+          this.setState({dataLoading: false, showMessageModal: true});
           this.fetchData(this.props.selectedProjectID);
         } else {
           this.setState({dataLoading: false});
@@ -496,6 +523,10 @@ class ProjectFilesScreen extends Component {
     }
   }
 
+  onPressCancel() {
+    this.setState({showMessageModal: false});
+  }
+
   render() {
     let filesData = this.state.filesData;
     let dataLoading = this.state.dataLoading;
@@ -567,6 +598,12 @@ class ProjectFilesScreen extends Component {
           onConfirmPressed={() => {
             this.hideAlert();
           }}
+        />
+        <MessageShowModal
+          showMessageModal={this.state.showMessageModal}
+          details={this.deleteDetails}
+          onPress={() => this.deleteFile(this)}
+          onPressCancel={() => this.onPressCancel(this)}
         />
       </View>
     );
