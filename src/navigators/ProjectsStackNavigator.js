@@ -33,10 +33,10 @@ export const ProjectsStackNavigator = createStackNavigator(
         header: (
           <Header
             isHome
-            isSearch = {true}
-            searchNavigation = {'projectScreen'}
-            isAddNew = {true}
-            addNewNavigation = {'projectScreen'}
+            isSearch={true}
+            searchNavigation={'projectScreen'}
+            isAddNew={true}
+            addNewNavigation={'projectScreen'}
             navigation={navigation}
             title="Projects"
             onPress={() => navigation.openDrawer()}
@@ -86,10 +86,7 @@ export const ProjectsStackNavigator = createStackNavigator(
       screen: EditProjectScreen,
       navigationOptions: ({navigation}) => ({
         header: (
-          <Header
-            title={'Edit Project'}
-            onPress={() => navigation.pop()}
-          />
+          <Header title={'Edit Project'} onPress={() => navigation.pop()} />
         ),
       }),
     },
@@ -97,10 +94,7 @@ export const ProjectsStackNavigator = createStackNavigator(
       screen: AddPeopleScreen,
       navigationOptions: ({navigation}) => ({
         header: (
-          <Header
-            title={'Add People'}
-            onPress={() => navigation.pop()}
-          />
+          <Header title={'Add People'} onPress={() => navigation.pop()} />
         ),
       }),
     },
@@ -108,10 +102,7 @@ export const ProjectsStackNavigator = createStackNavigator(
       screen: EditPeople,
       navigationOptions: ({navigation}) => ({
         header: (
-          <Header
-            title={'Edit People'}
-            onPress={() => navigation.goBack()}
-          />
+          <Header title={'Edit People'} onPress={() => navigation.goBack()} />
         ),
       }),
     },

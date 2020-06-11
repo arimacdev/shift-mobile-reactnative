@@ -112,7 +112,7 @@ const styles = EStyleSheet.create({
     marginBottom: '1%',
     marginLeft: '5%',
     marginRight: '8%',
-    borderRadius: 10,
+    borderRadius: '10rem',
     backgroundColor: '#edf0f5',
   },
 });

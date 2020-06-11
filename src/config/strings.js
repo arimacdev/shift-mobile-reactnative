@@ -5,7 +5,7 @@ const strings = {
     configBottomText:
       'Contact your organization administrator to get the organization URL',
     configButton: 'OK',
-    configError:'Sorry, we did not find such organization' 
+    configError: 'Sorry, we did not find such organization',
   },
   login: {
     loginButton: 'Login',
@@ -14,8 +14,8 @@ const strings = {
     loginSubMainTitle:
       'Enter your email address and password to get access your account',
     copyRights: '© Arimac Digital',
-    loginText:'You are logging in to',
-    goBack:'Go Back'
+    loginText: 'You are logging in to',
+    goBack: 'Go Back',
   },
   slack: {
     clientId: '345426929140.1020110511447', // found under App Credentials
@@ -30,10 +30,9 @@ const strings = {
     dangerouslyAllowInsecureHttpRequests: true,
   },
 
-  oneSignal:{
-    oneSignalAppId:'45e39e49-0bb3-4d57-a9f9-9c6dcbe2e118'
-  }
-  
+  oneSignal: {
+    oneSignalAppId: '45e39e49-0bb3-4d57-a9f9-9c6dcbe2e118',
+  },
 };
 
 export default strings;

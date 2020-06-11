@@ -25,8 +25,8 @@ export const TasksStackNavigator = createStackNavigator(
         header: (
           <Header
             isHome
-            isSearch = {true}
-            searchNavigation = {'tasksScreen'}
+            isSearch={true}
+            searchNavigation={'tasksScreen'}
             navigation={navigation}
             title="Tasks"
             onPress={() => navigation.openDrawer()}
@@ -65,8 +65,7 @@ export const TasksStackNavigator = createStackNavigator(
       navigationOptions: ({navigation}) => ({
         header: (
           <Header
-            title={ 'My personal tasks'
-            }
+            title={'My personal tasks'}
             onPress={() => navigation.pop()}
           />
         ),
@@ -88,10 +87,7 @@ export const TasksStackNavigator = createStackNavigator(
       screen: AddPeopleGroupTaskScreen,
       navigationOptions: ({navigation}) => ({
         header: (
-          <Header
-            title={'Add People'}
-            onPress={() => navigation.pop()}
-          />
+          <Header title={'Add People'} onPress={() => navigation.pop()} />
         ),
       }),
     },

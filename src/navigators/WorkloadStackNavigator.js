@@ -28,7 +28,7 @@ export const WorkloadStackNavigator = createStackNavigator(
     WorkloadTabScreen: {
       screen: WorkloadTabScreen,
       navigationOptions: ({navigation}) => ({
-        header: null
+        header: null,
       }),
     },
     WorkloadSearchScreen: {

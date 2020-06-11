@@ -13,55 +13,52 @@ export const UsersStackNavigator = createStackNavigator(
     UsersScreen: {
       screen: UsersScreen,
       navigationOptions: ({navigation}) => ({
-        header: <Header
-              isHome
-              isUser
-              isSearch = {true}
-              searchNavigation = {'userScreen'}
-              isAddNew = {true}
-              addNewNavigation = {'userScreen'}
-              navigation={navigation}
-              title='User'
-              screen={'userList'}
-              onPress={() => navigation.openDrawer()}
-          />,
+        header: (
+          <Header
+            isHome
+            isUser
+            isSearch={true}
+            searchNavigation={'userScreen'}
+            isAddNew={true}
+            addNewNavigation={'userScreen'}
+            navigation={navigation}
+            title="User"
+            screen={'userList'}
+            onPress={() => navigation.openDrawer()}
+          />
+        ),
       }),
     },
     ViewUserScreen: {
       screen: ViewUserScreen,
-      navigationOptions: ({ navigation }) => ({
-          header: <Header
-              title='View user'
-              onPress={() => navigation.pop()}
-          />,
+      navigationOptions: ({navigation}) => ({
+        header: <Header title="View user" onPress={() => navigation.pop()} />,
       }),
     },
     AddUserScreen: {
       screen: AddUserScreen,
-      navigationOptions: ({ navigation }) => ({
-          header: <Header
-              title='Create new user'
-              onPress={() => navigation.pop()}
-          />,
+      navigationOptions: ({navigation}) => ({
+        header: (
+          <Header title="Create new user" onPress={() => navigation.pop()} />
+        ),
       }),
     },
     EditUserScreen: {
       screen: EditUserScreen,
-      navigationOptions: ({ navigation }) => ({
-          header: <Header
-              title='Edit user'
-              onPress={() => navigation.pop()}
-          />,
+      navigationOptions: ({navigation}) => ({
+        header: <Header title="Edit user" onPress={() => navigation.pop()} />,
       }),
     },
     SearchUserScreen: {
       screen: SearchUserScreen,
-      navigationOptions: ({ navigation }) => ({
-          header: <Header
-              title='Search User'
-              navigation={navigation}
-              onPress={() => navigation.pop()}
-          />,
+      navigationOptions: ({navigation}) => ({
+        header: (
+          <Header
+            title="Search User"
+            navigation={navigation}
+            onPress={() => navigation.pop()}
+          />
+        ),
       }),
     },
   },
