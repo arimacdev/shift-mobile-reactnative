@@ -35,10 +35,10 @@ class ProjectFilesScreen extends Component {
     type: 'confirm',
     title: 'Delete File',
     description:
-      "You are about to permanantly delete this file,\n If you are not sure, you can cancel this action.",
+      'You are about to permanantly delete this file,\n If you are not sure, you can cancel this action.',
     buttons: {positive: 'Delete', negative: 'Cancel'},
   };
-  onPressMessageModal = ()=>{};
+  onPressMessageModal = () => {};
   constructor(props) {
     super(props);
     this.state = {
@@ -60,7 +60,6 @@ class ProjectFilesScreen extends Component {
       indeterminate: false,
       searchText: '',
       showMessageModal: false,
-      item:[]
     };
   }
 
@@ -158,10 +157,10 @@ class ProjectFilesScreen extends Component {
       type: 'confirm',
       title: 'Delete File',
       description:
-        "You are about to permanantly delete this file,\n If you are not sure, you can cancel this action.",
+        'You are about to permanantly delete this file,\n If you are not sure, you can cancel this action.',
       buttons: {positive: 'Delete', negative: 'Cancel'},
     };
-    this.onPressMessageModal = ()=>this.deleteFile(item);
+    this.onPressMessageModal = () => this.deleteFile(item);
     this.setState({showMessageModal: true});
   }
 

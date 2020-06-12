@@ -90,7 +90,7 @@ class MyTasksDetailsScreen extends Component {
       "You're about to permanently delete this task, its comments and attachments, and all of its data.\nIf you're not sure, you can close this pop up.",
     buttons: {positive: 'Delete', negative: 'Cancel'},
   };
-  onPressMessageModal=()=>{};
+  onPressMessageModal = () => {};
 
   constructor(props) {
     super(props);
@@ -559,18 +559,18 @@ class MyTasksDetailsScreen extends Component {
       type: 'confirm',
       title: 'Delete File',
       description:
-        "You are about to permanantly delete this file,\n If you are not sure, you can cancel this action.",
+        'You are about to permanantly delete this file,\n If you are not sure, you can cancel this action.',
       buttons: {positive: 'Delete', negative: 'Cancel'},
     };
-    this.onPressMessageModal = ()=>this.deleteFile(item);
-    this.setState({showMessageModal:true});
+    this.onPressMessageModal = () => this.deleteFile(item);
+    this.setState({showMessageModal: true});
   }
 
   async deleteFile(item) {
     let selectedTaskID = this.state.selectedTaskID;
     let taskFileId = item.taskFileId;
 
-    this.setState({dataLoading: true, showMessageModal:false});
+    this.setState({dataLoading: true, showMessageModal: false});
     try {
       let resultObj = await APIServices.deleteFileInMyTaskData(
         selectedTaskID,
@@ -584,7 +584,7 @@ class MyTasksDetailsScreen extends Component {
           description: 'File has been deleted successfully',
           buttons: {},
         };
-        this.setState({dataLoading: false, showMessageModal:true});
+        this.setState({dataLoading: false, showMessageModal: true});
         this.setFiles();
       } else {
         this.setState({dataLoading: false});
@@ -1313,7 +1313,7 @@ class MyTasksDetailsScreen extends Component {
         "You're about to permanently delete this task, its comments and attachments, and all of its data.\nIf you're not sure, you can close this pop up.",
       buttons: {positive: 'Delete', negative: 'Cancel'},
     };
-    this.onPressMessageModal=() => this.deleteMyTask(this);
+    this.onPressMessageModal = () => this.deleteMyTask(this);
     this.setState({showMessageModal: true});
 
     // Alert.alert(
