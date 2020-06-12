@@ -90,6 +90,7 @@ class MyTasksDetailsScreen extends Component {
       "You're about to permanently delete this task, its comments and attachments, and all of its data.\nIf you're not sure, you can close this pop up.",
     buttons: {positive: 'Delete', negative: 'Cancel'},
   };
+  onPressMessageModal=()=>{};
 
   constructor(props) {
     super(props);
@@ -308,7 +309,7 @@ class MyTasksDetailsScreen extends Component {
   async setFiles() {
     let selectedTaskID = this.state.selectedTaskID;
     this.setState({dataLoading: true});
-    resultData = await APIServices.getFilesInMyTaskData(selectedTaskID);
+    let resultData = await APIServices.getFilesInMyTaskData(selectedTaskID);
     if (resultData.message == 'success') {
       this.setState({filesData: resultData.data, dataLoading: false});
     } else {
@@ -540,33 +541,50 @@ class MyTasksDetailsScreen extends Component {
   }
 
   deleteFileAlert(item) {
-    Alert.alert(
-      'Delete File',
-      'You are about to permanantly delete this file,\n If you are not sure, you can cancel this action.',
-      [
-        {
-          text: 'Cancel',
-          onPress: () => console.log('Cancel Pressed'),
-          style: 'cancel',
-        },
-        {text: 'Ok', onPress: () => this.deleteFile(item)},
-      ],
-      {cancelable: false},
-    );
+    // Alert.alert(
+    //   'Delete File',
+    //   'You are about to permanantly delete this file,\n If you are not sure, you can cancel this action.',
+    //   [
+    //     {
+    //       text: 'Cancel',
+    //       onPress: () => console.log('Cancel Pressed'),
+    //       style: 'cancel',
+    //     },
+    //     {text: 'Ok', onPress: () => this.deleteFile(item)},
+    //   ],
+    //   {cancelable: false},
+    // );
+    this.deleteDetails = {
+      icon: icons.alertRed,
+      type: 'confirm',
+      title: 'Delete File',
+      description:
+        "You are about to permanantly delete this file,\n If you are not sure, you can cancel this action.",
+      buttons: {positive: 'Delete', negative: 'Cancel'},
+    };
+    this.onPressMessageModal = ()=>this.deleteFile(item);
+    this.setState({showMessageModal:true});
   }
 
   async deleteFile(item) {
     let selectedTaskID = this.state.selectedTaskID;
     let taskFileId = item.taskFileId;
 
-    this.setState({dataLoading: true});
+    this.setState({dataLoading: true, showMessageModal:false});
     try {
-      resultObj = await APIServices.deleteFileInMyTaskData(
+      let resultObj = await APIServices.deleteFileInMyTaskData(
         selectedTaskID,
         taskFileId,
       );
       if (resultObj.message == 'success') {
-        this.setState({dataLoading: false});
+        this.deleteDetails = {
+          icon: icons.taskBlue,
+          type: 'success',
+          title: 'Sucsess',
+          description: 'File has been deleted successfully',
+          buttons: {},
+        };
+        this.setState({dataLoading: false, showMessageModal:true});
         this.setFiles();
       } else {
         this.setState({dataLoading: false});
@@ -1165,7 +1183,7 @@ class MyTasksDetailsScreen extends Component {
   async changeTaskStatus(selectedTaskStatusID, selectedTaskStatusName) {
     this.setState({dataLoading: true});
     let selectedTaskID = this.state.selectedTaskID;
-    resultData = await APIServices.myTaskUpdateTaskStatusData(
+    let resultData = await APIServices.myTaskUpdateTaskStatusData(
       selectedTaskID,
       selectedTaskStatusID,
     );
@@ -1185,7 +1203,7 @@ class MyTasksDetailsScreen extends Component {
   async onTaskNameChangeSubmit(text) {
     this.setState({dataLoading: true});
     let selectedTaskID = this.state.selectedTaskID;
-    resultData = await APIServices.myTaskUpdateTaskNameData(
+    let resultData = await APIServices.myTaskUpdateTaskNameData(
       selectedTaskID,
       text,
     );
@@ -1205,7 +1223,7 @@ class MyTasksDetailsScreen extends Component {
   async onSubmitTaskNote(note) {
     this.setState({dataLoading: true});
     let selectedTaskID = this.state.selectedTaskID;
-    resultData = await APIServices.myTaskUpdateTaskNoteData(
+    let resultData = await APIServices.myTaskUpdateTaskNoteData(
       selectedTaskID,
       note,
     );
@@ -1287,6 +1305,15 @@ class MyTasksDetailsScreen extends Component {
   }
 
   onTaskDeketePress() {
+    this.deleteDetails = {
+      icon: icons.alertRed,
+      type: 'confirm',
+      title: 'Delete My Task',
+      description:
+        "You're about to permanently delete this task, its comments and attachments, and all of its data.\nIf you're not sure, you can close this pop up.",
+      buttons: {positive: 'Delete', negative: 'Cancel'},
+    };
+    this.onPressMessageModal=() => this.deleteMyTask(this);
     this.setState({showMessageModal: true});
 
     // Alert.alert(
@@ -1494,7 +1521,7 @@ class MyTasksDetailsScreen extends Component {
         <MessageShowModal
           showMessageModal={this.state.showMessageModal}
           details={this.deleteDetails}
-          onPress={() => this.deleteMyTask(this)}
+          onPress={this.onPressMessageModal}
           onPressCancel={() => this.onPressCancel(this)}
         />
       </View>

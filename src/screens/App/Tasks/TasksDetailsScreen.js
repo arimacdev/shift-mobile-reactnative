@@ -244,6 +244,7 @@ class TasksDetailsScreen extends Component {
       "You're about to permanently delete this task, its comments and attachments, and all of its data.\nIf you're not sure, you can close this pop up.",
     buttons: {positive: 'Delete', negative: 'Cancel'},
   };
+  onPressMessageModal=()=>{};
 
   constructor(props) {
     super(props);
@@ -731,19 +732,29 @@ class TasksDetailsScreen extends Component {
   }
 
   deleteFileAlert(item) {
-    Alert.alert(
-      'Delete File',
-      'You are about to permanantly delete this file,\n If you are not sure, you can cancel this action.',
-      [
-        {
-          text: 'Cancel',
-          onPress: () => console.log('Cancel Pressed'),
-          style: 'cancel',
-        },
-        {text: 'Ok', onPress: () => this.deleteFile(item)},
-      ],
-      {cancelable: false},
-    );
+    // Alert.alert(
+    //   'Delete File',
+    //   'You are about to permanantly delete this file,\n If you are not sure, you can cancel this action.',
+    //   [
+    //     {
+    //       text: 'Cancel',
+    //       onPress: () => console.log('Cancel Pressed'),
+    //       style: 'cancel',
+    //     },
+    //     {text: 'Ok', onPress: () => this.deleteFile(item)},
+    //   ],
+    //   {cancelable: false},
+    // );
+    this.deleteDetails = {
+      icon: icons.alertRed,
+      type: 'confirm',
+      title: 'Delete File',
+      description:
+        "You are about to permanantly delete this file,\n If you are not sure, you can cancel this action.",
+      buttons: {positive: 'Delete', negative: 'Cancel'},
+    };
+    this.onPressMessageModal = ()=>this.deleteFile(item);
+    this.setState({showMessageModal:true});
   }
 
   async deleteFile(item) {
@@ -751,12 +762,19 @@ class TasksDetailsScreen extends Component {
     let taskID = item.taskId;
     let taskFileId = item.taskFileId;
 
-    this.setState({dataLoading: true});
+    this.setState({dataLoading: true, showMessageModal:false});
 
     await APIServices.deleteFileInTaskData(projectID, taskID, taskFileId)
       .then(response => {
         if (response.message == 'success') {
-          this.setState({dataLoading: false});
+          this.deleteDetails = {
+            icon: icons.taskBlue,
+            type: 'success',
+            title: 'Sucsess',
+            description: 'File has been deleted successfully',
+            buttons: {},
+          };
+          this.setState({dataLoading: false, showMessageModal:true});
           this.fetchFilesData(projectID, taskID);
         } else {
           this.setState({dataLoading: false});
@@ -1178,19 +1196,6 @@ class TasksDetailsScreen extends Component {
     if (isParent) {
       this.getSubTAskDetails();
     }
-
-    let descriptionTask =
-      "You're about to permanently delete this task, its comments and attachments, and all of its data.\nIf you're not sure, you can close this pop up.";
-    let descriptionSubTask =
-      "You're about to permanently delete this sub task and all of its data.\nIf you're not sure, you can close this pop up.";
-
-    this.deleteDetails = {
-      icon: icons.alertRed,
-      type: 'confirm',
-      title: isParent ? 'Delete Task' : 'Delete Sub Task',
-      description: isParent ? descriptionTask : descriptionSubTask,
-      buttons: {positive: 'Delete', negative: 'Cancel'},
-    };
   }
 
   setIssueType(taskResult) {
@@ -2135,6 +2140,20 @@ class TasksDetailsScreen extends Component {
 
   onTaskDeketePress() {
     // this.deleteTask();
+    let isParent = this.state.isParent;
+    let descriptionTask =
+      "You're about to permanently delete this task, its comments and attachments, and all of its data.\nIf you're not sure, you can close this pop up.";
+    let descriptionSubTask =
+      "You're about to permanently delete this sub task and all of its data.\nIf you're not sure, you can close this pop up.";
+
+    this.deleteDetails = {
+      icon: icons.alertRed,
+      type: 'confirm',
+      title: isParent ? 'Delete Task' : 'Delete Sub Task',
+      description: isParent ? descriptionTask : descriptionSubTask,
+      buttons: {positive: 'Delete', negative: 'Cancel'},
+    };
+    this.onPressMessageModal = ()=>this.deleteTask(this);
     this.setState({showMessageModal: true});
   }
 
@@ -2696,7 +2715,7 @@ class TasksDetailsScreen extends Component {
         <MessageShowModal
           showMessageModal={this.state.showMessageModal}
           details={this.deleteDetails}
-          onPress={() => this.deleteTask(this)}
+          onPress={this.onPressMessageModal}
           onPressCancel={() => this.onPressCancel(this)}
         />
         {dataLoading && <Loader />}
