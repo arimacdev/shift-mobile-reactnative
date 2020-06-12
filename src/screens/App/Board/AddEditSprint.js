@@ -201,7 +201,7 @@ class AddEditSprint extends Component {
                 resizeMode={'contain'}
               />
               <View style={{flex: 1}}>
-                <Text style={styles.buttonText}>Add new Project</Text>
+                <Text style={styles.buttonText}>Add new Sprint</Text>
               </View>
 
               <Image

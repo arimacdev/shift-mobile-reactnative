@@ -144,12 +144,13 @@ class PeopleScreen extends Component {
               />
             </TouchableOpacity>
 
-            <TouchableOpacity style={{marginLeft: EStyleSheet.value('24rem')}}>
+            {/*do not remove. this for further implementation*/}
+            {/* <TouchableOpacity style={{marginLeft: EStyleSheet.value('24rem')}}>
               <Image
                 style={styles.controlIcon}
                 source={icons.deleteRoundRed}
               />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
         </View>
         <Text style={styles.subText}>

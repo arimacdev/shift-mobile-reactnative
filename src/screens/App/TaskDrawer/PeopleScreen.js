@@ -106,11 +106,12 @@ class PeopleScreen extends Component {
               {item.assigneeFirstName + ' ' + item.assigneeLastName}
             </Text>
           </View>
-          <View style={styles.controlView}>
+          {/*do not remove. this for further implementation*/}
+          {/* <View style={styles.controlView}>
             <TouchableOpacity style={{marginLeft: EStyleSheet.value('24rem')}}>
               <Image style={styles.deleteIcon} source={icons.deleteRoundRed} />
             </TouchableOpacity>
-          </View>
+          </View> */}
         </View>
         <Text style={styles.subText}>
           {item.tasksCompleted + ' / ' + item.totalTasks + ' Tasks Completed'}

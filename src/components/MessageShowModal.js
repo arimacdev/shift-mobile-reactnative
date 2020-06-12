@@ -1,13 +1,5 @@
 import React, {Component} from 'react';
-import {
-  Dimensions,
-  View,
-  Text,
-  TouchableOpacity,
-  Image,
-  Linking,
-  Platform,
-} from 'react-native';
+import {Dimensions, View, Text, TouchableOpacity, Image} from 'react-native';
 import {connect} from 'react-redux';
 import * as actions from '../redux/actions';
 import colors from '../config/colors';
@@ -63,7 +55,8 @@ class MessageShowModal extends Component {
         <View style={styles.modalMainView}>
           <TouchableOpacity
             style={styles.crossView}
-            onPress={() => this.onCanclePress()}>
+            onPress={() => this.onCanclePress()}
+            hitSlop={styles.hitSlopStyle}>
             <Image
               style={styles.crossIcon}
               source={icons.cross}
@@ -228,6 +221,12 @@ const styles = EStyleSheet.create({
     height: '12rem',
     marginTop: '8rem',
     marginRight: '8rem',
+  },
+  hitSlopStyle: {
+    top: '15rem',
+    bottom: '15rem',
+    left: '15rem',
+    right: '15rem',
   },
 });
 
