@@ -180,7 +180,7 @@ class ViewProfileScreen extends Component {
       } else if (response.error) {
       } else if (response.customButton) {
       } else {
-        this.uploadFiles(response.uri, response.name, response.type);
+        this.uploadFiles(response.uri, response.fileName, response.type);
       }
     });
   }
