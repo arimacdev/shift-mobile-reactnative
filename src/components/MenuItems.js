@@ -1,5 +1,13 @@
 import React, {Component} from 'react';
-import {View, StyleSheet, Text, Image, FlatList, Platform} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Text,
+  Image,
+  FlatList,
+  Platform,
+  Dimensions,
+} from 'react-native';
 import {
   Menu,
   MenuOptions,
@@ -8,6 +16,9 @@ import {
 } from 'react-native-popup-menu';
 import icons from '../asserts/icons/icons';
 import colors from '../config/colors';
+import EStyleSheet from 'react-native-extended-stylesheet';
+const entireScreenWidth = Dimensions.get('window').width;
+EStyleSheet.build({$rem: entireScreenWidth / 380});
 
 const shadow = Platform.select({
   android: {
@@ -96,14 +107,17 @@ class MenuItems extends Component {
 
     const customStyles = {
       optionsContainer: {
-        minWidth: 120,
-        width: 150,
-        paddingVertical: 10,
+        minWidth: EStyleSheet.value('115rem'),
+        width: EStyleSheet.value('145rem'),
+        paddingVertical: EStyleSheet.value('10rem'),
         paddingHorizontal: 0,
         // paddingTop:10,
-        marginTop: Platform.OS === 'ios' ? 17 : 35,
+        marginTop:
+          Platform.OS === 'ios'
+            ? EStyleSheet.value('15rem')
+            : EStyleSheet.value('32rem'),
         backgroundColor: colors.white,
-        borderRadius: 5,
+        borderRadius: EStyleSheet.value('5rem'),
         ...shadow,
       },
       optionWrapper: {
@@ -166,25 +180,25 @@ const localColors = {
   borderColor: 'rgba(0, 0, 0, 0.12)',
 };
 
-const styles = StyleSheet.create({
+const styles = EStyleSheet.create({
   defaultSelectedText: {
-    fontSize: 16,
-    marginLeft: 15,
-    marginRight: 15,
+    fontSize: '15rem',
+    marginLeft: '15rem',
+    marginRight: '15rem',
   },
   filterIcon: {
-    width: 23,
-    height: 23,
-    marginTop: 2,
-    marginRight: -10,
+    width: '21rem',
+    height: '21rem',
+    marginTop: '2rem',
+    marginRight: '-10rem',
   },
   dropDownText: {
-    fontSize: 12,
+    fontSize: '11rem',
   },
   dropView: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingRight: 8,
+    paddingRight: '8rem',
   },
   dropContainer: {
     flexDirection: 'column',
@@ -193,39 +207,37 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    paddingRight: 20,
-    marginLeft: 20,
-    marginTop: 10,
-    marginBottom: 10,
+    paddingRight: '20rem',
+    marginLeft: '20rem',
+    marginTop: '10rem',
+    marginBottom: '10rem',
   },
   selectedItemBorder: {
     width: '100%',
-    borderBottomWidth: 1,
+    borderBottomWidth: '1rem',
     borderBottomColor: localColors.borderColor,
   },
   menuItemText: {
-    // flex: 1,
-    // paddingVertical: 10,
-    paddingLeft: 15,
+    paddingLeft: '15rem',
     color: colors.gray,
   },
   menuItemArrowWrapper: {
-    width: 24,
+    width: '24rem',
     justifyContent: 'center',
     alignItems: 'center',
   },
   menuItemArrow: {
-    width: 12,
-    height: 12,
+    width: '12rem',
+    height: '12rem',
   },
   menuStyle: {
-    marginRight: 18,
+    marginRight: '18rem',
   },
   menuItemTextView: {
-    width: 20,
-    height: 20,
-    paddingVertical: 10,
-    paddingLeft: 15,
+    width: '18rem',
+    height: '18rem',
+    paddingVertical: '10rem',
+    paddingLeft: '15rem',
   },
 });
 

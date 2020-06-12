@@ -1100,7 +1100,9 @@ class TasksTabScreen extends Component {
   getButtonDisabledStaus() {
     if (
       this.state.selectedStartDate == null ||
-      this.state.selectedEndDate == null
+      this.state.selectedStartDate == '' ||
+      this.state.selectedEndDate == null ||
+      this.state.selectedEndDate == ''
     ) {
       return true;
     } else {
