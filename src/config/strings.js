@@ -1,9 +1,9 @@
 const strings = {
   config: {
     configMainTitle: 'Welcome to Arimac SHIFT',
-    configSubTitle: 'Please enter your Organization URL to continue.',
+    configSubTitle: 'Please enter your Organization Nickname to continue.',
     configBottomText:
-      'Contact your organization administrator to get the organization URL',
+      'Contact your organization administrator to get the organization nickname',
     configButton: 'OK',
     configError: 'Sorry, we did not find such organization',
   },
