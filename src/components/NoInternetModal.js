@@ -16,7 +16,7 @@ const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
 import Modal from 'react-native-modal';
 import icons from '../asserts/icons/icons';
-import AndroidOpenSettings from 'react-native-android-open-settings'
+import AndroidOpenSettings from 'react-native-android-open-settings';
 
 class NoInternetModal extends Component {
   constructor(props) {
@@ -31,10 +31,7 @@ class NoInternetModal extends Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    if (
-      prevProps.showModal !== this.props.showModal &&
-      this.props.showModal
-    ) {
+    if (prevProps.showModal !== this.props.showModal && this.props.showModal) {
       this.setState({showModal: true});
     }
   }
@@ -45,10 +42,10 @@ class NoInternetModal extends Component {
 
   onSettingsPress() {
     if (Platform.OS == 'android') {
-        AndroidOpenSettings.generalSettings()
-      } else {
-        Linking.openURL('app-settings:');
-      }  
+      AndroidOpenSettings.generalSettings();
+    } else {
+      Linking.openURL('app-settings:');
+    }
   }
 
   render() {
@@ -59,12 +56,12 @@ class NoInternetModal extends Component {
         backdropTransitionOutTiming={0}>
         <View style={styles.modalMainView}>
           <View style={styles.modalHeaderView}>
-          <View>
-            <Image
-              style={styles.iconStyle}
-              source={icons.appIcon}
-              resizeMode="contain"
-            />
+            <View>
+              <Image
+                style={styles.iconStyle}
+                source={icons.appIcon}
+                resizeMode="contain"
+              />
             </View>
             <View>
               <Text style={styles.modalHeadderText}>No Internet</Text>
@@ -72,7 +69,7 @@ class NoInternetModal extends Component {
           </View>
           <View>
             <Text style={styles.textDescription}>
-            Please turn on the internet connection
+              Please turn on the internet connection
             </Text>
           </View>
           <View style={styles.ButtonViewStyle}>
@@ -108,7 +105,7 @@ const styles = EStyleSheet.create({
   modalHeadderText: {
     fontSize: '20rem',
     fontFamily: 'CircularStd-Medium',
-    marginLeft: Platform.OS=='ios'? '30rem': '20rem',
+    marginLeft: Platform.OS == 'ios' ? '30rem' : '20rem',
   },
   currentVersion: {
     marginTop: '10rem',
@@ -129,7 +126,7 @@ const styles = EStyleSheet.create({
     fontSize: '16rem',
     fontFamily: 'CircularStd-Medium',
     color: colors.black,
-    textAlign: 'center', 
+    textAlign: 'center',
   },
   ButtonViewStyle: {
     flexDirection: 'row',

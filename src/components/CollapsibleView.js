@@ -13,7 +13,6 @@ export default class Accordian extends Component {
   }
 
   render() {
-    console.log("sssssssssss",this.props)
     return (
       <View>
         <TouchableOpacity

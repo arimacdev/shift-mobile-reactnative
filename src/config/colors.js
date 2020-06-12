@@ -61,6 +61,6 @@ const colors = {
   colorSolitude: '#E5E9EF',
   colorGovernorBay: '#4D4F85',
   colorSilver: '#B9B9B9',
-  colorBlackRussian: '#040428'
+  colorBlackRussian: '#040428',
 };
 export default colors;

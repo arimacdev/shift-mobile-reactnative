@@ -3,10 +3,7 @@ import {
   Dimensions,
   View,
   Text,
-  TouchableOpacity,
   Image,
-  Linking,
-  Platform,
 } from 'react-native';
 import {connect} from 'react-redux';
 import * as actions from '../redux/actions';
@@ -34,9 +31,7 @@ class EmptyListView extends Component {
           source={icons.emptyResult}
           resizeMode={'contain'}
         />
-        <Text style={styles.noResultText}>
-          No data found
-        </Text>
+        <Text style={styles.noResultText}>No data found</Text>
       </View>
     );
   }
