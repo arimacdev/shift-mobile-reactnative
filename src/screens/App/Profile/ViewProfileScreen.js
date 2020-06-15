@@ -230,7 +230,6 @@ class ViewProfileScreen extends Component {
   }
 
   async uploadFiles(fileUri, filename, fileType) {
-    
     try {
       let userID = this.state.userID;
       this.setState({dataLoading: true, showMessageModal: false});

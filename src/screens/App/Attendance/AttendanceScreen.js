@@ -1,5 +1,12 @@
 import React, {Component} from 'react';
-import {View, FlatList, Text, Dimensions, Image, TouchableOpacity} from 'react-native';
+import {
+  View,
+  FlatList,
+  Text,
+  Dimensions,
+  Image,
+  TouchableOpacity,
+} from 'react-native';
 import {connect} from 'react-redux';
 import * as actions from '../../../redux/actions';
 import colors from '../../../config/colors';
@@ -7,254 +14,258 @@ import icons from '../../../asserts/icons/icons';
 import EStyleSheet from 'react-native-extended-stylesheet';
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
-import { Dropdown } from 'react-native-material-dropdown';
+import {Dropdown} from 'react-native-material-dropdown';
 import AsyncStorage from '@react-native-community/async-storage';
 import Loader from '../../../components/Loader';
-import { NavigationEvents } from 'react-navigation';
-import { Icon } from 'native-base';
+import {NavigationEvents} from 'react-navigation';
+import {Icon} from 'native-base';
 
 let dropData = [
-    {
-        id: 'Ongoing',
-        value: 'Ongoing',
-    },
-    {
-        id: 'Support',
-        value: 'Support',
-    },
-    {
-        id: 'Finished',
-        value: 'Finished',
-    },
-    {
-      id: 'Presales',
-      value: 'Presales',
-    },
-    {
-      id: 'Presales : Project Discovery',
-      value: 'Presales : Project Discovery',
-    },
-    {
-      id: 'Presales : Quotation Submission',
-      value: 'Presales : Quotation Submission',
-    },
-    {
-      id: 'Presales : Negotiation',
-      value: 'Presales : Negotiation',
-    },
-    {
-      id: 'Presales : Confirmed',
-      value: 'Presales : Confirmed',
-    },
-    {
-      id: 'Presales : Lost',
-      value: 'Presales : Lost',
-    },
-]
+  {
+    id: 'Ongoing',
+    value: 'Ongoing',
+  },
+  {
+    id: 'Support',
+    value: 'Support',
+  },
+  {
+    id: 'Finished',
+    value: 'Finished',
+  },
+  {
+    id: 'Presales',
+    value: 'Presales',
+  },
+  {
+    id: 'Presales : Project Discovery',
+    value: 'Presales : Project Discovery',
+  },
+  {
+    id: 'Presales : Quotation Submission',
+    value: 'Presales : Quotation Submission',
+  },
+  {
+    id: 'Presales : Negotiation',
+    value: 'Presales : Negotiation',
+  },
+  {
+    id: 'Presales : Confirmed',
+    value: 'Presales : Confirmed',
+  },
+  {
+    id: 'Presales : Lost',
+    value: 'Presales : Lost',
+  },
+];
 
 class AttendanceScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
       attendance: [],
-      allAttendance : [],
-      selectedType : 'Presales',
+      allAttendance: [],
+      selectedType: 'Presales',
     };
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    if (prevProps.projectsLoading !== this.props.projectsLoading && this.props.attendance && this.props.attendance.length > 0) {
+    if (
+      prevProps.projectsLoading !== this.props.projectsLoading &&
+      this.props.attendance &&
+      this.props.attendance.length > 0
+    ) {
       let searchValue = 'presales';
-      let filteredData = this.props.attendance.filter(function (item) {
+      let filteredData = this.props.attendance.filter(function(item) {
         return item.projectStatus.includes(searchValue);
       });
       this.setState({
-        attendance : filteredData,
-        allAttendance : this.props.attendance,
-    });
+        attendance: filteredData,
+        allAttendance: this.props.attendance,
+      });
     }
   }
 
-  componentDidMount() {
-  }
+  componentDidMount() {}
 
   onFilter(key) {
     let value = key;
     let searchValue = '';
     switch (value) {
       case 'Ongoing':
-            searchValue = 'ongoing'
-            break;
+        searchValue = 'ongoing';
+        break;
       case 'Support':
-            searchValue = 'support'
-            break;
+        searchValue = 'support';
+        break;
       case 'Finished':
-            searchValue = 'finished'
-            break;
-      case 'Presales':  
-            searchValue = 'presales'
-            break;      
-      case 'Presales : Project Discovery':  
-            searchValue = 'presalesPD'
-            break;
+        searchValue = 'finished';
+        break;
+      case 'Presales':
+        searchValue = 'presales';
+        break;
+      case 'Presales : Project Discovery':
+        searchValue = 'presalesPD';
+        break;
       case 'Presales : Quotation Submission':
-            searchValue = 'preSalesQS'
-            break;
+        searchValue = 'preSalesQS';
+        break;
       case 'Presales : Negotiation':
-            searchValue = 'preSalesN'
-            break;
+        searchValue = 'preSalesN';
+        break;
       case 'Presales : Confirmed':
-            searchValue = 'preSalesC'
-            break;
-      case 'Presales : Lost' : 
-            searchValue = 'preSalesL'
-            break;
+        searchValue = 'preSalesC';
+        break;
+      case 'Presales : Lost':
+        searchValue = 'preSalesL';
+        break;
     }
-    
-    let filteredData = this.state.allAttendance.filter(function (item) {
+
+    let filteredData = this.state.allAttendance.filter(function(item) {
       return item.projectStatus.includes(searchValue);
     });
-  
-  this.setState({
-    attendance: filteredData,
-    selectedType : key
-  });
-}
+
+    this.setState({
+      attendance: filteredData,
+      selectedType: key,
+    });
+  }
 
   renderProjectList(item) {
     // TasksScreen
     //EditProjectScreen
     return (
-    <TouchableOpacity onPress={()=>this.props.navigation.navigate('TasksScreen',{projDetails:item})}>  
-      <View style={styles.projectView}>
-        {this.folderIcon(item)}
-        <View style={{flex:1}}>
+      <TouchableOpacity
+        onPress={() =>
+          this.props.navigation.navigate('TasksScreen', {projDetails: item})
+        }>
+        <View style={styles.projectView}>
+          {this.folderIcon(item)}
+          <View style={{flex: 1}}>
             <Text style={styles.text}>{item.projectName}</Text>
+          </View>
+          {this.colorCode(item)}
         </View>
-        {this.colorCode(item)}
-      </View>
       </TouchableOpacity>
     );
   }
 
-  folderIcon = function (item) {
+  folderIcon = function(item) {
     let color = '';
     switch (item.projectStatus) {
       case 'presales':
-            color = '#ff7043'
+        color = '#ff7043';
       case 'presalesPD':
-            color = '#ff7043'
+        color = '#ff7043';
       case 'preSalesQS':
-            color = '#ff7043'
+        color = '#ff7043';
       case 'preSalesN':
-            color = '#ff7043'
-      case 'preSalesC':  
-            color = '#ff7043'    
-          break;
+        color = '#ff7043';
+      case 'preSalesC':
+        color = '#ff7043';
+        break;
       case 'preSalesL':
-          color = '#ff7043' 
-          break;
+        color = '#ff7043';
+        break;
       case 'ongoing':
-          color = '#ffc212' 
-          break;
+        color = '#ffc212';
+        break;
       case 'support':
-          color = '#ed5ed1'   
-          break;
-      case 'finished' : 
-          color = '#0bafff' 
-          break    
-  }
+        color = '#ed5ed1';
+        break;
+      case 'finished':
+        color = '#0bafff';
+        break;
+    }
     return (
-      <Icon name={'folder'} type={'Feather'} style={{ fontSize: EStyleSheet.value('22rem'), color: color, }} />
-    );
-   
-  }
-
-  colorCode = function (item) {
-    let color = '';
-    switch (item.projectStatus) {
-      case 'presales':
-            color = '#ff7043'
-      case 'presalesPD':
-            color = '#ff7043'
-      case 'preSalesQS':
-            color = '#ff7043'
-      case 'preSalesN':
-            color = '#ff7043'
-      case 'preSalesC':  
-            color = '#ff7043'    
-          break;
-      case 'preSalesL':
-          color = '#ff7043' 
-          break;
-      case 'ongoing':
-          color = '#ffc212' 
-          break;
-      case 'support':
-          color = '#ed5ed1'   
-          break;
-      case 'finished' : 
-          color = '#0bafff' 
-          break    
-  }
-    return (
-      <View style={[styles.statusView, {backgroundColor: color}]}/>
+      <Icon
+        name={'folder'}
+        type={'Feather'}
+        style={{fontSize: EStyleSheet.value('22rem'), color: color}}
+      />
     );
   };
 
-  renderBase(){
-      return(
-          <View style={{justifyContent:'center',flex:1}}>
-            <Image style={styles.dropIcon} source={icons.arrow} />
-          </View>
-      )
+  colorCode = function(item) {
+    let color = '';
+    switch (item.projectStatus) {
+      case 'presales':
+        color = '#ff7043';
+      case 'presalesPD':
+        color = '#ff7043';
+      case 'preSalesQS':
+        color = '#ff7043';
+      case 'preSalesN':
+        color = '#ff7043';
+      case 'preSalesC':
+        color = '#ff7043';
+        break;
+      case 'preSalesL':
+        color = '#ff7043';
+        break;
+      case 'ongoing':
+        color = '#ffc212';
+        break;
+      case 'support':
+        color = '#ed5ed1';
+        break;
+      case 'finished':
+        color = '#0bafff';
+        break;
+    }
+    return <View style={[styles.statusView, {backgroundColor: color}]} />;
+  };
+
+  renderBase() {
+    return (
+      <View style={{justifyContent: 'center', flex: 1}}>
+        <Image style={styles.dropIcon} source={icons.arrow} />
+      </View>
+    );
   }
 
-  loadProjects () {
+  loadProjects() {
     this.setState({
-      selectedType : 'Presales'
+      selectedType: 'Presales',
     });
     AsyncStorage.getItem('userID').then(userID => {
-      this.props.getAllProjectsByUser(userID)
+      this.props.getAllProjectsByUser(userID);
     });
   }
 
   render() {
     let attendance = this.state.attendance;
     let projectsLoading = this.state.projectsLoading;
-    let selectedType = this.state.selectedType
+    let selectedType = this.state.selectedType;
 
     return (
       <View style={styles.container}>
-        <NavigationEvents
-                onWillFocus={(payload) => this.loadProjects(payload)}
-                />
+        <NavigationEvents onWillFocus={payload => this.loadProjects(payload)} />
         <View style={styles.projectFilerView}>
-        <Dropdown
-        // style={{}}
-        label=''
-        labelFontSize={0}
-        data={dropData}
-        textColor={'white'}
-        error={''}
-        animationDuration={0.5}
-        containerStyle={{width:'100%'}}
-        overlayStyle={{width:'100%'}}
-        pickerStyle={{width:'89%',marginTop:70, marginLeft:15}}
-        dropdownPosition={0}
-        value={selectedType}
-        itemColor={'black'}
-        selectedItemColor={'black'}
-        dropdownOffset={{top:10}}
-        baseColor={colors.lightBlue}
-        // renderBase={this.renderBase}
-        renderAccessory={this.renderBase}
-        itemTextStyle={{marginLeft:15,fontFamily: 'CircularStd-Book',}}
-        itemPadding={10}
-        onChangeText={(value => this.onFilter(value))}
-
-      />
-            {/* <TouchableOpacity>
+          <Dropdown
+            // style={{}}
+            label=""
+            labelFontSize={0}
+            data={dropData}
+            textColor={'white'}
+            error={''}
+            animationDuration={0.5}
+            containerStyle={{width: '100%'}}
+            overlayStyle={{width: '100%'}}
+            pickerStyle={{width: '89%', marginTop: 70, marginLeft: 15}}
+            dropdownPosition={0}
+            value={selectedType}
+            itemColor={'black'}
+            selectedItemColor={'black'}
+            dropdownOffset={{top: 10}}
+            baseColor={colors.lightBlue}
+            // renderBase={this.renderBase}
+            renderAccessory={this.renderBase}
+            itemTextStyle={{marginLeft: 15, fontFamily: 'CircularStd-Book'}}
+            itemPadding={10}
+            onChangeText={value => this.onFilter(value)}
+          />
+          {/* <TouchableOpacity>
                 <View>
                     <Text style={styles.textFilter}>Ongoing</Text>
                 </View>
@@ -265,7 +276,7 @@ class AttendanceScreen extends Component {
           renderItem={({item}) => this.renderProjectList(item)}
           keyExtractor={item => item.projId}
         />
-        {projectsLoading && <Loader/>}
+        {projectsLoading && <Loader />}
       </View>
     );
   }
@@ -276,18 +287,18 @@ const styles = EStyleSheet.create({
     flex: 1,
     // backgroundColor: colors.pageBackGroundColor,
   },
-  projectFilerView:{
+  projectFilerView: {
     backgroundColor: colors.lightBlue,
     borderRadius: 5,
     // width: '330rem',
     marginTop: '17rem',
-    marginBottom:'12rem',
+    marginBottom: '12rem',
     flexDirection: 'row',
     alignItems: 'center',
     // justifyContent: 'center',
     paddingHorizontal: '12rem',
     height: '45rem',
-    marginHorizontal:'20rem'
+    marginHorizontal: '20rem',
   },
   textFilter: {
     fontSize: '14rem',
@@ -301,12 +312,12 @@ const styles = EStyleSheet.create({
   projectView: {
     backgroundColor: colors.projectBgColor,
     borderRadius: 5,
-    height:'60rem',
+    height: '60rem',
     marginTop: '7rem',
     flexDirection: 'row',
     alignItems: 'center',
     paddingLeft: '12rem',
-    marginHorizontal:'20rem'
+    marginHorizontal: '20rem',
   },
   text: {
     fontSize: '14rem',
@@ -316,30 +327,30 @@ const styles = EStyleSheet.create({
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
-    marginLeft:'10rem'
+    marginLeft: '10rem',
   },
   userIcon: {
     width: '20rem',
     height: '20rem',
   },
-  statusView:{
+  statusView: {
     backgroundColor: colors.gray,
-    width:'5rem',
-    height:'60rem',
-    alignItems:'flex-end',
+    width: '5rem',
+    height: '60rem',
+    alignItems: 'flex-end',
     borderTopRightRadius: 5,
     borderBottomRightRadius: 5,
   },
-  dropIcon:{
+  dropIcon: {
     width: '13rem',
     height: '13rem',
-  }
+  },
 });
 
 const mapStateToProps = state => {
   return {
-    projectsLoading : state.project.projectsLoading,
-    attendance : state.project.attendance
+    projectsLoading: state.project.projectsLoading,
+    attendance: state.project.attendance,
   };
 };
 export default connect(
