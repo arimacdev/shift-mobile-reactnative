@@ -176,13 +176,20 @@ class ViewProfileScreen extends Component {
     }, {});
     console.log('ssssssssssssssssssssss', skillMap);
     for (let index = 0; index < [skillMap].length; index++) {
-      const element = [skillMap][index];
-      console.log('vvvvvvvvvvvvvvvvvvvvvvvvv', element);
-      skillArray.push({
-        id: element.categoryName,
-        value: element.categoryName,
-        color: element.categoryColorCode,
-      });
+      const element = [skillMap][index].Backend;
+      console.log('vvvvvvvvvvvvvvvvvvvvvvvvv', element[0]);
+      for (let a = 0; a < element.length; a++) {
+        
+
+        const ccc = element[a];
+        console.log('bbbbbbbbbbbbbbbbbbbbbbbb', ccc);
+        skillArray.push({
+          id: ccc.categoryName,
+          value: ccc.categoryName,
+          color: ccc.categoryColorCode,
+        });
+      }
+      
       // for (let index = 0; index < element..length; index++) {
       //   const element = array[index];
 
@@ -707,10 +714,7 @@ class ViewProfileScreen extends Component {
             onPress={() => this.saveUser()}>
             <View style={styles.button}>
               <Image
-                style={[
-                  styles.bottomBarIcon,
-                  {marginRight: 15, marginLeft: 10},
-                ]}
+                style={styles.bottomBarIcon}
                 source={icons.userWhite}
                 resizeMode={'contain'}
               />
@@ -832,12 +836,12 @@ const styles = EStyleSheet.create({
     position: 'absolute',
     alignSelf: 'flex-end',
     bottom: 0,
-    paddingRight: 10,
+    paddingRight: '10rem',
   },
   button: {
     flexDirection: 'row',
     backgroundColor: colors.lightBlue,
-    borderRadius: 5,
+    borderRadius: '5rem',
     marginTop: '17rem',
     flexDirection: 'row',
     alignItems: 'center',
@@ -856,6 +860,8 @@ const styles = EStyleSheet.create({
   bottomBarIcon: {
     width: '20rem',
     height: '20rem',
+    marginRight: '15rem',
+    marginLeft: '10rem',
   },
   addIcon: {
     width: '28rem',
@@ -869,7 +875,7 @@ const styles = EStyleSheet.create({
     backgroundColor: colors.projectBgColor,
     borderBottomStartRadius: '5rem',
     borderBottomEndRadius: '5rem',
-    paddingVertical: '10rem',
+    paddingVertical: '5rem',
   },
   metricsListVew: {
     borderTopStartRadius: '5rem',
@@ -879,6 +885,7 @@ const styles = EStyleSheet.create({
     justifyContent: 'center',
   },
   metricsListText: {
+    fontSize: '12rem',
     fontFamily: 'CircularStd-Medium',
     color: colors.white,
   },
@@ -887,6 +894,7 @@ const styles = EStyleSheet.create({
     marginVertical: '10rem',
   },
   skillListText: {
+    fontSize: '12rem',
     fontFamily: 'CircularStd-Medium',
     color: colors.colorShuttleGrey,
   },
