@@ -120,9 +120,7 @@ class ViewProfileScreen extends Component {
     try {
       let skillMap = await APIServices.getUserSkillMapData(userID);
       if (skillMap.message == 'success') {
-        this.setState({
-          dataLoading: false,
-        });
+        this.setState({dataLoading: false});
       } else {
         this.setState({dataLoading: false});
       }
@@ -814,7 +812,7 @@ const styles = EStyleSheet.create({
     borderTopStartRadius: '5rem',
     borderTopEndRadius: '5rem',
     paddingHorizontal: '20rem',
-    height: '40rem',
+    height: '35rem',
     justifyContent: 'center',
   },
   metricsListText: {
