@@ -72,6 +72,7 @@ import {
   GET_ALL_USERS_WORKLOAD_WITH_COMPLETION,
   GET_MOBILE_VERSION_STATUS,
   GET_ORGANIZATION_WORK_SPACE,
+  GET_USER_SKILL_MAP,
 } from '../api/API';
 import AsyncStorage from '@react-native-community/async-storage';
 import {SET_UPLOAD_PROGRESS} from '../redux/types';
@@ -2704,6 +2705,28 @@ async function getOrganizationData(workSpace, version) {
   );
 }
 
+async function getUserSkillMapData(userID) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
+    let userIDHeder = null;
+    userIDHeder = await AsyncStorage.getItem('userID');
+  
+    let headers = {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      user: userIDHeder,
+    };
+  
+    return request(
+      {
+        url: baseURL + GET_USER_SKILL_MAP + userID + '/skillmap',
+        method: 'GET',
+      },
+      true,
+      headers,
+    );
+};
+
 const APIServices = {
   getAllProjectsByUserData,
   getUserData,
@@ -2804,6 +2827,7 @@ const APIServices = {
   getWorkloadWithCompletionUser,
   getMobileVersionStatusData,
   getOrganizationData,
+  getUserSkillMapData,
 };
 
 export default APIServices;

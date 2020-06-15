@@ -89,3 +89,5 @@ export const GET_ALL_USERS_WORKLOAD_WITH_COMPLETION = `projects/tasks/users/`;
 export const GET_MOBILE_VERSION_STATUS = `health`;
 
 export const GET_ORGANIZATION_WORK_SPACE = `${WORKSPACE}organization?`;
+
+export const GET_USER_SKILL_MAP = `category/user/`;
