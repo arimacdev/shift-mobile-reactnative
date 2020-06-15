@@ -1,5 +1,13 @@
 import React, {Component} from 'react';
-import {View, StyleSheet, Text, Image, FlatList, Platform} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Text,
+  Image,
+  FlatList,
+  Platform,
+  Dimensions,
+} from 'react-native';
 import {
   Menu,
   MenuOptions,
@@ -8,6 +16,9 @@ import {
 } from 'react-native-popup-menu';
 import icons from '../asserts/icons/icons';
 import colors from '../config/colors';
+import EStyleSheet from 'react-native-extended-stylesheet';
+const entireScreenWidth = Dimensions.get('window').width;
+EStyleSheet.build({$rem: entireScreenWidth / 380});
 
 const shadow = Platform.select({
   android: {
@@ -92,13 +103,16 @@ class PopupMenuNormal extends Component {
 
     const customStyles = {
       optionsContainer: {
-        minWidth: 120,
-        width: 150,
-        paddingVertical: 5,
+        minWidth: EStyleSheet.value('115rem'),
+        width: EStyleSheet.value('145rem'),
+        paddingVertical: EStyleSheet.value('5rem'),
         paddingHorizontal: 0,
-        marginTop: Platform.OS === 'ios' ? 17 : -30,
+        marginTop:
+          Platform.OS === 'ios'
+            ? EStyleSheet.value('15rem')
+            : EStyleSheet.value('-28rem'),
         backgroundColor: colors.white,
-        borderRadius: 5,
+        borderRadius: EStyleSheet.value('5rem'),
         ...shadow,
       },
       optionWrapper: {
@@ -161,67 +175,39 @@ const localColors = {
   borderColor: 'rgba(0, 0, 0, 0.12)',
 };
 
-const styles = StyleSheet.create({
-  defaultSelectedText: {
-    fontSize: 16,
-    marginLeft: 15,
-    marginRight: 15,
-  },
+const styles = EStyleSheet.create({
   menuIcon: {
-    width: 20,
-    height: 20,
-    marginTop: 3,
-    marginRight: -10,
-  },
-  dropDownText: {
-    fontSize: 12,
+    width: '18rem',
+    height: '18rem',
+    marginTop: '3rem',
+    marginRight: '-10rem',
   },
   dropView: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingRight: 8,
+    paddingRight: '8rem',
   },
   dropContainer: {
     flexDirection: 'column',
-    marginTop: 2,
-    marginRight: -15,
+    marginTop: '2rem',
+    marginRight: '-15rem',
   },
   menuItemTouchable: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    paddingRight: 10,
-    marginLeft: 20,
-    marginTop: 10,
-    marginBottom: 10,
-  },
-  selectedItemBorder: {
-    width: '100%',
-    borderBottomWidth: 1,
-    borderBottomColor: localColors.borderColor,
+    paddingRight: '10rem',
+    marginLeft: '20rem',
+    marginTop: '10rem',
+    marginBottom: '10rem',
   },
   menuItemText: {
     fontFamily: Platform.OS == 'ios' ? 'CircularStd-Medium' : 'Product Sans',
-    fontSize: 12,
-    paddingLeft: 5,
-  },
-  menuItemArrowWrapper: {
-    width: 24,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  menuItemArrow: {
-    width: 12,
-    height: 12,
+    fontSize: '11rem',
+    paddingLeft: '5rem',
   },
   menuStyle: {
-    marginRight: 20,
-  },
-  menuItemTextView: {
-    width: 20,
-    height: 20,
-    paddingVertical: 10,
-    paddingLeft: 15,
+    marginRight: '20rem',
   },
 });
 
