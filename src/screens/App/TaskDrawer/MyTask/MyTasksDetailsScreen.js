@@ -810,23 +810,27 @@ class MyTasksDetailsScreen extends Component {
     // let newTime = time.getHours() + ':' + time.getMinutes();
     // if (event.type == 'set') {
     if (this.state.reminder) {
-      this.setState({
-        reminderTime: newTime,
-        selectedTimeReminder: newTime,
-        showPicker: false,
-        showTimePicker: false,
-        timeReminder: new Date(time1),
-      });
-      this.changeTaskReminderDate();
+      this.setState(
+        {
+          reminderTime: newTime,
+          selectedTimeReminder: newTime,
+          showPicker: false,
+          showTimePicker: false,
+          timeReminder: new Date(time1),
+        },
+        () => this.changeTaskReminderDate(),
+      );
     } else {
-      this.setState({
-        dueTime: newTime,
-        selectedTimeReminder: newTime,
-        showPicker: false,
-        showTimePicker: false,
-        time: new Date(time1),
-      });
-      this.changeTaskDueDate();
+      this.setState(
+        {
+          dueTime: newTime,
+          selectedTimeReminder: newTime,
+          showPicker: false,
+          showTimePicker: false,
+          time: new Date(time1),
+        },
+        () => this.changeTaskDueDate(),
+      );
     }
     // } else {
     //   this.setState({

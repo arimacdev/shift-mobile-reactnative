@@ -689,18 +689,12 @@ class GroupSubTasksDetailsScreen extends Component {
           <TouchableOpacity
             onPress={() => this.downloadFile(item)}
             style={{marginLeft: EStyleSheet.value('24rem')}}>
-            <Image
-              style={styles.controlIcon}
-              source={icons.downloadIcon}
-            />
+            <Image style={styles.controlIcon} source={icons.downloadIcon} />
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => this.deleteFileAlert(item)}
             style={{marginLeft: EStyleSheet.value('10rem')}}>
-            <Image
-              style={styles.controlIcon}
-              source={icons.deleteRoundRed}
-            />
+            <Image style={styles.controlIcon} source={icons.deleteRoundRed} />
           </TouchableOpacity>
         </View>
       </View>
@@ -1002,23 +996,27 @@ class GroupSubTasksDetailsScreen extends Component {
     // let newTime = time.getHours() + ':' + time.getMinutes();
     // if (event.type == 'set') {
     if (this.state.reminder) {
-      this.setState({
-        reminderTime: newTime,
-        selectedTimeReminder: newTime,
-        showPicker: false,
-        showTimePicker: false,
-        timeReminder: new Date(time1),
-      });
-      this.changeTaskReminderDate();
+      this.setState(
+        {
+          reminderTime: newTime,
+          selectedTimeReminder: newTime,
+          showPicker: false,
+          showTimePicker: false,
+          timeReminder: new Date(time1),
+        },
+        () => this.changeTaskReminderDate(),
+      );
     } else {
-      this.setState({
-        dueTime: newTime,
-        selectedTimeReminder: newTime,
-        showPicker: false,
-        showTimePicker: false,
-        time: new Date(time1),
-      });
-      this.changeTaskDueDate();
+      this.setState(
+        {
+          dueTime: newTime,
+          selectedTimeReminder: newTime,
+          showPicker: false,
+          showTimePicker: false,
+          time: new Date(time1),
+        },
+        () => this.changeTaskDueDate(),
+      );
     }
     // } else {
     //   this.setState({
