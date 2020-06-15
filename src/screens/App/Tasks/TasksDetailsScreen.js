@@ -378,7 +378,7 @@ class TasksDetailsScreen extends Component {
     // let subTaskListLength = params.subTaskDetails
     //   ? params.subTaskDetails.length
     //   : 0;
-    let sprintId = params.taskDetails ? params.taskDetails.sprintId : '';
+    // let sprintId = params.taskDetails ? params.taskDetails.sprintId : '';
     let fromMyTask = params.fromMyTask ? params.fromMyTask : false;
     // params.subTaskDetails.length > 0 ? this.state.subTaskList[0].length : 0;
 
@@ -391,18 +391,13 @@ class TasksDetailsScreen extends Component {
       parentTaskName: params.parentTaskName ? params.parentTaskName : '',
       // subTaskListLength: subTaskListLength,
       // allDetails: allDetails,
-      sprintId: sprintId,
+      // sprintId: sprintId,
       fromMyTask: fromMyTask,
       taskItem: params.taskDetails,
     });
 
     this.fetchData(selectedProjectID, selectedProjectTaskID);
-    this.fetchFilesData(selectedProjectID, selectedProjectTaskID);
-    this.getAllTaskInProject(selectedProjectID);
-    if (params.isFromBoards == true) {
-      // let sprintId = params.taskDetails.sprintId;
-      this.getAllSprintInProject(selectedProjectID, sprintId);
-    }
+
     this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
       return true;
     });
@@ -442,6 +437,7 @@ class TasksDetailsScreen extends Component {
   }
 
   async getSubTAskDetails() {
+    this.setState({dataLoading: true});
     await APIServices.getChildTasksOfParentData(
       this.state.selectedProjectID,
       this.state.selectedProjectTaskID,
@@ -911,12 +907,18 @@ class TasksDetailsScreen extends Component {
 
   async getAllSprintInProject(selectedProjectID, sprintId) {
     this.setState({dataLoading: true});
-    let sprintData = await APIServices.getAllSprintInProject(selectedProjectID);
-    if (sprintData.message == 'success') {
-      this.setSprintDroupDownData(sprintData.data);
-      this.setSprintDroupDownSelectedValue(sprintData.data, sprintId);
-      this.setState({dataLoading: false});
-    } else {
+    try {
+      let sprintData = await APIServices.getAllSprintInProject(
+        selectedProjectID,
+      );
+      if (sprintData.message == 'success') {
+        this.setSprintDroupDownData(sprintData.data);
+        this.setSprintDroupDownSelectedValue(sprintData.data, sprintId);
+        this.setState({dataLoading: false});
+      } else {
+        this.setState({dataLoading: false});
+      }
+    } catch (error) {
       this.setState({dataLoading: false});
     }
   }
@@ -940,6 +942,8 @@ class TasksDetailsScreen extends Component {
         this.setIsParent(taskResult);
         this.setIssueType(taskResult);
         this.setSprintId(taskResult);
+        this.fetchFilesData(selectedProjectID, selectedProjectTaskID);
+        this.getAllTaskInProject(selectedProjectID);
         this.setState({dataLoading: false, taskResult: taskResult});
       } else {
         this.setState({dataLoading: false});
@@ -998,8 +1002,12 @@ class TasksDetailsScreen extends Component {
     this.setState({secondaryTaskId: taskResult.data.secondaryTaskId});
   }
 
-  setSprintId(taskResult) {
-    this.setState({sprintId: taskResult.data.sprintId});
+  async setSprintId(taskResult) {
+    await this.setState({sprintId: taskResult.data.sprintId});
+    this.getAllSprintInProject(
+      this.state.selectedProjectID,
+      this.state.sprintId,
+    );
   }
 
   hideAlert() {
@@ -1098,13 +1106,20 @@ class TasksDetailsScreen extends Component {
   async setTaskUserName(taskResult) {
     let projectID = this.state.selectedProjectID;
     let userID = taskResult.data.taskAssignee;
-    let activeUsers = await APIServices.getAllUsersByProjectId(projectID);
-    if (activeUsers.message == 'success' && userID) {
-      const result = activeUsers.data.find(({userId}) => userId === userID);
-      this.setState({
-        name: result.firstName + ' ' + result.lastName,
-        //activeUsers : activeUsers.data,
-      });
+    this.setState({dataLoading: true});
+    try {
+      let activeUsers = await APIServices.getAllUsersByProjectId(projectID);
+      if (activeUsers.message == 'success' && userID) {
+        const result = activeUsers.data.find(({userId}) => userId === userID);
+        this.setState({
+          name: result.firstName + ' ' + result.lastName,
+          //activeUsers : activeUsers.data,
+        });
+      } else {
+        this.setState({dataLoading: false});
+      }
+    } catch (error) {
+      this.setState({dataLoading: false});
     }
   }
 
@@ -1873,7 +1888,7 @@ class TasksDetailsScreen extends Component {
           'YYYY-MM-DD[T]HH:mm:ss',
         )
       : '';
-
+    this.setState({dataLoading: true});
     await APIServices.updateTaskDueDateData(projectID, taskID, IsoDueDate)
       .then(response => {
         if (response.message == 'success') {
@@ -1905,7 +1920,7 @@ class TasksDetailsScreen extends Component {
             'YYYY-MM-DD[T]HH:mm:ss',
           )
         : '';
-
+      this.setState({dataLoading: true});
       let resultData = await APIServices.updateTaskReminderDateData(
         projectID,
         taskID,
@@ -2214,6 +2229,7 @@ class TasksDetailsScreen extends Component {
   }
 
   async getChildTasksOfParent(selectedProjectID, newParent, selectedTaskID) {
+    this.setState({dataLoading: true});
     await APIServices.getChildTasksOfParentData(selectedProjectID, newParent)
       .then(async response => {
         if (response.message == 'success') {
@@ -2224,9 +2240,9 @@ class TasksDetailsScreen extends Component {
             selectedProjectTaskID: newParent,
           });
           this.fetchData(selectedProjectID, newParent);
-          this.fetchFilesData(selectedProjectID, newParent);
-          this.getAllSprintInProject(selectedProjectID, this.state.sprintId);
-          this.getAllTaskInProject(selectedProjectID);
+          // this.fetchFilesData(selectedProjectID, newParent);
+          // this.getAllSprintInProject(selectedProjectID, this.state.sprintId);
+          // this.getAllTaskInProject(selectedProjectID);
         } else {
           this.setState({dataLoading: false});
         }
@@ -2251,7 +2267,7 @@ class TasksDetailsScreen extends Component {
     let parentTaskName = this.state.selectedTaskName;
     let projectTaskInitiator = this.state.projectTaskInitiator;
 
-    this.setState({showTaskModal: false});
+    this.setState({dataLoading: true, showTaskModal: false});
 
     await APIServices.updateParentToChild(
       selectedProjectID,
@@ -2262,11 +2278,11 @@ class TasksDetailsScreen extends Component {
         if (response.message == 'success') {
           this.setState({dataLoading: false});
           this.fetchData(selectedProjectID, this.state.selectedProjectTaskID);
-          this.fetchFilesData(
-            selectedProjectID,
-            this.state.selectedProjectTaskID,
-          );
-          this.getAllTaskInProject(selectedProjectID);
+          // this.fetchFilesData(
+          //   selectedProjectID,
+          //   this.state.selectedProjectTaskID,
+          // );
+          // this.getAllTaskInProject(selectedProjectID);
           this.setState({parentTaskName: parentTaskName});
         } else {
           this.setState({dataLoading: false});

@@ -1249,7 +1249,7 @@ class MyTasksDetailsScreen extends Component {
           'YYYY-MM-DD[T]HH:mm:ss',
         )
       : '';
-
+    this.setState({dataLoading: true});
     await APIServices.myTaskUpdateDueDateData(selectedTaskID, IsoDueDate)
       .then(response => {
         if (response.message == 'success') {
@@ -1280,7 +1280,7 @@ class MyTasksDetailsScreen extends Component {
           'YYYY-MM-DD[T]HH:mm:ss',
         )
       : '';
-
+    this.setState({dataLoading: true});
     await APIServices.myTaskUpdateReminderDateData(
       selectedTaskID,
       IsoReminderDate,

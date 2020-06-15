@@ -246,8 +246,8 @@ class GroupTasksDetailsScreen extends Component {
     });
 
     this.fetchData(selectedGroupTaskID, selectedTaskID);
-    this.fetchFilesData(selectedGroupTaskID, selectedTaskID);
-    this.getAllTaskByGroup(selectedGroupTaskID);
+    // this.fetchFilesData(selectedGroupTaskID, selectedTaskID);
+    // this.getAllTaskByGroup(selectedGroupTaskID);
   }
 
   async fetchFilesData(selectedGroupTaskID, selectedTaskID) {
@@ -284,6 +284,7 @@ class GroupTasksDetailsScreen extends Component {
   }
 
   async getSubTAskDetails() {
+    this.setState({dataLoading: true});
     await APIServices.getChildTasksOfTaskGroupData(
       this.state.selectedGroupTaskID,
       this.state.selectedTaskID,
@@ -763,7 +764,8 @@ class GroupTasksDetailsScreen extends Component {
         this.setTaskUserName(taskResult);
         this.setSecondaryTaskId(taskResult);
         this.setIsParent(taskResult);
-
+        this.fetchFilesData(selectedGroupTaskID, selectedTaskID);
+        this.getAllTaskByGroup(selectedGroupTaskID);
         this.setState({dataLoading: false, taskResult: taskResult});
       } else {
         this.setState({dataLoading: false});
@@ -856,15 +858,24 @@ class GroupTasksDetailsScreen extends Component {
   async setTaskUserName(taskResult) {
     let selectedGroupTaskID = this.state.selectedGroupTaskID;
     let userID = taskResult.data.taskAssignee;
-    let activeUsers = await APIServices.getTaskPeopleData(selectedGroupTaskID);
-    if (activeUsers.message == 'success' && userID) {
-      const result = activeUsers.data.find(
-        ({assigneeId}) => assigneeId === userID,
+    this.setState({dataLoading: true});
+    try {
+      let activeUsers = await APIServices.getTaskPeopleData(
+        selectedGroupTaskID,
       );
-      this.setState({
-        name: result.assigneeFirstName + ' ' + result.assigneeLastName,
-        //activeUsers : activeUsers.data,
-      });
+      if (activeUsers.message == 'success' && userID) {
+        const result = activeUsers.data.find(
+          ({assigneeId}) => assigneeId === userID,
+        );
+        this.setState({
+          name: result.assigneeFirstName + ' ' + result.assigneeLastName,
+          //activeUsers : activeUsers.data,
+        });
+      } else {
+        this.setState({dataLoading: false});
+      }
+    } catch (error) {
+      this.setState({dataLoading: false});
     }
   }
 
@@ -1465,7 +1476,7 @@ class GroupTasksDetailsScreen extends Component {
           'YYYY-MM-DD[T]HH:mm:ss',
         )
       : '';
-
+    this.setState({dataLoading: true});
     await APIServices.groupTaskUpdateDueDateData(
       selectedGroupTaskID,
       selectedTaskID,
@@ -1501,7 +1512,7 @@ class GroupTasksDetailsScreen extends Component {
             'YYYY-MM-DD[T]HH:mm:ss',
           )
         : '';
-
+      this.setState({dataLoading: true});
       let resultData = await APIServices.groupTaskUpdateReminderDateData(
         selectedGroupTaskID,
         selectedTaskID,
@@ -1771,7 +1782,7 @@ class GroupTasksDetailsScreen extends Component {
     let selectedTaskNameModal = this.state.selectedTaskName;
     let parentTaskName = this.state.selectedTaskName;
 
-    this.setState({showTaskModal: false});
+    this.setState({dataLoading: true, showTaskModal: false});
 
     await APIServices.updateParentToChildInGroup(
       selectedGroupTaskID,
@@ -1783,9 +1794,8 @@ class GroupTasksDetailsScreen extends Component {
           this.setState({dataLoading: false});
           // if (fromParent) {
           this.fetchData(selectedGroupTaskID, this.state.selectedTaskID);
-          this.fetchFilesData(selectedGroupTaskID, this.state.selectedTaskID);
-
-          this.getAllTaskByGroup(this.state.selectedGroupTaskID);
+          // this.fetchFilesData(selectedGroupTaskID, this.state.selectedTaskID);
+          // this.getAllTaskByGroup(this.state.selectedGroupTaskID);
           this.setState({parentTaskName: parentTaskName});
         } else {
           this.setState({dataLoading: false});
