@@ -128,74 +128,7 @@ class ViewProfileScreen extends Component {
       }
     } catch (error) {
       this.setState({dataLoading: false});
-      let response = {
-        message: 'success',
-        data: [
-          {
-            skillId: '1a232d78-13d7-4124-8971-cda9fec177a0',
-            userId: '138bbb3d-02ed-4d72-9a03-7e8cdfe89eff',
-            categoryId: '107db9ed-97ec-4442-bbe3-e35fc40bee2d',
-            skillName: 'Vue JS',
-            categoryName: 'FE',
-            categoryColorCode: '#C0CA33FF',
-          },
-          {
-            skillId: '3e590b0e-7c0b-4db8-9815-007c912d1a6d',
-            userId: '138bbb3d-02ed-4d72-9a03-7e8cdfe89eff',
-            categoryId: '8555040d-55e2-46a0-84e5-c45b20d6eff1',
-            skillName: 'Java',
-            categoryName: 'Backend',
-            categoryColorCode: '4521',
-          },
-          {
-            skillId: '89b1fca4-be9e-43b6-bdfc-d661d22ecf9d',
-            userId: '138bbb3d-02ed-4d72-9a03-7e8cdfe89eff',
-            categoryId: '8555040d-55e2-46a0-84e5-c45b20d6eff1',
-            skillName: 'NodeJs',
-            categoryName: 'Backend',
-            categoryColorCode: '4521',
-          },
-        ],
-        status: 'OK',
-        timestamp: 'Mon Jun 15 14:38:09 IST 2020',
-      };
-      this.groupSkillMap(response.data);
     }
-  }
-
-  groupSkillMap(items) {
-    // const skillMap = items.reduce((skillMapToGroup, { categoryName, skillName }) => {
-    //   if (!skillMapToGroup[categoryName]) skillMapToGroup[categoryName] = [];
-    //   skillMapToGroup[categoryName].push(skillName);
-    //   return skillMapToGroup;
-    // }, {});
-    let skillArray = [];
-    const skillMap = items.reduce(function(rv, x) {
-      (rv[x['categoryName']] = rv[x['categoryName']] || []).push(x);
-      return rv;
-    }, {});
-    console.log('ssssssssssssssssssssss', skillMap);
-    for (let index = 0; index < [skillMap].length; index++) {
-      const element = [skillMap][index].Backend;
-      console.log('vvvvvvvvvvvvvvvvvvvvvvvvv', element[0]);
-      for (let a = 0; a < element.length; a++) {
-        
-
-        const ccc = element[a];
-        console.log('bbbbbbbbbbbbbbbbbbbbbbbb', ccc);
-        skillArray.push({
-          id: ccc.categoryName,
-          value: ccc.categoryName,
-          color: ccc.categoryColorCode,
-        });
-      }
-      
-      // for (let index = 0; index < element..length; index++) {
-      //   const element = array[index];
-
-      // }
-    }
-    console.log('nnnnnnnnnnnnnnnnnnnnnnnnnnnn', skillArray);
   }
 
   async updateSlackNotificationStatus(email, value) {
@@ -801,7 +734,7 @@ const styles = EStyleSheet.create({
   slackView: {
     backgroundColor: colors.white,
     borderColor: colors.lighterGray,
-    borderWidth: 1,
+    borderWidth: '1rem',
     borderRadius: '5rem',
     marginTop: '0rem',
     marginBottom: '7rem',
@@ -845,7 +778,6 @@ const styles = EStyleSheet.create({
     marginTop: '17rem',
     flexDirection: 'row',
     alignItems: 'center',
-    // justifyContent: 'center',
     paddingHorizontal: '12rem',
     height: '55rem',
     marginHorizontal: '20rem',
@@ -869,6 +801,7 @@ const styles = EStyleSheet.create({
   },
   mainFlatListStyle: {
     marginHorizontal: '20rem',
+    marginBottom: '10rem',
   },
   flatListStyle: {
     marginBottom: '7rem',
