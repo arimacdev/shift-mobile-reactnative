@@ -760,12 +760,9 @@ class MyTasksDetailsScreen extends Component {
   };
 
   handleTimeConfirm = time1 => {
-    console.log(time1, 'time');
     this.hideTimePicker();
     let time = new Date(time1);
     let newTime = moment(time).format('hh:mmA');
-    // let newTime = time.getHours() + ':' + time.getMinutes();
-    // if (event.type == 'set') {
     if (this.state.reminder) {
       this.setState({
         reminderTime: newTime,
@@ -773,8 +770,7 @@ class MyTasksDetailsScreen extends Component {
         showPicker: false,
         showTimePicker: false,
         timeReminder: new Date(time1),
-      });
-      this.changeTaskReminderDate();
+      },() => this.changeTaskReminderDate());
     } else {
       this.setState({
         dueTime: newTime,
@@ -782,15 +778,8 @@ class MyTasksDetailsScreen extends Component {
         showPicker: false,
         showTimePicker: false,
         time: new Date(time1),
-      });
-      this.changeTaskDueDate();
+      },() => this.changeTaskDueDate());
     }
-    // } else {
-    //   this.setState({
-    //     showPicker: false,
-    //     showTimePicker: false,
-    //   });
-    // }
   };
 
   onChangeDate(event, selectedDate) {

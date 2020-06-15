@@ -1149,8 +1149,7 @@ class SubTasksDetailsScreen extends Component {
         showPicker: false,
         showTimePicker: false,
         timeReminder: new Date(time1),
-      });
-      this.changeTaskReminderDate();
+      },() => this.changeTaskReminderDate());
     } else {
       this.setState({
         dueTime: newTime,
@@ -1158,15 +1157,8 @@ class SubTasksDetailsScreen extends Component {
         showPicker: false,
         showTimePicker: false,
         time: new Date(time1),
-      });
-      this.changeTaskDueDate();
+      }, () => this.changeTaskDueDate());
     }
-    // } else {
-    //   this.setState({
-    //     showPicker: false,
-    //     showTimePicker: false,
-    //   });
-    // }
   };
 
   onChangeDate(event, selectedDate) {

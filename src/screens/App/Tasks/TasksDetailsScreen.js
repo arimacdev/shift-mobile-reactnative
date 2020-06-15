@@ -1291,21 +1291,19 @@ class TasksDetailsScreen extends Component {
   };
 
   handleTimeConfirm = time1 => {
-    console.log(time1, 'time');
     this.hideTimePicker();
     let time = new Date(time1);
     let newTime = moment(time).format('hh:mmA');
-    // let newTime = time.getHours() + ':' + time.getMinutes();
-    // if (event.type == 'set') {
     if (this.state.reminder) {
-      this.setState({
-        reminderTime: newTime,
-        selectedTimeReminder: newTime,
-        showPicker: false,
-        showTimePicker: false,
-        timeReminder: new Date(time1),
-      });
-      this.changeTaskReminderDate();
+      this.setState({ 
+          reminderTime: newTime,
+          selectedTimeReminder: newTime,
+          showPicker: false,
+          showTimePicker: false,
+          timeReminder: new Date(time1),
+        },
+        () =>  this.changeTaskReminderDate()
+      );
     } else {
       this.setState({
         dueTime: newTime,
@@ -1313,15 +1311,10 @@ class TasksDetailsScreen extends Component {
         showPicker: false,
         showTimePicker: false,
         time: new Date(time1),
-      });
-      this.changeTaskDueDate();
+      },
+      ()=> this.changeTaskDueDate()
+      );
     }
-    // } else {
-    //   this.setState({
-    //     showPicker: false,
-    //     showTimePicker: false,
-    //   });
-    // }
   };
 
   onChangeDate(event, selectedDate) {
@@ -1870,6 +1863,8 @@ class TasksDetailsScreen extends Component {
       let reminderTime = this.state.reminderTime;
       let projectID = this.state.selectedProjectID;
       let taskID = this.state.selectedProjectTaskID;
+      console.log('reminderTime',reminderTime);
+      console.log('remindDateValue',remindDateValue);
 
       let IsoReminderDate = remindDateValue
         ? moment(remindDateValue + reminderTime, 'DD/MM/YYYY hh:mmA').format(
@@ -2964,6 +2959,7 @@ const styles = EStyleSheet.create({
   buttonAddTaskView: {
     flexDirection: 'row',
     marginHorizontal: '20rem',
+    marginTop: '10rem'
   },
   buttonAddParentTask: {
     flex: 1,
