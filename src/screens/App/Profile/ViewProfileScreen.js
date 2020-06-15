@@ -8,6 +8,8 @@ import {
   TouchableOpacity,
   Switch,
   Alert,
+  TextInput,
+  FlatList,
 } from 'react-native';
 import {connect} from 'react-redux';
 import * as actions from '../../../redux/actions';
@@ -18,7 +20,6 @@ const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
 import Loader from '../../../components/Loader';
 import APIServices from '../../../services/APIServices';
-import {TextInput} from 'react-native-gesture-handler';
 import {authorize} from 'react-native-app-auth';
 import strings from '../../../config/strings';
 import _ from 'lodash';
@@ -60,6 +61,7 @@ class ViewProfileScreen extends Component {
       userID: '',
       // switchValue: false,
       showMessageModal: false,
+      userMetricsData: [],
     };
   }
 
@@ -87,12 +89,108 @@ class ViewProfileScreen extends Component {
         userSlackId: userData.data.userSlackId,
         notification: userData.data.notification,
         userLastImage: userData.data.profileImage,
+        userMetricsData: [
+          {
+            id: 1,
+            value: 'Front end',
+            color: colors.colorApple,
+            skills: [
+              {id: 1, name: 'Vue Js'},
+              {id: 2, name: 'React Js'},
+              {id: 3, name: 'HTML'},
+            ],
+          },
+          {
+            id: 2,
+            value: 'Back end',
+            color: colors.colorBittersweet,
+            skills: [{id: 1, name: 'Node Js'}],
+          },
+        ],
         dataLoading: false,
       });
+      this.getUserSkillMap(userID);
     } else {
       this.setState({dataLoading: false});
     }
   }
+
+  async getUserSkillMap(userID) {
+    this.setState({dataLoading: true});
+    try {
+      let skillMap = await APIServices.getUserSkillMapData(userID);
+      if (skillMap.message == 'success') {
+        this.setState({
+          dataLoading: false,
+        });
+      } else {
+        this.setState({dataLoading: false});
+      }
+    } catch (error) {
+      this.setState({dataLoading: false});
+      let response = {
+        message: 'success',
+        data: [
+          {
+            skillId: '1a232d78-13d7-4124-8971-cda9fec177a0',
+            userId: '138bbb3d-02ed-4d72-9a03-7e8cdfe89eff',
+            categoryId: '107db9ed-97ec-4442-bbe3-e35fc40bee2d',
+            skillName: 'Vue JS',
+            categoryName: 'FE',
+            categoryColorCode: '#C0CA33FF',
+          },
+          {
+            skillId: '3e590b0e-7c0b-4db8-9815-007c912d1a6d',
+            userId: '138bbb3d-02ed-4d72-9a03-7e8cdfe89eff',
+            categoryId: '8555040d-55e2-46a0-84e5-c45b20d6eff1',
+            skillName: 'Java',
+            categoryName: 'Backend',
+            categoryColorCode: '4521',
+          },
+          {
+            skillId: '89b1fca4-be9e-43b6-bdfc-d661d22ecf9d',
+            userId: '138bbb3d-02ed-4d72-9a03-7e8cdfe89eff',
+            categoryId: '8555040d-55e2-46a0-84e5-c45b20d6eff1',
+            skillName: 'NodeJs',
+            categoryName: 'Backend',
+            categoryColorCode: '4521',
+          },
+        ],
+        status: 'OK',
+        timestamp: 'Mon Jun 15 14:38:09 IST 2020',
+      };
+      this.groupSkillMap(response.data);
+    }
+  }
+
+  groupSkillMap(items) {
+    // const skillMap = items.reduce((skillMapToGroup, { categoryName, skillName }) => {
+    //   if (!skillMapToGroup[categoryName]) skillMapToGroup[categoryName] = [];
+    //   skillMapToGroup[categoryName].push(skillName);
+    //   return skillMapToGroup;
+    // }, {});
+    let skillArray = [];
+    const skillMap = items.reduce(function(rv, x) {
+      (rv[x['categoryName']] = rv[x['categoryName']] || []).push(x);
+      return rv;
+    }, {});
+    console.log('ssssssssssssssssssssss', skillMap);
+    for (let index = 0; index < [skillMap].length; index++) {
+      const element = [skillMap][index];
+      console.log('vvvvvvvvvvvvvvvvvvvvvvvvv', element);
+      skillArray.push({
+        id: element.categoryName,
+        value: element.categoryName,
+        color: element.categoryColorCode,
+      });
+      // for (let index = 0; index < element..length; index++) {
+      //   const element = array[index];
+
+      // }
+    }
+    console.log('nnnnnnnnnnnnnnnnnnnnnnnnnnnn', skillArray);
+  }
+
   async updateSlackNotificationStatus(email, value) {
     const {
       navigation: {
@@ -442,6 +540,32 @@ class ViewProfileScreen extends Component {
   //   this.updateSlackNotificationStatus()
   // };
 
+  renderSkillList(item) {
+    return (
+      <View style={styles.skillListView}>
+        <Text style={styles.skillListText}>{item.name}</Text>
+      </View>
+    );
+  }
+
+  renderUserMetricsList(item) {
+    return (
+      <View>
+        <View style={[styles.metricsListVew, {backgroundColor: item.color}]}>
+          <Text style={styles.metricsListText}>{item.value}</Text>
+        </View>
+        <View>
+          <FlatList
+            style={styles.flatListStyle}
+            data={item.skills}
+            renderItem={({item, index}) => this.renderSkillList(item)}
+            keyExtractor={item => item.id}
+          />
+        </View>
+      </View>
+    );
+  }
+
   render() {
     let {
       userFirstName,
@@ -457,6 +581,7 @@ class ViewProfileScreen extends Component {
       showAlert,
       alertTitle,
       alertMsg,
+      userMetricsData,
     } = this.state;
 
     return (
@@ -525,6 +650,14 @@ class ViewProfileScreen extends Component {
               value={userConfirmPassword}
               editable={editEnabled}
               onChangeText={text => this.onConfirmPasswordChange(text)}
+            />
+          </View>
+          <View>
+            <FlatList
+              style={styles.mainFlatListStyle}
+              data={userMetricsData}
+              renderItem={({item, index}) => this.renderUserMetricsList(item)}
+              keyExtractor={item => item.id}
             />
           </View>
           <TouchableOpacity onPress={() => this.onSlackButtonPress()}>
@@ -727,6 +860,35 @@ const styles = EStyleSheet.create({
   addIcon: {
     width: '28rem',
     height: '28rem',
+  },
+  mainFlatListStyle: {
+    marginHorizontal: '20rem',
+  },
+  flatListStyle: {
+    marginBottom: '7rem',
+    backgroundColor: colors.projectBgColor,
+    borderBottomStartRadius: '5rem',
+    borderBottomEndRadius: '5rem',
+    paddingVertical: '10rem',
+  },
+  metricsListVew: {
+    borderTopStartRadius: '5rem',
+    borderTopEndRadius: '5rem',
+    paddingHorizontal: '20rem',
+    height: '40rem',
+    justifyContent: 'center',
+  },
+  metricsListText: {
+    fontFamily: 'CircularStd-Medium',
+    color: colors.white,
+  },
+  skillListView: {
+    paddingHorizontal: '20rem',
+    marginVertical: '10rem',
+  },
+  skillListText: {
+    fontFamily: 'CircularStd-Medium',
+    color: colors.colorShuttleGrey,
   },
 });
 
