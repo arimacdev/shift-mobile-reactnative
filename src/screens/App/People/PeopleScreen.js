@@ -57,32 +57,36 @@ class PeopleScreen extends Component {
 
   async fetchData(userID) {
     let selectedProjectID = this.props.selectedProjectID;
-    this.setState({dataLoading: true});
-    let projectPeopleData = await APIServices.getProjectPeopleData(
-      selectedProjectID,
-      userID,
-    );
-    if (projectPeopleData.message == 'success') {
-      let ownerArray = [];
-      let adminsArray = [];
-      let usersArray = [];
-      ownerArray = projectPeopleData.data.filter(function(obj) {
-        return obj.projectRoleId == 1;
-      });
-      adminsArray = projectPeopleData.data.filter(function(obj) {
-        return obj.projectRoleId == 2;
-      });
-      usersArray = projectPeopleData.data.filter(function(obj) {
-        return obj.projectRoleId == 3;
-      });
+    try {
+      this.setState({dataLoading: true});
+      let projectPeopleData = await APIServices.getProjectPeopleData(
+        selectedProjectID,
+        userID,
+      );
+      if (projectPeopleData.message == 'success') {
+        let ownerArray = [];
+        let adminsArray = [];
+        let usersArray = [];
+        ownerArray = projectPeopleData.data.filter(function(obj) {
+          return obj.projectRoleId == 1;
+        });
+        adminsArray = projectPeopleData.data.filter(function(obj) {
+          return obj.projectRoleId == 2;
+        });
+        usersArray = projectPeopleData.data.filter(function(obj) {
+          return obj.projectRoleId == 3;
+        });
 
-      this.setState({
-        owner: ownerArray,
-        admins: adminsArray,
-        users: usersArray,
-        dataLoading: false,
-      });
-    } else {
+        this.setState({
+          owner: ownerArray,
+          admins: adminsArray,
+          users: usersArray,
+          dataLoading: false,
+        });
+      } else {
+        this.setState({dataLoading: false});
+      }
+    } catch (error) {
       this.setState({dataLoading: false});
     }
   }
@@ -138,10 +142,7 @@ class PeopleScreen extends Component {
           </View>
           <View style={styles.controlView}>
             <TouchableOpacity onPress={() => this.goToEditPeople(item)}>
-              <Image
-                style={styles.controlIcon}
-                source={icons.editRoundWhite}
-              />
+              <Image style={styles.controlIcon} source={icons.editRoundWhite} />
             </TouchableOpacity>
 
             {/*do not remove. this for further implementation*/}

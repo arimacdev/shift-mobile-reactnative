@@ -236,7 +236,7 @@ let taskDataWhenParentIsBoard = [
 let MS_PER_MINUTE = 60000;
 
 class TasksDetailsScreen extends Component {
-  deleteDetails = {
+  details = {
     icon: icons.alertRed,
     type: 'confirm',
     title: 'Delete Task',
@@ -583,6 +583,7 @@ class TasksDetailsScreen extends Component {
       files: this.state.files,
       indeterminate: true,
       Uploading: 0,
+      showMessageModal: false,
     });
 
     await APIServices.addFileToTask(
@@ -592,7 +593,19 @@ class TasksDetailsScreen extends Component {
     )
       .then(response => {
         if (response.message == 'success') {
-          this.setState({indeterminate: false, files: [], uploading: 100});
+          this.details = {
+            icon: icons.taskBlue,
+            type: 'success',
+            title: 'Sucsess',
+            description: 'File have been added successfully',
+            buttons: {},
+          };
+          this.setState({
+            indeterminate: false,
+            files: [],
+            uploading: 100,
+            showMessageModal: true,
+          });
           this.fetchFilesData(selectedProjectID, selectedProjectTaskID);
         } else {
           this.setState({indeterminate: false, files: [], uploading: 0});
@@ -640,6 +653,7 @@ class TasksDetailsScreen extends Component {
         files: this.state.files,
         indeterminate: true,
         uploading: 0,
+        showMessageModal: false,
       });
 
       await APIServices.addFileToTask(
@@ -649,7 +663,19 @@ class TasksDetailsScreen extends Component {
       )
         .then(response => {
           if (response.message == 'success') {
-            this.setState({indeterminate: false, files: [], uploading: 100});
+            this.details = {
+              icon: icons.taskBlue,
+              type: 'success',
+              title: 'Sucsess',
+              description: 'File have been added successfully',
+              buttons: {},
+            };
+            this.setState({
+              indeterminate: false,
+              files: [],
+              uploading: 100,
+              showMessageModal: true,
+            });
             this.fetchFilesData(selectedProjectID, selectedProjectTaskID);
           } else {
             this.setState({indeterminate: false, files: [], uploading: 0});
@@ -741,7 +767,7 @@ class TasksDetailsScreen extends Component {
     //   ],
     //   {cancelable: false},
     // );
-    this.deleteDetails = {
+    this.details = {
       icon: icons.alertRed,
       type: 'confirm',
       title: 'Delete File',
@@ -763,7 +789,7 @@ class TasksDetailsScreen extends Component {
     await APIServices.deleteFileInTaskData(projectID, taskID, taskFileId)
       .then(response => {
         if (response.message == 'success') {
-          this.deleteDetails = {
+          this.details = {
             icon: icons.taskBlue,
             type: 'success',
             title: 'Sucsess',
@@ -1691,7 +1717,7 @@ class TasksDetailsScreen extends Component {
     selectedProjectID,
     selectedProjectTaskID,
   ) {
-    this.setState({dataLoading: true});
+    this.setState({dataLoading: true, showMessageModal: false});
     await APIServices.changeSprint(
       selectedId,
       previousSprintID,
@@ -1700,7 +1726,18 @@ class TasksDetailsScreen extends Component {
     )
       .then(response => {
         if (response.message == 'success') {
-          this.setState({dataLoading: false, sprintName: selectedName});
+          this.details = {
+            icon: icons.taskBlue,
+            type: 'success',
+            title: 'Sucsess',
+            description: 'Sprint has been updated successfully',
+            buttons: {},
+          };
+          this.setState({
+            dataLoading: false,
+            showMessageModal: true,
+            sprintName: selectedName,
+          });
         } else {
           this.setState({dataLoading: false});
           this.showAlert('', response.message);
@@ -1719,13 +1756,24 @@ class TasksDetailsScreen extends Component {
   }
 
   async onSubmitTaskNote(note) {
-    this.setState({dataLoading: true});
+    this.setState({dataLoading: true, showMessageModal: false});
     let projectID = this.state.selectedProjectID;
     let taskID = this.state.selectedProjectTaskID;
     await APIServices.updateTaskNoteData(projectID, taskID, note)
       .then(response => {
         if (response.message == 'success') {
-          this.setState({dataLoading: false, note: note});
+          this.details = {
+            icon: icons.taskBlue,
+            type: 'success',
+            title: 'Sucsess',
+            description: 'Notes has been updated successfully',
+            buttons: {},
+          };
+          this.setState({
+            dataLoading: false,
+            showMessageModal: true,
+            note: note,
+          });
         } else {
           this.setState({dataLoading: false});
         }
@@ -1740,7 +1788,7 @@ class TasksDetailsScreen extends Component {
 
   // change issue typ of task API
   async onChangeIssueType(selectedIssueTypeId, selectedIssueTypeName) {
-    this.setState({dataLoading: true});
+    this.setState({dataLoading: true, showMessageModal: false});
     let projectID = this.state.selectedProjectID;
     let taskID = this.state.selectedProjectTaskID;
     await APIServices.updateTaskIssueTypeData(
@@ -1750,8 +1798,16 @@ class TasksDetailsScreen extends Component {
     )
       .then(response => {
         if (response.message == 'success') {
+          this.details = {
+            icon: icons.taskBlue,
+            type: 'success',
+            title: 'Sucsess',
+            description: 'Task type has been updated successfully',
+            buttons: {},
+          };
           this.setState({
             dataLoading: false,
+            showMessageModal: true,
             issueType: selectedIssueTypeName,
           });
           this.changeTaskStatusDropDown(selectedIssueTypeId);
@@ -1807,13 +1863,24 @@ class TasksDetailsScreen extends Component {
 
   // change assignee of task API
   async changeTaskAssignee(name, userID) {
-    this.setState({dataLoading: true});
+    this.setState({dataLoading: true, showMessageModal: false});
     let projectID = this.state.selectedProjectID;
     let taskID = this.state.selectedProjectTaskID;
     await APIServices.updateTaskAssigneeData(projectID, taskID, userID)
       .then(response => {
         if (response.message == 'success') {
-          this.setState({dataLoading: false, name: name});
+          this.details = {
+            icon: icons.taskBlue,
+            type: 'success',
+            title: 'Sucsess',
+            description: 'Task assignee has been updated successfully',
+            buttons: {},
+          };
+          this.setState({
+            dataLoading: false,
+            showMessageModal: true,
+            name: name,
+          });
         } else {
           this.setState({dataLoading: false});
           this.showAlert('', response.message);
@@ -1829,7 +1896,7 @@ class TasksDetailsScreen extends Component {
 
   // change status of task API
   async onChangeTaskStatus(selectedTaskStatusId, selectedTaskStatusName) {
-    this.setState({dataLoading: true});
+    this.setState({dataLoading: true, showMessageModal: false});
     let projectID = this.state.selectedProjectID;
     let taskID = this.state.selectedProjectTaskID;
     await APIServices.updateTaskStatusData(
@@ -1839,8 +1906,16 @@ class TasksDetailsScreen extends Component {
     )
       .then(response => {
         if (response.message == 'success') {
+          this.details = {
+            icon: icons.taskBlue,
+            type: 'success',
+            title: 'Sucsess',
+            description: 'Task status has been updated successfully',
+            buttons: {},
+          };
           this.setState({
             dataLoading: false,
+            showMessageModal: true,
             taskStatusValue: selectedTaskStatusName,
           });
         } else {
@@ -1858,13 +1933,24 @@ class TasksDetailsScreen extends Component {
 
   // change name of task API
   async onTaskNameChangeSubmit(text) {
-    this.setState({dataLoading: true, taskNameEditable: false});
+    this.setState({
+      dataLoading: true,
+      showMessageModal: false,
+      taskNameEditable: false,
+    });
     let projectID = this.state.selectedProjectID;
     let taskID = this.state.selectedProjectTaskID;
     await APIServices.updateTaskNameData(projectID, taskID, text)
       .then(response => {
         if (response.message == 'success') {
-          this.setState({dataLoading: false});
+          this.details = {
+            icon: icons.taskBlue,
+            type: 'success',
+            title: 'Sucsess',
+            description: 'Task name has been updated successfully',
+            buttons: {},
+          };
+          this.setState({dataLoading: false, showMessageModal: true});
         } else {
           this.setState({dataLoading: false});
         }
@@ -1888,11 +1974,18 @@ class TasksDetailsScreen extends Component {
           'YYYY-MM-DD[T]HH:mm:ss',
         )
       : '';
-    this.setState({dataLoading: true});
+    this.setState({dataLoading: true, showMessageModal: false});
     await APIServices.updateTaskDueDateData(projectID, taskID, IsoDueDate)
       .then(response => {
         if (response.message == 'success') {
-          this.setState({dataLoading: false});
+          this.details = {
+            icon: icons.taskBlue,
+            type: 'success',
+            title: 'Sucsess',
+            description: 'Due date has been updated successfully',
+            buttons: {},
+          };
+          this.setState({dataLoading: false, showMessageModal: true});
           this.fetchData(projectID, taskID);
         } else {
           this.setState({dataLoading: false});
@@ -1920,14 +2013,21 @@ class TasksDetailsScreen extends Component {
             'YYYY-MM-DD[T]HH:mm:ss',
           )
         : '';
-      this.setState({dataLoading: true});
+      this.setState({dataLoading: true, showMessageModal: false});
       let resultData = await APIServices.updateTaskReminderDateData(
         projectID,
         taskID,
         IsoReminderDate,
       );
       if (resultData.message == 'success') {
-        this.setState({dataLoading: false});
+        this.details = {
+          icon: icons.taskBlue,
+          type: 'success',
+          title: 'Sucsess',
+          description: 'Remind date has been updated successfully',
+          buttons: {},
+        };
+        this.setState({dataLoading: false, showMessageModal: true});
         this.fetchData(projectID, taskID);
       } else {
         this.setState({dataLoading: false});
@@ -1974,7 +2074,7 @@ class TasksDetailsScreen extends Component {
     APIServices.deleteSingleTask(projectID, taskId, taskName, tskInitiator)
       .then(response => {
         if (response.message == 'success') {
-          this.deleteDetails = {
+          this.details = {
             icon: icons.taskBlue,
             type: 'success',
             title: 'Sucsess',
@@ -2165,7 +2265,7 @@ class TasksDetailsScreen extends Component {
     let descriptionSubTask =
       "You're about to permanently delete this sub task and all of its data.\nIf you're not sure, you can close this pop up.";
 
-    this.deleteDetails = {
+    this.details = {
       icon: icons.alertRed,
       type: 'confirm',
       title: isParent ? 'Delete Task' : 'Delete Sub Task',
@@ -2267,7 +2367,11 @@ class TasksDetailsScreen extends Component {
     let parentTaskName = this.state.selectedTaskName;
     let projectTaskInitiator = this.state.projectTaskInitiator;
 
-    this.setState({dataLoading: true, showTaskModal: false});
+    this.setState({
+      dataLoading: true,
+      showMessageModal: false,
+      showTaskModal: false,
+    });
 
     await APIServices.updateParentToChild(
       selectedProjectID,
@@ -2276,7 +2380,16 @@ class TasksDetailsScreen extends Component {
     )
       .then(response => {
         if (response.message == 'success') {
-          this.setState({dataLoading: false});
+          this.details = {
+            icon: icons.taskBlue,
+            type: 'success',
+            title: 'Sucsess',
+            description: fromParent
+              ? 'Parent task have been added successfully'
+              : 'Child task have been added successfully',
+            buttons: {},
+          };
+          this.setState({dataLoading: false, showMessageModal: true});
           this.fetchData(selectedProjectID, this.state.selectedProjectTaskID);
           // this.fetchFilesData(
           //   selectedProjectID,
@@ -2736,7 +2849,7 @@ class TasksDetailsScreen extends Component {
         />
         <MessageShowModal
           showMessageModal={this.state.showMessageModal}
-          details={this.deleteDetails}
+          details={this.details}
           onPress={this.onPressMessageModal}
           onPressCancel={() => this.onPressCancel(this)}
         />

@@ -53,7 +53,7 @@ class ProjectsDetailsScreen extends Component {
     );
     if (projectTaskDetailsData.message == 'success') {
       this.setProjectTaskData(projectTaskDetailsData.data);
-      projectData = await APIServices.getProjectData(selectedProjectID);
+      let projectData = await APIServices.getProjectData(selectedProjectID);
       if (projectData.message == 'success') {
         this.setProjectData(projectData.data);
         this.setState({dataLoading: false});
