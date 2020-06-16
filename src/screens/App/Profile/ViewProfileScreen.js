@@ -110,6 +110,38 @@ class ViewProfileScreen extends Component {
         dataLoading: false,
       });
       this.getUserSkillMap(userID);
+      this. userSkillMap = {
+        "message": "success",
+        "data": [
+            {
+                "skillId": "1a232d78-13d7-4124-8971-cda9fec177a0",
+                "userId": "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
+                "categoryId": "107db9ed-97ec-4442-bbe3-e35fc40bee2d",
+                "skillName": "Vue JS",
+                "categoryName": "FE",
+                "categoryColorCode": "#C0CA33FF"
+            },
+            {
+                "skillId": "3e590b0e-7c0b-4db8-9815-007c912d1a6d",
+                "userId": "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
+                "categoryId": "8555040d-55e2-46a0-84e5-c45b20d6eff1",
+                "skillName": "Java",
+                "categoryName": "Backend",
+                "categoryColorCode": "4521"
+            },
+            {
+                "skillId": "89b1fca4-be9e-43b6-bdfc-d661d22ecf9d",
+                "userId": "138bbb3d-02ed-4d72-9a03-7e8cdfe89eff",
+                "categoryId": "8555040d-55e2-46a0-84e5-c45b20d6eff1",
+                "skillName": "NodeJs",
+                "categoryName": "Backend",
+                "categoryColorCode": "4521"
+            }
+        ],
+        "status": "OK",
+        "timestamp": "Mon Jun 15 14:38:09 IST 2020"
+    }
+    this.categorizedSkillMap();
     } else {
       this.setState({dataLoading: false});
     }
@@ -127,6 +159,20 @@ class ViewProfileScreen extends Component {
     } catch (error) {
       this.setState({dataLoading: false});
     }
+  }
+  
+  categorizedSkillMap() {
+    let skillmap = this.userSkillMap;
+    // console.log("skillmap", this.userSkillMap);
+    const orderedSkillMap = skillmap.reduce((accumilate, current) => {
+      accumilate[current.categoryId] = (
+        accumilate[current.categoryId] || []
+      ).concat(current);
+      return accumilate;
+    }, {});
+    console.log("orderedSkillMap",orderedSkillMap)
+
+    return orderedSkillMap;
   }
 
   async updateSlackNotificationStatus(email, value) {
