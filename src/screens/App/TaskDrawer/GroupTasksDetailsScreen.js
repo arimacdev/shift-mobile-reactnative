@@ -104,7 +104,7 @@ let taskStatusData = [
 ];
 let MS_PER_MINUTE = 60000;
 class GroupTasksDetailsScreen extends Component {
-  deleteDetails = {
+  details = {
     icon: icons.alertRed,
     type: 'confirm',
     title: 'Delete Group Task',
@@ -420,6 +420,7 @@ class GroupTasksDetailsScreen extends Component {
       files: this.state.files,
       indeterminate: true,
       Uploading: 0,
+      showMessageModal: false,
     });
 
     await APIServices.addFileToGroupTask(
@@ -429,7 +430,19 @@ class GroupTasksDetailsScreen extends Component {
     )
       .then(response => {
         if (response.message == 'success') {
-          this.setState({indeterminate: false, files: [], uploading: 100});
+          this.details = {
+            icon: icons.taskBlue,
+            type: 'success',
+            title: 'Sucsess',
+            description: 'File have been added successfully',
+            buttons: {},
+          };
+          this.setState({
+            indeterminate: false,
+            files: [],
+            uploading: 100,
+            showMessageModal: true,
+          });
           this.fetchFilesData(selectedGroupTaskID, selectedTaskID);
         } else {
           this.setState({indeterminate: false, files: [], uploading: 0});
@@ -477,6 +490,7 @@ class GroupTasksDetailsScreen extends Component {
         files: this.state.files,
         indeterminate: true,
         uploading: 0,
+        showMessageModal: false,
       });
 
       await APIServices.addFileToGroupTask(
@@ -486,7 +500,19 @@ class GroupTasksDetailsScreen extends Component {
       )
         .then(response => {
           if (response.message == 'success') {
-            this.setState({indeterminate: false, files: [], uploading: 100});
+            this.details = {
+              icon: icons.taskBlue,
+              type: 'success',
+              title: 'Sucsess',
+              description: 'File have been added successfully',
+              buttons: {},
+            };
+            this.setState({
+              indeterminate: false,
+              files: [],
+              uploading: 100,
+              showMessageModal: true,
+            });
             this.fetchFilesData(selectedGroupTaskID, selectedTaskID);
           } else {
             this.setState({indeterminate: false, files: [], uploading: 0});
@@ -575,7 +601,7 @@ class GroupTasksDetailsScreen extends Component {
     //   ],
     //   {cancelable: false},
     // );
-    this.deleteDetails = {
+    this.details = {
       icon: icons.alertRed,
       type: 'confirm',
       title: 'Delete File',
@@ -601,7 +627,7 @@ class GroupTasksDetailsScreen extends Component {
     )
       .then(response => {
         if (response.message == 'success') {
-          this.deleteDetails = {
+          this.details = {
             icon: icons.taskBlue,
             type: 'success',
             title: 'Sucsess',
@@ -1365,7 +1391,7 @@ class GroupTasksDetailsScreen extends Component {
   }
 
   async onSubmitTaskNote(note) {
-    this.setState({dataLoading: true});
+    this.setState({dataLoading: true, showMessageModal: false});
     let selectedGroupTaskID = this.state.selectedGroupTaskID;
     let selectedTaskID = this.state.selectedTaskID;
     await APIServices.groupTaskUpdateTaskNoteData(
@@ -1375,7 +1401,18 @@ class GroupTasksDetailsScreen extends Component {
     )
       .then(response => {
         if (response.message == 'success') {
-          this.setState({dataLoading: false, note: note});
+          this.details = {
+            icon: icons.taskBlue,
+            type: 'success',
+            title: 'Sucsess',
+            description: 'Notes has been updated successfully',
+            buttons: {},
+          };
+          this.setState({
+            dataLoading: false,
+            showMessageModal: true,
+            note: note,
+          });
         } else {
           this.setState({dataLoading: false});
         }
@@ -1390,7 +1427,7 @@ class GroupTasksDetailsScreen extends Component {
 
   // change assignee of task API
   async changeTaskAssignee(name, userID) {
-    this.setState({dataLoading: true});
+    this.setState({dataLoading: true, showMessageModal: false});
     let selectedGroupTaskID = this.state.selectedGroupTaskID;
     let selectedTaskID = this.state.selectedTaskID;
     await APIServices.groupTaskUpdateTaskAssigneeData(
@@ -1400,7 +1437,19 @@ class GroupTasksDetailsScreen extends Component {
     )
       .then(response => {
         if (response.message == 'success') {
-          this.setState({dataLoading: false, name: name});
+          this.details = {
+            icon: icons.taskBlue,
+            type: 'success',
+            title: 'Sucsess',
+            description: 'Task assignee has been updated successfully',
+            buttons: {},
+          };
+          this.setState({
+            dataLoading: false,
+            showMessageModal: true,
+            name: name,
+          });
+          this.fetchData(selectedGroupTaskID, selectedTaskID);
         } else {
           this.setState({dataLoading: false});
         }
@@ -1415,7 +1464,7 @@ class GroupTasksDetailsScreen extends Component {
 
   // change status of task API
   async onChangeTaskStatus(selectedTaskStatusId, selectedTaskStatusName) {
-    this.setState({dataLoading: true});
+    this.setState({dataLoading: true, showMessageModal: false});
     let selectedGroupTaskID = this.state.selectedGroupTaskID;
     let selectedTaskID = this.state.selectedTaskID;
     await APIServices.groupTaskUpdateTaskStatusData(
@@ -1425,8 +1474,16 @@ class GroupTasksDetailsScreen extends Component {
     )
       .then(response => {
         if (response.message == 'success') {
+          this.details = {
+            icon: icons.taskBlue,
+            type: 'success',
+            title: 'Sucsess',
+            description: 'Task status has been updated successfully',
+            buttons: {},
+          };
           this.setState({
             dataLoading: false,
+            showMessageModal: true,
             taskStatusValue: selectedTaskStatusName,
           });
         } else {
@@ -1444,7 +1501,7 @@ class GroupTasksDetailsScreen extends Component {
   // change name of task API DONE
   async onTaskNameChangeSubmit(text) {
     try {
-      this.setState({dataLoading: true});
+      this.setState({dataLoading: true, showMessageModal: false});
       let selectedGroupTaskID = this.state.selectedGroupTaskID;
       let selectedTaskID = this.state.selectedTaskID;
       let resultData = await APIServices.groupTaskUpdateTaskNameData(
@@ -1453,7 +1510,14 @@ class GroupTasksDetailsScreen extends Component {
         text,
       );
       if (resultData.message == 'success') {
-        this.setState({dataLoading: false});
+        this.details = {
+          icon: icons.taskBlue,
+          type: 'success',
+          title: 'Sucsess',
+          description: 'Task name has been updated successfully',
+          buttons: {},
+        };
+        this.setState({dataLoading: false, showMessageModal: true});
       } else {
         this.setState({dataLoading: false});
       }
@@ -1476,7 +1540,7 @@ class GroupTasksDetailsScreen extends Component {
           'YYYY-MM-DD[T]HH:mm:ss',
         )
       : '';
-    this.setState({dataLoading: true});
+    this.setState({dataLoading: true, showMessageModal: false});
     await APIServices.groupTaskUpdateDueDateData(
       selectedGroupTaskID,
       selectedTaskID,
@@ -1484,7 +1548,14 @@ class GroupTasksDetailsScreen extends Component {
     )
       .then(response => {
         if (response.message == 'success') {
-          this.setState({dataLoading: false});
+          this.details = {
+            icon: icons.taskBlue,
+            type: 'success',
+            title: 'Sucsess',
+            description: 'Due date has been updated successfully',
+            buttons: {},
+          };
+          this.setState({dataLoading: false, showMessageModal: true});
           this.fetchData(selectedGroupTaskID, selectedTaskID);
         } else {
           this.setState({dataLoading: false});
@@ -1512,14 +1583,21 @@ class GroupTasksDetailsScreen extends Component {
             'YYYY-MM-DD[T]HH:mm:ss',
           )
         : '';
-      this.setState({dataLoading: true});
+      this.setState({dataLoading: true, showMessageModal: false});
       let resultData = await APIServices.groupTaskUpdateReminderDateData(
         selectedGroupTaskID,
         selectedTaskID,
         IsoReminderDate,
       );
       if (resultData.message == 'success') {
-        this.setState({dataLoading: false});
+        this.details = {
+          icon: icons.taskBlue,
+          type: 'success',
+          title: 'Sucsess',
+          description: 'Remind date has been updated successfully',
+          buttons: {},
+        };
+        this.setState({dataLoading: false, showMessageModal: true});
         this.fetchData(selectedGroupTaskID, selectedTaskID);
       } else {
         this.setState({dataLoading: false});
@@ -1564,7 +1642,7 @@ class GroupTasksDetailsScreen extends Component {
     APIServices.deleteSingleInGroupTaskData(selectedGroupTaskID, selectedTaskID)
       .then(response => {
         if (response.message == 'success') {
-          this.deleteDetails = {
+          this.details = {
             icon: icons.taskBlue,
             type: 'success',
             title: 'Sucsess',
@@ -1711,7 +1789,7 @@ class GroupTasksDetailsScreen extends Component {
     let descriptionSubTask =
       "You're about to permanently delete this group sub task and all of its data.\nIf you're not sure, you can close this pop up.";
 
-    this.deleteDetails = {
+    this.details = {
       icon: icons.alertRed,
       type: 'confirm',
       title: isParent ? 'Delete Group Task' : 'Delete Group Sub Task',
@@ -1782,7 +1860,11 @@ class GroupTasksDetailsScreen extends Component {
     let selectedTaskNameModal = this.state.selectedTaskName;
     let parentTaskName = this.state.selectedTaskName;
 
-    this.setState({dataLoading: true, showTaskModal: false});
+    this.setState({
+      dataLoading: true,
+      showMessageModal: false,
+      showTaskModal: false,
+    });
 
     await APIServices.updateParentToChildInGroup(
       selectedGroupTaskID,
@@ -1791,7 +1873,16 @@ class GroupTasksDetailsScreen extends Component {
     )
       .then(response => {
         if (response.message == 'success') {
-          this.setState({dataLoading: false});
+          this.details = {
+            icon: icons.taskBlue,
+            type: 'success',
+            title: 'Sucsess',
+            description: fromParent
+              ? 'Parent task have been added successfully'
+              : 'Child task have been added successfully',
+            buttons: {},
+          };
+          this.setState({dataLoading: false, showMessageModal: true});
           // if (fromParent) {
           this.fetchData(selectedGroupTaskID, this.state.selectedTaskID);
           // this.fetchFilesData(selectedGroupTaskID, this.state.selectedTaskID);
@@ -2132,7 +2223,7 @@ class GroupTasksDetailsScreen extends Component {
         />
         <MessageShowModal
           showMessageModal={this.state.showMessageModal}
-          details={this.deleteDetails}
+          details={this.details}
           onPress={this.onPressMessageModal}
           onPressCancel={() => this.onPressCancel(this)}
         />

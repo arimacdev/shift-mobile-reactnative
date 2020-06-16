@@ -1881,6 +1881,7 @@ class TasksDetailsScreen extends Component {
             showMessageModal: true,
             name: name,
           });
+          this.fetchData(projectID, taskID);
         } else {
           this.setState({dataLoading: false});
           this.showAlert('', response.message);
