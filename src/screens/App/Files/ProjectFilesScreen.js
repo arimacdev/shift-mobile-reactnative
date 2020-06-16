@@ -70,17 +70,22 @@ class ProjectFilesScreen extends Component {
   }
 
   async fetchData(selectedProjectID) {
-    this.setState({dataLoading: true});
-    let filesData = await APIServices.getProjectFiles(selectedProjectID);
-    if (filesData.message == 'success') {
-      this.setState({
-        filesData: filesData.data,
-        allFilesData: filesData.data,
-        dataLoading: false,
-        isFetching: false,
-      });
-    } else {
+    try {
+      this.setState({dataLoading: true});
+      let filesData = await APIServices.getProjectFiles(selectedProjectID);
+      if (filesData.message == 'success') {
+        this.setState({
+          filesData: filesData.data,
+          allFilesData: filesData.data,
+          dataLoading: false,
+          isFetching: false,
+        });
+      } else {
+        this.setState({dataLoading: false});
+      }
+    } catch (error) {
       this.setState({dataLoading: false});
+      this.showAlert('', 'Data loading error');
     }
   }
 

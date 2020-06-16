@@ -39,30 +39,34 @@ class DefaultBoard extends Component {
 
   async fetchData() {
     let selectedProjectID = this.props.selectedProjectID;
-    this.setState({dataLoading: true});
-    taskData = await APIServices.getAllTaskInDefaultBoardData(
-      selectedProjectID,
-    );
-    if (taskData.message == 'success') {
-      let dataArray = [];
-      for (let i = 0; i < taskData.data.length; i++) {
-        let parentTask = taskData.data[i].parentTask;
-        let childTasks = taskData.data[i].childTasks;
-        if (parentTask.sprintId == 'default') {
-          dataArray.push(parentTask);
-        }
-        for (let j = 0; j < childTasks.length; j++) {
-          let childTasksItem = childTasks[j];
-          if (childTasksItem.sprintId == 'default') {
-            dataArray.push(childTasksItem);
+    try {
+      this.setState({dataLoading: true});
+      let taskData = await APIServices.getAllTaskInDefaultBoardData(
+        selectedProjectID,
+      );
+      if (taskData.message == 'success') {
+        let dataArray = [];
+        for (let i = 0; i < taskData.data.length; i++) {
+          let parentTask = taskData.data[i].parentTask;
+          let childTasks = taskData.data[i].childTasks;
+          if (parentTask.sprintId == 'default') {
+            dataArray.push(parentTask);
+          }
+          for (let j = 0; j < childTasks.length; j++) {
+            let childTasksItem = childTasks[j];
+            if (childTasksItem.sprintId == 'default') {
+              dataArray.push(childTasksItem);
+            }
           }
         }
+        this.setState({
+          tasks: dataArray,
+          dataLoading: false,
+        });
+      } else {
+        this.setState({dataLoading: false});
       }
-      this.setState({
-        tasks: dataArray,
-        dataLoading: false,
-      });
-    } else {
+    } catch (error) {
       this.setState({dataLoading: false});
     }
   }
@@ -94,6 +98,7 @@ class DefaultBoard extends Component {
                 width={30}
                 height={30}
                 color={'#0bafff'}
+                style={{borderTopEndRadius: EStyleSheet.value('5rem')}}
                 direction={'up-right'}
               />
             </View>

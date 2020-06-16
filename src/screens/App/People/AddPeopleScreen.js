@@ -105,29 +105,33 @@ class AddPeopleScreen extends Component {
   }
 
   async getActiveUsers() {
-    this.setState({dataLoading: true});
-    let activeUsers = await APIServices.getActiveUsers();
-    if (activeUsers.message == 'success') {
-      let userList = [];
-      for (let i = 0; i < activeUsers.data.length; i++) {
-        if (activeUsers.data[i].firstName && activeUsers.data[i].lastName) {
-          userList.push({
-            key: activeUsers.data[i].userId,
-            label:
-              activeUsers.data[i].firstName +
-              ' ' +
-              activeUsers.data[i].lastName,
-            userImage: activeUsers.data[i].profileImage,
-          });
+    try {
+      this.setState({dataLoading: true});
+      let activeUsers = await APIServices.getActiveUsers();
+      if (activeUsers.message == 'success') {
+        let userList = [];
+        for (let i = 0; i < activeUsers.data.length; i++) {
+          if (activeUsers.data[i].firstName && activeUsers.data[i].lastName) {
+            userList.push({
+              key: activeUsers.data[i].userId,
+              label:
+                activeUsers.data[i].firstName +
+                ' ' +
+                activeUsers.data[i].lastName,
+              userImage: activeUsers.data[i].profileImage,
+            });
+          }
         }
+        this.setState({
+          activeUsers: userList,
+          allActiveUsers: userList,
+          dataLoading: false,
+        });
+      } else {
+        console.log('error');
+        this.setState({dataLoading: false});
       }
-      this.setState({
-        activeUsers: userList,
-        allActiveUsers: userList,
-        dataLoading: false,
-      });
-    } else {
-      console.log('error');
+    } catch (error) {
       this.setState({dataLoading: false});
     }
   }
@@ -345,10 +349,7 @@ class AddPeopleScreen extends Component {
             <TouchableOpacity onPress={() => this.saveUser()}>
               <View style={styles.button}>
                 <Image
-                  style={[
-                    styles.bottomBarIcon,
-                    {marginRight: 15, marginLeft: 10},
-                  ]}
+                  style={styles.bottomBarIcon}
                   source={icons.userWhite}
                   resizeMode={'contain'}
                 />
@@ -366,10 +367,7 @@ class AddPeopleScreen extends Component {
             <TouchableOpacity onPress={() => this.cancelUserSave()}>
               <View style={styles.buttonDelete}>
                 <Image
-                  style={[
-                    styles.bottomBarIcon,
-                    {marginRight: 15, marginLeft: 10},
-                  ]}
+                  style={styles.bottomBarIcon}
                   source={icons.userWhite}
                   resizeMode={'contain'}
                 />
@@ -436,6 +434,8 @@ const styles = EStyleSheet.create({
   bottomBarIcon: {
     width: '20rem',
     height: '20rem',
+    marginRight: '15rem',
+    marginLeft: '10rem',
   },
   textInput: {
     fontSize: '12rem',

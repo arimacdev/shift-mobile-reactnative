@@ -47,46 +47,56 @@ class OtherBoard extends Component {
 
   async getAllTaskDataInProject() {
     let selectedProjectID = this.props.selectedProjectID;
-    this.setState({dataLoading: true});
-    let taskData = await APIServices.getAllTaskInDefaultBoardData(
-      selectedProjectID,
-    );
-    if (taskData.message == 'success') {
-      this.setState({dataLoading: false});
-      let dataArray = [];
-      for (let i = 0; i < taskData.data.length; i++) {
-        let parentTask = taskData.data[i].parentTask;
-        let childTasks = taskData.data[i].childTasks;
-        dataArray.push(parentTask);
-        for (let j = 0; j < childTasks.length; j++) {
-          let childTasksItem = childTasks[j];
-          dataArray.push(childTasksItem);
+    try {
+      this.setState({dataLoading: true});
+      let taskData = await APIServices.getAllTaskInDefaultBoardData(
+        selectedProjectID,
+      );
+      if (taskData.message == 'success') {
+        this.setState({dataLoading: false});
+        let dataArray = [];
+        for (let i = 0; i < taskData.data.length; i++) {
+          let parentTask = taskData.data[i].parentTask;
+          let childTasks = taskData.data[i].childTasks;
+          dataArray.push(parentTask);
+          for (let j = 0; j < childTasks.length; j++) {
+            let childTasksItem = childTasks[j];
+            dataArray.push(childTasksItem);
+          }
         }
+        this.getAllSprintInProject(dataArray);
+      } else {
+        this.setState({dataLoading: false});
       }
-      this.getAllSprintInProject(dataArray);
-    } else {
+    } catch (error) {
       this.setState({dataLoading: false});
     }
   }
 
   async getAllSprintInProject(taskData) {
     let selectedProjectID = this.props.selectedProjectID;
-    this.setState({dataLoading: true});
-    let sprintData = await APIServices.getAllSprintInProject(selectedProjectID);
-    if (sprintData.message == 'success') {
-      let sprintsArray = [];
-      for (let i = 0; i < sprintData.data.length; i++) {
-        let sprintObj = sprintData.data[i];
-        let sprintID = sprintObj.sprintId;
-        let taskArray = [];
-        taskArray = taskData.filter(function(obj) {
-          return obj.sprintId == sprintID;
-        });
-        sprintObj.tasks = taskArray;
-        sprintsArray.push(sprintObj);
+    try {
+      this.setState({dataLoading: true});
+      let sprintData = await APIServices.getAllSprintInProject(
+        selectedProjectID,
+      );
+      if (sprintData.message == 'success') {
+        let sprintsArray = [];
+        for (let i = 0; i < sprintData.data.length; i++) {
+          let sprintObj = sprintData.data[i];
+          let sprintID = sprintObj.sprintId;
+          let taskArray = [];
+          taskArray = taskData.filter(function(obj) {
+            return obj.sprintId == sprintID;
+          });
+          sprintObj.tasks = taskArray;
+          sprintsArray.push(sprintObj);
+        }
+        this.setState({dataLoading: false, sprints: sprintsArray});
+      } else {
+        this.setState({dataLoading: false});
       }
-      this.setState({dataLoading: false, sprints: sprintsArray});
-    } else {
+    } catch (error) {
       this.setState({dataLoading: false});
     }
   }
@@ -169,6 +179,7 @@ class OtherBoard extends Component {
                   width={30}
                   height={30}
                   color={'#0bafff'}
+                  style={{borderTopEndRadius: EStyleSheet.value('5rem')}}
                   direction={'up-right'}
                 />
               </View>
@@ -362,7 +373,7 @@ const styles = EStyleSheet.create({
     marginTop: '20rem',
   },
   sub_item: {
-    width: '280rem',
+    // width: '280rem',
     flex: 1,
     flexDirection: 'row',
     backgroundColor: '#ffffff',
@@ -402,7 +413,8 @@ const styles = EStyleSheet.create({
     height: '20rem',
   },
   sub_scrollView: {
-    height: '70%',
+    height: Platform.OS == 'ios' ? '70%' : '76%',
+    width: '100%',
     backgroundColor: '#edf0f5',
   },
   userView: {

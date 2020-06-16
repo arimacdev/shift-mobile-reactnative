@@ -481,6 +481,7 @@ class Tasks extends Component {
                   width={30}
                   height={30}
                   color={'#0bafff'}
+                  style={{borderTopEndRadius: EStyleSheet.value('5rem')}}
                   direction={'up-right'}
                 />
               </View>

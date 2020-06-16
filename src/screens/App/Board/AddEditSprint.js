@@ -79,7 +79,7 @@ class AddEditSprint extends Component {
     if (this.validateProject(sprintName, sprintDescription)) {
       this.setState({dataLoading: true});
       try {
-        resultObj = await APIServices.addSprintData(
+        let resultObj = await APIServices.addSprintData(
           projectID,
           sprintName,
           sprintDescription,
@@ -92,8 +92,8 @@ class AddEditSprint extends Component {
           this.showAlert('', 'Error');
         }
       } catch (e) {
+        this.setState({dataLoading: false});
         if (e.status == 403) {
-          this.setState({dataLoading: false});
           this.showAlert('', e.data.message);
         }
       }
@@ -108,7 +108,7 @@ class AddEditSprint extends Component {
     if (this.validateProject(sprintName, sprintDescription)) {
       this.setState({dataLoading: true});
       try {
-        resultObj = await APIServices.editSprintData(
+        let resultObj = await APIServices.editSprintData(
           projectID,
           sprintName,
           sprintDescription,
@@ -122,8 +122,8 @@ class AddEditSprint extends Component {
           this.showAlert('', 'Error');
         }
       } catch (e) {
+        this.setState({dataLoading: false});
         if (e.status == 403) {
-          this.setState({dataLoading: false});
           this.showAlert('', e.data.message);
         }
       }
