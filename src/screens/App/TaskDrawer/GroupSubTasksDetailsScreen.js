@@ -1993,6 +1993,9 @@ class GroupSubTasksDetailsScreen extends Component {
           onConfirmPressed={() => {
             this.hideAlert();
           }}
+          overlayStyle={{backgroundColor: colors.alertOverlayColor}}
+          contentContainerStyle={styles.alertContainerStyle}
+          confirmButtonStyle={styles.alertConfirmButtonStyle}
         />
         {dataLoading && <Loader />}
       </View>
@@ -2472,6 +2475,20 @@ const styles = EStyleSheet.create({
   controlIcon: {
     width: '28rem',
     height: '28rem',
+  },
+  alertContainerStyle: {
+    bottom: 0,
+    width: '100%',
+    maxWidth: '100%',
+    position: 'absolute',
+    borderRadius: 0,
+    borderTopStartRadius: '5rem',
+    borderTopEndRadius: '5rem',
+  },
+  alertConfirmButtonStyle: {
+    width: '100rem',
+    backgroundColor: colors.colorBittersweet,
+    alignItems: 'center',
   },
 });
 

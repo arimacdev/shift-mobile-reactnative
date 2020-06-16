@@ -141,7 +141,7 @@ class AddNewTasksScreen extends Component {
       selectedOperarionalId: 'general',
       viewSprint: true,
       selectSprintName: '',
-      showMessageModal: false
+      showMessageModal: false,
     };
   }
 
@@ -186,9 +186,9 @@ class AddNewTasksScreen extends Component {
     }
   }
 
-  onPressCancel(){
-    this.setState({showMessageModal:false});
-    this.onSuccess('success')
+  onPressCancel() {
+    this.setState({showMessageModal: false});
+    this.onSuccess('success');
   }
 
   onSuccess(text) {
@@ -1233,6 +1233,9 @@ class AddNewTasksScreen extends Component {
           onConfirmPressed={() => {
             this.hideAlert();
           }}
+          overlayStyle={{backgroundColor: colors.alertOverlayColor}}
+          contentContainerStyle={styles.alertContainerStyle}
+          confirmButtonStyle={styles.alertConfirmButtonStyle}
         />
         <MessageShowModal
           showMessageModal={this.state.showMessageModal}
@@ -1387,6 +1390,20 @@ const styles = EStyleSheet.create({
     fontSize: '12rem',
     color: colors.gray,
     fontFamily: 'CircularStd-Book',
+  },
+  alertContainerStyle: {
+    bottom: 0,
+    width: '100%',
+    maxWidth: '100%',
+    position: 'absolute',
+    borderRadius: 0,
+    borderTopStartRadius: '5rem',
+    borderTopEndRadius: '5rem',
+  },
+  alertConfirmButtonStyle: {
+    width: '100rem',
+    backgroundColor: colors.colorBittersweet,
+    alignItems: 'center',
   },
 });
 

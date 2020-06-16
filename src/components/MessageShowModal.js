@@ -104,9 +104,9 @@ class MessageShowModal extends Component {
           {details.type == 'confirm' && (
             <View style={styles.ButtonViewStyle}>
               <TouchableOpacity
-                style={[styles.updateStyle]}
+                style={[styles.positiveStyle]}
                 onPress={() => this.onPress()}>
-                <Text style={styles.updateTextStyle}>{buttons.positive}</Text>
+                <Text style={styles.positiveTextStyle}>{buttons.positive}</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.cancelStyle}
@@ -171,7 +171,7 @@ const styles = EStyleSheet.create({
     alignItems: 'center',
     marginHorizontal: '20rem',
   },
-  updateStyle: {
+  positiveStyle: {
     flex: 1,
     height: '45rem',
     backgroundColor: colors.lightRed,
@@ -180,7 +180,7 @@ const styles = EStyleSheet.create({
     paddingVertical: '10rem',
     justifyContent: 'center',
   },
-  updateTextStyle: {
+  positiveTextStyle: {
     fontSize: '15rem',
     color: colors.white,
     textAlign: 'center',

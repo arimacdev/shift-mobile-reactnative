@@ -78,7 +78,7 @@ class EditTask extends Component {
     if (!groupName && _.isEmpty(groupName)) {
       this.showAlert('', 'Please Enter the Sub Task Name');
     } else {
-      this.setState({dataLoading: true, showMessageModal:false});
+      this.setState({dataLoading: true, showMessageModal: false});
       try {
         let resultObj = await APIServices.updateGroupTaskData(
           selectedTaskGroupId,
@@ -92,7 +92,7 @@ class EditTask extends Component {
             description: 'Group have been renamed successfully',
             buttons: {},
           };
-          this.setState({dataLoading: false, showMessageModal:true});
+          this.setState({dataLoading: false, showMessageModal: true});
           // this.showAlert('', 'Successfully Updated');
         } else {
           this.setState({dataLoading: false});
@@ -195,7 +195,9 @@ class EditTask extends Component {
   async getGroupDetails() {
     let selectedTaskGroupId = this.state.selectedTaskGroupId;
     this.setState({dataLoading: true, isChange: true});
-    let dataResult = await APIServices.getSingleGroupTaskData(selectedTaskGroupId);
+    let dataResult = await APIServices.getSingleGroupTaskData(
+      selectedTaskGroupId,
+    );
     if (dataResult.message == 'success') {
       this.setState({
         dataLoading: false,
@@ -276,6 +278,9 @@ class EditTask extends Component {
           onConfirmPressed={() => {
             this.hideAlert();
           }}
+          overlayStyle={{backgroundColor: colors.alertOverlayColor}}
+          contentContainerStyle={styles.alertContainerStyle}
+          confirmButtonStyle={styles.alertConfirmButtonStyle}
         />
         <MessageShowModal
           showMessageModal={this.state.showMessageModal}
@@ -371,6 +376,20 @@ const styles = EStyleSheet.create({
     position: 'absolute',
     bottom: 0,
     width: '100%',
+  },
+  alertContainerStyle: {
+    bottom: 0,
+    width: '100%',
+    maxWidth: '100%',
+    position: 'absolute',
+    borderRadius: 0,
+    borderTopStartRadius: '5rem',
+    borderTopEndRadius: '5rem',
+  },
+  alertConfirmButtonStyle: {
+    width: '100rem',
+    backgroundColor: colors.colorBittersweet,
+    alignItems: 'center',
   },
 });
 

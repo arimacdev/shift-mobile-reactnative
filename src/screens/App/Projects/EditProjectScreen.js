@@ -826,6 +826,9 @@ class EditProjectScreen extends Component {
             onConfirmPressed={() => {
               this.hideAlert();
             }}
+            overlayStyle={{backgroundColor: colors.alertOverlayColor}}
+            contentContainerStyle={styles.alertContainerStyle}
+            confirmButtonStyle={styles.alertConfirmButtonStyle}
           />
         </ScrollView>
         <View style={styles.bottomContainer}>
@@ -1073,6 +1076,20 @@ const styles = EStyleSheet.create({
     width: '89.5%',
     marginTop: '64rem',
     marginLeft: '13rem',
+  },
+  alertContainerStyle: {
+    bottom: 0,
+    width: '100%',
+    maxWidth: '100%',
+    position: 'absolute',
+    borderRadius: 0,
+    borderTopStartRadius: '5rem',
+    borderTopEndRadius: '5rem',
+  },
+  alertConfirmButtonStyle: {
+    width: '100rem',
+    backgroundColor: colors.colorBittersweet,
+    alignItems: 'center',
   },
 });
 

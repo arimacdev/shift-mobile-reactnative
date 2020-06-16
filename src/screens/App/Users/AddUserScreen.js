@@ -41,7 +41,7 @@ class AddUserScreen extends Component {
       showAlert: false,
       alertTitle: '',
       alertMsg: '',
-      showMessageModal: false
+      showMessageModal: false,
     };
   }
 
@@ -85,8 +85,8 @@ class AddUserScreen extends Component {
     });
   }
 
-  onPressCancel(){
-    this.setState({showMessageModal:false});
+  onPressCancel() {
+    this.setState({showMessageModal: false});
   }
 
   saveUser() {
@@ -306,6 +306,9 @@ class AddUserScreen extends Component {
           onConfirmPressed={() => {
             this.hideAlert();
           }}
+          overlayStyle={{backgroundColor: colors.alertOverlayColor}}
+          contentContainerStyle={styles.alertContainerStyle}
+          confirmButtonStyle={styles.alertConfirmButtonStyle}
         />
         <MessageShowModal
           showMessageModal={this.state.showMessageModal}
@@ -381,6 +384,20 @@ const styles = EStyleSheet.create({
     bottom: 0,
     width: '100%',
     marginBottom: '15rem',
+  },
+  alertContainerStyle: {
+    bottom: 0,
+    width: '100%',
+    maxWidth: '100%',
+    position: 'absolute',
+    borderRadius: 0,
+    borderTopStartRadius: '5rem',
+    borderTopEndRadius: '5rem',
+  },
+  alertConfirmButtonStyle: {
+    width: '100rem',
+    backgroundColor: colors.colorBittersweet,
+    alignItems: 'center',
   },
 });
 

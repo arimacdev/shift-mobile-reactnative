@@ -40,6 +40,7 @@ const colors = {
   black: '#000000',
   selectedRange: '#7300e6',
   detailsViewText: '#424f64',
+  alertOverlayColor:'rgba(0,0,0,0.8)',
   colorMagenta: '#ff33ff',
   colorFreeSpeechGreen: '#22ff22',
   colorRed: '#FF0000',
