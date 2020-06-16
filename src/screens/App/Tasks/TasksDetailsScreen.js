@@ -2497,7 +2497,13 @@ class TasksDetailsScreen extends Component {
   }
 
   onPressCancel() {
-    if (this.state.deleteTaskSuccess) {
+    if (
+      this.props.navigation.state.routeName == 'TasksSubDetailsScreen' &&
+      this.state.isParent &&
+      this.state.deleteTaskSuccess
+    ) {
+      this.props.navigation.pop(2);
+    } else if (this.state.deleteTaskSuccess) {
       this.props.navigation.goBack();
     }
     this.setState({showMessageModal: false});
