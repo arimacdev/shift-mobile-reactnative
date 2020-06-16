@@ -180,6 +180,7 @@ class GroupTasksDetailsScreen extends Component {
       parentTaskName: '',
       showMessageModal: false,
       deleteTaskSuccess: false,
+      loadDetails: true,
     };
   }
 
@@ -1304,6 +1305,7 @@ class GroupTasksDetailsScreen extends Component {
       case 10:
         break;
       case 0:
+        this.setState({loadDetails: false});
         this.props.navigation.navigate('AssigneeScreenGroupTask', {
           selectedGroupTaskID: this.state.selectedGroupTaskID,
           onSelectUser: (name, id) => this.onSelectUser(name, id),
@@ -1449,7 +1451,6 @@ class GroupTasksDetailsScreen extends Component {
             showMessageModal: true,
             name: name,
           });
-          this.fetchData(selectedGroupTaskID, selectedTaskID);
         } else {
           this.setState({dataLoading: false});
         }
@@ -1726,6 +1727,7 @@ class GroupTasksDetailsScreen extends Component {
   };
 
   navigateTo(item) {
+    this.setState({loadDetails: true});
     this.props.navigation.navigate('GroupSubTasksDetailsScreen', {
       taskDetails: item,
       selectedGroupTaskID: this.state.selectedGroupTaskID,
@@ -1997,7 +1999,9 @@ class GroupTasksDetailsScreen extends Component {
 
     return (
       <View style={styles.container}>
-        <NavigationEvents onWillFocus={payload => this.pageOpen(payload)} />
+        {this.state.loadDetails ? (
+          <NavigationEvents onWillFocus={payload => this.pageOpen(payload)} />
+        ) : null}
         <Header
           isDelete={true}
           navigation={this.props.navigation}
@@ -2031,6 +2035,7 @@ class GroupTasksDetailsScreen extends Component {
                 multiline={true}
                 value={this.state.taskName}
                 editable={this.state.taskNameEditable}
+                onBlur={() => this.onTaskNameChangeSubmit(this.state.taskName)}
                 onChangeText={text => this.onTaskNameChange(text)}
                 onSubmitEditing={() =>
                   this.onTaskNameChangeSubmit(this.state.taskName)

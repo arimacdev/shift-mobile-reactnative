@@ -317,6 +317,7 @@ class TasksDetailsScreen extends Component {
       parentTaskStatus: '',
       showMessageModal: false,
       deleteTaskSuccess: false,
+      loadDetails: true,
     };
   }
 
@@ -1590,6 +1591,7 @@ class TasksDetailsScreen extends Component {
       case 10:
         break;
       case 0:
+        this.setState({loadDetails: false});
         this.props.navigation.navigate('AssigneeScreen', {
           selectedProjectID: this.state.selectedProjectID,
           onSelectUser: (name, id) => this.onSelectUser(name, id),
@@ -1881,7 +1883,6 @@ class TasksDetailsScreen extends Component {
             showMessageModal: true,
             name: name,
           });
-          this.fetchData(projectID, taskID);
         } else {
           this.setState({dataLoading: false});
           this.showAlert('', response.message);
@@ -2154,6 +2155,7 @@ class TasksDetailsScreen extends Component {
 
   async navigateTo(item) {
     let isSecondDetailViewOpen = this.props.isSecondDetailViewOpen;
+    this.setState({loadDetails: true});
     if (!isSecondDetailViewOpen) {
       this.props.navigation.navigate('TasksSubDetailsScreen', {
         taskDetails: item,
@@ -2168,7 +2170,7 @@ class TasksDetailsScreen extends Component {
   async navigateToSubTask() {
     let taskItem = this.state.taskItem;
     let parentID = taskItem.parentId;
-    this.setState({dataLoading: false});
+    this.setState({dataLoading: false, loadDetails: true});
     try {
       let taskResult = await APIServices.getProjecTaskData(
         this.state.selectedProjectID,
@@ -2518,7 +2520,10 @@ class TasksDetailsScreen extends Component {
 
     return (
       <View style={styles.container}>
-        <NavigationEvents onWillFocus={payload => this.pageOpen(payload)} />
+        {this.state.loadDetails ? (
+          <NavigationEvents onWillFocus={payload => this.pageOpen(payload)} />
+        ) : null}
+
         <Header
           isTaskLog={false}
           isDelete={true}
