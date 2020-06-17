@@ -256,37 +256,37 @@ class ProjectFilesScreen extends Component {
     details = size + ' | ' + date + ' by ' + name;
 
     return (
-      <TouchableOpacity
-        onPress={() =>
-          this.props.navigation.navigate('FilesView', {filesData: item})
-        }>
-        <View style={styles.filesView}>
-          <Image
-            source={this.getTypeIcons(item.projectFileName)}
-            style={styles.taskStateIcon}
-          />
-          <View style={{flex: 1}}>
-            <Text style={styles.text} numberOfLines={1}>
-              {item.projectFileName}
-            </Text>
-            <Text style={styles.textDate} numberOfLines={1}>
-              {details}
-            </Text>
-          </View>
-          <View style={styles.controlView}>
-            <TouchableOpacity
-              onPress={() => this.downloadFile(item)}
-              style={{marginLeft: EStyleSheet.value('24rem')}}>
-              <Image style={styles.controlIcon} source={icons.downloadIcon} />
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => this.deleteFileAlert(item)}
-              style={{marginLeft: EStyleSheet.value('10rem')}}>
-              <Image style={styles.controlIcon} source={icons.deleteRoundRed} />
-            </TouchableOpacity>
-          </View>
+      // <TouchableOpacity
+      //   onPress={() =>
+      //     this.props.navigation.navigate('FilesView', {filesData: item})
+      //   }>
+      <View style={styles.filesView}>
+        <Image
+          source={this.getTypeIcons(item.projectFileName)}
+          style={styles.taskStateIcon}
+        />
+        <View style={{flex: 1}}>
+          <Text style={styles.text} numberOfLines={1}>
+            {item.projectFileName}
+          </Text>
+          <Text style={styles.textDate} numberOfLines={1}>
+            {details}
+          </Text>
         </View>
-      </TouchableOpacity>
+        <View style={styles.controlView}>
+          <TouchableOpacity
+            onPress={() => this.downloadFile(item)}
+            style={{marginLeft: EStyleSheet.value('24rem')}}>
+            <Image style={styles.controlIcon} source={icons.downloadIcon} />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => this.deleteFileAlert(item)}
+            style={{marginLeft: EStyleSheet.value('10rem')}}>
+            <Image style={styles.controlIcon} source={icons.deleteRoundRed} />
+          </TouchableOpacity>
+        </View>
+      </View>
+      // </TouchableOpacity>
     );
   }
 
