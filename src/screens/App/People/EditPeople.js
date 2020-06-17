@@ -149,8 +149,8 @@ class EditPeople extends Component {
           this.showAlert('', 'Error');
         }
       } catch (e) {
+        this.setState({dataLoading: false});
         if (e.status == 403) {
-          this.setState({dataLoading: false});
           this.showAlert('', e.data.message);
         }
       }

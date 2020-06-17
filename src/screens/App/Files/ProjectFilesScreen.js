@@ -192,8 +192,8 @@ class ProjectFilesScreen extends Component {
         }
       })
       .catch(error => {
+        this.setState({dataLoading: false});
         if (error.status == 401) {
-          this.setState({dataLoading: false});
           this.showAlert('', error.data.message);
         }
       });
@@ -396,9 +396,11 @@ class ProjectFilesScreen extends Component {
         }
       })
       .catch(error => {
+        this.setState({indeterminate: false, files: [], Uploading: 0});
         if (error.status == 401) {
-          this.setState({indeterminate: false, files: [], Uploading: 0});
           this.showAlert('', error.data.message);
+        } else {
+          this.showAlert('', error);
         }
       });
   }
@@ -450,9 +452,11 @@ class ProjectFilesScreen extends Component {
           }
         })
         .catch(error => {
+          this.setState({indeterminate: false, files: [], Uploading: 0});
           if (error.status == 401) {
-            this.setState({indeterminate: false, files: [], Uploading: 0});
             this.showAlert('', error.data.message);
+          } else {
+            this.showAlert('', error);
           }
         });
       // this.props.uploadFile(this.state.files, this.props.selectedProjectID);

@@ -432,10 +432,10 @@ class GroupTasksDetailsScreen extends Component {
       .then(response => {
         if (response.message == 'success') {
           this.details = {
-            icon: icons.taskBlue,
+            icon: icons.fileOrange,
             type: 'success',
             title: 'Sucsess',
-            description: 'File have been added successfully',
+            description: 'File has been added successfully',
             buttons: {},
           };
           this.setState({
@@ -450,10 +450,12 @@ class GroupTasksDetailsScreen extends Component {
         }
       })
       .catch(error => {
-        //if (error.status == 401) {
         this.setState({indeterminate: false, files: [], uploading: 0});
-        this.showAlert('', error.data.message);
-        //}
+        if (error.status == 401) {
+          this.showAlert('', error.data.message);
+        } else {
+          this.showAlert('', error);
+        }
       });
   }
 
@@ -502,10 +504,10 @@ class GroupTasksDetailsScreen extends Component {
         .then(response => {
           if (response.message == 'success') {
             this.details = {
-              icon: icons.taskBlue,
+              icon: icons.fileOrange,
               type: 'success',
               title: 'Sucsess',
-              description: 'File have been added successfully',
+              description: 'File has been added successfully',
               buttons: {},
             };
             this.setState({
@@ -520,10 +522,12 @@ class GroupTasksDetailsScreen extends Component {
           }
         })
         .catch(error => {
-          //if (error.status == 401) {
           this.setState({indeterminate: false, files: [], uploading: 0});
-          this.showAlert('', error.data.message);
-          //}
+          if (error.status == 401) {
+            this.showAlert('', error.data.message);
+          } else {
+            this.showAlert('', error);
+          }
         });
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
@@ -629,7 +633,7 @@ class GroupTasksDetailsScreen extends Component {
       .then(response => {
         if (response.message == 'success') {
           this.details = {
-            icon: icons.taskBlue,
+            icon: icons.fileOrange,
             type: 'success',
             title: 'Sucsess',
             description: 'File has been deleted successfully',
@@ -1404,7 +1408,7 @@ class GroupTasksDetailsScreen extends Component {
       .then(response => {
         if (response.message == 'success') {
           this.details = {
-            icon: icons.taskBlue,
+            icon: icons.noteRed,
             type: 'success',
             title: 'Sucsess',
             description: 'Notes has been updated successfully',
@@ -1440,7 +1444,7 @@ class GroupTasksDetailsScreen extends Component {
       .then(response => {
         if (response.message == 'success') {
           this.details = {
-            icon: icons.taskBlue,
+            icon: icons.taskUser,
             type: 'success',
             title: 'Sucsess',
             description: 'Task assignee has been updated successfully',
@@ -1550,7 +1554,7 @@ class GroupTasksDetailsScreen extends Component {
       .then(response => {
         if (response.message == 'success') {
           this.details = {
-            icon: icons.taskBlue,
+            icon: icons.calendarBlue,
             type: 'success',
             title: 'Sucsess',
             description: 'Due date has been updated successfully',
@@ -1592,7 +1596,7 @@ class GroupTasksDetailsScreen extends Component {
       );
       if (resultData.message == 'success') {
         this.details = {
-          icon: icons.taskBlue,
+          icon: icons.clockOrange,
           type: 'success',
           title: 'Sucsess',
           description: 'Remind date has been updated successfully',
