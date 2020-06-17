@@ -170,10 +170,10 @@ class ViewProfileScreen extends Component {
         let sortedData = response.data.sort(this.arrayCompare);
         this.setState({dataLoading: false, userMetricsData: sortedData});
       } else {
-        this.setState({dataLoading: false});
+        this.setState({dataLoading: false, userMetricsData: []});
       }
     } catch (error) {
-      this.setState({dataLoading: false});
+      this.setState({dataLoading: false, userMetricsData: []});
     }
   }
 
