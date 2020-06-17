@@ -89,24 +89,24 @@ class ViewProfileScreen extends Component {
         userSlackId: userData.data.userSlackId,
         notification: userData.data.notification,
         userLastImage: userData.data.profileImage,
-        userMetricsData: [
-          {
-            id: 1,
-            value: 'Front end',
-            color: colors.colorApple,
-            skills: [
-              {id: 1, name: 'Vue Js'},
-              {id: 2, name: 'React Js'},
-              {id: 3, name: 'HTML'},
-            ],
-          },
-          {
-            id: 2,
-            value: 'Back end',
-            color: colors.colorBittersweet,
-            skills: [{id: 1, name: 'Node Js'}],
-          },
-        ],
+        // userMetricsData: [
+        //   {
+        //     id: 1,
+        //     value: 'Front end',
+        //     color: colors.colorApple,
+        //     skills: [
+        //       {id: 1, name: 'Vue Js'},
+        //       {id: 2, name: 'React Js'},
+        //       {id: 3, name: 'HTML'},
+        //     ],
+        //   },
+        //   {
+        //     id: 2,
+        //     value: 'Back end',
+        //     color: colors.colorBittersweet,
+        //     skills: [{id: 1, name: 'Node Js'}],
+        //   },
+        // ],
         dataLoading: false,
       });
       this.getUserSkillMap(userID);
@@ -120,7 +120,7 @@ class ViewProfileScreen extends Component {
     try {
       let skillMap = await APIServices.getUserSkillMapData(userID);
       if (skillMap.message == 'success') {
-        this.setState({dataLoading: false});
+        this.setState({dataLoading: false, userMetricsData:skillMap.data});
       } else {
         this.setState({dataLoading: false});
       }

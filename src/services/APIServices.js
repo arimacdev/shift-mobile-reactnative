@@ -2719,7 +2719,7 @@ async function getUserSkillMapData(userID) {
   
     return request(
       {
-        url: baseURL + GET_USER_SKILL_MAP + userID + '/skillmap',
+        url: baseURL + GET_USER_SKILL_MAP + userID + '/skillmap/profile',
         method: 'GET',
       },
       true,
