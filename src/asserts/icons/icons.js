@@ -75,5 +75,6 @@ const icons = {
   alertRed: require('./alert_red.png'),
   folderGreen: require('./folder_green.png'),
   userGreen: require('./user_green.png'),
+  notificationPurple: require('./notification_purple.png'),
 };
 export default icons;

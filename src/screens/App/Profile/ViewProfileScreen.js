@@ -200,19 +200,34 @@ class ViewProfileScreen extends Component {
     let profile = params.profile;
     let userID = profile.userId;
 
-    this.setState({dataLoading: true});
-    let notoficationStatus = await APIServices.updateSlackNotificationStatus(
-      userID,
-      email,
-      value,
-    );
-    if (notoficationStatus.message == 'success') {
-      this.setState({
-        notification: value,
-        dataLoading: false,
-      });
-    } else {
+    try {
+      this.setState({dataLoading: true, showMessageModal: false});
+      let notoficationStatus = await APIServices.updateSlackNotificationStatus(
+        userID,
+        email,
+        value,
+      );
+      if (notoficationStatus.message == 'success') {
+        this.successDetails = {
+          icon: icons.notificationPurple,
+          type: 'success',
+          title: 'Success',
+          description: value
+            ? 'Slack notifications enabled successfully'
+            : 'Slack notifications disabled successfully',
+          buttons: {},
+        };
+        this.setState({
+          notification: value,
+          dataLoading: false,
+          showMessageModal: true,
+        });
+      } else {
+        this.setState({dataLoading: false});
+      }
+    } catch (error) {
       this.setState({dataLoading: false});
+      this.showAlert('', error.data.message);
     }
   }
 
@@ -354,14 +369,14 @@ class ViewProfileScreen extends Component {
       //if(e.status == 500){
       //console.log('error', e);
       this.setState({dataLoading: false});
-      this.showAlert('', 'error');
+      this.showAlert('', 'Profile image upload faild');
       //}
     }
   }
 
-  fetchDataUserData(userID) {
+  async fetchDataUserData(userID) {
     this.setState({dataLoading: true});
-    APIServices.getUserData(userID)
+    await APIServices.getUserData(userID)
       .then(responseUser => {
         this.setState({dataLoading: false});
         this.props.UserInfoSuccess(responseUser);
@@ -408,12 +423,28 @@ class ViewProfileScreen extends Component {
       const result = await authorize(config);
       var obj = result.tokenAdditionalParameters.authed_user;
       const authedUser = JSON.parse(obj);
-
-      APIServices.addSlackID(userID, authedUser.id);
-
-      console.log('authed user ID', authedUser.id);
+      this.setState({dataLoading: true, showMessageModal: false});
+      await APIServices.addSlackID(userID, authedUser.id)
+        .then(response => {
+          if (response.message == 'success') {
+            this.successDetails = {
+              icon: icons.slackIcon,
+              type: 'success',
+              title: 'Success',
+              description: 'Slack connected successfully',
+              buttons: {},
+            };
+            this.setState({dataLoading: false, showMessageModal: true});
+          } else {
+            this.setState({dataLoading: false});
+          }
+        })
+        .catch(() => {
+          this.setState({dataLoading: false});
+        });
     } catch (error) {
-      console.log('slack connet error', error);
+      this.setState({dataLoading: false});
+      this.showAlert('', 'Error connected to the slack');
     }
   }
 
@@ -589,167 +620,171 @@ class ViewProfileScreen extends Component {
     } = this.state;
 
     return (
-      <ScrollView style={styles.container}>
-        <View style={styles.header} />
-        <View style={styles.avatarView}>
-          <TouchableOpacity
-            onPress={() => this.setImage()}
-            disabled={!editEnabled}>
-            {this.userIcon(userLastImage)}
-          </TouchableOpacity>
-          <View style={styles.editView}>
-            <TouchableOpacity onPress={() => this.onEditPress()}>
-              <Image style={styles.editIcon} source={icons.editRoundedBlue} />
+      <View style={{flex: 1}}>
+        <ScrollView style={styles.container}>
+          <View style={styles.header} />
+          <View style={styles.avatarView}>
+            <TouchableOpacity
+              onPress={() => this.setImage()}
+              disabled={!editEnabled}>
+              {this.userIcon(userLastImage)}
             </TouchableOpacity>
+            <View style={styles.editView}>
+              <TouchableOpacity onPress={() => this.onEditPress()}>
+                <Image style={styles.editIcon} source={icons.editRoundedBlue} />
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
-        <View style={styles.body}>
-          <View style={styles.bodyContent}>
-            <Text style={styles.name}>
-              {userFirstName + ' ' + userLastName}
-            </Text>
-          </View>
-          <View style={styles.taskFieldView}>
-            <TextInput
-              style={styles.textBottom}
-              placeholder={'First Name'}
-              value={userFirstName}
-              editable={editEnabled}
-              onChangeText={text => this.onFirstNameChange(text)}
-            />
-          </View>
-          <View style={[styles.taskFieldView]}>
-            <TextInput
-              style={styles.textBottom}
-              placeholder={'Last Name'}
-              value={userLastName}
-              editable={editEnabled}
-              onChangeText={text => this.onLastNameChange(text)}
-            />
-          </View>
-          <View style={[styles.taskFieldView]}>
-            <TextInput
-              style={styles.textBottom}
-              placeholder={'Email'}
-              value={userEmail}
-              editable={editEnabled}
-              onChangeText={text => this.onEmailChange(text)}
-            />
-          </View>
-          <View style={[styles.taskFieldView]}>
-            <TextInput
-              style={styles.textBottom}
-              placeholder={'New Password'}
-              secureTextEntry={true}
-              value={userNewPassword}
-              editable={editEnabled}
-              onChangeText={text => this.onNewPasswordChange(text)}
-            />
-          </View>
-          <View style={[styles.taskFieldView]}>
-            <TextInput
-              style={styles.textBottom}
-              placeholder={'Confirm Password'}
-              secureTextEntry={true}
-              value={userConfirmPassword}
-              editable={editEnabled}
-              onChangeText={text => this.onConfirmPasswordChange(text)}
-            />
-          </View>
-          <View>
-            {userMetricsData.length > 0 ? (
-              <FlatList
-                style={styles.mainFlatListStyle}
-                data={userMetricsData}
-                renderItem={({item, index}) => this.renderUserMetricsList(item)}
-                keyExtractor={item => item.categoryId}
-              />
-            ) : null}
-          </View>
-          <TouchableOpacity onPress={() => this.onSlackButtonPress()}>
-            <View
-              style={[
-                styles.taskFieldView,
-                {backgroundColor: colors.slackBgColor},
-              ]}>
-              <Image
-                style={styles.slackLogo}
-                source={icons.slackLogo}
-                resizeMode={'contain'}
-              />
-              <Text style={[styles.textBottom, {color: colors.white}]}>
-                Add to Slack
+          <View style={styles.body}>
+            <View style={styles.bodyContent}>
+              <Text style={styles.name}>
+                {userFirstName + ' ' + userLastName}
               </Text>
             </View>
-          </TouchableOpacity>
-          <View
-            style={[
-              styles.slackView,
-              {
-                backgroundColor: colors.white,
-                borderColor: colors.lighterGray,
-                borderWidth: 1,
-              },
-            ]}>
-            <Image
-              style={styles.slackIcon}
-              source={icons.slackIcon}
-              resizeMode={'contain'}
-            />
-            <Text style={styles.textBottom}>Enable Slack Notifications</Text>
-            <Switch
-              // style={{marginTop: 30}}
-              onValueChange={value =>
-                this.updateSlackNotificationStatus(userEmail, value)
-              }
-              value={notification}
-              disabled={userSlackId == ''}
-              trackColor={colors.switchOnBgColor}
-              thumbColor={notification ? colors.switchColor : colors.gray}
-            />
-          </View>
-          <TouchableOpacity
-            disabled={!editEnabled}
-            onPress={() => this.saveUser()}>
-            <View style={styles.button}>
+            <View style={styles.taskFieldView}>
+              <TextInput
+                style={styles.textBottom}
+                placeholder={'First Name'}
+                value={userFirstName}
+                editable={editEnabled}
+                onChangeText={text => this.onFirstNameChange(text)}
+              />
+            </View>
+            <View style={[styles.taskFieldView]}>
+              <TextInput
+                style={styles.textBottom}
+                placeholder={'Last Name'}
+                value={userLastName}
+                editable={editEnabled}
+                onChangeText={text => this.onLastNameChange(text)}
+              />
+            </View>
+            <View style={[styles.taskFieldView]}>
+              <TextInput
+                style={styles.textBottom}
+                placeholder={'Email'}
+                value={userEmail}
+                editable={editEnabled}
+                onChangeText={text => this.onEmailChange(text)}
+              />
+            </View>
+            <View style={[styles.taskFieldView]}>
+              <TextInput
+                style={styles.textBottom}
+                placeholder={'New Password'}
+                secureTextEntry={true}
+                value={userNewPassword}
+                editable={editEnabled}
+                onChangeText={text => this.onNewPasswordChange(text)}
+              />
+            </View>
+            <View style={[styles.taskFieldView]}>
+              <TextInput
+                style={styles.textBottom}
+                placeholder={'Confirm Password'}
+                secureTextEntry={true}
+                value={userConfirmPassword}
+                editable={editEnabled}
+                onChangeText={text => this.onConfirmPasswordChange(text)}
+              />
+            </View>
+            <View>
+              {userMetricsData.length > 0 ? (
+                <FlatList
+                  style={styles.mainFlatListStyle}
+                  data={userMetricsData}
+                  renderItem={({item, index}) =>
+                    this.renderUserMetricsList(item)
+                  }
+                  keyExtractor={item => item.categoryId}
+                />
+              ) : null}
+            </View>
+            <TouchableOpacity onPress={() => this.onSlackButtonPress()}>
+              <View
+                style={[
+                  styles.taskFieldView,
+                  {backgroundColor: colors.slackBgColor},
+                ]}>
+                <Image
+                  style={styles.slackLogo}
+                  source={icons.slackLogo}
+                  resizeMode={'contain'}
+                />
+                <Text style={[styles.textBottom, {color: colors.white}]}>
+                  Add to Slack
+                </Text>
+              </View>
+            </TouchableOpacity>
+            <View
+              style={[
+                styles.slackView,
+                {
+                  backgroundColor: colors.white,
+                  borderColor: colors.lighterGray,
+                  borderWidth: 1,
+                },
+              ]}>
               <Image
-                style={styles.bottomBarIcon}
-                source={icons.userWhite}
+                style={styles.slackIcon}
+                source={icons.slackIcon}
                 resizeMode={'contain'}
               />
-              <View style={{flex: 1}}>
-                <Text style={styles.buttonText}>Save Changes</Text>
-              </View>
+              <Text style={styles.textBottom}>Enable Slack Notifications</Text>
+              <Switch
+                // style={{marginTop: 30}}
+                onValueChange={value =>
+                  this.updateSlackNotificationStatus(userEmail, value)
+                }
+                value={notification}
+                disabled={userSlackId == ''}
+                trackColor={colors.switchOnBgColor}
+                thumbColor={notification ? colors.switchColor : colors.gray}
+              />
             </View>
-          </TouchableOpacity>
-          <AwesomeAlert
-            show={showAlert}
-            showProgress={false}
-            title={alertTitle}
-            message={alertMsg}
-            closeOnTouchOutside={true}
-            closeOnHardwareBackPress={false}
-            showCancelButton={false}
-            showConfirmButton={true}
-            cancelText=""
-            confirmText="OK"
-            confirmButtonColor={colors.primary}
-            onConfirmPressed={() => {
-              this.hideAlert();
-            }}
-            overlayStyle={{backgroundColor: colors.alertOverlayColor}}
-            contentContainerStyle={styles.alertContainerStyle}
-            confirmButtonStyle={styles.alertConfirmButtonStyle}
-          />
-          <MessageShowModal
-            showMessageModal={this.state.showMessageModal}
-            details={this.successDetails}
-            onPress={() => {}}
-            onPressCancel={() => this.onPressCancel(this)}
-          />
-        </View>
+            <TouchableOpacity
+              disabled={!editEnabled}
+              onPress={() => this.saveUser()}>
+              <View style={styles.button}>
+                <Image
+                  style={styles.bottomBarIcon}
+                  source={icons.userWhite}
+                  resizeMode={'contain'}
+                />
+                <View style={{flex: 1}}>
+                  <Text style={styles.buttonText}>Save Changes</Text>
+                </View>
+              </View>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+        <AwesomeAlert
+          show={showAlert}
+          showProgress={false}
+          title={alertTitle}
+          message={alertMsg}
+          closeOnTouchOutside={true}
+          closeOnHardwareBackPress={false}
+          showCancelButton={false}
+          showConfirmButton={true}
+          cancelText=""
+          confirmText="OK"
+          confirmButtonColor={colors.primary}
+          onConfirmPressed={() => {
+            this.hideAlert();
+          }}
+          overlayStyle={{backgroundColor: colors.alertOverlayColor}}
+          contentContainerStyle={styles.alertContainerStyle}
+          confirmButtonStyle={styles.alertConfirmButtonStyle}
+        />
+        <MessageShowModal
+          showMessageModal={this.state.showMessageModal}
+          details={this.successDetails}
+          onPress={() => {}}
+          onPressCancel={() => this.onPressCancel(this)}
+        />
         {dataLoading && <Loader />}
-      </ScrollView>
+      </View>
     );
   }
 }
