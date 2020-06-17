@@ -780,10 +780,18 @@ class AddNewTasksScreen extends Component {
   setParentTask = (value, index, data) => {
     let parentTaskId = data[index].id;
     let parentTaskName = data[index].value;
-    this.setState({
-      parentTaskStatus: parentTaskName,
-      parentTaskId: parentTaskId,
-    });
+    if (parentTaskId == 0) {
+      this.setState({
+        parentTaskStatus: parentTaskName,
+        parentTaskId: '',
+      });
+    } else {
+      this.setState({
+        parentTaskStatus: parentTaskName,
+        parentTaskId: parentTaskId,
+      });
+    }
+   
     if (parentTaskName && parentTaskName == 'No parent') {
       this.setState({viewSprint: true});
     } else {
