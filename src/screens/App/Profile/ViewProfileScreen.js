@@ -89,24 +89,6 @@ class ViewProfileScreen extends Component {
         userSlackId: userData.data.userSlackId,
         notification: userData.data.notification,
         userLastImage: userData.data.profileImage,
-        // userMetricsData: [
-        //   {
-        //     id: 1,
-        //     value: 'Front end',
-        //     color: colors.colorApple,
-        //     skills: [
-        //       {id: 1, name: 'Vue Js'},
-        //       {id: 2, name: 'React Js'},
-        //       {id: 3, name: 'HTML'},
-        //     ],
-        //   },
-        //   {
-        //     id: 2,
-        //     value: 'Back end',
-        //     color: colors.colorBittersweet,
-        //     skills: [{id: 1, name: 'Node Js'}],
-        //   },
-        // ],
         dataLoading: false,
       });
       this.getUserSkillMap(userID);
@@ -118,15 +100,95 @@ class ViewProfileScreen extends Component {
   async getUserSkillMap(userID) {
     this.setState({dataLoading: true});
     try {
-      let skillMap = await APIServices.getUserSkillMapData(userID);
-      if (skillMap.message == 'success') {
-        this.setState({dataLoading: false, userMetricsData:skillMap.data});
+      // let response = await APIServices.getUserSkillMapData(userID);
+      let response = {
+        message: 'success',
+        data: [
+          {
+            categoryId: '1cfd87ff-70ef-4df9-9284-a73cf268322a',
+            categoryName: 'Robotics',
+            categoryColorCode: '#78909CFF',
+            skillSet: [
+              {
+                skillId: '4c82f34c-5dd4-433d-ad2a-53f033589c3f',
+                skillName: 'IoT',
+                isAssigned: true,
+              },
+            ],
+          },
+          {
+            categoryId: 'd0b328d9-5970-4425-9305-d53835b35d1c',
+            categoryName: 'Game Development',
+            categoryColorCode: '#D32F2FFF',
+            skillSet: [
+              {
+                skillId: '2f2843bc-05de-417f-ad79-11ae0a7320ee',
+                skillName: 'Unity',
+                isAssigned: true,
+              },
+              {
+                skillId: 'd7337f9b-67f2-414f-bb5d-afc3bc9b9ec5',
+                skillName: '3D - Max',
+                isAssigned: true,
+              },
+            ],
+          },
+          {
+            categoryId: 'd754af80-9a8c-47d2-94d4-33d23152d3b1',
+            categoryName: 'Design',
+            categoryColorCode: '#00BCD4FF',
+            skillSet: [
+              {
+                skillId: 'e9f33645-a514-4f09-b04f-c1dd0cc13b5a',
+                skillName: 'Adobe - XD',
+                isAssigned: true,
+              },
+            ],
+          },
+          {
+            categoryId: '107db9ed-97ec-4442-bbe3-e35fc40bee2d',
+            categoryName: 'FE',
+            categoryColorCode: '#C0CA33FF',
+            skillSet: [
+              {
+                skillId: '1a232d78-13d7-4124-8971-cda9fec177a0',
+                skillName: 'Vue JS',
+                isAssigned: true,
+              },
+              {
+                skillId: '42ba8c1a-35db-4f47-963c-74e83a90b083',
+                skillName: 'React Native',
+                isAssigned: true,
+              },
+            ],
+          },
+        ],
+        status: 'OK',
+        timestamp: 'Wed Jun 17 10:26:31 IST 2020',
+      };
+      if (response.message == 'success') {
+        let sortedData = response.data.sort(this.arrayCompare);
+        this.setState({dataLoading: false, userMetricsData: sortedData});
       } else {
         this.setState({dataLoading: false});
       }
     } catch (error) {
       this.setState({dataLoading: false});
     }
+  }
+
+  arrayCompare(a, b) {
+    // Use toUpperCase() to ignore character casing
+    const categoryNameA = a.categoryName.toUpperCase();
+    const categoryNameB = b.categoryName.toUpperCase();
+
+    let comparison = 0;
+    if (categoryNameA > categoryNameB) {
+      comparison = 1;
+    } else if (categoryNameA < categoryNameB) {
+      comparison = -1;
+    }
+    return comparison;
   }
 
   async updateSlackNotificationStatus(email, value) {
@@ -481,7 +543,7 @@ class ViewProfileScreen extends Component {
   renderSkillList(item) {
     return (
       <View style={styles.skillListView}>
-        <Text style={styles.skillListText}>{item.name}</Text>
+        <Text style={styles.skillListText}>{item.skillName}</Text>
       </View>
     );
   }
@@ -489,15 +551,19 @@ class ViewProfileScreen extends Component {
   renderUserMetricsList(item) {
     return (
       <View>
-        <View style={[styles.metricsListVew, {backgroundColor: item.color}]}>
-          <Text style={styles.metricsListText}>{item.value}</Text>
+        <View
+          style={[
+            styles.metricsListVew,
+            {backgroundColor: item.categoryColorCode},
+          ]}>
+          <Text style={styles.metricsListText}>{item.categoryName}</Text>
         </View>
         <View>
           <FlatList
             style={styles.flatListStyle}
-            data={item.skills}
+            data={item.skillSet}
             renderItem={({item, index}) => this.renderSkillList(item)}
-            keyExtractor={item => item.id}
+            keyExtractor={item => item.skillId}
           />
         </View>
       </View>
@@ -591,12 +657,14 @@ class ViewProfileScreen extends Component {
             />
           </View>
           <View>
-            <FlatList
-              style={styles.mainFlatListStyle}
-              data={userMetricsData}
-              renderItem={({item, index}) => this.renderUserMetricsList(item)}
-              keyExtractor={item => item.id}
-            />
+            {userMetricsData.length > 0 ? (
+              <FlatList
+                style={styles.mainFlatListStyle}
+                data={userMetricsData}
+                renderItem={({item, index}) => this.renderUserMetricsList(item)}
+                keyExtractor={item => item.categoryId}
+              />
+            ) : null}
           </View>
           <TouchableOpacity onPress={() => this.onSlackButtonPress()}>
             <View
