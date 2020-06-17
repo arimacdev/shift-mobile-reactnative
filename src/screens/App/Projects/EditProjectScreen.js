@@ -189,7 +189,7 @@ class EditProjectScreen extends Component {
     } = this.props;
     let projectId = params.projDetails;
     this.setState({dataLoading: true});
-    projectData = await APIServices.getProjectData(projectId);
+    let projectData = await APIServices.getProjectData(projectId);
     if (projectData.message == 'success') {
       await this.setProjectStartDate(projectData.data.projectStartDate);
       await this.setProjectEndDate(projectData.data.projectEndDate);

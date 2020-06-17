@@ -20,6 +20,7 @@ import Header from '../../../components/Header';
 import Loader from '../../../components/Loader';
 import {NavigationEvents} from 'react-navigation';
 import EmptyListView from '../../../components/EmptyListView';
+import AwesomeAlert from 'react-native-awesome-alerts';
 
 class DrawerTasksScreen extends Component {
   constructor(props) {
@@ -28,6 +29,9 @@ class DrawerTasksScreen extends Component {
       groupName: '',
       groupTasks: [],
       dataLoading: false,
+      showAlert: false,
+      alertTitle: '',
+      alertMsg: '',
     };
   }
 
@@ -37,7 +41,7 @@ class DrawerTasksScreen extends Component {
 
   async fetchData() {
     this.setState({dataLoading: true});
-    groupTaskData = await APIServices.getGroupTaskData();
+    let groupTaskData = await APIServices.getGroupTaskData();
     if (groupTaskData.message == 'success') {
       this.setState({dataLoading: false, groupTasks: groupTaskData.data});
     } else {
@@ -53,7 +57,7 @@ class DrawerTasksScreen extends Component {
     try {
       let groupName = this.state.groupName;
       this.setState({dataLoading: true});
-      newGroupTaskData = await APIServices.addGroupTaskData(groupName);
+      let newGroupTaskData = await APIServices.addGroupTaskData(groupName);
       if (newGroupTaskData.message == 'success') {
         this.setState({dataLoading: false, groupName: ''});
         this.fetchData();
@@ -62,6 +66,7 @@ class DrawerTasksScreen extends Component {
       }
     } catch (e) {
       this.setState({dataLoading: false});
+      this.showAlert('', e.data.message);
     }
   }
 
@@ -88,10 +93,29 @@ class DrawerTasksScreen extends Component {
     this.fetchData();
   }
 
+  hideAlert() {
+    this.setState({
+      showAlert: false,
+      alertTitle: '',
+      alertMsg: '',
+    });
+  }
+
+  showAlert(title, msg) {
+    this.setState({
+      showAlert: true,
+      alertTitle: title,
+      alertMsg: msg,
+    });
+  }
+
   render() {
     let groupName = this.state.groupName;
     let groupTasks = this.state.groupTasks;
     let dataLoading = this.state.dataLoading;
+    let showAlert = this.state.showAlert;
+    let alertTitle = this.state.alertTitle;
+    let alertMsg = this.state.alertMsg;
 
     return (
       <View style={styles.container}>
@@ -132,6 +156,25 @@ class DrawerTasksScreen extends Component {
           keyExtractor={item => item.projId}
           ListEmptyComponent={<EmptyListView />}
         />
+        <AwesomeAlert
+            show={showAlert}
+            showProgress={false}
+            title={alertTitle}
+            message={alertMsg}
+            closeOnTouchOutside={true}
+            closeOnHardwareBackPress={false}
+            showCancelButton={false}
+            showConfirmButton={true}
+            cancelText=""
+            confirmText="OK"
+            confirmButtonColor={colors.primary}
+            onConfirmPressed={() => {
+              this.hideAlert();
+            }}
+            overlayStyle={{backgroundColor: colors.alertOverlayColor}}
+            contentContainerStyle={styles.alertContainerStyle}
+            confirmButtonStyle={styles.alertConfirmButtonStyle}
+          />
         {dataLoading && <Loader />}
       </View>
     );
@@ -228,6 +271,20 @@ const styles = EStyleSheet.create({
     width: '16rem',
     height: '16rem',
     marginRight: '16rem',
+  },
+  alertContainerStyle: {
+    bottom: 0,
+    width: '100%',
+    maxWidth: '100%',
+    position: 'absolute',
+    borderRadius: 0,
+    borderTopStartRadius: '5rem',
+    borderTopEndRadius: '5rem',
+  },
+  alertConfirmButtonStyle: {
+    width: '100rem',
+    backgroundColor: colors.colorBittersweet,
+    alignItems: 'center',
   },
 });
 

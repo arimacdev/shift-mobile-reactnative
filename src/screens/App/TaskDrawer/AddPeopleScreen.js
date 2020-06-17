@@ -145,7 +145,7 @@ class AddPeopleScreen extends Component {
   async addUser(userID, taskItemID) {
     this.setState({dataLoading: true});
     try {
-      resultObj = await APIServices.addUserToGroupTask(userID, taskItemID);
+      let resultObj = await APIServices.addUserToGroupTask(userID, taskItemID);
       if (resultObj.message == 'success') {
         this.setState({dataLoading: false, showMessageModal: true});
         // this.showAlert('', 'Successfully completed');
@@ -160,8 +160,8 @@ class AddPeopleScreen extends Component {
         this.showAlert('', 'Error');
       }
     } catch (e) {
+      this.setState({dataLoading: false});
       if (e.status == 400 || e.status == 401 || e.status == 403) {
-        this.setState({dataLoading: false});
         this.showAlert('', e.data.message);
       }
     }

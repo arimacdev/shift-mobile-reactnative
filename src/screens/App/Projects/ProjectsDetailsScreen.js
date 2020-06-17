@@ -48,7 +48,7 @@ class ProjectsDetailsScreen extends Component {
   async fetchData() {
     let selectedProjectID = this.props.selectedProjectID;
     this.setState({dataLoading: true});
-    projectTaskDetailsData = await APIServices.getProjectTaskDetails(
+    let projectTaskDetailsData = await APIServices.getProjectTaskDetails(
       selectedProjectID,
     );
     if (projectTaskDetailsData.message == 'success') {

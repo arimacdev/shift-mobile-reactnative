@@ -43,7 +43,7 @@ class SearchGruopTaskScreen extends Component {
 
   async fetchData() {
     this.setState({dataLoading: true});
-    groupTaskData = await APIServices.getGroupTaskData();
+    let groupTaskData = await APIServices.getGroupTaskData();
     if (groupTaskData.message == 'success') {
       this.setState({
         dataLoading: false,

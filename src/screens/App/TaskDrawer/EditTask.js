@@ -99,8 +99,8 @@ class EditTask extends Component {
           this.showAlert('', 'Error');
         }
       } catch (e) {
+        this.setState({dataLoading: false});
         if (e.status == 401) {
-          this.setState({dataLoading: false});
           this.showAlert('', e.data.message);
         }
       }
@@ -158,8 +158,8 @@ class EditTask extends Component {
         this.showAlert('', 'Error');
       }
     } catch (e) {
+      this.setState({dataLoading: false, deleteTaskSuccess: false});
       if (e.status == 401) {
-        this.setState({dataLoading: false, deleteTaskSuccess: false});
         this.showAlert('', e.data.message);
       }
     }
@@ -209,6 +209,7 @@ class EditTask extends Component {
       }
     } catch (error) {
       this.setState({dataLoading: false});
+      this.showAlert('', 'Data loading error');
     }
   }
 
