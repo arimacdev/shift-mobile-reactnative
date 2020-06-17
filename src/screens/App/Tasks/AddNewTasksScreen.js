@@ -970,142 +970,27 @@ class AddNewTasksScreen extends Component {
     let selectSprintName = this.state.selectSprintName;
 
     return (
-      <ScrollView style={{marginBottom: EStyleSheet.value('90rem')}}>
-        <View
-          style={[
-            styles.taskFieldView,
-            {marginTop: EStyleSheet.value('25rem')},
-          ]}>
-          <TextInput
-            style={[styles.textInput, {width: '95%'}]}
-            placeholder={'Task name*'}
-            value={this.state.taskName}
-            onChangeText={text => this.onTaskNameChange(text)}
-          />
-        </View>
-        <View style={styles.taskFieldView}>
-          <Dropdown
-            style={{paddingLeft: 5}}
-            label=""
-            labelFontSize={0}
-            fontSize={13}
-            data={this.state.dropPeopleData}
-            textColor={colors.gray}
-            error={''}
-            animationDuration={0.5}
-            containerStyle={{width: '100%'}}
-            overlayStyle={{width: '100%'}}
-            pickerStyle={styles.dropPickerStyle}
-            dropdownPosition={0}
-            value={this.state.selectedAssignee}
-            itemColor={'black'}
-            selectedItemColor={'black'}
-            onChangeText={value => this.selectAssignee(value)}
-            // onChangeText={(value)=>{this.selectAssignee(item.name, value)}}
-            dropdownOffset={{top: 10}}
-            baseColor={colors.projectBgColor}
-            // renderBase={this.renderBase}
-            renderAccessory={this.renderBase}
-            itemTextStyle={{marginLeft: 15}}
-            itemPadding={10}
-          />
-        </View>
-        <View style={styles.taskFieldView}>
-          <Dropdown
-            style={{paddingLeft: 5}}
-            label="Parent Task"
-            labelFontSize={11}
-            fontSize={13}
-            data={this.state.dropParentData}
-            textColor={colors.gray}
-            error={''}
-            animationDuration={0.5}
-            containerStyle={{width: '100%'}}
-            overlayStyle={{width: '100%'}}
-            pickerStyle={styles.dropPickerStyle}
-            dropdownPosition={0}
-            value={this.state.parentTaskStatus}
-            itemColor={'black'}
-            selectedItemColor={'black'}
-            onChangeText={this.setParentTask}
-            // onChangeText={(value)=>{this.selectAssignee(item.name, value)}}
-            dropdownOffset={{top: 10}}
-            baseColor={colors.projectBgColor}
-            // renderBase={this.renderBase}
-            renderAccessory={this.renderBase}
-            itemTextStyle={{marginLeft: 15}}
-            itemPadding={10}
-          />
-        </View>
-        <View style={styles.subTitleStyle}>
-          <Text style={styles.subTitleText}>Task Type</Text>
-        </View>
-        <View style={styles.taskFieldView}>
-          <Dropdown
-            style={{paddingLeft: 5}}
-            label=""
-            labelFontSize={0}
-            fontSize={13}
-            data={issueTypeList}
-            textColor={colors.gray}
-            error={''}
-            animationDuration={0.5}
-            containerStyle={{width: '100%'}}
-            overlayStyle={{width: '100%'}}
-            pickerStyle={styles.dropPickerStyle}
-            dropdownPosition={0}
-            value={this.state.selectedOperarionalStatus}
-            itemColor={'black'}
-            selectedItemColor={'black'}
-            dropdownOffset={{top: 10}}
-            baseColor={colors.projectBgColor}
-            onChangeText={this.selectOperationalStatus}
-            // renderBase={this.renderBase}
-            renderAccessory={this.renderBase}
-            itemTextStyle={{marginLeft: 15}}
-            itemPadding={10}
-          />
-        </View>
-
-        <View style={styles.taskFieldView}>
-          <Dropdown
-            style={{paddingLeft: 5}}
-            label=""
-            labelFontSize={0}
-            fontSize={13}
-            data={dropData}
-            textColor={colors.gray}
-            error={''}
-            animationDuration={0.5}
-            containerStyle={{width: '100%'}}
-            overlayStyle={{width: '100%'}}
-            pickerStyle={styles.dropPickerStyle}
-            dropdownPosition={0}
-            value={this.state.selectedStatus}
-            itemColor={'black'}
-            selectedItemColor={'black'}
-            dropdownOffset={{top: 10}}
-            baseColor={colors.projectBgColor}
-            onChangeText={value => this.selectStatus(value)}
-            // renderBase={this.renderBase}
-            renderAccessory={this.renderBase}
-            itemTextStyle={{marginLeft: 15}}
-            itemPadding={10}
-          />
-        </View>
-
-        <View style={styles.subTitleStyle}>
-          <Text style={styles.subTitleText}>Board</Text>
-        </View>
-
-        <View style={styles.taskFieldView}>
-          {viewSprint ? (
+      <View>
+        <ScrollView style={{marginBottom: EStyleSheet.value('90rem')}}>
+          <View
+            style={[
+              styles.taskFieldView,
+              {marginTop: EStyleSheet.value('25rem')},
+            ]}>
+            <TextInput
+              style={[styles.textInput, {width: '95%'}]}
+              placeholder={'Task name*'}
+              value={this.state.taskName}
+              onChangeText={text => this.onTaskNameChange(text)}
+            />
+          </View>
+          <View style={styles.taskFieldView}>
             <Dropdown
               style={{paddingLeft: 5}}
               label=""
               labelFontSize={0}
               fontSize={13}
-              data={this.state.dropSprintData}
+              data={this.state.dropPeopleData}
               textColor={colors.gray}
               error={''}
               animationDuration={0.5}
@@ -1113,116 +998,236 @@ class AddNewTasksScreen extends Component {
               overlayStyle={{width: '100%'}}
               pickerStyle={styles.dropPickerStyle}
               dropdownPosition={0}
-              value={this.state.sprintStatus}
+              value={this.state.selectedAssignee}
               itemColor={'black'}
               selectedItemColor={'black'}
+              onChangeText={value => this.selectAssignee(value)}
+              // onChangeText={(value)=>{this.selectAssignee(item.name, value)}}
               dropdownOffset={{top: 10}}
               baseColor={colors.projectBgColor}
-              // onChangeText={value => this.selectSprintStatus(value)}
-              onChangeText={this.selectSprintStatus}
               // renderBase={this.renderBase}
               renderAccessory={this.renderBase}
               itemTextStyle={{marginLeft: 15}}
               itemPadding={10}
             />
-          ) : (
-            <Text style={styles.sprintText}>{selectSprintName}</Text>
-          )}
-        </View>
+          </View>
+          <View style={styles.taskFieldView}>
+            <Dropdown
+              style={{paddingLeft: 5}}
+              label="Parent Task"
+              labelFontSize={11}
+              fontSize={13}
+              data={this.state.dropParentData}
+              textColor={colors.gray}
+              error={''}
+              animationDuration={0.5}
+              containerStyle={{width: '100%'}}
+              overlayStyle={{width: '100%'}}
+              pickerStyle={styles.dropPickerStyle}
+              dropdownPosition={0}
+              value={this.state.parentTaskStatus}
+              itemColor={'black'}
+              selectedItemColor={'black'}
+              onChangeText={this.setParentTask}
+              // onChangeText={(value)=>{this.selectAssignee(item.name, value)}}
+              dropdownOffset={{top: 10}}
+              baseColor={colors.projectBgColor}
+              // renderBase={this.renderBase}
+              renderAccessory={this.renderBase}
+              itemTextStyle={{marginLeft: 15}}
+              itemPadding={10}
+            />
+          </View>
+          <View style={styles.subTitleStyle}>
+            <Text style={styles.subTitleText}>Task Type</Text>
+          </View>
+          <View style={styles.taskFieldView}>
+            <Dropdown
+              style={{paddingLeft: 5}}
+              label=""
+              labelFontSize={0}
+              fontSize={13}
+              data={issueTypeList}
+              textColor={colors.gray}
+              error={''}
+              animationDuration={0.5}
+              containerStyle={{width: '100%'}}
+              overlayStyle={{width: '100%'}}
+              pickerStyle={styles.dropPickerStyle}
+              dropdownPosition={0}
+              value={this.state.selectedOperarionalStatus}
+              itemColor={'black'}
+              selectedItemColor={'black'}
+              dropdownOffset={{top: 10}}
+              baseColor={colors.projectBgColor}
+              onChangeText={this.selectOperationalStatus}
+              // renderBase={this.renderBase}
+              renderAccessory={this.renderBase}
+              itemTextStyle={{marginLeft: 15}}
+              itemPadding={10}
+            />
+          </View>
 
-        <TouchableOpacity
-          onPress={() =>
-            this.setState({showPicker: true, reminder: false, mode: 'date'})
-          }>
-          <View style={[styles.taskFieldView, {flexDirection: 'row'}]}>
-            <Text style={[styles.textInput, {flex: 1}]}>
-              {this.state.selectedDate == ''
-                ? 'Due Date'
-                : this.state.selectedTime + ' ' + this.state.selectedDate}
-            </Text>
-            <Image
-              style={styles.calendarIcon}
-              source={icons.calendar}
-              resizeMode={'contain'}
+          <View style={styles.taskFieldView}>
+            <Dropdown
+              style={{paddingLeft: 5}}
+              label=""
+              labelFontSize={0}
+              fontSize={13}
+              data={dropData}
+              textColor={colors.gray}
+              error={''}
+              animationDuration={0.5}
+              containerStyle={{width: '100%'}}
+              overlayStyle={{width: '100%'}}
+              pickerStyle={styles.dropPickerStyle}
+              dropdownPosition={0}
+              value={this.state.selectedStatus}
+              itemColor={'black'}
+              selectedItemColor={'black'}
+              dropdownOffset={{top: 10}}
+              baseColor={colors.projectBgColor}
+              onChangeText={value => this.selectStatus(value)}
+              // renderBase={this.renderBase}
+              renderAccessory={this.renderBase}
+              itemTextStyle={{marginLeft: 15}}
+              itemPadding={10}
             />
           </View>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() =>
-            this.setState({showPicker: true, reminder: true, mode: 'date'})
-          }>
-          <View style={[styles.taskFieldView, {flexDirection: 'row'}]}>
-            <Text style={[styles.textInput, {flex: 1}]}>
-              {this.state.selectedDateReminder == ''
-                ? 'Reminder'
-                : this.state.selectedTimeReminder +
-                  ' ' +
-                  this.state.selectedDateReminder}
-            </Text>
-            <Image
-              style={styles.calendarIcon}
-              source={icons.calendar}
-              resizeMode={'contain'}
-            />
+
+          <View style={styles.subTitleStyle}>
+            <Text style={styles.subTitleText}>Board</Text>
           </View>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() =>
-            Platform.OS == 'ios' ? this.iOSFilePicker() : this.doumentPicker()
-          }>
-          {this.state.files.length > 0 ? (
-            <View
-              style={[
-                styles.taskFieldDocPickView,
-                {flexDirection: 'row', flexWrap: 'wrap'},
-              ]}>
-              {this.state.files.map(item => {
-                return this.renderDocPickeredView(item);
-              })}
-            </View>
-          ) : (
+
+          <View style={styles.taskFieldView}>
+            {viewSprint ? (
+              <Dropdown
+                style={{paddingLeft: 5}}
+                label=""
+                labelFontSize={0}
+                fontSize={13}
+                data={this.state.dropSprintData}
+                textColor={colors.gray}
+                error={''}
+                animationDuration={0.5}
+                containerStyle={{width: '100%'}}
+                overlayStyle={{width: '100%'}}
+                pickerStyle={styles.dropPickerStyle}
+                dropdownPosition={0}
+                value={this.state.sprintStatus}
+                itemColor={'black'}
+                selectedItemColor={'black'}
+                dropdownOffset={{top: 10}}
+                baseColor={colors.projectBgColor}
+                // onChangeText={value => this.selectSprintStatus(value)}
+                onChangeText={this.selectSprintStatus}
+                // renderBase={this.renderBase}
+                renderAccessory={this.renderBase}
+                itemTextStyle={{marginLeft: 15}}
+                itemPadding={10}
+              />
+            ) : (
+              <Text style={styles.sprintText}>{selectSprintName}</Text>
+            )}
+          </View>
+
+          <TouchableOpacity
+            onPress={() =>
+              this.setState({showPicker: true, reminder: false, mode: 'date'})
+            }>
             <View style={[styles.taskFieldView, {flexDirection: 'row'}]}>
+              <Text style={[styles.textInput, {flex: 1}]}>
+                {this.state.selectedDate == ''
+                  ? 'Due Date'
+                  : this.state.selectedTime + ' ' + this.state.selectedDate}
+              </Text>
               <Image
-                style={[styles.calendarIcon, {marginRight: 10}]}
-                source={icons.upload}
+                style={styles.calendarIcon}
+                source={icons.calendar}
                 resizeMode={'contain'}
               />
-              <Text style={[styles.textInput, {flex: 1}]}>Add files</Text>
             </View>
-          )}
-        </TouchableOpacity>
-        <View style={[styles.taskFieldView, {height: 160}]}>
-          <TextInput
-            style={[
-              styles.textInput,
-              {width: '95%', textAlignVertical: 'top', height: 150},
-            ]}
-            placeholder={'Notes'}
-            value={this.state.notes}
-            multiline={true}
-            onChangeText={text => this.onNotesChange(text)}
-          />
-        </View>
-        <TouchableOpacity onPress={() => this.addNewTask()}>
-          <View style={styles.button}>
-            <Image
-              style={[styles.bottomBarIcon, {marginRight: 15, marginLeft: 10}]}
-              source={icons.taskWhite}
-              resizeMode={'contain'}
-            />
-            <View style={{flex: 1}}>
-              <Text style={styles.buttonText}>Add new Task</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() =>
+              this.setState({showPicker: true, reminder: true, mode: 'date'})
+            }>
+            <View style={[styles.taskFieldView, {flexDirection: 'row'}]}>
+              <Text style={[styles.textInput, {flex: 1}]}>
+                {this.state.selectedDateReminder == ''
+                  ? 'Reminder'
+                  : this.state.selectedTimeReminder +
+                    ' ' +
+                    this.state.selectedDateReminder}
+              </Text>
+              <Image
+                style={styles.calendarIcon}
+                source={icons.calendar}
+                resizeMode={'contain'}
+              />
             </View>
-
-            <Image
-              style={[styles.addIcon, {marginRight: 10}]}
-              source={icons.add}
-              // resizeMode={'contain'}
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() =>
+              Platform.OS == 'ios' ? this.iOSFilePicker() : this.doumentPicker()
+            }>
+            {this.state.files.length > 0 ? (
+              <View
+                style={[
+                  styles.taskFieldDocPickView,
+                  {flexDirection: 'row', flexWrap: 'wrap'},
+                ]}>
+                {this.state.files.map(item => {
+                  return this.renderDocPickeredView(item);
+                })}
+              </View>
+            ) : (
+              <View style={[styles.taskFieldView, {flexDirection: 'row'}]}>
+                <Image
+                  style={[styles.calendarIcon, {marginRight: 10}]}
+                  source={icons.upload}
+                  resizeMode={'contain'}
+                />
+                <Text style={[styles.textInput, {flex: 1}]}>Add files</Text>
+              </View>
+            )}
+          </TouchableOpacity>
+          <View style={[styles.taskFieldView, {height: 160}]}>
+            <TextInput
+              style={[
+                styles.textInput,
+                {width: '95%', textAlignVertical: 'top', height: 150},
+              ]}
+              placeholder={'Notes'}
+              value={this.state.notes}
+              multiline={true}
+              onChangeText={text => this.onNotesChange(text)}
             />
           </View>
-        </TouchableOpacity>
-        {this.state.showPicker ? this.renderDatePicker() : null}
-        {this.state.showTimePicker ? this.renderTimePicker() : null}
+          <TouchableOpacity onPress={() => this.addNewTask()}>
+            <View style={styles.button}>
+              <Image
+                style={[
+                  styles.bottomBarIcon,
+                  {marginRight: 15, marginLeft: 10},
+                ]}
+                source={icons.taskWhite}
+                resizeMode={'contain'}
+              />
+              <View style={{flex: 1}}>
+                <Text style={styles.buttonText}>Add new Task</Text>
+              </View>
+
+              <Image
+                style={[styles.addIcon, {marginRight: 10}]}
+                source={icons.add}
+                // resizeMode={'contain'}
+              />
+            </View>
+          </TouchableOpacity>
+          {this.state.showPicker ? this.renderDatePicker() : null}
+          {this.state.showTimePicker ? this.renderTimePicker() : null}
+        </ScrollView>
         {this.state.isDateNeedLoading && <Loader />}
         {addTaskToProjectLoading && <Loader />}
         {addFileTaskLoading && <Loader />}
@@ -1251,7 +1256,7 @@ class AddNewTasksScreen extends Component {
           onPress={() => {}}
           onPressCancel={() => this.onPressCancel(this)}
         />
-      </ScrollView>
+      </View>
     );
   }
 }
@@ -1407,6 +1412,7 @@ const styles = EStyleSheet.create({
     borderRadius: 0,
     borderTopStartRadius: '5rem',
     borderTopEndRadius: '5rem',
+    zIndex:100
   },
   alertConfirmButtonStyle: {
     width: '100rem',

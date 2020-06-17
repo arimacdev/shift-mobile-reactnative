@@ -24,6 +24,7 @@ import {NavigationEvents} from 'react-navigation';
 import APIServices from '../../../services/APIServices';
 import Triangle from 'react-native-triangle';
 import EmptyListView from '../../../components/EmptyListView';
+import AwesomeAlert from 'react-native-awesome-alerts';
 
 let dropData = [
   {
@@ -55,6 +56,9 @@ class Tasks extends Component {
       filter: false,
       subTasksName: '',
       textInputs: [],
+      showAlert: false,
+      alertTitle: '',
+      alertMsg: '',
     };
   }
 
@@ -253,6 +257,22 @@ class Tasks extends Component {
     }
   }
 
+  hideAlert() {
+    this.setState({
+      showAlert: false,
+      alertTitle: '',
+      alertMsg: '',
+    });
+  }
+
+  showAlert(title, msg) {
+    this.setState({
+      showAlert: true,
+      alertTitle: title,
+      alertMsg: msg,
+    });
+  }
+
   onNewTaskNameChange(text) {
     this.setState({taskName: text});
   }
@@ -262,7 +282,7 @@ class Tasks extends Component {
       let taskName = this.state.taskName;
       let selectedTaskGroupId = this.state.selectedTaskGroupId;
       this.setState({dataLoading: true});
-      newGroupTaskData = await APIServices.addTaskGroupTaskData(
+      let newGroupTaskData = await APIServices.addTaskGroupTaskData(
         taskName,
         selectedTaskGroupId,
       );
@@ -274,6 +294,7 @@ class Tasks extends Component {
       }
     } catch (e) {
       this.setState({dataLoading: false});
+      this.showAlert('', 'New task added fail');
     }
   }
 
@@ -287,7 +308,7 @@ class Tasks extends Component {
       let selectedTaskGroupId = this.state.selectedTaskGroupId;
       let taskId = item.parentTask.taskId;
       this.setState({dataLoading: true});
-      newTaskData = await APIServices.addSubTaskGroupTaskData(
+      let newTaskData = await APIServices.addSubTaskGroupTaskData(
         subTasksName,
         selectedTaskGroupId,
         taskId,
@@ -300,6 +321,7 @@ class Tasks extends Component {
       }
     } catch (e) {
       this.setState({dataLoading: false, textInputs: []});
+      this.showAlert('', 'New sub task added fail');
     }
   }
 
@@ -499,6 +521,9 @@ class Tasks extends Component {
     selectedTypeAllTasks;
     let taskName = this.state.taskName;
     let filter = this.state.filter;
+    let showAlert = this.state.showAlert;
+    let alertTitle = this.state.alertTitle;
+    let alertMsg = this.state.alertMsg;
 
     return (
       <View style={styles.container}>
@@ -574,6 +599,25 @@ class Tasks extends Component {
             />
           </View>
         )}
+        <AwesomeAlert
+          show={showAlert}
+          showProgress={false}
+          title={alertTitle}
+          message={alertMsg}
+          closeOnTouchOutside={true}
+          closeOnHardwareBackPress={false}
+          showCancelButton={false}
+          showConfirmButton={true}
+          cancelText=""
+          confirmText="OK"
+          confirmButtonColor={colors.primary}
+          onConfirmPressed={() => {
+            this.hideAlert();
+          }}
+          overlayStyle={{backgroundColor: colors.alertOverlayColor}}
+          contentContainerStyle={styles.alertContainerStyle}
+          confirmButtonStyle={styles.alertConfirmButtonStyle}
+        />
         {dataLoading && <Loader />}
       </View>
     );
@@ -836,6 +880,20 @@ const styles = EStyleSheet.create({
     width: '24rem',
     height: '24rem',
     borderRadius: 50 / 2,
+  },
+  alertContainerStyle: {
+    bottom: 0,
+    width: '100%',
+    maxWidth: '100%',
+    position: 'absolute',
+    borderRadius: 0,
+    borderTopStartRadius: '5rem',
+    borderTopEndRadius: '5rem',
+  },
+  alertConfirmButtonStyle: {
+    width: '100rem',
+    backgroundColor: colors.colorBittersweet,
+    alignItems: 'center',
   },
 });
 

@@ -710,9 +710,9 @@ class EditProjectScreen extends Component {
     let alertMsg = this.state.alertMsg;
     let projectStartTime = this.state.projectStartTime;
     let projectEndTime = this.state.projectEndTime;
-    let dataLoading = this.props.dataLoading;
+    let dataLoading = this.state.dataLoading;
     let projectStatus = this.state.projectStatus;
-    let updateProjectLoading = this.state.updateProjectLoading;
+    let updateProjectLoading = this.props.updateProjectLoading;
     let deleteProjectErrorMessage = this.state.deleteProjectErrorMessage;
     let projectAlias = this.state.projectAlias;
     let deleteButtonPress = this.state.deleteButtonPress;
@@ -808,28 +808,6 @@ class EditProjectScreen extends Component {
           {this.state.showPicker ? this.renderDatePicker() : null}
           {this.state.showTimePicker ? this.renderTimePicker() : null}
           {this.state.isDateNeedLoading && <Loader />}
-          {dataLoading && <Loader />}
-          {updateProjectLoading && <Loader />}
-          {deleteProjectErrorMessage && <Loader />}
-          <AwesomeAlert
-            show={showAlert}
-            showProgress={false}
-            title={alertTitle}
-            message={alertMsg}
-            closeOnTouchOutside={true}
-            closeOnHardwareBackPress={false}
-            showCancelButton={false}
-            showConfirmButton={true}
-            cancelText=""
-            confirmText="OK"
-            confirmButtonColor={colors.primary}
-            onConfirmPressed={() => {
-              this.hideAlert();
-            }}
-            overlayStyle={{backgroundColor: colors.alertOverlayColor}}
-            contentContainerStyle={styles.alertContainerStyle}
-            confirmButtonStyle={styles.alertConfirmButtonStyle}
-          />
         </ScrollView>
         <View style={styles.bottomContainer}>
           <TouchableOpacity onPress={() => this.saveProject()}>
@@ -874,12 +852,34 @@ class EditProjectScreen extends Component {
             </View>
           </TouchableOpacity>
         </View>
+        <AwesomeAlert
+          show={showAlert}
+          showProgress={false}
+          title={alertTitle}
+          message={alertMsg}
+          closeOnTouchOutside={true}
+          closeOnHardwareBackPress={false}
+          showCancelButton={false}
+          showConfirmButton={true}
+          cancelText=""
+          confirmText="OK"
+          confirmButtonColor={colors.primary}
+          onConfirmPressed={() => {
+            this.hideAlert();
+          }}
+          overlayStyle={{backgroundColor: colors.alertOverlayColor}}
+          contentContainerStyle={styles.alertContainerStyle}
+          confirmButtonStyle={styles.alertConfirmButtonStyle}
+        />
         <MessageShowModal
           showMessageModal={this.state.showMessageModal}
           details={deleteButtonPress ? deleteDetails : successDetails}
           onPress={() => this.reomoveProjectSuccess(this)}
           onPressCancel={() => this.onPressCancel(this)}
         />
+        {dataLoading && <Loader />}
+        {updateProjectLoading && <Loader />}
+        {deleteProjectErrorMessage && <Loader />}
       </View>
     );
   }

@@ -97,7 +97,7 @@ class MyTaskAddEditSubTaskScreen extends Component {
     } else {
       this.setState({dataLoading: true});
       try {
-        resultObj = await APIServices.myTaskUpdateSubTask(
+        let resultObj = await APIServices.myTaskUpdateSubTask(
           userID,
           taskID,
           subTaskID,
@@ -131,7 +131,7 @@ class MyTaskAddEditSubTaskScreen extends Component {
     } else {
       this.setState({dataLoading: true});
       try {
-        resultObj = await APIServices.myTaskAddSubTask(
+        let resultObj = await APIServices.myTaskAddSubTask(
           userID,
           taskID,
           subTaskName,

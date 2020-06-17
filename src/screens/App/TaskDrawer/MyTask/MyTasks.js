@@ -200,7 +200,7 @@ class MyTasks extends Component {
     try {
       let taskName = this.state.taskName;
       this.setState({dataLoading: true});
-      newTaskData = await APIServices.addNewMyTaskData(taskName);
+      let newTaskData = await APIServices.addNewMyTaskData(taskName);
       if (newTaskData.message == 'success') {
         this.setState({dataLoading: false, taskName: ''});
         this.getAllTaskInMyTask();
