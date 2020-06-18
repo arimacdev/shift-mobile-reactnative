@@ -31,7 +31,7 @@ const strings = {
   },
 
   oneSignal: {
-    oneSignalAppId: '45e39e49-0bb3-4d57-a9f9-9c6dcbe2e118',
+    oneSignalAppId: 'fe6df906-c5cf-4c5e-bc1f-21003be4b2d5',
   },
 };
 
