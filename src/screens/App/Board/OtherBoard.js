@@ -157,9 +157,9 @@ class OtherBoard extends Component {
         <TouchableOpacity
           onPress={() =>
             this.props.navigation.navigate('TasksDetailsScreen', {
-              selectedProjectTaskID: data.item.taskId,
-              selectedProjectID: selectedProjectID,
-              selectedProjectName: selectedProjectName,
+              taskId: data.item.taskId,
+              id: selectedProjectID,
+              name: selectedProjectName,
             })
           }>
           <View style={styles.sub_item}>

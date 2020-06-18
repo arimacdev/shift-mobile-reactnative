@@ -335,9 +335,9 @@ class Tasks extends Component {
         <TouchableOpacity
           onPress={() =>
             this.props.navigation.navigate('GroupTasksDetailsScreen', {
-              selectedTaskID: item.parentTask.taskId,
-              selectedGroupTaskID: selectedTaskGroupId,
-              selectedGroupTaskName: item.parentTask.taskName,
+              taskId: item.parentTask.taskId,
+              id: selectedTaskGroupId,
+              name: item.parentTask.taskName,
             })
           }>
           <View
@@ -432,9 +432,9 @@ class Tasks extends Component {
       <TouchableOpacity
         onPress={() =>
           this.props.navigation.navigate('GroupTasksDetailsScreen', {
-            selectedTaskID: item.taskId,
-            selectedGroupTaskID: selectedTaskGroupId,
-            selectedGroupTaskName: item.taskName,
+            taskId: item.taskId,
+            id: selectedTaskGroupId,
+            name: item.taskName,
             parentTaskName: parentTaskName,
           })
         }>
@@ -472,9 +472,9 @@ class Tasks extends Component {
       <TouchableOpacity
         onPress={() =>
           this.props.navigation.navigate('GroupTasksDetailsScreen', {
-            selectedTaskID: item.taskId,
-            selectedGroupTaskID: selectedTaskGroupId,
-            selectedGroupTaskName: item.taskName,
+            taskId: item.taskId,
+            id: selectedTaskGroupId,
+            name: item.taskName,
             parentTaskName: parentTaskName,
           })
         }>

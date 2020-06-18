@@ -369,9 +369,9 @@ class TasksDetailsScreen extends Component {
       },
     } = this.props;
 
-    let selectedProjectID = params.selectedProjectID;
-    let selectedProjectName = params.selectedProjectName;
-    let selectedProjectTaskID = params.selectedProjectTaskID;
+    let selectedProjectID = params.id;
+    let selectedProjectName = params.name;
+    let selectedProjectTaskID = params.taskId;
 
     this.setState({
       selectedProjectID: selectedProjectID,
@@ -2139,9 +2139,9 @@ class TasksDetailsScreen extends Component {
     this.setState({loadDetails: true});
     if (!isSecondDetailViewOpen) {
       this.props.navigation.navigate('TasksSubDetailsScreen', {
-        selectedProjectTaskID: item.taskId,
-        selectedProjectID: this.state.selectedProjectID,
-        selectedProjectName: this.state.selectedProjectName,
+        taskId: item.taskId,
+        id: this.state.selectedProjectID,
+        name: this.state.selectedProjectName,
       });
       await this.props.secondDetailViewOpen(true);
     }
@@ -2170,9 +2170,9 @@ class TasksDetailsScreen extends Component {
     let isSecondDetailViewOpen = this.props.isSecondDetailViewOpen;
     if (!isSecondDetailViewOpen) {
       this.props.navigation.navigate('TasksSubDetailsScreen', {
-        selectedProjectTaskID: item.taskId,
-        selectedProjectID: this.state.selectedProjectID,
-        selectedProjectName: this.state.selectedProjectName,
+        taskId: item.taskId,
+        id: this.state.selectedProjectID,
+        name: this.state.selectedProjectName,
       });
       await this.props.secondDetailViewOpen(true);
     }

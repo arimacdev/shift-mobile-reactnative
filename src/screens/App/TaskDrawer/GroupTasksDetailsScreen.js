@@ -234,9 +234,9 @@ class GroupTasksDetailsScreen extends Component {
       },
     } = this.props;
 
-    let selectedGroupTaskID = params.selectedGroupTaskID;
-    let selectedTaskID = params.selectedTaskID;
-    let selectedGroupTaskName = params.selectedGroupTaskName;
+    let selectedTaskID = params.taskId;
+    let selectedGroupTaskID = params.id;
+    let selectedGroupTaskName = params.name;
     let parentTaskName = params.parentTaskName ? params.parentTaskName : '';
 
     this.setState({
@@ -1733,9 +1733,9 @@ class GroupTasksDetailsScreen extends Component {
   navigateTo(item) {
     this.setState({loadDetails: true});
     this.props.navigation.navigate('GroupSubTasksDetailsScreen', {
-      selectedTaskID: item.taskId,
-      selectedGroupTaskID: this.state.selectedGroupTaskID,
-      selectedGroupTaskName: item.taskName,
+      taskId: item.taskId,
+      id: this.state.selectedGroupTaskID,
+      name: item.taskName,
     });
   }
 

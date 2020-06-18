@@ -197,7 +197,7 @@ class MyTasksDetailsScreen extends Component {
         state: {params},
       },
     } = this.props;
-    let selectedTaskID = params.selectedTaskID;
+    let selectedTaskID = params.taskId;
     this.setState({
       selectedTaskID: selectedTaskID,
     });

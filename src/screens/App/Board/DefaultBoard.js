@@ -79,9 +79,9 @@ class DefaultBoard extends Component {
         style={styles.mainContainer}
         onPress={() =>
           this.props.navigation.navigate('TasksDetailsScreen', {
-            selectedProjectTaskID: item.taskId,
-            selectedProjectID: selectedProjectID,
-            selectedProjectName: selectedProjectName,
+            taskId: item.taskId,
+            id: selectedProjectID,
+            name: selectedProjectName,
           })
         }>
         <View style={styles.userView}>

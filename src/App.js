@@ -67,9 +67,9 @@ export default class App extends Component {
         if (additionalData !== null) {
           // let taskDetails = JSON.parse(additionalData.taskDetails);
           NavigationService.navigate(additionalData.screen, {
-            selectedProjectTaskID: additionalData.selectedProjectTaskID,
-            selectedProjectID: additionalData.selectedProjectID,
-            selectedProjectName: additionalData.selectedProjectName,
+            taskId: additionalData.selectedProjectTaskID,
+            id: additionalData.selectedProjectID,
+            name: additionalData.selectedProjectName,
           });
         }
       }
