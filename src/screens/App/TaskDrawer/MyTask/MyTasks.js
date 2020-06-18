@@ -136,7 +136,7 @@ class MyTasks extends Component {
       <TouchableOpacity
         onPress={() =>
           this.props.navigation.navigate('MyTasksDetailsScreen', {
-            taskDetails: item,
+            selectedTaskID: item.taskId,
           })
         }>
         <View style={styles.taskView}>

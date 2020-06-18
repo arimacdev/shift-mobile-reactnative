@@ -73,14 +73,15 @@ class DefaultBoard extends Component {
 
   renderTaskList(item) {
     let selectedProjectID = this.props.selectedProjectID;
+    let selectedProjectName = this.props.selectedProjectName;
     return (
       <TouchableOpacity
         style={styles.mainContainer}
         onPress={() =>
           this.props.navigation.navigate('TasksDetailsScreen', {
-            taskDetails: item,
+            selectedProjectTaskID: item.taskId,
             selectedProjectID: selectedProjectID,
-            isFromBoards: true,
+            selectedProjectName: selectedProjectName,
           })
         }>
         <View style={styles.userView}>

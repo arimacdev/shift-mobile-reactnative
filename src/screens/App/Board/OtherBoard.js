@@ -150,14 +150,16 @@ class OtherBoard extends Component {
   }
 
   renderItemSubTile(data) {
+    let selectedProjectID = this.props.selectedProjectID;
+    let selectedProjectName = this.props.selectedProjectName;
     return (
       <View style={{flex: 1}}>
         <TouchableOpacity
           onPress={() =>
             this.props.navigation.navigate('TasksDetailsScreen', {
-              taskDetails: data.item,
-              selectedProjectID: this.props.selectedProjectID,
-              isFromBoards: true,
+              selectedProjectTaskID: data.item.taskId,
+              selectedProjectID: selectedProjectID,
+              selectedProjectName: selectedProjectName,
             })
           }>
           <View style={styles.sub_item}>

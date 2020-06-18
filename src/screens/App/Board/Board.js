@@ -32,12 +32,14 @@ class Board extends Component {
       },
     } = this.props;
     let projectId = params.projDetails.projectId;
+    let projectName = params.projDetails.projectName;
     switch (this.state.selectedIndex) {
       case 0:
         return (
           <DefaultBoard
             selectedProjectID={projectId}
             navigation={this.props.navigation}
+            selectedProjectName={projectName}
             //   isActive={isActive}
           />
         );
@@ -46,6 +48,7 @@ class Board extends Component {
           <OtherBoard
             selectedProjectID={projectId}
             navigation={this.props.navigation}
+            selectedProjectName={projectName}
             //   isActive={isActive}
           />
         );

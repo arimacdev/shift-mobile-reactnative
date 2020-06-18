@@ -235,7 +235,7 @@ class GroupTasksDetailsScreen extends Component {
     } = this.props;
 
     let selectedGroupTaskID = params.selectedGroupTaskID;
-    let selectedTaskID = params.taskDetails.taskId;
+    let selectedTaskID = params.selectedTaskID;
     let selectedGroupTaskName = params.selectedGroupTaskName;
     let parentTaskName = params.parentTaskName ? params.parentTaskName : '';
 
@@ -1733,7 +1733,7 @@ class GroupTasksDetailsScreen extends Component {
   navigateTo(item) {
     this.setState({loadDetails: true});
     this.props.navigation.navigate('GroupSubTasksDetailsScreen', {
-      taskDetails: item,
+      selectedTaskID: item.taskId,
       selectedGroupTaskID: this.state.selectedGroupTaskID,
       selectedGroupTaskName: item.taskName,
     });
