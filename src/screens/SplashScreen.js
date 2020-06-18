@@ -128,12 +128,28 @@ class SplashScreen extends Component {
         this.setState({dataLoading: false});
         this.props.UserInfoSuccess(responseUser);
         this.props.UserType(userType);
+        this.setOneSignalUserId();
         NavigationService.navigate('App');
       })
       .catch(err => {
         this.setState({dataLoading: false});
         NavigationService.navigate('LoginScreen');
       });
+  }
+
+  setOneSignalUserId() {
+    AsyncStorage.getItem('userIdOneSignal').then(userIdOneSignal => {
+      if (userIdOneSignal) {
+        this.setState({dataLoading: true});
+        APIServices.setOneSignalUserID(userIdOneSignal)
+          .then(response => {
+            this.setState({dataLoading: false});
+          })
+          .catch(err => {
+            this.setState({dataLoading: false});
+          });
+      }
+    });
   }
 
   render() {

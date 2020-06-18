@@ -73,6 +73,7 @@ import {
   GET_MOBILE_VERSION_STATUS,
   GET_ORGANIZATION_WORK_SPACE,
   GET_USER_SKILL_MAP,
+  SET_ONE_SIGNAL_USER_ID,
 } from '../api/API';
 import AsyncStorage from '@react-native-community/async-storage';
 import {SET_UPLOAD_PROGRESS} from '../redux/types';
@@ -2727,6 +2728,31 @@ async function getUserSkillMapData(userID) {
     );
 };
 
+async function setOneSignalUserID(oneSignalUserID) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
+  let userIDHeder = null;
+  userIDHeder = await AsyncStorage.getItem('userID');
+
+  let headers = {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+    user: userIDHeder,
+  };
+
+  return request(
+    {
+      url: baseURL + SET_ONE_SIGNAL_USER_ID,
+      method: 'POST',
+      data: {
+        oneSignalUserID: oneSignalUserID,
+      },
+    },
+    true,
+    headers,
+  );
+}
+
 const APIServices = {
   getAllProjectsByUserData,
   getUserData,
@@ -2828,6 +2854,7 @@ const APIServices = {
   getMobileVersionStatusData,
   getOrganizationData,
   getUserSkillMapData,
+  setOneSignalUserID,
 };
 
 export default APIServices;

@@ -1,9 +1,9 @@
 export const PROTOCOL = 'https://';
-//export const HOST = 'pmtool.devops.arimac.xyz/api/pm-service/';
-// export const HOST = 'project.arimaclanka.com/api/pm-service/';
+
 // export const WORKSPACE = `${PROTOCOL}project.arimaclanka.com/api/bff/`
 export const WORKSPACE = `${PROTOCOL}pmtool.devops.arimac.xyz/api/bff/`;
 
+export const GET_ORGANIZATION_WORK_SPACE = `${WORKSPACE}organization?`;
 export const GET_ALL_PROJECTS_BY_USER = `projects?`;
 export const GET_ALL_TASKS_BY_PROJECT = `projects/`;
 export const GET_MY_TASKS_BY_PROJECT = `projects/`;
@@ -88,6 +88,6 @@ export const GET_ALL_USERS_WORKLOAD_WITH_COMPLETION = `projects/tasks/users/`;
 
 export const GET_MOBILE_VERSION_STATUS = `health`;
 
-export const GET_ORGANIZATION_WORK_SPACE = `${WORKSPACE}organization?`;
-
 export const GET_USER_SKILL_MAP = `category/user/`;
+
+export const SET_ONE_SIGNAL_USER_ID = `users`;

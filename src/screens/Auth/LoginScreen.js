@@ -124,11 +124,27 @@ class LoginScreen extends Component {
         this.props.UserInfoSuccess(responseUser);
         this.props.UserType(userType);
         OneSignal.setSubscription(true);
+        this.setOneSignalUserId();
         NavigationService.navigate('App');
       })
       .catch(err => {
         this.setState({dataLoading: false});
       });
+  }
+
+  setOneSignalUserId() {
+    AsyncStorage.getItem('userIdOneSignal').then(userIdOneSignal => {
+      if (userIdOneSignal) {
+        this.setState({dataLoading: true});
+        APIServices.setOneSignalUserID(userIdOneSignal)
+          .then(response => {
+            this.setState({dataLoading: false});
+          })
+          .catch(err => {
+            this.setState({dataLoading: false});
+          });
+      }
+    });
   }
 
   async initialUserLogin() {
@@ -163,50 +179,48 @@ class LoginScreen extends Component {
     return (
       <View style={styles.container}>
         {/* <ScrollView style={styles.container}> */}
-          <View style={styles.imageContainer}>
-            <Image
-              style={styles.iconStyle}
-              source={icons.appIcon}
-              resizeMode="contain"
-            />
-          </View>
-          <View style={styles.imageContainer}>
-            <Text style={styles.textTitle}>{strings.login.loginText}</Text>
-            <View style={styles.companyImageContainer}>
-              {details.organizationLogo ? (
-                <FadeIn>
-                  <Image
-                    style={styles.compantIconStyle}
-                    source={{uri: details.organizationLogo}}
-                    resizeMode="contain"
-                  />
-                </FadeIn>
-              ) : (
+        <View style={styles.imageContainer}>
+          <Image
+            style={styles.iconStyle}
+            source={icons.appIcon}
+            resizeMode="contain"
+          />
+        </View>
+        <View style={styles.imageContainer}>
+          <Text style={styles.textTitle}>{strings.login.loginText}</Text>
+          <View style={styles.companyImageContainer}>
+            {details.organizationLogo ? (
+              <FadeIn>
                 <Image
                   style={styles.compantIconStyle}
-                  source={icons.defaultOrganization}
+                  source={{uri: details.organizationLogo}}
                   resizeMode="contain"
                 />
-              )}
-            </View>
-            <Text style={styles.companyNameText}>
-              {details.organizationName}
-            </Text>
-            <Text style={styles.companyNameSubText}>{details.company}</Text>
-            <TouchableOpacity
-              style={styles.loginButton}
-              onPress={() => this.initialUserLogin()}>
-              <Text style={styles.textLogin}>{strings.login.loginButton}</Text>
-            </TouchableOpacity>
+              </FadeIn>
+            ) : (
+              <Image
+                style={styles.compantIconStyle}
+                source={icons.defaultOrganization}
+                resizeMode="contain"
+              />
+            )}
           </View>
-          <View style={styles.bottomContainer}>
-            <TouchableOpacity
-              style={styles.goBackButton}
-              onPress={() => this.props.navigation.goBack()}>
-              <Text style={styles.textGoBack}>{strings.login.goBack}</Text>
-            </TouchableOpacity>
-            {/* <Text style={styles.copyRights}>{strings.login.copyRights}</Text> */}
-          </View>
+          <Text style={styles.companyNameText}>{details.organizationName}</Text>
+          <Text style={styles.companyNameSubText}>{details.company}</Text>
+          <TouchableOpacity
+            style={styles.loginButton}
+            onPress={() => this.initialUserLogin()}>
+            <Text style={styles.textLogin}>{strings.login.loginButton}</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.bottomContainer}>
+          <TouchableOpacity
+            style={styles.goBackButton}
+            onPress={() => this.props.navigation.goBack()}>
+            <Text style={styles.textGoBack}>{strings.login.goBack}</Text>
+          </TouchableOpacity>
+          {/* <Text style={styles.copyRights}>{strings.login.copyRights}</Text> */}
+        </View>
         {/* </ScrollView> */}
         <ForceUpdateModal
           showForceUpdateModal={this.state.forceUpdate}
@@ -278,7 +292,7 @@ const styles = EStyleSheet.create({
     bottom: 0,
     width: '100%',
     marginTop: '10rem',
-    marginBottom:'25rem'
+    marginBottom: '25rem',
   },
   iconStyle: {
     width: '175rem',
