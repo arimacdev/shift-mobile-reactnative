@@ -124,7 +124,7 @@ class PeopleScreen extends Component {
     }
   };
 
-  renderPeopleList(item) {
+  renderPeopleList(item, fromOwner) {
     let progress = 0;
     if (item.totalTasks > 0) {
       progress = item.tasksCompleted / item.totalTasks;
@@ -140,19 +140,24 @@ class PeopleScreen extends Component {
               {item.assigneeFirstName + ' ' + item.assigneeLastName}
             </Text>
           </View>
-          <View style={styles.controlView}>
-            <TouchableOpacity onPress={() => this.goToEditPeople(item)}>
-              <Image style={styles.controlIcon} source={icons.editRoundWhite} />
-            </TouchableOpacity>
+          {!fromOwner ? (
+            <View style={styles.controlView}>
+              <TouchableOpacity onPress={() => this.goToEditPeople(item)}>
+                <Image
+                  style={styles.controlIcon}
+                  source={icons.editRoundWhite}
+                />
+              </TouchableOpacity>
 
-            {/*do not remove. this for further implementation*/}
-            {/* <TouchableOpacity style={{marginLeft: EStyleSheet.value('24rem')}}>
+              {/*do not remove. this for further implementation*/}
+              {/* <TouchableOpacity style={{marginLeft: EStyleSheet.value('24rem')}}>
               <Image
                 style={styles.controlIcon}
                 source={icons.deleteRoundRed}
               />
             </TouchableOpacity> */}
-          </View>
+            </View>
+          ) : null}
         </View>
         <Text style={styles.subText}>
           {item.tasksCompleted + ' / ' + item.totalTasks + ' Tasks Completed'}
@@ -204,7 +209,7 @@ class PeopleScreen extends Component {
           <FlatList
             style={styles.flalList}
             data={this.state.owner}
-            renderItem={({item}) => this.renderPeopleList(item)}
+            renderItem={({item}) => this.renderPeopleList(item, true)}
             keyExtractor={item => item.projId}
             // ListEmptyComponent={<EmptyListView />}
             // onRefresh={() => this.onRefresh()}
@@ -214,21 +219,15 @@ class PeopleScreen extends Component {
           <FlatList
             style={styles.flalList}
             data={this.state.admins}
-            renderItem={({item}) => this.renderPeopleList(item)}
+            renderItem={({item}) => this.renderPeopleList(item, false)}
             keyExtractor={item => item.projId}
-            // ListEmptyComponent={<EmptyListView />}
-            // onRefresh={() => this.onRefresh()}
-            // refreshing={isFetching}
           />
           <Text style={styles.subTitle}>Other Users</Text>
           <FlatList
             style={styles.flalList}
             data={this.state.users}
-            renderItem={({item}) => this.renderPeopleList(item)}
+            renderItem={({item}) => this.renderPeopleList(item, false)}
             keyExtractor={item => item.projId}
-            // ListEmptyComponent={<EmptyListView />}
-            // onRefresh={() => this.onRefresh()}
-            // refreshing={isFetching}
           />
         </ScrollView>
         {dataLoading && <Loader />}
