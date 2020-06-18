@@ -394,10 +394,8 @@ class TasksTabScreen extends Component {
     this.props.navigation.navigate('TasksDetailsScreen', {
       taskDetails: item,
       selectedProjectID: selectedProjectID,
-      isFromBoards: true,
       selectedProjectName: selectedProjectName,
       parentTaskName: parentTaskName,
-      allDetails: this.state.filterdDataAllTaks,
     });
   }
 
@@ -452,12 +450,9 @@ class TasksTabScreen extends Component {
     await this.props.secondDetailViewOpen(false);
     this.props.navigation.navigate('TasksDetailsScreen', {
       taskDetails: item.parentTask,
-      // subTaskDetails: item.childTasks,
       selectedProjectID: selectedProjectID,
       selectedProjectName: selectedProjectName,
-      isFromBoards: true,
       parentTaskName: parentTaskName,
-      allDetails: this.state.filterdDataAllTaks,
     });
   }
 
@@ -589,11 +584,8 @@ class TasksTabScreen extends Component {
     this.props.navigation.navigate('TasksDetailsScreen', {
       taskDetails: item,
       selectedProjectID: selectedProjectID,
-      isFromBoards: true,
       selectedProjectName: selectedProjectName,
       parentTaskName: parentTaskName,
-      allDetails: this.state.filterdDataAllTaks,
-      fromMyTask: this.state.filter ? false : true,
     });
   }
 

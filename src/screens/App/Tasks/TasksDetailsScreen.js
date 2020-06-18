@@ -310,7 +310,6 @@ class TasksDetailsScreen extends Component {
       taskNameEditable: false,
       sprintId: '',
       taskModalDataID: '',
-      fromMyTask: false,
       parentTaskName: '',
       selectdList: development,
       taskItem: {},
@@ -318,6 +317,7 @@ class TasksDetailsScreen extends Component {
       showMessageModal: false,
       deleteTaskSuccess: false,
       loadDetails: true,
+      parentID: '',
     };
   }
 
@@ -374,27 +374,11 @@ class TasksDetailsScreen extends Component {
     let selectedProjectTaskID = params.taskDetails
       ? params.taskDetails.taskId
       : '';
-    let isFromBoards = params.isFromBoards;
-    // let allDetails = params.allDetails;
-    // let subTaskListLength = params.subTaskDetails
-    //   ? params.subTaskDetails.length
-    //   : 0;
-    // let sprintId = params.taskDetails ? params.taskDetails.sprintId : '';
-    let fromMyTask = params.fromMyTask ? params.fromMyTask : false;
-    // params.subTaskDetails.length > 0 ? this.state.subTaskList[0].length : 0;
-
     this.setState({
       selectedProjectID: selectedProjectID,
       selectedProjectName: selectedProjectName,
       selectedProjectTaskID: selectedProjectTaskID,
-      isFromBoards: params.isFromBoards,
-      // subTaskList: params.subTaskDetails ? [params.subTaskDetails] : [],
       parentTaskName: params.parentTaskName ? params.parentTaskName : '',
-      // subTaskListLength: subTaskListLength,
-      // allDetails: allDetails,
-      // sprintId: sprintId,
-      fromMyTask: fromMyTask,
-      taskItem: params.taskDetails,
     });
 
     this.fetchData(selectedProjectID, selectedProjectTaskID);
@@ -424,6 +408,7 @@ class TasksDetailsScreen extends Component {
         this.state.selectedProjectID,
         parentTaskId,
       );
+      console.log("ddddddddddddddddddd",parentTaskId)
       if (taskResult.message == 'success') {
         this.setState({
           parentTaskName: taskResult.data.taskName,
@@ -1222,17 +1207,13 @@ class TasksDetailsScreen extends Component {
   setIsParent(taskResult) {
     let isParent = taskResult.data.isParent;
     let subTaskListLength = this.state.subTaskListLength;
-    let fromMyTask = this.state.fromMyTask;
-    this.setState({
-      isParent: isParent,
-      // addParentTaskShow: subTaskListLength > 0 ? false : true,
-      // addChildTaskShow: isParent ? true : false,
-    });
+    this.setState({isParent: isParent});
 
     if (!isParent) {
       this.setState({
         addParentTaskShow: false,
         addChildTaskShow: false,
+        parentID: taskResult.data.parentId,
       });
       this.gerTaskParentName(taskResult.data.parentId);
     }
@@ -2163,15 +2144,13 @@ class TasksDetailsScreen extends Component {
         taskDetails: item,
         selectedProjectID: this.state.selectedProjectID,
         selectedProjectName: this.state.selectedProjectName,
-        isFromBoards: true,
       });
       await this.props.secondDetailViewOpen(true);
     }
   }
 
   async navigateToSubTask() {
-    let taskItem = this.state.taskItem;
-    let parentID = taskItem.parentId;
+    let parentID = this.state.parentID;
     this.setState({dataLoading: false, loadDetails: true});
     try {
       let taskResult = await APIServices.getProjecTaskData(
@@ -2196,7 +2175,6 @@ class TasksDetailsScreen extends Component {
         taskDetails: item,
         selectedProjectID: this.state.selectedProjectID,
         selectedProjectName: this.state.selectedProjectName,
-        isFromBoards: true,
       });
       await this.props.secondDetailViewOpen(true);
     }
