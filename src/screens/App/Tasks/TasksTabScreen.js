@@ -392,7 +392,7 @@ class TasksTabScreen extends Component {
     let selectedProjectName = this.state.selectedProjectName;
     await this.props.secondDetailViewOpen(false);
     this.props.navigation.navigate('TasksDetailsScreen', {
-      taskDetails: item,
+      selectedProjectTaskID: item.taskId,
       selectedProjectID: selectedProjectID,
       selectedProjectName: selectedProjectName,
       parentTaskName: parentTaskName,
@@ -449,7 +449,7 @@ class TasksTabScreen extends Component {
   ) {
     await this.props.secondDetailViewOpen(false);
     this.props.navigation.navigate('TasksDetailsScreen', {
-      taskDetails: item.parentTask,
+      selectedProjectTaskID: item.parentTask.taskId,
       selectedProjectID: selectedProjectID,
       selectedProjectName: selectedProjectName,
       parentTaskName: parentTaskName,
@@ -582,7 +582,7 @@ class TasksTabScreen extends Component {
     let parentTaskName = '';
     await this.props.secondDetailViewOpen(false);
     this.props.navigation.navigate('TasksDetailsScreen', {
-      taskDetails: item,
+      selectedProjectTaskID: item.taskId,
       selectedProjectID: selectedProjectID,
       selectedProjectName: selectedProjectName,
       parentTaskName: parentTaskName,

@@ -371,9 +371,8 @@ class TasksDetailsScreen extends Component {
 
     let selectedProjectID = params.selectedProjectID;
     let selectedProjectName = params.selectedProjectName;
-    let selectedProjectTaskID = params.taskDetails
-      ? params.taskDetails.taskId
-      : '';
+    let selectedProjectTaskID = params.selectedProjectTaskID;
+
     this.setState({
       selectedProjectID: selectedProjectID,
       selectedProjectName: selectedProjectName,
@@ -408,7 +407,6 @@ class TasksDetailsScreen extends Component {
         this.state.selectedProjectID,
         parentTaskId,
       );
-      console.log("ddddddddddddddddddd",parentTaskId)
       if (taskResult.message == 'success') {
         this.setState({
           parentTaskName: taskResult.data.taskName,
@@ -2141,7 +2139,7 @@ class TasksDetailsScreen extends Component {
     this.setState({loadDetails: true});
     if (!isSecondDetailViewOpen) {
       this.props.navigation.navigate('TasksSubDetailsScreen', {
-        taskDetails: item,
+        selectedProjectTaskID: item.taskId,
         selectedProjectID: this.state.selectedProjectID,
         selectedProjectName: this.state.selectedProjectName,
       });
@@ -2172,7 +2170,7 @@ class TasksDetailsScreen extends Component {
     let isSecondDetailViewOpen = this.props.isSecondDetailViewOpen;
     if (!isSecondDetailViewOpen) {
       this.props.navigation.navigate('TasksSubDetailsScreen', {
-        taskDetails: item,
+        selectedProjectTaskID: item.taskId,
         selectedProjectID: this.state.selectedProjectID,
         selectedProjectName: this.state.selectedProjectName,
       });
