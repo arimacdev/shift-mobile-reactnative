@@ -87,7 +87,7 @@ export const UPDATE_PARENT_TO_CHILD_IN_GROUP = `taskgroup`;
 export const GET_ALL_USERS_WORKLOAD_WITH_COMPLETION = `projects/tasks/users/`;
 
 export const GET_MOBILE_VERSION_STATUS = `health`;
-
 export const GET_USER_SKILL_MAP = `category/user/`;
 
 export const SET_ONE_SIGNAL_USER_ID = `users`;
+export const SET_ONE_SIGNAL_USER_UNSUBSCRIBE = `users`;

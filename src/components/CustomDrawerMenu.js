@@ -20,6 +20,7 @@ import axios from 'axios';
 import FadeIn from 'react-native-fade-in-image';
 import icons from '../asserts/icons/icons';
 import OneSignal from 'react-native-onesignal';
+import APIServices from '../services/APIServices';
 
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
@@ -228,7 +229,7 @@ const confirmLogout = props => {
         onPress: () => console.log('Cancel Pressed'),
         style: 'cancel',
       },
-      {text: 'Logout', onPress: () => logOut(props)},
+      {text: 'Logout', onPress: () => setOneSignalUserUnsubscribe(props)},
     ],
     {cancelable: false},
   );
@@ -246,6 +247,15 @@ const logOut = async () => {
       AsyncStorage.clear();
       OneSignal.setSubscription(false);
       NavigationService.navigate('ConfigurationScreen');
+    }
+  } catch (error) {}
+};
+
+const setOneSignalUserUnsubscribe = async () => {
+  try {
+    let responce = await APIServices.setOneSignalUserUnsubscribeData(taskName);
+    if (responce.message == 'success') {
+      logOut();
     }
   } catch (error) {}
 };
