@@ -100,7 +100,6 @@ const styles = EStyleSheet.create({
     flexDirection: 'row',
     marginHorizontal: '20rem',
     marginVertical: '20rem',
-    // alignItems: 'center',
   },
   modalHeadderText: {
     fontSize: '20rem',

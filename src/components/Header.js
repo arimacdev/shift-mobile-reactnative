@@ -133,7 +133,7 @@ class Header extends Component {
               <TouchableOpacity
                 activeOpacity={0.6}
                 onPress={onPress}
-                hitSlop={{top: 20, bottom: 20, left: 50, right: 50}}>
+                hitSlop={styles.hitslopStyle}>
                 <Icon
                   name={'ios-arrow-round-back'}
                   style={styles.iconBack}
@@ -158,7 +158,7 @@ class Header extends Component {
                 onPress={() =>
                   this.props.navigation.navigate('ProjectsSearchScreen')
                 }
-                hitSlop={{top: 20, bottom: 20, left: 50, right: 50}}>
+                hitSlop={styles.hitslopStyle}>
                 <Image
                   source={icons.editWhite}
                   style={styles.iconEdit}
@@ -170,7 +170,7 @@ class Header extends Component {
                 onPress={() =>
                   this.props.navigation.navigate('CreateNewProjectScreen')
                 }
-                hitSlop={{top: 20, bottom: 20, left: 50, right: 50}}>
+                hitSlop={styles.hitslopStyle}>
                 <Image
                   source={icons.deleteWhite}
                   style={styles.iconEdit}
@@ -185,7 +185,7 @@ class Header extends Component {
               <TouchableOpacity
                 activeOpacity={0.6}
                 onPress={onPress}
-                hitSlop={{top: 20, bottom: 20, left: 50, right: 50}}>
+                hitSlop={styles.hitslopStyle}>
                 <Icon
                   name={search ? 'ios-close' : 'ios-arrow-round-back'}
                   style={styles.iconBack}
@@ -391,6 +391,12 @@ const styles = EStyleSheet.create({
     width: '20rem',
     height: '20rem',
     marginRight: '20rem',
+  },
+  hitslopStyle: {
+    top: '20rem',
+    bottom: '20rem',
+    left: '50rem',
+    right: '50rem',
   },
 });
 

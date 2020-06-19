@@ -256,7 +256,7 @@ const setOneSignalUserUnsubscribe = async () => {
     if (userIdOneSignal) {
       APIServices.setOneSignalUserUnsubscribeData(userIdOneSignal)
         .then(response => {
-          if(response=='success'){
+          if (response == 'success') {
             logOut();
           }
         })

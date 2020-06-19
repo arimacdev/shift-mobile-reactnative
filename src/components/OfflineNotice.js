@@ -70,10 +70,7 @@ const styles = EStyleSheet.create({
   offlineText: {
     color: colors.primary,
     fontFamily: 'HelveticaNeueMedium',
-    marginTop: 5,
-    //backgroundColor : 'red',
-    //padding : 10,
-    // borderRadius :  5
+    marginTop: '5rem',
   },
   image: {
     width: '90rem',

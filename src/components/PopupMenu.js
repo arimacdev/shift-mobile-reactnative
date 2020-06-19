@@ -89,26 +89,7 @@ const optionsStyles = {
     marginTop: 40,
     width: '90%',
     marginLeft: 20,
-    // backgroundColor: 'green',
-    // padding: 5,
   },
-  //   optionsWrapper: {
-  //     //   height:100,
-  //     backgroundColor: 'purple',
-  //   },
-  //   optionWrapper: {
-  //     // height:100,
-  //     backgroundColor: 'yellow',
-  //     margin: 5,
-  //   },
-  //   optionTouchable: {
-  //     height:100,
-  //     underlayColor: 'gold',
-  //     activeOpacity: 70,
-  //   },
-  //   optionText: {
-  //     color: 'brown',
-  //   },
 };
 
 const styles = EStyleSheet.create({
