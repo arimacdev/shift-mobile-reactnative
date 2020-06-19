@@ -360,6 +360,10 @@ class TasksDetailsScreen extends Component {
         allDetails: this.props.allTaskByProject,
       });
     }
+
+    if(this.props.navigation.state.params !== prevProps.navigation.state.params){
+      this.pageOpen();
+    }
   }
 
   pageOpen() {
