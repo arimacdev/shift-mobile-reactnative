@@ -229,7 +229,7 @@ const confirmLogout = props => {
         onPress: () => console.log('Cancel Pressed'),
         style: 'cancel',
       },
-      {text: 'Logout', onPress: () => setOneSignalUserUnsubscribe(props)},
+      {text: 'Logout', onPress: () => logOut(props)},
     ],
     {cancelable: false},
   );
@@ -246,18 +246,20 @@ const logOut = async () => {
     if (response.status === 200) {
       AsyncStorage.clear();
       OneSignal.setSubscription(false);
+      setOneSignalUserUnsubscribe();
       NavigationService.navigate('ConfigurationScreen');
     }
   } catch (error) {}
 };
 
 const setOneSignalUserUnsubscribe = async () => {
-  try {
-    let responce = await APIServices.setOneSignalUserUnsubscribeData(taskName);
-    if (responce.message == 'success') {
-      logOut();
+  AsyncStorage.getItem('userIdOneSignal').then(userIdOneSignal => {
+    if (userIdOneSignal) {
+      APIServices.setOneSignalUserUnsubscribeData(userIdOneSignal)
+        .then(response => {})
+        .catch(err => {});
     }
-  } catch (error) {}
+  });
 };
 
 const styles = EStyleSheet.create({
