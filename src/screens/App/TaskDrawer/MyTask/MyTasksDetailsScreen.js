@@ -189,9 +189,21 @@ class MyTasksDetailsScreen extends Component {
       //   {cancelable: false},
       // );
     }
+
+    if (
+      this.props.navigation.state.params &&
+      this.props.navigation.state.params.taskId !==
+        prevProps.navigation.state.params.taskId
+    ) {
+      this.pageOpen();
+    }
   }
 
   componentDidMount() {
+    this.pageOpen();
+  }
+
+  pageOpen() {
     const {
       navigation: {
         state: {params},

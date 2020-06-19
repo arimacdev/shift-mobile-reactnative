@@ -361,7 +361,11 @@ class TasksDetailsScreen extends Component {
       });
     }
 
-    if(this.props.navigation.state.params !== prevProps.navigation.state.params){
+    if (
+      this.props.navigation.state.params &&
+      this.props.navigation.state.params.taskId !==
+        prevProps.navigation.state.params.taskId
+    ) {
       this.pageOpen();
     }
   }

@@ -65,20 +65,6 @@ export default class App extends Component {
       } else {
         let additionalData = openResult.notification.payload.additionalData;
         if (additionalData !== null) {
-          // let taskDetails = JSON.parse(additionalData.taskDetails);
-          // if (NavigationService.state.routeName == additionalData.screen) {
-          //   NavigationService.replace(additionalData.screen, {
-          //     taskId: additionalData.taskId,
-          //     id: additionalData.id,
-          //     name: additionalData.name,
-          //   });
-          // } else {
-          //   NavigationService.navigate(additionalData.screen, {
-          //     taskId: additionalData.taskId,
-          //     id: additionalData.id,
-          //     name: additionalData.name,
-          //   });
-          // }
           NavigationService.navigate(additionalData.screen, {
             taskId: additionalData.taskId,
             id: additionalData.id,

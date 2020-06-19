@@ -225,6 +225,14 @@ class GroupTasksDetailsScreen extends Component {
         allDetails: this.props.allTaskByGroup,
       });
     }
+
+    if (
+      this.props.navigation.state.params &&
+      this.props.navigation.state.params.taskId !==
+        prevProps.navigation.state.params.taskId
+    ) {
+      this.pageOpen();
+    }
   }
 
   pageOpen() {
