@@ -23,6 +23,7 @@ import {SkypeIndicator} from 'react-native-indicators';
 import {NavigationEvents} from 'react-navigation';
 import APIServices from '../../../../services/APIServices';
 import EmptyListView from '../../../../components/EmptyListView';
+import AwesomeAlert from 'react-native-awesome-alerts';
 
 const Placeholder = () => (
   <View style={styles.landing}>
@@ -56,6 +57,9 @@ class MyTasks extends Component {
       selectedTypeAllTasks: 'All',
       dataLoading: false,
       taskName: '',
+      showAlert: false,
+      alertTitle: '',
+      alertMsg: '',
     };
   }
 
@@ -209,7 +213,24 @@ class MyTasks extends Component {
       }
     } catch (e) {
       this.setState({dataLoading: false});
+      this.showAlert('', 'New task added fail');
     }
+  }
+
+  hideAlert() {
+    this.setState({
+      showAlert: false,
+      alertTitle: '',
+      alertMsg: '',
+    });
+  }
+
+  showAlert(title, msg) {
+    this.setState({
+      showAlert: true,
+      alertTitle: title,
+      alertMsg: msg,
+    });
   }
 
   render() {
@@ -217,6 +238,9 @@ class MyTasks extends Component {
     let selectedTypeAllTasks = this.state.selectedTypeAllTasks;
     let dataLoading = this.state.dataLoading;
     let taskName = this.state.taskName;
+    let showAlert = this.state.showAlert;
+    let alertTitle = this.state.alertTitle;
+    let alertMsg = this.state.alertMsg;
 
     return (
       <View style={styles.container}>
@@ -269,6 +293,25 @@ class MyTasks extends Component {
             ListEmptyComponent={<EmptyListView />}
           />
         </View>
+        <AwesomeAlert
+          show={showAlert}
+          showProgress={false}
+          title={alertTitle}
+          message={alertMsg}
+          closeOnTouchOutside={true}
+          closeOnHardwareBackPress={false}
+          showCancelButton={false}
+          showConfirmButton={true}
+          cancelText=""
+          confirmText="OK"
+          confirmButtonColor={colors.primary}
+          onConfirmPressed={() => {
+            this.hideAlert();
+          }}
+          overlayStyle={{backgroundColor: colors.alertOverlayColor}}
+          contentContainerStyle={styles.alertContainerStyle}
+          confirmButtonStyle={styles.alertConfirmButtonStyle}
+        />
         {dataLoading && <Loader />}
       </View>
     );
@@ -407,6 +450,20 @@ const styles = EStyleSheet.create({
     width: '22rem',
     height: '22rem',
     borderRadius: 80 / 2,
+  },
+  alertContainerStyle: {
+    bottom: 0,
+    width: '100%',
+    maxWidth: '100%',
+    position: 'absolute',
+    borderRadius: 0,
+    borderTopStartRadius: '5rem',
+    borderTopEndRadius: '5rem',
+  },
+  alertConfirmButtonStyle: {
+    width: '100rem',
+    backgroundColor: colors.colorBittersweet,
+    alignItems: 'center',
   },
 });
 
