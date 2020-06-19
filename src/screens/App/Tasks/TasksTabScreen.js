@@ -31,6 +31,7 @@ const {height, width} = Dimensions.get('window');
 import {Icon} from 'native-base';
 import APIServices from '../../../services/APIServices';
 import EmptyListView from '../../../components/EmptyListView';
+import AwesomeAlert from 'react-native-awesome-alerts';
 
 const Placeholder = () => (
   <View style={styles.landing}>
@@ -131,6 +132,9 @@ class TasksTabScreen extends Component {
       selectedEndDate: null,
       filterTaskType: '',
       textInputs: [],
+      showAlert: false,
+      alertTitle: '',
+      alertMsg: '',
     };
 
     this.onDateChange = this.onDateChange.bind(this);
@@ -396,6 +400,22 @@ class TasksTabScreen extends Component {
       id: selectedProjectID,
       name: selectedProjectName,
       parentTaskName: parentTaskName,
+    });
+  }
+
+  hideAlert() {
+    this.setState({
+      showAlert: false,
+      alertTitle: '',
+      alertMsg: '',
+    });
+  }
+
+  showAlert(title, msg) {
+    this.setState({
+      showAlert: true,
+      alertTitle: title,
+      alertMsg: msg,
     });
   }
 
@@ -825,6 +845,7 @@ class TasksTabScreen extends Component {
         this.setState({dataLoading: false, textInputs: []});
       }
     } catch (e) {
+      this.showAlert('', 'New sub task added fail');
       this.setState({dataLoading: false, textInputs: []});
     }
   }
@@ -849,6 +870,7 @@ class TasksTabScreen extends Component {
         this.setState({dataLoading: false});
       }
     } catch (e) {
+      this.showAlert('', 'New main task added fail');
       this.setState({dataLoading: false});
     }
   }
@@ -1198,6 +1220,9 @@ class TasksTabScreen extends Component {
     let filterType = this.state.filterType;
     let tasksName = this.state.tasksName;
     let dataLoading = this.state.dataLoading;
+    let showAlert = this.state.showAlert;
+    let alertTitle = this.state.alertTitle;
+    let alertMsg = this.state.alertMsg;
 
     return (
       <View style={styles.container}>
@@ -1312,6 +1337,25 @@ class TasksTabScreen extends Component {
         {allTaskByProjectLoading && <Loader />}
         {myTaskByProjectLoading && <Loader />}
         {dataLoading && <Loader />}
+        <AwesomeAlert
+          show={showAlert}
+          showProgress={false}
+          title={alertTitle}
+          message={alertMsg}
+          closeOnTouchOutside={true}
+          closeOnHardwareBackPress={false}
+          showCancelButton={false}
+          showConfirmButton={true}
+          cancelText=""
+          confirmText="OK"
+          confirmButtonColor={colors.primary}
+          onConfirmPressed={() => {
+            this.hideAlert();
+          }}
+          overlayStyle={{backgroundColor: colors.alertOverlayColor}}
+          contentContainerStyle={styles.alertContainerStyle}
+          confirmButtonStyle={styles.alertConfirmButtonStyle}
+        />
       </View>
     );
   }
@@ -1725,6 +1769,20 @@ const styles = EStyleSheet.create({
     width: '22rem',
     height: '22rem',
     borderRadius: 50 / 2,
+  },
+  alertContainerStyle: {
+    bottom: 0,
+    width: '100%',
+    maxWidth: '100%',
+    position: 'absolute',
+    borderRadius: 0,
+    borderTopStartRadius: '5rem',
+    borderTopEndRadius: '5rem',
+  },
+  alertConfirmButtonStyle: {
+    width: '100rem',
+    backgroundColor: colors.colorBittersweet,
+    alignItems: 'center',
   },
 });
 

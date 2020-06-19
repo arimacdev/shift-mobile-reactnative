@@ -1228,6 +1228,7 @@ class MyTasksDetailsScreen extends Component {
   //API change task status
   async changeTaskStatus(selectedTaskStatusID, selectedTaskStatusName) {
     this.setState({dataLoading: true, showMessageModal: false});
+    try{
     let selectedTaskID = this.state.selectedTaskID;
     let resultData = await APIServices.myTaskUpdateTaskStatusData(
       selectedTaskID,
@@ -1249,6 +1250,10 @@ class MyTasksDetailsScreen extends Component {
     } else {
       this.setState({dataLoading: false});
     }
+  } catch {
+    this.setState({dataLoading: false});
+    this.showAlert('', 'Task status update failed');
+  }
   }
 
   // change name of task
@@ -1263,6 +1268,7 @@ class MyTasksDetailsScreen extends Component {
       showMessageModal: false,
       taskNameEditable: false,
     });
+    try{
     let selectedTaskID = this.state.selectedTaskID;
     let resultData = await APIServices.myTaskUpdateTaskNameData(
       selectedTaskID,
@@ -1280,6 +1286,10 @@ class MyTasksDetailsScreen extends Component {
     } else {
       this.setState({dataLoading: false});
     }
+  } catch {
+    this.setState({dataLoading: false});
+    this.showAlert('', 'Task name update failed');
+  }
   }
 
   // change note of task
@@ -1290,6 +1300,7 @@ class MyTasksDetailsScreen extends Component {
   // change note of task API
   async onSubmitTaskNote(note) {
     this.setState({dataLoading: true, showMessageModal: false});
+    try{
     let selectedTaskID = this.state.selectedTaskID;
     let resultData = await APIServices.myTaskUpdateTaskNoteData(
       selectedTaskID,
@@ -1307,10 +1318,15 @@ class MyTasksDetailsScreen extends Component {
     } else {
       this.setState({dataLoading: false});
     }
+  } catch {
+    this.setState({dataLoading: false});
+    this.showAlert('', 'Notes update failed');
+  }
   }
 
   // change due date of task API DONE
   async changeTaskDueDate() {
+    try{
     let duedateValue = this.state.duedateValue;
     let dueTime = this.state.dueTime;
     let selectedTaskID = this.state.selectedTaskID;
@@ -1345,10 +1361,15 @@ class MyTasksDetailsScreen extends Component {
         this.setDueDate(this.state.taskResult);
         //}
       });
+    } catch {
+      this.setState({dataLoading: false});
+      this.showAlert('', 'Due date update failed');
+    }
   }
 
   // change reminder date of task API DONE
   async changeTaskReminderDate() {
+    try{
     let remindDateValue = this.state.remindDateValue;
     let reminderTime = this.state.reminderTime;
     let selectedTaskID = this.state.selectedTaskID;
@@ -1386,6 +1407,10 @@ class MyTasksDetailsScreen extends Component {
         this.setReminderDate(this.state.taskResult);
         //}
       });
+    } catch {
+        this.setState({dataLoading: false});
+        this.showAlert('', 'Remind date update failed');
+    }
   }
 
   deleteMyTask() {
@@ -1591,7 +1616,8 @@ class MyTasksDetailsScreen extends Component {
             {this.state.showTimePicker ? this.renderTimePicker() : null}
           </View>
           {dataLoading && <Loader />}
-          <AwesomeAlert
+        </ScrollView>
+        <AwesomeAlert
             show={showAlert}
             showProgress={false}
             title={alertTitle}
@@ -1610,7 +1636,6 @@ class MyTasksDetailsScreen extends Component {
             contentContainerStyle={styles.alertContainerStyle}
             confirmButtonStyle={styles.alertConfirmButtonStyle}
           />
-        </ScrollView>
         <MessageShowModal
           showMessageModal={this.state.showMessageModal}
           details={this.details}
@@ -1923,6 +1948,7 @@ const styles = EStyleSheet.create({
     borderRadius: 0,
     borderTopStartRadius: '5rem',
     borderTopEndRadius: '5rem',
+    zIndex: 100000
   },
   alertConfirmButtonStyle: {
     width: '100rem',
