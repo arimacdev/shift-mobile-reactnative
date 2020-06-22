@@ -135,7 +135,6 @@ class LoginScreen extends Component {
         this.setState({dataLoading: false});
         this.props.UserInfoSuccess(responseUser);
         this.props.UserType(userType);
-        OneSignal.setSubscription(true);
         OneSignal.getPermissionSubscriptionState(status => {
           if (!status) {
             this.setOneSignalUserId();
@@ -160,7 +159,10 @@ class LoginScreen extends Component {
         this.setState({dataLoading: true});
         APIServices.setOneSignalUserID(userIdOneSignal)
           .then(response => {
-            this.setState({dataLoading: false});
+            if (response.message == 'success') {
+              this.setState({dataLoading: false});
+              OneSignal.setSubscription(true);
+            }
           })
           .catch(err => {
             this.setState({dataLoading: false});
@@ -173,13 +175,19 @@ class LoginScreen extends Component {
     });
   }
 
-  setOneSignalUserSubscribe(){
+  setOneSignalUserSubscribe() {
     AsyncStorage.getItem('userIdOneSignal').then(userIdOneSignal => {
       if (userIdOneSignal) {
+        this.setState({dataLoading: true});
         APIServices.setOneSignalNotificationStatusData(userIdOneSignal, true)
           .then(response => {
+            if (response.message == 'success') {
+              this.setState({dataLoading: false});
+              OneSignal.setSubscription(true);
+            }
           })
           .catch(err => {
+            this.setState({dataLoading: false});
             let title = '';
             let msg = 'One signal notification subscribe failed';
             let config = {showAlert: true, alertTitle: title, alertMsg: msg};
@@ -187,7 +195,7 @@ class LoginScreen extends Component {
           });
       }
     });
-  };
+  }
 
   async initialUserLogin() {
     try {
