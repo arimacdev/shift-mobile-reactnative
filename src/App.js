@@ -10,6 +10,7 @@ import {OfflineNotice} from './components/OfflineNotice';
 import OneSignal from 'react-native-onesignal';
 import strings from './config/strings';
 import AsyncStorage from '@react-native-community/async-storage';
+import ErrorModal from './components/ErrorModal';
 
 console.disableYellowBox = true;
 
@@ -97,6 +98,7 @@ export default class App extends Component {
           />
         }
         <OfflineNotice />
+        <ErrorModal />
       </Provider>
     );
   }
