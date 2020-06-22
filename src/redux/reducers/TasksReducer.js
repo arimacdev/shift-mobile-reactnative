@@ -19,7 +19,6 @@ import {
   DELETE_SINGLE_SUB_TASK_IN_GROUP_TASKS_SUCCESS,
   DELETE_SINGLE_SUB_TASK_IN_GROUP_TASKS_FAILED,
   DELETE_SINGLE_SUB_TASK_IN_GROUP_TASKS_FAILED_MASSAGE,
-
 } from '../types';
 
 const INITIAL_STATE = {
@@ -189,7 +188,7 @@ export default (state = INITIAL_STATE, action) => {
         deleteSingleSubTaskInGroupSuccess: false,
         deleteSingleSubTaskInGroupError: true,
         deleteSingleSubTaskInGroupErrorMessage: action.payload,
-      };  
+      };
     default:
       return state;
   }
