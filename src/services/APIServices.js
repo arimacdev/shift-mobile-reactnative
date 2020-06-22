@@ -2716,7 +2716,7 @@ async function getUserSkillMapData(userID) {
     let headers = {
       Accept: 'application/json',
       'Content-Type': 'application/json',
-      user: userIDHeder,
+      userID: userIDHeder,
     };
   
     return request(

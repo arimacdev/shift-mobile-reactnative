@@ -100,75 +100,10 @@ class ViewProfileScreen extends Component {
   async getUserSkillMap(userID) {
     this.setState({dataLoading: true});
     try {
-      // let response = await APIServices.getUserSkillMapData(userID);
-      let response = {
-        message: 'success',
-        data: [
-          {
-            categoryId: '1cfd87ff-70ef-4df9-9284-a73cf268322a',
-            categoryName: 'Robotics',
-            categoryColorCode: '#78909CFF',
-            skillSet: [
-              {
-                skillId: '4c82f34c-5dd4-433d-ad2a-53f033589c3f',
-                skillName: 'IoT',
-                isAssigned: true,
-              },
-            ],
-          },
-          {
-            categoryId: 'd0b328d9-5970-4425-9305-d53835b35d1c',
-            categoryName: 'Game Development',
-            categoryColorCode: '#D32F2FFF',
-            skillSet: [
-              {
-                skillId: '2f2843bc-05de-417f-ad79-11ae0a7320ee',
-                skillName: 'Unity',
-                isAssigned: true,
-              },
-              {
-                skillId: 'd7337f9b-67f2-414f-bb5d-afc3bc9b9ec5',
-                skillName: '3D - Max',
-                isAssigned: true,
-              },
-            ],
-          },
-          {
-            categoryId: 'd754af80-9a8c-47d2-94d4-33d23152d3b1',
-            categoryName: 'Design',
-            categoryColorCode: '#00BCD4FF',
-            skillSet: [
-              {
-                skillId: 'e9f33645-a514-4f09-b04f-c1dd0cc13b5a',
-                skillName: 'Adobe - XD',
-                isAssigned: true,
-              },
-            ],
-          },
-          {
-            categoryId: '107db9ed-97ec-4442-bbe3-e35fc40bee2d',
-            categoryName: 'FE',
-            categoryColorCode: '#C0CA33FF',
-            skillSet: [
-              {
-                skillId: '1a232d78-13d7-4124-8971-cda9fec177a0',
-                skillName: 'Vue JS',
-                isAssigned: true,
-              },
-              {
-                skillId: '42ba8c1a-35db-4f47-963c-74e83a90b083',
-                skillName: 'React Native',
-                isAssigned: true,
-              },
-            ],
-          },
-        ],
-        status: 'OK',
-        timestamp: 'Wed Jun 17 10:26:31 IST 2020',
-      };
+      let response = await APIServices.getUserSkillMapData(userID);
       if (response.message == 'success') {
-        let sortedData = response.data.sort(this.arrayCompare);
-        this.setState({dataLoading: false, userMetricsData: sortedData});
+        // let sortedData = response.data.sort(this.arrayCompare);
+        this.setState({dataLoading: false, userMetricsData: response.data});
       } else {
         this.setState({dataLoading: false, userMetricsData: []});
       }
