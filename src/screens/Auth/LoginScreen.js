@@ -40,6 +40,14 @@ class LoginScreen extends Component {
     };
   }
 
+  componentWillMount() {
+    OneSignal.addEventListener('ids', this.onIds);
+  }
+
+  onIds(device) {
+    AsyncStorage.setItem('userIdOneSignal', device.userId);
+  }
+
   componentDidMount() {
     AppState.addEventListener('change', this._handleAppStateChange);
     // if (Platform.OS == 'ios') {
@@ -113,6 +121,10 @@ class LoginScreen extends Component {
       }
     } catch (error) {
       this.setState({dataLoading: false});
+      let title = '';
+      let msg = 'Data loading error';
+      let config = {showAlert: true, alertTitle: title, alertMsg: msg};
+      this.props.showMessagePopup(config);
     }
   }
 
@@ -124,11 +136,21 @@ class LoginScreen extends Component {
         this.props.UserInfoSuccess(responseUser);
         this.props.UserType(userType);
         OneSignal.setSubscription(true);
-        this.setOneSignalUserId();
+        OneSignal.getPermissionSubscriptionState(status => {
+          if (!status) {
+            this.setOneSignalUserId();
+          } else {
+            this.setOneSignalUserSubscribe();
+          }
+        });
         NavigationService.navigate('App');
       })
       .catch(err => {
         this.setState({dataLoading: false});
+        let title = '';
+        let msg = 'Data loading error';
+        let config = {showAlert: true, alertTitle: title, alertMsg: msg};
+        this.props.showMessagePopup(config);
       });
   }
 
@@ -142,10 +164,30 @@ class LoginScreen extends Component {
           })
           .catch(err => {
             this.setState({dataLoading: false});
+            let title = '';
+            let msg = 'One signal notification user register failed';
+            let config = {showAlert: true, alertTitle: title, alertMsg: msg};
+            this.props.showMessagePopup(config);
           });
       }
     });
   }
+
+  setOneSignalUserSubscribe(){
+    AsyncStorage.getItem('userIdOneSignal').then(userIdOneSignal => {
+      if (userIdOneSignal) {
+        APIServices.setOneSignalNotificationStatusData(userIdOneSignal, true)
+          .then(response => {
+          })
+          .catch(err => {
+            let title = '';
+            let msg = 'One signal notification subscribe failed';
+            let config = {showAlert: true, alertTitle: title, alertMsg: msg};
+            this.props.showMessagePopup(config);
+          });
+      }
+    });
+  };
 
   async initialUserLogin() {
     try {

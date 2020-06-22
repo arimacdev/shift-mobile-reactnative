@@ -72,9 +72,9 @@ const CustomDrawerContentComponent = props => {
     setShowMessageModal(false);
     AsyncStorage.getItem('userIdOneSignal').then(userIdOneSignal => {
       if (userIdOneSignal) {
-        APIServices.setOneSignalUserUnsubscribeData(userIdOneSignal)
+        APIServices.setOneSignalNotificationStatusData(userIdOneSignal, false)
           .then(response => {
-            if (response == 'success') {
+            if (response.message == 'success') {
               logOut();
             }
           })

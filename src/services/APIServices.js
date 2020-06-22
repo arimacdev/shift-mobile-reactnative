@@ -2738,7 +2738,7 @@ async function setOneSignalUserID(oneSignalUserID) {
   let headers = {
     Accept: 'application/json',
     'Content-Type': 'application/json',
-    user: userIDHeder,
+    userId: userIDHeder,
   };
 
   return request(
@@ -2746,7 +2746,10 @@ async function setOneSignalUserID(oneSignalUserID) {
       url: baseURL + SET_ONE_SIGNAL_USER_ID,
       method: 'POST',
       data: {
-        oneSignalUserID: oneSignalUserID,
+        subscriberId: userIDHeder,
+        subscriptionId: oneSignalUserID,
+        provider: 'OneSignal',
+        platform: 'Mobile'
       },
     },
     true,
@@ -2754,24 +2757,28 @@ async function setOneSignalUserID(oneSignalUserID) {
   );
 }
 
-async function setOneSignalUserUnsubscribeData(oneSignalUserID) {
+async function setOneSignalNotificationStatusData(oneSignalUserID, notificationStatus) {
   let baseURL = null;
   baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
   userIDHeder = await AsyncStorage.getItem('userID');
-
+  
   let headers = {
     Accept: 'application/json',
     'Content-Type': 'application/json',
-    user: userIDHeder,
+    userId: userIDHeder,
   };
 
   return request(
     {
       url: baseURL + SET_ONE_SIGNAL_USER_UNSUBSCRIBE,
-      method: 'POST',
+      method: 'PUT',
       data: {
-        oneSignalUserID: oneSignalUserID,
+        subscriberId: userIDHeder, 
+        subscriptionId: oneSignalUserID, 
+        provider: 'OneSignal', 
+        platform : 'Mobile', 
+        notificationStatus: notificationStatus 
       },
     },
     true,
@@ -2881,7 +2888,7 @@ const APIServices = {
   getOrganizationData,
   getUserSkillMapData,
   setOneSignalUserID,
-  setOneSignalUserUnsubscribeData,
+  setOneSignalNotificationStatusData
 };
 
 export default APIServices;
