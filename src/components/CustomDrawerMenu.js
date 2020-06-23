@@ -79,6 +79,7 @@ const CustomDrawerContentComponent = props => {
             }
           })
           .catch(err => {
+            logOut();
             let title = '';
             let msg = 'One signal notification unsubscribe failed';
             let config = {showAlert: true, alertTitle: title, alertMsg: msg};

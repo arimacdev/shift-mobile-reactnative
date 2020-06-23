@@ -46,6 +46,7 @@ class LoginScreen extends Component {
 
   onIds(device) {
     AsyncStorage.setItem('userIdOneSignal', device.userId);
+    this.pushToken = device.pushToken;
   }
 
   componentDidMount() {
@@ -136,7 +137,7 @@ class LoginScreen extends Component {
         this.props.UserInfoSuccess(responseUser);
         this.props.UserType(userType);
         OneSignal.getPermissionSubscriptionState(status => {
-          if (!status) {
+          if (!status.userSubscriptionEnabled) {
             this.setOneSignalUserId();
           } else {
             this.setOneSignalUserSubscribe();
