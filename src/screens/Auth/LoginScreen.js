@@ -133,13 +133,7 @@ class LoginScreen extends Component {
         this.setState({dataLoading: false});
         this.props.UserInfoSuccess(responseUser);
         this.props.UserType(userType);
-        OneSignal.getPermissionSubscriptionState(status => {
-          if (status == null) {
-            this.setOneSignalUserId();
-          } else {
-            this.setOneSignalUserSubscribe();
-          }
-        });
+        this.setOneSignalUserId();
         NavigationService.navigate('App');
       })
       .catch(err => {
@@ -165,30 +159,6 @@ class LoginScreen extends Component {
               true,
               '',
               'One signal notification user register failed',
-              this.props,
-            );
-          });
-      }
-    });
-  }
-
-  setOneSignalUserSubscribe() {
-    AsyncStorage.getItem('userIdOneSignal').then(userIdOneSignal => {
-      if (userIdOneSignal) {
-        this.setState({dataLoading: true});
-        APIServices.setOneSignalNotificationStatusData(userIdOneSignal, true)
-          .then(response => {
-            if (response.message == 'success') {
-              this.setState({dataLoading: false});
-              OneSignal.setSubscription(true);
-            }
-          })
-          .catch(err => {
-            this.setState({dataLoading: false});
-            Utils.showAlert(
-              true,
-              '',
-              'One signal notification subscribe failed',
               this.props,
             );
           });

@@ -2749,7 +2749,8 @@ async function setOneSignalUserID(oneSignalUserID) {
         subscriberId: userIDHeder,
         subscriptionId: oneSignalUserID,
         provider: 'OneSignal',
-        platform: 'Mobile'
+        platform: 'Mobile',
+        notificationStatus: true 
       },
     },
     true,
