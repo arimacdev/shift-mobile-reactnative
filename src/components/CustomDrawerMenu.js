@@ -22,6 +22,7 @@ import icons from '../asserts/icons/icons';
 import OneSignal from 'react-native-onesignal';
 import APIServices from '../services/APIServices';
 import MessageShowModal from './MessageShowModal';
+import Utils from '../utils/Utils';
 
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
@@ -61,10 +62,7 @@ const CustomDrawerContentComponent = props => {
         NavigationService.navigate('ConfigurationScreen');
       }
     } catch (error) {
-      let title = '';
-      let msg = 'Logout error';
-      let config = {showAlert: true, alertTitle: title, alertMsg: msg};
-      props.showMessagePopup(config);
+      Utils.showAlert(true, '', 'Logout error', props);
     }
   };
 
@@ -80,10 +78,12 @@ const CustomDrawerContentComponent = props => {
           })
           .catch(err => {
             logOut();
-            let title = '';
-            let msg = 'One signal notification unsubscribe failed';
-            let config = {showAlert: true, alertTitle: title, alertMsg: msg};
-            props.showMessagePopup(config);
+            Utils.showAlert(
+              true,
+              '',
+              'One signal notification unsubscribe failed',
+              props,
+            );
           });
       }
     });

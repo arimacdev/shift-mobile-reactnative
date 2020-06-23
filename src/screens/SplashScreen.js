@@ -25,6 +25,7 @@ import ForceUpdateModal from '../components/ForceUpdateModal';
 import DeviceInfo from 'react-native-device-info';
 import Loader from '../components/Loader';
 import icons from '../asserts/icons/icons';
+import Utils from '../utils/Utils';
 
 class SplashScreen extends Component {
   constructor(props) {
@@ -105,10 +106,7 @@ class SplashScreen extends Component {
       }
     } catch (error) {
       this.setState({dataLoading: false});
-      let title = '';
-      let msg = 'Data loading error';
-      let config = {showAlert: true, alertTitle: title, alertMsg: msg};
-      this.props.showMessagePopup(config);
+      Utils.showAlert(true, '', 'Data loading error', this.props);
     }
   }
 
@@ -136,10 +134,7 @@ class SplashScreen extends Component {
       })
       .catch(err => {
         this.setState({dataLoading: false});
-        let title = '';
-        let msg = 'Data loading error';
-        let config = {showAlert: true, alertTitle: title, alertMsg: msg};
-        this.props.showMessagePopup(config);
+        Utils.showAlert(true, '', 'Data loading error', this.props);
         // NavigationService.navigate('LoginScreen');
       });
   }

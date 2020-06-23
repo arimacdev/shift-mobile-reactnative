@@ -27,6 +27,7 @@ import Loader from '../../components/Loader';
 import icons from '../../asserts/icons/icons';
 import FadeIn from 'react-native-fade-in-image';
 import OneSignal from 'react-native-onesignal';
+import Utils from '../../utils/Utils';
 
 class LoginScreen extends Component {
   constructor(props) {
@@ -46,7 +47,6 @@ class LoginScreen extends Component {
 
   onIds(device) {
     AsyncStorage.setItem('userIdOneSignal', device.userId);
-    this.pushToken = device.pushToken;
   }
 
   componentDidMount() {
@@ -122,10 +122,7 @@ class LoginScreen extends Component {
       }
     } catch (error) {
       this.setState({dataLoading: false});
-      let title = '';
-      let msg = 'Data loading error';
-      let config = {showAlert: true, alertTitle: title, alertMsg: msg};
-      this.props.showMessagePopup(config);
+      Utils.showAlert(true, '', 'Data loading error', this.props);
     }
   }
 
@@ -137,7 +134,7 @@ class LoginScreen extends Component {
         this.props.UserInfoSuccess(responseUser);
         this.props.UserType(userType);
         OneSignal.getPermissionSubscriptionState(status => {
-          if (!status.userSubscriptionEnabled) {
+          if (status == null) {
             this.setOneSignalUserId();
           } else {
             this.setOneSignalUserSubscribe();
@@ -147,10 +144,7 @@ class LoginScreen extends Component {
       })
       .catch(err => {
         this.setState({dataLoading: false});
-        let title = '';
-        let msg = 'Data loading error';
-        let config = {showAlert: true, alertTitle: title, alertMsg: msg};
-        this.props.showMessagePopup(config);
+        Utils.showAlert(true, '', 'Data loading error', this.props);
       });
   }
 
@@ -167,10 +161,12 @@ class LoginScreen extends Component {
           })
           .catch(err => {
             this.setState({dataLoading: false});
-            let title = '';
-            let msg = 'One signal notification user register failed';
-            let config = {showAlert: true, alertTitle: title, alertMsg: msg};
-            this.props.showMessagePopup(config);
+            Utils.showAlert(
+              true,
+              '',
+              'One signal notification user register failed',
+              this.props,
+            );
           });
       }
     });
@@ -189,10 +185,12 @@ class LoginScreen extends Component {
           })
           .catch(err => {
             this.setState({dataLoading: false});
-            let title = '';
-            let msg = 'One signal notification subscribe failed';
-            let config = {showAlert: true, alertTitle: title, alertMsg: msg};
-            this.props.showMessagePopup(config);
+            Utils.showAlert(
+              true,
+              '',
+              'One signal notification subscribe failed',
+              this.props,
+            );
           });
       }
     });
