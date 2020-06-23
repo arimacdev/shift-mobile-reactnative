@@ -58,6 +58,7 @@ const CustomDrawerContentComponent = props => {
       });
       if (response.status === 200) {
         AsyncStorage.clear();
+        OneSignal.setSubscription(false);
         NavigationService.navigate('ConfigurationScreen');
       }
     } catch (error) {
@@ -72,11 +73,11 @@ const CustomDrawerContentComponent = props => {
         APIServices.setOneSignalNotificationStatusData(userIdOneSignal, false)
           .then(response => {
             if (response.message == 'success') {
-              OneSignal.setSubscription(false);
               logOut();
             }
           })
           .catch(err => {
+            logOut();
             Utils.showAlert(
               true,
               '',
