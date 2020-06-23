@@ -22,7 +22,6 @@ export default class App extends Component {
     //Remove this method to stop OneSignal Debugging
     OneSignal.setLogLevel(6, 0);
 
-    // Replace 'YOUR_ONESIGNAL_APP_ID' with your OneSignal App ID.
     OneSignal.init(strings.oneSignal.oneSignalAppId, {
       kOSSettingsKeyAutoPrompt: false,
       kOSSettingsKeyInAppLaunchURL: false,

@@ -2,8 +2,6 @@ import React, {Component} from 'react';
 import {
   Dimensions,
   View,
-  Text,
-  TouchableOpacity,
   Platform,
   AppState,
   Image,
@@ -12,14 +10,11 @@ import {
 import {connect} from 'react-redux';
 import * as actions from '../redux/actions';
 import colors from '../config/colors';
-import strings from '../config/strings';
-import {authorize} from 'react-native-app-auth';
 import AsyncStorage from '@react-native-community/async-storage';
 import NavigationService from '../services/NavigationService';
 import EStyleSheet from 'react-native-extended-stylesheet';
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
-import jwtDecode from 'jwt-decode';
 import APIServices from '../services/APIServices';
 import ForceUpdateModal from '../components/ForceUpdateModal';
 import DeviceInfo from 'react-native-device-info';
@@ -116,7 +111,6 @@ class SplashScreen extends Component {
         AsyncStorage.getItem('userType').then(userType => {
           if (userType) {
             this.fetchDataUserData(userID, userType);
-            //NavigationService.navigate('App');
           }
         });
       }
@@ -132,10 +126,9 @@ class SplashScreen extends Component {
         this.props.UserType(userType);
         NavigationService.navigate('App');
       })
-      .catch(err => {
+      .catch(() => {
         this.setState({dataLoading: false});
         Utils.showAlert(true, '', 'Data loading error', this.props);
-        // NavigationService.navigate('LoginScreen');
       });
   }
 
@@ -230,7 +223,7 @@ const styles = EStyleSheet.create({
   },
 });
 
-const mapStateToProps = state => {
+const mapStateToProps = () => {
   return {};
 };
 export default connect(
