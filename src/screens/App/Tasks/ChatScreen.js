@@ -18,16 +18,21 @@ EStyleSheet.build({$rem: entireScreenWidth / 380});
 import FadeIn from 'react-native-fade-in-image';
 import Loader from '../../../components/Loader';
 import {NavigationEvents} from 'react-navigation';
+import io from 'socket.io-client';
+import APIServices from '../../../services/APIServices';
 
 class ChatScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
       users: [],
-      allUsers: [],
       isFetching: false,
+      dataLoading: false,
       chatText: '',
       height: 60,
+
+      chatMessage: '',
+      chatMessages: [],
     };
   }
 
@@ -39,7 +44,6 @@ class ChatScreen extends Component {
     ) {
       this.setState({
         users: this.props.users,
-        allUsers: this.props.users,
       });
     }
 
@@ -51,17 +55,37 @@ class ChatScreen extends Component {
   }
 
   componentDidMount() {
+    this.socket = io('http://127.0.0.1:3000');
+    this.socket.on('chat message', msg => {
+      this.setState({chatMessages: [...this.state.chatMessages, msg]});
+    });
     this.fetchData();
   }
 
-  fetchData() {
-    this.setState({users: [], allUsers: []}, function() {
+  async fetchData() {
+    // this.setState({dataLoading: true, users: []});
+    // await APIServices.getCommentsData()
+    //   .then(response => {
+    //     if (response.message == 'success') {
+
+    //       this.setState({dataLoading: false});
+    //     } else {
+    //       this.setState({dataLoading: false});
+    //     }
+    //   })
+    //   .catch(error => {
+    //     this.setState({dataLoading: false});
+    //     this.showAlert('', error.data.message);
+    //   });
+    this.setState({users: []}, function() {
       this.props.getAllUsers();
     });
   }
 
-  userImage = function() {
-    let userImage = item.taskAssigneeProfileImage;
+  userImage = function(item) {
+    // let userImage = item.taskAssigneeProfileImage;
+    let userImage =
+      'https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg';
 
     if (userImage) {
       return (
@@ -74,10 +98,10 @@ class ChatScreen extends Component {
     }
   };
 
-  renderUserListList() {
+  renderUserListList(item) {
     return (
       <View style={styles.chatView}>
-        {this.userImage()}
+        {this.userImage(item)}
         <View style={{flex: 1}}>
           <View style={styles.timeView}>
             <Text style={styles.textTime}>
@@ -101,7 +125,7 @@ class ChatScreen extends Component {
   }
 
   onRefresh() {
-    this.setState({isFetching: true, users: [], allUsers: []}, function() {
+    this.setState({isFetching: true, users: []}, function() {
       this.fetchData();
     });
   }
@@ -111,7 +135,7 @@ class ChatScreen extends Component {
   }
 
   loadUsers() {
-    this.setState({users: [], allUsers: []}, function() {
+    this.setState({users: []}, function() {
       this.props.getAllUsers();
     });
   }
@@ -127,6 +151,11 @@ class ChatScreen extends Component {
       });
     }
   };
+
+  submitChatMessage() {
+    this.socket.emit('chat message', this.state.chatText);
+    this.setState({chatText: ''});
+  }
 
   render() {
     let users = this.state.users;
@@ -152,12 +181,16 @@ class ChatScreen extends Component {
               value={this.state.chatText}
               multiline={true}
               onChangeText={text => this.onChatTextChange(text)}
+              // onSubmitEditing={() => this.submitChatMessage()}
               // onContentSizeChange={e =>
               //   this.updateSize(e.nativeEvent.contentSize.height)
               // }
             />
           </View>
-          <TouchableOpacity onPress={() => {}}>
+          <TouchableOpacity
+            onPress={() => {
+              this.submitChatMessage();
+            }}>
             <Image
               style={styles.chatIcon}
               source={icons.forwordGreen}

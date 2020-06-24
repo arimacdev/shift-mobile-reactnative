@@ -75,6 +75,7 @@ import {
   GET_USER_SKILL_MAP,
   SET_ONE_SIGNAL_USER_ID,
   SET_ONE_SIGNAL_USER_UNSUBSCRIBE,
+  GET_COMMENTS,
 } from '../api/API';
 import AsyncStorage from '@react-native-community/async-storage';
 import {SET_UPLOAD_PROGRESS} from '../redux/types';
@@ -2970,6 +2971,28 @@ async function setOneSignalNotificationStatusData(
   );
 }
 
+async function getCommentsData() {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
+  let userIDHeder = null;
+  userIDHeder = await AsyncStorage.getItem('userID');
+
+  let headers = {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+    userID: userIDHeder,
+  };
+
+  return request(
+    {
+      url: baseURL + GET_COMMENTS,
+      method: 'GET',
+    },
+    true,
+    headers,
+  );
+}
+
 const APIServices = {
   getAllProjectsByUserData,
   getUserData,
@@ -3073,6 +3096,7 @@ const APIServices = {
   getUserSkillMapData,
   setOneSignalUserID,
   setOneSignalNotificationStatusData,
+  getCommentsData,
 };
 
 export default APIServices;
