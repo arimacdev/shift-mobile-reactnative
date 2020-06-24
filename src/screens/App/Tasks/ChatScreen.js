@@ -55,7 +55,7 @@ class ChatScreen extends Component {
   }
 
   componentDidMount() {
-    this.socket = io('http://127.0.0.1:3000');
+    this.socket = io('http://192.168.1.4:3000');
     this.socket.on('chat message', msg => {
       this.setState({chatMessages: [...this.state.chatMessages, msg]});
     });
@@ -162,9 +162,15 @@ class ChatScreen extends Component {
     let isFetching = this.state.isFetching;
     let usersLoading = this.props.usersLoading;
 
+    const chatMessages = this.state.chatMessages.map(chatMessage => (
+      <Text style={{borderWidth: 2, top: 500}}>{chatMessage}</Text>
+    ));
+
     return (
       <View style={styles.container}>
         <NavigationEvents onWillFocus={payload => this.loadUsers(payload)} />
+
+        {chatMessages}
         <FlatList
           style={styles.flalList}
           data={users}
