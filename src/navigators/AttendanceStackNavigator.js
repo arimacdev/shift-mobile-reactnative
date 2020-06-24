@@ -20,7 +20,7 @@ export const AttendanceStackNavigator = createStackNavigator(
         ),
       }),
     },
-    
+  },
   {
     initialRouteName: 'AttendanceScreen',
   },
