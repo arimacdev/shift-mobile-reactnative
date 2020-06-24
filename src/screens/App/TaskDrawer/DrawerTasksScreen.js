@@ -189,11 +189,10 @@ const styles = EStyleSheet.create({
   button: {
     flexDirection: 'row',
     backgroundColor: colors.lightGreen,
-    borderRadius: 5,
+    borderRadius: '5rem',
     marginTop: '17rem',
     flexDirection: 'row',
     alignItems: 'center',
-    // justifyContent: 'center',
     paddingHorizontal: '12rem',
     height: '55rem',
     marginHorizontal: '20rem',
@@ -215,7 +214,7 @@ const styles = EStyleSheet.create({
   },
   addNewFieldView: {
     backgroundColor: colors.white,
-    borderRadius: 5,
+    borderRadius: '5rem',
     borderWidth: 2,
     borderColor: colors.taskBorderColor,
     marginTop: '14rem',
@@ -245,7 +244,7 @@ const styles = EStyleSheet.create({
   },
   groupTaskView: {
     backgroundColor: colors.projectBgColor,
-    borderRadius: 5,
+    borderRadius: '5rem',
     height: '60rem',
     marginTop: '7rem',
     flexDirection: 'row',

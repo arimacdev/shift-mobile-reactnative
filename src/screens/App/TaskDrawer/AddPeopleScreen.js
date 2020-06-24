@@ -373,7 +373,7 @@ const styles = EStyleSheet.create({
   },
   taskFieldView: {
     backgroundColor: colors.projectBgColor,
-    borderRadius: 5,
+    borderRadius: '5rem',
     marginTop: '0rem',
     marginBottom: '7rem',
     flexDirection: 'row',
@@ -416,7 +416,7 @@ const styles = EStyleSheet.create({
   buttonDelete: {
     flexDirection: 'row',
     backgroundColor: colors.lightRed,
-    borderRadius: 5,
+    borderRadius: '5rem',
     marginTop: '10rem',
     marginBottom: '5rem',
     flexDirection: 'row',
@@ -440,7 +440,7 @@ const styles = EStyleSheet.create({
     position: 'absolute',
     bottom: 0,
     width: '100%',
-    marginBottom: 15,
+    marginBottom: '15rem',
   },
   checkBoxContainer: {
     flex: 1,

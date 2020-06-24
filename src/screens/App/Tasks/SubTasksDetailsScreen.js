@@ -2627,7 +2627,7 @@ const styles = EStyleSheet.create({
   filesView: {
     backgroundColor: colors.projectBgColor,
     borderRadius: '5rem',
-    borderWidth: 1,
+    borderWidth: '1rem',
     borderColor: colors.lighterGray,
     height: '50rem',
     marginTop: '7rem',
