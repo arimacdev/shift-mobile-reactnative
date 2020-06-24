@@ -1,11 +1,11 @@
 import {SHOW_MESSAGE_POPUAP} from '../types';
 
 const INITIAL_STATE = {
-  showMessageConfig:{
-    showAlert:false,
-    title:'',
-    msg:''
-  }
+  showMessageConfig: {
+    showAlert: false,
+    title: '',
+    msg: '',
+  },
 };
 
 export default (state = INITIAL_STATE, action) => {

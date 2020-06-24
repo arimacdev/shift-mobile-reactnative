@@ -129,7 +129,12 @@ async function getAllTaskInProjectsData(userID, projectID) {
 
   return request(
     {
-      url: baseURL + GET_MY_TASKS_BY_PROJECT + projectID + '/tasks?userId=' + userID,
+      url:
+        baseURL +
+        GET_MY_TASKS_BY_PROJECT +
+        projectID +
+        '/tasks?userId=' +
+        userID,
       method: 'GET',
     },
     true,
@@ -148,7 +153,11 @@ async function getMyTaskInProjectsData(userID, projectID) {
   return request(
     {
       url:
-      baseURL + GET_ALL_TASKS_BY_PROJECT + projectID + '/tasks/user?userId=' + userID,
+        baseURL +
+        GET_ALL_TASKS_BY_PROJECT +
+        projectID +
+        '/tasks/user?userId=' +
+        userID,
       method: 'GET',
     },
     true,
@@ -298,7 +307,7 @@ async function updateProjectData(
   IsoStartDate,
   IsoSEndDate,
   projectStatus,
-  projectAlias
+  projectAlias,
 ) {
   let baseURL = null;
   baseURL = await AsyncStorage.getItem('baseURL');
@@ -362,7 +371,12 @@ async function getProjectTaskDetails(projectID) {
 
   return request(
     {
-      url: baseURL + GET_PROJECT_DETAILS_TASK + '/' + projectID + '/tasks/completion',
+      url:
+        baseURL +
+        GET_PROJECT_DETAILS_TASK +
+        '/' +
+        projectID +
+        '/tasks/completion',
       method: 'GET',
     },
     true,
@@ -386,7 +400,8 @@ async function getProjectPeopleData(projectID, userID) {
   return request(
     {
       url:
-      baseURL + GET_PROJECT_PEOPLE +
+        baseURL +
+        GET_PROJECT_PEOPLE +
         '/' +
         projectID +
         '/tasks/' +
@@ -484,7 +499,8 @@ async function getProjecTaskData(projectID, selectedProjectTaskID) {
   return request(
     {
       url:
-        baseURL + GET_TASK_IN_PROJECT +
+        baseURL +
+        GET_TASK_IN_PROJECT +
         '/' +
         projectID +
         '/tasks/' +
@@ -726,7 +742,8 @@ async function addFileToTask(file, taskId, selectedProjectID) {
   return request(
     {
       url:
-        baseURL + ADD_FILE_TO_TASK +
+        baseURL +
+        ADD_FILE_TO_TASK +
         '/' +
         selectedProjectID +
         '/tasks/' +
@@ -810,7 +827,8 @@ async function getSubTaskData(projectID, taskID, userID) {
   return request(
     {
       url:
-        baseURL + GET_ALL_SUB_TASKS +
+        baseURL +
+        GET_ALL_SUB_TASKS +
         '/' +
         projectID +
         '/tasks/' +
@@ -840,7 +858,8 @@ async function deleteSubTask(projectID, taskID, subtaskId) {
   return request(
     {
       url:
-        baseURL + DELETE_SUB_TASK +
+        baseURL +
+        DELETE_SUB_TASK +
         '/' +
         projectID +
         '/tasks/' +
@@ -864,7 +883,14 @@ async function addSubTask(userID, projectID, taskID, subTaskName) {
 
   return request(
     {
-      url: baseURL + ADD_SUB_TASK + '/' + projectID + '/tasks/' + taskID + '/subtask',
+      url:
+        baseURL +
+        ADD_SUB_TASK +
+        '/' +
+        projectID +
+        '/tasks/' +
+        taskID +
+        '/subtask',
       method: 'POST',
       data: {
         taskId: taskID,
@@ -900,7 +926,8 @@ async function updateSubTask(
   return request(
     {
       url:
-        baseURL + UPDATE_SUB_TASK +
+        baseURL +
+        UPDATE_SUB_TASK +
         '/' +
         projectID +
         '/tasks/' +
@@ -935,7 +962,14 @@ async function getFilesInTaskData(projectID, taskID) {
 
   return request(
     {
-      url: baseURL + GET_FILES_IN_TASK + '/' + projectID + '/tasks/' + taskID + '/files',
+      url:
+        baseURL +
+        GET_FILES_IN_TASK +
+        '/' +
+        projectID +
+        '/tasks/' +
+        taskID +
+        '/files',
       method: 'GET',
     },
     true,
@@ -959,7 +993,8 @@ async function deleteFileInTaskData(projectID, taskID, taskFileId) {
   return request(
     {
       url:
-        baseURL + DELETE_FILE_IN_TASK +
+        baseURL +
+        DELETE_FILE_IN_TASK +
         '/' +
         projectID +
         '/tasks/' +
@@ -1009,13 +1044,16 @@ async function getWorkloadWithCompletionAll() {
     Accept: 'application/json',
     'Content-Type': 'application/json',
     user: userIDHeder,
-    from : 'all',
-    to : 'all',
+    from: 'all',
+    to: 'all',
   };
 
   return request(
     {
-      url: baseURL + GET_ALL_USERS_WORKLOAD_WITH_COMPLETION + '/workload?assignee=all',
+      url:
+        baseURL +
+        GET_ALL_USERS_WORKLOAD_WITH_COMPLETION +
+        '/workload?assignee=all',
       method: 'GET',
     },
     true,
@@ -1041,7 +1079,13 @@ async function updateRolePeopleData(
   };
   return request(
     {
-      url: baseURL + UPDATE_PEOPLE_PROJECT + '/' + projectID + '/users/' + assignerId,
+      url:
+        baseURL +
+        UPDATE_PEOPLE_PROJECT +
+        '/' +
+        projectID +
+        '/users/' +
+        assignerId,
       method: 'PUT',
       data: {
         assignerId: userID,
@@ -1138,7 +1182,8 @@ async function getAllTaskByGroup(selectedTaskGroupId) {
   return request(
     {
       url:
-        baseURL + VIEW_ALL_TASK_BY_GROUP_DATA +
+        baseURL +
+        VIEW_ALL_TASK_BY_GROUP_DATA +
         '/' +
         selectedTaskGroupId +
         '/tasks?userId=' +
@@ -1260,7 +1305,8 @@ async function getTaskPeopleData(selectedTaskGroupId) {
   return request(
     {
       url:
-        baseURL + GET_PEOPLE_IN_TASK +
+        baseURL +
+        GET_PEOPLE_IN_TASK +
         '/' +
         selectedTaskGroupId +
         '/tasks/' +
@@ -1337,7 +1383,8 @@ async function getGroupSingleTaskData(selectedTaskGroupId, selectedTaskID) {
   return request(
     {
       url:
-        baseURL + GET_GROUP_SINGLE_TASK_DATA +
+        baseURL +
+        GET_GROUP_SINGLE_TASK_DATA +
         '/' +
         selectedTaskGroupId +
         '/tasks/' +
@@ -1347,7 +1394,7 @@ async function getGroupSingleTaskData(selectedTaskGroupId, selectedTaskID) {
     true,
     headers,
   );
-};
+}
 
 async function uploadFileData(file, selectedProjectID, dispatch) {
   let baseURL = null;
@@ -1372,7 +1419,12 @@ async function uploadFileData(file, selectedProjectID, dispatch) {
   formData.append('files', file1);
   return request(
     {
-      url: baseURL + ADD_FILE_TO_PROJECT + '/' + selectedProjectID + '/files/upload',
+      url:
+        baseURL +
+        ADD_FILE_TO_PROJECT +
+        '/' +
+        selectedProjectID +
+        '/files/upload',
       method: 'POST',
       data: formData,
       // onUploadProgress: progress => {
@@ -1447,7 +1499,13 @@ async function deleteProjectFile(selectedProjectID, fileId) {
 
   return request(
     {
-      url: baseURL + DELETE_PROJECT_FILES + '/' + selectedProjectID + '/files/' + fileId,
+      url:
+        baseURL +
+        DELETE_PROJECT_FILES +
+        '/' +
+        selectedProjectID +
+        '/files/' +
+        fileId,
       method: 'DELETE',
     },
     true,
@@ -1499,7 +1557,8 @@ async function groupTaskUpdateTaskNameData(
   return request(
     {
       url:
-        baseURL + UPDATE_GROUP_TASK_SINGLE_TASK +
+        baseURL +
+        UPDATE_GROUP_TASK_SINGLE_TASK +
         '/' +
         selectedTaskGroupId +
         '/tasks/' +
@@ -1533,7 +1592,8 @@ async function groupTaskUpdateTaskStatusData(
   return request(
     {
       url:
-        baseURL + UPDATE_GROUP_TASK_SINGLE_TASK +
+        baseURL +
+        UPDATE_GROUP_TASK_SINGLE_TASK +
         '/' +
         selectedTaskGroupId +
         '/tasks/' +
@@ -1567,7 +1627,8 @@ async function groupTaskUpdateTaskAssigneeData(
   return request(
     {
       url:
-        baseURL + UPDATE_GROUP_TASK_SINGLE_TASK +
+        baseURL +
+        UPDATE_GROUP_TASK_SINGLE_TASK +
         '/' +
         selectedTaskGroupId +
         '/tasks/' +
@@ -1601,7 +1662,8 @@ async function groupTaskUpdateDueDateData(
   return request(
     {
       url:
-        baseURL + UPDATE_GROUP_TASK_SINGLE_TASK +
+        baseURL +
+        UPDATE_GROUP_TASK_SINGLE_TASK +
         '/' +
         selectedTaskGroupId +
         '/tasks/' +
@@ -1635,7 +1697,8 @@ async function groupTaskUpdateReminderDateData(
   return request(
     {
       url:
-        baseURL + UPDATE_GROUP_TASK_SINGLE_TASK +
+        baseURL +
+        UPDATE_GROUP_TASK_SINGLE_TASK +
         '/' +
         selectedTaskGroupId +
         '/tasks/' +
@@ -1669,7 +1732,8 @@ async function groupTaskUpdateTaskNoteData(
   return request(
     {
       url:
-        baseURL + UPDATE_GROUP_TASK_SINGLE_TASK +
+        baseURL +
+        UPDATE_GROUP_TASK_SINGLE_TASK +
         '/' +
         selectedTaskGroupId +
         '/tasks/' +
@@ -1699,7 +1763,13 @@ async function deleteSingleInGroupTaskData(selectedTaskGroupId, taskID) {
 
   return request(
     {
-      url: baseURL + DELETE_TASK_IN_GROUP + '/' + selectedTaskGroupId + '/tasks/' + taskID,
+      url:
+        baseURL +
+        DELETE_TASK_IN_GROUP +
+        '/' +
+        selectedTaskGroupId +
+        '/tasks/' +
+        taskID,
       method: 'DELETE',
     },
     true,
@@ -1889,7 +1959,13 @@ async function deleteFileInMyTaskData(taskID, taskFileId) {
 
   return request(
     {
-      url: baseURL + DELETE_PERSONAL_TASK_FILE + '/' + taskID + '/files/' + taskFileId,
+      url:
+        baseURL +
+        DELETE_PERSONAL_TASK_FILE +
+        '/' +
+        taskID +
+        '/files/' +
+        taskFileId,
       method: 'DELETE',
     },
     true,
@@ -1964,7 +2040,8 @@ async function getMyTaskSubTaskData(selectedTaskID) {
   return request(
     {
       url:
-        baseURL + GET_ALL_SUB_TASKS_IN_MY_TASK +
+        baseURL +
+        GET_ALL_SUB_TASKS_IN_MY_TASK +
         '/' +
         selectedTaskID +
         '/subtask?userId=' +
@@ -1990,7 +2067,13 @@ async function myTaskdeleteSubTask(taskID, subtaskId) {
 
   return request(
     {
-      url: baseURL + DELETE_SUB_TASKS_IN_MY_TASK + '/' + taskID + '/subtask/' + subtaskId,
+      url:
+        baseURL +
+        DELETE_SUB_TASKS_IN_MY_TASK +
+        '/' +
+        taskID +
+        '/subtask/' +
+        subtaskId,
       method: 'DELETE',
     },
     true,
@@ -2042,7 +2125,13 @@ async function myTaskUpdateSubTask(
 
   return request(
     {
-      url: baseURL + MY_TASK_UPDATE_SUB_TASK + '/' + taskID + '/subtask/' + subTaskID,
+      url:
+        baseURL +
+        MY_TASK_UPDATE_SUB_TASK +
+        '/' +
+        taskID +
+        '/subtask/' +
+        subTaskID,
       method: 'PUT',
       data: {
         subtaskName: subTaskName, //
@@ -2070,7 +2159,12 @@ async function getAllTaskInDefaultBoardData(projectID) {
 
   return request(
     {
-      url: baseURL + GET_MY_TASKS_BY_PROJECT + projectID + '/tasks?userId=' + userID,
+      url:
+        baseURL +
+        GET_MY_TASKS_BY_PROJECT +
+        projectID +
+        '/tasks?userId=' +
+        userID,
       method: 'GET',
     },
     true,
@@ -2146,7 +2240,8 @@ async function editSprintData(
 
   return request(
     {
-      url: baseURL + ADD_EDIT_SPRINT_BY_PROJECT + '/' + projectID + '/' + sprintId,
+      url:
+        baseURL + ADD_EDIT_SPRINT_BY_PROJECT + '/' + projectID + '/' + sprintId,
       method: 'PUT',
       data: {
         sprintName: sprintName,
@@ -2178,7 +2273,8 @@ async function changeSprint(
   return request(
     {
       url:
-        baseURL + UPDATE_SPRINT +
+        baseURL +
+        UPDATE_SPRINT +
         '/' +
         selectedProjectID +
         '/tasks/' +
@@ -2208,7 +2304,8 @@ async function addMainTaskToProjectData(taskName, selectedProjectID) {
 
   return request(
     {
-      url: baseURL + ADD_MAIN_TASK_TO_PROJECT + '/' + selectedProjectID + '/tasks',
+      url:
+        baseURL + ADD_MAIN_TASK_TO_PROJECT + '/' + selectedProjectID + '/tasks',
       method: 'POST',
       data: {
         taskName: taskName,
@@ -2236,7 +2333,8 @@ async function addSubTaskToProjectData(taskName, selectedProjectID, taskID) {
 
   return request(
     {
-      url: baseURL + ADD_MAIN_TASK_TO_PROJECT + '/' + selectedProjectID + '/tasks',
+      url:
+        baseURL + ADD_MAIN_TASK_TO_PROJECT + '/' + selectedProjectID + '/tasks',
       method: 'POST',
       data: {
         taskName: taskName,
@@ -2275,7 +2373,12 @@ async function filterTaskByDate(
 
   return request(
     {
-      url: baseURL + FILTER_TASK_IN_PROJECT + '/' + selectedProjectID + '/tasks/filter',
+      url:
+        baseURL +
+        FILTER_TASK_IN_PROJECT +
+        '/' +
+        selectedProjectID +
+        '/tasks/filter',
       method: 'GET',
     },
     true,
@@ -2302,7 +2405,12 @@ async function filterTaskByUser(selectedProjectID, assignee) {
 
   return request(
     {
-      url: baseURL + FILTER_TASK_IN_PROJECT + '/' + selectedProjectID + '/tasks/filter',
+      url:
+        baseURL +
+        FILTER_TASK_IN_PROJECT +
+        '/' +
+        selectedProjectID +
+        '/tasks/filter',
       method: 'GET',
     },
     true,
@@ -2329,7 +2437,12 @@ async function filterTaskByTaskTypeData(selectedProjectID, issueType) {
 
   return request(
     {
-      url: baseURL + FILTER_TASK_IN_PROJECT + '/' + selectedProjectID + '/tasks/filter',
+      url:
+        baseURL +
+        FILTER_TASK_IN_PROJECT +
+        '/' +
+        selectedProjectID +
+        '/tasks/filter',
       method: 'GET',
     },
     true,
@@ -2441,15 +2554,22 @@ async function updateParentToChild(projectId, taskId, newParent) {
   let headers = {
     Accept: 'application/json',
     'Content-Type': 'application/json',
-    user: userIDHeder
+    user: userIDHeder,
   };
 
   return request(
     {
-      url: baseURL + UPDATE_PARENT_TO_CHILD + '/' + projectId + '/tasks/' + taskId + '/parent/transition',
+      url:
+        baseURL +
+        UPDATE_PARENT_TO_CHILD +
+        '/' +
+        projectId +
+        '/tasks/' +
+        taskId +
+        '/parent/transition',
       method: 'PUT',
       data: {
-         newParent: newParent,
+        newParent: newParent,
       },
     },
     true,
@@ -2460,95 +2580,25 @@ async function updateParentToChild(projectId, taskId, newParent) {
 async function getTaskLogData(taskId) {
   let baseURL = null;
   baseURL = await AsyncStorage.getItem('baseURL');
-    let userID = null;
-    userID = await AsyncStorage.getItem('userID');
-  
-    let headers = {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    };
-  
-    return request(
-      {
-        url: baseURL + GET_TASK_LOG + '/' + taskId,
-        method: 'GET',
-      },
-      true,
-      headers,
-    );
-  }
+  let userID = null;
+  userID = await AsyncStorage.getItem('userID');
 
-  async function updateTaskIssueTypeData(projectID, taskID, selectedIssueTypeId) {
-    let baseURL = null;
-  baseURL = await AsyncStorage.getItem('baseURL');
-    let userIDHeder = null;
-    userIDHeder = await AsyncStorage.getItem('userID');
-  
-    let headers = {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-      user: userIDHeder,
-    };
-  
-    return request(
-      {
-        url: baseURL + UPDATE_PROJECT_TASK + '/' + projectID + '/tasks/' + taskID,
-        method: 'PUT',
-        data: {
-          issueType: selectedIssueTypeId,
-          taskType: 'project',
-        },
-      },
-      true,
-      headers,
-    );
-  }
-
-  async function getChildTasksOfParentData(selectedProjectID, taskId) {
-    let baseURL = null;
-  baseURL = await AsyncStorage.getItem('baseURL');
-    let userID = null;
-    userID = await AsyncStorage.getItem('userID');
-  
-    let headers = {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-      user: userID,
-    };
-  
-    return request(
-      {
-        url: baseURL + GET_CHILD_TASK_OF_PARENT + '/' + selectedProjectID + '/tasks/'+ taskId +'/children',
-        method: 'GET',
-      },
-      true,
-      headers,
-    );
+  let headers = {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
   };
 
-async function getFilesInGroupTaskData(selectedGroupTaskID, selectedTaskID) {
-  let baseURL = null;
-  baseURL = await AsyncStorage.getItem('baseURL');
-    let userIDHeder = null;
-    userIDHeder = await AsyncStorage.getItem('userID');
-  
-    let headers = {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-      user: userIDHeder,
-    };
-  
-    return request(
-      {
-        url: baseURL + GET_GROUP_TASK_DATA + '/' + selectedGroupTaskID + '/tasks/' + selectedTaskID + '/files',
-        method: 'GET',
-      },
-      true,
-      headers,
-    );
-};
+  return request(
+    {
+      url: baseURL + GET_TASK_LOG + '/' + taskId,
+      method: 'GET',
+    },
+    true,
+    headers,
+  );
+}
 
-async function deleteFileInGroupTaskData(selectedGroupTaskID, selectedTaskID,taskFileId) {
+async function updateTaskIssueTypeData(projectID, taskID, selectedIssueTypeId) {
   let baseURL = null;
   baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
@@ -2562,15 +2612,111 @@ async function deleteFileInGroupTaskData(selectedGroupTaskID, selectedTaskID,tas
 
   return request(
     {
-      url: baseURL + GET_GROUP_TASK_DATA + '/' + selectedGroupTaskID + '/tasks/' + selectedTaskID + '/upload/'+taskFileId,
+      url: baseURL + UPDATE_PROJECT_TASK + '/' + projectID + '/tasks/' + taskID,
+      method: 'PUT',
+      data: {
+        issueType: selectedIssueTypeId,
+        taskType: 'project',
+      },
+    },
+    true,
+    headers,
+  );
+}
+
+async function getChildTasksOfParentData(selectedProjectID, taskId) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
+  let userID = null;
+  userID = await AsyncStorage.getItem('userID');
+
+  let headers = {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+    user: userID,
+  };
+
+  return request(
+    {
+      url:
+        baseURL +
+        GET_CHILD_TASK_OF_PARENT +
+        '/' +
+        selectedProjectID +
+        '/tasks/' +
+        taskId +
+        '/children',
+      method: 'GET',
+    },
+    true,
+    headers,
+  );
+}
+
+async function getFilesInGroupTaskData(selectedGroupTaskID, selectedTaskID) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
+  let userIDHeder = null;
+  userIDHeder = await AsyncStorage.getItem('userID');
+
+  let headers = {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+    user: userIDHeder,
+  };
+
+  return request(
+    {
+      url:
+        baseURL +
+        GET_GROUP_TASK_DATA +
+        '/' +
+        selectedGroupTaskID +
+        '/tasks/' +
+        selectedTaskID +
+        '/files',
+      method: 'GET',
+    },
+    true,
+    headers,
+  );
+}
+
+async function deleteFileInGroupTaskData(
+  selectedGroupTaskID,
+  selectedTaskID,
+  taskFileId,
+) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
+  let userIDHeder = null;
+  userIDHeder = await AsyncStorage.getItem('userID');
+
+  let headers = {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+    user: userIDHeder,
+  };
+
+  return request(
+    {
+      url:
+        baseURL +
+        GET_GROUP_TASK_DATA +
+        '/' +
+        selectedGroupTaskID +
+        '/tasks/' +
+        selectedTaskID +
+        '/upload/' +
+        taskFileId,
       method: 'DELETE',
     },
     true,
     headers,
   );
-};
+}
 
-async function addFileToGroupTask(file,selectedGroupTaskID, selectedTaskID) {
+async function addFileToGroupTask(file, selectedGroupTaskID, selectedTaskID) {
   let baseURL = null;
   baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
@@ -2593,14 +2739,21 @@ async function addFileToGroupTask(file,selectedGroupTaskID, selectedTaskID) {
 
   return request(
     {
-      url: baseURL + GET_GROUP_TASK_DATA + '/' + selectedGroupTaskID + '/tasks/' + selectedTaskID + '/upload',
+      url:
+        baseURL +
+        GET_GROUP_TASK_DATA +
+        '/' +
+        selectedGroupTaskID +
+        '/tasks/' +
+        selectedTaskID +
+        '/upload',
       method: 'POST',
       data: formData,
     },
     true,
     headers,
   );
-};
+}
 
 async function getChildTasksOfTaskGroupData(selectedGroupTaskID, taskId) {
   let baseURL = null;
@@ -2616,15 +2769,26 @@ async function getChildTasksOfTaskGroupData(selectedGroupTaskID, taskId) {
 
   return request(
     {
-      url: baseURL + GET_CHILD_TASK_OF_TASK_GROUP + '/' + selectedGroupTaskID + '/tasks/'+ taskId +'/children',
+      url:
+        baseURL +
+        GET_CHILD_TASK_OF_TASK_GROUP +
+        '/' +
+        selectedGroupTaskID +
+        '/tasks/' +
+        taskId +
+        '/children',
       method: 'GET',
     },
     true,
     headers,
   );
-};
+}
 
-async function updateParentToChildInGroup(selectedGroupTaskID, taskId, newParent) {
+async function updateParentToChildInGroup(
+  selectedGroupTaskID,
+  taskId,
+  newParent,
+) {
   let baseURL = null;
   baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
@@ -2633,21 +2797,28 @@ async function updateParentToChildInGroup(selectedGroupTaskID, taskId, newParent
   let headers = {
     Accept: 'application/json',
     'Content-Type': 'application/json',
-    user: userIDHeder
+    user: userIDHeder,
   };
 
   return request(
     {
-      url: baseURL + UPDATE_PARENT_TO_CHILD_IN_GROUP + '/' + selectedGroupTaskID + '/tasks/' + taskId + '/parent/transition',
+      url:
+        baseURL +
+        UPDATE_PARENT_TO_CHILD_IN_GROUP +
+        '/' +
+        selectedGroupTaskID +
+        '/tasks/' +
+        taskId +
+        '/parent/transition',
       method: 'PUT',
       data: {
-         newParent: newParent,
+        newParent: newParent,
       },
     },
     true,
     headers,
   );
-};
+}
 
 async function getWorkloadWithCompletionUser() {
   let baseURL = null;
@@ -2659,13 +2830,17 @@ async function getWorkloadWithCompletionUser() {
     Accept: 'application/json',
     'Content-Type': 'application/json',
     user: userIDHeder,
-    from : 'all',
-    to : 'all',
+    from: 'all',
+    to: 'all',
   };
 
   return request(
     {
-      url: baseURL + GET_ALL_USERS_WORKLOAD_WITH_COMPLETION + '/workload?assignee='+userIDHeder,
+      url:
+        baseURL +
+        GET_ALL_USERS_WORKLOAD_WITH_COMPLETION +
+        '/workload?assignee=' +
+        userIDHeder,
       method: 'GET',
     },
     true,
@@ -2699,7 +2874,12 @@ async function getOrganizationData(workSpace, version) {
 
   return request(
     {
-      url: GET_ORGANIZATION_WORK_SPACE + 'workspace=' + workSpace + '&current_version=' + version,
+      url:
+        GET_ORGANIZATION_WORK_SPACE +
+        'workspace=' +
+        workSpace +
+        '&current_version=' +
+        version,
       method: 'GET',
     },
     false,
@@ -2710,24 +2890,24 @@ async function getOrganizationData(workSpace, version) {
 async function getUserSkillMapData(userID) {
   let baseURL = null;
   baseURL = await AsyncStorage.getItem('baseURL');
-    let userIDHeder = null;
-    userIDHeder = await AsyncStorage.getItem('userID');
-  
-    let headers = {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-      userID: userIDHeder,
-    };
-  
-    return request(
-      {
-        url: baseURL + GET_USER_SKILL_MAP + userID + '/skillmap/profile',
-        method: 'GET',
-      },
-      true,
-      headers,
-    );
-};
+  let userIDHeder = null;
+  userIDHeder = await AsyncStorage.getItem('userID');
+
+  let headers = {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+    userID: userIDHeder,
+  };
+
+  return request(
+    {
+      url: baseURL + GET_USER_SKILL_MAP + userID + '/skillmap/profile',
+      method: 'GET',
+    },
+    true,
+    headers,
+  );
+}
 
 async function setOneSignalUserID(oneSignalUserID) {
   let baseURL = null;
@@ -2750,7 +2930,7 @@ async function setOneSignalUserID(oneSignalUserID) {
         subscriptionId: oneSignalUserID,
         provider: 'OneSignal',
         platform: 'Mobile',
-        notificationStatus: true 
+        notificationStatus: true,
       },
     },
     true,
@@ -2758,12 +2938,15 @@ async function setOneSignalUserID(oneSignalUserID) {
   );
 }
 
-async function setOneSignalNotificationStatusData(oneSignalUserID, notificationStatus) {
+async function setOneSignalNotificationStatusData(
+  oneSignalUserID,
+  notificationStatus,
+) {
   let baseURL = null;
   baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
   userIDHeder = await AsyncStorage.getItem('userID');
-  
+
   let headers = {
     Accept: 'application/json',
     'Content-Type': 'application/json',
@@ -2775,11 +2958,11 @@ async function setOneSignalNotificationStatusData(oneSignalUserID, notificationS
       url: baseURL + SET_ONE_SIGNAL_USER_UNSUBSCRIBE,
       method: 'PUT',
       data: {
-        subscriberId: userIDHeder, 
-        subscriptionId: oneSignalUserID, 
-        provider: 'OneSignal', 
-        platform : 'Mobile', 
-        notificationStatus: notificationStatus 
+        subscriberId: userIDHeder,
+        subscriptionId: oneSignalUserID,
+        provider: 'OneSignal',
+        platform: 'Mobile',
+        notificationStatus: notificationStatus,
       },
     },
     true,
@@ -2889,7 +3072,7 @@ const APIServices = {
   getOrganizationData,
   getUserSkillMapData,
   setOneSignalUserID,
-  setOneSignalNotificationStatusData
+  setOneSignalNotificationStatusData,
 };
 
 export default APIServices;
