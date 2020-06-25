@@ -18,10 +18,9 @@ EStyleSheet.build({$rem: entireScreenWidth / 380});
 import FadeIn from 'react-native-fade-in-image';
 import Loader from '../../../components/Loader';
 import {NavigationEvents} from 'react-navigation';
-// import io from 'socket.io-client';
+import io from 'socket.io-client';
 import APIServices from '../../../services/APIServices';
 import moment from 'moment';
-import SockJS from 'sockjs-client/dist/sockjs.js';
 
 class ChatScreen extends Component {
   constructor(props) {
@@ -57,33 +56,23 @@ class ChatScreen extends Component {
   }
 
   componentDidMount() {
-
-    this.sock = new SockJS('https://mydomain.com/my_prefix');
-    console.log("ssssssssssssssssssssssssss",this.sock)
-    this.sock.onopen = function() {
-      
-      console.log('open');
-      sock.send('test');
-  };
-
-    // this.socket = io('http://pmtool.devops.arimac.xyz/api/pm-service/chat');
-    // console.log("dddddddddddddddd",this.socket)
-    // this.socket.on('chat message', msg => {
-    //   let comment = {
-    //     email: 'ron@r.com',
-    //     firstName: 'Ronald',
-    //     idpUserId: 'fea0bb2b-51f1-406b-90f2-9a7e8f7d0440',
-    //     isActive: true,
-    //     lastName: 'veesley',
-    //     profileImage: null,
-    //     userId: 'fd3abd08-c4b3-4bcd-919d-7b4e59c968aa',
-    //     userName: 'ron',
-    //     msg: msg,
-    //     dateTime: moment().format('hh:mm A'),
-    //     // dateTime: moment(new Date()).fromNow()
-    //   };
-    //   this.setState({users: this.state.users.concat(comment)});
-    // });
+    this.socket = io('http://192.168.1.6:3000');
+    this.socket.on('chat message', msg => {
+      let comment = {
+        email: 'ron@r.com',
+        firstName: 'Ronald',
+        idpUserId: 'fea0bb2b-51f1-406b-90f2-9a7e8f7d0440',
+        isActive: true,
+        lastName: 'veesley',
+        profileImage: null,
+        userId: 'fd3abd08-c4b3-4bcd-919d-7b4e59c968aa',
+        userName: 'ron',
+        msg: msg,
+        dateTime: moment().format('hh:mm A'),
+        // dateTime: moment(new Date()).fromNow()
+      };
+      this.setState({users: this.state.users.concat(comment)});
+    });
     // this.fetchData();
   }
 
@@ -171,8 +160,7 @@ class ChatScreen extends Component {
   };
 
   submitChatMessage() {
-    // this.socket.emit('chat message', this.state.chatText);
-    this.sock.send('test');
+    this.socket.emit('chat message', this.state.chatText);
     this.setState({chatText: ''});
   }
 
