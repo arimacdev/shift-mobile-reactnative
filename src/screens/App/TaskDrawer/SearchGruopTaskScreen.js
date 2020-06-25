@@ -120,7 +120,7 @@ const styles = EStyleSheet.create({
   },
   projectFilerView: {
     backgroundColor: colors.projectBgColor,
-    borderRadius: 5,
+    borderRadius: '5rem',
     marginTop: '17rem',
     marginBottom: '12rem',
     flexDirection: 'row',
@@ -136,12 +136,10 @@ const styles = EStyleSheet.create({
     textAlign: 'center',
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
-    textAlign: 'center',
-    // fontWeight: 'bold',
   },
   projectView: {
     backgroundColor: colors.projectBgColor,
-    borderRadius: 5,
+    borderRadius: '5rem',
     height: '60rem',
     marginTop: '7rem',
     flexDirection: 'row',
@@ -168,8 +166,8 @@ const styles = EStyleSheet.create({
     width: '5rem',
     height: '60rem',
     alignItems: 'flex-end',
-    borderTopRightRadius: 5,
-    borderBottomRightRadius: 5,
+    borderTopRightRadius: '5rem',
+    borderBottomRightRadius: '5rem',
   },
   dropIcon: {
     width: '13rem',
@@ -190,7 +188,7 @@ const styles = EStyleSheet.create({
   },
   groupTaskView: {
     backgroundColor: colors.projectBgColor,
-    borderRadius: 5,
+    borderRadius: '5rem',
     height: '60rem',
     marginTop: '7rem',
     flexDirection: 'row',

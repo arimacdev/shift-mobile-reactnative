@@ -254,12 +254,11 @@ const styles = EStyleSheet.create({
   button: {
     flexDirection: 'row',
     backgroundColor: colors.lightBlue,
-    borderRadius: 5,
+    borderRadius: '5rem',
     marginTop: '17rem',
     marginBottom: '17rem',
     flexDirection: 'row',
     alignItems: 'center',
-    // justifyContent: 'center',
     paddingHorizontal: '12rem',
     height: '55rem',
     marginHorizontal: '20rem',
@@ -274,13 +273,13 @@ const styles = EStyleSheet.create({
   addIcon: {
     width: '28rem',
     height: '28rem',
-    marginRight: 10,
+    marginRight: '10rem',
   },
   bottomBarIcon: {
     width: '20rem',
     height: '20rem',
-    marginRight: 15,
-    marginLeft: 10,
+    marginRight: '15rem',
+    marginLeft: '10rem',
   },
   checkBoxContainer: {
     flex: 1,
@@ -306,7 +305,7 @@ const styles = EStyleSheet.create({
     position: 'absolute',
     bottom: 0,
     width: '100%',
-    marginBottom: 15,
+    marginBottom: '15rem',
   },
   alertContainerStyle: {
     bottom: 0,

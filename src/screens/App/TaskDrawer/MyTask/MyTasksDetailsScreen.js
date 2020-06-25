@@ -1653,7 +1653,7 @@ const styles = EStyleSheet.create({
   },
   projectFilerView: {
     backgroundColor: colors.lightBlue,
-    borderRadius: 5,
+    borderRadius: '5rem',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
@@ -1661,7 +1661,7 @@ const styles = EStyleSheet.create({
     width: '100rem',
   },
   projectView: {
-    borderRadius: 5,
+    borderRadius: '5rem',
     marginTop: '20rem',
     flexDirection: 'row',
     alignItems: 'center',
@@ -1735,7 +1735,7 @@ const styles = EStyleSheet.create({
   },
   subTasksListView: {
     backgroundColor: colors.projectBgColor,
-    borderRadius: 5,
+    borderRadius: '5rem',
     height: '45rem',
     marginTop: '7rem',
     flexDirection: 'row',
@@ -1775,7 +1775,7 @@ const styles = EStyleSheet.create({
   taskTypeDropDownView: {
     flex: 1,
     backgroundColor: colors.projectBgColor,
-    borderRadius: 5,
+    borderRadius: '5rem',
     marginTop: '5rem',
     marginBottom: '5rem',
     paddingHorizontal: '12rem',
@@ -1822,8 +1822,8 @@ const styles = EStyleSheet.create({
   },
   filesView: {
     backgroundColor: colors.projectBgColor,
-    borderRadius: 5,
-    borderWidth: 1,
+    borderRadius: '5rem',
+    borderWidth: '1rem',
     borderColor: colors.lighterGray,
     height: '50rem',
     marginTop: '7rem',

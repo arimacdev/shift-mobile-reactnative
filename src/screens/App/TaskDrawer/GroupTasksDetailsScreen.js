@@ -2332,7 +2332,7 @@ const styles = EStyleSheet.create({
   buttonDelete: {
     flexDirection: 'row',
     backgroundColor: colors.lightRed,
-    borderRadius: 5,
+    borderRadius: '5rem',
     marginTop: '40rem',
     marginBottom: '30rem',
     flexDirection: 'row',
@@ -2500,7 +2500,7 @@ const styles = EStyleSheet.create({
   filesView: {
     backgroundColor: colors.projectBgColor,
     borderRadius: '5rem',
-    borderWidth: 1,
+    borderWidth: '1rem',
     borderColor: colors.lighterGray,
     height: '50rem',
     marginTop: '7rem',

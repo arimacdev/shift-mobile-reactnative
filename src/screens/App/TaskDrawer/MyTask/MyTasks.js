@@ -324,7 +324,7 @@ const styles = EStyleSheet.create({
   },
   projectFilerView: {
     backgroundColor: colors.projectBgColor,
-    borderRadius: 5,
+    borderRadius: '5rem',
     marginTop: '17rem',
     marginBottom: '12rem',
     flexDirection: 'row',
@@ -343,7 +343,7 @@ const styles = EStyleSheet.create({
   },
   taskView: {
     backgroundColor: colors.projectBgColor,
-    borderRadius: 5,
+    borderRadius: '5rem',
     height: '60rem',
     marginTop: '7rem',
     flexDirection: 'row',
@@ -377,7 +377,7 @@ const styles = EStyleSheet.create({
   avatarIcon: {
     width: '20rem',
     height: '20rem',
-    marginLeft: 10,
+    marginLeft: '10rem',
   },
   statusView: {
     alignItems: 'center',
@@ -391,48 +391,16 @@ const styles = EStyleSheet.create({
     width: '40rem',
     height: '40rem',
   },
-  bottomBarContainer: {
-    position: 'absolute',
-    bottom: 0,
-    height: 80,
-    width: '100%',
-    backgroundColor: colors.projectBgColor,
-  },
-  bottomBarInnerContainer: {
-    flexDirection: 'row',
-    height: 80,
-  },
-  bottomItemView: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'row',
-  },
-  bottomItemTouch: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: '100%',
-  },
-  horizontalLine: {
-    backgroundColor: colors.gray,
-    width: 1,
-    height: 40,
-  },
-  bottomBarIcon: {
-    width: '20rem',
-    height: '20rem',
-  },
   landing: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
   addNewFieldView: {
-    backgroundColor: '#e5e9ef',
-    borderRadius: 5,
-    borderWidth: 2,
-    borderColor: '#e5e9ef',
+    backgroundColor: colors.colorSolitude,
+    borderRadius: '5rem',
+    borderWidth: '2rem',
+    borderColor: colors.colorSolitude,
     marginTop: '10rem',
     marginBottom: '0rem',
     flexDirection: 'row',
