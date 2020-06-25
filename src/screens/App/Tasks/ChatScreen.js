@@ -20,6 +20,7 @@ import Loader from '../../../components/Loader';
 import {NavigationEvents} from 'react-navigation';
 import io from 'socket.io-client';
 import APIServices from '../../../services/APIServices';
+import moment from 'moment';
 
 class ChatScreen extends Component {
   constructor(props) {
@@ -57,9 +58,22 @@ class ChatScreen extends Component {
   componentDidMount() {
     this.socket = io('http://192.168.1.4:3000');
     this.socket.on('chat message', msg => {
-      this.setState({chatMessages: [...this.state.chatMessages, msg]});
+      let comment = {
+        email: 'ron@r.com',
+        firstName: 'Ronald',
+        idpUserId: 'fea0bb2b-51f1-406b-90f2-9a7e8f7d0440',
+        isActive: true,
+        lastName: 'veesley',
+        profileImage: null,
+        userId: 'fd3abd08-c4b3-4bcd-919d-7b4e59c968aa',
+        userName: 'ron',
+        msg: msg,
+        dateTime: moment().format('hh:mm A'),
+        // dateTime: moment(new Date()).fromNow()
+      };
+      this.setState({users: this.state.users.concat(comment)});
     });
-    this.fetchData();
+    // this.fetchData();
   }
 
   async fetchData() {
@@ -104,20 +118,13 @@ class ChatScreen extends Component {
         {this.userImage(item)}
         <View style={{flex: 1}}>
           <View style={styles.timeView}>
-            <Text style={styles.textTime}>
-              {/* {item.firstName} */}
-              an hour ago
-            </Text>
+            <Text style={styles.textTime}>{item.dateTime}</Text>
           </View>
           <View style={styles.nameView}>
             <Text style={styles.text}>
-              {/* {item.firstName} */}
-              Indika Wijesooriya
+              {item.firstName} {item.lastName}
             </Text>
-            <Text style={styles.textChat}>
-              {/* {item.firstName} */}
-              Chameera Aiya i just made the designing
-            </Text>
+            <Text style={styles.textChat}>{item.msg}</Text>
           </View>
         </View>
       </View>
@@ -162,22 +169,21 @@ class ChatScreen extends Component {
     let isFetching = this.state.isFetching;
     let usersLoading = this.props.usersLoading;
 
-    const chatMessages = this.state.chatMessages.map(chatMessage => (
-      <Text style={{borderWidth: 2, top: 500}}>{chatMessage}</Text>
-    ));
-
     return (
       <View style={styles.container}>
         <NavigationEvents onWillFocus={payload => this.loadUsers(payload)} />
-
-        {chatMessages}
         <FlatList
           style={styles.flalList}
           data={users}
-          renderItem={({item}) => this.renderUserListList()}
+          renderItem={item => this.renderUserListList(item.item)}
           keyExtractor={item => item.projId}
           onRefresh={() => this.onRefresh()}
           refreshing={isFetching}
+          ref={ref => (this.flatList = ref)}
+          onContentSizeChange={() =>
+            this.flatList.scrollToEnd({animated: true})
+          }
+          onLayout={() => this.flatList.scrollToEnd({animated: true})}
         />
         <View style={styles.chatFieldView}>
           <View style={{flex: 1}}>
@@ -187,7 +193,6 @@ class ChatScreen extends Component {
               value={this.state.chatText}
               multiline={true}
               onChangeText={text => this.onChatTextChange(text)}
-              // onSubmitEditing={() => this.submitChatMessage()}
               // onContentSizeChange={e =>
               //   this.updateSize(e.nativeEvent.contentSize.height)
               // }
@@ -244,7 +249,7 @@ const styles = EStyleSheet.create({
     flexDirection: 'row',
   },
   flalList: {
-    marginTop: '20rem',
+    // marginTop: '20rem',
     marginBottom: '10rem',
   },
   taskStateIcon: {
