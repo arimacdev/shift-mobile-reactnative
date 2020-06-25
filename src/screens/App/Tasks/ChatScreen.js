@@ -160,8 +160,10 @@ class ChatScreen extends Component {
   };
 
   submitChatMessage() {
-    this.socket.emit('chat message', this.state.chatText);
-    this.setState({chatText: ''});
+    if (this.state.chatText != '') {
+      this.socket.emit('chat message', this.state.chatText);
+      this.setState({chatText: ''});
+    }
   }
 
   render() {
