@@ -326,7 +326,6 @@ const styles = EStyleSheet.create({
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
-    // width: '95%'
   },
   boxTextInput: {
     fontSize: '12rem',
@@ -336,7 +335,6 @@ const styles = EStyleSheet.create({
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
     bottom: '5rem',
-    // width: '95%'
   },
   checkBoxText: {
     fontSize: '12rem',
@@ -345,19 +343,16 @@ const styles = EStyleSheet.create({
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
-    // width: '95%'
   },
   boxText: {
     fontSize: '12rem',
     color: 'black',
     textAlign: 'center',
-    // lineHeight: '10rem',
     fontWeight: 'bold',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
     paddingTop: '20rem',
     marginHorizontal: '4rem',
-    // width: '95%'
   },
   button: {
     flexDirection: 'row',
@@ -366,7 +361,6 @@ const styles = EStyleSheet.create({
     marginTop: '17rem',
     flexDirection: 'row',
     alignItems: 'center',
-    // justifyContent: 'center',
     paddingHorizontal: '12rem',
     height: '55rem',
     marginHorizontal: '20rem',

@@ -339,7 +339,6 @@ const styles = EStyleSheet.create({
     textAlign: 'center',
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
-    textAlign: 'center',
   },
   taskView: {
     backgroundColor: colors.projectBgColor,

@@ -106,8 +106,6 @@ const styles = EStyleSheet.create({
     fontSize: '14rem',
     color: colors.darkBlue,
     textAlign: 'center',
-    // lineHeight: '15rem',
-    // marginTop: '16rem',
     fontWeight: 'bold',
     fontFamily: 'CircularStd-Book',
   },
@@ -159,7 +157,6 @@ const styles = EStyleSheet.create({
     textAlign: 'center',
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Book',
-    textAlign: 'center',
     fontWeight: 'bold',
   },
 });

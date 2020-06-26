@@ -198,7 +198,6 @@ const styles = EStyleSheet.create({
     textAlign: 'center',
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Black',
-    textAlign: 'center',
     fontWeight: 'bold',
   },
   bottomContainer: {

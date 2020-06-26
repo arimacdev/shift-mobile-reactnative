@@ -922,7 +922,6 @@ const styles = EStyleSheet.create({
     textAlign: 'center',
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
-    textAlign: 'center',
   },
   projectView: {
     backgroundColor: colors.projectBgColor,
@@ -1010,7 +1009,6 @@ const styles = EStyleSheet.create({
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
-    // width: '95%'
   },
   calendarIcon: {
     width: '23rem',
