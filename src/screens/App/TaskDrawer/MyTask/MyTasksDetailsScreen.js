@@ -39,6 +39,7 @@ import * as Animatable from 'react-native-animatable';
 import Modal from 'react-native-modal';
 import ImagePicker from 'react-native-image-picker';
 import MessageShowModal from '../../../../components/MessageShowModal';
+import Utils from '../../../../utils/Utils';
 
 const Placeholder = () => (
   <View style={styles.landing}>
@@ -230,6 +231,10 @@ class MyTasksDetailsScreen extends Component {
       this.setState({dataLoading: false, taskResult: taskResult});
     } else {
       this.setState({dataLoading: false});
+      if(error.data.status == 404){
+        Utils.showAlert(true,'','This task was deleted',this.props);
+        this.props.navigation.goBack();
+      }
     }
   }
 

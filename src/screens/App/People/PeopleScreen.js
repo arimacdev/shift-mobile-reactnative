@@ -296,7 +296,7 @@ const styles = EStyleSheet.create({
   },
   subText: {
     fontSize: '10rem',
-    color: '#b9b9b9',
+    color: colors.colorSilver,
     textAlign: 'center',
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
@@ -306,7 +306,7 @@ const styles = EStyleSheet.create({
   },
   subTextName: {
     fontSize: '12rem',
-    color: '#080848',
+    color: colors.colorMidnightExpress,
     textAlign: 'center',
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
