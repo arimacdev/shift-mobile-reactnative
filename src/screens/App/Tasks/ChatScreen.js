@@ -64,7 +64,7 @@ class ChatScreen extends Component {
         this.setState({status: 'Disconnected (not graceful)'});
       },
     );
-    this.props.stompContext.removeStompClient();
+    // this.props.stompContext.removeStompClient();
     // this.rootSubscribed.unsubscribe();
   }
 
