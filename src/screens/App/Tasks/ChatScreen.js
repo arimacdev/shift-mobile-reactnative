@@ -18,9 +18,10 @@ EStyleSheet.build({$rem: entireScreenWidth / 380});
 import FadeIn from 'react-native-fade-in-image';
 import Loader from '../../../components/Loader';
 import {NavigationEvents} from 'react-navigation';
-import io from 'socket.io-client';
+// import io from 'socket.io-client';
 import APIServices from '../../../services/APIServices';
 import moment from 'moment';
+import {StompEventTypes, withStomp, Client} from 'react-stompjs';
 
 class ChatScreen extends Component {
   constructor(props) {
@@ -34,6 +35,7 @@ class ChatScreen extends Component {
 
       chatMessage: '',
       chatMessages: [],
+      status: 'Not Connected',
     };
   }
 
@@ -55,25 +57,85 @@ class ChatScreen extends Component {
     }
   }
 
+  componentWillUnmount() {
+    this.props.stompContext.removeStompEventListener(
+      StompEventTypes.WebSocketClose,
+      () => {
+        this.setState({status: 'Disconnected (not graceful)'});
+      },
+    );
+    this.props.stompContext.removeStompClient();
+    // this.rootSubscribed.unsubscribe();
+  }
+
   componentDidMount() {
-    this.socket = io('http://192.168.1.6:3000');
-    this.socket.on('chat message', msg => {
-      let comment = {
-        email: 'ron@r.com',
-        firstName: 'Ronald',
-        idpUserId: 'fea0bb2b-51f1-406b-90f2-9a7e8f7d0440',
-        isActive: true,
-        lastName: 'veesley',
-        profileImage: null,
-        userId: 'fd3abd08-c4b3-4bcd-919d-7b4e59c968aa',
-        userName: 'ron',
-        msg: msg,
-        dateTime: moment().format('hh:mm A'),
-        // dateTime: moment(new Date()).fromNow()
-      };
-      this.setState({users: this.state.users.concat(comment)});
-    });
+    // this.socket = io('http://192.168.1.6:3000');
+    // this.socket.on('chat message', msg => {
+    //   let comment = {
+    //     email: 'ron@r.com',
+    //     firstName: 'Ronald',
+    //     idpUserId: 'fea0bb2b-51f1-406b-90f2-9a7e8f7d0440',
+    //     isActive: true,
+    //     lastName: 'veesley',
+    //     profileImage: null,
+    //     userId: 'fd3abd08-c4b3-4bcd-919d-7b4e59c968aa',
+    //     userName: 'ron',
+    //     msg: msg,
+    //     dateTime: moment().format('hh:mm A'),
+    //     // dateTime: moment(new Date()).fromNow()
+    //   };
+    //   this.setState({users: this.state.users.concat(comment)});
+    // });
     // this.fetchData();
+
+    this.props.stompContext.addStompEventListener(
+      StompEventTypes.Connect,
+      () => {
+        this.setState({status: 'Connected'});
+        this.rootSubscribed = this.props.stompContext
+          .getStompClient()
+          .subscribe(
+            '/app/chat/' + 'eabde9b1-e57f-483f-986a-e5fdcdcb5c32',
+            message => {
+              console.log('kkkkkkkkkkkkk', message.body);
+              let comment = {
+                email: 'ron@r.com',
+                firstName: 'Ronald',
+                idpUserId: 'fea0bb2b-51f1-406b-90f2-9a7e8f7d0440',
+                isActive: true,
+                lastName: 'veesley',
+                profileImage: null,
+                userId: 'fd3abd08-c4b3-4bcd-919d-7b4e59c968aa',
+                userName: 'ron',
+                msg: message.body,
+                dateTime: moment().format('hh:mm A'),
+                // dateTime: moment(new Date()).fromNow()
+              };
+              this.setState({users: this.state.users.concat(comment)});
+            },
+          );
+
+        console.log('lllllllllllllllllllllllllll', this.rootSubscribed);
+      },
+    );
+    this.props.stompContext.addStompEventListener(
+      StompEventTypes.Disconnect,
+      () => {
+        this.setState({status: 'Disconnected'});
+      },
+    );
+    this.props.stompContext.addStompEventListener(
+      StompEventTypes.WebSocketClose,
+      () => {
+        this.setState({status: 'Disconnected (not graceful)'});
+      },
+    );
+    this.props.stompContext.newStompClient(
+      'https://pmtool.devops.arimac.xyz/api/pm-service/chat',
+      '',
+      '',
+      '/',
+    );
   }
 
   async fetchData() {
@@ -92,7 +154,7 @@ class ChatScreen extends Component {
     //     this.showAlert('', error.data.message);
     //   });
     this.setState({users: []}, function() {
-      this.props.getAllUsers();
+      // this.props.getAllUsers();
     });
   }
 
@@ -143,7 +205,7 @@ class ChatScreen extends Component {
 
   loadUsers() {
     this.setState({users: []}, function() {
-      this.props.getAllUsers();
+      // this.props.getAllUsers();
     });
   }
 
@@ -161,7 +223,41 @@ class ChatScreen extends Component {
 
   submitChatMessage() {
     if (this.state.chatText != '') {
-      this.socket.emit('chat message', this.state.chatText);
+      // this.socket.emit('chat message', this.state.chatText);
+      this.props.stompContext.getStompClient().publish({
+        destination: '/app/chat/' + 'eabde9b1-e57f-483f-986a-e5fdcdcb5c32',
+        headers: {priority: 9},
+        body: JSON.stringify({
+          fromLogin: 'from',
+          message: 'naveen!!',
+          actionType: 'comment',
+        }),
+      });
+
+      let comment = {
+        email: 'ron@r.com',
+        firstName: 'Ronald',
+        idpUserId: 'fea0bb2b-51f1-406b-90f2-9a7e8f7d0440',
+        isActive: true,
+        lastName: 'veesley',
+        profileImage: null,
+        userId: 'fd3abd08-c4b3-4bcd-919d-7b4e59c968aa',
+        userName: 'ron',
+        msg: this.state.chatText,
+        dateTime: moment().format('hh:mm A'),
+        // dateTime: moment(new Date()).fromNow()
+      };
+      this.setState({users: this.state.users.concat(comment)});
+
+      // this.props.stompContext.getStompClient().publish(
+      //   '/app/chat/' + 'eabde9b1-e57f-483f-986a-e5fdcdcb5c32',
+      //   {},
+      //   JSON.stringify({
+      //     fromLogin: 'from',
+      //     message: 'Hi!!',
+      //     actionType: 'comment',
+      //   }),
+      // );
       this.setState({chatText: ''});
     }
   }
@@ -174,6 +270,9 @@ class ChatScreen extends Component {
     return (
       <View style={styles.container}>
         <NavigationEvents onWillFocus={payload => this.loadUsers(payload)} />
+        <View>
+          <Text>Status: {this.state.status}</Text>
+        </View>
         <FlatList
           style={styles.flalList}
           data={users}
@@ -336,7 +435,9 @@ const mapStateToProps = state => {
     users: state.users.users,
   };
 };
-export default connect(
-  mapStateToProps,
-  actions,
-)(ChatScreen);
+// export default connect(
+//   mapStateToProps,
+//   actions,
+// )(ChatScreen);
+
+export default withStomp(ChatScreen);
