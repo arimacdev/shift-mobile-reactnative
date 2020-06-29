@@ -22,6 +22,7 @@ import {NavigationEvents} from 'react-navigation';
 import APIServices from '../../../services/APIServices';
 import moment from 'moment';
 import {StompEventTypes, withStomp, Client} from 'react-stompjs';
+import {Picker} from 'emoji-mart';
 
 class ChatScreen extends Component {
   constructor(props) {
@@ -36,6 +37,7 @@ class ChatScreen extends Component {
       chatMessage: '',
       chatMessages: [],
       status: 'Not Connected',
+      showEmojiPicker:false
     };
   }
 
@@ -187,6 +189,10 @@ class ChatScreen extends Component {
     }
   };
 
+  onReactionIconPress(){
+    this.setState({showEmojiPicker:true})
+  }
+
   renderUserListList(item) {
     return (
       <View style={styles.chatView}>
@@ -196,16 +202,15 @@ class ChatScreen extends Component {
             <Text style={styles.textTime}>{item.dateTime}</Text>
           </View>
           <View style={styles.nameView}>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <View style={styles.innerView}>
               <View style={{flex: 1}}>
                 <Text style={styles.text}>
                   {item.firstName} {item.lastName}
                 </Text>
                 <Text style={styles.textChat}>{item.msg}</Text>
               </View>
-              <TouchableOpacity
-                style={{justifyContent: 'flex-end', marginTop: 10}}>
-                <Image style={styles.imojiIcon} source={icons.addImoji} />
+              <TouchableOpacity style={styles.emojiIconView} onPress={()=>this.onReactionIconPress()}>
+                <Image style={styles.emojiIcon} source={icons.addEmoji} />
               </TouchableOpacity>
             </View>
             {item.image ? (
@@ -215,28 +220,14 @@ class ChatScreen extends Component {
                     uri:
                       'https://static.toiimg.com/thumb/72975551.cms?width=680&height=512&imgsize=881753',
                   }}
-                  style={{width: 100, height: 100, marginLeft: 10}}
+                  style={styles.uploadImage}
                   resizeMode={'contain'}
                 />
               </FadeIn>
             ) : null}
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent:'center',
-                alignItems:'center',
-                backgroundColor: colors.colorPaleCornflowerBlue,
-                marginLeft: 10,
-                marginTop: 5,
-                width: 50,
-                paddingHorizontal: 5,
-                paddingVertical: 2,
-                borderRadius: 15,
-                borderColor: colors.colorDeepSkyBlue,
-                borderWidth: 1,
-              }}>
+            <View style={styles.reactionView}>
               <Image style={styles.reactionIcon} source={icons.smilingFace} />
-              <Text style={styles.textCount}>2</Text>
+              <Text style={styles.textCount}>1</Text>
             </View>
           </View>
         </View>
@@ -289,10 +280,25 @@ class ChatScreen extends Component {
     }
   }
 
+  addEmoji(){
+
+  }
+
+  renderEmojiPicker() {
+    return (
+      <Picker
+        set="apple"
+        style={{position: 'absolute', bottom: '20px', right: '20px'}}
+        onSelect={()=>this.addEmoji()}
+      />
+    );
+  }
+
   render() {
     let users = this.state.users;
     let isFetching = this.state.isFetching;
     let usersLoading = this.props.usersLoading;
+    let showEmojiPicker = this.state.showEmojiPicker
 
     return (
       <View style={styles.container}>
@@ -335,6 +341,7 @@ class ChatScreen extends Component {
             />
           </TouchableOpacity>
         </View>
+        {showEmojiPicker && this.renderEmojiPicker()}
         {usersLoading && <Loader />}
         {/* {this.state.status != 'Connected' && <Loader />} */}
       </View>
@@ -453,22 +460,49 @@ const styles = EStyleSheet.create({
     height: '20rem',
     marginRight: '15rem',
   },
-  imojiIcon: {
-    width: 20,
-    height: 20,
+  innerView: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  emojiIconView: {
+    justifyContent: 'flex-end',
+    marginTop: '10rem',
+  },
+  emojiIcon: {
+    width: '18rem',
+    height: '18rem',
+  },
+  uploadImage: {
+    width: '100rem',
+    height: '100rem',
+    marginLeft: '10rem',
+  },
+  reactionView: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: colors.colorPaleCornflowerBlue,
+    marginLeft: '10rem',
+    marginTop: '5rem',
+    width: '50rem',
+    paddingHorizontal: '5rem',
+    paddingVertical: '2rem',
+    borderRadius: '15rem',
+    borderColor: colors.colorDeepSkyBlue,
+    borderWidth: '1rem',
   },
   reactionIcon: {
-    width: 20,
-    height: 20,
+    width: '20rem',
+    height: '20rem',
   },
-  textCount:{
+  textCount: {
     fontSize: '12rem',
     color: colors.colorMidnightBlue,
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
     marginLeft: '3rem',
     fontWeight: 'bold',
-  }
+  },
 });
 
 const mapStateToProps = state => {

@@ -77,6 +77,6 @@ const icons = {
   userGreen: require('./user_green.png'),
   notificationPurple: require('./notification_purple.png'),
   smilingFace: require('./smiling_face.png'),
-  addImoji: require('./add_imoji.png'),
+  addEmoji: require('./add_emoji.png'),
 };
 export default icons;
