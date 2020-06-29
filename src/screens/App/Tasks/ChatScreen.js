@@ -14,6 +14,7 @@ import colors from '../../../config/colors';
 import icons from '../../../asserts/icons/icons';
 import EStyleSheet from 'react-native-extended-stylesheet';
 const entireScreenWidth = Dimensions.get('window').width;
+const entireScreenHeight = Dimensions.get('window').height;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
 import FadeIn from 'react-native-fade-in-image';
 import Loader from '../../../components/Loader';
@@ -23,7 +24,7 @@ import APIServices from '../../../services/APIServices';
 import moment from 'moment';
 import {StompEventTypes, withStomp, Client} from 'react-stompjs';
 import EmojiSelector from 'react-native-emoji-selector';
-import {Picker, PickerModal} from 'react-native-slack-emoji';
+import Modal from 'react-native-modal';
 
 class ChatScreen extends Component {
   constructor(props) {
@@ -40,7 +41,6 @@ class ChatScreen extends Component {
       status: 'Not Connected',
       showEmojiPicker: false,
       reactionIcon: '',
-      emojiList: [],
     };
   }
 
@@ -92,6 +92,21 @@ class ChatScreen extends Component {
     //   this.setState({users: this.state.users.concat(comment)});
     // });
     // this.fetchData();
+
+    let comment = {
+      email: 'ron@r.com',
+      firstName: 'Ronald',
+      idpUserId: 'fea0bb2b-51f1-406b-90f2-9a7e8f7d0440',
+      isActive: true,
+      lastName: 'veesley',
+      profileImage: null,
+      userId: 'fd3abd08-c4b3-4bcd-919d-7b4e59c968aa',
+      userName: 'ron',
+      msg: 'messageDecode.message',
+      dateTime: moment().format('hh:mm A'),
+      // dateTime: moment(new Date()).fromNow()
+    };
+    this.setState({users: this.state.users.concat(comment)});
 
     this.props.stompContext.addStompEventListener(
       StompEventTypes.Connect,
@@ -197,12 +212,11 @@ class ChatScreen extends Component {
                 </Text>
                 <Text style={styles.textChat}>{item.msg}</Text>
               </View>
-              {/* <TouchableOpacity
+              <TouchableOpacity
                 style={styles.emojiIconView}
                 onPress={() => this.onReactionIconPress()}>
                 <Image style={styles.emojiIcon} source={icons.addEmoji} />
-              </TouchableOpacity> */}
-              {this.renderEmojiPicker()}
+              </TouchableOpacity>
             </View>
             {item.image ? (
               <FadeIn>
@@ -217,10 +231,7 @@ class ChatScreen extends Component {
               </FadeIn>
             ) : null}
             <View style={styles.reactionView}>
-              <Image
-                style={styles.reactionIcon}
-                source={this.state.reactionIcon}
-              />
+              <Text>{this.state.reactionIcon}</Text>
               <Text style={styles.textCount}>1</Text>
             </View>
           </View>
@@ -274,24 +285,39 @@ class ChatScreen extends Component {
     }
   }
 
-  onSelect = (emoji, emojiName, data) => {
-    console.log('dddddddddddddddddd', emoji);
-  };
+  addEmoji(emoji) {
+    this.setState({reactionIcon: emoji, showEmojiPicker: false});
+  }
 
-  updateEmoji = (emoji, name) => {
-    console.log('dddddddddddddddddd', emoji);
-  };
+  onCloseTaskModal() {
+    this.setState({showEmojiPicker: false});
+  }
 
   renderEmojiPicker() {
-    const {emojiList} = this.state;
     return (
-      <View style={styles.emojiIconView}>
-        <Picker
-          emojiList={emojiList}
-          updateEmoji={this.updateEmoji}
-          onSelect={this.onSelect}
+      <Modal
+        isVisible={this.state.showEmojiPicker}
+        style={styles.modalStyle}
+        onBackButtonPress={() => this.onCloseTaskModal()}
+        onBackdropPress={() => this.onCloseTaskModal()}
+        onRequestClose={() => this.onCloseTaskModal()}
+        coverScreen={false}
+        backdropTransitionOutTiming={0}>
+        <EmojiSelector
+          style={{
+            position: 'absolute',
+            marginHorizontal: 10,
+            marginTop: 10,
+            height: entireScreenHeight - 180,
+            width: '95%',
+            backgroundColor: colors.white,
+          }}
+          onEmojiSelected={emoji => this.addEmoji(emoji)}
+          showSectionTitles={false}
+          showHistory={true}
+          columns={10}
         />
-      </View>
+      </Modal>
     );
   }
 
@@ -342,7 +368,7 @@ class ChatScreen extends Component {
             />
           </TouchableOpacity>
         </View>
-        {/* {showEmojiPicker && this.renderEmojiPicker()} */}
+        {this.renderEmojiPicker()}
         {usersLoading && <Loader />}
         {/* {this.state.status != 'Connected' && <Loader />} */}
       </View>
@@ -503,6 +529,10 @@ const styles = EStyleSheet.create({
     textAlign: 'left',
     marginLeft: '3rem',
     fontWeight: 'bold',
+  },
+  modalStyle: {
+    borderRadius: 5,
+    backgroundColor: colors.white,
   },
 });
 
