@@ -64,8 +64,8 @@ class ChatScreen extends Component {
         this.setState({status: 'Disconnected (not graceful)'});
       },
     );
-    this.props.stompContext.removeStompClient();
-    this.rootSubscribed.unsubscribe();
+    // this.props.stompContext.removeStompClient();
+    // this.rootSubscribed.unsubscribe();
   }
 
   componentDidMount() {
@@ -87,6 +87,21 @@ class ChatScreen extends Component {
     //   this.setState({users: this.state.users.concat(comment)});
     // });
     // this.fetchData();
+
+    let comment = {
+      email: 'ron@r.com',
+      firstName: 'Ronald',
+      idpUserId: 'fea0bb2b-51f1-406b-90f2-9a7e8f7d0440',
+      isActive: true,
+      lastName: 'veesley',
+      profileImage: null,
+      userId: 'fd3abd08-c4b3-4bcd-919d-7b4e59c968aa',
+      userName: 'ron',
+      msg: 'dddddddddddd',
+      dateTime: moment().format('hh:mm A'),
+      // dateTime: moment(new Date()).fromNow()
+    };
+    this.setState({users: this.state.users.concat(comment)});
 
     this.props.stompContext.addStompEventListener(
       StompEventTypes.Connect,
@@ -114,8 +129,6 @@ class ChatScreen extends Component {
               this.setState({users: this.state.users.concat(comment)});
             },
           );
-
-        console.log('lllllllllllllllllllllllllll', this.rootSubscribed);
       },
     );
     this.props.stompContext.addStompEventListener(
@@ -183,10 +196,48 @@ class ChatScreen extends Component {
             <Text style={styles.textTime}>{item.dateTime}</Text>
           </View>
           <View style={styles.nameView}>
-            <Text style={styles.text}>
-              {item.firstName} {item.lastName}
-            </Text>
-            <Text style={styles.textChat}>{item.msg}</Text>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <View style={{flex: 1}}>
+                <Text style={styles.text}>
+                  {item.firstName} {item.lastName}
+                </Text>
+                <Text style={styles.textChat}>{item.msg}</Text>
+              </View>
+              <TouchableOpacity
+                style={{justifyContent: 'flex-end', marginTop: 10}}>
+                <Image style={styles.imojiIcon} source={icons.addImoji} />
+              </TouchableOpacity>
+            </View>
+            {item.image ? (
+              <FadeIn>
+                <Image
+                  source={{
+                    uri:
+                      'https://static.toiimg.com/thumb/72975551.cms?width=680&height=512&imgsize=881753',
+                  }}
+                  style={{width: 100, height: 100, marginLeft: 10}}
+                  resizeMode={'contain'}
+                />
+              </FadeIn>
+            ) : null}
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent:'center',
+                alignItems:'center',
+                backgroundColor: colors.colorPaleCornflowerBlue,
+                marginLeft: 10,
+                marginTop: 5,
+                width: 50,
+                paddingHorizontal: 5,
+                paddingVertical: 2,
+                borderRadius: 15,
+                borderColor: colors.colorDeepSkyBlue,
+                borderWidth: 1,
+              }}>
+              <Image style={styles.reactionIcon} source={icons.smilingFace} />
+              <Text style={styles.textCount}>2</Text>
+            </View>
           </View>
         </View>
       </View>
@@ -234,16 +285,6 @@ class ChatScreen extends Component {
           actionType: 'comment',
         }),
       });
-
-      // this.props.stompContext.getStompClient().publish(
-      //   '/app/chat/' + 'eabde9b1-e57f-483f-986a-e5fdcdcb5c32',
-      //   {},
-      //   JSON.stringify({
-      //     fromLogin: 'from',
-      //     message: 'Hi!!',
-      //     actionType: 'comment',
-      //   }),
-      // );
       this.setState({chatText: ''});
     }
   }
@@ -295,7 +336,7 @@ class ChatScreen extends Component {
           </TouchableOpacity>
         </View>
         {usersLoading && <Loader />}
-        {this.state.status !='Connected' && <Loader />}
+        {/* {this.state.status != 'Connected' && <Loader />} */}
       </View>
     );
   }
@@ -412,6 +453,22 @@ const styles = EStyleSheet.create({
     height: '20rem',
     marginRight: '15rem',
   },
+  imojiIcon: {
+    width: 20,
+    height: 20,
+  },
+  reactionIcon: {
+    width: 20,
+    height: 20,
+  },
+  textCount:{
+    fontSize: '12rem',
+    color: colors.colorMidnightBlue,
+    fontFamily: 'CircularStd-Medium',
+    textAlign: 'left',
+    marginLeft: '3rem',
+    fontWeight: 'bold',
+  }
 });
 
 const mapStateToProps = state => {
