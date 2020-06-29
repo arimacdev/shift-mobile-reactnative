@@ -23,6 +23,7 @@ import APIServices from '../../../services/APIServices';
 import moment from 'moment';
 import {StompEventTypes, withStomp, Client} from 'react-stompjs';
 import EmojiSelector from 'react-native-emoji-selector';
+import {Picker, PickerModal} from 'react-native-slack-emoji';
 
 class ChatScreen extends Component {
   constructor(props) {
@@ -39,6 +40,7 @@ class ChatScreen extends Component {
       status: 'Not Connected',
       showEmojiPicker: false,
       reactionIcon: '',
+      emojiList: [],
     };
   }
 
@@ -195,11 +197,12 @@ class ChatScreen extends Component {
                 </Text>
                 <Text style={styles.textChat}>{item.msg}</Text>
               </View>
-              <TouchableOpacity
+              {/* <TouchableOpacity
                 style={styles.emojiIconView}
                 onPress={() => this.onReactionIconPress()}>
                 <Image style={styles.emojiIcon} source={icons.addEmoji} />
-              </TouchableOpacity>
+              </TouchableOpacity> */}
+              {this.renderEmojiPicker()}
             </View>
             {item.image ? (
               <FadeIn>
@@ -271,18 +274,24 @@ class ChatScreen extends Component {
     }
   }
 
-  addEmoji(emoji) {
-    this.setState({reactionIcon: emoji, showEmojiPicker:false});
-  }
+  onSelect = (emoji, emojiName, data) => {
+    console.log('dddddddddddddddddd', emoji);
+  };
+
+  updateEmoji = (emoji, name) => {
+    console.log('dddddddddddddddddd', emoji);
+  };
 
   renderEmojiPicker() {
+    const {emojiList} = this.state;
     return (
-      <EmojiSelector
-      style={{position:'absolute', height:500,width:"100%", backgroundColor:colors.white}}
-        onEmojiSelected={emoji => this.addEmoji(emoji)}
-        showSectionTitles={false}
-        columns={10}
-      />
+      <View style={styles.emojiIconView}>
+        <Picker
+          emojiList={emojiList}
+          updateEmoji={this.updateEmoji}
+          onSelect={this.onSelect}
+        />
+      </View>
     );
   }
 
@@ -333,7 +342,7 @@ class ChatScreen extends Component {
             />
           </TouchableOpacity>
         </View>
-        {showEmojiPicker && this.renderEmojiPicker()}
+        {/* {showEmojiPicker && this.renderEmojiPicker()} */}
         {usersLoading && <Loader />}
         {/* {this.state.status != 'Connected' && <Loader />} */}
       </View>
