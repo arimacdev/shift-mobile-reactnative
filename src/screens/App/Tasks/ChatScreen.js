@@ -86,28 +86,6 @@ class ChatScreen extends Component {
             '/topic/messages/' + '8ad68987-cb6f-4bbf-ae39-4b84afb4c7d7',
             message => {
               let messageDecode = JSON.parse(message.body);
-              let comment = {
-                commentId: '202d83f9-ac1b-4f56-8f70-53f436f6dce8',
-                commentedAt: '2020-06-29T10:54:28.000+0000',
-                commenter: '138bbb3d-02ed-4d72-9a03-7e8cdfe89eff',
-                commenterFistName: 'Naveen',
-                commenterLatName: 'Perera',
-                commenterProfileImage:
-                  'https://arimac-pmtool.s3-ap-southeast-1.amazonaws.com/profileImage_1591184736784_image_4.jpg',
-                content: '<p>gfgf</p>',
-                msg: messageDecode.message,
-                dateTime: moment().format('hh:mm A'),
-                reactionDetails: [
-                  {id: '1', reactionIcon: '😃', reactionCount: 2},
-                  {id: '2', reactionIcon: '👍', reactionCount: 1},
-                  {id: '2', reactionIcon: '👍', reactionCount: 1},
-                  {id: '2', reactionIcon: '👍', reactionCount: 1},
-                  {id: '2', reactionIcon: '👍', reactionCount: 1},
-                  {id: '2', reactionIcon: '👍', reactionCount: 1},
-                ],
-                // dateTime: moment(new Date()).fromNow()
-              };
-              this.setState({users: this.state.users.concat(comment)});
             },
           );
       },
@@ -146,16 +124,10 @@ class ChatScreen extends Component {
         this.setState({dataLoading: false});
         Utils.showAlert(true, '', error.data.message, this.props);
       });
-    this.setState({users: []}, function() {
-      // this.props.getAllUsers();
-    });
   }
 
   userImage = function(item) {
-    // let userImage = item.taskAssigneeProfileImage;
-    let userImage =
-      'https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg';
-
+    let userImage = item.commenterProfileImage;
     if (userImage) {
       return (
         <FadeIn>
@@ -192,7 +164,7 @@ class ChatScreen extends Component {
             <View style={styles.innerView}>
               <View style={{flex: 1}}>
                 <Text style={styles.text}>
-                  {item.firstName} {item.lastName}
+                  {item.commenterFistName} {item.commenterFistName}
                 </Text>
                 <Text style={styles.textChat}>{item.msg}</Text>
               </View>
@@ -268,6 +240,24 @@ class ChatScreen extends Component {
           actionType: 'comment',
         }),
       });
+      let comment = {
+        commentId: '202d83f9-ac1b-4f56-8f70-53f436f6dce8',
+        commentedAt: '2020-06-29T10:54:28.000+0000',
+        commenter: '138bbb3d-02ed-4d72-9a03-7e8cdfe89eff',
+        commenterFistName: 'Naveen',
+        commenterLatName: 'Perera',
+        commenterProfileImage:
+          'https://arimac-pmtool.s3-ap-southeast-1.amazonaws.com/profileImage_1591184736784_image_4.jpg',
+        content: '<p>gfgf</p>',
+        msg: chatText,
+        dateTime: moment().format('hh:mm A'),
+        reactionDetails: [
+          {id: '1', reactionIcon: '😃', reactionCount: 2},
+          {id: '2', reactionIcon: '👍', reactionCount: 1},
+        ],
+        // dateTime: moment(new Date()).fromNow()
+      };
+      this.setState({users: this.state.users.concat(comment)});
       this.setState({chatText: ''});
     }
   }
