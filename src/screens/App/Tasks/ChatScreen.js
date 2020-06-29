@@ -64,8 +64,8 @@ class ChatScreen extends Component {
         this.setState({status: 'Disconnected (not graceful)'});
       },
     );
-    // this.props.stompContext.removeStompClient();
-    // this.rootSubscribed.unsubscribe();
+    this.props.stompContext.removeStompClient();
+    this.rootSubscribed.unsubscribe();
   }
 
   componentDidMount() {
@@ -95,9 +95,9 @@ class ChatScreen extends Component {
         this.rootSubscribed = this.props.stompContext
           .getStompClient()
           .subscribe(
-            '/app/chat/' + 'eabde9b1-e57f-483f-986a-e5fdcdcb5c32',
+            '/topic/messages/' + 'eabde9b1-e57f-483f-986a-e5fdcdcb5c32',
             message => {
-              console.log('kkkkkkkkkkkkk', message.body);
+              let messageDecode = JSON.parse(message.body);
               let comment = {
                 email: 'ron@r.com',
                 firstName: 'Ronald',
@@ -107,7 +107,7 @@ class ChatScreen extends Component {
                 profileImage: null,
                 userId: 'fd3abd08-c4b3-4bcd-919d-7b4e59c968aa',
                 userName: 'ron',
-                msg: message.body,
+                msg: messageDecode.message,
                 dateTime: moment().format('hh:mm A'),
                 // dateTime: moment(new Date()).fromNow()
               };
@@ -222,32 +222,18 @@ class ChatScreen extends Component {
   };
 
   submitChatMessage() {
-    if (this.state.chatText != '') {
+    let chatText = this.state.chatText;
+    if (chatText != '') {
       // this.socket.emit('chat message', this.state.chatText);
       this.props.stompContext.getStompClient().publish({
         destination: '/app/chat/' + 'eabde9b1-e57f-483f-986a-e5fdcdcb5c32',
         headers: {priority: 9},
         body: JSON.stringify({
           fromLogin: 'from',
-          message: 'naveen!!',
+          message: chatText,
           actionType: 'comment',
         }),
       });
-
-      let comment = {
-        email: 'ron@r.com',
-        firstName: 'Ronald',
-        idpUserId: 'fea0bb2b-51f1-406b-90f2-9a7e8f7d0440',
-        isActive: true,
-        lastName: 'veesley',
-        profileImage: null,
-        userId: 'fd3abd08-c4b3-4bcd-919d-7b4e59c968aa',
-        userName: 'ron',
-        msg: this.state.chatText,
-        dateTime: moment().format('hh:mm A'),
-        // dateTime: moment(new Date()).fromNow()
-      };
-      this.setState({users: this.state.users.concat(comment)});
 
       // this.props.stompContext.getStompClient().publish(
       //   '/app/chat/' + 'eabde9b1-e57f-483f-986a-e5fdcdcb5c32',
@@ -270,9 +256,6 @@ class ChatScreen extends Component {
     return (
       <View style={styles.container}>
         <NavigationEvents onWillFocus={payload => this.loadUsers(payload)} />
-        <View>
-          <Text>Status: {this.state.status}</Text>
-        </View>
         <FlatList
           style={styles.flalList}
           data={users}
@@ -293,6 +276,7 @@ class ChatScreen extends Component {
               placeholder={'Add a comment'}
               value={this.state.chatText}
               multiline={true}
+              editable={this.state.status == 'Connected' ? true : false}
               onChangeText={text => this.onChatTextChange(text)}
               // onContentSizeChange={e =>
               //   this.updateSize(e.nativeEvent.contentSize.height)
@@ -311,6 +295,7 @@ class ChatScreen extends Component {
           </TouchableOpacity>
         </View>
         {usersLoading && <Loader />}
+        {this.state.status !='Connected' && <Loader />}
       </View>
     );
   }
