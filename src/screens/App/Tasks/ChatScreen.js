@@ -158,7 +158,7 @@ class ChatScreen extends Component {
         {this.userImage(item)}
         <View style={{flex: 1}}>
           <View style={styles.timeView}>
-            <Text style={styles.textTime}>{item.dateTime}</Text>
+            <Text style={styles.textTime}>{moment(item.commentedAt).format('hh:mm A')}</Text>
           </View>
           <View style={styles.nameView}>
             <View style={styles.innerView}>
@@ -166,7 +166,7 @@ class ChatScreen extends Component {
                 <Text style={styles.text}>
                   {item.commenterFistName} {item.commenterFistName}
                 </Text>
-                <Text style={styles.textChat}>{item.msg}</Text>
+                <Text style={styles.textChat}>{item.content}</Text>
               </View>
               <TouchableOpacity
                 style={styles.emojiIconView}
@@ -303,7 +303,6 @@ class ChatScreen extends Component {
     let users = this.state.users;
     let isFetching = this.state.isFetching;
     let usersLoading = this.props.usersLoading;
-    let showEmojiPicker = this.state.showEmojiPicker;
 
     return (
       <View style={styles.container}>
