@@ -92,4 +92,4 @@ export const GET_USER_SKILL_MAP = `category/user/`;
 export const SET_ONE_SIGNAL_USER_ID = `notification/register`;
 export const SET_ONE_SIGNAL_USER_UNSUBSCRIBE = `notification/status`;
 
-export const GET_COMMENTS = `chat`
+export const GET_COMMENTS = `task`

@@ -14,6 +14,7 @@ import colors from '../../../config/colors';
 import icons from '../../../asserts/icons/icons';
 import EStyleSheet from 'react-native-extended-stylesheet';
 const entireScreenWidth = Dimensions.get('window').width;
+const entireScreenHeight = Dimensions.get('window').height;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
 import FadeIn from 'react-native-fade-in-image';
 import Loader from '../../../components/Loader';
@@ -23,6 +24,8 @@ import APIServices from '../../../services/APIServices';
 import moment from 'moment';
 import {StompEventTypes, withStomp, Client} from 'react-stompjs';
 import EmojiSelector from 'react-native-emoji-selector';
+import Modal from 'react-native-modal';
+import Utils from '../../../utils/Utils';
 
 class ChatScreen extends Component {
   constructor(props) {
@@ -72,25 +75,7 @@ class ChatScreen extends Component {
   }
 
   componentDidMount() {
-    // this.socket = io('http://192.168.1.6:3000');
-    // this.socket.on('chat message', msg => {
-    //   let comment = {
-    //     email: 'ron@r.com',
-    //     firstName: 'Ronald',
-    //     idpUserId: 'fea0bb2b-51f1-406b-90f2-9a7e8f7d0440',
-    //     isActive: true,
-    //     lastName: 'veesley',
-    //     profileImage: null,
-    //     userId: 'fd3abd08-c4b3-4bcd-919d-7b4e59c968aa',
-    //     userName: 'ron',
-    //     msg: msg,
-    //     dateTime: moment().format('hh:mm A'),
-    //     // dateTime: moment(new Date()).fromNow()
-    //   };
-    //   this.setState({users: this.state.users.concat(comment)});
-    // });
-    // this.fetchData();
-
+    this.fetchData();
     this.props.stompContext.addStompEventListener(
       StompEventTypes.Connect,
       () => {
@@ -98,20 +83,28 @@ class ChatScreen extends Component {
         this.rootSubscribed = this.props.stompContext
           .getStompClient()
           .subscribe(
-            '/topic/messages/' + 'eabde9b1-e57f-483f-986a-e5fdcdcb5c32',
+            '/topic/messages/' + '8ad68987-cb6f-4bbf-ae39-4b84afb4c7d7',
             message => {
               let messageDecode = JSON.parse(message.body);
               let comment = {
-                email: 'ron@r.com',
-                firstName: 'Ronald',
-                idpUserId: 'fea0bb2b-51f1-406b-90f2-9a7e8f7d0440',
-                isActive: true,
-                lastName: 'veesley',
-                profileImage: null,
-                userId: 'fd3abd08-c4b3-4bcd-919d-7b4e59c968aa',
-                userName: 'ron',
+                commentId: '202d83f9-ac1b-4f56-8f70-53f436f6dce8',
+                commentedAt: '2020-06-29T10:54:28.000+0000',
+                commenter: '138bbb3d-02ed-4d72-9a03-7e8cdfe89eff',
+                commenterFistName: 'Naveen',
+                commenterLatName: 'Perera',
+                commenterProfileImage:
+                  'https://arimac-pmtool.s3-ap-southeast-1.amazonaws.com/profileImage_1591184736784_image_4.jpg',
+                content: '<p>gfgf</p>',
                 msg: messageDecode.message,
                 dateTime: moment().format('hh:mm A'),
+                reactionDetails: [
+                  {id: '1', reactionIcon: '😃', reactionCount: 2},
+                  {id: '2', reactionIcon: '👍', reactionCount: 1},
+                  {id: '2', reactionIcon: '👍', reactionCount: 1},
+                  {id: '2', reactionIcon: '👍', reactionCount: 1},
+                  {id: '2', reactionIcon: '👍', reactionCount: 1},
+                  {id: '2', reactionIcon: '👍', reactionCount: 1},
+                ],
                 // dateTime: moment(new Date()).fromNow()
               };
               this.setState({users: this.state.users.concat(comment)});
@@ -140,20 +133,19 @@ class ChatScreen extends Component {
   }
 
   async fetchData() {
-    // this.setState({dataLoading: true, users: []});
-    // await APIServices.getCommentsData()
-    //   .then(response => {
-    //     if (response.message == 'success') {
-
-    //       this.setState({dataLoading: false});
-    //     } else {
-    //       this.setState({dataLoading: false});
-    //     }
-    //   })
-    //   .catch(error => {
-    //     this.setState({dataLoading: false});
-    //     this.showAlert('', error.data.message);
-    //   });
+    this.setState({dataLoading: true, users: []});
+    await APIServices.getCommentsData('8ad68987-cb6f-4bbf-ae39-4b84afb4c7d7')
+      .then(response => {
+        if (response.message == 'success') {
+          this.setState({dataLoading: false, users: response.data});
+        } else {
+          this.setState({dataLoading: false});
+        }
+      })
+      .catch(error => {
+        this.setState({dataLoading: false});
+        Utils.showAlert(true, '', error.data.message, this.props);
+      });
     this.setState({users: []}, function() {
       // this.props.getAllUsers();
     });
@@ -177,6 +169,15 @@ class ChatScreen extends Component {
 
   onReactionIconPress() {
     this.setState({showEmojiPicker: true});
+  }
+
+  renderReactionDetailsList(item) {
+    return (
+      <View style={styles.reactionView}>
+        <Text>{item.reactionIcon}</Text>
+        <Text style={styles.textCount}>{item.reactionCount}</Text>
+      </View>
+    );
   }
 
   renderUserListList(item) {
@@ -213,13 +214,13 @@ class ChatScreen extends Component {
                 />
               </FadeIn>
             ) : null}
-            <View style={styles.reactionView}>
-              <Image
-                style={styles.reactionIcon}
-                source={this.state.reactionIcon}
-              />
-              <Text style={styles.textCount}>1</Text>
-            </View>
+            <FlatList
+              style={styles.flalList}
+              data={item.reactionDetails}
+              horizontal={true}
+              renderItem={item => this.renderReactionDetailsList(item.item)}
+              keyExtractor={item => item.reactionId}
+            />
           </View>
         </View>
       </View>
@@ -259,7 +260,7 @@ class ChatScreen extends Component {
     if (chatText != '') {
       // this.socket.emit('chat message', this.state.chatText);
       this.props.stompContext.getStompClient().publish({
-        destination: '/app/chat/' + 'eabde9b1-e57f-483f-986a-e5fdcdcb5c32',
+        destination: '/app/chat/' + '8ad68987-cb6f-4bbf-ae39-4b84afb4c7d7',
         headers: {priority: 9},
         body: JSON.stringify({
           fromLogin: 'from',
@@ -272,17 +273,39 @@ class ChatScreen extends Component {
   }
 
   addEmoji(emoji) {
-    this.setState({reactionIcon: emoji, showEmojiPicker:false});
+    this.setState({reactionIcon: emoji, showEmojiPicker: false});
+    console.log(emoji);
+  }
+
+  onCloseTaskModal() {
+    this.setState({showEmojiPicker: false});
   }
 
   renderEmojiPicker() {
     return (
-      <EmojiSelector
-      style={{position:'absolute', height:500,width:"100%", backgroundColor:colors.white}}
-        onEmojiSelected={emoji => this.addEmoji(emoji)}
-        showSectionTitles={false}
-        columns={10}
-      />
+      <Modal
+        isVisible={this.state.showEmojiPicker}
+        style={styles.modalStyle}
+        onBackButtonPress={() => this.onCloseTaskModal()}
+        onBackdropPress={() => this.onCloseTaskModal()}
+        onRequestClose={() => this.onCloseTaskModal()}
+        coverScreen={false}
+        backdropTransitionOutTiming={0}>
+        <EmojiSelector
+          style={{
+            position: 'absolute',
+            marginHorizontal: 10,
+            marginTop: 10,
+            height: entireScreenHeight - 180,
+            width: '95%',
+            backgroundColor: colors.white,
+          }}
+          onEmojiSelected={emoji => this.addEmoji(emoji)}
+          showSectionTitles={false}
+          showHistory={true}
+          columns={10}
+        />
+      </Modal>
     );
   }
 
@@ -333,7 +356,7 @@ class ChatScreen extends Component {
             />
           </TouchableOpacity>
         </View>
-        {showEmojiPicker && this.renderEmojiPicker()}
+        {this.renderEmojiPicker()}
         {usersLoading && <Loader />}
         {/* {this.state.status != 'Connected' && <Loader />} */}
       </View>
@@ -494,6 +517,10 @@ const styles = EStyleSheet.create({
     textAlign: 'left',
     marginLeft: '3rem',
     fontWeight: 'bold',
+  },
+  modalStyle: {
+    borderRadius: 5,
+    backgroundColor: colors.white,
   },
 });
 

@@ -2971,7 +2971,7 @@ async function setOneSignalNotificationStatusData(
   );
 }
 
-async function getCommentsData() {
+async function getCommentsData(taskId) {
   let baseURL = null;
   baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
@@ -2985,7 +2985,7 @@ async function getCommentsData() {
 
   return request(
     {
-      url: baseURL + GET_COMMENTS,
+      url: baseURL + GET_COMMENTS + '/' + taskId + '/comment?startIndex=0&endIndex=10',
       method: 'GET',
     },
     true,
