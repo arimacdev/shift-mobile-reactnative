@@ -41,7 +41,7 @@ import Modal from 'react-native-modal';
 import {NavigationEvents} from 'react-navigation';
 import ImagePicker from 'react-native-image-picker';
 import MessageShowModal from '../../../components/MessageShowModal';
-import Utils from '../../../utils/Utils'
+import Utils from '../../../utils/Utils';
 
 const Placeholder = () => (
   <View style={styles.landing}>
@@ -68,6 +68,13 @@ let taskData = [
     id: 3,
     name: 'Remind',
     icon: icons.remindRoundedOrange,
+    renderImage: false,
+    disabled: false,
+  },
+  {
+    id: 6,
+    name: 'Comments',
+    icon: icons.filesRoundedOrange,
     renderImage: false,
     disabled: false,
   },
@@ -971,8 +978,8 @@ class TasksDetailsScreen extends Component {
       }
     } catch (error) {
       this.setState({dataLoading: false});
-      if(error.data.status == 404){
-        Utils.showAlert(true,'','This task was deleted',this.props);
+      if (error.data.status == 404) {
+        Utils.showAlert(true, '', 'This task was deleted', this.props);
         this.props.navigation.goBack();
       }
     }
@@ -1616,7 +1623,10 @@ class TasksDetailsScreen extends Component {
         // });
         break;
       case 6:
-        this.props.navigation.navigate('ChatScreen');
+        this.props.navigation.navigate('ChatScreen', {
+          selectedProjectID: this.state.selectedProjectID,
+          selectedProjectTaskID: this.state.selectedProjectTaskID,
+        });
         break;
       default:
         break;
