@@ -3037,7 +3037,7 @@ async function deleteCommentData(commentId) {
   let headers = {
     Accept: 'application/json',
     'Content-Type': 'application/json',
-    user: userIDHeder,
+    userId: userIDHeder,
   };
 
   return request(

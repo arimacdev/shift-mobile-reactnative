@@ -61,7 +61,7 @@ class ChatScreen extends Component {
     };
   }
 
-  componentWillMount(){
+  componentWillMount() {
     const {
       navigation: {
         state: {params},
@@ -108,7 +108,7 @@ class ChatScreen extends Component {
   componentDidMount() {
     let taskId = this.state.taskId;
     let userId = AsyncStorage.getItem('userID');
-    
+
     this.props.stompContext.addStompEventListener(
       StompEventTypes.Connect,
       () => {
@@ -117,8 +117,8 @@ class ChatScreen extends Component {
           .getStompClient()
           .subscribe('/topic/messages/' + taskId, message => {
             let messageDecode = JSON.parse(message.body);
-            console.log("messageDecode",messageDecode)
-            if(messageDecode.sender !== userId){
+            console.log('messageDecode', messageDecode);
+            if (messageDecode.sender !== userId) {
               // this.fetchData(taskId);
             }
           });
@@ -190,6 +190,23 @@ class ChatScreen extends Component {
     console.log('item', item);
   }
 
+  async onDeleteCommentPress(commentId){
+    this.setState({dataLoading: true});
+    await APIServices.deleteCommentData(commentId)
+      .then(response => {
+        if (response.message == 'success') {
+          this.setState({dataLoading: false});
+          this.fetchData(this.state.taskId)
+        } else {
+          this.setState({dataLoading: false});
+        }
+      })
+      .catch(error => {
+        this.setState({dataLoading: false});
+        // Utils.showAlert(true, '', error.data.message, this.props);
+      });
+  }
+
   renderUserListList(item) {
     return (
       <View style={styles.chatView}>
@@ -213,16 +230,17 @@ class ChatScreen extends Component {
                   imagesMaxWidth={entireScreenWidth}
                 />
               </View>
-              {/* <TouchableOpacity
-                style={styles.emojiIconView}
-                onPress={() => this.onReactionIconPress()}>
-                <Image style={styles.emojiIcon} source={icons.addEmoji} />
-              </TouchableOpacity> */}
+
               <View style={styles.emojiIconView}>
                 <PopupMenuEmojiReaction
                   data={reactionDetails}
                   onChange={item => this.onMenuItemChange(item, item.commentId)}
                 />
+                <TouchableOpacity
+                  style={styles.emojiIconView}
+                  onPress={() => this.onDeleteCommentPress(item.commentId)}>
+                  <Image style={styles.emojiIcon} source={icons.deleteRoundRed} />
+                </TouchableOpacity>
               </View>
             </View>
             {item.reactions && item.reactions.length > 0 ? (
