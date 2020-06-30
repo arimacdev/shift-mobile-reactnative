@@ -30,6 +30,7 @@ import HTML from 'react-native-render-html';
 import PopupMenuEmojiReaction from '../../../components/PopupMenuEmojiReaction';
 import {MenuProvider} from 'react-native-popup-menu';
 import DocumentPicker from 'react-native-document-picker';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const reactionDetails = [
   {value: ':+1:', text: '👍'},
@@ -58,6 +59,21 @@ class ChatScreen extends Component {
       reactionIcon: '',
       taskId: '',
     };
+  }
+
+  componentWillMount(){
+    const {
+      navigation: {
+        state: {params},
+      },
+    } = this.props;
+
+    let taskId = params.taskId;
+
+    this.setState({
+      taskId: taskId,
+    });
+    this.fetchData(taskId);
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -90,20 +106,9 @@ class ChatScreen extends Component {
   }
 
   componentDidMount() {
-    const {
-      navigation: {
-        state: {params},
-      },
-    } = this.props;
-
-    let taskId = params.taskId;
-
-    this.setState({
-      taskId: taskId,
-    });
-
-    this.fetchData(taskId);
-
+    let taskId = this.state.taskId;
+    let userId = AsyncStorage.getItem('userID');
+    
     this.props.stompContext.addStompEventListener(
       StompEventTypes.Connect,
       () => {
@@ -112,6 +117,10 @@ class ChatScreen extends Component {
           .getStompClient()
           .subscribe('/topic/messages/' + taskId, message => {
             let messageDecode = JSON.parse(message.body);
+            console.log("messageDecode",messageDecode)
+            if(messageDecode.sender !== userId){
+              // this.fetchData(taskId);
+            }
           });
       },
     );
@@ -136,7 +145,7 @@ class ChatScreen extends Component {
   }
 
   async fetchData(taskId) {
-    this.setState({dataLoading: true, comments: []});
+    this.setState({dataLoading: true});
     await APIServices.getCommentsData(taskId)
       .then(response => {
         if (response.message == 'success') {
@@ -178,7 +187,7 @@ class ChatScreen extends Component {
   }
 
   onMenuItemChange(item, commentId) {
-    console.log('dsddddddddddddddddd', item);
+    console.log('item', item);
   }
 
   renderUserListList(item) {
@@ -261,12 +270,24 @@ class ChatScreen extends Component {
 
   async addComment(chatText) {
     let taskId = this.state.taskId;
-
-    this.setState({dataLoading: true, comments: []});
-    await APIServices.addCommentData(taskId, chatText)
+    let chatTextConvert = '<p>' + chatText + '<p>';
+    this.setState({dataLoading: true});
+    await APIServices.addCommentData(taskId, chatTextConvert)
       .then(response => {
         if (response.message == 'success') {
           this.setState({dataLoading: false});
+          let data = response.data;
+          let comment = {
+            commentId: data.commentId,
+            commentedAt: data.commentedAt,
+            commenter: data.commenter,
+            commenterFistName: data.commenterFistName,
+            commenterLatName: data.commenterLatName,
+            commenterProfileImage: data.commenterProfileImage,
+            content: data.content,
+            reactions: data.reactions,
+          };
+          this.setState({comments: this.state.comments.concat(comment)});
         } else {
           this.setState({dataLoading: false});
         }
@@ -277,36 +298,23 @@ class ChatScreen extends Component {
       });
   }
 
-  submitChatMessage() {
+  async submitChatMessage() {
     let chatText = this.state.chatText;
     let taskId = this.state.taskId;
-    
+    let userId = await AsyncStorage.getItem('userID');
+
     if (chatText != '') {
       // this.socket.emit('chat message', this.state.chatText);
       this.props.stompContext.getStompClient().publish({
         destination: '/app/chat/' + taskId,
         headers: {priority: 9},
         body: JSON.stringify({
-          fromLogin: 'from',
+          sender: userId,
           message: chatText,
           actionType: 'comment',
         }),
       });
-      // let comment = {
-      //   commentId: '202d83f9-ac1b-4f56-8f70-53f436f6dce8',
-      //   commentedAt: '2020-06-29T10:54:28.000+0000',
-      //   commenter: '138bbb3d-02ed-4d72-9a03-7e8cdfe89eff',
-      //   commenterFistName: 'Naveen',
-      //   commenterLatName: 'Perera',
-      //   commenterProfileImage:
-      //     'https://arimac-pmtool.s3-ap-southeast-1.amazonaws.com/profileImage_1591184736784_image_4.jpg',
-      //   content: '<p>gfgf</p>',
-      //   msg: chatText,
-      //   dateTime: moment().format('hh:mm A'),
-      //   reactions: [],
-      // };
-      // this.setState({comments: this.state.comments.concat(comment)});
-      this.addComment(chatText)
+      this.addComment(chatText);
       this.setState({chatText: ''});
     }
   }
