@@ -279,6 +279,8 @@ class ChatScreen extends Component {
 
   submitChatMessage() {
     let chatText = this.state.chatText;
+    let taskId = this.state.taskId;
+    
     if (chatText != '') {
       // this.socket.emit('chat message', this.state.chatText);
       this.props.stompContext.getStompClient().publish({
