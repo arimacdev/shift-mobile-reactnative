@@ -26,6 +26,7 @@ import {StompEventTypes, withStomp, Client} from 'react-stompjs';
 import EmojiSelector from 'react-native-emoji-selector';
 import Modal from 'react-native-modal';
 import Utils from '../../../utils/Utils';
+import HTML from 'react-native-render-html';
 
 class ChatScreen extends Component {
   constructor(props) {
@@ -166,7 +167,8 @@ class ChatScreen extends Component {
                 <Text style={styles.text}>
                   {item.commenterFistName} {item.commenterFistName}
                 </Text>
-                <Text style={styles.textChat}>{item.content}</Text>
+                {/* <Text style={styles.textChat}>{item.content}</Text> */}
+                <HTML html={item.content} imagesMaxWidth={entireScreenWidth} />
               </View>
               <TouchableOpacity
                 style={styles.emojiIconView}
