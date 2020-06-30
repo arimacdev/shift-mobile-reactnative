@@ -27,6 +27,18 @@ import EmojiSelector from 'react-native-emoji-selector';
 import Modal from 'react-native-modal';
 import Utils from '../../../utils/Utils';
 import HTML from 'react-native-render-html';
+import PopupMenuEmojiReaction from '../../../components/PopupMenuEmojiReaction';
+import {MenuProvider} from 'react-native-popup-menu';
+
+const reactionDetails = [
+  {value: '2', text: '👍'},
+  {value: '2', text: '🙂'},
+  {value: '1', text: '😃'},
+  {value: '2', text: '😂'},
+  {value: '2', text: '💚'},
+  {value: '2', text: '😡'},
+  {value: '2', text: '😢'},
+];
 
 class ChatScreen extends Component {
   constructor(props) {
@@ -153,13 +165,19 @@ class ChatScreen extends Component {
     );
   }
 
+  onMenuItemChange(item, commentId) {
+    console.log('dsddddddddddddddddd', item);
+  }
+
   renderUserListList(item) {
     return (
       <View style={styles.chatView}>
         {this.userImage(item)}
         <View style={{flex: 1}}>
           <View style={styles.timeView}>
-            <Text style={styles.textTime}>{moment(item.commentedAt).format('hh:mm A')}</Text>
+            <Text style={styles.textTime}>
+              {moment.parseZone(item.commentedAt).format('hh:mm A')}
+            </Text>
           </View>
           <View style={styles.nameView}>
             <View style={styles.innerView}>
@@ -168,33 +186,33 @@ class ChatScreen extends Component {
                   {item.commenterFistName} {item.commenterFistName}
                 </Text>
                 {/* <Text style={styles.textChat}>{item.content}</Text> */}
-                <HTML html={item.content} imagesMaxWidth={entireScreenWidth} />
+                <HTML
+                  containerStyle={{marginLeft: 11, marginTop: -15}}
+                  html={item.content}
+                  imagesMaxWidth={entireScreenWidth}
+                />
               </View>
-              <TouchableOpacity
+              {/* <TouchableOpacity
                 style={styles.emojiIconView}
                 onPress={() => this.onReactionIconPress()}>
                 <Image style={styles.emojiIcon} source={icons.addEmoji} />
-              </TouchableOpacity>
-            </View>
-            {item.image ? (
-              <FadeIn>
-                <Image
-                  source={{
-                    uri:
-                      'https://static.toiimg.com/thumb/72975551.cms?width=680&height=512&imgsize=881753',
-                  }}
-                  style={styles.uploadImage}
-                  resizeMode={'contain'}
+              </TouchableOpacity> */}
+              <View style={styles.emojiIconView}>
+                <PopupMenuEmojiReaction
+                  data={reactionDetails}
+                  onChange={item => this.onMenuItemChange(item, item.commentId)}
                 />
-              </FadeIn>
+              </View>
+            </View>
+            {item.reactions && item.reactions.length > 0 ? (
+              <FlatList
+                style={styles.flalList}
+                data={item.reactions}
+                horizontal={true}
+                renderItem={item => this.renderReactionDetailsList(item.item)}
+                keyExtractor={item => item.reactionId}
+              />
             ) : null}
-            <FlatList
-              style={styles.flalList}
-              data={item.reactionDetails}
-              horizontal={true}
-              renderItem={item => this.renderReactionDetailsList(item.item)}
-              keyExtractor={item => item.reactionId}
-            />
           </View>
         </View>
       </View>
@@ -253,11 +271,7 @@ class ChatScreen extends Component {
         content: '<p>gfgf</p>',
         msg: chatText,
         dateTime: moment().format('hh:mm A'),
-        reactionDetails: [
-          {id: '1', reactionIcon: '😃', reactionCount: 2},
-          {id: '2', reactionIcon: '👍', reactionCount: 1},
-        ],
-        // dateTime: moment(new Date()).fromNow()
+        reactions: [],
       };
       this.setState({users: this.state.users.concat(comment)});
       this.setState({chatText: ''});
@@ -307,50 +321,52 @@ class ChatScreen extends Component {
     let usersLoading = this.props.usersLoading;
 
     return (
-      <View style={styles.container}>
-        <NavigationEvents onWillFocus={payload => this.loadUsers(payload)} />
-        <FlatList
-          style={styles.flalList}
-          data={users}
-          renderItem={item => this.renderUserListList(item.item)}
-          keyExtractor={item => item.projId}
-          onRefresh={() => this.onRefresh()}
-          refreshing={isFetching}
-          ref={ref => (this.flatList = ref)}
-          onContentSizeChange={() =>
-            this.flatList.scrollToEnd({animated: true})
-          }
-          onLayout={() => this.flatList.scrollToEnd({animated: true})}
-        />
-        <View style={styles.chatFieldView}>
-          <View style={{flex: 1}}>
-            <TextInput
-              style={styles.textInput}
-              placeholder={'Add a comment'}
-              value={this.state.chatText}
-              multiline={true}
-              editable={this.state.status == 'Connected' ? true : false}
-              onChangeText={text => this.onChatTextChange(text)}
-              // onContentSizeChange={e =>
-              //   this.updateSize(e.nativeEvent.contentSize.height)
-              // }
-            />
+      <MenuProvider>
+        <View style={styles.container}>
+          <NavigationEvents onWillFocus={payload => this.loadUsers(payload)} />
+          <FlatList
+            style={styles.flalList}
+            data={users}
+            renderItem={item => this.renderUserListList(item.item)}
+            keyExtractor={item => item.projId}
+            onRefresh={() => this.onRefresh()}
+            refreshing={isFetching}
+            ref={ref => (this.flatList = ref)}
+            onContentSizeChange={() =>
+              this.flatList.scrollToEnd({animated: true})
+            }
+            onLayout={() => this.flatList.scrollToEnd({animated: true})}
+          />
+          <View style={styles.chatFieldView}>
+            <View style={{flex: 1}}>
+              <TextInput
+                style={styles.textInput}
+                placeholder={'Add a comment'}
+                value={this.state.chatText}
+                multiline={true}
+                editable={this.state.status == 'Connected' ? true : false}
+                onChangeText={text => this.onChatTextChange(text)}
+                // onContentSizeChange={e =>
+                //   this.updateSize(e.nativeEvent.contentSize.height)
+                // }
+              />
+            </View>
+            <TouchableOpacity
+              onPress={() => {
+                this.submitChatMessage();
+              }}>
+              <Image
+                style={styles.chatIcon}
+                source={icons.forwordGreen}
+                resizeMode={'contain'}
+              />
+            </TouchableOpacity>
           </View>
-          <TouchableOpacity
-            onPress={() => {
-              this.submitChatMessage();
-            }}>
-            <Image
-              style={styles.chatIcon}
-              source={icons.forwordGreen}
-              resizeMode={'contain'}
-            />
-          </TouchableOpacity>
+          {this.renderEmojiPicker()}
+          {usersLoading && <Loader />}
+          {/* {this.state.status != 'Connected' && <Loader />} */}
         </View>
-        {this.renderEmojiPicker()}
-        {usersLoading && <Loader />}
-        {/* {this.state.status != 'Connected' && <Loader />} */}
-      </View>
+      </MenuProvider>
     );
   }
 }
@@ -472,6 +488,7 @@ const styles = EStyleSheet.create({
   },
   emojiIconView: {
     justifyContent: 'flex-end',
+    alignSelf: 'flex-start',
     marginTop: '10rem',
   },
   emojiIcon: {

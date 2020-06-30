@@ -108,6 +108,8 @@ target 'arimacPmTool' do
 
   pod 'react-native-onesignal', :path => '../node_modules/react-native-onesignal'
 
+  pod 'react-native-webview', :path => '../node_modules/react-native-webview'
+
 end
 
 target 'OneSignalNotificationServiceExtension' do
