@@ -78,5 +78,8 @@ const icons = {
   notificationPurple: require('./notification_purple.png'),
   smilingFace: require('./smiling_face.png'),
   addEmoji: require('./add_emoji.png'),
+  emojiChatIcon: require('./emoji_chat_icon.png'),
+  keyboardIcon: require('./keyboard_icon.png'),
+  addRoundedBlue: require('./add_rounded_blue.png'),
 };
 export default icons;

@@ -29,15 +29,16 @@ import Utils from '../../../utils/Utils';
 import HTML from 'react-native-render-html';
 import PopupMenuEmojiReaction from '../../../components/PopupMenuEmojiReaction';
 import {MenuProvider} from 'react-native-popup-menu';
+import DocumentPicker from 'react-native-document-picker';
 
 const reactionDetails = [
-  {value: '2', text: '👍'},
-  {value: '2', text: '🙂'},
-  {value: '1', text: '😃'},
-  {value: '2', text: '😂'},
-  {value: '2', text: '💚'},
-  {value: '2', text: '😡'},
-  {value: '2', text: '😢'},
+  {value: ':+1:', text: '👍'},
+  {value: ':simple_smile:', text: '🙂'},
+  {value: ':grinning:', text: '😃'},
+  {value: ':joy:', text: '😂'},
+  {value: ':green_heart:', text: '💚'},
+  {value: ':rage:', text: '😡'},
+  {value: ':cry:', text: '😢'},
 ];
 
 class ChatScreen extends Component {
@@ -279,7 +280,10 @@ class ChatScreen extends Component {
   }
 
   addEmoji(emoji) {
-    this.setState({reactionIcon: emoji, showEmojiPicker: false});
+    this.setState({
+      chatText: this.state.chatText.concat(emoji),
+      showEmojiPicker: false,
+    });
     console.log(emoji);
   }
 
@@ -289,36 +293,112 @@ class ChatScreen extends Component {
 
   renderEmojiPicker() {
     return (
-      <Modal
-        isVisible={this.state.showEmojiPicker}
-        style={styles.modalStyle}
-        onBackButtonPress={() => this.onCloseTaskModal()}
-        onBackdropPress={() => this.onCloseTaskModal()}
-        onRequestClose={() => this.onCloseTaskModal()}
-        coverScreen={false}
-        backdropTransitionOutTiming={0}>
-        <EmojiSelector
-          style={{
-            position: 'absolute',
-            marginHorizontal: 10,
-            marginTop: 10,
-            height: entireScreenHeight - 180,
-            width: '95%',
-            backgroundColor: colors.white,
-          }}
-          onEmojiSelected={emoji => this.addEmoji(emoji)}
-          showSectionTitles={false}
-          showHistory={true}
-          columns={10}
-        />
-      </Modal>
+      // <Modal
+      //   isVisible={this.state.showEmojiPicker}
+      //   style={styles.modalStyle}
+      //   onBackButtonPress={() => this.onCloseTaskModal()}
+      //   onBackdropPress={() => this.onCloseTaskModal()}
+      //   onRequestClose={() => this.onCloseTaskModal()}
+      //   coverScreen={false}
+      //   backdropTransitionOutTiming={0}>
+      <EmojiSelector
+        style={{
+          height: 250,
+        }}
+        onEmojiSelected={emoji => this.addEmoji(emoji)}
+        showSectionTitles={false}
+        showHistory={true}
+        columns={10}
+      />
+      // </Modal>
     );
+  }
+
+  onEmojiPickerPress(showEmojiPicker) {
+    this.setState({showEmojiPicker: !showEmojiPicker});
+  }
+
+  async doumentPicker() {
+    // Pick multiple files
+    try {
+      const results = await DocumentPicker.pickMultiple({
+        type: [
+          DocumentPicker.types.images,
+          DocumentPicker.types.plainText,
+          DocumentPicker.types.pdf,
+        ],
+      });
+      for (const res of results) {
+        this.onFilesCrossPress(res.uri);
+
+        await this.state.files.push({
+          uri: res.uri,
+          type: res.type, // mime type
+          name: res.name,
+          size: res.size,
+          dateTime:
+            moment().format('YYYY/MM/DD') + ' | ' + moment().format('HH:mm'),
+        });
+        console.log(
+          res.uri,
+          res.type, // mime type
+          res.name,
+          res.size,
+        );
+      }
+      await this.setState({
+        files: this.state.files,
+        indeterminate: true,
+        uploading: 0,
+        showMessageModal: false,
+      });
+
+      await APIServices.addFileToTask(
+        this.state.files,
+      )
+        .then(response => {
+          if (response.message == 'success') {
+            this.details = {
+              icon: icons.fileOrange,
+              type: 'success',
+              title: 'Sucsess',
+              description: 'File has been added successfully',
+              buttons: {},
+            };
+            this.setState({
+              indeterminate: false,
+              files: [],
+              uploading: 100,
+              showMessageModal: true,
+            });
+            // this.fetchFilesData(selectedProjectID, selectedProjectTaskID);
+          } else {
+            this.setState({indeterminate: false, files: [], uploading: 0});
+          }
+        })
+        .catch(error => {
+          this.setState({indeterminate: false, files: [], uploading: 0});
+          if (error.status == 401) {
+            this.showAlert('', error.data.message);
+          } else {
+            this.showAlert('', error);
+          }
+        });
+      console.log(this.state.files);
+    } catch (err) {
+      if (DocumentPicker.isCancel(err)) {
+        console.log('file pick error', err);
+      } else {
+        throw err;
+      }
+    }
   }
 
   render() {
     let users = this.state.users;
     let isFetching = this.state.isFetching;
     let usersLoading = this.props.usersLoading;
+    let showEmojiPicker = this.state.showEmojiPicker;
 
     return (
       <MenuProvider>
@@ -338,6 +418,16 @@ class ChatScreen extends Component {
             onLayout={() => this.flatList.scrollToEnd({animated: true})}
           />
           <View style={styles.chatFieldView}>
+            <TouchableOpacity
+              onPress={() => {
+                this.doumentPicker();
+              }}>
+              <Image
+                style={styles.addFileIcon}
+                source={icons.addRoundedBlue}
+                resizeMode={'contain'}
+              />
+            </TouchableOpacity>
             <View style={{flex: 1}}>
               <TextInput
                 style={styles.textInput}
@@ -353,6 +443,18 @@ class ChatScreen extends Component {
             </View>
             <TouchableOpacity
               onPress={() => {
+                this.onEmojiPickerPress(showEmojiPicker);
+              }}>
+              <Image
+                style={styles.emojiChatIconStyle}
+                source={
+                  showEmojiPicker ? icons.keyboardIcon : icons.emojiChatIcon
+                }
+                resizeMode={'contain'}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
                 this.submitChatMessage();
               }}>
               <Image
@@ -362,7 +464,7 @@ class ChatScreen extends Component {
               />
             </TouchableOpacity>
           </View>
-          {this.renderEmojiPicker()}
+          {showEmojiPicker && this.renderEmojiPicker()}
           {usersLoading && <Loader />}
           {/* {this.state.status != 'Connected' && <Loader />} */}
         </View>
@@ -482,6 +584,11 @@ const styles = EStyleSheet.create({
     height: '20rem',
     marginRight: '15rem',
   },
+  emojiChatIconStyle: {
+    width: '23rem',
+    height: '23rem',
+    marginRight: '15rem',
+  },
   innerView: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -530,6 +637,11 @@ const styles = EStyleSheet.create({
     borderRadius: 5,
     backgroundColor: colors.white,
   },
+  addFileIcon:{
+    width: '23rem',
+    height: '23rem',
+    marginRight: '10rem',
+  }
 });
 
 const mapStateToProps = state => {
