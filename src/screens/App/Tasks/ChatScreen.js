@@ -45,7 +45,7 @@ class ChatScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      users: [],
+      comments: [],
       isFetching: false,
       dataLoading: false,
       chatText: '',
@@ -56,17 +56,18 @@ class ChatScreen extends Component {
       status: 'Not Connected',
       showEmojiPicker: false,
       reactionIcon: '',
+      taskId: '',
     };
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (
-      prevProps.usersLoading !== this.props.usersLoading &&
-      this.props.users &&
-      this.props.users.length > 0
+      prevProps.commentsLoading !== this.props.commentsLoading &&
+      this.props.comments &&
+      this.props.comments.length > 0
     ) {
       this.setState({
-        users: this.props.users,
+        comments: this.props.comments,
       });
     }
 
@@ -89,19 +90,29 @@ class ChatScreen extends Component {
   }
 
   componentDidMount() {
-    this.fetchData();
+    const {
+      navigation: {
+        state: {params},
+      },
+    } = this.props;
+
+    let taskId = params.taskId;
+
+    this.setState({
+      taskId: taskId,
+    });
+
+    this.fetchData(taskId);
+
     this.props.stompContext.addStompEventListener(
       StompEventTypes.Connect,
       () => {
         this.setState({status: 'Connected'});
         this.rootSubscribed = this.props.stompContext
           .getStompClient()
-          .subscribe(
-            '/topic/messages/' + '8ad68987-cb6f-4bbf-ae39-4b84afb4c7d7',
-            message => {
-              let messageDecode = JSON.parse(message.body);
-            },
-          );
+          .subscribe('/topic/messages/' + taskId, message => {
+            let messageDecode = JSON.parse(message.body);
+          });
       },
     );
     this.props.stompContext.addStompEventListener(
@@ -124,19 +135,19 @@ class ChatScreen extends Component {
     );
   }
 
-  async fetchData() {
-    this.setState({dataLoading: true, users: []});
-    await APIServices.getCommentsData('8ad68987-cb6f-4bbf-ae39-4b84afb4c7d7')
+  async fetchData(taskId) {
+    this.setState({dataLoading: true, comments: []});
+    await APIServices.getCommentsData(taskId)
       .then(response => {
         if (response.message == 'success') {
-          this.setState({dataLoading: false, users: response.data});
+          this.setState({dataLoading: false, comments: response.data});
         } else {
           this.setState({dataLoading: false});
         }
       })
       .catch(error => {
         this.setState({dataLoading: false});
-        Utils.showAlert(true, '', error.data.message, this.props);
+        // Utils.showAlert(true, '', error.data.message, this.props);
       });
   }
 
@@ -221,7 +232,7 @@ class ChatScreen extends Component {
   }
 
   onRefresh() {
-    this.setState({isFetching: true, users: []}, function() {
+    this.setState({isFetching: true, comments: []}, function() {
       this.fetchData();
     });
   }
@@ -231,7 +242,7 @@ class ChatScreen extends Component {
   }
 
   loadUsers() {
-    this.setState({users: []}, function() {
+    this.setState({comments: []}, function() {
       // this.props.getAllUsers();
     });
   }
@@ -248,12 +259,30 @@ class ChatScreen extends Component {
     }
   };
 
+  async addComment(chatText) {
+    let taskId = this.state.taskId;
+
+    this.setState({dataLoading: true, comments: []});
+    await APIServices.addCommentData(taskId, chatText)
+      .then(response => {
+        if (response.message == 'success') {
+          this.setState({dataLoading: false});
+        } else {
+          this.setState({dataLoading: false});
+        }
+      })
+      .catch(error => {
+        this.setState({dataLoading: false});
+        Utils.showAlert(true, '', error.data.message, this.props);
+      });
+  }
+
   submitChatMessage() {
     let chatText = this.state.chatText;
     if (chatText != '') {
       // this.socket.emit('chat message', this.state.chatText);
       this.props.stompContext.getStompClient().publish({
-        destination: '/app/chat/' + '8ad68987-cb6f-4bbf-ae39-4b84afb4c7d7',
+        destination: '/app/chat/' + taskId,
         headers: {priority: 9},
         body: JSON.stringify({
           fromLogin: 'from',
@@ -261,20 +290,21 @@ class ChatScreen extends Component {
           actionType: 'comment',
         }),
       });
-      let comment = {
-        commentId: '202d83f9-ac1b-4f56-8f70-53f436f6dce8',
-        commentedAt: '2020-06-29T10:54:28.000+0000',
-        commenter: '138bbb3d-02ed-4d72-9a03-7e8cdfe89eff',
-        commenterFistName: 'Naveen',
-        commenterLatName: 'Perera',
-        commenterProfileImage:
-          'https://arimac-pmtool.s3-ap-southeast-1.amazonaws.com/profileImage_1591184736784_image_4.jpg',
-        content: '<p>gfgf</p>',
-        msg: chatText,
-        dateTime: moment().format('hh:mm A'),
-        reactions: [],
-      };
-      this.setState({users: this.state.users.concat(comment)});
+      // let comment = {
+      //   commentId: '202d83f9-ac1b-4f56-8f70-53f436f6dce8',
+      //   commentedAt: '2020-06-29T10:54:28.000+0000',
+      //   commenter: '138bbb3d-02ed-4d72-9a03-7e8cdfe89eff',
+      //   commenterFistName: 'Naveen',
+      //   commenterLatName: 'Perera',
+      //   commenterProfileImage:
+      //     'https://arimac-pmtool.s3-ap-southeast-1.amazonaws.com/profileImage_1591184736784_image_4.jpg',
+      //   content: '<p>gfgf</p>',
+      //   msg: chatText,
+      //   dateTime: moment().format('hh:mm A'),
+      //   reactions: [],
+      // };
+      // this.setState({comments: this.state.comments.concat(comment)});
+      this.addComment(chatText)
       this.setState({chatText: ''});
     }
   }
@@ -353,9 +383,7 @@ class ChatScreen extends Component {
         showMessageModal: false,
       });
 
-      await APIServices.addFileToTask(
-        this.state.files,
-      )
+      await APIServices.addFileToTask(this.state.files)
         .then(response => {
           if (response.message == 'success') {
             this.details = {
@@ -395,7 +423,7 @@ class ChatScreen extends Component {
   }
 
   render() {
-    let users = this.state.users;
+    let comments = this.state.comments;
     let isFetching = this.state.isFetching;
     let usersLoading = this.props.usersLoading;
     let showEmojiPicker = this.state.showEmojiPicker;
@@ -406,7 +434,7 @@ class ChatScreen extends Component {
           <NavigationEvents onWillFocus={payload => this.loadUsers(payload)} />
           <FlatList
             style={styles.flalList}
-            data={users}
+            data={comments}
             renderItem={item => this.renderUserListList(item.item)}
             keyExtractor={item => item.projId}
             onRefresh={() => this.onRefresh()}
@@ -637,11 +665,11 @@ const styles = EStyleSheet.create({
     borderRadius: 5,
     backgroundColor: colors.white,
   },
-  addFileIcon:{
+  addFileIcon: {
     width: '23rem',
     height: '23rem',
     marginRight: '10rem',
-  }
+  },
 });
 
 const mapStateToProps = state => {

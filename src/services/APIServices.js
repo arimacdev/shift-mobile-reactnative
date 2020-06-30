@@ -76,6 +76,7 @@ import {
   SET_ONE_SIGNAL_USER_ID,
   SET_ONE_SIGNAL_USER_UNSUBSCRIBE,
   GET_COMMENTS,
+  ADD_COMMENT,
 } from '../api/API';
 import AsyncStorage from '@react-native-community/async-storage';
 import {SET_UPLOAD_PROGRESS} from '../redux/types';
@@ -2985,8 +2986,41 @@ async function getCommentsData(taskId) {
 
   return request(
     {
-      url: baseURL + GET_COMMENTS + '/' + taskId + '/comment?startIndex=0&endIndex=10',
+      url:
+        baseURL +
+        GET_COMMENTS +
+        '/' +
+        taskId +
+        '/comment?startIndex=0&endIndex=10',
       method: 'GET',
+    },
+    true,
+    headers,
+  );
+}
+
+async function addCommentData(taskId, content) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
+  let userIDHeder = null;
+  userIDHeder = await AsyncStorage.getItem('userID');
+
+  let headers = {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+    userId: userIDHeder,
+  };
+
+  return request(
+    {
+      url: baseURL + ADD_COMMENT,
+      method: 'POST',
+      data: {
+        entityId: taskId,
+        content: content,
+        commenter: userIDHeder,
+        parentId: '',
+      },
     },
     true,
     headers,
@@ -3097,6 +3131,7 @@ const APIServices = {
   setOneSignalUserID,
   setOneSignalNotificationStatusData,
   getCommentsData,
+  addCommentData
 };
 
 export default APIServices;

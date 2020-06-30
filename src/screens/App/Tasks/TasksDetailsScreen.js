@@ -1624,8 +1624,8 @@ class TasksDetailsScreen extends Component {
         break;
       case 6:
         this.props.navigation.navigate('ChatScreen', {
-          selectedProjectID: this.state.selectedProjectID,
-          selectedProjectTaskID: this.state.selectedProjectTaskID,
+          projectId: this.state.selectedProjectID,
+          taskId: this.state.selectedProjectTaskID,
         });
         break;
       default:
