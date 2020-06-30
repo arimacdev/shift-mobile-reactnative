@@ -77,6 +77,7 @@ import {
   SET_ONE_SIGNAL_USER_UNSUBSCRIBE,
   GET_COMMENTS,
   ADD_COMMENT,
+  DELETE_COMMENT,
 } from '../api/API';
 import AsyncStorage from '@react-native-community/async-storage';
 import {SET_UPLOAD_PROGRESS} from '../redux/types';
@@ -3027,6 +3028,28 @@ async function addCommentData(taskId, content) {
   );
 }
 
+async function deleteCommentData(commentId) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
+  let userIDHeder = null;
+  userIDHeder = await AsyncStorage.getItem('userID');
+
+  let headers = {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+    user: userIDHeder,
+  };
+
+  return request(
+    {
+      url: baseURL + DELETE_COMMENT + '/' + commentId,
+      method: 'DELETE',
+    },
+    true,
+    headers,
+  );
+}
+
 const APIServices = {
   getAllProjectsByUserData,
   getUserData,
@@ -3131,7 +3154,8 @@ const APIServices = {
   setOneSignalUserID,
   setOneSignalNotificationStatusData,
   getCommentsData,
-  addCommentData
+  addCommentData,
+  deleteCommentData
 };
 
 export default APIServices;

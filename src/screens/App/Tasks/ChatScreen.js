@@ -270,7 +270,7 @@ class ChatScreen extends Component {
 
   async addComment(chatText) {
     let taskId = this.state.taskId;
-    let chatTextConvert = '<p>' + chatText + '<p>';
+    let chatTextConvert = '<p>' + chatText + '</p>';
     this.setState({dataLoading: true});
     await APIServices.addCommentData(taskId, chatTextConvert)
       .then(response => {

@@ -94,3 +94,4 @@ export const SET_ONE_SIGNAL_USER_UNSUBSCRIBE = `notification/status`;
 
 export const GET_COMMENTS = `task`;
 export const ADD_COMMENT = `task/comment`;
+export const DELETE_COMMENT = `task/comment`
