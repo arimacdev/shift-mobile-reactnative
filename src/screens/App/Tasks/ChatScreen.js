@@ -31,15 +31,14 @@ import PopupMenuEmojiReaction from '../../../components/PopupMenuEmojiReaction';
 import {MenuProvider} from 'react-native-popup-menu';
 import DocumentPicker from 'react-native-document-picker';
 import AsyncStorage from '@react-native-community/async-storage';
+import Swipeable from 'react-native-swipeable';
 
 const reactionDetails = [
-  {value: ':+1:', text: '👍'},
-  {value: ':simple_smile:', text: '🙂'},
-  {value: ':grinning:', text: '😃'},
-  {value: ':joy:', text: '😂'},
-  {value: ':green_heart:', text: '💚'},
-  {value: ':rage:', text: '😡'},
-  {value: ':cry:', text: '😢'},
+  {value: '&#128077', text: '👍'},
+  {value: '&#128154', text: '💚'},
+  {value: '&#128514', text: '😂'},
+  {value: '&#128545', text: '😡'},
+  {value: '&#128546', text: '😢'},
 ];
 
 class ChatScreen extends Component {
@@ -101,8 +100,8 @@ class ChatScreen extends Component {
         this.setState({status: 'Disconnected (not graceful)'});
       },
     );
-    // this.props.stompContext.removeStompClient();
-    // this.rootSubscribed.unsubscribe();
+    this.props.stompContext.removeStompClient();
+    this.rootSubscribed.unsubscribe();
   }
 
   componentDidMount() {
@@ -119,7 +118,7 @@ class ChatScreen extends Component {
             let messageDecode = JSON.parse(message.body);
             console.log('messageDecode', messageDecode);
             if (messageDecode.sender !== userId) {
-              // this.fetchData(taskId);
+              this.fetchData(taskId);
             }
           });
       },
@@ -180,20 +179,26 @@ class ChatScreen extends Component {
   renderReactionDetailsList(item) {
     return (
       <View style={styles.reactionView}>
-        <Text>{item.reactionIcon}</Text>
-        <Text style={styles.textCount}>{item.reactionCount}</Text>
+        <HTML
+          // containerStyle={{marginLeft: 11, marginTop: -15}}
+          html={item.reactionId}
+          imagesMaxWidth={entireScreenWidth}
+        />
+        {/* <Text>{item.reactionIcon}</Text> */}
+        <Text style={styles.textCount}>
+          {item.respondants ? item.respondants.length : ''}
+        </Text>
       </View>
     );
   }
 
   async onMenuItemChange(item, commentId) {
-    console.log('item', item);
     this.setState({dataLoading: true});
     await APIServices.addUpdateCommentReactionData(commentId, item.value)
       .then(response => {
         if (response.message == 'success') {
           this.setState({dataLoading: false});
-          this.fetchData(this.state.taskId)
+          this.sendMessageToSocket(item.value)
         } else {
           this.setState({dataLoading: false});
         }
@@ -204,13 +209,13 @@ class ChatScreen extends Component {
       });
   }
 
-  async onDeleteCommentPress(commentId){
+  async onDeleteCommentPress(commentId) {
     this.setState({dataLoading: true});
     await APIServices.deleteCommentData(commentId)
       .then(response => {
         if (response.message == 'success') {
           this.setState({dataLoading: false});
-          this.fetchData(this.state.taskId)
+          this.sendMessageToSocket('');
         } else {
           this.setState({dataLoading: false});
         }
@@ -223,59 +228,73 @@ class ChatScreen extends Component {
 
   renderUserListList(item) {
     let commentId = item.commentId;
-    return (
-      <View style={styles.chatView}>
-        {this.userImage(item)}
-        <View style={{flex: 1}}>
-          <View style={styles.timeView}>
-            <Text style={styles.textTime}>
-              {moment.parseZone(item.commentedAt).format('hh:mm A')}
-            </Text>
-          </View>
-          <View style={styles.nameView}>
-            <View style={styles.innerView}>
-              <View style={{flex: 1}}>
-                <Text style={styles.text}>
-                  {item.commenterFistName} {item.commenterFistName}
-                </Text>
-                {/* <Text style={styles.textChat}>{item.content}</Text> */}
-                <HTML
-                  containerStyle={{marginLeft: 11, marginTop: -15}}
-                  html={item.content}
-                  imagesMaxWidth={entireScreenWidth}
-                />
-              </View>
 
-              <View style={styles.emojiIconView}>
-                <PopupMenuEmojiReaction
-                  data={reactionDetails}
-                  onChange={item => this.onMenuItemChange(item, commentId)}
-                />
-                <TouchableOpacity
-                  style={styles.emojiIconView}
-                  onPress={() => this.onDeleteCommentPress(item.commentId)}>
-                  <Image style={styles.emojiIcon} source={icons.deleteRoundRed} />
-                </TouchableOpacity>
-              </View>
+    const rightButtons = [
+      <TouchableOpacity
+        style={styles.leftContentButtonStyle}
+        onPress={() => this.OnEditCommentPress(item.commentId)}>
+        <Image style={styles.controlIcon} source={icons.editRoundWhite} />
+      </TouchableOpacity>,
+      <TouchableOpacity
+        style={styles.leftContentButtonStyle}
+        onPress={() => this.onDeleteCommentPress(item.commentId)}>
+        <Image style={styles.controlIcon} source={icons.deleteRoundRed} />
+      </TouchableOpacity>,
+    ];
+
+    return (
+      <Swipeable
+        style={styles.swipeableView}
+        rightButtons={rightButtons}
+        rightButtonWidth={EStyleSheet.value('50rem')}>
+        <View style={styles.chatView}>
+          {this.userImage(item)}
+          <View style={{flex: 1}}>
+            <View style={styles.timeView}>
+              <Text style={styles.textTime}>
+                {moment.parseZone(item.commentedAt).format('hh:mm A')}
+              </Text>
             </View>
-            {item.reactions && item.reactions.length > 0 ? (
-              <FlatList
-                style={styles.flalList}
-                data={item.reactions}
-                horizontal={true}
-                renderItem={item => this.renderReactionDetailsList(item.item)}
-                keyExtractor={item => item.reactionId}
-              />
-            ) : null}
+            <View style={styles.nameView}>
+              <View style={styles.innerView}>
+                <View style={{flex: 1}}>
+                  <Text style={styles.text}>
+                    {item.commenterFistName} {item.commenterFistName}
+                  </Text>
+                  {/* <Text style={styles.textChat}>{item.content}</Text> */}
+                  <HTML
+                    containerStyle={{marginLeft: 11, marginTop: -15}}
+                    html={item.content}
+                    imagesMaxWidth={entireScreenWidth}
+                  />
+                </View>
+
+                <View style={styles.emojiIconView}>
+                  <PopupMenuEmojiReaction
+                    data={reactionDetails}
+                    onChange={item => this.onMenuItemChange(item, commentId)}
+                  />
+                </View>
+              </View>
+              {item.reactions && item.reactions.length > 0 ? (
+                <FlatList
+                  style={styles.flalListReactions}
+                  data={item.reactions}
+                  horizontal={true}
+                  renderItem={item => this.renderReactionDetailsList(item.item)}
+                  keyExtractor={item => item.reactionId}
+                />
+              ) : null}
+            </View>
           </View>
         </View>
-      </View>
+      </Swipeable>
     );
   }
 
   onRefresh() {
     this.setState({isFetching: true, comments: []}, function() {
-      this.fetchData();
+      this.fetchData(this.state.taskId);
     });
   }
 
@@ -301,26 +320,29 @@ class ChatScreen extends Component {
     }
   };
 
-  async addComment(chatText) {
+  async addComment() {
+    let chatText = this.state.chatText;
     let taskId = this.state.taskId;
     let chatTextConvert = '<p>' + chatText + '</p>';
+
     this.setState({dataLoading: true});
     await APIServices.addCommentData(taskId, chatTextConvert)
       .then(response => {
         if (response.message == 'success') {
           this.setState({dataLoading: false});
           let data = response.data;
-          let comment = {
-            commentId: data.commentId,
-            commentedAt: data.commentedAt,
-            commenter: data.commenter,
-            commenterFistName: data.commenterFistName,
-            commenterLatName: data.commenterLatName,
-            commenterProfileImage: data.commenterProfileImage,
-            content: data.content,
-            reactions: data.reactions,
-          };
-          this.setState({comments: this.state.comments.concat(comment)});
+          // let comment = {
+          //   commentId: data.commentId,
+          //   commentedAt: data.commentedAt,
+          //   commenter: data.commenter,
+          //   commenterFistName: data.commenterFistName,
+          //   commenterLatName: data.commenterLatName,
+          //   commenterProfileImage: data.commenterProfileImage,
+          //   content: data.content,
+          //   reactions: data.reactions,
+          // };
+          // this.setState({comments: this.state.comments.concat(comment)});
+          this.submitChatMessage(chatText);
         } else {
           this.setState({dataLoading: false});
         }
@@ -331,23 +353,9 @@ class ChatScreen extends Component {
       });
   }
 
-  async submitChatMessage() {
-    let chatText = this.state.chatText;
-    let taskId = this.state.taskId;
-    let userId = await AsyncStorage.getItem('userID');
-
+  async submitChatMessage(chatText) {
     if (chatText != '') {
-      // this.socket.emit('chat message', this.state.chatText);
-      this.props.stompContext.getStompClient().publish({
-        destination: '/app/chat/' + taskId,
-        headers: {priority: 9},
-        body: JSON.stringify({
-          sender: userId,
-          message: chatText,
-          actionType: 'comment',
-        }),
-      });
-      this.addComment(chatText);
+      this.sendMessageToSocket(chatText);
       this.setState({chatText: ''});
     }
   }
@@ -465,6 +473,21 @@ class ChatScreen extends Component {
     }
   }
 
+  async sendMessageToSocket(message) {
+    let taskId = this.state.taskId;
+    let userId = await AsyncStorage.getItem('userID');
+
+    this.props.stompContext.getStompClient().publish({
+      destination: '/app/chat/' + taskId,
+      headers: {priority: 9},
+      body: JSON.stringify({
+        sender: userId,
+        message: message,
+        actionType: 'comment',
+      }),
+    });
+  }
+
   render() {
     let comments = this.state.comments;
     let isFetching = this.state.isFetching;
@@ -526,7 +549,7 @@ class ChatScreen extends Component {
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
-                this.submitChatMessage();
+                this.addComment();
               }}>
               <Image
                 style={styles.chatIcon}
@@ -551,11 +574,15 @@ const styles = EStyleSheet.create({
   chatView: {
     backgroundColor: colors.white,
     borderColor: colors.lighterGray,
-    marginTop: '13rem',
-    marginBottom: '13rem',
+    // marginTop: '13rem',
+    // marginBottom: '13rem',
     flexDirection: 'row',
     paddingHorizontal: '12rem',
     marginHorizontal: '20rem',
+  },
+  swipeableView: {
+    marginTop: '10rem',
+    marginBottom: '10rem',
   },
   text: {
     fontSize: '12rem',
@@ -578,8 +605,10 @@ const styles = EStyleSheet.create({
     flexDirection: 'row',
   },
   flalList: {
-    // marginTop: '20rem',
     marginBottom: '10rem',
+  },
+  flalListReactions: {
+    marginBottom: '5rem',
   },
   taskStateIcon: {
     width: '25rem',
@@ -684,7 +713,7 @@ const styles = EStyleSheet.create({
     alignItems: 'center',
     backgroundColor: colors.colorPaleCornflowerBlue,
     marginLeft: '10rem',
-    marginTop: '5rem',
+    // marginTop: '5rem',
     width: '50rem',
     paddingHorizontal: '5rem',
     paddingVertical: '2rem',
@@ -712,6 +741,15 @@ const styles = EStyleSheet.create({
     width: '23rem',
     height: '23rem',
     marginRight: '10rem',
+  },
+  controlIcon: {
+    width: '28rem',
+    height: '28rem',
+  },
+  leftContentButtonStyle: {
+    width: '30rem',
+    height: '42rem',
+    justifyContent: 'flex-end',
   },
 });
 
