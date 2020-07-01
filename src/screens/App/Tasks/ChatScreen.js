@@ -225,13 +225,13 @@ class ChatScreen extends Component {
       });
   }
 
-  onEditCommentPress(item) {
+  onEditCommentPress(commentId, content) {
     this.setState({
-      chatText: item.content,
-      commentId: item.commentId,
+      chatText: content,
+      commentId: commentId,
       edit: true,
     });
-    this.state.currentlyOpenSwipeable.recenter()
+    this.state.currentlyOpenSwipeable.recenter();
   }
 
   async updateComment() {
@@ -254,7 +254,7 @@ class ChatScreen extends Component {
   }
 
   async onDeleteCommentPress(commentId) {
-    this.state.currentlyOpenSwipeable.recenter()
+    this.state.currentlyOpenSwipeable.recenter();
     this.setState({dataLoading: true});
     await APIServices.deleteCommentData(commentId)
       .then(response => {
@@ -273,11 +273,12 @@ class ChatScreen extends Component {
 
   renderCommentList(item) {
     let commentId = item.commentId;
+    let result = item.content.replace(/(<p[^>]+?>|<p>|<\/p>)/gi, '');
 
     const rightButtons = [
       <TouchableOpacity
         style={styles.leftContentButtonStyle}
-        onPress={() => this.onEditCommentPress(item)}>
+        onPress={() => this.onEditCommentPress(item.commentId, result)}>
         <Image style={styles.controlIcon} source={icons.editRoundWhite} />
       </TouchableOpacity>,
       <TouchableOpacity
@@ -326,7 +327,7 @@ class ChatScreen extends Component {
                       marginTop: 0,
                       marginRight: 10,
                     }}
-                    html={item.content}
+                    html={result}
                     imagesMaxWidth={entireScreenWidth}
                   />
                 </View>
@@ -897,7 +898,7 @@ const styles = EStyleSheet.create({
     alignItems: 'center',
     backgroundColor: colors.colorPaleCornflowerBlue,
     marginLeft: '10rem',
-    // marginTop: '5rem',
+    marginTop: '5rem',
     width: '50rem',
     paddingHorizontal: '5rem',
     paddingVertical: '2rem',
