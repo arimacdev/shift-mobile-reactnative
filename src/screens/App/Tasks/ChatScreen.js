@@ -59,6 +59,7 @@ class ChatScreen extends Component {
       taskId: '',
       commentId: '',
       edit: false,
+      currentlyOpenSwipeable: null,
     };
   }
 
@@ -217,6 +218,7 @@ class ChatScreen extends Component {
       commentId: item.commentId,
       edit: true,
     });
+    this.state.currentlyOpenSwipeable.recenter()
   }
 
   async updateComment() {
@@ -239,6 +241,7 @@ class ChatScreen extends Component {
   }
 
   async onDeleteCommentPress(commentId) {
+    this.state.currentlyOpenSwipeable.recenter()
     this.setState({dataLoading: true});
     await APIServices.deleteCommentData(commentId)
       .then(response => {
@@ -275,7 +278,20 @@ class ChatScreen extends Component {
       <Swipeable
         style={styles.swipeableView}
         rightButtons={rightButtons}
-        rightButtonWidth={EStyleSheet.value('50rem')}>
+        rightButtonWidth={EStyleSheet.value('50rem')}
+        onRef={ref => (this.swipe = ref)}
+        onRightButtonsOpenRelease={(event, gestureState, swipe) => {
+          if (
+            this.state.currentlyOpenSwipeable &&
+            this.state.currentlyOpenSwipeable !== swipe
+          ) {
+            this.state.currentlyOpenSwipeable.recenter();
+          }
+          this.setState({currentlyOpenSwipeable: swipe});
+        }}
+        onRightButtonsCloseRelease={() =>
+          this.setState({currentlyOpenSwipeable: null})
+        }>
         <View style={styles.chatView}>
           {this.userImage(item)}
           <View style={{flex: 1}}>
