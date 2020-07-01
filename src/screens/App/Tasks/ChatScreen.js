@@ -198,7 +198,7 @@ class ChatScreen extends Component {
       .then(response => {
         if (response.message == 'success') {
           this.setState({dataLoading: false});
-          this.sendMessageToSocket(item.value)
+          this.sendMessageToSocket(item.value);
         } else {
           this.setState({dataLoading: false});
         }
@@ -226,7 +226,7 @@ class ChatScreen extends Component {
       });
   }
 
-  renderUserListList(item) {
+  renderCommentList(item) {
     let commentId = item.commentId;
 
     const rightButtons = [
@@ -252,7 +252,7 @@ class ChatScreen extends Component {
           <View style={{flex: 1}}>
             <View style={styles.timeView}>
               <Text style={styles.textTime}>
-                {moment.parseZone(item.commentedAt).format('hh:mm A')}
+                {moment.parseZone(item.commentedAt).fromNow()}
               </Text>
             </View>
             <View style={styles.nameView}>
@@ -263,7 +263,11 @@ class ChatScreen extends Component {
                   </Text>
                   {/* <Text style={styles.textChat}>{item.content}</Text> */}
                   <HTML
-                    containerStyle={{marginLeft: 11, marginTop: -15}}
+                    containerStyle={{
+                      marginLeft: 11,
+                      marginTop: 0,
+                      marginRight: 10,
+                    }}
                     html={item.content}
                     imagesMaxWidth={entireScreenWidth}
                   />
@@ -323,7 +327,7 @@ class ChatScreen extends Component {
   async addComment() {
     let chatText = this.state.chatText;
     let taskId = this.state.taskId;
-    let chatTextConvert = '<p>' + chatText + '</p>';
+    let chatTextConvert = chatText;
 
     this.setState({dataLoading: true});
     await APIServices.addCommentData(taskId, chatTextConvert)
@@ -488,11 +492,26 @@ class ChatScreen extends Component {
     });
   }
 
+  arrayCompare(a, b) {
+    const dateA = a.commentedAt;
+    const dateB = b.commentedAt;
+
+    let comparison = 0;
+    if (dateA > dateB) {
+      comparison = 1;
+    } else if (dateA < dateB) {
+      comparison = -1;
+    }
+    return comparison;
+  }
+
   render() {
     let comments = this.state.comments;
     let isFetching = this.state.isFetching;
     let usersLoading = this.props.usersLoading;
     let showEmojiPicker = this.state.showEmojiPicker;
+
+    let sortedData = comments.sort(this.arrayCompare);
 
     return (
       <MenuProvider>
@@ -500,8 +519,8 @@ class ChatScreen extends Component {
           <NavigationEvents onWillFocus={payload => this.loadUsers(payload)} />
           <FlatList
             style={styles.flalList}
-            data={comments}
-            renderItem={item => this.renderUserListList(item.item)}
+            data={sortedData}
+            renderItem={item => this.renderCommentList(item.item)}
             keyExtractor={item => item.projId}
             onRefresh={() => this.onRefresh()}
             refreshing={isFetching}
