@@ -9,6 +9,7 @@ import {
   TextInput,
   Animated,
   Keyboard,
+  Alert,
   UIManager
 } from 'react-native';
 import {connect} from 'react-redux';
@@ -21,6 +22,7 @@ const entireScreenHeight = Dimensions.get('window').height;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
 import FadeIn from 'react-native-fade-in-image';
 import Loader from '../../../components/Loader';
+import ImagePicker from 'react-native-image-picker';
 import {NavigationEvents} from 'react-navigation';
 // import io from 'socket.io-client';
 import APIServices from '../../../services/APIServices';
@@ -458,6 +460,74 @@ class ChatScreen extends Component {
     this.setState({showEmojiPicker: !showEmojiPicker});
   }
 
+  async iOSFilePicker() {
+    Alert.alert(
+      'Add Files',
+      'Select the file source',
+      [
+        {text: 'Camera', onPress: () => this.selectCamera()},
+        {text: 'Gallery', onPress: () => this.selectGallery()},
+        {text: 'Files', onPress: () => this.doumentPicker()},
+        {text: 'Cancel', onPress: () => console.log('Back')},
+      ],
+      {
+        cancelable: true,
+      },
+    );
+  }
+
+  async selectCamera() {
+    const options = {
+      title: 'Select pictures',
+      storageOptions: {
+        skipBackup: true,
+        path: 'images',
+      },
+      quality: 0.2,
+    };
+    ImagePicker.launchCamera(options, res => {
+      if (res.didCancel) {
+      } else if (res.error) {
+      } else if (res.customButton) {
+      } else {
+        this.setImageForFile(res);
+      }
+    });
+  }
+
+  async selectGallery() {
+    const options = {
+      title: 'Select pictures',
+      storageOptions: {
+        skipBackup: true,
+        path: 'images',
+      },
+      quality: 0.2,
+    };
+
+    ImagePicker.launchImageLibrary(options, res => {
+      if (res.didCancel) {
+      } else if (res.error) {
+      } else if (res.customButton) {
+      } else {
+        this.setImageForFile(res);
+      }
+    });
+  }
+
+  async setImageForFile(res) {
+    this.onFilesCrossPress(res.uri);
+    await this.state.files.push({
+      uri: res.uri,
+      type: res.type, // mime type
+      name: 'Img ' + new Date().getTime(),
+      size: res.fileSize,
+      dateTime:
+        moment().format('YYYY/MM/DD') + ' | ' + moment().format('HH:mm'),
+    });
+    this.setState({files: this.state.files});
+  }
+
   async doumentPicker() {
     // Pick multiple files
     try {
@@ -627,7 +697,7 @@ handleKeyboardDidHide = () => {
           <View style={styles.chatFieldView}>
             <TouchableOpacity
               onPress={() => {
-                this.doumentPicker();
+                Platform.OS == 'ios' ? this.iOSFilePicker() : this.doumentPicker()
               }}>
               <Image
                 style={styles.addFileIcon}
