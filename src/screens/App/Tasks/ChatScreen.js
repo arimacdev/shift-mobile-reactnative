@@ -7,6 +7,9 @@ import {
   Image,
   TouchableOpacity,
   TextInput,
+  Animated,
+  Keyboard,
+  UIManager
 } from 'react-native';
 import {connect} from 'react-redux';
 import * as actions from '../../../redux/actions';
@@ -41,6 +44,9 @@ const reactionDetails = [
   {value: '&#128546', text: '😢'},
 ];
 
+
+const { State: TextInputState } = TextInput;
+
 class ChatScreen extends Component {
   constructor(props) {
     super(props);
@@ -60,6 +66,7 @@ class ChatScreen extends Component {
       commentId: '',
       edit: false,
       currentlyOpenSwipeable: null,
+      shift: new Animated.Value(0),
     };
   }
 
@@ -76,6 +83,8 @@ class ChatScreen extends Component {
       taskId: taskId,
     });
     this.fetchData(taskId);
+    this.keyboardDidShowSub = Keyboard.addListener('keyboardDidShow', this.handleKeyboardDidShow);
+    this.keyboardDidHideSub = Keyboard.addListener('keyboardDidHide', this.handleKeyboardDidHide);
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -105,6 +114,8 @@ class ChatScreen extends Component {
     );
     this.props.stompContext.removeStompClient();
     this.rootSubscribed.unsubscribe();
+    this.keyboardDidShowSub.remove();
+    this.keyboardDidHideSub.remove();
   }
 
   componentDidMount() {
@@ -551,6 +562,41 @@ class ChatScreen extends Component {
     return comparison;
   }
 
+  handleKeyboardDidShow = (event) => {
+    const { height: windowHeight } = Dimensions.get('window');
+    const keyboardHeight = event.endCoordinates.height;
+    const currentlyFocusedField = TextInputState.currentlyFocusedField();
+    UIManager.measure(currentlyFocusedField, (originX, originY, width, height, pageX, pageY) => {
+        const fieldHeight = height;
+        const fieldTop = pageY;
+        const gap = (windowHeight - keyboardHeight - 20) - (fieldTop + fieldHeight);
+        if (gap >= 0) {
+            return;
+        }
+        if (gap !== null && !(isNaN(gap))) {
+            Animated.timing(
+                this.state.shift,
+                {
+                    toValue: gap,
+                    duration: 100,
+                    useNativeDriver: true,
+                }
+            ).start();
+        }
+    });
+};
+
+handleKeyboardDidHide = () => {
+    Animated.timing(
+        this.state.shift,
+        {
+            toValue: 0,
+            duration: 100,
+            useNativeDriver: true,
+        }
+    ).start();
+};
+
   render() {
     let comments = this.state.comments;
     let isFetching = this.state.isFetching;
@@ -558,6 +604,7 @@ class ChatScreen extends Component {
     let showEmojiPicker = this.state.showEmojiPicker;
     let sortedData = comments.sort(this.arrayCompare);
     let edit = this.state.edit;
+    const { shift } = this.state;
 
     return (
       <MenuProvider>
@@ -576,6 +623,7 @@ class ChatScreen extends Component {
             }
             onLayout={() => this.flatList.scrollToEnd({animated: true})}
           />
+          <Animated.View style={[{ transform: [{ translateY: shift }] }]}>
           <View style={styles.chatFieldView}>
             <TouchableOpacity
               onPress={() => {
@@ -623,6 +671,7 @@ class ChatScreen extends Component {
               />
             </TouchableOpacity>
           </View>
+          </Animated.View>
           {showEmojiPicker && this.renderEmojiPicker()}
           {usersLoading && <Loader />}
           {/* {this.state.status != 'Connected' && <Loader />} */}
