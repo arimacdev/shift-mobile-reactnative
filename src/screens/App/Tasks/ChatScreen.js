@@ -635,45 +635,49 @@ class ChatScreen extends Component {
   }
 
   handleKeyboardDidShow = (event) => {
-    const { height: windowHeight } = Dimensions.get('window');
-    const keyboardHeight = event.endCoordinates.height;
-    const currentlyFocusedField = TextInputState.currentlyFocusedField();
-    UIManager.measure(currentlyFocusedField, (originX, originY, width, height, pageX, pageY) => {
-      const fieldHeight = height;
-      const fieldTop = pageY;
-      const gap = (windowHeight - keyboardHeight - 20) - (fieldTop + fieldHeight);
-      if (gap >= 0) {
-        return;
-      }
-      if (gap !== null && !(isNaN(gap))) {
-        Animated.timing(
-          this.state.shift,
-          {
-            toValue: gap,
-            duration: 100,
-            useNativeDriver: true,
-          }
-        ).start();
-      }
-    });
+    if (Platform.OS == 'ios') {
+      const { height: windowHeight } = Dimensions.get('window');
+      const keyboardHeight = event.endCoordinates.height;
+      const currentlyFocusedField = TextInputState.currentlyFocusedField();
+      UIManager.measure(currentlyFocusedField, (originX, originY, width, height, pageX, pageY) => {
+        const fieldHeight = height;
+        const fieldTop = pageY;
+        const gap = (windowHeight - keyboardHeight - 20) - (fieldTop + fieldHeight);
+        if (gap >= 0) {
+          return;
+        }
+        if (gap !== null && !(isNaN(gap))) {
+          Animated.timing(
+            this.state.shift,
+            {
+              toValue: gap,
+              duration: 100,
+              useNativeDriver: true,
+            }
+          ).start();
+        }
+      });
+    }
   };
 
   handleKeyboardDidHide = () => {
-    Animated.timing(
-      this.state.shift,
-      {
-        toValue: 0,
-        duration: 100,
-        useNativeDriver: true,
-      }
-    ).start();
+    if (Platform.OS == 'ios') {
+      Animated.timing(
+        this.state.shift,
+        {
+          toValue: 0,
+          duration: 100,
+          useNativeDriver: true,
+        }
+      ).start();
+    }
   };
 
   handleListScrollToEnd = () => {
     if (!this.state.isDeleteEvent) {
       this.flatList.scrollToEnd({ animated: true })
     }
-    this.setState({isDeleteEvent: false})
+    this.setState({ isDeleteEvent: false })
   }
 
 
