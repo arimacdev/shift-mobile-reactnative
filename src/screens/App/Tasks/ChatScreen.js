@@ -186,8 +186,22 @@ class ChatScreen extends Component {
     );
   }
 
-  onMenuItemChange(item, commentId) {
+  async onMenuItemChange(item, commentId) {
     console.log('item', item);
+    this.setState({dataLoading: true});
+    await APIServices.addUpdateCommentReactionData(commentId, item.value)
+      .then(response => {
+        if (response.message == 'success') {
+          this.setState({dataLoading: false});
+          this.fetchData(this.state.taskId)
+        } else {
+          this.setState({dataLoading: false});
+        }
+      })
+      .catch(error => {
+        this.setState({dataLoading: false});
+        // Utils.showAlert(true, '', error.data.message, this.props);
+      });
   }
 
   async onDeleteCommentPress(commentId){
@@ -208,6 +222,7 @@ class ChatScreen extends Component {
   }
 
   renderUserListList(item) {
+    let commentId = item.commentId;
     return (
       <View style={styles.chatView}>
         {this.userImage(item)}
@@ -234,7 +249,7 @@ class ChatScreen extends Component {
               <View style={styles.emojiIconView}>
                 <PopupMenuEmojiReaction
                   data={reactionDetails}
-                  onChange={item => this.onMenuItemChange(item, item.commentId)}
+                  onChange={item => this.onMenuItemChange(item, commentId)}
                 />
                 <TouchableOpacity
                   style={styles.emojiIconView}

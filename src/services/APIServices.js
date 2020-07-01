@@ -79,6 +79,7 @@ import {
   ADD_COMMENT,
   DELETE_COMMENT,
   UPDATE_COMMENT,
+  ADD_UPDATE_COMMENT_REACTION
 } from '../api/API';
 import AsyncStorage from '@react-native-community/async-storage';
 import {SET_UPLOAD_PROGRESS} from '../redux/types';
@@ -3029,7 +3030,7 @@ async function addCommentData(taskId, content) {
   );
 }
 
-async function updateCommentData(commentId) {
+async function updateCommentData(commentId, content) {
   let baseURL = null;
   baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
@@ -3043,11 +3044,11 @@ async function updateCommentData(commentId) {
 
   return request(
     {
-      url: baseURL + UPDATE_COMMENT ,
+      url: baseURL + UPDATE_COMMENT + '/' + commentId,
       method: 'PUT',
       data: {
-        content: "This is the Updated First Comment!", 
-        commenter: userIDHeder
+        content: content,
+        commenter: userIDHeder,
       },
     },
     true,
@@ -3077,7 +3078,7 @@ async function deleteCommentData(commentId) {
   );
 }
 
-async function addUpdateReactionData(commentId) {
+async function addUpdateCommentReactionData(commentId, reactionId) {
   let baseURL = null;
   baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
@@ -3091,8 +3092,12 @@ async function addUpdateReactionData(commentId) {
 
   return request(
     {
-      url: baseURL + DELETE_COMMENT + '/' + commentId,
-      method: 'DELETE',
+      url:
+        baseURL + ADD_UPDATE_COMMENT_REACTION + '/' + commentId + '/reaction',
+      method: 'POST',
+      data: {
+        reactionId: reactionId,
+      },
     },
     true,
     headers,
@@ -3204,8 +3209,9 @@ const APIServices = {
   setOneSignalNotificationStatusData,
   getCommentsData,
   addCommentData,
+  updateCommentData,
   deleteCommentData,
-  addUpdateReactionData,
+  addUpdateCommentReactionData,
 };
 
 export default APIServices;
