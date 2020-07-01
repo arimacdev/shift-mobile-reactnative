@@ -57,6 +57,8 @@ class ChatScreen extends Component {
       showEmojiPicker: false,
       reactionIcon: '',
       taskId: '',
+      commentId: '',
+      edit: false,
     };
   }
 
@@ -117,7 +119,7 @@ class ChatScreen extends Component {
           .subscribe('/topic/messages/' + taskId, message => {
             let messageDecode = JSON.parse(message.body);
             console.log('messageDecode', messageDecode);
-            if (messageDecode.sender !== userId) {
+            if (messageDecode.sender != userId) {
               this.fetchData(taskId);
             }
           });
@@ -209,6 +211,33 @@ class ChatScreen extends Component {
       });
   }
 
+  onEditCommentPress(item) {
+    this.setState({
+      chatText: item.content,
+      commentId: item.commentId,
+      edit: true,
+    });
+  }
+
+  async updateComment() {
+    let commentId = this.state.commentId;
+    let chatText = this.state.chatText;
+    this.setState({dataLoading: true});
+    await APIServices.updateCommentData(commentId, chatText)
+      .then(response => {
+        if (response.message == 'success') {
+          this.setState({dataLoading: false, edit: false});
+          this.sendMessageToSocket(chatText);
+        } else {
+          this.setState({dataLoading: false});
+        }
+      })
+      .catch(error => {
+        this.setState({dataLoading: false});
+        // Utils.showAlert(true, '', error.data.message, this.props);
+      });
+  }
+
   async onDeleteCommentPress(commentId) {
     this.setState({dataLoading: true});
     await APIServices.deleteCommentData(commentId)
@@ -232,7 +261,7 @@ class ChatScreen extends Component {
     const rightButtons = [
       <TouchableOpacity
         style={styles.leftContentButtonStyle}
-        onPress={() => this.OnEditCommentPress(item.commentId)}>
+        onPress={() => this.onEditCommentPress(item)}>
         <Image style={styles.controlIcon} source={icons.editRoundWhite} />
       </TouchableOpacity>,
       <TouchableOpacity
@@ -360,7 +389,6 @@ class ChatScreen extends Component {
   async submitChatMessage(chatText) {
     if (chatText != '') {
       this.sendMessageToSocket(chatText);
-      this.setState({chatText: ''});
     }
   }
 
@@ -490,6 +518,8 @@ class ChatScreen extends Component {
         actionType: 'comment',
       }),
     });
+
+    this.setState({chatText: ''});
   }
 
   arrayCompare(a, b) {
@@ -510,8 +540,8 @@ class ChatScreen extends Component {
     let isFetching = this.state.isFetching;
     let usersLoading = this.props.usersLoading;
     let showEmojiPicker = this.state.showEmojiPicker;
-
     let sortedData = comments.sort(this.arrayCompare);
+    let edit = this.state.edit;
 
     return (
       <MenuProvider>
@@ -568,7 +598,7 @@ class ChatScreen extends Component {
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
-                this.addComment();
+                edit ? this.updateComment() : this.addComment();
               }}>
               <Image
                 style={styles.chatIcon}
