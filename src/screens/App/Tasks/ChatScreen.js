@@ -68,7 +68,8 @@ class ChatScreen extends Component {
       edit: false,
       currentlyOpenSwipeable: null,
       shift: new Animated.Value(0),
-      isDeleteEvent: false
+      isDeleteEvent: false,
+      listHeghtWithKeyboard: '100%'
     };
   }
 
@@ -635,7 +636,7 @@ class ChatScreen extends Component {
   }
 
   handleKeyboardDidShow = (event) => {
-    if (Platform.OS == 'ios') {
+    // if (Platform.OS == 'ios') {
       const { height: windowHeight } = Dimensions.get('window');
       const keyboardHeight = event.endCoordinates.height;
       const currentlyFocusedField = TextInputState.currentlyFocusedField();
@@ -643,6 +644,7 @@ class ChatScreen extends Component {
         const fieldHeight = height;
         const fieldTop = pageY;
         const gap = (windowHeight - keyboardHeight - 20) - (fieldTop + fieldHeight);
+        this.setState({listHeghtWithKeyboard: windowHeight - keyboardHeight - 80})
         if (gap >= 0) {
           return;
         }
@@ -657,11 +659,12 @@ class ChatScreen extends Component {
           ).start();
         }
       });
-    }
+    // }
   };
 
   handleKeyboardDidHide = () => {
-    if (Platform.OS == 'ios') {
+    // if (Platform.OS == 'ios') {
+      this.setState({listHeghtWithKeyboard: '100%'})
       Animated.timing(
         this.state.shift,
         {
@@ -670,7 +673,7 @@ class ChatScreen extends Component {
           useNativeDriver: true,
         }
       ).start();
-    }
+    // }
   };
 
   handleListScrollToEnd = () => {
@@ -694,6 +697,7 @@ class ChatScreen extends Component {
       <MenuProvider>
         <View style={styles.container}>
           <NavigationEvents onWillFocus={payload => this.loadUsers(payload)} />
+          <View style={{height: this.state.listHeghtWithKeyboard}}>
           <FlatList
             style={styles.flalList}
             data={sortedData}
@@ -707,7 +711,8 @@ class ChatScreen extends Component {
             }
             onLayout={() => this.handleListScrollToEnd()}
           />
-          <Animated.View style={[{ transform: [{ translateY: shift }] }]}>
+          
+          {/* <Animated.View style={[{ transform: [{ translateY: shift }] }]}> */}
             <View style={styles.chatFieldView}>
               <TouchableOpacity
                 onPress={() => {
@@ -755,10 +760,11 @@ class ChatScreen extends Component {
                 />
               </TouchableOpacity>
             </View>
-          </Animated.View>
+          {/* </Animated.View> */}
           {showEmojiPicker && this.renderEmojiPicker()}
           {usersLoading && <Loader />}
           {/* {this.state.status != 'Connected' && <Loader />} */}
+        </View>
         </View>
       </MenuProvider>
     );
