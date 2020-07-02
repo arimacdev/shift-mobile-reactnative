@@ -44,6 +44,8 @@ import CNRichTextEditor, {
   getInitialObject,
   getDefaultStyles,
 } from 'react-native-cn-richtext-editor';
+import HBRichTextEditor from 'react-native-richtext-editor';
+import HBToolbar from'react-native-richtext-editor/HBToolbar';
 
 const defaultStyles = getDefaultStyles();
 
@@ -848,6 +850,8 @@ class ChatScreen extends Component {
     let edit = this.state.edit;
     const {shift} = this.state;
 
+    let bodyForDisplay = 'web&nbsp;<img src="https://arimac-pmtool.s3-ap-southeast-1.amazonaws.com/profileImage_1593594181536_add_rounded_blue_o.png" class="e-rte-image e-imginline" width="auto" height="auto" style="min-width: 0px; min-height: 0px;">'
+
     return (
       <MenuProvider>
         <View style={styles.container}>
@@ -867,7 +871,11 @@ class ChatScreen extends Component {
 
             {/* <Animated.View style={[{ transform: [{ translateY: shift }] }]}> */}
             {/* {this.renderRichTextView()} */}
+           
+
             <View style={styles.chatFieldView}>
+            {/* <HBRichTextEditor ref="myEditor" initialHTML={bodyForDisplay} />
+            <HBToolbar /> */}
               <TouchableOpacity
                 onPress={() => {
                   Platform.OS == 'ios'
