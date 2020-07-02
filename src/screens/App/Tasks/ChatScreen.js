@@ -709,7 +709,8 @@ class ChatScreen extends Component {
     let edit = this.state.edit;
     const {shift} = this.state;
 
-    let bodyForDisplay = 'web&nbsp;<img src="https://arimac-pmtool.s3-ap-southeast-1.amazonaws.com/profileImage_1593594181536_add_rounded_blue_o.png" class="e-rte-image e-imginline" width="auto" height="auto" style="min-width: 0px; min-height: 0px;">'
+    let bodyForDisplay =
+      'web&nbsp;<img src="https://arimac-pmtool.s3-ap-southeast-1.amazonaws.com/profileImage_1593594181536_add_rounded_blue_o.png" class="e-rte-image e-imginline" width="auto" height="auto" style="min-width: 0px; min-height: 0px;">';
 
     return (
       <MenuProvider>
@@ -727,8 +728,9 @@ class ChatScreen extends Component {
               onContentSizeChange={() => this.handleListScrollToEnd()}
               onLayout={() => this.handleListScrollToEnd()}
             />
+
             <View style={styles.chatFieldView}>
-            <TouchableOpacity
+              <TouchableOpacity
                 onPress={() => {
                   Platform.OS == 'ios'
                     ? this.iOSFilePicker()
@@ -740,8 +742,8 @@ class ChatScreen extends Component {
                   resizeMode={'contain'}
                 />
               </TouchableOpacity>
-            <RichTextEditor chatText={this.state.chatText}/>
-            <TouchableOpacity
+              <RichTextEditor chatText={this.state.chatText} />
+              <TouchableOpacity
                 onPress={() => {
                   edit ? this.updateComment() : this.addComment();
                 }}>
@@ -752,6 +754,7 @@ class ChatScreen extends Component {
                 />
               </TouchableOpacity>
             </View>
+            
             {/* <Animated.View style={[{ transform: [{ translateY: shift }] }]}> */}
             {/* <View style={styles.chatFieldView}>
               <TouchableOpacity
