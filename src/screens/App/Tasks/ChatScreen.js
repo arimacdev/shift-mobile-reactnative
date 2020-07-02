@@ -64,7 +64,7 @@ class ChatScreen extends Component {
       comments: [],
       isFetching: false,
       dataLoading: false,
-      // chatText: '',
+      chatText: '',
       height: 60,
       chatMessage: '',
       chatMessages: [],
@@ -80,7 +80,7 @@ class ChatScreen extends Component {
       listHeghtWithKeyboard: '100%',
       selectedTag: 'body',
       selectedStyles: [],
-      chatText: [getInitialObject()],
+      value: [getInitialObject()],
     };
     this.editor = null;
   }
@@ -195,9 +195,8 @@ class ChatScreen extends Component {
   };
 
   onValueChanged = value => {
-    console.log("ddddddddddddddddd",value);
     this.setState({
-      chatText: value,
+      value: value,
     });
   };
 
@@ -220,7 +219,7 @@ class ChatScreen extends Component {
               ref={input => (this.editor = input)}
               onSelectedTagChanged={this.onSelectedTagChanged}
               onSelectedStyleChanged={this.onSelectedStyleChanged}
-              value={this.state.chatText}
+              value={this.state.value}
               style={{backgroundColor: '#fff'}}
               styleList={defaultStyles}
               onValueChanged={this.onValueChanged}
@@ -867,8 +866,8 @@ class ChatScreen extends Component {
             />
 
             {/* <Animated.View style={[{ transform: [{ translateY: shift }] }]}> */}
-            {this.renderRichTextView()}
-            {/* <View style={styles.chatFieldView}>
+            {/* {this.renderRichTextView()} */}
+            <View style={styles.chatFieldView}>
               <TouchableOpacity
                 onPress={() => {
                   Platform.OS == 'ios'
@@ -916,7 +915,7 @@ class ChatScreen extends Component {
                   resizeMode={'contain'}
                 />
               </TouchableOpacity>
-            {/* </View> */}
+            </View>
             {/* </Animated.View> */}
             {showEmojiPicker && this.renderEmojiPicker()}
             {usersLoading && <Loader />}
@@ -967,7 +966,6 @@ const styles = EStyleSheet.create({
   },
   flalList: {
     marginBottom: '10rem',
-    height:100
   },
   flalListReactions: {
     marginBottom: '5rem',
