@@ -39,15 +39,7 @@ import {MenuProvider} from 'react-native-popup-menu';
 import DocumentPicker from 'react-native-document-picker';
 import AsyncStorage from '@react-native-community/async-storage';
 import Swipeable from 'react-native-swipeable';
-import CNRichTextEditor, {
-  CNToolbar,
-  getInitialObject,
-  getDefaultStyles,
-} from 'react-native-cn-richtext-editor';
-// import HBRichTextEditor from 'react-native-richtext-editor';
-// import HBToolbar from'react-native-richtext-editor/HBToolbar';
-
-const defaultStyles = getDefaultStyles();
+import RichTextEditor from '../../../components/RichTextEditor';
 
 const reactionDetails = [
   {value: '&#128077', text: '👍'},
@@ -82,7 +74,6 @@ class ChatScreen extends Component {
       listHeghtWithKeyboard: '100%',
       selectedTag: 'body',
       selectedStyles: [],
-      value: [getInitialObject()],
     };
     this.editor = null;
   }
@@ -177,138 +168,6 @@ class ChatScreen extends Component {
       '',
       '',
       '/',
-    );
-  }
-
-  onStyleKeyPress = toolType => {
-    this.editor.applyToolbar(toolType);
-  };
-
-  onSelectedTagChanged = tag => {
-    this.setState({
-      selectedTag: tag,
-    });
-  };
-
-  onSelectedStyleChanged = styles => {
-    this.setState({
-      selectedStyles: styles,
-    });
-  };
-
-  onValueChanged = value => {
-    this.setState({
-      value: value,
-    });
-  };
-
-  renderRichTextView() {
-    return (
-      <KeyboardAvoidingView
-        behavior="padding"
-        enabled
-        keyboardVerticalOffset={0}
-        style={{
-          flex: 1,
-          paddingTop: 20,
-          backgroundColor: '#eee',
-          flexDirection: 'column',
-          justifyContent: 'flex-end',
-        }}>
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View style={styles.main}>
-            <CNRichTextEditor
-              ref={input => (this.editor = input)}
-              onSelectedTagChanged={this.onSelectedTagChanged}
-              onSelectedStyleChanged={this.onSelectedStyleChanged}
-              value={this.state.value}
-              style={{backgroundColor: '#fff'}}
-              styleList={defaultStyles}
-              onValueChanged={this.onValueChanged}
-            />
-          </View>
-        </TouchableWithoutFeedback>
-
-        <View
-          style={{
-            minHeight: 35,
-          }}>
-          <CNToolbar
-            style={{
-              height: 35,
-            }}
-            iconSetContainerStyle={{
-              flexGrow: 1,
-              justifyContent: 'space-evenly',
-              alignItems: 'center',
-            }}
-            size={30}
-            iconSet={[
-              {
-                type: 'tool',
-                iconArray: [
-                  {
-                    toolTypeText: 'image',
-                    iconComponent: (
-                      <Text style={styles.toolbarButton}>image</Text>
-                    ),
-                  },
-                ],
-              },
-              {
-                type: 'tool',
-                iconArray: [
-                  {
-                    toolTypeText: 'bold',
-                    buttonTypes: 'style',
-                    iconComponent: (
-                      <Text style={styles.toolbarButton}>bold</Text>
-                    ),
-                  },
-                ],
-              },
-              {
-                type: 'seperator',
-              },
-              {
-                type: 'tool',
-                iconArray: [
-                  {
-                    toolTypeText: 'body',
-                    buttonTypes: 'tag',
-                    iconComponent: (
-                      <Text style={styles.toolbarButton}>body</Text>
-                    ),
-                  },
-                ],
-              },
-              {
-                type: 'tool',
-                iconArray: [
-                  {
-                    toolTypeText: 'ul',
-                    buttonTypes: 'tag',
-                    iconComponent: <Text style={styles.toolbarButton}>ul</Text>,
-                  },
-                ],
-              },
-              {
-                type: 'tool',
-                iconArray: [
-                  {
-                    toolTypeText: 'ol',
-                    buttonTypes: 'tag',
-                    iconComponent: <Text style={styles.toolbarButton}>ol</Text>,
-                  },
-                ],
-              },
-            ]}
-            selectedTag={this.state.selectedTag}
-            selectedStyles={this.state.selectedStyles}
-            onStyleKeyPress={this.onStyleKeyPress}
-          />
-        </View>
-      </KeyboardAvoidingView>
     );
   }
 
@@ -868,14 +727,33 @@ class ChatScreen extends Component {
               onContentSizeChange={() => this.handleListScrollToEnd()}
               onLayout={() => this.handleListScrollToEnd()}
             />
-
-            {/* <Animated.View style={[{ transform: [{ translateY: shift }] }]}> */}
-            {/* {this.renderRichTextView()} */}
-           
-
             <View style={styles.chatFieldView}>
-            {/* <HBRichTextEditor ref="myEditor" initialHTML={bodyForDisplay} />
-            <HBToolbar /> */}
+            <TouchableOpacity
+                onPress={() => {
+                  Platform.OS == 'ios'
+                    ? this.iOSFilePicker()
+                    : this.doumentPicker();
+                }}>
+                <Image
+                  style={styles.addFileIcon}
+                  source={icons.addRoundedBlue}
+                  resizeMode={'contain'}
+                />
+              </TouchableOpacity>
+            <RichTextEditor chatText={this.state.chatText}/>
+            <TouchableOpacity
+                onPress={() => {
+                  edit ? this.updateComment() : this.addComment();
+                }}>
+                <Image
+                  style={styles.chatIcon}
+                  source={icons.forwordGreen}
+                  resizeMode={'contain'}
+                />
+              </TouchableOpacity>
+            </View>
+            {/* <Animated.View style={[{ transform: [{ translateY: shift }] }]}> */}
+            {/* <View style={styles.chatFieldView}>
               <TouchableOpacity
                 onPress={() => {
                   Platform.OS == 'ios'
@@ -901,18 +779,6 @@ class ChatScreen extends Component {
                   // }
                 />
               </View>
-              {/* <TouchableOpacity
-                onPress={() => {
-                  this.onEmojiPickerPress(showEmojiPicker);
-                }}>
-                <Image
-                  style={styles.emojiChatIconStyle}
-                  source={
-                    showEmojiPicker ? icons.keyboardIcon : icons.emojiChatIcon
-                  }
-                  resizeMode={'contain'}
-                />
-              </TouchableOpacity> */}
               <TouchableOpacity
                 onPress={() => {
                   edit ? this.updateComment() : this.addComment();
@@ -923,7 +789,7 @@ class ChatScreen extends Component {
                   resizeMode={'contain'}
                 />
               </TouchableOpacity>
-            </View>
+            </View> */}
             {/* </Animated.View> */}
             {showEmojiPicker && this.renderEmojiPicker()}
             {usersLoading && <Loader />}
@@ -1036,7 +902,7 @@ const styles = EStyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingLeft: '12rem',
-    height: '45rem',
+    height: '100rem',
     marginHorizontal: '20rem',
   },
   textInput: {
@@ -1118,32 +984,6 @@ const styles = EStyleSheet.create({
     width: '30rem',
     height: '42rem',
     justifyContent: 'flex-end',
-  },
-  main: {
-    flex: 1,
-    marginTop: 10,
-    paddingLeft: 30,
-    paddingRight: 30,
-    paddingBottom: 1,
-    alignItems: 'stretch',
-  },
-  toolbarButton: {
-    fontSize: 20,
-    width: 28,
-    height: 28,
-    textAlign: 'center',
-  },
-  italicButton: {
-    fontStyle: 'italic',
-  },
-  boldButton: {
-    fontWeight: 'bold',
-  },
-  underlineButton: {
-    textDecorationLine: 'underline',
-  },
-  lineThroughButton: {
-    textDecorationLine: 'line-through',
   },
 });
 

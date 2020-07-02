@@ -2997,7 +2997,7 @@ async function getCommentsData(taskId) {
         GET_COMMENTS +
         '/' +
         taskId +
-        '/comment?startIndex=0&endIndex=50',
+        '/comment?startIndex=0&endIndex=10',
       method: 'GET',
     },
     true,
