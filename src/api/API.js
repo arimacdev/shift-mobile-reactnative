@@ -97,3 +97,6 @@ export const ADD_COMMENT = `task/comment`;
 export const UPDATE_COMMENT = `task/comment`;
 export const DELETE_COMMENT = `task/comment`;
 export const ADD_UPDATE_COMMENT_REACTION = `task/comment`;
+export const DELETE_COMMENT_REACTION = `task/comment`;
+export const GET_COMMENTS_COUNT = `task`;
+export const UPLOAD_FILE_TO_COMMENT = `task`;

@@ -79,7 +79,9 @@ import {
   ADD_COMMENT,
   DELETE_COMMENT,
   UPDATE_COMMENT,
-  ADD_UPDATE_COMMENT_REACTION
+  ADD_UPDATE_COMMENT_REACTION,
+  DELETE_COMMENT_REACTION,
+  GET_COMMENTS_COUNT,
 } from '../api/API';
 import AsyncStorage from '@react-native-community/async-storage';
 import {SET_UPLOAD_PROGRESS} from '../redux/types';
@@ -3104,6 +3106,85 @@ async function addUpdateCommentReactionData(commentId, reactionId) {
   );
 }
 
+async function deleteCommentReactionData(commentId, reactionId) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
+  let userIDHeder = null;
+  userIDHeder = await AsyncStorage.getItem('userID');
+
+  let headers = {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+    userId: userIDHeder,
+  };
+
+  return request(
+    {
+      url: baseURL + DELETE_COMMENT_REACTION + '/' + commentId + '/reaction',
+      method: 'DELETE',
+      data: {
+        reactionId: reactionId,
+      },
+    },
+    true,
+    headers,
+  );
+}
+
+async function getCommentsCountData(taskId) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
+  let userIDHeder = null;
+  userIDHeder = await AsyncStorage.getItem('userID');
+
+  let headers = {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+    userID: userIDHeder,
+  };
+
+  return request(
+    {
+      url: baseURL + GET_COMMENTS_COUNT + '/' + taskId + '/comment/count',
+      method: 'GET',
+    },
+    true,
+    headers,
+  );
+}
+
+async function uploadFileToComment(file, taskId) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
+  let userIDHeder = null;
+  userIDHeder = await AsyncStorage.getItem('userID');
+
+  let headers = {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+    user: userIDHeder,
+  };
+
+  const fileData = {
+    uri: file[0].uri,
+    name: file[0].name,
+    type: file[0].type,
+  };
+  const formData = new FormData();
+  formData.append('type', 'comment');
+  formData.append('files', fileData);
+
+  return request(
+    {
+      url: baseURL + UPLOAD_FILE_TO_COMMENT + '/' + taskId + '/comment/file',
+      method: 'POST',
+      data: formData,
+    },
+    true,
+    headers,
+  );
+}
+
 const APIServices = {
   getAllProjectsByUserData,
   getUserData,
@@ -3212,6 +3293,9 @@ const APIServices = {
   updateCommentData,
   deleteCommentData,
   addUpdateCommentReactionData,
+  deleteCommentReactionData,
+  getCommentsCountData,
+  uploadFileToComment
 };
 
 export default APIServices;
