@@ -11,6 +11,8 @@ import {
   Keyboard,
   Alert,
   UIManager,
+  TouchableWithoutFeedback,
+  KeyboardAvoidingView,
 } from 'react-native';
 import {connect} from 'react-redux';
 import * as actions from '../../../redux/actions';
@@ -37,6 +39,13 @@ import {MenuProvider} from 'react-native-popup-menu';
 import DocumentPicker from 'react-native-document-picker';
 import AsyncStorage from '@react-native-community/async-storage';
 import Swipeable from 'react-native-swipeable';
+import CNRichTextEditor, {
+  CNToolbar,
+  getInitialObject,
+  getDefaultStyles,
+} from 'react-native-cn-richtext-editor';
+
+const defaultStyles = getDefaultStyles();
 
 const reactionDetails = [
   {value: '&#128077', text: '👍'},
@@ -55,7 +64,7 @@ class ChatScreen extends Component {
       comments: [],
       isFetching: false,
       dataLoading: false,
-      chatText: '',
+      // chatText: '',
       height: 60,
       chatMessage: '',
       chatMessages: [],
@@ -69,7 +78,11 @@ class ChatScreen extends Component {
       shift: new Animated.Value(0),
       isDeleteEvent: false,
       listHeghtWithKeyboard: '100%',
+      selectedTag: 'body',
+      selectedStyles: [],
+      chatText: [getInitialObject()],
     };
+    this.editor = null;
   }
 
   componentWillMount() {
@@ -162,6 +175,139 @@ class ChatScreen extends Component {
       '',
       '',
       '/',
+    );
+  }
+
+  onStyleKeyPress = toolType => {
+    this.editor.applyToolbar(toolType);
+  };
+
+  onSelectedTagChanged = tag => {
+    this.setState({
+      selectedTag: tag,
+    });
+  };
+
+  onSelectedStyleChanged = styles => {
+    this.setState({
+      selectedStyles: styles,
+    });
+  };
+
+  onValueChanged = value => {
+    console.log("ddddddddddddddddd",value);
+    this.setState({
+      chatText: value,
+    });
+  };
+
+  renderRichTextView() {
+    return (
+      <KeyboardAvoidingView
+        behavior="padding"
+        enabled
+        keyboardVerticalOffset={0}
+        style={{
+          flex: 1,
+          paddingTop: 20,
+          backgroundColor: '#eee',
+          flexDirection: 'column',
+          justifyContent: 'flex-end',
+        }}>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <View style={styles.main}>
+            <CNRichTextEditor
+              ref={input => (this.editor = input)}
+              onSelectedTagChanged={this.onSelectedTagChanged}
+              onSelectedStyleChanged={this.onSelectedStyleChanged}
+              value={this.state.chatText}
+              style={{backgroundColor: '#fff'}}
+              styleList={defaultStyles}
+              onValueChanged={this.onValueChanged}
+            />
+          </View>
+        </TouchableWithoutFeedback>
+
+        <View
+          style={{
+            minHeight: 35,
+          }}>
+          <CNToolbar
+            style={{
+              height: 35,
+            }}
+            iconSetContainerStyle={{
+              flexGrow: 1,
+              justifyContent: 'space-evenly',
+              alignItems: 'center',
+            }}
+            size={30}
+            iconSet={[
+              {
+                type: 'tool',
+                iconArray: [
+                  {
+                    toolTypeText: 'image',
+                    iconComponent: (
+                      <Text style={styles.toolbarButton}>image</Text>
+                    ),
+                  },
+                ],
+              },
+              {
+                type: 'tool',
+                iconArray: [
+                  {
+                    toolTypeText: 'bold',
+                    buttonTypes: 'style',
+                    iconComponent: (
+                      <Text style={styles.toolbarButton}>bold</Text>
+                    ),
+                  },
+                ],
+              },
+              {
+                type: 'seperator',
+              },
+              {
+                type: 'tool',
+                iconArray: [
+                  {
+                    toolTypeText: 'body',
+                    buttonTypes: 'tag',
+                    iconComponent: (
+                      <Text style={styles.toolbarButton}>body</Text>
+                    ),
+                  },
+                ],
+              },
+              {
+                type: 'tool',
+                iconArray: [
+                  {
+                    toolTypeText: 'ul',
+                    buttonTypes: 'tag',
+                    iconComponent: <Text style={styles.toolbarButton}>ul</Text>,
+                  },
+                ],
+              },
+              {
+                type: 'tool',
+                iconArray: [
+                  {
+                    toolTypeText: 'ol',
+                    buttonTypes: 'tag',
+                    iconComponent: <Text style={styles.toolbarButton}>ol</Text>,
+                  },
+                ],
+              },
+            ]}
+            selectedTag={this.state.selectedTag}
+            selectedStyles={this.state.selectedStyles}
+            onStyleKeyPress={this.onStyleKeyPress}
+          />
+        </View>
+      </KeyboardAvoidingView>
     );
   }
 
@@ -702,7 +848,7 @@ class ChatScreen extends Component {
     let sortedData = comments.sort(this.arrayCompare);
     let edit = this.state.edit;
     const {shift} = this.state;
-    
+
     return (
       <MenuProvider>
         <View style={styles.container}>
@@ -721,7 +867,8 @@ class ChatScreen extends Component {
             />
 
             {/* <Animated.View style={[{ transform: [{ translateY: shift }] }]}> */}
-            <View style={styles.chatFieldView}>
+            {this.renderRichTextView()}
+            {/* <View style={styles.chatFieldView}>
               <TouchableOpacity
                 onPress={() => {
                   Platform.OS == 'ios'
@@ -769,7 +916,7 @@ class ChatScreen extends Component {
                   resizeMode={'contain'}
                 />
               </TouchableOpacity>
-            </View>
+            {/* </View> */}
             {/* </Animated.View> */}
             {showEmojiPicker && this.renderEmojiPicker()}
             {usersLoading && <Loader />}
@@ -820,6 +967,7 @@ const styles = EStyleSheet.create({
   },
   flalList: {
     marginBottom: '10rem',
+    height:100
   },
   flalListReactions: {
     marginBottom: '5rem',
@@ -965,6 +1113,32 @@ const styles = EStyleSheet.create({
     height: '42rem',
     justifyContent: 'flex-end',
   },
+  main: {
+    flex: 1,
+    marginTop: 10,
+    paddingLeft: 30,
+    paddingRight: 30,
+    paddingBottom: 1,
+    alignItems: 'stretch',
+  },
+  toolbarButton: {
+    fontSize: 20,
+    width: 28,
+    height: 28,
+    textAlign: 'center',
+  },
+  italicButton: {
+    fontStyle: 'italic',
+  },
+  boldButton: {
+    fontWeight: 'bold',
+  },
+  underlineButton: {
+    textDecorationLine: 'underline',
+  },
+  lineThroughButton: {
+    textDecorationLine: 'line-through',
+  },
 });
 
 const mapStateToProps = state => {
@@ -978,7 +1152,9 @@ const mapStateToProps = state => {
 //   actions,
 // )(ChatScreen);
 
-export default withStomp(connect(
-  mapStateToProps,
-  actions,
-)(ChatScreen));
+export default withStomp(
+  connect(
+    mapStateToProps,
+    actions,
+  )(ChatScreen),
+);
