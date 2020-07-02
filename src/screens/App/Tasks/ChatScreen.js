@@ -44,8 +44,8 @@ import CNRichTextEditor, {
   getInitialObject,
   getDefaultStyles,
 } from 'react-native-cn-richtext-editor';
-import HBRichTextEditor from 'react-native-richtext-editor';
-import HBToolbar from'react-native-richtext-editor/HBToolbar';
+// import HBRichTextEditor from 'react-native-richtext-editor';
+// import HBToolbar from'react-native-richtext-editor/HBToolbar';
 
 const defaultStyles = getDefaultStyles();
 
