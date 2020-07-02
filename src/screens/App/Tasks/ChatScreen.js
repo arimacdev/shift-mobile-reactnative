@@ -467,7 +467,7 @@ class ChatScreen extends Component {
   onEmojiPickerPress(showEmojiPicker) {
     this.setState({showEmojiPicker: !showEmojiPicker});
     if (showEmojiPicker) {
-      this.handleKeyboardDidHide();
+      Keyboard.dismiss();
     }
   }
 
@@ -702,7 +702,7 @@ class ChatScreen extends Component {
     let sortedData = comments.sort(this.arrayCompare);
     let edit = this.state.edit;
     const {shift} = this.state;
-
+    
     return (
       <MenuProvider>
         <View style={styles.container}>
@@ -747,7 +747,7 @@ class ChatScreen extends Component {
                   // }
                 />
               </View>
-              <TouchableOpacity
+              {/* <TouchableOpacity
                 onPress={() => {
                   this.onEmojiPickerPress(showEmojiPicker);
                 }}>
@@ -758,7 +758,7 @@ class ChatScreen extends Component {
                   }
                   resizeMode={'contain'}
                 />
-              </TouchableOpacity>
+              </TouchableOpacity> */}
               <TouchableOpacity
                 onPress={() => {
                   edit ? this.updateComment() : this.addComment();
@@ -978,4 +978,7 @@ const mapStateToProps = state => {
 //   actions,
 // )(ChatScreen);
 
-export default withStomp(ChatScreen);
+export default withStomp(connect(
+  mapStateToProps,
+  actions,
+)(ChatScreen));
