@@ -82,6 +82,7 @@ import {
   ADD_UPDATE_COMMENT_REACTION,
   DELETE_COMMENT_REACTION,
   GET_COMMENTS_COUNT,
+  UPLOAD_FILE_TO_COMMENT
 } from '../api/API';
 import AsyncStorage from '@react-native-community/async-storage';
 import {SET_UPLOAD_PROGRESS} from '../redux/types';
