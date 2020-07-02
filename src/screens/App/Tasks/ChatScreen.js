@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import {
   View,
   FlatList,
@@ -10,44 +10,43 @@ import {
   Animated,
   Keyboard,
   Alert,
-  UIManager
+  UIManager,
 } from 'react-native';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import * as actions from '../../../redux/actions';
 import colors from '../../../config/colors';
 import icons from '../../../asserts/icons/icons';
 import EStyleSheet from 'react-native-extended-stylesheet';
 const entireScreenWidth = Dimensions.get('window').width;
 const entireScreenHeight = Dimensions.get('window').height;
-EStyleSheet.build({ $rem: entireScreenWidth / 380 });
+EStyleSheet.build({$rem: entireScreenWidth / 380});
 import FadeIn from 'react-native-fade-in-image';
 import Loader from '../../../components/Loader';
 import ImagePicker from 'react-native-image-picker';
-import { NavigationEvents } from 'react-navigation';
+import {NavigationEvents} from 'react-navigation';
 // import io from 'socket.io-client';
 import APIServices from '../../../services/APIServices';
 import moment from 'moment';
-import { StompEventTypes, withStomp, Client } from 'react-stompjs';
+import {StompEventTypes, withStomp, Client} from 'react-stompjs';
 import EmojiSelector from 'react-native-emoji-selector';
 import Modal from 'react-native-modal';
 import Utils from '../../../utils/Utils';
 import HTML from 'react-native-render-html';
 import PopupMenuEmojiReaction from '../../../components/PopupMenuEmojiReaction';
-import { MenuProvider } from 'react-native-popup-menu';
+import {MenuProvider} from 'react-native-popup-menu';
 import DocumentPicker from 'react-native-document-picker';
 import AsyncStorage from '@react-native-community/async-storage';
 import Swipeable from 'react-native-swipeable';
 
 const reactionDetails = [
-  { value: '&#128077', text: '👍' },
-  { value: '&#128154', text: '💚' },
-  { value: '&#128514', text: '😂' },
-  { value: '&#128545', text: '😡' },
-  { value: '&#128546', text: '😢' },
+  {value: '&#128077', text: '👍'},
+  {value: '&#128154', text: '💚'},
+  {value: '&#128514', text: '😂'},
+  {value: '&#128545', text: '😡'},
+  {value: '&#128546', text: '😢'},
 ];
 
-
-const { State: TextInputState } = TextInput;
+const {State: TextInputState} = TextInput;
 
 class ChatScreen extends Component {
   constructor(props) {
@@ -69,14 +68,14 @@ class ChatScreen extends Component {
       currentlyOpenSwipeable: null,
       shift: new Animated.Value(0),
       isDeleteEvent: false,
-      listHeghtWithKeyboard: '100%'
+      listHeghtWithKeyboard: '100%',
     };
   }
 
   componentWillMount() {
     const {
       navigation: {
-        state: { params },
+        state: {params},
       },
     } = this.props;
 
@@ -86,8 +85,14 @@ class ChatScreen extends Component {
       taskId: taskId,
     });
     this.fetchData(taskId);
-    this.keyboardDidShowSub = Keyboard.addListener('keyboardDidShow', this.handleKeyboardDidShow);
-    this.keyboardDidHideSub = Keyboard.addListener('keyboardDidHide', this.handleKeyboardDidHide);
+    this.keyboardDidShowSub = Keyboard.addListener(
+      'keyboardDidShow',
+      this.handleKeyboardDidShow,
+    );
+    this.keyboardDidHideSub = Keyboard.addListener(
+      'keyboardDidHide',
+      this.handleKeyboardDidHide,
+    );
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -112,7 +117,7 @@ class ChatScreen extends Component {
     this.props.stompContext.removeStompEventListener(
       StompEventTypes.WebSocketClose,
       () => {
-        this.setState({ status: 'Disconnected (not graceful)' });
+        this.setState({status: 'Disconnected (not graceful)'});
       },
     );
     this.props.stompContext.removeStompClient();
@@ -128,7 +133,7 @@ class ChatScreen extends Component {
     this.props.stompContext.addStompEventListener(
       StompEventTypes.Connect,
       () => {
-        this.setState({ status: 'Connected' });
+        this.setState({status: 'Connected'});
         this.rootSubscribed = this.props.stompContext
           .getStompClient()
           .subscribe('/topic/messages/' + taskId, message => {
@@ -143,13 +148,13 @@ class ChatScreen extends Component {
     this.props.stompContext.addStompEventListener(
       StompEventTypes.Disconnect,
       () => {
-        this.setState({ status: 'Disconnected' });
+        this.setState({status: 'Disconnected'});
       },
     );
     this.props.stompContext.addStompEventListener(
       StompEventTypes.WebSocketClose,
       () => {
-        this.setState({ status: 'Disconnected (not graceful)' });
+        this.setState({status: 'Disconnected (not graceful)'});
       },
     );
     this.props.stompContext.newStompClient(
@@ -161,27 +166,27 @@ class ChatScreen extends Component {
   }
 
   async fetchData(taskId) {
-    this.setState({ dataLoading: true });
+    this.setState({dataLoading: true});
     await APIServices.getCommentsData(taskId)
       .then(response => {
         if (response.message == 'success') {
-          this.setState({ dataLoading: false, comments: response.data });
+          this.setState({dataLoading: false, comments: response.data});
         } else {
-          this.setState({ dataLoading: false });
+          this.setState({dataLoading: false});
         }
       })
       .catch(error => {
-        this.setState({ dataLoading: false });
+        this.setState({dataLoading: false});
         // Utils.showAlert(true, '', error.data.message, this.props);
       });
   }
 
-  userImage = function (item) {
+  userImage = function(item) {
     let userImage = item.commenterProfileImage;
     if (userImage) {
       return (
         <FadeIn>
-          <Image source={{ uri: userImage }} style={styles.userIcon} />
+          <Image source={{uri: userImage}} style={styles.userIcon} />
         </FadeIn>
       );
     } else {
@@ -190,7 +195,7 @@ class ChatScreen extends Component {
   };
 
   onReactionIconPress() {
-    this.setState({ showEmojiPicker: true });
+    this.setState({showEmojiPicker: true});
   }
 
   renderReactionDetailsList(item) {
@@ -210,18 +215,18 @@ class ChatScreen extends Component {
   }
 
   async onMenuItemChange(item, commentId) {
-    this.setState({ dataLoading: true });
+    this.setState({dataLoading: true});
     await APIServices.addUpdateCommentReactionData(commentId, item.value)
       .then(response => {
         if (response.message == 'success') {
-          this.setState({ dataLoading: false });
+          this.setState({dataLoading: false});
           this.sendMessageToSocket(item.value);
         } else {
-          this.setState({ dataLoading: false });
+          this.setState({dataLoading: false});
         }
       })
       .catch(error => {
-        this.setState({ dataLoading: false });
+        this.setState({dataLoading: false});
         // Utils.showAlert(true, '', error.data.message, this.props);
       });
   }
@@ -238,37 +243,37 @@ class ChatScreen extends Component {
   async updateComment() {
     let commentId = this.state.commentId;
     let chatText = this.state.chatText;
-    this.setState({ dataLoading: true });
+    this.setState({dataLoading: true});
     await APIServices.updateCommentData(commentId, chatText)
       .then(response => {
         if (response.message == 'success') {
-          this.setState({ dataLoading: false, edit: false });
+          this.setState({dataLoading: false, edit: false});
           this.sendMessageToSocket(chatText);
         } else {
-          this.setState({ dataLoading: false });
+          this.setState({dataLoading: false});
         }
       })
       .catch(error => {
-        this.setState({ dataLoading: false });
+        this.setState({dataLoading: false});
         // Utils.showAlert(true, '', error.data.message, this.props);
       });
   }
 
   async onDeleteCommentPress(commentId) {
-    this.setState({ isDeleteEvent: true })
-    this.state.currentlyOpenSwipeable.recenter()
-    this.setState({ dataLoading: true });
+    this.setState({isDeleteEvent: true});
+    this.state.currentlyOpenSwipeable.recenter();
+    this.setState({dataLoading: true});
     await APIServices.deleteCommentData(commentId)
       .then(response => {
         if (response.message == 'success') {
-          this.setState({ dataLoading: false });
+          this.setState({dataLoading: false});
           this.sendMessageToSocket('');
         } else {
-          this.setState({ dataLoading: false });
+          this.setState({dataLoading: false});
         }
       })
       .catch(error => {
-        this.setState({ dataLoading: false });
+        this.setState({dataLoading: false});
         // Utils.showAlert(true, '', error.data.message, this.props);
       });
   }
@@ -303,14 +308,14 @@ class ChatScreen extends Component {
           ) {
             this.state.currentlyOpenSwipeable.recenter();
           }
-          this.setState({ currentlyOpenSwipeable: swipe });
+          this.setState({currentlyOpenSwipeable: swipe});
         }}
         onRightButtonsCloseRelease={() =>
-          this.setState({ currentlyOpenSwipeable: null })
+          this.setState({currentlyOpenSwipeable: null})
         }>
         <View style={styles.chatView}>
           {this.userImage(item)}
-          <View style={{ flex: 1 }}>
+          <View style={{flex: 1}}>
             <View style={styles.timeView}>
               <Text style={styles.textTime}>
                 {moment.parseZone(item.commentedAt).fromNow()}
@@ -318,7 +323,7 @@ class ChatScreen extends Component {
             </View>
             <View style={styles.nameView}>
               <View style={styles.innerView}>
-                <View style={{ flex: 1 }}>
+                <View style={{flex: 1}}>
                   <Text style={styles.text}>
                     {item.commenterFistName} {item.commenterFistName}
                   </Text>
@@ -358,7 +363,7 @@ class ChatScreen extends Component {
   }
 
   onRefresh() {
-    this.setState({ isFetching: true, comments: [] }, function () {
+    this.setState({isFetching: true, comments: []}, function() {
       this.fetchData(this.state.taskId);
     });
   }
@@ -368,13 +373,13 @@ class ChatScreen extends Component {
   }
 
   loadUsers() {
-    this.setState({ comments: [] }, function () {
+    this.setState({comments: []}, function() {
       // this.props.getAllUsers();
     });
   }
 
   onChatTextChange(text) {
-    this.setState({ chatText: text });
+    this.setState({chatText: text});
   }
 
   updateSize = height => {
@@ -390,11 +395,11 @@ class ChatScreen extends Component {
     let taskId = this.state.taskId;
     let chatTextConvert = chatText;
 
-    this.setState({ dataLoading: true });
+    this.setState({dataLoading: true});
     await APIServices.addCommentData(taskId, chatTextConvert)
       .then(response => {
         if (response.message == 'success') {
-          this.setState({ dataLoading: false });
+          this.setState({dataLoading: false});
           let data = response.data;
           // let comment = {
           //   commentId: data.commentId,
@@ -409,11 +414,11 @@ class ChatScreen extends Component {
           // this.setState({comments: this.state.comments.concat(comment)});
           this.submitChatMessage(chatText);
         } else {
-          this.setState({ dataLoading: false });
+          this.setState({dataLoading: false});
         }
       })
       .catch(error => {
-        this.setState({ dataLoading: false });
+        this.setState({dataLoading: false});
         Utils.showAlert(true, '', error.data.message, this.props);
       });
   }
@@ -433,7 +438,7 @@ class ChatScreen extends Component {
   }
 
   onCloseTaskModal() {
-    this.setState({ showEmojiPicker: false });
+    this.setState({showEmojiPicker: false});
   }
 
   renderEmojiPicker() {
@@ -460,7 +465,10 @@ class ChatScreen extends Component {
   }
 
   onEmojiPickerPress(showEmojiPicker) {
-    this.setState({ showEmojiPicker: !showEmojiPicker });
+    this.setState({showEmojiPicker: !showEmojiPicker});
+    if (showEmojiPicker) {
+      this.handleKeyboardDidHide();
+    }
   }
 
   async iOSFilePicker() {
@@ -468,10 +476,10 @@ class ChatScreen extends Component {
       'Add Files',
       'Select the file source',
       [
-        { text: 'Camera', onPress: () => this.selectCamera() },
-        { text: 'Gallery', onPress: () => this.selectGallery() },
-        { text: 'Files', onPress: () => this.doumentPicker() },
-        { text: 'Cancel', onPress: () => console.log('Back') },
+        {text: 'Camera', onPress: () => this.selectCamera()},
+        {text: 'Gallery', onPress: () => this.selectGallery()},
+        {text: 'Files', onPress: () => this.doumentPicker()},
+        {text: 'Cancel', onPress: () => console.log('Back')},
       ],
       {
         cancelable: true,
@@ -528,7 +536,7 @@ class ChatScreen extends Component {
       dateTime:
         moment().format('YYYY/MM/DD') + ' | ' + moment().format('HH:mm'),
     });
-    this.setState({ files: this.state.files });
+    this.setState({files: this.state.files});
   }
 
   async doumentPicker() {
@@ -584,11 +592,11 @@ class ChatScreen extends Component {
             });
             // this.fetchFilesData(selectedProjectID, selectedProjectTaskID);
           } else {
-            this.setState({ indeterminate: false, files: [], uploading: 0 });
+            this.setState({indeterminate: false, files: [], uploading: 0});
           }
         })
         .catch(error => {
-          this.setState({ indeterminate: false, files: [], uploading: 0 });
+          this.setState({indeterminate: false, files: [], uploading: 0});
           if (error.status == 401) {
             this.showAlert('', error.data.message);
           } else {
@@ -611,7 +619,7 @@ class ChatScreen extends Component {
 
     this.props.stompContext.getStompClient().publish({
       destination: '/app/chat/' + taskId,
-      headers: { priority: 9 },
+      headers: {priority: 9},
       body: JSON.stringify({
         sender: userId,
         message: message,
@@ -619,7 +627,7 @@ class ChatScreen extends Component {
       }),
     });
 
-    this.setState({ chatText: '' });
+    this.setState({chatText: ''});
   }
 
   arrayCompare(a, b) {
@@ -635,54 +643,56 @@ class ChatScreen extends Component {
     return comparison;
   }
 
-  handleKeyboardDidShow = (event) => {
+  handleKeyboardDidShow = event => {
     // if (Platform.OS == 'ios') {
-      const { height: windowHeight } = Dimensions.get('window');
-      const keyboardHeight = event.endCoordinates.height;
-      const currentlyFocusedField = TextInputState.currentlyFocusedField();
-      UIManager.measure(currentlyFocusedField, (originX, originY, width, height, pageX, pageY) => {
+    const {height: windowHeight} = Dimensions.get('window');
+    const keyboardHeight = event.endCoordinates.height;
+    const currentlyFocusedField = TextInputState.currentlyFocusedField();
+    UIManager.measure(
+      currentlyFocusedField,
+      (originX, originY, width, height, pageX, pageY) => {
         const fieldHeight = height;
         const fieldTop = pageY;
-        const gap = (windowHeight - keyboardHeight - 20) - (fieldTop + fieldHeight);
-        this.setState({listHeghtWithKeyboard: windowHeight - keyboardHeight - 80})
+        const gap =
+          windowHeight - keyboardHeight - 20 - (fieldTop + fieldHeight);
+        this.setState({
+          listHeghtWithKeyboard:
+            Platform.OS == 'ios'
+              ? windowHeight - keyboardHeight - 80
+              : windowHeight - 100,
+        });
         if (gap >= 0) {
           return;
         }
-        if (gap !== null && !(isNaN(gap))) {
-          Animated.timing(
-            this.state.shift,
-            {
-              toValue: gap,
-              duration: 100,
-              useNativeDriver: true,
-            }
-          ).start();
+        if (gap !== null && !isNaN(gap)) {
+          Animated.timing(this.state.shift, {
+            toValue: gap,
+            duration: 100,
+            useNativeDriver: true,
+          }).start();
         }
-      });
+      },
+    );
     // }
   };
 
   handleKeyboardDidHide = () => {
     // if (Platform.OS == 'ios') {
-      this.setState({listHeghtWithKeyboard: '100%'})
-      Animated.timing(
-        this.state.shift,
-        {
-          toValue: 0,
-          duration: 100,
-          useNativeDriver: true,
-        }
-      ).start();
+    this.setState({listHeghtWithKeyboard: '100%'});
+    Animated.timing(this.state.shift, {
+      toValue: 0,
+      duration: 100,
+      useNativeDriver: true,
+    }).start();
     // }
   };
 
   handleListScrollToEnd = () => {
     if (!this.state.isDeleteEvent) {
-      this.flatList.scrollToEnd({ animated: true })
+      this.flatList.scrollToEnd({animated: true});
     }
-    this.setState({ isDeleteEvent: false })
-  }
-
+    this.setState({isDeleteEvent: false});
+  };
 
   render() {
     let comments = this.state.comments;
@@ -691,32 +701,32 @@ class ChatScreen extends Component {
     let showEmojiPicker = this.state.showEmojiPicker;
     let sortedData = comments.sort(this.arrayCompare);
     let edit = this.state.edit;
-    const { shift } = this.state;
+    const {shift} = this.state;
 
     return (
       <MenuProvider>
         <View style={styles.container}>
           <NavigationEvents onWillFocus={payload => this.loadUsers(payload)} />
           <View style={{height: this.state.listHeghtWithKeyboard}}>
-          <FlatList
-            style={styles.flalList}
-            data={sortedData}
-            renderItem={item => this.renderCommentList(item.item)}
-            keyExtractor={item => item.projId}
-            onRefresh={() => this.onRefresh()}
-            refreshing={isFetching}
-            ref={ref => (this.flatList = ref)}
-            onContentSizeChange={() =>
-              this.handleListScrollToEnd()
-            }
-            onLayout={() => this.handleListScrollToEnd()}
-          />
-          
-          {/* <Animated.View style={[{ transform: [{ translateY: shift }] }]}> */}
+            <FlatList
+              style={styles.flalList}
+              data={sortedData}
+              renderItem={item => this.renderCommentList(item.item)}
+              keyExtractor={item => item.projId}
+              onRefresh={() => this.onRefresh()}
+              refreshing={isFetching}
+              ref={ref => (this.flatList = ref)}
+              onContentSizeChange={() => this.handleListScrollToEnd()}
+              onLayout={() => this.handleListScrollToEnd()}
+            />
+
+            {/* <Animated.View style={[{ transform: [{ translateY: shift }] }]}> */}
             <View style={styles.chatFieldView}>
               <TouchableOpacity
                 onPress={() => {
-                  Platform.OS == 'ios' ? this.iOSFilePicker() : this.doumentPicker()
+                  Platform.OS == 'ios'
+                    ? this.iOSFilePicker()
+                    : this.doumentPicker();
                 }}>
                 <Image
                   style={styles.addFileIcon}
@@ -724,7 +734,7 @@ class ChatScreen extends Component {
                   resizeMode={'contain'}
                 />
               </TouchableOpacity>
-              <View style={{ flex: 1 }}>
+              <View style={{flex: 1}}>
                 <TextInput
                   style={styles.textInput}
                   placeholder={'Add a comment'}
@@ -732,9 +742,9 @@ class ChatScreen extends Component {
                   multiline={true}
                   editable={this.state.status == 'Connected' ? true : false}
                   onChangeText={text => this.onChatTextChange(text)}
-                // onContentSizeChange={e =>
-                //   this.updateSize(e.nativeEvent.contentSize.height)
-                // }
+                  // onContentSizeChange={e =>
+                  //   this.updateSize(e.nativeEvent.contentSize.height)
+                  // }
                 />
               </View>
               <TouchableOpacity
@@ -760,11 +770,11 @@ class ChatScreen extends Component {
                 />
               </TouchableOpacity>
             </View>
-          {/* </Animated.View> */}
-          {showEmojiPicker && this.renderEmojiPicker()}
-          {usersLoading && <Loader />}
-          {/* {this.state.status != 'Connected' && <Loader />} */}
-        </View>
+            {/* </Animated.View> */}
+            {showEmojiPicker && this.renderEmojiPicker()}
+            {usersLoading && <Loader />}
+            {/* {this.state.status != 'Connected' && <Loader />} */}
+          </View>
         </View>
       </MenuProvider>
     );
