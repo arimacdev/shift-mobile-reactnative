@@ -89,6 +89,7 @@ class ChatScreen extends Component {
       Uploading: 0,
       indeterminate: false,
       showMessageModal: false,
+      timeTextChange: '',
     };
     this.editor = null;
   }
@@ -262,9 +263,11 @@ class ChatScreen extends Component {
   }
 
   async updateComment() {
+    this.setState({dataLoading: true, timeTextChange: new Date()});
+
     let commentId = this.state.commentId;
     let chatText = this.state.chatText;
-    this.setState({dataLoading: true});
+
     await APIServices.updateCommentData(commentId, chatText)
       .then(response => {
         if (response.message == 'success') {
@@ -412,16 +415,15 @@ class ChatScreen extends Component {
   };
 
   async addComment() {
+    this.setState({timeTextChange: new Date()});
+    let chatText = this.state.chatText;
     if (chatText != '') {
-      let chatText = this.state.chatText;
       let taskId = this.state.taskId;
       let chatTextConvert = chatText;
 
-      this.setState({dataLoading: true});
       await APIServices.addCommentData(taskId, chatTextConvert)
         .then(response => {
           if (response.message == 'success') {
-            this.setState({dataLoading: false});
             let data = response.data;
             // let comment = {
             //   commentId: data.commentId,
@@ -436,11 +438,9 @@ class ChatScreen extends Component {
             // this.setState({comments: this.state.comments.concat(comment)});
             this.submitChatMessage(chatText);
           } else {
-            this.setState({dataLoading: false});
           }
         })
         .catch(error => {
-          this.setState({dataLoading: false});
           Utils.showAlert(true, '', error.data.message, this.props);
         });
     }
@@ -621,21 +621,26 @@ class ChatScreen extends Component {
         showMessageModal: false,
       });
 
-      await APIServices.addFileToTask(this.state.files)
+      await APIServices.uploadFileToComment(this.state.files)
         .then(response => {
           if (response.message == 'success') {
-            this.details = {
-              icon: icons.fileOrange,
-              type: 'success',
-              title: 'Sucsess',
-              description: 'File has been added successfully',
-              buttons: {},
-            };
+            // this.details = {
+            //   icon: icons.fileOrange,
+            //   type: 'success',
+            //   title: 'Sucsess',
+            //   description: 'File has been added successfully',
+            //   buttons: {},
+            // };
             this.setState({
               indeterminate: false,
               files: [],
               uploading: 100,
-              showMessageModal: true,
+              // showMessageModal: true,
+              chatText: this.state.chatText.concat(
+                '<img src=' +
+                  response.data +
+                  ' class="e-rte-image e-imginline" width="auto" height="auto" style="min-width: 0px; min-height: 0px; "width: auto; height: auto;">',
+              ),
             });
             // this.fetchFilesData(selectedProjectID, selectedProjectTaskID);
           } else {
@@ -645,9 +650,9 @@ class ChatScreen extends Component {
         .catch(error => {
           this.setState({indeterminate: false, files: [], uploading: 0});
           if (error.status == 401) {
-            this.showAlert('', error.data.message);
+            Utils.showAlert('', error.data.message);
           } else {
-            this.showAlert('', error);
+            Utils.showAlert('', error);
           }
         });
       console.log(this.state.files);
@@ -741,9 +746,10 @@ class ChatScreen extends Component {
     this.setState({isDeleteEvent: false});
   };
 
-  getChatText(chatText) {
-    console.log('sddddddddddddddddddddd', chatText);
-    this.setState({chatText: chatText});
+  async getChatText(html) {
+    console.log('sddddddddddddddddddddd', html);
+    await this.setState({chatText: html.toString()});
+    // alert(html);
   }
 
   render() {
@@ -774,12 +780,25 @@ class ChatScreen extends Component {
               onContentSizeChange={() => this.handleListScrollToEnd()}
               onLayout={() => this.handleListScrollToEnd()}
             />
-
-            <RichTextEditorPell
-              chatText={this.state.chatText}
-              getChatText={html => this.getChatText(html)}
-            />
-
+            <TouchableOpacity
+              onPress={() => {
+                Platform.OS == 'ios'
+                  ? this.iOSFilePicker()
+                  : this.doumentPicker();
+              }}>
+              <Image
+                style={styles.addFileIcon}
+                source={icons.addRoundedBlue}
+                resizeMode={'contain'}
+              />
+            </TouchableOpacity>
+            <View style={{height: 130}}>
+              <RichTextEditorPell
+                chatText={this.state.chatText}
+                getChatText={html => this.getChatText(html)}
+                timeTextChange={this.state.timeTextChange}
+              />
+            </View>
             <TouchableOpacity
               onPress={() => {
                 edit ? this.updateComment() : this.addComment();

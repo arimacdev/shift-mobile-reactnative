@@ -33,7 +33,7 @@ class RichTextEditorPell extends React.Component {
     const that = this;
     const theme = props.theme || Appearance.getColorScheme();
     const contentStyle = that.createContentStyle(theme);
-    that.state = {theme: theme, contentStyle, initHTML:''};
+    that.state = {theme: theme, contentStyle, initHTML: ''};
     that.onHome = that.onHome;
     that.save = that.save;
     that.onTheme = that.onTheme;
@@ -47,7 +47,18 @@ class RichTextEditorPell extends React.Component {
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (prevProps.chatText !== this.props.chatText && this.props.chatText) {
-      this.setContentHTML(this.props.chatText)
+      console.log('wwwwwwwwwwwwwwwwww', this.props.chatText);
+      this.setContentHTML(this.props.chatText);
+      this.save();
+    }
+    if (
+      prevProps.timeTextChange !== this.props.timeTextChange &&
+      this.props.timeTextChange
+    ) {
+      console.log('2222222222222', this.props.timeTextChange);
+
+      this.save();
+      this.setContentHTML('');
     }
   }
 
@@ -70,10 +81,10 @@ class RichTextEditorPell extends React.Component {
     let html = await this.richText.current?.getContentHtml();
     // console.log(html);
     // alert(html);
-    this.props.getChatText(html)
+    this.props.getChatText(html);
   }
 
-  async setContentHTML(chatText){
+  async setContentHTML(chatText) {
     await this.richText.current?.setContentHTML(chatText);
   }
 
