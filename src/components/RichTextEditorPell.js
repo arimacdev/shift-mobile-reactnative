@@ -47,7 +47,6 @@ class RichTextEditorPell extends React.Component {
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (prevProps.chatText !== this.props.chatText && this.props.chatText) {
-      console.log('wwwwwwwwwwwwwwwwww', this.props.chatText);
       this.setContentHTML(this.props.chatText);
       this.save();
     }
@@ -55,8 +54,6 @@ class RichTextEditorPell extends React.Component {
       prevProps.timeTextChange !== this.props.timeTextChange &&
       this.props.timeTextChange
     ) {
-      console.log('2222222222222', this.props.timeTextChange);
-
       this.save();
     }
 

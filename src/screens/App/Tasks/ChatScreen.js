@@ -90,7 +90,7 @@ class ChatScreen extends Component {
       indeterminate: false,
       showMessageModal: false,
       timeTextChange: '',
-      chatTextClear:false
+      chatTextClear: false,
     };
     this.editor = null;
   }
@@ -268,11 +268,11 @@ class ChatScreen extends Component {
 
     let commentId = this.state.commentId;
     let chatText = this.state.chatText;
-    this.setState({chatTextClear:false})
+    this.setState({chatTextClear: false});
     await APIServices.updateCommentData(commentId, chatText)
       .then(response => {
         if (response.message == 'success') {
-          this.setState({dataLoading: false, edit: false, chatTextClear:true});
+          this.setState({dataLoading: false, edit: false, chatTextClear: true});
           this.sendMessageToSocket(chatText);
         } else {
           this.setState({dataLoading: false});
@@ -420,11 +420,11 @@ class ChatScreen extends Component {
     if (chatText != '') {
       let taskId = this.state.taskId;
       let chatTextConvert = chatText;
-      this.setState({chatTextClear:false})
+      this.setState({chatTextClear: false});
       await APIServices.addCommentData(taskId, chatTextConvert)
         .then(response => {
           if (response.message == 'success') {
-            this.setState({chatTextClear:true})
+            this.setState({chatTextClear: true});
             let data = response.data;
             // let comment = {
             //   commentId: data.commentId,
@@ -748,9 +748,7 @@ class ChatScreen extends Component {
   };
 
   async getChatText(html) {
-    console.log('sddddddddddddddddddddd', html);
     await this.setState({chatText: html.toString()});
-    // alert(html);
   }
 
   sendMessage() {
