@@ -40,6 +40,7 @@ import DocumentPicker from 'react-native-document-picker';
 import AsyncStorage from '@react-native-community/async-storage';
 import Swipeable from 'react-native-swipeable';
 import RichTextEditor from '../../../components/RichTextEditor';
+import MessageShowModal from '../../../components/MessageShowModal';
 
 const reactionDetails = [
   {value: '&#128077', text: '👍'},
@@ -52,6 +53,15 @@ const reactionDetails = [
 const {State: TextInputState} = TextInput;
 
 class ChatScreen extends Component {
+  deleteDetails = {
+    icon: icons.alertRed,
+    type: 'confirm',
+    title: 'Delete File',
+    description:
+      'You are about to permanantly delete this comment,\n If you are not sure, you can cancel this action.',
+    buttons: {positive: 'Delete', negative: 'Cancel'},
+  };
+  onPressMessageModal = () => {};
   constructor(props) {
     super(props);
     this.state = {
@@ -74,6 +84,10 @@ class ChatScreen extends Component {
       listHeghtWithKeyboard: '100%',
       selectedTag: 'body',
       selectedStyles: [],
+      files: [],
+      Uploading: 0,
+      indeterminate: false,
+      showMessageModal: false,
     };
     this.editor = null;
   }
@@ -532,6 +546,32 @@ class ChatScreen extends Component {
     });
   }
 
+  deleteCommentAlert(item) {
+    this.deleteDetails = {
+      icon: icons.alertRed,
+      type: 'confirm',
+      title: 'Delete File',
+      description:
+        'You are about to permanantly delete this file,\n If you are not sure, you can cancel this action.',
+      buttons: {positive: 'Delete', negative: 'Cancel'},
+    };
+    this.onPressMessageModal = () => this.deleteFile(item);
+    this.setState({showMessageModal: true});
+  }
+
+  onPressCancel() {
+    this.setState({showMessageModal: false});
+  }
+
+  onFilesCrossPress(uri) {
+    this.setState({files: []}, () => {
+      let filesArray = this.state.files.filter(item => {
+        return item.uri !== uri;
+      });
+      this.setState({files: filesArray});
+    });
+  }
+
   async setImageForFile(res) {
     this.onFilesCrossPress(res.uri);
     await this.state.files.push({
@@ -729,7 +769,7 @@ class ChatScreen extends Component {
               onLayout={() => this.handleListScrollToEnd()}
             />
 
-            <View style={styles.chatFieldView}>
+            {/* <View style={styles.chatFieldView}>
               <TouchableOpacity
                 onPress={() => {
                   Platform.OS == 'ios'
@@ -753,10 +793,11 @@ class ChatScreen extends Component {
                   resizeMode={'contain'}
                 />
               </TouchableOpacity>
-            </View>
-            
+            </View> */}
+
             {/* <Animated.View style={[{ transform: [{ translateY: shift }] }]}> */}
-            {/* <View style={styles.chatFieldView}>
+
+            <View style={styles.chatFieldView}>
               <TouchableOpacity
                 onPress={() => {
                   Platform.OS == 'ios'
@@ -792,10 +833,17 @@ class ChatScreen extends Component {
                   resizeMode={'contain'}
                 />
               </TouchableOpacity>
-            </View> */}
+            </View>
+
             {/* </Animated.View> */}
             {showEmojiPicker && this.renderEmojiPicker()}
             {usersLoading && <Loader />}
+            <MessageShowModal
+              showMessageModal={this.state.showMessageModal}
+              details={this.deleteDetails}
+              onPress={this.onPressMessageModal}
+              onPressCancel={() => this.onPressCancel(this)}
+            />
             {/* {this.state.status != 'Connected' && <Loader />} */}
           </View>
         </View>
