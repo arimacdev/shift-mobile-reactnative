@@ -90,6 +90,7 @@ class ChatScreen extends Component {
       indeterminate: false,
       showMessageModal: false,
       timeTextChange: '',
+      chatTextClear:false
     };
     this.editor = null;
   }
@@ -263,15 +264,15 @@ class ChatScreen extends Component {
   }
 
   async updateComment() {
-    this.setState({dataLoading: true, timeTextChange: new Date()});
+    this.setState({dataLoading: true});
 
     let commentId = this.state.commentId;
     let chatText = this.state.chatText;
-
+    this.setState({chatTextClear:false})
     await APIServices.updateCommentData(commentId, chatText)
       .then(response => {
         if (response.message == 'success') {
-          this.setState({dataLoading: false, edit: false});
+          this.setState({dataLoading: false, edit: false, chatTextClear:true});
           this.sendMessageToSocket(chatText);
         } else {
           this.setState({dataLoading: false});
@@ -415,15 +416,15 @@ class ChatScreen extends Component {
   };
 
   async addComment() {
-    this.setState({timeTextChange: new Date()});
     let chatText = this.state.chatText;
     if (chatText != '') {
       let taskId = this.state.taskId;
       let chatTextConvert = chatText;
-
+      this.setState({chatTextClear:false})
       await APIServices.addCommentData(taskId, chatTextConvert)
         .then(response => {
           if (response.message == 'success') {
+            this.setState({chatTextClear:true})
             let data = response.data;
             // let comment = {
             //   commentId: data.commentId,
@@ -752,6 +753,14 @@ class ChatScreen extends Component {
     // alert(html);
   }
 
+  sendMessage() {
+    this.setState({timeTextChange: new Date()});
+    let edit = this.state.edit;
+    setTimeout(() => {
+      edit ? this.updateComment() : this.addComment();
+    }, 500);
+  }
+
   render() {
     let comments = this.state.comments;
     let isFetching = this.state.isFetching;
@@ -797,11 +806,13 @@ class ChatScreen extends Component {
                 chatText={this.state.chatText}
                 getChatText={html => this.getChatText(html)}
                 timeTextChange={this.state.timeTextChange}
+                taskId={this.state.taskId}
+                chatTextClear={this.state.chatTextClear}
               />
             </View>
             <TouchableOpacity
               onPress={() => {
-                edit ? this.updateComment() : this.addComment();
+                this.sendMessage();
               }}>
               <Image
                 style={styles.chatIcon}

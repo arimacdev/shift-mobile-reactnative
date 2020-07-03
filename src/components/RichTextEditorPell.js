@@ -58,6 +58,12 @@ class RichTextEditorPell extends React.Component {
       console.log('2222222222222', this.props.timeTextChange);
 
       this.save();
+    }
+
+    if (
+      prevProps.chatTextClear !== this.props.chatTextClear &&
+      this.props.chatTextClear
+    ) {
       this.setContentHTML('');
     }
   }
@@ -79,8 +85,6 @@ class RichTextEditorPell extends React.Component {
   async save() {
     // Get the data here and call the interface to save the data
     let html = await this.richText.current?.getContentHtml();
-    // console.log(html);
-    // alert(html);
     this.props.getChatText(html);
   }
 
