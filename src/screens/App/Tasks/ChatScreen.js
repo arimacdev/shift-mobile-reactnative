@@ -56,7 +56,7 @@ class ChatScreen extends Component {
   deleteDetails = {
     icon: icons.alertRed,
     type: 'confirm',
-    title: 'Delete File',
+    title: 'Delete Comment',
     description:
       'You are about to permanantly delete this comment,\n If you are not sure, you can cancel this action.',
     buttons: {positive: 'Delete', negative: 'Cancel'},
@@ -310,7 +310,7 @@ class ChatScreen extends Component {
       </TouchableOpacity>,
       <TouchableOpacity
         style={styles.leftContentButtonStyle}
-        onPress={() => this.onDeleteCommentPress(item.commentId)}>
+        onPress={() => this.deleteCommentAlert(item.commentId)}>
         <Image style={styles.controlIcon} source={icons.deleteRoundRed} />
       </TouchableOpacity>,
     ];
@@ -546,16 +546,16 @@ class ChatScreen extends Component {
     });
   }
 
-  deleteCommentAlert(item) {
+  deleteCommentAlert(commentId) {
     this.deleteDetails = {
       icon: icons.alertRed,
       type: 'confirm',
-      title: 'Delete File',
+      title: 'Delete Comment',
       description:
-        'You are about to permanantly delete this file,\n If you are not sure, you can cancel this action.',
+        'You are about to permanantly delete this comment,\n If you are not sure, you can cancel this action.',
       buttons: {positive: 'Delete', negative: 'Cancel'},
     };
-    this.onPressMessageModal = () => this.deleteFile(item);
+    this.onPressMessageModal = () => this.onDeleteCommentPress(commentId);
     this.setState({showMessageModal: true});
   }
 
@@ -769,7 +769,7 @@ class ChatScreen extends Component {
               onLayout={() => this.handleListScrollToEnd()}
             />
 
-            {/* <View style={styles.chatFieldView}>
+            <View style={styles.chatFieldView}>
               <TouchableOpacity
                 onPress={() => {
                   Platform.OS == 'ios'
@@ -793,11 +793,11 @@ class ChatScreen extends Component {
                   resizeMode={'contain'}
                 />
               </TouchableOpacity>
-            </View> */}
+            </View>
 
             {/* <Animated.View style={[{ transform: [{ translateY: shift }] }]}> */}
 
-            <View style={styles.chatFieldView}>
+            {/* <View style={styles.chatFieldView}>
               <TouchableOpacity
                 onPress={() => {
                   Platform.OS == 'ios'
@@ -833,7 +833,7 @@ class ChatScreen extends Component {
                   resizeMode={'contain'}
                 />
               </TouchableOpacity>
-            </View>
+            </View> */}
 
             {/* </Animated.View> */}
             {showEmojiPicker && this.renderEmojiPicker()}

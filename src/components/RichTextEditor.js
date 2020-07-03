@@ -8,7 +8,7 @@ import {
   Dimensions,
   KeyboardAvoidingView,
   Platform,
-  PermissionsAndroid
+  PermissionsAndroid,
 } from 'react-native';
 // import {Permissions, ImagePicker} from 'expo';
 import ImagePicker from 'react-native-image-picker';
@@ -63,7 +63,7 @@ class RichTextEditor extends Component {
       selectedStyles: [],
       // value: [getInitialObject()] get empty editor
       value: convertToObject(
-        '<div><p><span>This is </span><span style="font-weight: bold;">bold</span><span> and </span><span style="font-style: italic;">italic </span><span>text</span></p></div>',
+        '<div><p><span>' + this.props.chatText + '</span></p></div>',
         this.customStyles,
       ),
     };
@@ -110,7 +110,9 @@ class RichTextEditor extends Component {
 
   askPermissionsAsync = async () => {
     const camera = await PermissionsAndroid.askAsync(PermissionsAndroid.CAMERA);
-    const cameraRoll = await PermissionsAndroid.askAsync(PermissionsAndroid.CAMERA_ROLL);
+    const cameraRoll = await PermissionsAndroid.askAsync(
+      PermissionsAndroid.CAMERA_ROLL,
+    );
 
     this.setState({
       hasCameraPermission: camera.status === 'granted',
@@ -217,11 +219,7 @@ class RichTextEditor extends Component {
       let color = defaultStyles[item] ? defaultStyles[item].color : 'black';
       return (
         <MenuOption value={item} key={item}>
-          <Icons
-            name="format-color-text"
-            color={color}
-            size={28}
-          />
+          <Icons name="format-color-text" color={color} size={28} />
         </MenuOption>
       );
     });
@@ -287,12 +285,7 @@ class RichTextEditor extends Component {
     return (
       <Menu renderer={SlideInMenu} onSelect={this.onHighlightSelectorClicked}>
         <MenuTrigger>
-          <Icons
-            name="marker"
-            color={selectedColor}
-            size={24}
-            style={{}}
-          />
+          <Icons name="marker" color={selectedColor} size={24} style={{}} />
         </MenuTrigger>
         <MenuOptions customStyles={highlightOptionsStyles}>
           {this.renderHighlightMenuOptions()}
@@ -310,7 +303,7 @@ class RichTextEditor extends Component {
         style={styles.root}>
         <MenuProvider style={{flex: 1}}>
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <View style={styles.main}>
+            <View style={styles.main} onTouchStart={e => e.stopPropagation()}>
               <CNRichTextEditor
                 ref={input => (this.editor = input)}
                 onSelectedTagChanged={this.onSelectedTagChanged}
@@ -343,23 +336,17 @@ class RichTextEditor extends Component {
                     {
                       toolTypeText: 'bold',
                       buttonTypes: 'style',
-                      iconComponent: (
-                        <Icons name="format-bold" />
-                      ),
+                      iconComponent: <Icons name="format-bold" />,
                     },
                     {
                       toolTypeText: 'italic',
                       buttonTypes: 'style',
-                      iconComponent: (
-                        <Icons name="format-italic" />
-                      ),
+                      iconComponent: <Icons name="format-italic" />,
                     },
                     {
                       toolTypeText: 'underline',
                       buttonTypes: 'style',
-                      iconComponent: (
-                        <Icons name="format-underline" />
-                      ),
+                      iconComponent: <Icons name="format-underline" />,
                     },
                     {
                       toolTypeText: 'lineThrough',
@@ -379,37 +366,27 @@ class RichTextEditor extends Component {
                     {
                       toolTypeText: 'body',
                       buttonTypes: 'tag',
-                      iconComponent: (
-                        <Icons name="format-text" />
-                      ),
+                      iconComponent: <Icons name="format-text" />,
                     },
                     {
                       toolTypeText: 'title',
                       buttonTypes: 'tag',
-                      iconComponent: (
-                        <Icons name="format-header-1" />
-                      ),
+                      iconComponent: <Icons name="format-header-1" />,
                     },
                     {
                       toolTypeText: 'heading',
                       buttonTypes: 'tag',
-                      iconComponent: (
-                        <Icons name="format-header-3" />
-                      ),
+                      iconComponent: <Icons name="format-header-3" />,
                     },
                     {
                       toolTypeText: 'ul',
                       buttonTypes: 'tag',
-                      iconComponent: (
-                        <Icons name="format-list-bulleted" />
-                      ),
+                      iconComponent: <Icons name="format-list-bulleted" />,
                     },
                     {
                       toolTypeText: 'ol',
                       buttonTypes: 'tag',
-                      iconComponent: (
-                        <Icons name="format-list-numbered" />
-                      ),
+                      iconComponent: <Icons name="format-list-numbered" />,
                     },
                   ],
                 },
@@ -460,7 +437,7 @@ var styles = StyleSheet.create({
   main: {
     flex: 1,
     marginTop: 5,
-    marginBottom:5,
+    marginBottom: 5,
     paddingLeft: 5,
     paddingRight: 5,
     alignItems: 'stretch',
