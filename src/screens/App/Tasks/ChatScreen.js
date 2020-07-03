@@ -41,6 +41,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import Swipeable from 'react-native-swipeable';
 import RichTextEditor from '../../../components/RichTextEditor';
 import MessageShowModal from '../../../components/MessageShowModal';
+import RichTextEditorPell from '../../../components/RichTextEditorPell';
 
 const reactionDetails = [
   {value: '&#128077', text: '👍'},
@@ -282,7 +283,7 @@ class ChatScreen extends Component {
   async onDeleteCommentPress(commentId) {
     this.setState({isDeleteEvent: true});
     this.state.currentlyOpenSwipeable.recenter();
-    this.setState({dataLoading: true});
+    this.setState({dataLoading: true, showMessageModal: false});
     await APIServices.deleteCommentData(commentId)
       .then(response => {
         if (response.message == 'success') {
@@ -305,7 +306,7 @@ class ChatScreen extends Component {
     const rightButtons = [
       <TouchableOpacity
         style={styles.leftContentButtonStyle}
-        onPress={() => this.onEditCommentPress(item.commentId, result)}>
+        onPress={() => this.onEditCommentPress(item.commentId, item.content)}>
         <Image style={styles.controlIcon} source={icons.editRoundWhite} />
       </TouchableOpacity>,
       <TouchableOpacity
@@ -354,7 +355,7 @@ class ChatScreen extends Component {
                       marginTop: 0,
                       marginRight: 10,
                     }}
-                    html={result}
+                    html={item.content}
                     imagesMaxWidth={entireScreenWidth}
                   />
                 </View>
@@ -411,42 +412,42 @@ class ChatScreen extends Component {
   };
 
   async addComment() {
-    let chatText = this.state.chatText;
-    let taskId = this.state.taskId;
-    let chatTextConvert = chatText;
+    if (chatText != '') {
+      let chatText = this.state.chatText;
+      let taskId = this.state.taskId;
+      let chatTextConvert = chatText;
 
-    this.setState({dataLoading: true});
-    await APIServices.addCommentData(taskId, chatTextConvert)
-      .then(response => {
-        if (response.message == 'success') {
+      this.setState({dataLoading: true});
+      await APIServices.addCommentData(taskId, chatTextConvert)
+        .then(response => {
+          if (response.message == 'success') {
+            this.setState({dataLoading: false});
+            let data = response.data;
+            // let comment = {
+            //   commentId: data.commentId,
+            //   commentedAt: data.commentedAt,
+            //   commenter: data.commenter,
+            //   commenterFistName: data.commenterFistName,
+            //   commenterLatName: data.commenterLatName,
+            //   commenterProfileImage: data.commenterProfileImage,
+            //   content: data.content,
+            //   reactions: data.reactions,
+            // };
+            // this.setState({comments: this.state.comments.concat(comment)});
+            this.submitChatMessage(chatText);
+          } else {
+            this.setState({dataLoading: false});
+          }
+        })
+        .catch(error => {
           this.setState({dataLoading: false});
-          let data = response.data;
-          // let comment = {
-          //   commentId: data.commentId,
-          //   commentedAt: data.commentedAt,
-          //   commenter: data.commenter,
-          //   commenterFistName: data.commenterFistName,
-          //   commenterLatName: data.commenterLatName,
-          //   commenterProfileImage: data.commenterProfileImage,
-          //   content: data.content,
-          //   reactions: data.reactions,
-          // };
-          // this.setState({comments: this.state.comments.concat(comment)});
-          this.submitChatMessage(chatText);
-        } else {
-          this.setState({dataLoading: false});
-        }
-      })
-      .catch(error => {
-        this.setState({dataLoading: false});
-        Utils.showAlert(true, '', error.data.message, this.props);
-      });
+          Utils.showAlert(true, '', error.data.message, this.props);
+        });
+    }
   }
 
   async submitChatMessage(chatText) {
-    if (chatText != '') {
-      this.sendMessageToSocket(chatText);
-    }
+    this.sendMessageToSocket(chatText);
   }
 
   addEmoji(emoji) {
@@ -740,6 +741,11 @@ class ChatScreen extends Component {
     this.setState({isDeleteEvent: false});
   };
 
+  getChatText(chatText) {
+    console.log('sddddddddddddddddddddd', chatText);
+    this.setState({chatText: chatText});
+  }
+
   render() {
     let comments = this.state.comments;
     let isFetching = this.state.isFetching;
@@ -769,7 +775,23 @@ class ChatScreen extends Component {
               onLayout={() => this.handleListScrollToEnd()}
             />
 
-            <View style={styles.chatFieldView}>
+            <RichTextEditorPell
+              chatText={this.state.chatText}
+              getChatText={html => this.getChatText(html)}
+            />
+
+            <TouchableOpacity
+              onPress={() => {
+                edit ? this.updateComment() : this.addComment();
+              }}>
+              <Image
+                style={styles.chatIcon}
+                source={icons.forwordGreen}
+                resizeMode={'contain'}
+              />
+            </TouchableOpacity>
+
+            {/* <View style={styles.chatFieldView}>
               <TouchableOpacity
                 onPress={() => {
                   Platform.OS == 'ios'
@@ -782,7 +804,10 @@ class ChatScreen extends Component {
                   resizeMode={'contain'}
                 />
               </TouchableOpacity>
-              <RichTextEditor chatText={this.state.chatText} />
+              <RichTextEditorPell
+                // chatText={this.state.chatText}
+                // getChatText={chatText => this.getChatText(chatText)}
+              />
               <TouchableOpacity
                 onPress={() => {
                   edit ? this.updateComment() : this.addComment();
@@ -793,7 +818,7 @@ class ChatScreen extends Component {
                   resizeMode={'contain'}
                 />
               </TouchableOpacity>
-            </View>
+            </View> */}
 
             {/* <Animated.View style={[{ transform: [{ translateY: shift }] }]}> */}
 

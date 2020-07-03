@@ -71,6 +71,17 @@ class RichTextEditor extends Component {
     this.editor = null;
   }
 
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (prevProps.chatText !== this.props.chatText && this.props.chatText) {
+      this.setState({
+        value: convertToObject(
+          '<div><p><span>' + this.props.chatText + '</span></p></div>',
+          this.customStyles,
+        ),
+      });
+    }
+  }
+
   onStyleKeyPress = toolType => {
     if (toolType == 'image') {
       return;
@@ -98,10 +109,11 @@ class RichTextEditor extends Component {
     });
   };
 
-  onValueChanged = value => {
-    this.setState({
+  onValueChanged = async value => {
+    await this.setState({
       value: value,
     });
+    this.props.getChatText(this.state.value);
   };
 
   insertImage(url) {
