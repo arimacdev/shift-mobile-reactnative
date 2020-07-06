@@ -151,7 +151,11 @@ class RichTextEditorPell extends React.Component {
         </ScrollView>
         <KeyboardAvoidingView behavior={'padding'}>
           <RichToolbar
-            style={[styles.richBar, themeBg]}
+            style={[
+              styles.richBar,
+              themeBg,
+              {backgroundColor: colors.colorWhisper},
+            ]}
             editor={that.richText}
             iconTint={color}
             selectedIconTint={colors.colorDeepSkyBlue}

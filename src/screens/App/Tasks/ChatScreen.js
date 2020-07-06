@@ -596,7 +596,6 @@ class ChatScreen extends Component {
 
   async uploadFilesToComment(files, taskId) {
     // await this.richText.current?.insertImage('https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/1024px-React-icon.svg.png');
-
     await APIServices.uploadFileToComment(files, taskId)
       .then(response => {
         if (response.message == 'success') {
@@ -730,6 +729,7 @@ class ChatScreen extends Component {
         }
       },
     );
+
     // }
   };
 
@@ -793,26 +793,29 @@ class ChatScreen extends Component {
       <MenuProvider>
         <View style={styles.container}>
           {/* <NavigationEvents onWillFocus={payload => this.loadUsers(payload)} /> */}
-          {/* <View style={{height: this.state.listHeghtWithKeyboard}}> */}
-          <FlatList
-            style={styles.flalList}
-            data={sortedData}
-            renderItem={item => this.renderCommentList(item.item)}
-            keyExtractor={item => item.projId}
-            onRefresh={() => this.onRefresh()}
-            refreshing={isFetching}
-            ref={ref => (this.flatList = ref)}
-            onContentSizeChange={() => this.handleListScrollToEnd()}
-            onLayout={() => this.handleListScrollToEnd()}
-          />
-          {/* </View> */}
+          <View>
+            <FlatList
+              style={[styles.flalList]}
+              data={sortedData}
+              renderItem={item => this.renderCommentList(item.item)}
+              keyExtractor={item => item.projId}
+              onRefresh={() => this.onRefresh()}
+              refreshing={isFetching}
+              ref={ref => (this.flatList = ref)}
+              onContentSizeChange={() => this.handleListScrollToEnd()}
+              onLayout={() => this.handleListScrollToEnd()}
+            />
+          </View>
           <View
             style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              marginHorizontal: 20,
+              position: 'absolute',
+              bottom: 0,
+              zIndex: 1000,
+              alignSelf: 'flex-end',
+              marginBottom: 18,
+              width: 40,
             }}>
-            <TouchableOpacity
+            {/* <TouchableOpacity
               onPress={() => {
                 Platform.OS == 'ios'
                   ? this.iOSFilePicker()
@@ -823,7 +826,7 @@ class ChatScreen extends Component {
                 source={icons.addRoundedBlue}
                 resizeMode={'contain'}
               />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             <TouchableOpacity
               onPress={() => {
                 this.sendMessage();
@@ -836,7 +839,15 @@ class ChatScreen extends Component {
             </TouchableOpacity>
           </View>
 
-          <View style={{height: 130}}>
+          <View
+            style={{
+              height: 130,
+              borderTopColor: colors.colorSilver,
+              borderTopWidth: 0.5,
+              position: 'absolute',
+              bottom: 0,
+              width: '100%',
+            }}>
             <RichTextEditorPell
               chatText={this.state.chatText}
               // getChatText={html => this.getChatText(html)}
@@ -972,7 +983,7 @@ const styles = EStyleSheet.create({
     flexDirection: 'row',
   },
   flalList: {
-    marginBottom: '10rem',
+    marginBottom: '120rem',
   },
   flalListReactions: {
     marginBottom: '5rem',
