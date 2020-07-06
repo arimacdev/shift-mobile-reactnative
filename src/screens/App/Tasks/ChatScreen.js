@@ -91,6 +91,7 @@ class ChatScreen extends Component {
       showMessageModal: false,
       timeTextChange: '',
       chatTextClear: false,
+      currentKeyboardHeight: 0
     };
     this.editor = null;
   }
@@ -108,17 +109,20 @@ class ChatScreen extends Component {
       taskId: taskId,
     });
     this.fetchData(taskId);
-    // this.keyboardDidShowSub = Keyboard.addListener(
-    //   'keyboardDidShow',
-    //   this.handleKeyboardDidShow,
-    // );
-    // this.keyboardDidHideSub = Keyboard.addListener(
-    //   'keyboardDidHide',
-    //   this.handleKeyboardDidHide,
-    // );
+    if(Platform.OS=='ios'){
+    this.keyboardDidShowSub = Keyboard.addListener(
+      'keyboardDidShow',
+      this.handleKeyboardDidShow,
+    );
+    this.keyboardDidHideSub = Keyboard.addListener(
+      'keyboardDidHide',
+      this.handleKeyboardDidHide,
+    );
+    }
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
+    if(Platform.OS=='ios'){
     if (
       prevProps.commentsLoading !== this.props.commentsLoading &&
       this.props.comments &&
@@ -135,6 +139,7 @@ class ChatScreen extends Component {
       });
     }
   }
+  }
 
   componentWillUnmount() {
     this.props.stompContext.removeStompEventListener(
@@ -145,8 +150,8 @@ class ChatScreen extends Component {
     );
     this.props.stompContext.removeStompClient();
     this.rootSubscribed.unsubscribe();
-    // this.keyboardDidShowSub.remove();
-    // this.keyboardDidHideSub.remove();
+    this.keyboardDidShowSub.remove();
+    this.keyboardDidHideSub.remove();
   }
 
   componentDidMount() {
@@ -700,10 +705,11 @@ class ChatScreen extends Component {
   }
 
   handleKeyboardDidShow = event => {
-    // if (Platform.OS == 'ios') {
+    if (Platform.OS == 'ios') {
     const {height: windowHeight} = Dimensions.get('window');
     const keyboardHeight = event.endCoordinates.height;
-    const currentlyFocusedField = TextInputState.currentlyFocusedField();
+    this.setState({currentKeyboardHeight: windowHeight-keyboardHeight-200})
+    const currentlyFocusedField = TextInputState.currentlyFocusedField() == null ? 0 : TextInputState.currentlyFocusedField();
     UIManager.measure(
       currentlyFocusedField,
       (originX, originY, width, height, pageX, pageY) => {
@@ -729,19 +735,19 @@ class ChatScreen extends Component {
         }
       },
     );
-
-    // }
+    }
   };
 
   handleKeyboardDidHide = () => {
-    // if (Platform.OS == 'ios') {
+    if (Platform.OS == 'ios') {
+    this.setState({currentKeyboardHeight: 0})
     this.setState({listHeghtWithKeyboard: '100%'});
     Animated.timing(this.state.shift, {
       toValue: 0,
       duration: 100,
       useNativeDriver: true,
     }).start();
-    // }
+    }
   };
 
   handleListScrollToEnd = () => {
@@ -803,6 +809,7 @@ class ChatScreen extends Component {
               onLayout={() => this.handleListScrollToEnd()}
             />
           </View>
+          <View style={{bottom: Platform.OS == 'ios'? this.state.currentKeyboardHeight: 0}}>
           <TouchableOpacity
             style={styles.crossIconStyle}
             onPress={() => this.onCrossPress()}>
@@ -841,6 +848,7 @@ class ChatScreen extends Component {
             />
           </View>
           {this.state.status != 'Connected' && <Loader />}
+        </View>
         </View>
       </MenuProvider>
     );
