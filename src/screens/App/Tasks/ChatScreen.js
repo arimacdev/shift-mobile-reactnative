@@ -108,14 +108,14 @@ class ChatScreen extends Component {
       taskId: taskId,
     });
     this.fetchData(taskId);
-    this.keyboardDidShowSub = Keyboard.addListener(
-      'keyboardDidShow',
-      this.handleKeyboardDidShow,
-    );
-    this.keyboardDidHideSub = Keyboard.addListener(
-      'keyboardDidHide',
-      this.handleKeyboardDidHide,
-    );
+    // this.keyboardDidShowSub = Keyboard.addListener(
+    //   'keyboardDidShow',
+    //   this.handleKeyboardDidShow,
+    // );
+    // this.keyboardDidHideSub = Keyboard.addListener(
+    //   'keyboardDidHide',
+    //   this.handleKeyboardDidHide,
+    // );
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -145,8 +145,8 @@ class ChatScreen extends Component {
     );
     this.props.stompContext.removeStompClient();
     this.rootSubscribed.unsubscribe();
-    this.keyboardDidShowSub.remove();
-    this.keyboardDidHideSub.remove();
+    // this.keyboardDidShowSub.remove();
+    // this.keyboardDidHideSub.remove();
   }
 
   componentDidMount() {
@@ -575,6 +575,7 @@ class ChatScreen extends Component {
   }
 
   async setImageForFile(res) {
+    let taskId = this.state.taskId;
     this.onFilesCrossPress(res.uri);
     await this.state.files.push({
       uri: res.uri,
@@ -584,11 +585,40 @@ class ChatScreen extends Component {
       dateTime:
         moment().format('YYYY/MM/DD') + ' | ' + moment().format('HH:mm'),
     });
-    this.setState({files: this.state.files});
+    this.setState({files: this.state.files}, () => {
+      this.uploadFilesToComment(this.state.files, taskId);
+    });
+  }
+
+  async uploadFilesToComment(files, taskId) {
+    await APIServices.uploadFileToComment(files, taskId)
+      .then(response => {
+        if (response.message == 'success') {
+          this.setState({
+            files: [],
+            chatText: this.state.chatText.concat(
+              '<img src=' +
+                response.data +
+                ' class="e-rte-image e-imginline" width="auto" height="auto" style="min-width: 0px; min-height: 0px; "width: auto; height: auto;">',
+            ),
+          });
+        } else {
+          this.setState({files: []});
+        }
+      })
+      .catch(error => {
+        this.setState({files: []});
+        if (error.status == 401) {
+          Utils.showAlert('', error.data.message);
+        } else {
+          Utils.showAlert('', error);
+        }
+      });
   }
 
   async doumentPicker() {
     // Pick multiple files
+    let taskId = this.state.taskId;
     try {
       const results = await DocumentPicker.pickMultiple({
         type: [
@@ -621,41 +651,7 @@ class ChatScreen extends Component {
         uploading: 0,
         showMessageModal: false,
       });
-
-      await APIServices.uploadFileToComment(this.state.files, this.state.taskId)
-        .then(response => {
-          if (response.message == 'success') {
-            // this.details = {
-            //   icon: icons.fileOrange,
-            //   type: 'success',
-            //   title: 'Sucsess',
-            //   description: 'File has been added successfully',
-            //   buttons: {},
-            // };
-            this.setState({
-              indeterminate: false,
-              files: [],
-              uploading: 100,
-              // showMessageModal: true,
-              chatText: this.state.chatText.concat(
-                '<img src=' +
-                  response.data +
-                  ' class="e-rte-image e-imginline" width="auto" height="auto" style="min-width: 0px; min-height: 0px; "width: auto; height: auto;">',
-              ),
-            });
-            // this.fetchFilesData(selectedProjectID, selectedProjectTaskID);
-          } else {
-            this.setState({indeterminate: false, files: [], uploading: 0});
-          }
-        })
-        .catch(error => {
-          this.setState({indeterminate: false, files: [], uploading: 0});
-          if (error.status == 401) {
-            Utils.showAlert('', error.data.message);
-          } else {
-            Utils.showAlert('', error);
-          }
-        });
+      this.uploadFilesToComment(this.state.files, taskId);
       console.log(this.state.files);
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
@@ -775,18 +771,19 @@ class ChatScreen extends Component {
       <MenuProvider>
         <View style={styles.container}>
           <NavigationEvents onWillFocus={payload => this.loadUsers(payload)} />
-          <View style={{height: this.state.listHeghtWithKeyboard}}>
-            <FlatList
-              style={styles.flalList}
-              data={sortedData}
-              renderItem={item => this.renderCommentList(item.item)}
-              keyExtractor={item => item.projId}
-              onRefresh={() => this.onRefresh()}
-              refreshing={isFetching}
-              ref={ref => (this.flatList = ref)}
-              onContentSizeChange={() => this.handleListScrollToEnd()}
-              onLayout={() => this.handleListScrollToEnd()}
-            />
+          {/* <View style={{height: this.state.listHeghtWithKeyboard}}> */}
+          <FlatList
+            style={styles.flalList}
+            data={sortedData}
+            renderItem={item => this.renderCommentList(item.item)}
+            keyExtractor={item => item.projId}
+            onRefresh={() => this.onRefresh()}
+            refreshing={isFetching}
+            ref={ref => (this.flatList = ref)}
+            onContentSizeChange={() => this.handleListScrollToEnd()}
+            onLayout={() => this.handleListScrollToEnd()}
+          />
+          <View>
             <TouchableOpacity
               onPress={() => {
                 Platform.OS == 'ios'
@@ -799,15 +796,6 @@ class ChatScreen extends Component {
                 resizeMode={'contain'}
               />
             </TouchableOpacity>
-            <View style={{height: 130}}>
-              <RichTextEditorPell
-                chatText={this.state.chatText}
-                getChatText={html => this.getChatText(html)}
-                timeTextChange={this.state.timeTextChange}
-                taskId={this.state.taskId}
-                chatTextClear={this.state.chatTextClear}
-              />
-            </View>
             <TouchableOpacity
               onPress={() => {
                 this.sendMessage();
@@ -818,6 +806,17 @@ class ChatScreen extends Component {
                 resizeMode={'contain'}
               />
             </TouchableOpacity>
+          </View>
+
+          <View style={{height: 130}}>
+            <RichTextEditorPell
+              chatText={this.state.chatText}
+              getChatText={html => this.getChatText(html)}
+              timeTextChange={this.state.timeTextChange}
+              taskId={this.state.taskId}
+              chatTextClear={this.state.chatTextClear}
+            />
+            {/* </View> */}
 
             {/* <View style={styles.chatFieldView}>
               <TouchableOpacity
