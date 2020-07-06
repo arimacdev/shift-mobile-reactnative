@@ -14,8 +14,13 @@ import {
   Text,
   TextInput,
   View,
+  Dimensions,
 } from 'react-native';
 import {RichEditor, RichToolbar} from 'react-native-pell-rich-editor';
+import colors from '../config/colors';
+import EStyleSheet from 'react-native-extended-stylesheet';
+const entireScreenWidth = Dimensions.get('window').width;
+EStyleSheet.build({$rem: entireScreenWidth / 380});
 
 // const initHTML = `<br/>
 // <center><b>Pell.js Rich Editor</b></center>
@@ -105,14 +110,14 @@ class RichTextEditorPell extends React.Component {
 
   createContentStyle(theme) {
     const contentStyle = {
-      backgroundColor: '#000033',
-      color: '#fff',
+      backgroundColor: colors.colorMidnightBlue,
+      color: colors.white,
       placeholderColor: 'gray',
     };
     if (theme === 'light') {
-      contentStyle.backgroundColor = '#fff';
-      contentStyle.color = '#000033';
-      contentStyle.placeholderColor = '#a9a9a9';
+      contentStyle.backgroundColor = colors.white;
+      contentStyle.color = colors.colorMidnightBlue;
+      contentStyle.placeholderColor = colors.colorSilver;
     }
     return contentStyle;
   }
@@ -148,7 +153,7 @@ class RichTextEditorPell extends React.Component {
             style={[styles.richBar, themeBg]}
             editor={that.richText}
             iconTint={color}
-            selectedIconTint={'#2095F2'}
+            selectedIconTint={colors.colorDeepSkyBlue}
             selectedButtonStyle={{backgroundColor: 'transparent'}}
             onPressAddImage={that.onPressAddImage}
           />
@@ -158,34 +163,34 @@ class RichTextEditorPell extends React.Component {
   }
 }
 
-const styles = StyleSheet.create({
+const styles = EStyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5FCFF',
+    backgroundColor: colors.colorAliceBlue,
   },
   nav: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginHorizontal: 5,
+    marginHorizontal: '5rem',
   },
   rich: {
-    minHeight: 300,
+    minHeight: '300rem',
     flex: 1,
   },
   richBar: {
-    height: 50,
-    backgroundColor: '#F5FCFF',
+    height: '50rem',
+    backgroundColor: colors.colorAliceBlue,
   },
   scroll: {
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.white,
   },
   item: {
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderColor: '#eee',
+    borderColor: colors.colorWhisper,
     flexDirection: 'row',
-    height: 40,
+    height: '40rem',
     alignItems: 'center',
-    paddingHorizontal: 15,
+    paddingHorizontal: '15rem',
   },
 
   input: {

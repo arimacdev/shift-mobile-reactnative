@@ -63,6 +63,8 @@ const colors = {
   colorGovernorBay: '#4D4F85',
   colorSilver: '#B9B9B9',
   colorBlackRussian: '#040428',
-  colorPaleCornflowerBlue: '#B6D3F1'
+  colorPaleCornflowerBlue: '#B6D3F1',
+  colorAliceBlue: '#F5FCFF',
+  colorWhisper: '#EEEEEE'
 };
 export default colors;
