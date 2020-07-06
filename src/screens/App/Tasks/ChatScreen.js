@@ -796,7 +796,7 @@ class ChatScreen extends Component {
       <MenuProvider>
         <View style={styles.container}>
           {/* <NavigationEvents onWillFocus={payload => this.loadUsers(payload)} /> */}
-          <View>
+          <View style={{bottom: Platform.OS == 'ios'? this.state.currentKeyboardHeight: 0}}>
             <FlatList
               style={styles.flalList}
               data={sortedData}
