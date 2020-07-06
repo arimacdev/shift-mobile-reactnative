@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   View,
   FlatList,
@@ -14,28 +14,28 @@ import {
   TouchableWithoutFeedback,
   KeyboardAvoidingView,
 } from 'react-native';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import * as actions from '../../../redux/actions';
 import colors from '../../../config/colors';
 import icons from '../../../asserts/icons/icons';
 import EStyleSheet from 'react-native-extended-stylesheet';
 const entireScreenWidth = Dimensions.get('window').width;
 const entireScreenHeight = Dimensions.get('window').height;
-EStyleSheet.build({$rem: entireScreenWidth / 380});
+EStyleSheet.build({ $rem: entireScreenWidth / 380 });
 import FadeIn from 'react-native-fade-in-image';
 import Loader from '../../../components/Loader';
 import ImagePicker from 'react-native-image-picker';
-import {NavigationEvents} from 'react-navigation';
+import { NavigationEvents } from 'react-navigation';
 // import io from 'socket.io-client';
 import APIServices from '../../../services/APIServices';
 import moment from 'moment';
-import {StompEventTypes, withStomp, Client} from 'react-stompjs';
+import { StompEventTypes, withStomp, Client } from 'react-stompjs';
 import EmojiSelector from 'react-native-emoji-selector';
 import Modal from 'react-native-modal';
 import Utils from '../../../utils/Utils';
 import HTML from 'react-native-render-html';
 import PopupMenuEmojiReaction from '../../../components/PopupMenuEmojiReaction';
-import {MenuProvider} from 'react-native-popup-menu';
+import { MenuProvider } from 'react-native-popup-menu';
 import DocumentPicker from 'react-native-document-picker';
 import AsyncStorage from '@react-native-community/async-storage';
 import Swipeable from 'react-native-swipeable';
@@ -44,14 +44,14 @@ import MessageShowModal from '../../../components/MessageShowModal';
 import RichTextEditorPell from '../../../components/RichTextEditorPell';
 
 const reactionDetails = [
-  {value: '&#128077', text: '👍'},
-  {value: '&#128154', text: '💚'},
-  {value: '&#128514', text: '😂'},
-  {value: '&#128545', text: '😡'},
-  {value: '&#128546', text: '😢'},
+  { value: '&#128077', text: '👍' },
+  { value: '&#128154', text: '💚' },
+  { value: '&#128514', text: '😂' },
+  { value: '&#128545', text: '😡' },
+  { value: '&#128546', text: '😢' },
 ];
 
-const {State: TextInputState} = TextInput;
+const { State: TextInputState } = TextInput;
 
 class ChatScreen extends Component {
   deleteDetails = {
@@ -85,12 +85,13 @@ class ChatScreen extends Component {
       listHeghtWithKeyboard: '100%',
       selectedTag: 'body',
       selectedStyles: [],
-      files: [],
       Uploading: 0,
       indeterminate: false,
       showMessageModal: false,
       timeTextChange: '',
       chatTextClear: false,
+      value: [getInitialObject()],
+      files: [],
     };
     this.editor = null;
   }
@@ -98,7 +99,7 @@ class ChatScreen extends Component {
   componentWillMount() {
     const {
       navigation: {
-        state: {params},
+        state: { params },
       },
     } = this.props;
 
@@ -140,7 +141,7 @@ class ChatScreen extends Component {
     this.props.stompContext.removeStompEventListener(
       StompEventTypes.WebSocketClose,
       () => {
-        this.setState({status: 'Disconnected (not graceful)'});
+        this.setState({ status: 'Disconnected (not graceful)' });
       },
     );
     this.props.stompContext.removeStompClient();
@@ -156,7 +157,7 @@ class ChatScreen extends Component {
     this.props.stompContext.addStompEventListener(
       StompEventTypes.Connect,
       () => {
-        this.setState({status: 'Connected'});
+        this.setState({ status: 'Connected' });
         this.rootSubscribed = this.props.stompContext
           .getStompClient()
           .subscribe('/topic/messages/' + taskId, message => {
@@ -171,13 +172,13 @@ class ChatScreen extends Component {
     this.props.stompContext.addStompEventListener(
       StompEventTypes.Disconnect,
       () => {
-        this.setState({status: 'Disconnected'});
+        this.setState({ status: 'Disconnected' });
       },
     );
     this.props.stompContext.addStompEventListener(
       StompEventTypes.WebSocketClose,
       () => {
-        this.setState({status: 'Disconnected (not graceful)'});
+        this.setState({ status: 'Disconnected (not graceful)' });
       },
     );
     this.props.stompContext.newStompClient(
@@ -188,28 +189,160 @@ class ChatScreen extends Component {
     );
   }
 
+  onStyleKeyPress = toolType => {
+    this.editor.applyToolbar(toolType);
+  };
+
+  onSelectedTagChanged = tag => {
+    this.setState({
+      selectedTag: tag,
+    });
+  };
+
+  onSelectedStyleChanged = styles => {
+    this.setState({
+      selectedStyles: styles,
+    });
+  };
+
+  onValueChanged = value => {
+    this.setState({
+      value: value,
+    });
+  };
+
+  renderRichTextView() {
+    return (
+      <KeyboardAvoidingView
+        behavior="padding"
+        enabled
+        keyboardVerticalOffset={0}
+        style={{
+          flex: 1,
+          paddingTop: 20,
+          backgroundColor: '#eee',
+          flexDirection: 'column',
+          justifyContent: 'flex-end',
+        }}>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <View style={styles.main}>
+            <CNRichTextEditor
+              ref={input => (this.editor = input)}
+              onSelectedTagChanged={this.onSelectedTagChanged}
+              onSelectedStyleChanged={this.onSelectedStyleChanged}
+              value={this.state.value}
+              style={{ backgroundColor: '#fff' }}
+              styleList={defaultStyles}
+              onValueChanged={this.onValueChanged}
+            />
+          </View>
+        </TouchableWithoutFeedback>
+
+        <View
+          style={{
+            minHeight: 35,
+          }}>
+          <CNToolbar
+            style={{
+              height: 35,
+            }}
+            iconSetContainerStyle={{
+              flexGrow: 1,
+              justifyContent: 'space-evenly',
+              alignItems: 'center',
+            }}
+            size={30}
+            iconSet={[
+              {
+                type: 'tool',
+                iconArray: [
+                  {
+                    toolTypeText: 'image',
+                    iconComponent: (
+                      <Text style={styles.toolbarButton}>image</Text>
+                    ),
+                  },
+                ],
+              },
+              {
+                type: 'tool',
+                iconArray: [
+                  {
+                    toolTypeText: 'bold',
+                    buttonTypes: 'style',
+                    iconComponent: (
+                      <Text style={styles.toolbarButton}>bold</Text>
+                    ),
+                  },
+                ],
+              },
+              {
+                type: 'seperator',
+              },
+              {
+                type: 'tool',
+                iconArray: [
+                  {
+                    toolTypeText: 'body',
+                    buttonTypes: 'tag',
+                    iconComponent: (
+                      <Text style={styles.toolbarButton}>body</Text>
+                    ),
+                  },
+                ],
+              },
+              {
+                type: 'tool',
+                iconArray: [
+                  {
+                    toolTypeText: 'ul',
+                    buttonTypes: 'tag',
+                    iconComponent: <Text style={styles.toolbarButton}>ul</Text>,
+                  },
+                ],
+              },
+              {
+                type: 'tool',
+                iconArray: [
+                  {
+                    toolTypeText: 'ol',
+                    buttonTypes: 'tag',
+                    iconComponent: <Text style={styles.toolbarButton}>ol</Text>,
+                  },
+                ],
+              },
+            ]}
+            selectedTag={this.state.selectedTag}
+            selectedStyles={this.state.selectedStyles}
+            onStyleKeyPress={this.onStyleKeyPress}
+          />
+        </View>
+      </KeyboardAvoidingView>
+    );
+  }
+
   async fetchData(taskId) {
-    this.setState({dataLoading: true});
+    this.setState({ dataLoading: true });
     await APIServices.getCommentsData(taskId)
       .then(response => {
         if (response.message == 'success') {
-          this.setState({dataLoading: false, comments: response.data});
+          this.setState({ dataLoading: false, comments: response.data });
         } else {
-          this.setState({dataLoading: false});
+          this.setState({ dataLoading: false });
         }
       })
       .catch(error => {
-        this.setState({dataLoading: false});
+        this.setState({ dataLoading: false });
         // Utils.showAlert(true, '', error.data.message, this.props);
       });
   }
 
-  userImage = function(item) {
+  userImage = function (item) {
     let userImage = item.commenterProfileImage;
     if (userImage) {
       return (
         <FadeIn>
-          <Image source={{uri: userImage}} style={styles.userIcon} />
+          <Image source={{ uri: userImage }} style={styles.userIcon} />
         </FadeIn>
       );
     } else {
@@ -218,7 +351,7 @@ class ChatScreen extends Component {
   };
 
   onReactionIconPress() {
-    this.setState({showEmojiPicker: true});
+    this.setState({ showEmojiPicker: true });
   }
 
   renderReactionDetailsList(item) {
@@ -238,18 +371,18 @@ class ChatScreen extends Component {
   }
 
   async onMenuItemChange(item, commentId) {
-    this.setState({dataLoading: true});
+    this.setState({ dataLoading: true });
     await APIServices.addUpdateCommentReactionData(commentId, item.value)
       .then(response => {
         if (response.message == 'success') {
-          this.setState({dataLoading: false});
+          this.setState({ dataLoading: false });
           this.sendMessageToSocket(item.value);
         } else {
-          this.setState({dataLoading: false});
+          this.setState({ dataLoading: false });
         }
       })
       .catch(error => {
-        this.setState({dataLoading: false});
+        this.setState({ dataLoading: false });
         // Utils.showAlert(true, '', error.data.message, this.props);
       });
   }
@@ -277,30 +410,30 @@ class ChatScreen extends Component {
           this.setState({dataLoading: false, edit: false});
           this.sendMessageToSocket(chatText);
         } else {
-          this.setState({dataLoading: false});
+          this.setState({ dataLoading: false });
         }
       })
       .catch(error => {
-        this.setState({dataLoading: false});
+        this.setState({ dataLoading: false });
         // Utils.showAlert(true, '', error.data.message, this.props);
       });
   }
 
   async onDeleteCommentPress(commentId) {
-    this.setState({isDeleteEvent: true});
+    this.setState({ isDeleteEvent: true });
     this.state.currentlyOpenSwipeable.recenter();
     this.setState({dataLoading: true, showMessageModal: false});
     await APIServices.deleteCommentData(commentId)
       .then(response => {
         if (response.message == 'success') {
-          this.setState({dataLoading: false});
+          this.setState({ dataLoading: false });
           this.sendMessageToSocket('');
         } else {
-          this.setState({dataLoading: false});
+          this.setState({ dataLoading: false });
         }
       })
       .catch(error => {
-        this.setState({dataLoading: false});
+        this.setState({ dataLoading: false });
         // Utils.showAlert(true, '', error.data.message, this.props);
       });
   }
@@ -335,14 +468,14 @@ class ChatScreen extends Component {
           ) {
             this.state.currentlyOpenSwipeable.recenter();
           }
-          this.setState({currentlyOpenSwipeable: swipe});
+          this.setState({ currentlyOpenSwipeable: swipe });
         }}
         onRightButtonsCloseRelease={() =>
-          this.setState({currentlyOpenSwipeable: null})
+          this.setState({ currentlyOpenSwipeable: null })
         }>
         <View style={styles.chatView}>
           {this.userImage(item)}
-          <View style={{flex: 1}}>
+          <View style={{ flex: 1 }}>
             <View style={styles.timeView}>
               <Text style={styles.textTime}>
                 {moment.parseZone(item.commentedAt).fromNow()}
@@ -350,7 +483,7 @@ class ChatScreen extends Component {
             </View>
             <View style={styles.nameView}>
               <View style={styles.innerView}>
-                <View style={{flex: 1}}>
+                <View style={{ flex: 1 }}>
                   <Text style={styles.text}>
                     {item.commenterFistName} {item.commenterFistName}
                   </Text>
@@ -390,7 +523,7 @@ class ChatScreen extends Component {
   }
 
   onRefresh() {
-    this.setState({isFetching: true, comments: []}, function() {
+    this.setState({ isFetching: true, comments: [] }, function () {
       this.fetchData(this.state.taskId);
     });
   }
@@ -400,13 +533,13 @@ class ChatScreen extends Component {
   }
 
   loadUsers() {
-    this.setState({comments: []}, function() {
+    this.setState({ comments: [] }, function () {
       // this.props.getAllUsers();
     });
   }
 
   onChatTextChange(text) {
-    this.setState({chatText: text});
+    this.setState({ chatText: text });
   }
 
   updateSize = height => {
@@ -464,7 +597,7 @@ class ChatScreen extends Component {
   }
 
   onCloseTaskModal() {
-    this.setState({showEmojiPicker: false});
+    this.setState({ showEmojiPicker: false });
   }
 
   renderEmojiPicker() {
@@ -491,7 +624,7 @@ class ChatScreen extends Component {
   }
 
   onEmojiPickerPress(showEmojiPicker) {
-    this.setState({showEmojiPicker: !showEmojiPicker});
+    this.setState({ showEmojiPicker: !showEmojiPicker });
     if (showEmojiPicker) {
       Keyboard.dismiss();
     }
@@ -502,10 +635,10 @@ class ChatScreen extends Component {
       'Add Files',
       'Select the file source',
       [
-        {text: 'Camera', onPress: () => this.selectCamera()},
-        {text: 'Gallery', onPress: () => this.selectGallery()},
-        {text: 'Files', onPress: () => this.doumentPicker()},
-        {text: 'Cancel', onPress: () => console.log('Back')},
+        { text: 'Camera', onPress: () => this.selectCamera() },
+        { text: 'Gallery', onPress: () => this.selectGallery() },
+        { text: 'Files', onPress: () => this.doumentPicker() },
+        { text: 'Cancel', onPress: () => console.log('Back') },
       ],
       {
         cancelable: true,
@@ -589,38 +722,40 @@ class ChatScreen extends Component {
       dateTime:
         moment().format('YYYY/MM/DD') + ' | ' + moment().format('HH:mm'),
     });
-    this.setState({files: this.state.files}, () => {
-      this.uploadFilesToComment(this.state.files, taskId);
-    });
+    this.setState({ files: this.state.files }, () => {
+      this.uploadFilesToComment()
+    },
+    );
   }
 
-  async uploadFilesToComment(files, taskId) {
-    // await this.richText.current?.insertImage('https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/1024px-React-icon.svg.png');
-    await APIServices.uploadFileToComment(files, taskId)
-      .then(response => {
-        if (response.message == 'success') {
-          // this.richText.current?.insertImage('https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/1024px-React-icon.svg.png');
-          this.richText.current?.blurContentEditor();
-          this.setState({
-            files: [],
-            chatText: this.state.chatText.concat(
-              '<img src=' +
-                response.data +
-                ' class="e-rte-image e-imginline" width="auto" height="auto" style="min-width: 0px; min-height: 0px; "width: auto; height: auto;">',
-            ),
-          });
-        } else {
-          this.setState({files: []});
-        }
-      })
-      .catch(error => {
-        this.setState({files: []});
-        if (error.status == 401) {
-          Utils.showAlert('', error.data.message);
-        } else {
-          Utils.showAlert('', error);
-        }
-      });
+  async uploadFilesToComment() {
+    let taskId = this.state.taskId;
+    try {
+      let taskResult = await APIServices.uploadFileToComment(
+        this.state.files,
+        taskId
+      );
+      if (taskResult.message == 'success') {
+        // console.log('ooooooooooooooo', taskResult)
+        // this.setSprintId(taskResult);
+        // this.setState({dataLoading: false});
+      } else {
+        // this.setState({dataLoading: false});
+      }
+    } catch (error) {
+      // this.setState({dataLoading: false});
+    }
+  }
+
+  onFilesCrossPress(uri) {
+    this.setState({ files: [] },
+      () => {
+        let filesArray = this.state.files.filter(item => {
+          return item.uri !== uri;
+        });
+        this.setState({ files: filesArray });
+      },
+    );
   }
 
   async doumentPicker() {
@@ -658,7 +793,41 @@ class ChatScreen extends Component {
         uploading: 0,
         showMessageModal: false,
       });
-      this.uploadFilesToComment(this.state.files, taskId);
+
+      await APIServices.uploadFileToComment(this.state.files, this.state.taskId)
+        .then(response => {
+          if (response.message == 'success') {
+            // this.details = {
+            //   icon: icons.fileOrange,
+            //   type: 'success',
+            //   title: 'Sucsess',
+            //   description: 'File has been added successfully',
+            //   buttons: {},
+            // };
+            this.setState({
+              indeterminate: false,
+              files: [],
+              uploading: 100,
+              // showMessageModal: true,
+              chatText: this.state.chatText.concat(
+                '<img src=' +
+                  response.data +
+                  ' class="e-rte-image e-imginline" width="auto" height="auto" style="min-width: 0px; min-height: 0px; "width: auto; height: auto;">',
+              ),
+            });
+            // this.fetchFilesData(selectedProjectID, selectedProjectTaskID);
+          } else {
+            this.setState({ indeterminate: false, files: [], uploading: 0 });
+          }
+        })
+        .catch(error => {
+          this.setState({ indeterminate: false, files: [], uploading: 0 });
+          if (error.status == 401) {
+            Utils.showAlert('', error.data.message);
+          } else {
+            Utils.showAlert('', error);
+          }
+        });
       console.log(this.state.files);
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
@@ -675,7 +844,7 @@ class ChatScreen extends Component {
 
     this.props.stompContext.getStompClient().publish({
       destination: '/app/chat/' + taskId,
-      headers: {priority: 9},
+      headers: { priority: 9 },
       body: JSON.stringify({
         sender: userId,
         message: message,
@@ -683,7 +852,7 @@ class ChatScreen extends Component {
       }),
     });
 
-    this.setState({chatText: ''});
+    this.setState({ chatText: '' });
   }
 
   arrayCompare(a, b) {
@@ -701,7 +870,7 @@ class ChatScreen extends Component {
 
   handleKeyboardDidShow = event => {
     // if (Platform.OS == 'ios') {
-    const {height: windowHeight} = Dimensions.get('window');
+    const { height: windowHeight } = Dimensions.get('window');
     const keyboardHeight = event.endCoordinates.height;
     const currentlyFocusedField = TextInputState.currentlyFocusedField();
     UIManager.measure(
@@ -735,7 +904,7 @@ class ChatScreen extends Component {
 
   handleKeyboardDidHide = () => {
     // if (Platform.OS == 'ios') {
-    this.setState({listHeghtWithKeyboard: '100%'});
+    this.setState({ listHeghtWithKeyboard: '100%' });
     Animated.timing(this.state.shift, {
       toValue: 0,
       duration: 100,
@@ -746,9 +915,9 @@ class ChatScreen extends Component {
 
   handleListScrollToEnd = () => {
     if (!this.state.isDeleteEvent) {
-      this.flatList.scrollToEnd({animated: true});
+      this.flatList.scrollToEnd({ animated: true });
     }
-    this.setState({isDeleteEvent: false});
+    this.setState({ isDeleteEvent: false });
   };
 
   async getChatText(html) {
@@ -784,13 +953,13 @@ class ChatScreen extends Component {
     let showEmojiPicker = this.state.showEmojiPicker;
     let sortedData = comments.sort(this.arrayCompare);
     let edit = this.state.edit;
-    const {shift} = this.state;
+    const { shift } = this.state;
 
     return (
       <MenuProvider>
         <View style={styles.container}>
-          {/* <NavigationEvents onWillFocus={payload => this.loadUsers(payload)} /> */}
-          <View>
+          <NavigationEvents onWillFocus={payload => this.loadUsers(payload)} />
+          <View style={{ height: this.state.listHeghtWithKeyboard }}>
             <FlatList
               style={styles.flalList}
               data={sortedData}
@@ -802,35 +971,108 @@ class ChatScreen extends Component {
               onContentSizeChange={() => this.handleListScrollToEnd()}
               onLayout={() => this.handleListScrollToEnd()}
             />
-          </View>
-          <TouchableOpacity
-            style={styles.crossIconStyle}
-            onPress={() => this.onCrossPress()}>
-            <Image
-              style={styles.addFileIcon}
-              source={icons.cross}
-              resizeMode={'contain'}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.sendIconStyle}
-            onPress={() => {
-              this.sendMessage();
-            }}>
-            <Image
-              style={styles.chatIcon}
-              source={icons.forwordGreen}
-              resizeMode={'contain'}
-            />
-          </TouchableOpacity>
-          <View style={styles.textEditorStyle}>
-            <RichTextEditorPell
-              chatText={this.state.chatText}
-              timeTextChange={this.state.timeTextChange}
-              taskId={this.state.taskId}
-              getRefEditor={refEditor => this.getRefEditor(refEditor)}
-              doumentPicker={() => this.doumentPicker()}
-            />
+            <TouchableOpacity
+              onPress={() => {
+                Platform.OS == 'ios'
+                  ? this.iOSFilePicker()
+                  : this.doumentPicker();
+              }}>
+              <Image
+                style={styles.addFileIcon}
+                source={icons.addRoundedBlue}
+                resizeMode={'contain'}
+              />
+            </TouchableOpacity>
+            <View style={{height: 130}}>
+              <RichTextEditorPell
+                chatText={this.state.chatText}
+                getChatText={html => this.getChatText(html)}
+                timeTextChange={this.state.timeTextChange}
+                taskId={this.state.taskId}
+                chatTextClear={this.state.chatTextClear}
+              />
+            </View>
+            <TouchableOpacity
+              onPress={() => {
+                this.sendMessage();
+              }}>
+              <Image
+                style={styles.chatIcon}
+                source={icons.forwordGreen}
+                resizeMode={'contain'}
+              />
+            </TouchableOpacity>
+
+            {/* <View style={styles.chatFieldView}>
+              <TouchableOpacity
+                onPress={() => {
+                  Platform.OS == 'ios'
+                    ? this.iOSFilePicker()
+                    : this.doumentPicker();
+                }}>
+                <Image
+                  style={styles.addFileIcon}
+                  source={icons.addRoundedBlue}
+                  resizeMode={'contain'}
+                />
+              </TouchableOpacity>
+              <RichTextEditorPell
+                // chatText={this.state.chatText}
+                // getChatText={chatText => this.getChatText(chatText)}
+              />
+              <TouchableOpacity
+                onPress={() => {
+                  edit ? this.updateComment() : this.addComment();
+                }}>
+                <Image
+                  style={styles.chatIcon}
+                  source={icons.forwordGreen}
+                  resizeMode={'contain'}
+                />
+              </TouchableOpacity>
+            </View> */}
+
+            {/* <Animated.View style={[{ transform: [{ translateY: shift }] }]}> */}
+
+            {/* <View style={styles.chatFieldView}>
+              <TouchableOpacity
+                onPress={() => {
+                  Platform.OS == 'ios'
+                    ? this.iOSFilePicker()
+                    : this.doumentPicker();
+                }}>
+                <Image
+                  style={styles.addFileIcon}
+                  source={icons.addRoundedBlue}
+                  resizeMode={'contain'}
+                />
+              </TouchableOpacity>
+              <View style={{ flex: 1 }}>
+                <TextInput
+                  style={styles.textInput}
+                  placeholder={'Add a comment'}
+                  value={this.state.chatText}
+                  multiline={true}
+                  editable={this.state.status == 'Connected' ? true : false}
+                  onChangeText={text => this.onChatTextChange(text)}
+                // onContentSizeChange={e =>
+                //   this.updateSize(e.nativeEvent.contentSize.height)
+                // }
+                />
+              </View>
+              <TouchableOpacity
+                onPress={() => {
+                  edit ? this.updateComment() : this.addComment();
+                }}>
+                <Image
+                  style={styles.chatIcon}
+                  source={icons.forwordGreen}
+                  resizeMode={'contain'}
+                />
+              </TouchableOpacity>
+            </View> */}
+
+            {/* </Animated.View> */}
             {showEmojiPicker && this.renderEmojiPicker()}
             {usersLoading && <Loader />}
             <MessageShowModal
