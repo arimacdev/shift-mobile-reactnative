@@ -305,7 +305,7 @@ class ChatScreen extends Component {
 
   renderCommentList(item) {
     let commentId = item.commentId;
-    let result = item.content.replace(/(<p[^>]+?>|<p>|<\/p>)/gi, '');
+    // let result = item.content.replace(/(<p[^>]+?>|<p>|<\/p>)/gi, '');
 
     const rightButtons = [
       <TouchableOpacity
@@ -622,7 +622,7 @@ class ChatScreen extends Component {
         showMessageModal: false,
       });
 
-      await APIServices.uploadFileToComment(this.state.files)
+      await APIServices.uploadFileToComment(this.state.files, this.state.taskId)
         .then(response => {
           if (response.message == 'success') {
             // this.details = {
