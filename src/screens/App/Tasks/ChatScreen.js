@@ -91,6 +91,7 @@ class ChatScreen extends Component {
       showMessageModal: false,
       timeTextChange: '',
       chatTextClear: false,
+      currentKeyboardHeight: 0,
     };
     this.editor = null;
   }
@@ -108,14 +109,14 @@ class ChatScreen extends Component {
       taskId: taskId,
     });
     this.fetchData(taskId);
-    // this.keyboardDidShowSub = Keyboard.addListener(
-    //   'keyboardDidShow',
-    //   this.handleKeyboardDidShow,
-    // );
-    // this.keyboardDidHideSub = Keyboard.addListener(
-    //   'keyboardDidHide',
-    //   this.handleKeyboardDidHide,
-    // );
+    this.keyboardDidShowSub = Keyboard.addListener(
+      'keyboardDidShow',
+      this.handleKeyboardDidShow,
+    );
+    this.keyboardDidHideSub = Keyboard.addListener(
+      'keyboardDidHide',
+      this.handleKeyboardDidHide,
+    );
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -145,8 +146,8 @@ class ChatScreen extends Component {
     );
     this.props.stompContext.removeStompClient();
     this.rootSubscribed.unsubscribe();
-    // this.keyboardDidShowSub.remove();
-    // this.keyboardDidHideSub.remove();
+    this.keyboardDidShowSub.remove();
+    this.keyboardDidHideSub.remove();
   }
 
   componentDidMount() {
@@ -700,48 +701,54 @@ class ChatScreen extends Component {
   }
 
   handleKeyboardDidShow = event => {
-    // if (Platform.OS == 'ios') {
-    const {height: windowHeight} = Dimensions.get('window');
-    const keyboardHeight = event.endCoordinates.height;
-    const currentlyFocusedField = TextInputState.currentlyFocusedField();
-    UIManager.measure(
-      currentlyFocusedField,
-      (originX, originY, width, height, pageX, pageY) => {
-        const fieldHeight = height;
-        const fieldTop = pageY;
-        const gap =
-          windowHeight - keyboardHeight - 20 - (fieldTop + fieldHeight);
-        this.setState({
-          listHeghtWithKeyboard:
-            Platform.OS == 'ios'
-              ? windowHeight - keyboardHeight - 80
-              : windowHeight - 100,
-        });
-        if (gap >= 0) {
-          return;
-        }
-        if (gap !== null && !isNaN(gap)) {
-          Animated.timing(this.state.shift, {
-            toValue: gap,
-            duration: 100,
-            useNativeDriver: true,
-          }).start();
-        }
-      },
-    );
-
-    // }
+    if (Platform.OS == 'ios') {
+      const {height: windowHeight} = Dimensions.get('window');
+      const keyboardHeight = event.endCoordinates.height;
+      this.setState({
+        currentKeyboardHeight: windowHeight - keyboardHeight - 200,
+      });
+      const currentlyFocusedField =
+        TextInputState.currentlyFocusedField() == null
+          ? 0
+          : TextInputState.currentlyFocusedField();
+      UIManager.measure(
+        currentlyFocusedField,
+        (originX, originY, width, height, pageX, pageY) => {
+          const fieldHeight = height;
+          const fieldTop = pageY;
+          const gap =
+            windowHeight - keyboardHeight - 20 - (fieldTop + fieldHeight);
+          this.setState({
+            listHeghtWithKeyboard:
+              Platform.OS == 'ios'
+                ? windowHeight - keyboardHeight - 80
+                : windowHeight - 100,
+          });
+          if (gap >= 0) {
+            return;
+          }
+          if (gap !== null && !isNaN(gap)) {
+            Animated.timing(this.state.shift, {
+              toValue: gap,
+              duration: 100,
+              useNativeDriver: true,
+            }).start();
+          }
+        },
+      );
+    }
   };
 
   handleKeyboardDidHide = () => {
-    // if (Platform.OS == 'ios') {
-    this.setState({listHeghtWithKeyboard: '100%'});
-    Animated.timing(this.state.shift, {
-      toValue: 0,
-      duration: 100,
-      useNativeDriver: true,
-    }).start();
-    // }
+    if (Platform.OS == 'ios') {
+      this.setState({currentKeyboardHeight: 0});
+      this.setState({listHeghtWithKeyboard: '100%'});
+      Animated.timing(this.state.shift, {
+        toValue: 0,
+        duration: 100,
+        useNativeDriver: true,
+      }).start();
+    }
   };
 
   handleListScrollToEnd = () => {
@@ -775,7 +782,7 @@ class ChatScreen extends Component {
   onCrossPress() {
     this.setContentHTML('');
     this.blurContentEditor('');
-    this.setState({chatText:''})
+    this.setState({chatText: ''});
   }
 
   render() {
@@ -791,7 +798,11 @@ class ChatScreen extends Component {
       <MenuProvider>
         <View style={styles.container}>
           {/* <NavigationEvents onWillFocus={payload => this.loadUsers(payload)} /> */}
-          <View>
+          <View
+            style={{
+              bottom:
+                Platform.OS == 'ios' ? this.state.currentKeyboardHeight : 0,
+            }}>
             <FlatList
               style={styles.flalList}
               data={sortedData}
@@ -804,46 +815,52 @@ class ChatScreen extends Component {
               onLayout={() => this.handleListScrollToEnd()}
             />
           </View>
-          <TouchableOpacity
-            style={styles.crossIconStyle}
-            onPress={() => this.onCrossPress()}>
-            <Image
-              style={styles.addFileIcon}
-              source={icons.cross}
-              resizeMode={'contain'}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.sendIconStyle}
-            onPress={() => {
-              this.sendMessage();
+          <View
+            style={{
+              bottom:
+                Platform.OS == 'ios' ? this.state.currentKeyboardHeight : 0,
             }}>
-            <Image
-              style={styles.chatIcon}
-              source={icons.forwordGreen}
-              resizeMode={'contain'}
-            />
-          </TouchableOpacity>
-          <View style={styles.textEditorStyle}>
-            <RichTextEditorPell
-              chatText={this.state.chatText}
-              timeTextChange={this.state.timeTextChange}
-              taskId={this.state.taskId}
-              getRefEditor={refEditor => this.getRefEditor(refEditor)}
-              doumentPicker={() => {
-                Platform.OS == 'ios'
-                  ? this.iOSFilePicker()
-                  : this.doumentPicker();
-              }}
-            />
-            {showEmojiPicker && this.renderEmojiPicker()}
-            {usersLoading && <Loader />}
-            <MessageShowModal
-              showMessageModal={this.state.showMessageModal}
-              details={this.deleteDetails}
-              onPress={this.onPressMessageModal}
-              onPressCancel={() => this.onPressCancel(this)}
-            />
+            <TouchableOpacity
+              style={styles.crossIconStyle}
+              onPress={() => this.onCrossPress()}>
+              <Image
+                style={styles.addFileIcon}
+                source={icons.cross}
+                resizeMode={'contain'}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.sendIconStyle}
+              onPress={() => {
+                this.sendMessage();
+              }}>
+              <Image
+                style={styles.chatIcon}
+                source={icons.forwordGreen}
+                resizeMode={'contain'}
+              />
+            </TouchableOpacity>
+            <View style={styles.textEditorStyle}>
+              <RichTextEditorPell
+                chatText={this.state.chatText}
+                timeTextChange={this.state.timeTextChange}
+                taskId={this.state.taskId}
+                getRefEditor={refEditor => this.getRefEditor(refEditor)}
+                doumentPicker={() => {
+                  Platform.OS == 'ios'
+                    ? this.iOSFilePicker()
+                    : this.doumentPicker();
+                }}
+              />
+              {showEmojiPicker && this.renderEmojiPicker()}
+              {usersLoading && <Loader />}
+              <MessageShowModal
+                showMessageModal={this.state.showMessageModal}
+                details={this.deleteDetails}
+                onPress={this.onPressMessageModal}
+                onPressCancel={() => this.onPressCancel(this)}
+              />
+            </View>
           </View>
           {this.state.status != 'Connected' && <Loader />}
         </View>

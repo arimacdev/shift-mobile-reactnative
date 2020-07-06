@@ -158,6 +158,7 @@ class RichTextEditorPell extends React.Component {
             ]}
             editor={that.richText}
             iconTint={color}
+            iconSize={45}
             selectedIconTint={colors.colorDeepSkyBlue}
             selectedButtonStyle={{backgroundColor: 'transparent'}}
             onPressAddImage={that.props.doumentPicker}
