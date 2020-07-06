@@ -756,12 +756,7 @@ class ChatScreen extends Component {
   }
 
   sendMessage() {
-    // this.setState({timeTextChange: new Date()});
     let edit = this.state.edit;
-    // setTimeout(() => {
-    //   edit ? this.updateComment() : this.addComment();
-    // }, 500);
-
     edit ? this.updateComment() : this.addComment();
   }
 
@@ -791,16 +786,13 @@ class ChatScreen extends Component {
     let edit = this.state.edit;
     const {shift} = this.state;
 
-    let bodyForDisplay =
-      'web&nbsp;<img src="https://arimac-pmtool.s3-ap-southeast-1.amazonaws.com/profileImage_1593594181536_add_rounded_blue_o.png" class="e-rte-image e-imginline" width="auto" height="auto" style="min-width: 0px; min-height: 0px;">';
-
     return (
       <MenuProvider>
         <View style={styles.container}>
           {/* <NavigationEvents onWillFocus={payload => this.loadUsers(payload)} /> */}
           <View>
             <FlatList
-              style={[styles.flalList]}
+              style={styles.flalList}
               data={sortedData}
               renderItem={item => this.renderCommentList(item.item)}
               keyExtractor={item => item.projId}
@@ -811,42 +803,8 @@ class ChatScreen extends Component {
               onLayout={() => this.handleListScrollToEnd()}
             />
           </View>
-          {/* <View
-            style={{
-              flexDirection:'row',
-              position: 'absolute',
-              bottom: 0,
-              zIndex: 1000,
-              justifyContent: 'space-between',
-              marginBottom: 18,
-              width: '90%',
-              height:'4%',
-              marginHorizontal:20
-            }}> */}
-          {/* <TouchableOpacity
-              onPress={() => {
-                Platform.OS == 'ios'
-                  ? this.iOSFilePicker()
-                  : this.doumentPicker();
-              }}>
-              <Image
-                style={styles.addFileIcon}
-                source={icons.addRoundedBlue}
-                resizeMode={'contain'}
-              />
-            </TouchableOpacity> */}
           <TouchableOpacity
-            style={{
-              flexDirection: 'row',
-              position: 'absolute',
-              bottom: 0,
-              zIndex: 1000,
-              alignSelf: 'flex-start',
-              marginBottom: 18,
-              width: '10%',
-              height: '4%',
-              marginLeft: 20,
-            }}
+            style={styles.crossIconStyle}
             onPress={() => this.onCrossPress()}>
             <Image
               style={styles.addFileIcon}
@@ -855,16 +813,7 @@ class ChatScreen extends Component {
             />
           </TouchableOpacity>
           <TouchableOpacity
-            style={{
-              flexDirection: 'row',
-              position: 'absolute',
-              bottom: 0,
-              zIndex: 1000,
-              alignSelf: 'flex-end',
-              marginBottom: 18,
-              width: '10%',
-              height: '4%',
-            }}
+            style={styles.sendIconStyle}
             onPress={() => {
               this.sendMessage();
             }}>
@@ -874,98 +823,14 @@ class ChatScreen extends Component {
               resizeMode={'contain'}
             />
           </TouchableOpacity>
-          {/* </View> */}
-
-          <View
-            style={{
-              height: 130,
-              borderTopColor: colors.colorSilver,
-              borderTopWidth: 0.5,
-              position: 'absolute',
-              bottom: 0,
-              width: '100%',
-            }}>
+          <View style={styles.textEditorStyle}>
             <RichTextEditorPell
               chatText={this.state.chatText}
-              // getChatText={html => this.getChatText(html)}
               timeTextChange={this.state.timeTextChange}
               taskId={this.state.taskId}
-              // chatTextClear={this.state.chatTextClear}
               getRefEditor={refEditor => this.getRefEditor(refEditor)}
               doumentPicker={() => this.doumentPicker()}
             />
-            {/* </View> */}
-
-            {/* <View style={styles.chatFieldView}>
-              <TouchableOpacity
-                onPress={() => {
-                  Platform.OS == 'ios'
-                    ? this.iOSFilePicker()
-                    : this.doumentPicker();
-                }}>
-                <Image
-                  style={styles.addFileIcon}
-                  source={icons.addRoundedBlue}
-                  resizeMode={'contain'}
-                />
-              </TouchableOpacity>
-              <RichTextEditorPell
-                // chatText={this.state.chatText}
-                // getChatText={chatText => this.getChatText(chatText)}
-              />
-              <TouchableOpacity
-                onPress={() => {
-                  edit ? this.updateComment() : this.addComment();
-                }}>
-                <Image
-                  style={styles.chatIcon}
-                  source={icons.forwordGreen}
-                  resizeMode={'contain'}
-                />
-              </TouchableOpacity>
-            </View> */}
-
-            {/* <Animated.View style={[{ transform: [{ translateY: shift }] }]}> */}
-
-            {/* <View style={styles.chatFieldView}>
-              <TouchableOpacity
-                onPress={() => {
-                  Platform.OS == 'ios'
-                    ? this.iOSFilePicker()
-                    : this.doumentPicker();
-                }}>
-                <Image
-                  style={styles.addFileIcon}
-                  source={icons.addRoundedBlue}
-                  resizeMode={'contain'}
-                />
-              </TouchableOpacity>
-              <View style={{flex: 1}}>
-                <TextInput
-                  style={styles.textInput}
-                  placeholder={'Add a comment'}
-                  value={this.state.chatText}
-                  multiline={true}
-                  editable={this.state.status == 'Connected' ? true : false}
-                  onChangeText={text => this.onChatTextChange(text)}
-                  // onContentSizeChange={e =>
-                  //   this.updateSize(e.nativeEvent.contentSize.height)
-                  // }
-                />
-              </View>
-              <TouchableOpacity
-                onPress={() => {
-                  edit ? this.updateComment() : this.addComment();
-                }}>
-                <Image
-                  style={styles.chatIcon}
-                  source={icons.forwordGreen}
-                  resizeMode={'contain'}
-                />
-              </TouchableOpacity>
-            </View> */}
-
-            {/* </Animated.View> */}
             {showEmojiPicker && this.renderEmojiPicker()}
             {usersLoading && <Loader />}
             <MessageShowModal
@@ -974,8 +839,8 @@ class ChatScreen extends Component {
               onPress={this.onPressMessageModal}
               onPressCancel={() => this.onPressCancel(this)}
             />
-            {/* {this.state.status != 'Connected' && <Loader />} */}
           </View>
+          {this.state.status != 'Connected' && <Loader />}
         </View>
       </MenuProvider>
     );
@@ -989,8 +854,6 @@ const styles = EStyleSheet.create({
   chatView: {
     backgroundColor: colors.white,
     borderColor: colors.lighterGray,
-    // marginTop: '13rem',
-    // marginBottom: '13rem',
     flexDirection: 'row',
     paddingHorizontal: '12rem',
     marginHorizontal: '20rem',
@@ -1020,7 +883,7 @@ const styles = EStyleSheet.create({
     flexDirection: 'row',
   },
   flalList: {
-    marginBottom: '120rem',
+    marginBottom: '135rem',
   },
   flalListReactions: {
     marginBottom: '5rem',
@@ -1097,7 +960,6 @@ const styles = EStyleSheet.create({
   chatIcon: {
     width: '23rem',
     height: '23rem',
-    // marginRight: '15rem',
   },
   emojiChatIconStyle: {
     width: '23rem',
@@ -1149,14 +1011,13 @@ const styles = EStyleSheet.create({
     fontWeight: 'bold',
   },
   modalStyle: {
-    borderRadius: 5,
+    borderRadius: '5rem',
     backgroundColor: colors.white,
   },
   addFileIcon: {
     width: '18rem',
     height: '18rem',
-    // marginRight: '10rem',
-    marginTop: 4,
+    marginTop: '4rem',
   },
   controlIcon: {
     width: '28rem',
@@ -1167,6 +1028,36 @@ const styles = EStyleSheet.create({
     height: '42rem',
     justifyContent: 'flex-end',
   },
+  textEditorStyle: {
+    height: '130rem',
+    borderTopColor: colors.colorSilver,
+    borderTopWidth: '0.5rem',
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
+  },
+  crossIconStyle: {
+    flexDirection: 'row',
+    position: 'absolute',
+    bottom: 0,
+    zIndex: 1000,
+    alignSelf: 'flex-start',
+    marginLeft: '15rem',
+    alignItems: 'center',
+    height: '50rem',
+    marginBottom: '2rem',
+  },
+  sendIconStyle: {
+    flexDirection: 'row',
+    position: 'absolute',
+    bottom: 0,
+    zIndex: 1000,
+    alignSelf: 'flex-end',
+    alignItems: 'center',
+    width: '35rem',
+    height: '50rem',
+    marginBottom: '2rem',
+  },
 });
 
 const mapStateToProps = state => {
@@ -1175,10 +1066,6 @@ const mapStateToProps = state => {
     users: state.users.users,
   };
 };
-// export default connect(
-//   mapStateToProps,
-//   actions,
-// )(ChatScreen);
 
 export default withStomp(
   connect(
