@@ -91,7 +91,6 @@ class ChatScreen extends Component {
       showMessageModal: false,
       timeTextChange: '',
       chatTextClear: false,
-      currentKeyboardHeight: 0
     };
     this.editor = null;
   }
@@ -109,14 +108,14 @@ class ChatScreen extends Component {
       taskId: taskId,
     });
     this.fetchData(taskId);
-    this.keyboardDidShowSub = Keyboard.addListener(
-      'keyboardDidShow',
-      this.handleKeyboardDidShow,
-    );
-    this.keyboardDidHideSub = Keyboard.addListener(
-      'keyboardDidHide',
-      this.handleKeyboardDidHide,
-    );
+    // this.keyboardDidShowSub = Keyboard.addListener(
+    //   'keyboardDidShow',
+    //   this.handleKeyboardDidShow,
+    // );
+    // this.keyboardDidHideSub = Keyboard.addListener(
+    //   'keyboardDidHide',
+    //   this.handleKeyboardDidHide,
+    // );
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -146,8 +145,8 @@ class ChatScreen extends Component {
     );
     this.props.stompContext.removeStompClient();
     this.rootSubscribed.unsubscribe();
-    this.keyboardDidShowSub.remove();
-    this.keyboardDidHideSub.remove();
+    // this.keyboardDidShowSub.remove();
+    // this.keyboardDidHideSub.remove();
   }
 
   componentDidMount() {
@@ -265,15 +264,17 @@ class ChatScreen extends Component {
   }
 
   async updateComment() {
-    this.setState({dataLoading: true});
+    let html = await this.richText.current?.getContentHtml();
+    await this.setState({chatText: html});
 
     let commentId = this.state.commentId;
     let chatText = this.state.chatText;
-    this.setState({chatTextClear: false});
     await APIServices.updateCommentData(commentId, chatText)
-      .then(response => {
+      .then(async response => {
         if (response.message == 'success') {
-          this.setState({dataLoading: false, edit: false, chatTextClear: true});
+          this.setContentHTML('');
+          this.blurContentEditor();
+          this.setState({dataLoading: false, edit: false});
           this.sendMessageToSocket(chatText);
         } else {
           this.setState({dataLoading: false});
@@ -417,15 +418,17 @@ class ChatScreen extends Component {
   };
 
   async addComment() {
+    let html = await this.richText.current?.getContentHtml();
+    await this.setState({chatText: html});
     let chatText = this.state.chatText;
+
     if (chatText != '') {
       let taskId = this.state.taskId;
-      let chatTextConvert = chatText;
-      this.setState({chatTextClear: false});
-      await APIServices.addCommentData(taskId, chatTextConvert)
-        .then(response => {
+      await APIServices.addCommentData(taskId, chatText)
+        .then(async response => {
           if (response.message == 'success') {
-            this.setState({chatTextClear: true});
+            this.setContentHTML('');
+            this.blurContentEditor();
             let data = response.data;
             // let comment = {
             //   commentId: data.commentId,
@@ -592,9 +595,12 @@ class ChatScreen extends Component {
   }
 
   async uploadFilesToComment(files, taskId) {
+    // await this.richText.current?.insertImage('https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/1024px-React-icon.svg.png');
     await APIServices.uploadFileToComment(files, taskId)
       .then(response => {
         if (response.message == 'success') {
+          // this.richText.current?.insertImage('https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/1024px-React-icon.svg.png');
+          this.richText.current?.blurContentEditor();
           this.setState({
             files: [],
             chatText: this.state.chatText.concat(
@@ -697,8 +703,7 @@ class ChatScreen extends Component {
     // if (Platform.OS == 'ios') {
     const {height: windowHeight} = Dimensions.get('window');
     const keyboardHeight = event.endCoordinates.height;
-    this.setState({currentKeyboardHeight: windowHeight-keyboardHeight-200})
-    const currentlyFocusedField = TextInputState.currentlyFocusedField() == null ? 0 : TextInputState.currentlyFocusedField();
+    const currentlyFocusedField = TextInputState.currentlyFocusedField();
     UIManager.measure(
       currentlyFocusedField,
       (originX, originY, width, height, pageX, pageY) => {
@@ -724,12 +729,12 @@ class ChatScreen extends Component {
         }
       },
     );
+
     // }
   };
 
   handleKeyboardDidHide = () => {
     // if (Platform.OS == 'ios') {
-    this.setState({currentKeyboardHeight: 0})
     this.setState({listHeghtWithKeyboard: '100%'});
     Animated.timing(this.state.shift, {
       toValue: 0,
@@ -751,11 +756,25 @@ class ChatScreen extends Component {
   }
 
   sendMessage() {
-    this.setState({timeTextChange: new Date()});
     let edit = this.state.edit;
-    setTimeout(() => {
-      edit ? this.updateComment() : this.addComment();
-    }, 500);
+    edit ? this.updateComment() : this.addComment();
+  }
+
+  getRefEditor(refEditor) {
+    this.richText = refEditor;
+  }
+
+  async blurContentEditor() {
+    await this.richText.current?.blurContentEditor();
+  }
+
+  async setContentHTML(content) {
+    await this.richText.current?.setContentHTML(content);
+  }
+
+  onCrossPress() {
+    this.setContentHTML('');
+    this.blurContentEditor('');
   }
 
   render() {
@@ -767,131 +786,51 @@ class ChatScreen extends Component {
     let edit = this.state.edit;
     const {shift} = this.state;
 
-    let bodyForDisplay =
-      'web&nbsp;<img src="https://arimac-pmtool.s3-ap-southeast-1.amazonaws.com/profileImage_1593594181536_add_rounded_blue_o.png" class="e-rte-image e-imginline" width="auto" height="auto" style="min-width: 0px; min-height: 0px;">';
-
     return (
       <MenuProvider>
         <View style={styles.container}>
-          <NavigationEvents onWillFocus={payload => this.loadUsers(payload)} />
-          {/* <View style={{height: this.state.listHeghtWithKeyboard}}> */}
-          <FlatList
-            style={styles.flalList}
-            data={sortedData}
-            renderItem={item => this.renderCommentList(item.item)}
-            keyExtractor={item => item.projId}
-            onRefresh={() => this.onRefresh()}
-            refreshing={isFetching}
-            ref={ref => (this.flatList = ref)}
-            onContentSizeChange={() => this.handleListScrollToEnd()}
-            onLayout={() => this.handleListScrollToEnd()}
-          />
-          <View style={{bottom: Platform.OS == 'ios'? this.state.currentKeyboardHeight: 0}}>
+          {/* <NavigationEvents onWillFocus={payload => this.loadUsers(payload)} /> */}
           <View>
-            <TouchableOpacity
-              onPress={() => {
-                Platform.OS == 'ios'
-                  ? this.iOSFilePicker()
-                  : this.doumentPicker();
-              }}>
-              <Image
-                style={styles.addFileIcon}
-                source={icons.addRoundedBlue}
-                resizeMode={'contain'}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => {
-                this.sendMessage();
-              }}>
-              <Image
-                style={styles.chatIcon}
-                source={icons.forwordGreen}
-                resizeMode={'contain'}
-              />
-            </TouchableOpacity>
+            <FlatList
+              style={styles.flalList}
+              data={sortedData}
+              renderItem={item => this.renderCommentList(item.item)}
+              keyExtractor={item => item.projId}
+              onRefresh={() => this.onRefresh()}
+              refreshing={isFetching}
+              ref={ref => (this.flatList = ref)}
+              onContentSizeChange={() => this.handleListScrollToEnd()}
+              onLayout={() => this.handleListScrollToEnd()}
+            />
           </View>
-
-          <View style={{height: 130}}>
+          <TouchableOpacity
+            style={styles.crossIconStyle}
+            onPress={() => this.onCrossPress()}>
+            <Image
+              style={styles.addFileIcon}
+              source={icons.cross}
+              resizeMode={'contain'}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.sendIconStyle}
+            onPress={() => {
+              this.sendMessage();
+            }}>
+            <Image
+              style={styles.chatIcon}
+              source={icons.forwordGreen}
+              resizeMode={'contain'}
+            />
+          </TouchableOpacity>
+          <View style={styles.textEditorStyle}>
             <RichTextEditorPell
               chatText={this.state.chatText}
-              getChatText={html => this.getChatText(html)}
               timeTextChange={this.state.timeTextChange}
               taskId={this.state.taskId}
-              chatTextClear={this.state.chatTextClear}
+              getRefEditor={refEditor => this.getRefEditor(refEditor)}
+              doumentPicker={() => this.doumentPicker()}
             />
-            {/* </View> */}
-
-            {/* <View style={styles.chatFieldView}>
-              <TouchableOpacity
-                onPress={() => {
-                  Platform.OS == 'ios'
-                    ? this.iOSFilePicker()
-                    : this.doumentPicker();
-                }}>
-                <Image
-                  style={styles.addFileIcon}
-                  source={icons.addRoundedBlue}
-                  resizeMode={'contain'}
-                />
-              </TouchableOpacity>
-              <RichTextEditorPell
-                // chatText={this.state.chatText}
-                // getChatText={chatText => this.getChatText(chatText)}
-              />
-              <TouchableOpacity
-                onPress={() => {
-                  edit ? this.updateComment() : this.addComment();
-                }}>
-                <Image
-                  style={styles.chatIcon}
-                  source={icons.forwordGreen}
-                  resizeMode={'contain'}
-                />
-              </TouchableOpacity>
-            </View> */}
-
-            {/* <Animated.View style={[{ transform: [{ translateY: shift }] }]}> */}
-
-            {/* <View style={styles.chatFieldView}>
-              <TouchableOpacity
-                onPress={() => {
-                  Platform.OS == 'ios'
-                    ? this.iOSFilePicker()
-                    : this.doumentPicker();
-                }}>
-                <Image
-                  style={styles.addFileIcon}
-                  source={icons.addRoundedBlue}
-                  resizeMode={'contain'}
-                />
-              </TouchableOpacity>
-              <View style={{flex: 1}}>
-                <TextInput
-                  style={styles.textInput}
-                  placeholder={'Add a comment'}
-                  value={this.state.chatText}
-                  multiline={true}
-                  editable={this.state.status == 'Connected' ? true : false}
-                  onChangeText={text => this.onChatTextChange(text)}
-                  // onContentSizeChange={e =>
-                  //   this.updateSize(e.nativeEvent.contentSize.height)
-                  // }
-                />
-              </View>
-              <TouchableOpacity
-                onPress={() => {
-                  edit ? this.updateComment() : this.addComment();
-                }}>
-                <Image
-                  style={styles.chatIcon}
-                  source={icons.forwordGreen}
-                  resizeMode={'contain'}
-                />
-              </TouchableOpacity>
-            </View> */}
-
-            {/* </Animated.View> */}
             {showEmojiPicker && this.renderEmojiPicker()}
             {usersLoading && <Loader />}
             <MessageShowModal
@@ -900,9 +839,8 @@ class ChatScreen extends Component {
               onPress={this.onPressMessageModal}
               onPressCancel={() => this.onPressCancel(this)}
             />
-            {/* {this.state.status != 'Connected' && <Loader />} */}
           </View>
-          </View>
+          {this.state.status != 'Connected' && <Loader />}
         </View>
       </MenuProvider>
     );
@@ -916,8 +854,6 @@ const styles = EStyleSheet.create({
   chatView: {
     backgroundColor: colors.white,
     borderColor: colors.lighterGray,
-    // marginTop: '13rem',
-    // marginBottom: '13rem',
     flexDirection: 'row',
     paddingHorizontal: '12rem',
     marginHorizontal: '20rem',
@@ -947,7 +883,7 @@ const styles = EStyleSheet.create({
     flexDirection: 'row',
   },
   flalList: {
-    marginBottom: '10rem',
+    marginBottom: '135rem',
   },
   flalListReactions: {
     marginBottom: '5rem',
@@ -1022,9 +958,8 @@ const styles = EStyleSheet.create({
     textAlign: 'left',
   },
   chatIcon: {
-    width: '20rem',
-    height: '20rem',
-    marginRight: '15rem',
+    width: '23rem',
+    height: '23rem',
   },
   emojiChatIconStyle: {
     width: '23rem',
@@ -1076,13 +1011,13 @@ const styles = EStyleSheet.create({
     fontWeight: 'bold',
   },
   modalStyle: {
-    borderRadius: 5,
+    borderRadius: '5rem',
     backgroundColor: colors.white,
   },
   addFileIcon: {
-    width: '23rem',
-    height: '23rem',
-    marginRight: '10rem',
+    width: '18rem',
+    height: '18rem',
+    marginTop: '4rem',
   },
   controlIcon: {
     width: '28rem',
@@ -1093,6 +1028,36 @@ const styles = EStyleSheet.create({
     height: '42rem',
     justifyContent: 'flex-end',
   },
+  textEditorStyle: {
+    height: '130rem',
+    borderTopColor: colors.colorSilver,
+    borderTopWidth: '0.5rem',
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
+  },
+  crossIconStyle: {
+    flexDirection: 'row',
+    position: 'absolute',
+    bottom: 0,
+    zIndex: 1000,
+    alignSelf: 'flex-start',
+    marginLeft: '15rem',
+    alignItems: 'center',
+    height: '50rem',
+    marginBottom: '2rem',
+  },
+  sendIconStyle: {
+    flexDirection: 'row',
+    position: 'absolute',
+    bottom: 0,
+    zIndex: 1000,
+    alignSelf: 'flex-end',
+    alignItems: 'center',
+    width: '35rem',
+    height: '50rem',
+    marginBottom: '2rem',
+  },
 });
 
 const mapStateToProps = state => {
@@ -1101,10 +1066,6 @@ const mapStateToProps = state => {
     users: state.users.users,
   };
 };
-// export default connect(
-//   mapStateToProps,
-//   actions,
-// )(ChatScreen);
 
 export default withStomp(
   connect(
