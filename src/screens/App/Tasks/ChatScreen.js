@@ -264,15 +264,17 @@ class ChatScreen extends Component {
   }
 
   async updateComment() {
-    this.setState({dataLoading: true});
+    let html = await this.richText.current?.getContentHtml();
+    await this.setState({chatText: html});
 
     let commentId = this.state.commentId;
     let chatText = this.state.chatText;
-    this.setState({chatTextClear: false});
     await APIServices.updateCommentData(commentId, chatText)
-      .then(response => {
+      .then(async response => {
         if (response.message == 'success') {
-          this.setState({dataLoading: false, edit: false, chatTextClear: true});
+          this.setContentHTML('');
+          this.blurContentEditor();
+          this.setState({dataLoading: false, edit: false});
           this.sendMessageToSocket(chatText);
         } else {
           this.setState({dataLoading: false});
@@ -416,15 +418,17 @@ class ChatScreen extends Component {
   };
 
   async addComment() {
+    let html = await this.richText.current?.getContentHtml();
+    await this.setState({chatText: html});
     let chatText = this.state.chatText;
+
     if (chatText != '') {
       let taskId = this.state.taskId;
-      let chatTextConvert = chatText;
-      this.setState({chatTextClear: false});
-      await APIServices.addCommentData(taskId, chatTextConvert)
-        .then(response => {
+      await APIServices.addCommentData(taskId, chatText)
+        .then(async response => {
           if (response.message == 'success') {
-            this.setState({chatTextClear: true});
+            this.setContentHTML('');
+            this.blurContentEditor();
             let data = response.data;
             // let comment = {
             //   commentId: data.commentId,
@@ -591,9 +595,13 @@ class ChatScreen extends Component {
   }
 
   async uploadFilesToComment(files, taskId) {
+    // await this.richText.current?.insertImage('https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/1024px-React-icon.svg.png');
+
     await APIServices.uploadFileToComment(files, taskId)
       .then(response => {
         if (response.message == 'success') {
+          // this.richText.current?.insertImage('https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/1024px-React-icon.svg.png');
+          this.richText.current?.blurContentEditor();
           this.setState({
             files: [],
             chatText: this.state.chatText.concat(
@@ -748,11 +756,25 @@ class ChatScreen extends Component {
   }
 
   sendMessage() {
-    this.setState({timeTextChange: new Date()});
+    // this.setState({timeTextChange: new Date()});
     let edit = this.state.edit;
-    setTimeout(() => {
-      edit ? this.updateComment() : this.addComment();
-    }, 500);
+    // setTimeout(() => {
+    //   edit ? this.updateComment() : this.addComment();
+    // }, 500);
+
+    edit ? this.updateComment() : this.addComment();
+  }
+
+  getRefEditor(refEditor) {
+    this.richText = refEditor;
+  }
+
+  async blurContentEditor() {
+    await this.richText.current?.blurContentEditor();
+  }
+
+  async setContentHTML(content) {
+    await this.richText.current?.setContentHTML(content);
   }
 
   render() {
@@ -770,7 +792,7 @@ class ChatScreen extends Component {
     return (
       <MenuProvider>
         <View style={styles.container}>
-          <NavigationEvents onWillFocus={payload => this.loadUsers(payload)} />
+          {/* <NavigationEvents onWillFocus={payload => this.loadUsers(payload)} /> */}
           {/* <View style={{height: this.state.listHeghtWithKeyboard}}> */}
           <FlatList
             style={styles.flalList}
@@ -783,7 +805,13 @@ class ChatScreen extends Component {
             onContentSizeChange={() => this.handleListScrollToEnd()}
             onLayout={() => this.handleListScrollToEnd()}
           />
-          <View>
+          {/* </View> */}
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              marginHorizontal: 20,
+            }}>
             <TouchableOpacity
               onPress={() => {
                 Platform.OS == 'ios'
@@ -811,10 +839,12 @@ class ChatScreen extends Component {
           <View style={{height: 130}}>
             <RichTextEditorPell
               chatText={this.state.chatText}
-              getChatText={html => this.getChatText(html)}
+              // getChatText={html => this.getChatText(html)}
               timeTextChange={this.state.timeTextChange}
               taskId={this.state.taskId}
-              chatTextClear={this.state.chatTextClear}
+              // chatTextClear={this.state.chatTextClear}
+              getRefEditor={refEditor => this.getRefEditor(refEditor)}
+              doumentPicker={() => this.doumentPicker()}
             />
             {/* </View> */}
 
@@ -1019,7 +1049,7 @@ const styles = EStyleSheet.create({
   chatIcon: {
     width: '20rem',
     height: '20rem',
-    marginRight: '15rem',
+    // marginRight: '15rem',
   },
   emojiChatIconStyle: {
     width: '23rem',

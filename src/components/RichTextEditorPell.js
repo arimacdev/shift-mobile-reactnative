@@ -48,26 +48,27 @@ class RichTextEditorPell extends React.Component {
 
   componentDidMount() {
     Appearance.addChangeListener(this.themeChange);
+    this.props.getRefEditor(this.richText);
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (prevProps.chatText !== this.props.chatText && this.props.chatText) {
       this.setContentHTML(this.props.chatText);
-      this.save();
+      // this.save();
     }
-    if (
-      prevProps.timeTextChange !== this.props.timeTextChange &&
-      this.props.timeTextChange
-    ) {
-      this.save();
-    }
+    // if (
+    //   prevProps.timeTextChange !== this.props.timeTextChange &&
+    //   this.props.timeTextChange
+    // ) {
+    //   this.save();
+    // }
 
-    if (
-      prevProps.chatTextClear !== this.props.chatTextClear &&
-      this.props.chatTextClear
-    ) {
-      this.setContentHTML('');
-    }
+    // if (
+    //   prevProps.chatTextClear !== this.props.chatTextClear &&
+    //   this.props.chatTextClear
+    // ) {
+    //   this.setContentHTML('');
+    // }
   }
 
   componentWillUnmount() {
@@ -155,7 +156,7 @@ class RichTextEditorPell extends React.Component {
             iconTint={color}
             selectedIconTint={colors.colorDeepSkyBlue}
             selectedButtonStyle={{backgroundColor: 'transparent'}}
-            onPressAddImage={that.onPressAddImage}
+            onPressAddImage={that.props.doumentPicker}
           />
         </KeyboardAvoidingView>
       </SafeAreaView>
