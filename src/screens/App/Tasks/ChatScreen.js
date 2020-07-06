@@ -91,6 +91,7 @@ class ChatScreen extends Component {
       showMessageModal: false,
       timeTextChange: '',
       chatTextClear: false,
+      currentKeyboardHeight: 0
     };
     this.editor = null;
   }
@@ -108,14 +109,14 @@ class ChatScreen extends Component {
       taskId: taskId,
     });
     this.fetchData(taskId);
-    // this.keyboardDidShowSub = Keyboard.addListener(
-    //   'keyboardDidShow',
-    //   this.handleKeyboardDidShow,
-    // );
-    // this.keyboardDidHideSub = Keyboard.addListener(
-    //   'keyboardDidHide',
-    //   this.handleKeyboardDidHide,
-    // );
+    this.keyboardDidShowSub = Keyboard.addListener(
+      'keyboardDidShow',
+      this.handleKeyboardDidShow,
+    );
+    this.keyboardDidHideSub = Keyboard.addListener(
+      'keyboardDidHide',
+      this.handleKeyboardDidHide,
+    );
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -145,8 +146,8 @@ class ChatScreen extends Component {
     );
     this.props.stompContext.removeStompClient();
     this.rootSubscribed.unsubscribe();
-    // this.keyboardDidShowSub.remove();
-    // this.keyboardDidHideSub.remove();
+    this.keyboardDidShowSub.remove();
+    this.keyboardDidHideSub.remove();
   }
 
   componentDidMount() {
@@ -696,7 +697,8 @@ class ChatScreen extends Component {
     // if (Platform.OS == 'ios') {
     const {height: windowHeight} = Dimensions.get('window');
     const keyboardHeight = event.endCoordinates.height;
-    const currentlyFocusedField = TextInputState.currentlyFocusedField();
+    this.setState({currentKeyboardHeight: windowHeight-keyboardHeight-200})
+    const currentlyFocusedField = TextInputState.currentlyFocusedField() == null ? 0 : TextInputState.currentlyFocusedField();
     UIManager.measure(
       currentlyFocusedField,
       (originX, originY, width, height, pageX, pageY) => {
@@ -727,6 +729,7 @@ class ChatScreen extends Component {
 
   handleKeyboardDidHide = () => {
     // if (Platform.OS == 'ios') {
+    this.setState({currentKeyboardHeight: 0})
     this.setState({listHeghtWithKeyboard: '100%'});
     Animated.timing(this.state.shift, {
       toValue: 0,
@@ -783,6 +786,7 @@ class ChatScreen extends Component {
             onContentSizeChange={() => this.handleListScrollToEnd()}
             onLayout={() => this.handleListScrollToEnd()}
           />
+          <View style={{bottom: Platform.OS == 'ios'? this.state.currentKeyboardHeight: 0}}>
           <View>
             <TouchableOpacity
               onPress={() => {
@@ -897,6 +901,7 @@ class ChatScreen extends Component {
               onPressCancel={() => this.onPressCancel(this)}
             />
             {/* {this.state.status != 'Connected' && <Loader />} */}
+          </View>
           </View>
         </View>
       </MenuProvider>
