@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import {
   View,
   FlatList,
@@ -14,28 +14,28 @@ import {
   TouchableWithoutFeedback,
   KeyboardAvoidingView,
 } from 'react-native';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import * as actions from '../../../redux/actions';
 import colors from '../../../config/colors';
 import icons from '../../../asserts/icons/icons';
 import EStyleSheet from 'react-native-extended-stylesheet';
 const entireScreenWidth = Dimensions.get('window').width;
 const entireScreenHeight = Dimensions.get('window').height;
-EStyleSheet.build({ $rem: entireScreenWidth / 380 });
+EStyleSheet.build({$rem: entireScreenWidth / 380});
 import FadeIn from 'react-native-fade-in-image';
 import Loader from '../../../components/Loader';
 import ImagePicker from 'react-native-image-picker';
-import { NavigationEvents } from 'react-navigation';
+import {NavigationEvents} from 'react-navigation';
 // import io from 'socket.io-client';
 import APIServices from '../../../services/APIServices';
 import moment from 'moment';
-import { StompEventTypes, withStomp, Client } from 'react-stompjs';
+import {StompEventTypes, withStomp, Client} from 'react-stompjs';
 import EmojiSelector from 'react-native-emoji-selector';
 import Modal from 'react-native-modal';
 import Utils from '../../../utils/Utils';
 import HTML from 'react-native-render-html';
 import PopupMenuEmojiReaction from '../../../components/PopupMenuEmojiReaction';
-import { MenuProvider } from 'react-native-popup-menu';
+import {MenuProvider} from 'react-native-popup-menu';
 import DocumentPicker from 'react-native-document-picker';
 import AsyncStorage from '@react-native-community/async-storage';
 import Swipeable from 'react-native-swipeable';
@@ -44,14 +44,14 @@ import MessageShowModal from '../../../components/MessageShowModal';
 import RichTextEditorPell from '../../../components/RichTextEditorPell';
 
 const reactionDetails = [
-  { value: '&#128077', text: '👍' },
-  { value: '&#128154', text: '💚' },
-  { value: '&#128514', text: '😂' },
-  { value: '&#128545', text: '😡' },
-  { value: '&#128546', text: '😢' },
+  {value: '&#128077', text: '👍'},
+  {value: '&#128154', text: '💚'},
+  {value: '&#128514', text: '😂'},
+  {value: '&#128545', text: '😡'},
+  {value: '&#128546', text: '😢'},
 ];
 
-const { State: TextInputState } = TextInput;
+const {State: TextInputState} = TextInput;
 
 class ChatScreen extends Component {
   deleteDetails = {
@@ -85,13 +85,12 @@ class ChatScreen extends Component {
       listHeghtWithKeyboard: '100%',
       selectedTag: 'body',
       selectedStyles: [],
+      files: [],
       Uploading: 0,
       indeterminate: false,
       showMessageModal: false,
       timeTextChange: '',
       chatTextClear: false,
-      value: [getInitialObject()],
-      files: [],
     };
     this.editor = null;
   }
@@ -99,7 +98,7 @@ class ChatScreen extends Component {
   componentWillMount() {
     const {
       navigation: {
-        state: { params },
+        state: {params},
       },
     } = this.props;
 
@@ -141,7 +140,7 @@ class ChatScreen extends Component {
     this.props.stompContext.removeStompEventListener(
       StompEventTypes.WebSocketClose,
       () => {
-        this.setState({ status: 'Disconnected (not graceful)' });
+        this.setState({status: 'Disconnected (not graceful)'});
       },
     );
     this.props.stompContext.removeStompClient();
@@ -157,7 +156,7 @@ class ChatScreen extends Component {
     this.props.stompContext.addStompEventListener(
       StompEventTypes.Connect,
       () => {
-        this.setState({ status: 'Connected' });
+        this.setState({status: 'Connected'});
         this.rootSubscribed = this.props.stompContext
           .getStompClient()
           .subscribe('/topic/messages/' + taskId, message => {
@@ -172,13 +171,13 @@ class ChatScreen extends Component {
     this.props.stompContext.addStompEventListener(
       StompEventTypes.Disconnect,
       () => {
-        this.setState({ status: 'Disconnected' });
+        this.setState({status: 'Disconnected'});
       },
     );
     this.props.stompContext.addStompEventListener(
       StompEventTypes.WebSocketClose,
       () => {
-        this.setState({ status: 'Disconnected (not graceful)' });
+        this.setState({status: 'Disconnected (not graceful)'});
       },
     );
     this.props.stompContext.newStompClient(
@@ -189,160 +188,28 @@ class ChatScreen extends Component {
     );
   }
 
-  onStyleKeyPress = toolType => {
-    this.editor.applyToolbar(toolType);
-  };
-
-  onSelectedTagChanged = tag => {
-    this.setState({
-      selectedTag: tag,
-    });
-  };
-
-  onSelectedStyleChanged = styles => {
-    this.setState({
-      selectedStyles: styles,
-    });
-  };
-
-  onValueChanged = value => {
-    this.setState({
-      value: value,
-    });
-  };
-
-  renderRichTextView() {
-    return (
-      <KeyboardAvoidingView
-        behavior="padding"
-        enabled
-        keyboardVerticalOffset={0}
-        style={{
-          flex: 1,
-          paddingTop: 20,
-          backgroundColor: '#eee',
-          flexDirection: 'column',
-          justifyContent: 'flex-end',
-        }}>
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View style={styles.main}>
-            <CNRichTextEditor
-              ref={input => (this.editor = input)}
-              onSelectedTagChanged={this.onSelectedTagChanged}
-              onSelectedStyleChanged={this.onSelectedStyleChanged}
-              value={this.state.value}
-              style={{ backgroundColor: '#fff' }}
-              styleList={defaultStyles}
-              onValueChanged={this.onValueChanged}
-            />
-          </View>
-        </TouchableWithoutFeedback>
-
-        <View
-          style={{
-            minHeight: 35,
-          }}>
-          <CNToolbar
-            style={{
-              height: 35,
-            }}
-            iconSetContainerStyle={{
-              flexGrow: 1,
-              justifyContent: 'space-evenly',
-              alignItems: 'center',
-            }}
-            size={30}
-            iconSet={[
-              {
-                type: 'tool',
-                iconArray: [
-                  {
-                    toolTypeText: 'image',
-                    iconComponent: (
-                      <Text style={styles.toolbarButton}>image</Text>
-                    ),
-                  },
-                ],
-              },
-              {
-                type: 'tool',
-                iconArray: [
-                  {
-                    toolTypeText: 'bold',
-                    buttonTypes: 'style',
-                    iconComponent: (
-                      <Text style={styles.toolbarButton}>bold</Text>
-                    ),
-                  },
-                ],
-              },
-              {
-                type: 'seperator',
-              },
-              {
-                type: 'tool',
-                iconArray: [
-                  {
-                    toolTypeText: 'body',
-                    buttonTypes: 'tag',
-                    iconComponent: (
-                      <Text style={styles.toolbarButton}>body</Text>
-                    ),
-                  },
-                ],
-              },
-              {
-                type: 'tool',
-                iconArray: [
-                  {
-                    toolTypeText: 'ul',
-                    buttonTypes: 'tag',
-                    iconComponent: <Text style={styles.toolbarButton}>ul</Text>,
-                  },
-                ],
-              },
-              {
-                type: 'tool',
-                iconArray: [
-                  {
-                    toolTypeText: 'ol',
-                    buttonTypes: 'tag',
-                    iconComponent: <Text style={styles.toolbarButton}>ol</Text>,
-                  },
-                ],
-              },
-            ]}
-            selectedTag={this.state.selectedTag}
-            selectedStyles={this.state.selectedStyles}
-            onStyleKeyPress={this.onStyleKeyPress}
-          />
-        </View>
-      </KeyboardAvoidingView>
-    );
-  }
-
   async fetchData(taskId) {
-    this.setState({ dataLoading: true });
+    this.setState({dataLoading: true});
     await APIServices.getCommentsData(taskId)
       .then(response => {
         if (response.message == 'success') {
-          this.setState({ dataLoading: false, comments: response.data });
+          this.setState({dataLoading: false, comments: response.data});
         } else {
-          this.setState({ dataLoading: false });
+          this.setState({dataLoading: false});
         }
       })
       .catch(error => {
-        this.setState({ dataLoading: false });
+        this.setState({dataLoading: false});
         // Utils.showAlert(true, '', error.data.message, this.props);
       });
   }
 
-  userImage = function (item) {
+  userImage = function(item) {
     let userImage = item.commenterProfileImage;
     if (userImage) {
       return (
         <FadeIn>
-          <Image source={{ uri: userImage }} style={styles.userIcon} />
+          <Image source={{uri: userImage}} style={styles.userIcon} />
         </FadeIn>
       );
     } else {
@@ -351,7 +218,7 @@ class ChatScreen extends Component {
   };
 
   onReactionIconPress() {
-    this.setState({ showEmojiPicker: true });
+    this.setState({showEmojiPicker: true});
   }
 
   renderReactionDetailsList(item) {
@@ -371,18 +238,18 @@ class ChatScreen extends Component {
   }
 
   async onMenuItemChange(item, commentId) {
-    this.setState({ dataLoading: true });
+    this.setState({dataLoading: true});
     await APIServices.addUpdateCommentReactionData(commentId, item.value)
       .then(response => {
         if (response.message == 'success') {
-          this.setState({ dataLoading: false });
+          this.setState({dataLoading: false});
           this.sendMessageToSocket(item.value);
         } else {
-          this.setState({ dataLoading: false });
+          this.setState({dataLoading: false});
         }
       })
       .catch(error => {
-        this.setState({ dataLoading: false });
+        this.setState({dataLoading: false});
         // Utils.showAlert(true, '', error.data.message, this.props);
       });
   }
@@ -397,43 +264,41 @@ class ChatScreen extends Component {
   }
 
   async updateComment() {
-    let html = await this.richText.current?.getContentHtml();
-    await this.setState({chatText: html});
+    this.setState({dataLoading: true});
 
     let commentId = this.state.commentId;
     let chatText = this.state.chatText;
+    this.setState({chatTextClear: false});
     await APIServices.updateCommentData(commentId, chatText)
-      .then(async response => {
+      .then(response => {
         if (response.message == 'success') {
-          this.setContentHTML('');
-          this.blurContentEditor();
-          this.setState({dataLoading: false, edit: false});
+          this.setState({dataLoading: false, edit: false, chatTextClear: true});
           this.sendMessageToSocket(chatText);
         } else {
-          this.setState({ dataLoading: false });
+          this.setState({dataLoading: false});
         }
       })
       .catch(error => {
-        this.setState({ dataLoading: false });
+        this.setState({dataLoading: false});
         // Utils.showAlert(true, '', error.data.message, this.props);
       });
   }
 
   async onDeleteCommentPress(commentId) {
-    this.setState({ isDeleteEvent: true });
+    this.setState({isDeleteEvent: true});
     this.state.currentlyOpenSwipeable.recenter();
     this.setState({dataLoading: true, showMessageModal: false});
     await APIServices.deleteCommentData(commentId)
       .then(response => {
         if (response.message == 'success') {
-          this.setState({ dataLoading: false });
+          this.setState({dataLoading: false});
           this.sendMessageToSocket('');
         } else {
-          this.setState({ dataLoading: false });
+          this.setState({dataLoading: false});
         }
       })
       .catch(error => {
-        this.setState({ dataLoading: false });
+        this.setState({dataLoading: false});
         // Utils.showAlert(true, '', error.data.message, this.props);
       });
   }
@@ -468,14 +333,14 @@ class ChatScreen extends Component {
           ) {
             this.state.currentlyOpenSwipeable.recenter();
           }
-          this.setState({ currentlyOpenSwipeable: swipe });
+          this.setState({currentlyOpenSwipeable: swipe});
         }}
         onRightButtonsCloseRelease={() =>
-          this.setState({ currentlyOpenSwipeable: null })
+          this.setState({currentlyOpenSwipeable: null})
         }>
         <View style={styles.chatView}>
           {this.userImage(item)}
-          <View style={{ flex: 1 }}>
+          <View style={{flex: 1}}>
             <View style={styles.timeView}>
               <Text style={styles.textTime}>
                 {moment.parseZone(item.commentedAt).fromNow()}
@@ -483,7 +348,7 @@ class ChatScreen extends Component {
             </View>
             <View style={styles.nameView}>
               <View style={styles.innerView}>
-                <View style={{ flex: 1 }}>
+                <View style={{flex: 1}}>
                   <Text style={styles.text}>
                     {item.commenterFistName} {item.commenterFistName}
                   </Text>
@@ -523,7 +388,7 @@ class ChatScreen extends Component {
   }
 
   onRefresh() {
-    this.setState({ isFetching: true, comments: [] }, function () {
+    this.setState({isFetching: true, comments: []}, function() {
       this.fetchData(this.state.taskId);
     });
   }
@@ -533,13 +398,13 @@ class ChatScreen extends Component {
   }
 
   loadUsers() {
-    this.setState({ comments: [] }, function () {
+    this.setState({comments: []}, function() {
       // this.props.getAllUsers();
     });
   }
 
   onChatTextChange(text) {
-    this.setState({ chatText: text });
+    this.setState({chatText: text});
   }
 
   updateSize = height => {
@@ -551,17 +416,15 @@ class ChatScreen extends Component {
   };
 
   async addComment() {
-    let html = await this.richText.current?.getContentHtml();
-    await this.setState({chatText: html});
     let chatText = this.state.chatText;
-
     if (chatText != '') {
       let taskId = this.state.taskId;
-      await APIServices.addCommentData(taskId, chatText)
-        .then(async response => {
+      let chatTextConvert = chatText;
+      this.setState({chatTextClear: false});
+      await APIServices.addCommentData(taskId, chatTextConvert)
+        .then(response => {
           if (response.message == 'success') {
-            this.setContentHTML('');
-            this.blurContentEditor();
+            this.setState({chatTextClear: true});
             let data = response.data;
             // let comment = {
             //   commentId: data.commentId,
@@ -597,7 +460,7 @@ class ChatScreen extends Component {
   }
 
   onCloseTaskModal() {
-    this.setState({ showEmojiPicker: false });
+    this.setState({showEmojiPicker: false});
   }
 
   renderEmojiPicker() {
@@ -624,7 +487,7 @@ class ChatScreen extends Component {
   }
 
   onEmojiPickerPress(showEmojiPicker) {
-    this.setState({ showEmojiPicker: !showEmojiPicker });
+    this.setState({showEmojiPicker: !showEmojiPicker});
     if (showEmojiPicker) {
       Keyboard.dismiss();
     }
@@ -635,10 +498,10 @@ class ChatScreen extends Component {
       'Add Files',
       'Select the file source',
       [
-        { text: 'Camera', onPress: () => this.selectCamera() },
-        { text: 'Gallery', onPress: () => this.selectGallery() },
-        { text: 'Files', onPress: () => this.doumentPicker() },
-        { text: 'Cancel', onPress: () => console.log('Back') },
+        {text: 'Camera', onPress: () => this.selectCamera()},
+        {text: 'Gallery', onPress: () => this.selectGallery()},
+        {text: 'Files', onPress: () => this.doumentPicker()},
+        {text: 'Cancel', onPress: () => console.log('Back')},
       ],
       {
         cancelable: true,
@@ -722,40 +585,35 @@ class ChatScreen extends Component {
       dateTime:
         moment().format('YYYY/MM/DD') + ' | ' + moment().format('HH:mm'),
     });
-    this.setState({ files: this.state.files }, () => {
-      this.uploadFilesToComment()
-    },
-    );
+    this.setState({files: this.state.files}, () => {
+      this.uploadFilesToComment(this.state.files, taskId);
+    });
   }
 
-  async uploadFilesToComment() {
-    let taskId = this.state.taskId;
-    try {
-      let taskResult = await APIServices.uploadFileToComment(
-        this.state.files,
-        taskId
-      );
-      if (taskResult.message == 'success') {
-        // console.log('ooooooooooooooo', taskResult)
-        // this.setSprintId(taskResult);
-        // this.setState({dataLoading: false});
-      } else {
-        // this.setState({dataLoading: false});
-      }
-    } catch (error) {
-      // this.setState({dataLoading: false});
-    }
-  }
-
-  onFilesCrossPress(uri) {
-    this.setState({ files: [] },
-      () => {
-        let filesArray = this.state.files.filter(item => {
-          return item.uri !== uri;
-        });
-        this.setState({ files: filesArray });
-      },
-    );
+  async uploadFilesToComment(files, taskId) {
+    await APIServices.uploadFileToComment(files, taskId)
+      .then(response => {
+        if (response.message == 'success') {
+          this.setState({
+            files: [],
+            chatText: this.state.chatText.concat(
+              '<img src=' +
+                response.data +
+                ' class="e-rte-image e-imginline" width="auto" height="auto" style="min-width: 0px; min-height: 0px; "width: auto; height: auto;">',
+            ),
+          });
+        } else {
+          this.setState({files: []});
+        }
+      })
+      .catch(error => {
+        this.setState({files: []});
+        if (error.status == 401) {
+          Utils.showAlert('', error.data.message);
+        } else {
+          Utils.showAlert('', error);
+        }
+      });
   }
 
   async doumentPicker() {
@@ -793,41 +651,7 @@ class ChatScreen extends Component {
         uploading: 0,
         showMessageModal: false,
       });
-
-      await APIServices.uploadFileToComment(this.state.files, this.state.taskId)
-        .then(response => {
-          if (response.message == 'success') {
-            // this.details = {
-            //   icon: icons.fileOrange,
-            //   type: 'success',
-            //   title: 'Sucsess',
-            //   description: 'File has been added successfully',
-            //   buttons: {},
-            // };
-            this.setState({
-              indeterminate: false,
-              files: [],
-              uploading: 100,
-              // showMessageModal: true,
-              chatText: this.state.chatText.concat(
-                '<img src=' +
-                  response.data +
-                  ' class="e-rte-image e-imginline" width="auto" height="auto" style="min-width: 0px; min-height: 0px; "width: auto; height: auto;">',
-              ),
-            });
-            // this.fetchFilesData(selectedProjectID, selectedProjectTaskID);
-          } else {
-            this.setState({ indeterminate: false, files: [], uploading: 0 });
-          }
-        })
-        .catch(error => {
-          this.setState({ indeterminate: false, files: [], uploading: 0 });
-          if (error.status == 401) {
-            Utils.showAlert('', error.data.message);
-          } else {
-            Utils.showAlert('', error);
-          }
-        });
+      this.uploadFilesToComment(this.state.files, taskId);
       console.log(this.state.files);
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
@@ -844,7 +668,7 @@ class ChatScreen extends Component {
 
     this.props.stompContext.getStompClient().publish({
       destination: '/app/chat/' + taskId,
-      headers: { priority: 9 },
+      headers: {priority: 9},
       body: JSON.stringify({
         sender: userId,
         message: message,
@@ -852,7 +676,7 @@ class ChatScreen extends Component {
       }),
     });
 
-    this.setState({ chatText: '' });
+    this.setState({chatText: ''});
   }
 
   arrayCompare(a, b) {
@@ -870,7 +694,7 @@ class ChatScreen extends Component {
 
   handleKeyboardDidShow = event => {
     // if (Platform.OS == 'ios') {
-    const { height: windowHeight } = Dimensions.get('window');
+    const {height: windowHeight} = Dimensions.get('window');
     const keyboardHeight = event.endCoordinates.height;
     const currentlyFocusedField = TextInputState.currentlyFocusedField();
     UIManager.measure(
@@ -898,13 +722,12 @@ class ChatScreen extends Component {
         }
       },
     );
-
     // }
   };
 
   handleKeyboardDidHide = () => {
     // if (Platform.OS == 'ios') {
-    this.setState({ listHeghtWithKeyboard: '100%' });
+    this.setState({listHeghtWithKeyboard: '100%'});
     Animated.timing(this.state.shift, {
       toValue: 0,
       duration: 100,
@@ -915,9 +738,9 @@ class ChatScreen extends Component {
 
   handleListScrollToEnd = () => {
     if (!this.state.isDeleteEvent) {
-      this.flatList.scrollToEnd({ animated: true });
+      this.flatList.scrollToEnd({animated: true});
     }
-    this.setState({ isDeleteEvent: false });
+    this.setState({isDeleteEvent: false});
   };
 
   async getChatText(html) {
@@ -925,25 +748,11 @@ class ChatScreen extends Component {
   }
 
   sendMessage() {
+    this.setState({timeTextChange: new Date()});
     let edit = this.state.edit;
-    edit ? this.updateComment() : this.addComment();
-  }
-
-  getRefEditor(refEditor) {
-    this.richText = refEditor;
-  }
-
-  async blurContentEditor() {
-    await this.richText.current?.blurContentEditor();
-  }
-
-  async setContentHTML(content) {
-    await this.richText.current?.setContentHTML(content);
-  }
-
-  onCrossPress() {
-    this.setContentHTML('');
-    this.blurContentEditor('');
+    setTimeout(() => {
+      edit ? this.updateComment() : this.addComment();
+    }, 500);
   }
 
   render() {
@@ -953,24 +762,28 @@ class ChatScreen extends Component {
     let showEmojiPicker = this.state.showEmojiPicker;
     let sortedData = comments.sort(this.arrayCompare);
     let edit = this.state.edit;
-    const { shift } = this.state;
+    const {shift} = this.state;
+
+    let bodyForDisplay =
+      'web&nbsp;<img src="https://arimac-pmtool.s3-ap-southeast-1.amazonaws.com/profileImage_1593594181536_add_rounded_blue_o.png" class="e-rte-image e-imginline" width="auto" height="auto" style="min-width: 0px; min-height: 0px;">';
 
     return (
       <MenuProvider>
         <View style={styles.container}>
           <NavigationEvents onWillFocus={payload => this.loadUsers(payload)} />
-          <View style={{ height: this.state.listHeghtWithKeyboard }}>
-            <FlatList
-              style={styles.flalList}
-              data={sortedData}
-              renderItem={item => this.renderCommentList(item.item)}
-              keyExtractor={item => item.projId}
-              onRefresh={() => this.onRefresh()}
-              refreshing={isFetching}
-              ref={ref => (this.flatList = ref)}
-              onContentSizeChange={() => this.handleListScrollToEnd()}
-              onLayout={() => this.handleListScrollToEnd()}
-            />
+          {/* <View style={{height: this.state.listHeghtWithKeyboard}}> */}
+          <FlatList
+            style={styles.flalList}
+            data={sortedData}
+            renderItem={item => this.renderCommentList(item.item)}
+            keyExtractor={item => item.projId}
+            onRefresh={() => this.onRefresh()}
+            refreshing={isFetching}
+            ref={ref => (this.flatList = ref)}
+            onContentSizeChange={() => this.handleListScrollToEnd()}
+            onLayout={() => this.handleListScrollToEnd()}
+          />
+          <View>
             <TouchableOpacity
               onPress={() => {
                 Platform.OS == 'ios'
@@ -983,15 +796,6 @@ class ChatScreen extends Component {
                 resizeMode={'contain'}
               />
             </TouchableOpacity>
-            <View style={{height: 130}}>
-              <RichTextEditorPell
-                chatText={this.state.chatText}
-                getChatText={html => this.getChatText(html)}
-                timeTextChange={this.state.timeTextChange}
-                taskId={this.state.taskId}
-                chatTextClear={this.state.chatTextClear}
-              />
-            </View>
             <TouchableOpacity
               onPress={() => {
                 this.sendMessage();
@@ -1002,6 +806,17 @@ class ChatScreen extends Component {
                 resizeMode={'contain'}
               />
             </TouchableOpacity>
+          </View>
+
+          <View style={{height: 130}}>
+            <RichTextEditorPell
+              chatText={this.state.chatText}
+              getChatText={html => this.getChatText(html)}
+              timeTextChange={this.state.timeTextChange}
+              taskId={this.state.taskId}
+              chatTextClear={this.state.chatTextClear}
+            />
+            {/* </View> */}
 
             {/* <View style={styles.chatFieldView}>
               <TouchableOpacity
@@ -1047,7 +862,7 @@ class ChatScreen extends Component {
                   resizeMode={'contain'}
                 />
               </TouchableOpacity>
-              <View style={{ flex: 1 }}>
+              <View style={{flex: 1}}>
                 <TextInput
                   style={styles.textInput}
                   placeholder={'Add a comment'}
@@ -1055,9 +870,9 @@ class ChatScreen extends Component {
                   multiline={true}
                   editable={this.state.status == 'Connected' ? true : false}
                   onChangeText={text => this.onChatTextChange(text)}
-                // onContentSizeChange={e =>
-                //   this.updateSize(e.nativeEvent.contentSize.height)
-                // }
+                  // onContentSizeChange={e =>
+                  //   this.updateSize(e.nativeEvent.contentSize.height)
+                  // }
                 />
               </View>
               <TouchableOpacity
@@ -1081,8 +896,8 @@ class ChatScreen extends Component {
               onPress={this.onPressMessageModal}
               onPressCancel={() => this.onPressCancel(this)}
             />
+            {/* {this.state.status != 'Connected' && <Loader />} */}
           </View>
-          {this.state.status != 'Connected' && <Loader />}
         </View>
       </MenuProvider>
     );
@@ -1096,6 +911,8 @@ const styles = EStyleSheet.create({
   chatView: {
     backgroundColor: colors.white,
     borderColor: colors.lighterGray,
+    // marginTop: '13rem',
+    // marginBottom: '13rem',
     flexDirection: 'row',
     paddingHorizontal: '12rem',
     marginHorizontal: '20rem',
@@ -1125,7 +942,7 @@ const styles = EStyleSheet.create({
     flexDirection: 'row',
   },
   flalList: {
-    marginBottom: '135rem',
+    marginBottom: '10rem',
   },
   flalListReactions: {
     marginBottom: '5rem',
@@ -1200,8 +1017,9 @@ const styles = EStyleSheet.create({
     textAlign: 'left',
   },
   chatIcon: {
-    width: '23rem',
-    height: '23rem',
+    width: '20rem',
+    height: '20rem',
+    marginRight: '15rem',
   },
   emojiChatIconStyle: {
     width: '23rem',
@@ -1253,13 +1071,13 @@ const styles = EStyleSheet.create({
     fontWeight: 'bold',
   },
   modalStyle: {
-    borderRadius: '5rem',
+    borderRadius: 5,
     backgroundColor: colors.white,
   },
   addFileIcon: {
-    width: '18rem',
-    height: '18rem',
-    marginTop: '4rem',
+    width: '23rem',
+    height: '23rem',
+    marginRight: '10rem',
   },
   controlIcon: {
     width: '28rem',
@@ -1270,36 +1088,6 @@ const styles = EStyleSheet.create({
     height: '42rem',
     justifyContent: 'flex-end',
   },
-  textEditorStyle: {
-    height: '130rem',
-    borderTopColor: colors.colorSilver,
-    borderTopWidth: '0.5rem',
-    position: 'absolute',
-    bottom: 0,
-    width: '100%',
-  },
-  crossIconStyle: {
-    flexDirection: 'row',
-    position: 'absolute',
-    bottom: 0,
-    zIndex: 1000,
-    alignSelf: 'flex-start',
-    marginLeft: '15rem',
-    alignItems: 'center',
-    height: '50rem',
-    marginBottom: '2rem',
-  },
-  sendIconStyle: {
-    flexDirection: 'row',
-    position: 'absolute',
-    bottom: 0,
-    zIndex: 1000,
-    alignSelf: 'flex-end',
-    alignItems: 'center',
-    width: '35rem',
-    height: '50rem',
-    marginBottom: '2rem',
-  },
 });
 
 const mapStateToProps = state => {
@@ -1308,6 +1096,10 @@ const mapStateToProps = state => {
     users: state.users.users,
   };
 };
+// export default connect(
+//   mapStateToProps,
+//   actions,
+// )(ChatScreen);
 
 export default withStomp(
   connect(
