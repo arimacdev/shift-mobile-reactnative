@@ -777,6 +777,11 @@ class ChatScreen extends Component {
     await this.richText.current?.setContentHTML(content);
   }
 
+  onCrossPress() {
+    this.setContentHTML('');
+    this.blurContentEditor('');
+  }
+
   render() {
     let comments = this.state.comments;
     let isFetching = this.state.isFetching;
@@ -806,16 +811,19 @@ class ChatScreen extends Component {
               onLayout={() => this.handleListScrollToEnd()}
             />
           </View>
-          <View
+          {/* <View
             style={{
+              flexDirection:'row',
               position: 'absolute',
               bottom: 0,
               zIndex: 1000,
-              alignSelf: 'flex-end',
+              justifyContent: 'space-between',
               marginBottom: 18,
-              width: 40,
-            }}>
-            {/* <TouchableOpacity
+              width: '90%',
+              height:'4%',
+              marginHorizontal:20
+            }}> */}
+          {/* <TouchableOpacity
               onPress={() => {
                 Platform.OS == 'ios'
                   ? this.iOSFilePicker()
@@ -827,17 +835,46 @@ class ChatScreen extends Component {
                 resizeMode={'contain'}
               />
             </TouchableOpacity> */}
-            <TouchableOpacity
-              onPress={() => {
-                this.sendMessage();
-              }}>
-              <Image
-                style={styles.chatIcon}
-                source={icons.forwordGreen}
-                resizeMode={'contain'}
-              />
-            </TouchableOpacity>
-          </View>
+          <TouchableOpacity
+            style={{
+              flexDirection: 'row',
+              position: 'absolute',
+              bottom: 0,
+              zIndex: 1000,
+              alignSelf: 'flex-start',
+              marginBottom: 18,
+              width: '10%',
+              height: '4%',
+              marginLeft: 20,
+            }}
+            onPress={() => this.onCrossPress()}>
+            <Image
+              style={styles.addFileIcon}
+              source={icons.cross}
+              resizeMode={'contain'}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              flexDirection: 'row',
+              position: 'absolute',
+              bottom: 0,
+              zIndex: 1000,
+              alignSelf: 'flex-end',
+              marginBottom: 18,
+              width: '10%',
+              height: '4%',
+            }}
+            onPress={() => {
+              this.sendMessage();
+            }}>
+            <Image
+              style={styles.chatIcon}
+              source={icons.forwordGreen}
+              resizeMode={'contain'}
+            />
+          </TouchableOpacity>
+          {/* </View> */}
 
           <View
             style={{
@@ -1058,8 +1095,8 @@ const styles = EStyleSheet.create({
     textAlign: 'left',
   },
   chatIcon: {
-    width: '20rem',
-    height: '20rem',
+    width: '23rem',
+    height: '23rem',
     // marginRight: '15rem',
   },
   emojiChatIconStyle: {
@@ -1116,9 +1153,10 @@ const styles = EStyleSheet.create({
     backgroundColor: colors.white,
   },
   addFileIcon: {
-    width: '23rem',
-    height: '23rem',
-    marginRight: '10rem',
+    width: '18rem',
+    height: '18rem',
+    // marginRight: '10rem',
+    marginTop: 4,
   },
   controlIcon: {
     width: '28rem',
