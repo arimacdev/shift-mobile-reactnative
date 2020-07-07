@@ -96,7 +96,10 @@ class ChatScreen extends Component {
       isListLoadable: true,
       listStartIndex: 0,
       listEndIndex: 10, 
-      isEasyLoading: false
+      isEasyLoading: false,
+      showEnterUrlModal: false,
+      url: '',
+      urlTitle: '',
     };
     this.editor = null;
   }
@@ -499,7 +502,7 @@ class ChatScreen extends Component {
   }
 
   onCloseTaskModal() {
-    this.setState({showEmojiPicker: false});
+    this.setState({showEnterUrlModal: false, url: '', urlTitle: ''});
   }
 
   renderEmojiPicker() {
@@ -830,11 +833,86 @@ class ChatScreen extends Component {
     this.setState({chatText: ''});
   }
 
+  onUrlChange(text) {
+    this.setState({url: text});
+  }
+
+  addUrlPress() {
+    let URL = this.state.url;
+    let urlTitle = this.state.urlTitle != '' ? this.state.urlTitle : URL;
+    this.setState({
+      chatText: this.state.chatText.concat(
+        '<div><a href=' + URL + '>' + urlTitle + '</a></div>',
+      ),
+    });
+    this.onCloseTaskModal();
+  }
+
+  onUrlTitleChange(text) {
+    this.setState({urlTitle: text});
+  }
+
+  renderEnterUrlModal() {
+    return (
+      <Modal
+        isVisible={this.state.showEnterUrlModal}
+        style={styles.modalStyleUrl}
+        onBackButtonPress={() => this.onCloseTaskModal()}
+        onBackdropPress={() => this.onCloseTaskModal()}
+        onRequestClose={() => this.onCloseTaskModal()}
+        coverScreen={false}
+        backdropTransitionOutTiming={0}>
+        <View style={styles.urlModalInnerStyle}>
+          <Text style={styles.urlModalTitleStyle}>Insert Link</Text>
+          <View style={styles.urlModalInputTextViewStyle}>
+            <Text style={styles.urlModalTextStyle}>Web address</Text>
+            <View style={styles.urlModalInputTextViewInnerStyle}>
+              <TextInput
+                style={styles.urlModalInputTextInnerStyle}
+                placeholder={'http://example.com'}
+                value={this.state.url}
+                onChangeText={text => this.onUrlChange(text)}
+              />
+            </View>
+          </View>
+          <View style={styles.urlModalInputTextViewStyle}>
+            <Text style={styles.urlModalTextStyle}>Display Name</Text>
+            <View style={styles.urlModalInputTextViewInnerStyle}>
+              <TextInput
+                style={styles.urlModalInputTextInnerStyle}
+                placeholder={'Enter Text'}
+                value={this.state.urlTitle}
+                onChangeText={text => this.onUrlTitleChange(text)}
+              />
+            </View>
+          </View>
+          <View style={styles.ButtonViewStyle}>
+            <TouchableOpacity
+              style={[styles.positiveStyle]}
+              onPress={() => this.addUrlPress()}>
+              <Text style={styles.positiveTextStyle}>Insert</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.cancelStyle}
+              onPress={() => this.onCloseTaskModal()}>
+              <Text style={styles.cancelTextStyle}>Cancel</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+    );
+  }
+
+  showEnterUrlModal() {
+    this.setState({showEnterUrlModal: true});
+  }
+
   render() {
     let comments = this.state.comments;
     let isFetching = this.state.isFetching;
     let usersLoading = this.props.usersLoading;
     let showEmojiPicker = this.state.showEmojiPicker;
+    let showEnterUrlModal = this.state.showEnterUrlModal;
     let sortedData = comments.sort(this.arrayCompare);
     let edit = this.state.edit;
     const {shift} = this.state;
@@ -867,54 +945,56 @@ class ChatScreen extends Component {
               ListEmptyComponent={<EmptyListView />}
             />
           </View>
-          <View
+          {/* <View
             style={{
               bottom:
                 Platform.OS == 'ios' ? this.state.currentKeyboardHeight : 0,
+            }}> */}
+          <TouchableOpacity
+            style={styles.crossIconStyle}
+            onPress={() => this.onCrossPress()}>
+            <Image
+              style={styles.addFileIcon}
+              source={icons.cross}
+              resizeMode={'contain'}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.sendIconStyle}
+            onPress={() => {
+              this.sendMessage();
             }}>
-            <TouchableOpacity
-              style={styles.crossIconStyle}
-              onPress={() => this.onCrossPress()}>
-              <Image
-                style={styles.addFileIcon}
-                source={icons.cross}
-                resizeMode={'contain'}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.sendIconStyle}
-              onPress={() => {
-                this.sendMessage();
-              }}>
-              <Image
-                style={styles.chatIcon}
-                source={icons.forwordGreen}
-                resizeMode={'contain'}
-              />
-            </TouchableOpacity>
-            <View style={styles.textEditorStyle}>
-              <RichTextEditorPell
-                chatText={this.state.chatText}
-                timeTextChange={this.state.timeTextChange}
-                taskId={this.state.taskId}
-                getRefEditor={refEditor => this.getRefEditor(refEditor)}
-                doumentPicker={() => {
-                  Platform.OS == 'ios'
-                    ? this.iOSFilePicker()
-                    : this.doumentPicker();
-                }}
-              />
-              {showEmojiPicker && this.renderEmojiPicker()}
-              {usersLoading && <Loader />}
-              <MessageShowModal
-                showMessageModal={this.state.showMessageModal}
-                details={this.deleteDetails}
-                onPress={this.onPressMessageModal}
-                onPressCancel={() => this.onPressCancel(this)}
-              />
-            </View>
+            <Image
+              style={styles.chatIcon}
+              source={icons.forwordGreen}
+              resizeMode={'contain'}
+            />
+          </TouchableOpacity>
+          <View style={styles.textEditorStyle}>
+            <RichTextEditorPell
+              chatText={this.state.chatText}
+              timeTextChange={this.state.timeTextChange}
+              taskId={this.state.taskId}
+              getRefEditor={refEditor => this.getRefEditor(refEditor)}
+              doumentPicker={() => {
+                Platform.OS == 'ios'
+                  ? this.iOSFilePicker()
+                  : this.doumentPicker();
+              }}
+              onPressAddLink={() => this.showEnterUrlModal()}
+            />
+            {showEmojiPicker && this.renderEmojiPicker()}
+            {usersLoading && <Loader />}
           </View>
+          {/* </View> */}
           {this.state.status != 'Connected' && <Loader />}
+          {showEnterUrlModal && this.renderEnterUrlModal()}
+          <MessageShowModal
+            showMessageModal={this.state.showMessageModal}
+            details={this.deleteDetails}
+            onPress={this.onPressMessageModal}
+            onPressCancel={() => this.onPressCancel(this)}
+          />
         </View>
       </MenuProvider>
     );
@@ -1088,6 +1168,10 @@ const styles = EStyleSheet.create({
     borderRadius: '5rem',
     backgroundColor: colors.white,
   },
+  modalStyleUrl: {
+    justifyContent: 'flex-end',
+    margin: 0,
+  },
   addFileIcon: {
     width: '18rem',
     height: '18rem',
@@ -1114,7 +1198,7 @@ const styles = EStyleSheet.create({
     flexDirection: 'row',
     position: 'absolute',
     bottom: 0,
-    zIndex: 1000,
+    zIndex: 1,
     alignSelf: 'flex-start',
     marginLeft: '15rem',
     alignItems: 'center',
@@ -1125,12 +1209,73 @@ const styles = EStyleSheet.create({
     flexDirection: 'row',
     position: 'absolute',
     bottom: 0,
-    zIndex: 1000,
+    zIndex: 1,
     alignSelf: 'flex-end',
     alignItems: 'center',
     width: '35rem',
     height: '50rem',
     marginBottom: '2rem',
+  },
+  urlModalInnerStyle: {
+    backgroundColor: colors.white,
+    borderRadius: '5rem',
+    padding: '20rem',
+  },
+  urlModalTitleStyle: {
+    fontSize: '20rem',
+  },
+  urlModalInputTextViewStyle: {
+    marginTop: '20rem',
+  },
+  urlModalTextStyle: {
+    fontSize: '15rem',
+  },
+  urlModalInputTextViewInnerStyle: {
+    backgroundColor: colors.colorWhisper,
+    borderRadius: '5rem',
+    marginTop: '5rem',
+  },
+  urlModalInputTextInnerStyle: {
+    marginLeft: 10,
+  },
+  ButtonViewStyle: {
+    flexDirection: 'row',
+    marginTop: '20rem',
+    marginBottom: '10rem',
+    justifyContent: 'center',
+    alignItems: 'center',
+    // marginHorizontal: '20rem',
+  },
+  positiveStyle: {
+    flex: 1,
+    height: '45rem',
+    backgroundColor: colors.lightRed,
+    borderRadius: '5rem',
+    paddingHorizontal: '40rem',
+    paddingVertical: '10rem',
+    justifyContent: 'center',
+  },
+  positiveTextStyle: {
+    fontSize: '15rem',
+    color: colors.white,
+    textAlign: 'center',
+    fontFamily: 'CircularStd-Medium',
+  },
+  cancelStyle: {
+    flex: 1,
+    height: '45rem',
+    marginLeft: '10rem',
+    backgroundColor: colors.lightGreen,
+    borderRadius: '5rem',
+    paddingHorizontal: '40rem',
+    paddingVertical: '10rem',
+    justifyContent: 'center',
+  },
+  cancelTextStyle: {
+    fontSize: '15rem',
+    color: colors.white,
+    textAlign: 'center',
+    fontFamily: 'CircularStd-Medium',
   },
 });
 

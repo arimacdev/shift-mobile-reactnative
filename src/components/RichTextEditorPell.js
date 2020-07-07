@@ -43,6 +43,7 @@ class RichTextEditorPell extends React.Component {
     that.save = that.save;
     that.onTheme = that.onTheme;
     that.onPressAddImage = that.onPressAddImage;
+    that.onPressAddLink = that.onPressAddLink;
     that.themeChange = that.themeChange;
   }
 
@@ -162,6 +163,7 @@ class RichTextEditorPell extends React.Component {
             selectedIconTint={colors.colorDeepSkyBlue}
             selectedButtonStyle={{backgroundColor: 'transparent'}}
             onPressAddImage={that.props.doumentPicker}
+            onPressAddLink={that.props.onPressAddLink}
           />
         </KeyboardAvoidingView>
       </SafeAreaView>
