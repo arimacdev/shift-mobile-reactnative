@@ -196,10 +196,10 @@ class ChatScreen extends Component {
 
   async fetchData(taskId, startIndex, endIndex) {
     this.setState({dataLoading: true});
-    await APIServices.getCommentsData(taskId, startIndex, endIndex)
+    await APIServices.getCommentsData(taskId, 0, 10)
       .then(response => {
         if (response.message == 'success') {
-          this.setState({dataLoading: false, comments: this.state.comments.concat(response.data)});
+          this.setState({dataLoading: false, comments: response.data});
           if (response.data.length == 10) {
             this.setState({ isListLoadable: true })
           } else {
@@ -213,6 +213,36 @@ class ChatScreen extends Component {
         this.setState({dataLoading: false});
         // Utils.showAlert(true, '', error.data.message, this.props);
       });
+  }
+
+  async LazyFetchData(taskId, startIndex, endIndex) {
+    this.setState({dataLoading: true});
+    await APIServices.getCommentsData(taskId, startIndex, endIndex)
+      .then(response => {
+        if (response.message == 'success') {
+          this.setState({ comments: this.state.comments.concat(response.data), dataLoading: false })
+        } else {
+          this.setState({dataLoading: false});
+        }
+      })
+      .catch(error => {
+        this.setState({dataLoading: false});
+        // Utils.showAlert(true, '', error.data.message, this.props);
+      });
+  }
+
+  onRefresh() {
+    this.setState({isDeleteEvent: true, isEasyLoading: true})
+    if (this.state.isListLoadable) {
+      let startIndex = (this.state.listStartIndex+1)+10
+      let endIndex = this.state.listEndIndex+10
+      this.setState({isFetching: true}, function() {
+        this.LazyFetchData(this.state.taskId, startIndex, endIndex);
+        this.setState({ listStartIndex: startIndex-1, listEndIndex: endIndex })
+      });
+    } else {
+      // show toast
+    }
   }
 
   userImage = function(item) {
@@ -398,21 +428,6 @@ class ChatScreen extends Component {
         </View>
       </Swipeable>
     );
-  }
-
-  onRefresh() {
-    this.setState({isDeleteEvent: true, isEasyLoading: true})
-    // console.log('wwwwwwwwwwwwwww',this.state.comments.length)
-    if (this.state.isListLoadable) {
-      let startIndex = this.state.listStartIndex+10
-      let endIndex = this.state.listEndIndex+10
-      this.setState({isFetching: true}, function() {
-        this.fetchData(this.state.taskId, startIndex, endIndex);
-        this.setState({ listStartIndex: startIndex, listEndIndex: endIndex })
-      });
-    } else {
-      // show toast
-    }
   }
 
   onBackPress() {
@@ -852,11 +867,11 @@ class ChatScreen extends Component {
               ListEmptyComponent={<EmptyListView />}
             />
           </View>
-          {/* <View
+          <View
             style={{
               bottom:
                 Platform.OS == 'ios' ? this.state.currentKeyboardHeight : 0,
-            }}> */}
+            }}>
             <TouchableOpacity
               style={styles.crossIconStyle}
               onPress={() => this.onCrossPress()}>
@@ -898,7 +913,7 @@ class ChatScreen extends Component {
                 onPressCancel={() => this.onPressCancel(this)}
               />
             </View>
-          {/* </View> */}
+          </View>
           {this.state.status != 'Connected' && <Loader />}
         </View>
       </MenuProvider>
