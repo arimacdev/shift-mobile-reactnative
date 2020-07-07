@@ -42,6 +42,7 @@ import Swipeable from 'react-native-swipeable';
 import RichTextEditor from '../../../components/RichTextEditor';
 import MessageShowModal from '../../../components/MessageShowModal';
 import RichTextEditorPell from '../../../components/RichTextEditorPell';
+import EmptyListView from '../../../components/EmptyListView';
 
 const reactionDetails = [
   {value: '&#128077', text: '👍'},
@@ -598,7 +599,7 @@ class ChatScreen extends Component {
   async uploadFilesToComment(files, taskId) {
     let html = await this.richText.current?.getContentHtml();
     await this.setState({chatText: html});
-    
+
     await APIServices.uploadFileToComment(files, taskId)
       .then(response => {
         if (response.message == 'success') {
@@ -801,6 +802,12 @@ class ChatScreen extends Component {
         <View style={styles.container}>
           {/* <NavigationEvents onWillFocus={payload => this.loadUsers(payload)} /> */}
           <View
+            // onStartShouldSetResponder={evt => true}
+            // onMoveShouldSetResponder={evt => true}
+            // onResponderGrant={this.handlePressIn}
+            // onResponderMove={this.handlePressIn}
+            // onResponderRelease={this.handlePressOut}
+            // onResponderGrant={() => this.blurContentEditor()}
             style={{
               bottom:
                 Platform.OS == 'ios' ? this.state.currentKeyboardHeight : 0,
@@ -815,13 +822,14 @@ class ChatScreen extends Component {
               ref={ref => (this.flatList = ref)}
               onContentSizeChange={() => this.handleListScrollToEnd()}
               onLayout={() => this.handleListScrollToEnd()}
+              ListEmptyComponent={<EmptyListView />}
             />
           </View>
-          <View
+          {/* <View
             style={{
               bottom:
                 Platform.OS == 'ios' ? this.state.currentKeyboardHeight : 0,
-            }}>
+            }}> */}
             <TouchableOpacity
               style={styles.crossIconStyle}
               onPress={() => this.onCrossPress()}>
@@ -863,7 +871,7 @@ class ChatScreen extends Component {
                 onPressCancel={() => this.onPressCancel(this)}
               />
             </View>
-          </View>
+          {/* </View> */}
           {this.state.status != 'Connected' && <Loader />}
         </View>
       </MenuProvider>
