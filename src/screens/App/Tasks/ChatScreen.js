@@ -95,7 +95,7 @@ class ChatScreen extends Component {
       currentKeyboardHeight: 0,
       isListLoadable: true,
       listStartIndex: 0,
-      listEndIndex: 10, 
+      listEndIndex: 10,
       isEasyLoading: false,
       showEnterUrlModal: false,
       url: '',
@@ -172,7 +172,11 @@ class ChatScreen extends Component {
             let messageDecode = JSON.parse(message.body);
             console.log('messageDecode', messageDecode);
             if (messageDecode.sender != userId) {
-              this.fetchData(taskId, this.state.listStartIndex, this.state.listEndIndex);
+              this.fetchData(
+                taskId,
+                this.state.listStartIndex,
+                this.state.listEndIndex,
+              );
             }
           });
       },
@@ -204,9 +208,9 @@ class ChatScreen extends Component {
         if (response.message == 'success') {
           this.setState({dataLoading: false, comments: response.data});
           if (response.data.length == 10) {
-            this.setState({ isListLoadable: true })
+            this.setState({isListLoadable: true});
           } else {
-            this.setState({ isListLoadable: false })
+            this.setState({isListLoadable: false});
           }
         } else {
           this.setState({dataLoading: false});
@@ -223,7 +227,10 @@ class ChatScreen extends Component {
     await APIServices.getCommentsData(taskId, startIndex, endIndex)
       .then(response => {
         if (response.message == 'success') {
-          this.setState({ comments: this.state.comments.concat(response.data), dataLoading: false })
+          this.setState({
+            comments: this.state.comments.concat(response.data),
+            dataLoading: false,
+          });
         } else {
           this.setState({dataLoading: false});
         }
@@ -235,13 +242,13 @@ class ChatScreen extends Component {
   }
 
   onRefresh() {
-    this.setState({isDeleteEvent: true, isEasyLoading: true})
+    this.setState({isDeleteEvent: true, isEasyLoading: true});
     if (this.state.isListLoadable) {
-      let startIndex = (this.state.listStartIndex+1)+10
-      let endIndex = this.state.listEndIndex+10
+      let startIndex = this.state.listStartIndex + 1 + 10;
+      let endIndex = this.state.listEndIndex + 10;
       this.setState({isFetching: true}, function() {
         this.LazyFetchData(this.state.taskId, startIndex, endIndex);
-        this.setState({ listStartIndex: startIndex-1, listEndIndex: endIndex })
+        this.setState({listStartIndex: startIndex - 1, listEndIndex: endIndex});
       });
     } else {
       // show toast
@@ -939,7 +946,7 @@ class ChatScreen extends Component {
             // onResponderGrant={() => this.blurContentEditor()}
             style={{
               bottom:
-                Platform.OS == 'ios' ? this.state.currentKeyboardHeight : 0
+                Platform.OS == 'ios' ? this.state.currentKeyboardHeight : 0,
             }}>
             <FlatList
               style={styles.flalList}
