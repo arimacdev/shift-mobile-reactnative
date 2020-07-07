@@ -596,12 +596,14 @@ class ChatScreen extends Component {
   }
 
   async uploadFilesToComment(files, taskId) {
-    // await this.richText.current?.insertImage('https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/1024px-React-icon.svg.png');
+    let html = await this.richText.current?.getContentHtml();
+    await this.setState({chatText: html});
+    
     await APIServices.uploadFileToComment(files, taskId)
       .then(response => {
         if (response.message == 'success') {
           // this.richText.current?.insertImage('https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/1024px-React-icon.svg.png');
-          // this.richText.current?.blurContentEditor();
+          this.richText.current?.blurContentEditor();
           this.setState({
             files: [],
             chatText: this.state.chatText.concat(
@@ -659,18 +661,7 @@ class ChatScreen extends Component {
         uploading: 0,
         showMessageModal: false,
       });
-      // this.uploadFilesToComment(this.state.files, taskId);
-      let html = await this.richText.current?.getContentHtml();
-      await this.setState({chatText: html});
-
-      this.setState({
-        files: [],
-        chatText: this.state.chatText.concat(
-          '<img src=' +
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/1024px-React-icon.svg.png" +
-            ' class="e-rte-image e-imginline" width="auto" height="auto" style="min-width: 0px; min-height: 0px; width: auto; height: auto; marginTop: 10px">',
-        ),
-      });
+      this.uploadFilesToComment(this.state.files, taskId);
       console.log(this.state.files);
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
