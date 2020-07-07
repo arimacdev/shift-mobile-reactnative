@@ -14,6 +14,7 @@ import {
   TouchableWithoutFeedback,
   KeyboardAvoidingView,
   Linking,
+  Platform,
 } from 'react-native';
 import {connect} from 'react-redux';
 import * as actions from '../../../redux/actions';
@@ -154,7 +155,10 @@ class ChatScreen extends Component {
       },
     );
     this.props.stompContext.removeStompClient();
-    this.rootSubscribed.unsubscribe();
+    if (this.rootSubscribed != null) {
+      this.rootSubscribed.unsubscribe();
+    }
+
     this.keyboardDidShowSub.remove();
     this.keyboardDidHideSub.remove();
   }
@@ -273,10 +277,10 @@ class ChatScreen extends Component {
     this.setState({showEmojiPicker: true});
   }
 
-  onLinkPress(item){
-    Linking.canOpenURL(item.reactionId).then(supported => {
+  onLinkPress(href) {
+    Linking.canOpenURL(href).then(supported => {
       if (supported) {
-        Linking.openURL(item.reactionId);
+        Linking.openURL(href);
       } else {
         console.log("Don't know how to open URI: " + item.reactionId);
       }
@@ -290,7 +294,7 @@ class ChatScreen extends Component {
           // containerStyle={{marginLeft: 11, marginTop: -15}}
           html={item.reactionId}
           imagesMaxWidth={entireScreenWidth}
-          onLinkPress={()=>this.onLinkPress(item)}
+          onLinkPress={(event, href) => this.onLinkPress(href)}
         />
         {/* <Text>{item.reactionIcon}</Text> */}
         <Text style={styles.textCount}>
@@ -419,11 +423,7 @@ class ChatScreen extends Component {
                   </Text>
                   {/* <Text style={styles.textChat}>{item.content}</Text> */}
                   <HTML
-                    containerStyle={{
-                      marginLeft: 11,
-                      marginTop: 0,
-                      marginRight: 10,
-                    }}
+                    containerStyle={styles.htmlContentStyle}
                     html={item.content}
                     imagesMaxWidth={entireScreenWidth}
                   />
@@ -1197,8 +1197,8 @@ const styles = EStyleSheet.create({
     backgroundColor: colors.white,
   },
   modalStyleUrl: {
-    justifyContent: 'flex-end',
-    margin: 0,
+    // justifyContent: 'flex-end',
+    // margin: 0,
   },
   addFileIcon: {
     width: '18rem',
@@ -1262,9 +1262,11 @@ const styles = EStyleSheet.create({
     backgroundColor: colors.colorWhisper,
     borderRadius: '5rem',
     marginTop: '5rem',
+    height: Platform.OS == 'ios' ? '35rem' : '50rem',
   },
   urlModalInputTextInnerStyle: {
-    marginLeft: 10,
+    marginLeft: '10rem',
+    marginTop: Platform.OS == 'ios' ? '10rem' : '0rem',
   },
   ButtonViewStyle: {
     flexDirection: 'row',
@@ -1304,6 +1306,11 @@ const styles = EStyleSheet.create({
     color: colors.white,
     textAlign: 'center',
     fontFamily: 'CircularStd-Medium',
+  },
+  htmlContentStyle: {
+    marginLeft: '11rem',
+    marginTop: '0rem',
+    marginRight: '10rem',
   },
 });
 
