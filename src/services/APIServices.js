@@ -2978,7 +2978,9 @@ async function setOneSignalNotificationStatusData(
   );
 }
 
-async function getCommentsData(taskId) {
+async function getCommentsData(taskId, startIndex, endIndex) {
+  let commentstartIndex = startIndex;
+  let commentendIndex = endIndex;
   let baseURL = null;
   baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
@@ -2997,7 +2999,7 @@ async function getCommentsData(taskId) {
         GET_COMMENTS +
         '/' +
         taskId +
-        '/comment?startIndex=0&endIndex=10',
+        '/comment?startIndex='+commentstartIndex+'&endIndex='+commentendIndex,
       method: 'GET',
     },
     true,
