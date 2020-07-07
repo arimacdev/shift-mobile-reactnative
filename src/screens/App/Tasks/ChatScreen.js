@@ -888,7 +888,16 @@ class ChatScreen extends Component {
           </View>
           <View style={styles.ButtonViewStyle}>
             <TouchableOpacity
-              style={[styles.positiveStyle]}
+              style={[
+                styles.positiveStyle,
+                {
+                  backgroundColor:
+                    this.state.url == ''
+                      ? colors.lighterGray
+                      : colors.lightGreen,
+                },
+              ]}
+              disabled={this.state.url == '' ? true : false}
               onPress={() => this.addUrlPress()}>
               <Text style={styles.positiveTextStyle}>Insert</Text>
             </TouchableOpacity>
@@ -1249,7 +1258,7 @@ const styles = EStyleSheet.create({
   positiveStyle: {
     flex: 1,
     height: '45rem',
-    backgroundColor: colors.lightRed,
+    backgroundColor: colors.lightGreen,
     borderRadius: '5rem',
     paddingHorizontal: '40rem',
     paddingVertical: '10rem',
@@ -1265,7 +1274,7 @@ const styles = EStyleSheet.create({
     flex: 1,
     height: '45rem',
     marginLeft: '10rem',
-    backgroundColor: colors.lightGreen,
+    backgroundColor: colors.lightRed,
     borderRadius: '5rem',
     paddingHorizontal: '40rem',
     paddingVertical: '10rem',
