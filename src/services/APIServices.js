@@ -82,7 +82,7 @@ import {
   ADD_UPDATE_COMMENT_REACTION,
   DELETE_COMMENT_REACTION,
   GET_COMMENTS_COUNT,
-  UPLOAD_FILE_TO_COMMENT
+  UPLOAD_FILE_TO_COMMENT,
 } from '../api/API';
 import AsyncStorage from '@react-native-community/async-storage';
 import {SET_UPLOAD_PROGRESS} from '../redux/types';
@@ -2999,7 +2999,10 @@ async function getCommentsData(taskId, startIndex, endIndex) {
         GET_COMMENTS +
         '/' +
         taskId +
-        '/comment?startIndex='+commentstartIndex+'&endIndex='+commentendIndex,
+        '/comment?startIndex=' +
+        commentstartIndex +
+        '&endIndex=' +
+        commentendIndex,
       method: 'GET',
     },
     true,
@@ -3298,7 +3301,7 @@ const APIServices = {
   addUpdateCommentReactionData,
   deleteCommentReactionData,
   getCommentsCountData,
-  uploadFileToComment
+  uploadFileToComment,
 };
 
 export default APIServices;

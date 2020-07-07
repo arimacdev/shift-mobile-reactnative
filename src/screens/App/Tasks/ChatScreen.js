@@ -13,6 +13,7 @@ import {
   UIManager,
   TouchableWithoutFeedback,
   KeyboardAvoidingView,
+  Linking,
 } from 'react-native';
 import {connect} from 'react-redux';
 import * as actions from '../../../redux/actions';
@@ -272,6 +273,16 @@ class ChatScreen extends Component {
     this.setState({showEmojiPicker: true});
   }
 
+  onLinkPress(item){
+    Linking.canOpenURL(item.reactionId).then(supported => {
+      if (supported) {
+        Linking.openURL(item.reactionId);
+      } else {
+        console.log("Don't know how to open URI: " + item.reactionId);
+      }
+    });
+  }
+
   renderReactionDetailsList(item) {
     return (
       <View style={styles.reactionView}>
@@ -279,6 +290,7 @@ class ChatScreen extends Component {
           // containerStyle={{marginLeft: 11, marginTop: -15}}
           html={item.reactionId}
           imagesMaxWidth={entireScreenWidth}
+          onLinkPress={()=>this.onLinkPress(item)}
         />
         {/* <Text>{item.reactionIcon}</Text> */}
         <Text style={styles.textCount}>
