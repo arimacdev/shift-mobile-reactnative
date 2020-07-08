@@ -470,7 +470,7 @@ class ChatScreen extends Component {
               <View style={styles.innerView}>
                 <View style={{flex: 1}}>
                   <Text style={styles.text}>
-                    {item.commenterFistName} {item.commenterFistName}
+                    {item.commenterFistName} {item.commenterLatName}
                   </Text>
                   {/* <Text style={styles.textChat}>{item.content}</Text> */}
                   <HTML
@@ -692,11 +692,13 @@ class ChatScreen extends Component {
 
   async setImageForFile(res) {
     let taskId = this.state.taskId;
+    console.log('oooooooooooooo', res)
     this.onFilesCrossPress(res.uri);
     await this.state.files.push({
       uri: res.uri,
       type: res.type, // mime type
-      name: 'Img ' + new Date().getTime(),
+      name: 'Img' + new Date().getTime()+ '.png',
+      // name: res.name,
       size: res.fileSize,
       dateTime:
         moment().format('YYYY/MM/DD') + ' | ' + moment().format('HH:mm'),
@@ -1024,12 +1026,31 @@ class ChatScreen extends Component {
               ListEmptyComponent={<EmptyListView />}
             />
           </View>
-          {/* <View
+          <View
             style={{
               bottom:
                 Platform.OS == 'ios' ? this.state.currentKeyboardHeight : 0,
-            }}> */}
-
+            }}>
+          <TouchableOpacity
+            style={styles.crossIconStyle}
+            onPress={() => this.onCrossPress()}>
+            <Image
+              style={styles.addFileIcon}
+              source={icons.cross}
+              resizeMode={'contain'}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.sendIconStyle}
+            onPress={() => {
+              this.sendMessage();
+            }}>
+            <Image
+              style={styles.chatIcon}
+              source={icons.forwordGreen}
+              resizeMode={'contain'}
+            />
+          </TouchableOpacity>
           <View style={styles.textEditorStyle}>
             <TouchableOpacity
               style={styles.crossIconStyle}
@@ -1065,7 +1086,7 @@ class ChatScreen extends Component {
               onChangeEditorText={text => this.onChangeEditorText(text)}
             />
           </View>
-          {/* </View> */}
+          </View>
           {this.state.status != 'Connected' && <Loader />}
           {showEnterUrlModal && this.renderEnterUrlModal()}
           <MessageShowModal
