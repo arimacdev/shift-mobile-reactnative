@@ -45,6 +45,7 @@ import RichTextEditor from '../../../components/RichTextEditor';
 import MessageShowModal from '../../../components/MessageShowModal';
 import RichTextEditorPell from '../../../components/RichTextEditorPell';
 import EmptyListView from '../../../components/EmptyListView';
+import AndroidKeyboardAdjust from 'react-native-android-keyboard-adjust';
 
 const reactionDetails = [
   {value: '&#128077', text: '👍'},
@@ -107,6 +108,10 @@ class ChatScreen extends Component {
   }
 
   componentWillMount() {
+    if (Platform.OS == 'android') {
+      AndroidKeyboardAdjust.setAdjustResize();
+    }
+
     const {
       navigation: {
         state: {params},
@@ -161,6 +166,10 @@ class ChatScreen extends Component {
 
     this.keyboardDidShowSub.remove();
     this.keyboardDidHideSub.remove();
+
+    if (Platform.OS == 'android') {
+      AndroidKeyboardAdjust.setAdjustPan();
+    }
   }
 
   componentDidMount() {
@@ -315,6 +324,7 @@ class ChatScreen extends Component {
       chatText: content,
       commentId: commentId,
       edit: true,
+      isDeleteEvent: true
     });
     this.state.currentlyOpenSwipeable.recenter();
 
