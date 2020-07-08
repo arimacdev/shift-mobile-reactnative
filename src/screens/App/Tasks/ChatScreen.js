@@ -282,7 +282,7 @@ class ChatScreen extends Component {
       if (supported) {
         Linking.openURL(href);
       } else {
-        console.log("Don't know how to open URI: " + item.reactionId);
+        console.log("Don't know how to open URI: " + href);
       }
     });
   }
@@ -294,7 +294,6 @@ class ChatScreen extends Component {
           // containerStyle={{marginLeft: 11, marginTop: -15}}
           html={item.reactionId}
           imagesMaxWidth={entireScreenWidth}
-          onLinkPress={(event, href) => this.onLinkPress(href)}
         />
         {/* <Text>{item.reactionIcon}</Text> */}
         <Text style={styles.textCount}>
@@ -426,6 +425,7 @@ class ChatScreen extends Component {
                     containerStyle={styles.htmlContentStyle}
                     html={item.content}
                     imagesMaxWidth={entireScreenWidth}
+                    onLinkPress={(event, href) => this.onLinkPress(href)}
                   />
                 </View>
 
