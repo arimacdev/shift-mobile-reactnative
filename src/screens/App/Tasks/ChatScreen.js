@@ -277,16 +277,6 @@ class ChatScreen extends Component {
     this.setState({showEmojiPicker: true});
   }
 
-  onLinkPress(href) {
-    Linking.canOpenURL(href).then(supported => {
-      if (supported) {
-        Linking.openURL(href);
-      } else {
-        console.log("Don't know how to open URI: " + href);
-      }
-    });
-  }
-
   renderReactionDetailsList(item) {
     return (
       <View style={styles.reactionView}>
@@ -369,6 +359,21 @@ class ChatScreen extends Component {
         this.setState({dataLoading: false});
         // Utils.showAlert(true, '', error.data.message, this.props);
       });
+  }
+
+  onLinkPress(href) {
+    Linking.canOpenURL(href).then(supported => {
+      if (supported) {
+        Linking.openURL(href);
+      } else {
+        Utils.showAlert(
+          true,
+          '',
+          "Cannot open the link. May be missing 'http://'",
+          this.props,
+        );
+      }
+    });
   }
 
   renderCommentList(item) {
@@ -978,27 +983,28 @@ class ChatScreen extends Component {
               bottom:
                 Platform.OS == 'ios' ? this.state.currentKeyboardHeight : 0,
             }}> */}
-          <TouchableOpacity
-            style={styles.crossIconStyle}
-            onPress={() => this.onCrossPress()}>
-            <Image
-              style={styles.addFileIcon}
-              source={icons.cross}
-              resizeMode={'contain'}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.sendIconStyle}
-            onPress={() => {
-              this.sendMessage();
-            }}>
-            <Image
-              style={styles.chatIcon}
-              source={icons.forwordGreen}
-              resizeMode={'contain'}
-            />
-          </TouchableOpacity>
+
           <View style={styles.textEditorStyle}>
+            <TouchableOpacity
+              style={styles.crossIconStyle}
+              onPress={() => this.onCrossPress()}>
+              <Image
+                style={styles.addFileIcon}
+                source={icons.cross}
+                resizeMode={'contain'}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.sendIconStyle}
+              onPress={() => {
+                this.sendMessage();
+              }}>
+              <Image
+                style={styles.chatIcon}
+                source={icons.forwordGreen}
+                resizeMode={'contain'}
+              />
+            </TouchableOpacity>
             <RichTextEditorPell
               chatText={this.state.chatText}
               timeTextChange={this.state.timeTextChange}
@@ -1011,8 +1017,6 @@ class ChatScreen extends Component {
               }}
               onPressAddLink={() => this.showEnterUrlModal()}
             />
-            {showEmojiPicker && this.renderEmojiPicker()}
-            {usersLoading && <Loader />}
           </View>
           {/* </View> */}
           {this.state.status != 'Connected' && <Loader />}
