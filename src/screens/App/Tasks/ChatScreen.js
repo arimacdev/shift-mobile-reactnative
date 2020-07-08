@@ -242,7 +242,7 @@ class ChatScreen extends Component {
       })
       .catch(error => {
         this.setState({dataLoading: false});
-        // Utils.showAlert(true, '', error.data.message, this.props);
+        Utils.showAlert(true, '', 'Data loading error', this.props);
       });
   }
 
@@ -306,7 +306,7 @@ class ChatScreen extends Component {
       })
       .catch(error => {
         this.setState({dataLoading: false});
-        // Utils.showAlert(true, '', error.data.message, this.props);
+        Utils.showAlert(true, '', 'Faild to submit the reaction', this.props);
       });
   }
 
@@ -317,6 +317,9 @@ class ChatScreen extends Component {
       edit: true,
     });
     this.state.currentlyOpenSwipeable.recenter();
+
+    // let html = await this.richText.current?.getContentHtml();
+    // var href = html.match(/href="([^"]*)/)[0];
   }
 
   async updateComment() {
@@ -338,7 +341,16 @@ class ChatScreen extends Component {
       })
       .catch(error => {
         this.setState({dataLoading: false});
-        // Utils.showAlert(true, '', error.data.message, this.props);
+        if (error.status == 401) {
+          Utils.showAlert(
+            true,
+            '',
+            'You cannot edit others comments',
+            this.props,
+          );
+        } else {
+          Utils.showAlert(true, '', error.data.message, this.props);
+        }
       });
   }
 
@@ -357,7 +369,16 @@ class ChatScreen extends Component {
       })
       .catch(error => {
         this.setState({dataLoading: false});
-        // Utils.showAlert(true, '', error.data.message, this.props);
+        if (error.status == 401) {
+          Utils.showAlert(
+            true,
+            '',
+            'You cannot delete others comments',
+            this.props,
+          );
+        } else {
+          Utils.showAlert(true, '', error.data.message, this.props);
+        }
       });
   }
 
@@ -430,6 +451,7 @@ class ChatScreen extends Component {
                     containerStyle={styles.htmlContentStyle}
                     html={item.content}
                     imagesMaxWidth={entireScreenWidth}
+                    imagesInitialDimensions={{width: 150, height: 150}}
                     onLinkPress={(event, href) => this.onLinkPress(href)}
                   />
                 </View>
@@ -625,6 +647,7 @@ class ChatScreen extends Component {
     };
     this.onPressMessageModal = () => this.onDeleteCommentPress(commentId);
     this.setState({showMessageModal: true});
+    this.state.currentlyOpenSwipeable.recenter();
   }
 
   onPressCancel() {
@@ -670,7 +693,7 @@ class ChatScreen extends Component {
             chatText: this.state.chatText.concat(
               '<img src=' +
                 response.data +
-                ' class="e-rte-image e-imginline" width="auto" height="auto" style="min-width: 0px; min-height: 0px; width: auto; height: auto; marginTop: 10px">',
+                ' class="e-rte-image e-imginline" width="auto" height="auto" style="min-width: 0px; min-height: 0px; marginTop: 10px">',
             ),
           });
         } else {
