@@ -318,23 +318,23 @@ class ChatScreen extends Component {
     });
     this.state.currentlyOpenSwipeable.recenter();
 
-    let html = await this.richText.current?.getContentHtml();
-    let src = '';
-    try {
-      src = html.match(/src="([^"]*)/)[1];
-    } catch (error) {
-      console.log('no image attached', src);
-    }
+    // let html = await this.richText.current?.getContentHtml();
+    // let src = '';
+    // try {
+    //   src = html.match(/src="([^"]*)/)[1];
+    // } catch (error) {
+    //   console.log('no image attached', src);
+    // }
 
-    if (src != '') {
-      await this.setState({
-        chatText: this.state.chatText.replace(html,
-          '<img src=' +
-            src +
-            ' class="e-rte-image e-imginline" width="auto" height="auto" style="min-width: 0px; min-height: 0px; marginTop: 10px">',
-        ),
-      });
-    }
+    // if (src != '') {
+    //   await this.setState({
+    //     chatText: this.state.chatText.replace(html,
+    //       '<img src=' +
+    //         src +
+    //         ' class="e-rte-image e-imginline" width="auto" height="auto" style="min-width: 0px; min-height: 0px; marginTop: 10px">',
+    //     ),
+    //   });
+    // }
   }
 
   async updateComment() {
@@ -465,9 +465,9 @@ class ChatScreen extends Component {
                   <HTML
                     containerStyle={styles.htmlContentStyle}
                     html={item.content}
-                    imagesMaxWidth={100}
+                    imagesMaxWidth={150}
                     ignoredStyles={['height', 'width']}
-                    imagesInitialDimensions={{width: 150, height: 150}}
+                    // imagesInitialDimensions={{width: 150, height: 150}}
                     onLinkPress={(event, href) => this.onLinkPress(href)}
                   />
                 </View>
