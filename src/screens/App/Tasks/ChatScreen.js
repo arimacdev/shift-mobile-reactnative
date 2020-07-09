@@ -980,6 +980,10 @@ class ChatScreen extends Component {
     this.setState({showEnterUrlModal: true});
   }
 
+  onChangeEditorText(text){
+    console.log("text",text)
+  }
+
   render() {
     let comments = this.state.comments;
     let isFetching = this.state.isFetching;
@@ -1055,7 +1059,8 @@ class ChatScreen extends Component {
                   ? this.iOSFilePicker()
                   : this.doumentPicker();
               }}
-              onInsertLink={() => this.showEnterUrlModal()}
+              onInsertLink={() => this.showEnterUrlModal(text)}
+              onChangeEditorText={(text)=>this.onChangeEditorText(text)}
             />
           </View>
           {/* </View> */}
