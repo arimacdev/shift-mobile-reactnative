@@ -1346,7 +1346,7 @@ class TasksTabScreen extends Component {
                 keyExtractor={item => item.parentTask.taskId}
                 ListEmptyComponent={<EmptyListView />}
                 onEndReached={this.lazyGetAllTaskInProject}
-                onEndReachedThreshold={0.5}
+                onEndReachedThreshold={0.7}
               />
             )}
 
