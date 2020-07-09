@@ -1055,7 +1055,7 @@ class ChatScreen extends Component {
                   ? this.iOSFilePicker()
                   : this.doumentPicker();
               }}
-              onPressAddLink={() => this.showEnterUrlModal()}
+              onInsertLink={() => this.showEnterUrlModal()}
             />
           </View>
           {/* </View> */}
