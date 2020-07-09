@@ -46,6 +46,7 @@ import MessageShowModal from '../../../components/MessageShowModal';
 import RichTextEditorPell from '../../../components/RichTextEditorPell';
 import EmptyListView from '../../../components/EmptyListView';
 import AndroidKeyboardAdjust from 'react-native-android-keyboard-adjust';
+import PopupMenuAssignee from '../../../components/PopupMenuAssignee';
 
 const reactionDetails = [
   {value: '&#128077', text: '👍'},
@@ -324,7 +325,7 @@ class ChatScreen extends Component {
       chatText: content,
       commentId: commentId,
       edit: true,
-      isDeleteEvent: true
+      isDeleteEvent: true,
     });
     this.state.currentlyOpenSwipeable.recenter();
 
@@ -980,8 +981,16 @@ class ChatScreen extends Component {
     this.setState({showEnterUrlModal: true});
   }
 
-  onChangeEditorText(text){
-    console.log("text",text)
+  onChangeEditorText(text) {
+    console.log('text', text);
+    if (text == '<div>@</div>') {
+      return (
+        <PopupMenuAssignee
+          projectID={this.state.selectedProjectID}
+          onSelect={item => this.onSelectUser(item)}
+        />
+      );
+    }
   }
 
   render() {
@@ -997,14 +1006,7 @@ class ChatScreen extends Component {
     return (
       <MenuProvider>
         <View style={styles.container}>
-          {/* <NavigationEvents onWillFocus={payload => this.loadUsers(payload)} /> */}
           <View
-            // onStartShouldSetResponder={evt => true}
-            // onMoveShouldSetResponder={evt => true}
-            // onResponderGrant={this.handlePressIn}
-            // onResponderMove={this.handlePressIn}
-            // onResponderRelease={this.handlePressOut}
-            // onResponderGrant={() => this.blurContentEditor()}
             style={{
               bottom:
                 Platform.OS == 'ios' ? this.state.currentKeyboardHeight : 0,
@@ -1060,7 +1062,7 @@ class ChatScreen extends Component {
                   : this.doumentPicker();
               }}
               onInsertLink={() => this.showEnterUrlModal(text)}
-              onChangeEditorText={(text)=>this.onChangeEditorText(text)}
+              onChangeEditorText={text => this.onChangeEditorText(text)}
             />
           </View>
           {/* </View> */}
