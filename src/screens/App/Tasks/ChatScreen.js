@@ -105,6 +105,7 @@ class ChatScreen extends Component {
       url: '',
       urlTitle: '',
       showUserListModal: false,
+      userName:''
     };
     this.editor = null;
   }
@@ -693,12 +694,12 @@ class ChatScreen extends Component {
 
   async setImageForFile(res) {
     let taskId = this.state.taskId;
-    console.log('oooooooooooooo', res)
+    console.log('oooooooooooooo', res);
     this.onFilesCrossPress(res.uri);
     await this.state.files.push({
       uri: res.uri,
       type: res.type, // mime type
-      name: 'Img' + new Date().getTime()+ '.png',
+      name: 'Img' + new Date().getTime() + '.png',
       // name: res.name,
       size: res.fileSize,
       dateTime:
@@ -989,16 +990,18 @@ class ChatScreen extends Component {
     if (text.match('<div>@</div>')) {
       this.setState({showUserListModal: true});
     } else {
-      this.setState({showUserListModal: false});
+      let name = text.replace(/(<div[^>]+?>|<div>|<\/div>|@)/gi, '');
+      console.log("ddddddddddddddddd",name)
+      this.setState({showUserListModal: true, userName:name});
     }
   }
 
   renderUserListModal() {
     return (
-      
       <PopupMenuUserList
         addPeopleModelVisible={this.state.showUserListModal}
         onSelect={item => this.onSelectUser(item)}
+        userName={this.state.userName}
       />
     );
   }
@@ -1031,33 +1034,11 @@ class ChatScreen extends Component {
               ListEmptyComponent={<EmptyListView />}
             />
           </View>
-          <View
+          {/* <View
             style={{
               bottom:
                 Platform.OS == 'ios' ? this.state.currentKeyboardHeight : 0,
-            }}>
-          <TouchableOpacity
-            style={styles.crossIconStyle}
-            onPress={() => this.onCrossPress()}>
-            <Image
-              style={styles.addFileIcon}
-              source={icons.cross}
-              resizeMode={'contain'}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.sendIconStyle}
-            onPress={() => {
-              this.sendMessage();
-            }}>
-            <Image
-              style={styles.chatIcon}
-              source={icons.forwordGreen}
-              resizeMode={'contain'}
-            />
-          </TouchableOpacity>
-          <View style={styles.textEditorStyle}>
-          {this.renderUserListModal()}
+            }}> */}
             <TouchableOpacity
               style={styles.crossIconStyle}
               onPress={() => this.onCrossPress()}>
@@ -1078,23 +1059,45 @@ class ChatScreen extends Component {
                 resizeMode={'contain'}
               />
             </TouchableOpacity>
-            <RichTextEditorPell
-              chatText={this.state.chatText}
-              timeTextChange={this.state.timeTextChange}
-              taskId={this.state.taskId}
-              getRefEditor={refEditor => this.getRefEditor(refEditor)}
-              doumentPicker={() => {
-                Platform.OS == 'ios'
-                  ? this.iOSFilePicker()
-                  : this.doumentPicker();
-              }}
-              onInsertLink={() => this.showEnterUrlModal()}
-              onChangeEditorText={text => this.onChangeEditorText(text)}
-            />
-          </View>
-          </View>
+            <View style={styles.textEditorStyle}>
+              <TouchableOpacity
+                style={styles.crossIconStyle}
+                onPress={() => this.onCrossPress()}>
+                <Image
+                  style={styles.addFileIcon}
+                  source={icons.cross}
+                  resizeMode={'contain'}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.sendIconStyle}
+                onPress={() => {
+                  this.sendMessage();
+                }}>
+                <Image
+                  style={styles.chatIcon}
+                  source={icons.forwordGreen}
+                  resizeMode={'contain'}
+                />
+              </TouchableOpacity>
+              <RichTextEditorPell
+                chatText={this.state.chatText}
+                timeTextChange={this.state.timeTextChange}
+                taskId={this.state.taskId}
+                getRefEditor={refEditor => this.getRefEditor(refEditor)}
+                doumentPicker={() => {
+                  Platform.OS == 'ios'
+                    ? this.iOSFilePicker()
+                    : this.doumentPicker();
+                }}
+                onInsertLink={() => this.showEnterUrlModal()}
+                onChangeEditorText={text => this.onChangeEditorText(text)}
+              />
+            </View>
+          {/* </View> */}
           {this.state.status != 'Connected' && <Loader />}
           {this.renderEnterUrlModal()}
+          {this.renderUserListModal()}
           <MessageShowModal
             showMessageModal={this.state.showMessageModal}
             details={this.deleteDetails}

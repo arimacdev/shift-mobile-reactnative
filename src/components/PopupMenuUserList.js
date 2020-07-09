@@ -19,7 +19,6 @@ import * as actions from '../redux/actions';
 import {connect} from 'react-redux';
 import Modal from 'react-native-modal';
 
-
 import {
   MenuContext,
   Menu,
@@ -59,7 +58,7 @@ class PopupMenuUserList extends Component {
     console.log('Keyboard Show');
     this.DataLength = this.state.allActiveUsers.length;
     // alert('Keyboard Shown');
-    this.setState({keyboardHeight: height * 0.9 - e.endCoordinates.height});
+    this.setState({keyboardHeight: height * 0.8 - e.endCoordinates.height});
   }
 
   _keyboardDidHide(e) {
@@ -113,7 +112,6 @@ class PopupMenuUserList extends Component {
       prevProps.addPeopleModelVisible !== this.props.addPeopleModelVisible &&
       this.props.addPeopleModelVisible
     ) {
-      console.log('dddddddddddddd');
       this.setState({opened: this.props.addPeopleModelVisible});
     }
 
@@ -121,8 +119,12 @@ class PopupMenuUserList extends Component {
       prevProps.addPeopleModelVisible !== this.props.addPeopleModelVisible &&
       !this.props.addPeopleModelVisible
     ) {
-      console.log('vvvvvvvvvvvv');
       this.setState({opened: this.props.addPeopleModelVisible});
+    }
+
+    if(prevProps.userName !== this.props.userName &&
+      this.props.userName){
+      this.onSearchTextChange(this.props.userName)
     }
   }
 
@@ -131,6 +133,7 @@ class PopupMenuUserList extends Component {
   }
 
   async onSearchTextChange(text) {
+    console.log("vvvvvvvvvvvvvvvv",text)
     this.setState({userName: text, opened: true});
     let result = this.state.allActiveUsers.filter(data =>
       data.label.toLowerCase().includes(text.toLowerCase()),
@@ -140,21 +143,6 @@ class PopupMenuUserList extends Component {
     } else {
       this.setState({activeUsers: result});
     }
-  }
-
-  menuTrigger() {
-    return (
-      <View style={[styles.taskFieldView]}>
-        <TextInput
-          style={[styles.textInput, {width: '95%'}]}
-          placeholder={'Type name'}
-          value={this.state.userName}
-          onFocus={() => this.onTriggerPress()}
-          placeholderTextColor={colors.placeholder}
-          onChangeText={text => this.onSearchTextChange(text)}
-        />
-      </View>
-    );
   }
 
   userImage = function(item) {
@@ -216,8 +204,8 @@ class PopupMenuUserList extends Component {
 
     return (
       <Modal
-        isVisible={this.state.showUserListModal}
-        style={{height: 100}}
+        isVisible={this.state.opened}
+        style={{height: 10}}
         hideModalContentWhileAnimating={true}
         hasBackdrop={false}
         coverScreen={false}
@@ -227,25 +215,17 @@ class PopupMenuUserList extends Component {
         animationOutTiming={600}
         backdropTransitionInTiming={600}
         backdropTransitionOutTiming={600}>
-        <View style={{backgroundColor: colors.white}}>
-          <Text>dddddddddd</Text>
-          <FlatList
-            // style={{marginTop: 30}}
-            data={this.state.userList}
-            renderItem={item => renderUSerList(item.item)}
-            keyExtractor={(item, index) => index}
-          />
+        <View style={{backgroundColor: colors.projectBgColor, borderRadius:5}}>
+          <ScrollView style={scrollStyle.scrollViewMenuOption}>
+            {this.state.activeUsers.map(item => {
+              return (
+                <MenuOption onSelect={() => this.onSelect(item)}>
+                  {this.menuOptions(item)}
+                </MenuOption>
+              );
+            })}
+          </ScrollView>
         </View>
-
-        <ScrollView style={scrollStyle.scrollViewMenuOption}>
-          {this.state.activeUsers.map(item => {
-            return (
-              <MenuOption onSelect={() => this.onSelect(item)}>
-                {this.menuOptions(item)}
-              </MenuOption>
-            );
-          })}
-        </ScrollView>
       </Modal>
     );
   }
@@ -331,7 +311,7 @@ const styles = EStyleSheet.create({
 
 const mapStateToProps = state => {
   return {
-    addPeopleModelVisible: state.project.addPeopleModelVisible,
+    // addPeopleModelVisible: state.project.addPeopleModelVisible,
   };
 };
 export default connect(
