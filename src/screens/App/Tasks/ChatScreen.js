@@ -46,7 +46,7 @@ import MessageShowModal from '../../../components/MessageShowModal';
 import RichTextEditorPell from '../../../components/RichTextEditorPell';
 import EmptyListView from '../../../components/EmptyListView';
 import AndroidKeyboardAdjust from 'react-native-android-keyboard-adjust';
-import PopupMenuAssignee from '../../../components/PopupMenuAssignee';
+import PopupMenuUserList from '../../../components/PopupMenuUserList';
 
 const reactionDetails = [
   {value: '&#128077', text: '👍'},
@@ -104,6 +104,7 @@ class ChatScreen extends Component {
       showEnterUrlModal: false,
       url: '',
       urlTitle: '',
+      showUserListModal: false,
     };
     this.editor = null;
   }
@@ -985,22 +986,26 @@ class ChatScreen extends Component {
 
   onChangeEditorText(text) {
     console.log('text', text);
-    if (text == '<div>@</div>') {
-      return (
-        <PopupMenuAssignee
-          projectID={this.state.selectedProjectID}
-          onSelect={item => this.onSelectUser(item)}
-        />
-      );
+    if (text.match('<div>@</div>')) {
+      this.setState({showUserListModal: true});
+    } else {
+      this.setState({showUserListModal: false});
     }
+  }
+
+  renderUserListModal() {
+    return (
+      
+      <PopupMenuUserList
+        addPeopleModelVisible={this.state.showUserListModal}
+        onSelect={item => this.onSelectUser(item)}
+      />
+    );
   }
 
   render() {
     let comments = this.state.comments;
     let isFetching = this.state.isFetching;
-    let usersLoading = this.props.usersLoading;
-    let showEmojiPicker = this.state.showEmojiPicker;
-    let showEnterUrlModal = this.state.showEnterUrlModal;
     let sortedData = comments.sort(this.arrayCompare);
     let edit = this.state.edit;
     const {shift} = this.state;
@@ -1052,6 +1057,7 @@ class ChatScreen extends Component {
             />
           </TouchableOpacity>
           <View style={styles.textEditorStyle}>
+          {this.renderUserListModal()}
             <TouchableOpacity
               style={styles.crossIconStyle}
               onPress={() => this.onCrossPress()}>
@@ -1082,13 +1088,13 @@ class ChatScreen extends Component {
                   ? this.iOSFilePicker()
                   : this.doumentPicker();
               }}
-              onInsertLink={() => this.showEnterUrlModal(text)}
+              onInsertLink={() => this.showEnterUrlModal()}
               onChangeEditorText={text => this.onChangeEditorText(text)}
             />
           </View>
           </View>
           {this.state.status != 'Connected' && <Loader />}
-          {showEnterUrlModal && this.renderEnterUrlModal()}
+          {this.renderEnterUrlModal()}
           <MessageShowModal
             showMessageModal={this.state.showMessageModal}
             details={this.deleteDetails}
