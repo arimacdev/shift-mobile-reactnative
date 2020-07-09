@@ -867,15 +867,6 @@ class ChatScreen extends Component {
     if (!this.state.isDeleteEvent) {
       this.flatList.scrollToEnd({animated: true});
     }
-    // if (this.state.isEasyLoading == true) {
-    //   setTimeout(() => {
-    //     this.setState({
-    //       isDeleteEvent: false
-    //     });
-    //   }, 10000);
-    // } else {
-    //   this.setState({isDeleteEvent: false});
-    // }
     this.setState({isDeleteEvent: false});
   };
 
