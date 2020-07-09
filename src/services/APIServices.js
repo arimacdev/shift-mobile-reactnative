@@ -126,7 +126,9 @@ async function getUserData(userID) {
   );
 }
 
-async function getAllTaskInProjectsData(userID, projectID) {
+async function getAllTaskInProjectsData(userID, projectID, startIndex, endIndex) {
+  let listStartIndex = startIndex;
+  let listEndIndex = endIndex;
   let baseURL = null;
   baseURL = await AsyncStorage.getItem('baseURL');
   let headers = {
@@ -142,7 +144,7 @@ async function getAllTaskInProjectsData(userID, projectID) {
         GET_MY_TASKS_BY_PROJECT +
         projectID +
         '/tasks?userId=' +
-        userID,
+        userID+'&startIndex='+listStartIndex+'&endIndex='+listEndIndex ,
       method: 'GET',
     },
     true,
@@ -2977,7 +2979,6 @@ async function setOneSignalNotificationStatusData(
     headers,
   );
 }
-
 async function getCommentsData(taskId, startIndex, endIndex) {
   let commentstartIndex = startIndex;
   let commentendIndex = endIndex;

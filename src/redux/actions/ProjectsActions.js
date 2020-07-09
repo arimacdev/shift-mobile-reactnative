@@ -66,10 +66,10 @@ export const getAllProjectsByUser = userID => {
   };
 };
 
-export const getAllTaskInProjects = (userID, projectID) => {
+export const getAllTaskInProjects = (userID, projectID, startIndex, endIndex) => {
   return dispatch => {
     dispatch({type: GET_ALL_TASK_BY_PROJECT});
-    APIServices.getAllTaskInProjectsData(userID, projectID)
+    APIServices.getAllTaskInProjectsData(userID, projectID, startIndex, endIndex)
       .then(response => {
         if (response.message == 'success') {
           dispatch({

@@ -112,6 +112,8 @@ let issueTypeList = [
 class TasksTabScreen extends Component {
   constructor(props) {
     super(props);
+    this.lazyGetAllTaskInProject = this.lazyGetAllTaskInProject.bind(this);
+    this.getAllTaskInProjectDirectly = this.getAllTaskInProjectDirectly.bind(this);
     this.state = {
       filterdDataAllTaks: [],
       filterdAndMyTasksData: [],
@@ -135,6 +137,9 @@ class TasksTabScreen extends Component {
       showAlert: false,
       alertTitle: '',
       alertMsg: '',
+      listStartIndex: 0,
+      listEndIndex: 10,
+      cachecdData: []
     };
 
     this.onDateChange = this.onDateChange.bind(this);
@@ -169,6 +174,7 @@ class TasksTabScreen extends Component {
     ) {
       this.setState({
         filterdDataAllTaks: this.props.allTaskByProject,
+        cachecdData: this.props.allTaskByProject
       });
     }
 
@@ -233,12 +239,52 @@ class TasksTabScreen extends Component {
   }
 
   async getAllTaskInProject() {
+    let startIndex = 0;
+    let endIndex = 10;
     this.setState({
       filterType: 'None',
     });
     let selectedProjectID = this.state.selectedProjectID;
     AsyncStorage.getItem('userID').then(userID => {
-      this.props.getAllTaskInProjects(userID, selectedProjectID);
+      this.props.getAllTaskInProjects(userID, selectedProjectID, startIndex, endIndex);
+    });
+  }
+ 
+  lazyGetAllTaskInProject = async () => {
+    let selectedProjectID = this.state.selectedProjectID;
+    this.setState({
+      filterType: 'None',
+    });
+    if (this.state.cachecdData.length == 10) {
+      let listStartIndex = this.state.listStartIndex + 1 + 10;
+      let listEndIndex = this.state.listEndIndex + 10;
+      AsyncStorage.getItem('userID').then(userID => {
+      this.getAllTaskInProjectDirectly(userID, selectedProjectID, listStartIndex, listEndIndex)
+      });
+      this.setState({listStartIndex: listStartIndex - 1, listEndIndex: listEndIndex});
+    } else {
+      // TODO: Add toast
+    }
+  }
+
+  getAllTaskInProjectDirectly = async (userID, selectedProjectID, listStartIndex, listEndIndex) => {
+    this.setState({dataLoading: true, cachecdData: []});
+    await APIServices.getAllTaskInProjectsData(userID, selectedProjectID, listStartIndex, listEndIndex)
+    .then(response => {
+      if (response.message == 'success') {
+        this.setState({
+          filterdDataAllTaks: this.state.filterdDataAllTaks.concat(response.data),
+          cachecdData: response.data,
+          dataLoading: false,
+        }, () => {
+      });  
+      } else {
+        this.setState({dataLoading: false});
+      }
+    })
+    .catch(error => {
+      this.setState({dataLoading: false});
+      // Utils.showAlert(true, '', error.data.message, this.props);
     });
   }
 
@@ -1299,6 +1345,8 @@ class TasksTabScreen extends Component {
                 renderItem={({item, index}) => this.renderTaskList(item, index)}
                 keyExtractor={item => item.parentTask.taskId}
                 ListEmptyComponent={<EmptyListView />}
+                onEndReached={this.lazyGetAllTaskInProject}
+                onEndReachedThreshold={0.5}
               />
             )}
 
