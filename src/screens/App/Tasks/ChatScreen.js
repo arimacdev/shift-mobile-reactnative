@@ -107,7 +107,7 @@ class ChatScreen extends Component {
       urlTitle: '',
       showUserListModal: false,
       userName: '',
-      chatTextAll:''
+      chatTextAll: '',
     };
     this.editor = null;
   }
@@ -997,13 +997,14 @@ class ChatScreen extends Component {
   onChangeEditorText(text) {
     console.log('text', text);
     let replaceText = text;
-    this.setState({chatTextAll:text})
+    this.setState({chatTextAll: text});
     let a = replaceText.substring(replaceText.indexOf(' @') + 1);
 
     if (a.match('@')) {
-      let name = a.replace(/(<div[^>]+?>|<div>|<\/div>|@)/gi, '');
-      console.log('qqqqqqqqqqqqqqqqqq', name);
-      this.setState({showUserListModal: true, userName: name});
+      let name = a.replace(/(<div[^>]+?>|<div>|<\/div>)/gi, '');
+      var n = name.lastIndexOf('@');
+      var result = name.substring(n + 1);
+      this.setState({showUserListModal: true, userName: result});
     }
     // else if(replaceText.match(' @')){
     //   let name = replaceText.replace(/(<div[^>]+?>|<div>|<\/div>|@)/gi, '');
@@ -1012,30 +1013,29 @@ class ChatScreen extends Component {
     // }
 
     if (text == '') {
-      this.setState({showUserListModal: false ,chatText:''});
-      this.selectedUserList=[]
-      
+      this.setState({showUserListModal: false, chatText: ''});
+      this.selectedUserList = [];
     }
   }
 
   async onSelectUser(item) {
     let reg = /@\[([^\]]+?)\]\(id:([^\]]+?)\)/gim;
 
-    await this.setState({chatText:this.state.chatTextAll})
+    await this.setState({chatText: this.state.chatTextAll});
     // while (this.state.userName = reg.exec(val)) {
     this.selectedUserList.push({
       username: item.label,
       userId: item.key,
     });
     // }
-    
+
     await this.setState({
       showUserListModal: false,
       userName: '',
       chatText: this.state.chatText.concat('@' + item.label + '&nbsp;'),
     });
 
-    console.log("ooooooooooooooooooooo",this.state.chatText)
+    console.log('ooooooooooooooooooooo', this.state.chatText);
   }
 
   renderUserListModal() {

@@ -133,7 +133,6 @@ class PopupMenuUserList extends Component {
   }
 
   async onSearchTextChange(text) {
-    console.log("vvvvvvvvvvvvvvvv",text)
     this.setState({userName: text, opened: true});
     let result = this.state.allActiveUsers.filter(data =>
       data.label.toLowerCase().includes(text.toLowerCase()),
