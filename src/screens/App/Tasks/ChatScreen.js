@@ -105,7 +105,7 @@ class ChatScreen extends Component {
       url: '',
       urlTitle: '',
       showUserListModal: false,
-      userName:''
+      userName: '',
     };
     this.editor = null;
   }
@@ -987,13 +987,26 @@ class ChatScreen extends Component {
 
   onChangeEditorText(text) {
     console.log('text', text);
-    if (text.match('<div>@</div>')) {
-      this.setState({showUserListModal: true});
+    if (text.match('@')) {
+      let name = text.replace(/(<div[^>]+?>|<div>|<\/div>|@)/gi, '');
+      console.log('ddddddddddddddddd', name);
+      this.setState({showUserListModal: true, userName: name});
     } else {
       let name = text.replace(/(<div[^>]+?>|<div>|<\/div>|@)/gi, '');
-      console.log("ddddddddddddddddd",name)
-      this.setState({showUserListModal: true, userName:name});
+      console.log('ddddddddddddddddd', name);
+      this.setState({showUserListModal: true, userName: name});
     }
+
+    if(text==''){
+      this.setState({showUserListModal: false});
+    }
+  }
+
+  onSelectUser(item) {
+    this.setState({
+      userName: '',
+      chatText: this.state.chatText.concat('@' + item.label),
+    });
   }
 
   renderUserListModal() {
@@ -1039,6 +1052,27 @@ class ChatScreen extends Component {
               bottom:
                 Platform.OS == 'ios' ? this.state.currentKeyboardHeight : 0,
             }}> */}
+          <TouchableOpacity
+            style={styles.crossIconStyle}
+            onPress={() => this.onCrossPress()}>
+            <Image
+              style={styles.addFileIcon}
+              source={icons.cross}
+              resizeMode={'contain'}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.sendIconStyle}
+            onPress={() => {
+              this.sendMessage();
+            }}>
+            <Image
+              style={styles.chatIcon}
+              source={icons.forwordGreen}
+              resizeMode={'contain'}
+            />
+          </TouchableOpacity>
+          <View style={styles.textEditorStyle}>
             <TouchableOpacity
               style={styles.crossIconStyle}
               onPress={() => this.onCrossPress()}>
@@ -1059,41 +1093,20 @@ class ChatScreen extends Component {
                 resizeMode={'contain'}
               />
             </TouchableOpacity>
-            <View style={styles.textEditorStyle}>
-              <TouchableOpacity
-                style={styles.crossIconStyle}
-                onPress={() => this.onCrossPress()}>
-                <Image
-                  style={styles.addFileIcon}
-                  source={icons.cross}
-                  resizeMode={'contain'}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.sendIconStyle}
-                onPress={() => {
-                  this.sendMessage();
-                }}>
-                <Image
-                  style={styles.chatIcon}
-                  source={icons.forwordGreen}
-                  resizeMode={'contain'}
-                />
-              </TouchableOpacity>
-              <RichTextEditorPell
-                chatText={this.state.chatText}
-                timeTextChange={this.state.timeTextChange}
-                taskId={this.state.taskId}
-                getRefEditor={refEditor => this.getRefEditor(refEditor)}
-                doumentPicker={() => {
-                  Platform.OS == 'ios'
-                    ? this.iOSFilePicker()
-                    : this.doumentPicker();
-                }}
-                onInsertLink={() => this.showEnterUrlModal()}
-                onChangeEditorText={text => this.onChangeEditorText(text)}
-              />
-            </View>
+            <RichTextEditorPell
+              chatText={this.state.chatText}
+              timeTextChange={this.state.timeTextChange}
+              taskId={this.state.taskId}
+              getRefEditor={refEditor => this.getRefEditor(refEditor)}
+              doumentPicker={() => {
+                Platform.OS == 'ios'
+                  ? this.iOSFilePicker()
+                  : this.doumentPicker();
+              }}
+              onInsertLink={() => this.showEnterUrlModal()}
+              onChangeEditorText={text => this.onChangeEditorText(text)}
+            />
+          </View>
           {/* </View> */}
           {this.state.status != 'Connected' && <Loader />}
           {this.renderEnterUrlModal()}
