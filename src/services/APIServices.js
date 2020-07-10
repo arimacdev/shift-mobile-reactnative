@@ -144,7 +144,7 @@ async function getAllTaskInProjectsData(userID, projectID, startIndex, endIndex)
         GET_MY_TASKS_BY_PROJECT +
         projectID +
         '/tasks?userId=' +
-        userID+'&startIndex='+listStartIndex+'&endIndex='+listEndIndex ,
+        userID+'&startIndex='+listStartIndex+'&endIndex='+listEndIndex,
       method: 'GET',
     },
     true,
@@ -152,7 +152,7 @@ async function getAllTaskInProjectsData(userID, projectID, startIndex, endIndex)
   );
 }
 
-async function getMyTaskInProjectsData(userID, projectID) {
+async function getMyTaskInProjectsData(userID, projectID, myListStartIndex, myListEndIndex) {
   let baseURL = null;
   baseURL = await AsyncStorage.getItem('baseURL');
   let headers = {
@@ -167,7 +167,7 @@ async function getMyTaskInProjectsData(userID, projectID) {
         GET_ALL_TASKS_BY_PROJECT +
         projectID +
         '/tasks/user?userId=' +
-        userID,
+        userID+'&startIndex='+myListStartIndex+'&endIndex='+myListEndIndex,
       method: 'GET',
     },
     true,

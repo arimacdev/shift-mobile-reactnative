@@ -86,10 +86,10 @@ export const getAllTaskInProjects = (userID, projectID, startIndex, endIndex) =>
   };
 };
 
-export const getMyTaskInProjects = (userID, projectID) => {
+export const getMyTaskInProjects = (userID, projectID, myListStartIndex, myListEndIndex) => {
   return dispatch => {
     dispatch({type: GET_MY_TASK_BY_PROJECT});
-    APIServices.getMyTaskInProjectsData(userID, projectID)
+    APIServices.getMyTaskInProjectsData(userID, projectID, myListStartIndex, myListEndIndex)
       .then(response => {
         if (response.message == 'success') {
           dispatch({

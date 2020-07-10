@@ -113,6 +113,7 @@ class TasksTabScreen extends Component {
   constructor(props) {
     super(props);
     this.lazyGetAllTaskInProject = this.lazyGetAllTaskInProject.bind(this);
+    this.lazyGetMyTaskInProject = this.lazyGetMyTaskInProject.bind(this);
     this.getAllTaskInProjectDirectly = this.getAllTaskInProjectDirectly.bind(this);
     this.state = {
       filterdDataAllTaks: [],
@@ -139,7 +140,11 @@ class TasksTabScreen extends Component {
       alertMsg: '',
       listStartIndex: 0,
       listEndIndex: 10,
-      cachecdData: []
+      myListStartIndex: 0,
+      myListEndIndex: 10,
+      cachecdData: [],
+      cachecdMyListData: [],
+      listScrolled: false
     };
 
     this.onDateChange = this.onDateChange.bind(this);
@@ -186,6 +191,7 @@ class TasksTabScreen extends Component {
     ) {
       this.setState({
         filterdAndMyTasksData: this.props.myTaskByProject,
+        cachecdMyListData: this.props.myTaskByProject,
       });
     }
   }
@@ -255,7 +261,7 @@ class TasksTabScreen extends Component {
     this.setState({
       filterType: 'None',
     });
-    if (this.state.cachecdData.length == 10) {
+    if (this.state.cachecdData.length == 10 && this.state.listScrolled == true) {
       let listStartIndex = this.state.listStartIndex + 1 + 10;
       let listEndIndex = this.state.listEndIndex + 10;
       AsyncStorage.getItem('userID').then(userID => {
@@ -289,13 +295,61 @@ class TasksTabScreen extends Component {
   }
 
   async getMyTaskInProject() {
+    let myListStartIndex = 0;
+    let myListEndIndex = 10;
     this.setState({
       filterType: 'None',
     });
     let selectedProjectID = this.state.selectedProjectID;
     AsyncStorage.getItem('userID').then(userID => {
-      this.props.getMyTaskInProjects(userID, selectedProjectID);
+      this.props.getMyTaskInProjects(userID, selectedProjectID, myListStartIndex, myListEndIndex);
     });
+  }
+
+  lazyGetMyTaskInProject = async () => {
+    let selectedProjectID = this.state.selectedProjectID;
+    this.setState({
+      filterType: 'None',
+    });
+    if (this.state.cachecdMyListData.length == 10 && this.state.listScrolled == true) {
+      let myListStartIndex = this.state.myListStartIndex + 1 + 10;
+      let myListEndIndex = this.state.myListEndIndex + 10;
+      AsyncStorage.getItem('userID').then(userID => {
+      this.getAllMyTaskInProjectDirectly(userID, selectedProjectID, myListStartIndex, myListEndIndex)
+      });
+      this.setState({myListStartIndex: myListStartIndex - 1, myListEndIndex: myListEndIndex});
+    } else {
+      // TODO: Add toast
+    }
+    // let selectedProjectID = this.state.selectedProjectID;
+    // AsyncStorage.getItem('userID').then(userID => {
+    //   this.props.getMyTaskInProjects(userID, selectedProjectID, myListStartIndex, myListEndIndex);
+    // });
+  }
+
+  getAllMyTaskInProjectDirectly = async (userID, selectedProjectID, listStartIndex, listEndIndex) => {
+    this.setState({dataLoading: true, cachecdMyListData: []});
+    await APIServices.getMyTaskInProjectsData(userID, selectedProjectID, listStartIndex, listEndIndex)
+    .then(response => {
+      if (response.message == 'success') {
+        this.setState({
+          filterdAndMyTasksData: this.state.filterdAndMyTasksData.concat(response.data),
+          cachecdMyListData: response.data,
+          dataLoading: false,
+        }, () => {
+      });  
+      } else {
+        this.setState({dataLoading: false});
+      }
+    })
+    .catch(error => {
+      this.setState({dataLoading: false});
+      // Utils.showAlert(true, '', error.data.message, this.props);
+    });
+  }
+
+  onMyListScroll (event) {
+    this.setState({ listScrolled: true})
   }
 
   dateViewMyAndFilter = function(item) {
@@ -1347,6 +1401,7 @@ class TasksTabScreen extends Component {
                 ListEmptyComponent={<EmptyListView />}
                 onEndReached={this.lazyGetAllTaskInProject}
                 onEndReachedThreshold={0.7}
+                onScroll={this.onMyListScroll.bind(this)}
               />
             )}
 
@@ -1362,6 +1417,9 @@ class TasksTabScreen extends Component {
                   },
                 ]}
                 data={filterdAndMyTasksData}
+                onEndReached={this.lazyGetMyTaskInProject}
+                onEndReachedThreshold={0.7}
+                onScroll={this.onMyListScroll.bind(this)}
                 renderItem={({item, index}) =>
                   this.renderMyTasksAndFilterTaskList(item, index)
                 }
@@ -1511,7 +1569,7 @@ const styles = EStyleSheet.create({
     fontSize: '9rem',
     color: colors.white,
     lineHeight: '15rem',
-    fontFamily: 'CircularStd',
+    fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
     marginLeft: '5rem',
     flex: 0.9,
