@@ -58,7 +58,7 @@ class PopupMenuUserList extends Component {
     console.log('Keyboard Show');
     this.DataLength = this.state.allActiveUsers.length;
     // alert('Keyboard Shown');
-    this.setState({keyboardHeight: height * 0.8 - e.endCoordinates.height});
+    this.setState({keyboardHeight: height * 0.85 - e.endCoordinates.height});
   }
 
   _keyboardDidHide(e) {
@@ -122,9 +122,8 @@ class PopupMenuUserList extends Component {
       this.setState({opened: this.props.addPeopleModelVisible});
     }
 
-    if(prevProps.userName !== this.props.userName &&
-      this.props.userName){
-      this.onSearchTextChange(this.props.userName)
+    if (prevProps.userName !== this.props.userName && this.props.userName) {
+      this.onSearchTextChange(this.props.userName);
     }
   }
 
@@ -204,7 +203,7 @@ class PopupMenuUserList extends Component {
     return (
       <Modal
         isVisible={this.state.opened}
-        style={{height: 10}}
+        style={styles.modalStyle}
         hideModalContentWhileAnimating={true}
         hasBackdrop={false}
         coverScreen={false}
@@ -214,7 +213,7 @@ class PopupMenuUserList extends Component {
         animationOutTiming={600}
         backdropTransitionInTiming={600}
         backdropTransitionOutTiming={600}>
-        <View style={{backgroundColor: colors.projectBgColor, borderRadius:5}}>
+        <View style={{backgroundColor: colors.projectBgColor, borderRadius: 5}}>
           <ScrollView style={scrollStyle.scrollViewMenuOption}>
             {this.state.activeUsers.map(item => {
               return (
@@ -305,6 +304,10 @@ const styles = EStyleSheet.create({
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
     marginLeft: '10rem',
+  },
+  modalStyle: {
+    marginBottom: '135rem',
+    justifyContent: 'flex-end',
   },
 });
 

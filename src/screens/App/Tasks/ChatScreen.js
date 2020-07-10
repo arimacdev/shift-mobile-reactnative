@@ -1034,8 +1034,6 @@ class ChatScreen extends Component {
       userName: '',
       chatText: this.state.chatText.concat('@' + item.label + '&nbsp;'),
     });
-
-    console.log('ooooooooooooooooooooo', this.state.chatText);
   }
 
   renderUserListModal() {
