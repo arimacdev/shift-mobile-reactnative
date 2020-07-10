@@ -107,6 +107,7 @@ class ChatScreen extends Component {
       urlTitle: '',
       showUserListModal: false,
       userName: '',
+      chatTextAll:''
     };
     this.editor = null;
   }
@@ -996,7 +997,7 @@ class ChatScreen extends Component {
   onChangeEditorText(text) {
     console.log('text', text);
     let replaceText = text;
-
+    this.setState({chatTextAll:text})
     let a = replaceText.substring(replaceText.indexOf(' @') + 1);
 
     if (a.match('@')) {
@@ -1011,25 +1012,30 @@ class ChatScreen extends Component {
     // }
 
     if (text == '') {
-      this.setState({showUserListModal: false});
+      this.setState({showUserListModal: false ,chatText:''});
       this.selectedUserList=[]
+      
     }
   }
 
-  onSelectUser(item) {
+  async onSelectUser(item) {
     let reg = /@\[([^\]]+?)\]\(id:([^\]]+?)\)/gim;
 
+    await this.setState({chatText:this.state.chatTextAll})
     // while (this.state.userName = reg.exec(val)) {
     this.selectedUserList.push({
       username: item.label,
       userId: item.key,
     });
     // }
-    this.setState({
+    
+    await this.setState({
       showUserListModal: false,
       userName: '',
-      chatText: '<div>@' + item.label + '</div>',
+      chatText: this.state.chatText.concat('@' + item.label + '&nbsp;'),
     });
+
+    console.log("ooooooooooooooooooooo",this.state.chatText)
   }
 
   renderUserListModal() {
