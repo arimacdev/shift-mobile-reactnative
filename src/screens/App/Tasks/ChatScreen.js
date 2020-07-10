@@ -67,6 +67,7 @@ class ChatScreen extends Component {
       'You are about to permanantly delete this comment,\n If you are not sure, you can cancel this action.',
     buttons: {positive: 'Delete', negative: 'Cancel'},
   };
+  selectedUserList = [];
   onPressMessageModal = () => {};
   constructor(props) {
     super(props);
@@ -356,30 +357,35 @@ class ChatScreen extends Component {
 
     let commentId = this.state.commentId;
     let chatText = this.state.chatText;
-    await APIServices.updateCommentData(commentId, chatText)
-      .then(async response => {
-        if (response.message == 'success') {
-          this.setContentHTML('');
-          this.blurContentEditor();
-          this.setState({dataLoading: false, edit: false});
-          this.sendMessageToSocket(chatText);
-        } else {
+
+    if (chatText != '') {
+      await APIServices.updateCommentData(commentId, chatText)
+        .then(async response => {
+          if (response.message == 'success') {
+            this.setContentHTML('');
+            this.blurContentEditor();
+            this.setState({dataLoading: false, edit: false});
+            this.sendMessageToSocket(chatText);
+          } else {
+            this.setState({dataLoading: false});
+          }
+        })
+        .catch(error => {
           this.setState({dataLoading: false});
-        }
-      })
-      .catch(error => {
-        this.setState({dataLoading: false});
-        if (error.status == 401) {
-          Utils.showAlert(
-            true,
-            '',
-            'You cannot edit others comments',
-            this.props,
-          );
-        } else {
-          Utils.showAlert(true, '', error.data.message, this.props);
-        }
-      });
+          if (error.status == 401) {
+            Utils.showAlert(
+              true,
+              '',
+              'You cannot edit others comments',
+              this.props,
+            );
+          } else {
+            Utils.showAlert(true, '', error.data.message, this.props);
+          }
+        });
+    } else {
+      Utils.showAlert(true, '', 'Please enter a commant', this.props);
+    }
   }
 
   async onDeleteCommentPress(commentId) {
@@ -561,6 +567,8 @@ class ChatScreen extends Component {
         .catch(error => {
           Utils.showAlert(true, '', error.data.message, this.props);
         });
+    } else {
+      Utils.showAlert(true, '', 'Please enter a commant', this.props);
     }
   }
 
@@ -987,25 +995,40 @@ class ChatScreen extends Component {
 
   onChangeEditorText(text) {
     console.log('text', text);
-    if (text.match('@')) {
-      let name = text.replace(/(<div[^>]+?>|<div>|<\/div>|@)/gi, '');
-      console.log('ddddddddddddddddd', name);
-      this.setState({showUserListModal: true, userName: name});
-    } else {
-      let name = text.replace(/(<div[^>]+?>|<div>|<\/div>|@)/gi, '');
-      console.log('ddddddddddddddddd', name);
+    let replaceText = text;
+
+    let a = replaceText.substring(replaceText.indexOf(' @') + 1);
+
+    if (a.match('@')) {
+      let name = a.replace(/(<div[^>]+?>|<div>|<\/div>|@)/gi, '');
+      console.log('qqqqqqqqqqqqqqqqqq', name);
       this.setState({showUserListModal: true, userName: name});
     }
+    // else if(replaceText.match(' @')){
+    //   let name = replaceText.replace(/(<div[^>]+?>|<div>|<\/div>|@)/gi, '');
+    //   console.log('nnnnnnnnnnnnnn', name);
+    //   this.setState({showUserListModal: true, userName: name});
+    // }
 
-    if(text==''){
+    if (text == '') {
       this.setState({showUserListModal: false});
+      this.selectedUserList=[]
     }
   }
 
   onSelectUser(item) {
+    let reg = /@\[([^\]]+?)\]\(id:([^\]]+?)\)/gim;
+
+    // while (this.state.userName = reg.exec(val)) {
+    this.selectedUserList.push({
+      username: item.label,
+      userId: item.key,
+    });
+    // }
     this.setState({
+      showUserListModal: false,
       userName: '',
-      chatText: this.state.chatText.concat('@' + item.label),
+      chatText: '<div>@' + item.label + '</div>',
     });
   }
 
