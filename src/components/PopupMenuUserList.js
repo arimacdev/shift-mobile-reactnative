@@ -83,6 +83,7 @@ class PopupMenuUserList extends Component {
     let activeUsers = await APIServices.getAllUsersData();
     if (activeUsers.message == 'success') {
       let userList = [];
+      activeUsers.data.sort(this.arrayCompare);
       for (let i = 0; i < activeUsers.data.length; i++) {
         if (activeUsers.data[i].firstName && activeUsers.data[i].lastName) {
           userList.push({
@@ -105,6 +106,19 @@ class PopupMenuUserList extends Component {
       console.log('error');
       // this.setState({dataLoading: false});
     }
+  }
+
+  arrayCompare(a, b) {
+    const dateA = a.firstName;
+    const dateB = b.firstName;
+
+    let comparison = 0;
+    if (dateA > dateB) {
+      comparison = 1;
+    } else if (dateA < dateB) {
+      comparison = -1;
+    }
+    return comparison;
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {

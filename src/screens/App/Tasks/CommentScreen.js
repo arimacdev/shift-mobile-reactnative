@@ -810,7 +810,8 @@ class ChatScreen extends Component {
       }),
     });
 
-    this.setState({chatText: ''});
+    this.setState({chatText: '', showUserListModal: false});
+    this.selectedUserList = [];
   }
 
   arrayCompare(a, b) {
@@ -1007,11 +1008,6 @@ class ChatScreen extends Component {
       var result = name.substring(n + 1);
       this.setState({showUserListModal: true, userName: result});
     }
-    // else if(replaceText.match(' @')){
-    //   let name = replaceText.replace(/(<div[^>]+?>|<div>|<\/div>|@)/gi, '');
-    //   console.log('nnnnnnnnnnnnnn', name);
-    //   this.setState({showUserListModal: true, userName: name});
-    // }
 
     if (text == '') {
       this.setState({showUserListModal: false, chatText: ''});
@@ -1047,10 +1043,21 @@ class ChatScreen extends Component {
 
     let selectedUsers = [];
 
+    var parser = new DOMParser();
+    var parsedHtml = parser.parseFromString(this.state.chatText, 'text/html');
+    let pTags = parsedHtml.getElementsByTagName('var');
+    let users = [];
+    pTags.forEach(function(item) {
+      let user = item.getElementsByTagName('strong')[0].textContent.trim();
+      users.push({userName: user});
+    });
+
+    console.log('users', users);
+
     for (let index = 0; index < this.selectedUserList.length; index++) {
       const element = this.selectedUserList[index];
       console.log('element', element);
-      if(element){
+      if (element) {
         selectedUsers.push(element.userId);
       }
     }
