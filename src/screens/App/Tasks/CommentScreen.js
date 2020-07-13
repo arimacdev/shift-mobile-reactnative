@@ -1002,7 +1002,7 @@ class ChatScreen extends Component {
     let a = replaceText.substring(replaceText.indexOf(' @') + 1);
 
     if (a.match('@')) {
-      let name = a.replace( /(<([^>]+)>)/ig, '');
+      let name = a.replace(/(<([^>]+)>)/gi, '');
       var n = name.lastIndexOf('@');
       var result = name.substring(n + 1);
       this.setState({showUserListModal: true, userName: result});
@@ -1021,29 +1021,39 @@ class ChatScreen extends Component {
 
   async onSelectUser(item) {
     let reg = /@\[([^\]]+?)\]\(id:([^\]]+?)\)/gim;
-
-    await this.setState({chatText: this.state.chatTextAll});
-
-    // while (this.state.userName = reg.exec(val)) {
     this.selectedUserList.push({
       username: item.label,
       userId: item.key,
     });
-    // }
+
+    await this.setState({chatText: this.state.chatTextAll});
+
     let name = this.state.chatText;
     if (name.match('@')) {
       name = name.replace(/(<div[^>]+?>|<div>|<\/div>)/gi, '');
     }
 
-    console.log("name",name)
-
-    let replasedText = name.replace(this.state.userName, '');
+    let replasedText = name
+      .substring(0, name.lastIndexOf('@'))
+      .replace('/' + this.state.userName + '/', '');
 
     await this.setState({
       showUserListModal: false,
       userName: '',
-      chatText: replasedText.concat('<var>'+item.label+'</var>&nbsp;'),
+      chatText: replasedText.concat('<var>@' + item.label + '</var>&nbsp;'),
     });
+
+    console.log('this.state.chatText', this.state.chatText);
+
+    let selectedUsers = [];
+
+    for (let index = 0; index < this.selectedUserList.length; index++) {
+      const element = this.selectedUserList[index];
+      console.log('element', element);
+      if(element){
+        selectedUsers.push(element.userId);
+      }
+    }
   }
 
   renderUserListModal() {
