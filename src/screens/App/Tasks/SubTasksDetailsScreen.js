@@ -68,6 +68,13 @@ let taskData = [
     disabled: false,
   },
   {
+    id: 6,
+    name: 'Comments',
+    icon: icons.filesRoundedOrange,
+    renderImage: false,
+    disabled: false,
+  },
+  {
     id: 5,
     name: 'Files',
     icon: icons.filesRoundedOrange,
@@ -1393,7 +1400,10 @@ class SubTasksDetailsScreen extends Component {
         // });
         break;
       case 6:
-        this.props.navigation.navigate('ChatScreen');
+        this.props.navigation.navigate('ChatScreen', {
+          projectId: this.state.selectedProjectID,
+          taskId: this.state.selectedProjectTaskID,
+        });
         break;
       default:
         break;
