@@ -1022,17 +1022,24 @@ class ChatScreen extends Component {
     let reg = /@\[([^\]]+?)\]\(id:([^\]]+?)\)/gim;
 
     await this.setState({chatText: this.state.chatTextAll});
+    
     // while (this.state.userName = reg.exec(val)) {
     this.selectedUserList.push({
       username: item.label,
       userId: item.key,
     });
     // }
+    let name = this.state.chatText;
+    if (name.match('@')) {
+      name = name.replace(/(<div[^>]+?>|<div>|<\/div>)/gi, '');
+    }
+
+    let replasedText =  name.replace(this.state.userName, '');
 
     await this.setState({
       showUserListModal: false,
       userName: '',
-      chatText: this.state.chatText.concat('@' + item.label + '&nbsp;'),
+      chatText: replasedText.concat(item.label + '&nbsp;'),
     });
   }
 
