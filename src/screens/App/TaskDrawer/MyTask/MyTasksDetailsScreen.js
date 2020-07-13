@@ -1085,7 +1085,7 @@ class MyTasksDetailsScreen extends Component {
       case 5:
         break;
       case 6:
-        this.props.navigation.navigate('ChatScreen');
+        this.props.navigation.navigate('CommentScreen');
         break;
       default:
         break;

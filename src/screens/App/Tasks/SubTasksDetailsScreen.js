@@ -1400,7 +1400,7 @@ class SubTasksDetailsScreen extends Component {
         // });
         break;
       case 6:
-        this.props.navigation.navigate('ChatScreen', {
+        this.props.navigation.navigate('CommentScreen', {
           projectId: this.state.selectedProjectID,
           taskId: this.state.selectedProjectTaskID,
         });

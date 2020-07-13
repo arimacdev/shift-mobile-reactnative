@@ -16,7 +16,7 @@ import TasksDetailsScreen from '../screens/App/Tasks/TasksDetailsScreen';
 import AssigneeScreen from '../screens/App/Tasks/AssigneeScreen';
 import SubTaskScreen from '../screens/App/Tasks/SubTaskScreen';
 import FilesScreen from '../screens/App/Tasks/FilesScreen';
-import ChatScreen from '../screens/App/Tasks/ChatScreen';
+import CommentScreen from '../screens/App/Tasks/CommentScreen';
 import NotesScreen from '../screens/App/Tasks/NotesScreen';
 import ViewProfileScreen from '../screens/App/Profile/ViewProfileScreen';
 import AddEditSubTaskScreen from '../screens/App/Tasks/AddEditSubTaskScreen';
@@ -154,13 +154,13 @@ export const ProjectsStackNavigator = createStackNavigator(
         ),
       }),
     },
-    ChatScreen: {
-      screen: ChatScreen,
+    CommentScreen: {
+      screen: CommentScreen,
       navigationOptions: ({navigation}) => ({
         header: (
           <Header
             navigation={navigation}
-            title={'Chat'}
+            title={'Comments'}
             onPress={() => navigation.goBack()}
           />
         ),
