@@ -83,6 +83,7 @@ import {
   DELETE_COMMENT_REACTION,
   GET_COMMENTS_COUNT,
   UPLOAD_FILE_TO_COMMENT,
+  ADD_COMMENT_MENTION_NOTIFICATION,
 } from '../api/API';
 import AsyncStorage from '@react-native-community/async-storage';
 import {SET_UPLOAD_PROGRESS} from '../redux/types';
@@ -126,7 +127,12 @@ async function getUserData(userID) {
   );
 }
 
-async function getAllTaskInProjectsData(userID, projectID, startIndex, endIndex) {
+async function getAllTaskInProjectsData(
+  userID,
+  projectID,
+  startIndex,
+  endIndex,
+) {
   let listStartIndex = startIndex;
   let listEndIndex = endIndex;
   let baseURL = null;
@@ -144,7 +150,11 @@ async function getAllTaskInProjectsData(userID, projectID, startIndex, endIndex)
         GET_MY_TASKS_BY_PROJECT +
         projectID +
         '/tasks?userId=' +
-        userID+'&startIndex='+listStartIndex+'&endIndex='+listEndIndex,
+        userID +
+        '&startIndex=' +
+        listStartIndex +
+        '&endIndex=' +
+        listEndIndex,
       method: 'GET',
     },
     true,
@@ -152,7 +162,12 @@ async function getAllTaskInProjectsData(userID, projectID, startIndex, endIndex)
   );
 }
 
-async function getMyTaskInProjectsData(userID, projectID, myListStartIndex, myListEndIndex) {
+async function getMyTaskInProjectsData(
+  userID,
+  projectID,
+  myListStartIndex,
+  myListEndIndex,
+) {
   let baseURL = null;
   baseURL = await AsyncStorage.getItem('baseURL');
   let headers = {
@@ -167,7 +182,11 @@ async function getMyTaskInProjectsData(userID, projectID, myListStartIndex, myLi
         GET_ALL_TASKS_BY_PROJECT +
         projectID +
         '/tasks/user?userId=' +
-        userID+'&startIndex='+myListStartIndex+'&endIndex='+myListEndIndex,
+        userID +
+        '&startIndex=' +
+        myListStartIndex +
+        '&endIndex=' +
+        myListEndIndex,
       method: 'GET',
     },
     true,
@@ -3192,6 +3211,33 @@ async function uploadFileToComment(file, taskId) {
   );
 }
 
+async function addCommentMentionNotificationData(commentId, taskId, recipients) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
+  let userIDHeder = null;
+  userIDHeder = await AsyncStorage.getItem('userID');
+
+  let headers = {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+    userId: userIDHeder,
+  };
+
+  return request(
+    {
+      url: baseURL + ADD_COMMENT_MENTION_NOTIFICATION,
+      method: 'POST',
+      data: {
+        commentId: commentId,
+        entityId: taskId,
+        recipients: recipients,
+      },
+    },
+    true,
+    headers,
+  );
+}
+
 const APIServices = {
   getAllProjectsByUserData,
   getUserData,
@@ -3303,6 +3349,7 @@ const APIServices = {
   deleteCommentReactionData,
   getCommentsCountData,
   uploadFileToComment,
+  addCommentMentionNotificationData,
 };
 
 export default APIServices;

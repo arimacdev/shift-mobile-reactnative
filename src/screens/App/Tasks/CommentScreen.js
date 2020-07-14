@@ -551,21 +551,10 @@ class ChatScreen extends Component {
       await APIServices.addCommentData(taskId, chatText)
         .then(async response => {
           if (response.message == 'success') {
+            let commentId = response.data.commentId;
             this.setContentHTML('');
             this.blurContentEditor();
-            let data = response.data;
-            // let comment = {
-            //   commentId: data.commentId,
-            //   commentedAt: data.commentedAt,
-            //   commenter: data.commenter,
-            //   commenterFistName: data.commenterFistName,
-            //   commenterLatName: data.commenterLatName,
-            //   commenterProfileImage: data.commenterProfileImage,
-            //   content: data.content,
-            //   reactions: data.reactions,
-            // };
-            // this.setState({comments: this.state.comments.concat(comment)});
-            this.getTagUsers();
+            this.getTagUsers(commentId, taskId);
             this.submitChatMessage(chatText);
           } else {
           }
@@ -1045,7 +1034,7 @@ class ChatScreen extends Component {
     });
   }
 
-  getTagUsers() {
+  async getTagUsers(commentId, taskId) {
     this.selectedUsers = [];
     let usersFromHtml = [];
 
@@ -1067,6 +1056,22 @@ class ChatScreen extends Component {
         }
       }
     }
+
+    await APIServices.addCommentMentionNotificationData(
+      commentId,
+      taskId,
+      this.selectedUsers,
+    )
+      .then(async response => {
+        if (response.message == 'success') {
+          console.log(response);
+        } else {
+          console.log('Faild');
+        }
+      })
+      .catch(error => {
+        Utils.showAlert(true, '', error.data.message, this.props);
+      });
   }
 
   renderUserListModal() {
