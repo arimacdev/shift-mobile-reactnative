@@ -329,6 +329,8 @@ class ChatScreen extends Component {
   }
 
   async onEditCommentPress(commentId, content) {
+    let taskId = this.state.taskId;
+
     await this.setState({
       chatText: content,
       commentId: commentId,
@@ -336,6 +338,7 @@ class ChatScreen extends Component {
       isDeleteEvent: true,
     });
     this.state.currentlyOpenSwipeable.recenter();
+    this.getTagUsers(commentId, taskId);
 
     // let html = await this.richText.current?.getContentHtml();
     // let src = '';
@@ -362,6 +365,7 @@ class ChatScreen extends Component {
 
     let commentId = this.state.commentId;
     let chatText = this.state.chatText;
+    let taskId = this.state.taskId;
 
     if (chatText != '') {
       await APIServices.updateCommentData(commentId, chatText)
@@ -369,6 +373,7 @@ class ChatScreen extends Component {
           if (response.message == 'success') {
             this.setContentHTML('');
             this.blurContentEditor();
+            this.getTagUsers(commentId, taskId);
             this.setState({dataLoading: false, edit: false});
             this.sendMessageToSocket(chatText);
           } else {
@@ -1030,7 +1035,13 @@ class ChatScreen extends Component {
     await this.setState({
       showUserListModal: false,
       userName: '',
-      chatText: replasedText.concat('<var>@' + item.label + '</var>&nbsp;'),
+      chatText: replasedText.concat(
+        '<span><span> @' +
+          item.label +
+          "</span><span userId=" +
+          item.key +
+          "></span></span>&nbsp;",
+      ),
     });
   }
 
@@ -1039,39 +1050,43 @@ class ChatScreen extends Component {
     let usersFromHtml = [];
 
     const rootNode = DomSelector(this.state.chatText);
-    let userListData = rootNode.getElementsByTagName('var');
+    let userListData = rootNode.getElementsByTagName('span');
 
     for (let index = 0; index < userListData.length; index++) {
       const element = userListData[index];
-      let replacedName = element.children[0].text.replace('@', '');
-      usersFromHtml.push(replacedName);
+      let replacedName = element.attributes.userId;
+      this.selectedUsers.push(replacedName);
+
+      console.log("dddddddddddddddddddddd",element.attributes)
     }
 
-    for (let i = 0; i < this.selectedUserList.length; i++) {
-      const elementFirstArray = this.selectedUserList[i];
-      for (let j = 0; j < usersFromHtml.length; j++) {
-        const elementSecondArray = usersFromHtml[j];
-        if (elementFirstArray.username == elementSecondArray) {
-          this.selectedUsers.push(elementFirstArray.userId);
-        }
-      }
-    }
+    console.log("dddddddddddddddddddddd",replacedName)
 
-    await APIServices.addCommentMentionNotificationData(
-      commentId,
-      taskId,
-      this.selectedUsers,
-    )
-      .then(async response => {
-        if (response.message == 'success') {
-          console.log(response);
-        } else {
-          console.log('Faild');
-        }
-      })
-      .catch(error => {
-        Utils.showAlert(true, '', error.data.message, this.props);
-      });
+    // for (let i = 0; i < this.selectedUserList.length; i++) {
+    //   const elementFirstArray = this.selectedUserList[i];
+    //   for (let j = 0; j < usersFromHtml.length; j++) {
+    //     const elementSecondArray = usersFromHtml[j];
+    //     if (elementFirstArray.username == elementSecondArray) {
+    //       this.selectedUsers.push(elementFirstArray.userId);
+    //     }
+    //   }
+    // }
+
+    // await APIServices.addCommentMentionNotificationData(
+    //   commentId,
+    //   taskId,
+    //   this.selectedUsers,
+    // )
+    //   .then(async response => {
+    //     if (response.message == 'success') {
+    //       console.log(response);
+    //     } else {
+    //       console.log('Faild');
+    //     }
+    //   })
+    //   .catch(error => {
+    //     Utils.showAlert(true, '', error.data.message, this.props);
+    //   });
   }
 
   renderUserListModal() {
