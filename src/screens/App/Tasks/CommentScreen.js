@@ -112,6 +112,7 @@ class ChatScreen extends Component {
       showUserListModal: false,
       userName: '',
       chatTextAll: '',
+      ownCommnter:''
     };
     this.editor = null;
   }
@@ -141,6 +142,8 @@ class ChatScreen extends Component {
       'keyboardDidHide',
       this.handleKeyboardDidHide,
     );
+
+    this.getUserId();
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -181,6 +184,11 @@ class ChatScreen extends Component {
     }
   }
 
+  async getUserId(){
+    let userId = await AsyncStorage.getItem('userID');
+    this.setState({ownCommnter:userId})
+  }
+
   componentDidMount() {
     let taskId = this.state.taskId;
     let userId = AsyncStorage.getItem('userID');
@@ -194,13 +202,13 @@ class ChatScreen extends Component {
           .subscribe('/topic/messages/' + taskId, message => {
             let messageDecode = JSON.parse(message.body);
             console.log('messageDecode', messageDecode);
-            if (messageDecode.sender != userId) {
+            // if (messageDecode.sender != userId) {
               this.fetchData(
                 taskId,
                 this.state.listStartIndex,
                 this.state.listEndIndex,
               );
-            }
+            // }
           });
       },
     );
@@ -440,7 +448,12 @@ class ChatScreen extends Component {
 
   renderCommentList(item) {
     let commentId = item.commentId;
+    let ownComment = false;
     // let result = item.content.replace(/(<p[^>]+?>|<p>|<\/p>)/gi, '');
+
+    if (item.commenter == this.state.ownCommnter) {
+      ownComment = true;
+    }
 
     const rightButtons = [
       <TouchableOpacity
@@ -458,7 +471,7 @@ class ChatScreen extends Component {
     return (
       <Swipeable
         style={styles.swipeableView}
-        rightButtons={rightButtons}
+        rightButtons={ownComment ? rightButtons : null}
         rightButtonWidth={EStyleSheet.value('50rem')}
         onRef={ref => (this.swipe = ref)}
         onRightButtonsOpenRelease={(event, gestureState, swipe) => {
@@ -699,7 +712,6 @@ class ChatScreen extends Component {
 
   async setImageForFile(res) {
     let taskId = this.state.taskId;
-    console.log('oooooooooooooo', res);
     this.onFilesCrossPress(res.uri);
     await this.state.files.push({
       uri: res.uri,
