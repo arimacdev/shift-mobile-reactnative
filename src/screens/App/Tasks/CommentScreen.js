@@ -48,7 +48,7 @@ import EmptyListView from '../../../components/EmptyListView';
 import AndroidKeyboardAdjust from 'react-native-android-keyboard-adjust';
 import PopupMenuUserList from '../../../components/PopupMenuUserList';
 import DOMParser from 'react-native-html-parser';
-
+import DomSelector from 'react-native-dom-parser';
 
 const reactionDetails = [
   {value: '&#128077', text: '👍'},
@@ -70,6 +70,8 @@ class ChatScreen extends Component {
     buttons: {positive: 'Delete', negative: 'Cancel'},
   };
   selectedUserList = [];
+  selectedUsers = [];
+
   onPressMessageModal = () => {};
   constructor(props) {
     super(props);
@@ -563,6 +565,7 @@ class ChatScreen extends Component {
             //   reactions: data.reactions,
             // };
             // this.setState({comments: this.state.comments.concat(comment)});
+            this.getTagUsers();
             this.submitChatMessage(chatText);
           } else {
           }
@@ -1040,27 +1043,28 @@ class ChatScreen extends Component {
       userName: '',
       chatText: replasedText.concat('<var>@' + item.label + '</var>&nbsp;'),
     });
+  }
 
-    console.log('this.state.chatText', this.state.chatText);
+  getTagUsers() {
+    this.selectedUsers = [];
+    let usersFromHtml = [];
 
-    let selectedUsers = [];
+    const rootNode = DomSelector(this.state.chatText);
+    let userListData = rootNode.getElementsByTagName('var');
 
-    var parser = new DOMParser.DOMParser();
-    var parsedHtml = parser.parseFromString(this.state.chatText, 'text/html');
-    let pTags = parsedHtml.getElementsByTagName('var');
-    let users = [];
-    pTags.forEach(function(item) {
-      let user = item.getElementsByTagName('strong')[0].textContent.trim();
-      users.push({userName: user});
-    });
+    for (let index = 0; index < userListData.length; index++) {
+      const element = userListData[index];
+      let replacedName = element.children[0].text.replace('@', '');
+      usersFromHtml.push(replacedName);
+    }
 
-    console.log('users', users);
-
-    for (let index = 0; index < this.selectedUserList.length; index++) {
-      const element = this.selectedUserList[index];
-      console.log('element', element);
-      if (element) {
-        selectedUsers.push(element.userId);
+    for (let i = 0; i < this.selectedUserList.length; i++) {
+      const elementFirstArray = this.selectedUserList[i];
+      for (let j = 0; j < usersFromHtml.length; j++) {
+        const elementSecondArray = usersFromHtml[j];
+        if (elementFirstArray.username == elementSecondArray) {
+          this.selectedUsers.push(elementFirstArray.userId);
+        }
       }
     }
   }
