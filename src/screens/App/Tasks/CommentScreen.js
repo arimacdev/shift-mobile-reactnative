@@ -1435,7 +1435,6 @@ const styles = EStyleSheet.create({
     marginBottom: '10rem',
     justifyContent: 'center',
     alignItems: 'center',
-    // marginHorizontal: '20rem',
   },
   positiveStyle: {
     flex: 1,
