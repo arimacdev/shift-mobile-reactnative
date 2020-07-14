@@ -329,8 +329,6 @@ class ChatScreen extends Component {
   }
 
   async onEditCommentPress(commentId, content) {
-    let taskId = this.state.taskId;
-
     await this.setState({
       chatText: content,
       commentId: commentId,
@@ -338,7 +336,6 @@ class ChatScreen extends Component {
       isDeleteEvent: true,
     });
     this.state.currentlyOpenSwipeable.recenter();
-    this.getTagUsers(commentId, taskId);
 
     // let html = await this.richText.current?.getContentHtml();
     // let src = '';
@@ -1035,13 +1032,7 @@ class ChatScreen extends Component {
     await this.setState({
       showUserListModal: false,
       userName: '',
-      chatText: replasedText.concat(
-        '<span><span> @' +
-          item.label +
-          "</span><span userId=" +
-          item.key +
-          "></span></span>&nbsp;",
-      ),
+      chatText: replasedText.concat('<var>@' + item.label + '</var>&nbsp;'),
     });
   }
 
@@ -1050,43 +1041,39 @@ class ChatScreen extends Component {
     let usersFromHtml = [];
 
     const rootNode = DomSelector(this.state.chatText);
-    let userListData = rootNode.getElementsByTagName('span');
+    let userListData = rootNode.getElementsByTagName('var');
 
     for (let index = 0; index < userListData.length; index++) {
       const element = userListData[index];
-      let replacedName = element.attributes.userId;
-      this.selectedUsers.push(replacedName);
-
-      console.log("dddddddddddddddddddddd",element.attributes)
+      let replacedName = element.children[0].text.replace('@', '');
+      usersFromHtml.push(replacedName);
     }
 
-    console.log("dddddddddddddddddddddd",replacedName)
+    for (let i = 0; i < this.selectedUserList.length; i++) {
+      const elementFirstArray = this.selectedUserList[i];
+      for (let j = 0; j < usersFromHtml.length; j++) {
+        const elementSecondArray = usersFromHtml[j];
+        if (elementFirstArray.username == elementSecondArray) {
+          this.selectedUsers.push(elementFirstArray.userId);
+        }
+      }
+    }
 
-    // for (let i = 0; i < this.selectedUserList.length; i++) {
-    //   const elementFirstArray = this.selectedUserList[i];
-    //   for (let j = 0; j < usersFromHtml.length; j++) {
-    //     const elementSecondArray = usersFromHtml[j];
-    //     if (elementFirstArray.username == elementSecondArray) {
-    //       this.selectedUsers.push(elementFirstArray.userId);
-    //     }
-    //   }
-    // }
-
-    // await APIServices.addCommentMentionNotificationData(
-    //   commentId,
-    //   taskId,
-    //   this.selectedUsers,
-    // )
-    //   .then(async response => {
-    //     if (response.message == 'success') {
-    //       console.log(response);
-    //     } else {
-    //       console.log('Faild');
-    //     }
-    //   })
-    //   .catch(error => {
-    //     Utils.showAlert(true, '', error.data.message, this.props);
-    //   });
+    await APIServices.addCommentMentionNotificationData(
+      commentId,
+      taskId,
+      this.selectedUsers,
+    )
+      .then(async response => {
+        if (response.message == 'success') {
+          console.log(response);
+        } else {
+          console.log('Faild');
+        }
+      })
+      .catch(error => {
+        Utils.showAlert(true, '', error.data.message, this.props);
+      });
   }
 
   renderUserListModal() {
