@@ -47,6 +47,8 @@ import RichTextEditorPell from '../../../components/RichTextEditorPell';
 import EmptyListView from '../../../components/EmptyListView';
 import AndroidKeyboardAdjust from 'react-native-android-keyboard-adjust';
 import PopupMenuUserList from '../../../components/PopupMenuUserList';
+import DOMParser from 'react-native-html-parser';
+
 
 const reactionDetails = [
   {value: '&#128077', text: '👍'},
@@ -1043,7 +1045,7 @@ class ChatScreen extends Component {
 
     let selectedUsers = [];
 
-    var parser = new DOMParser();
+    var parser = new DOMParser.DOMParser();
     var parsedHtml = parser.parseFromString(this.state.chatText, 'text/html');
     let pTags = parsedHtml.getElementsByTagName('var');
     let users = [];
