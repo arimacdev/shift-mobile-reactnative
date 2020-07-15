@@ -1004,10 +1004,10 @@ class ChatScreen extends Component {
     console.log('text', text);
     let replaceText = text;
     this.setState({chatTextAll: text});
-    let a = replaceText.substring(replaceText.indexOf(' @') + 1);
+    let subStringText = replaceText.substring(replaceText.indexOf(' @') + 1);
 
-    if (a.match('@')) {
-      let name = a.replace(/(<([^>]+)>)/gi, '');
+    if (subStringText.match('@')) {
+      let name = subStringText.replace(/(<([^>]+)>)/gi, '');
       var n = name.lastIndexOf('@');
       var result = name.substring(n + 1);
       this.setState({showUserListModal: true, userName: result});
@@ -1020,7 +1020,8 @@ class ChatScreen extends Component {
   }
 
   async onSelectUser(item) {
-    let reg = /@\[([^\]]+?)\]\(id:([^\]]+?)\)/gim;
+    // let reg = /@\[([^\]]+?)\]\(id:([^\]]+?)\)/gim;
+    
     this.selectedUserList.push({
       username: item.label,
       userId: item.key,
