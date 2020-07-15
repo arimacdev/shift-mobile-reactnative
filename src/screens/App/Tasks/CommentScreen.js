@@ -1017,26 +1017,6 @@ class ChatScreen extends Component {
       this.setState({showUserListModal: false, chatText: ''});
       this.selectedUserList = [];
     }
-    const rootNode = DomSelector(text);
-    let userListData = rootNode.getElementsByTagName('var');
-    let usersFromHtml = [];
-    
-
-    for (let index = 0; index < userListData.length; index++) {
-      const element = userListData[index];
-      let replacedName = element.children[0].text.replace('@', '');
-      usersFromHtml.push(replacedName);
-    }
-
-    for (let i = 0; i < this.selectedUserList.length; i++) {
-      const elementFirstArray = this.selectedUserList[i];
-      for (let j = 0; j < usersFromHtml.length; j++) {
-        const elementSecondArray = usersFromHtml[j];
-        if (elementFirstArray.username.match(elementSecondArray)) {
-          this.setState({showUserListModal: true, userName: elementSecondArray});
-        }
-      }
-    }
   }
 
   async onSelectUser(item) {
