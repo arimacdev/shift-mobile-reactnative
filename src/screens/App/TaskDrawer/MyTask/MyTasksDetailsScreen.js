@@ -540,7 +540,7 @@ class MyTasksDetailsScreen extends Component {
     RNFetchBlob.config({
       // add this option that makes response data to be stored as a file,
       // this is much more performant.
-      path: dirs.DownloadDir + '/' + item.projectFileName,
+      path: dirs.DownloadDir + '/' + item.taskFileName,
       fileCache: true,
     })
       .fetch('GET', item.taskFileUrl, {
