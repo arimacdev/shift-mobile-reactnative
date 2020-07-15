@@ -112,7 +112,7 @@ class ChatScreen extends Component {
       showUserListModal: false,
       userName: '',
       chatTextAll: '',
-      ownCommnter:''
+      ownCommnter: '',
     };
     this.editor = null;
   }
@@ -184,9 +184,9 @@ class ChatScreen extends Component {
     }
   }
 
-  async getUserId(){
+  async getUserId() {
     let userId = await AsyncStorage.getItem('userID');
-    this.setState({ownCommnter:userId})
+    this.setState({ownCommnter: userId});
   }
 
   componentDidMount() {
@@ -203,11 +203,11 @@ class ChatScreen extends Component {
             let messageDecode = JSON.parse(message.body);
             console.log('messageDecode', messageDecode);
             // if (messageDecode.sender != userId) {
-              this.fetchData(
-                taskId,
-                this.state.listStartIndex,
-                this.state.listEndIndex,
-              );
+            this.fetchData(
+              taskId,
+              this.state.listStartIndex,
+              this.state.listEndIndex,
+            );
             // }
           });
       },
@@ -716,8 +716,8 @@ class ChatScreen extends Component {
     await this.state.files.push({
       uri: res.uri,
       type: res.type, // mime type
-      name: 'Img' + new Date().getTime() + '.png',
-      // name: res.name,
+      // name: 'Img' + new Date().getTime() + '.png',
+      name: res.fileName,
       size: res.fileSize,
       dateTime:
         moment().format('YYYY/MM/DD') + ' | ' + moment().format('HH:mm'),
@@ -751,9 +751,9 @@ class ChatScreen extends Component {
       .catch(error => {
         this.setState({files: []});
         if (error.status == 401) {
-          Utils.showAlert('', error.data.message);
+          Utils.showAlert(true, '', error.data.message, this.props);
         } else {
-          Utils.showAlert('', error);
+          Utils.showAlert(true, '', 'File upload failed!', this.props);
         }
       });
   }
@@ -763,11 +763,7 @@ class ChatScreen extends Component {
     let taskId = this.state.taskId;
     try {
       const results = await DocumentPicker.pickMultiple({
-        type: [
-          DocumentPicker.types.images,
-          DocumentPicker.types.plainText,
-          DocumentPicker.types.pdf,
-        ],
+        type: [DocumentPicker.types.images],
       });
       for (const res of results) {
         this.onFilesCrossPress(res.uri);
@@ -1071,7 +1067,7 @@ class ChatScreen extends Component {
       }
     }
 
-    if(this.selectedUsers.length > 0){
+    if (this.selectedUsers.length > 0) {
       await APIServices.addCommentMentionNotificationData(
         commentId,
         taskId,
