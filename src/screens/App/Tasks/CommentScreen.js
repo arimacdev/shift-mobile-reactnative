@@ -1071,21 +1071,23 @@ class ChatScreen extends Component {
       }
     }
 
-    await APIServices.addCommentMentionNotificationData(
-      commentId,
-      taskId,
-      this.selectedUsers,
-    )
-      .then(async response => {
-        if (response.message == 'success') {
-          console.log(response);
-        } else {
-          console.log('Faild');
-        }
-      })
-      .catch(error => {
-        Utils.showAlert(true, '', error.data.message, this.props);
-      });
+    if(this.selectedUsers.length > 0){
+      await APIServices.addCommentMentionNotificationData(
+        commentId,
+        taskId,
+        this.selectedUsers,
+      )
+        .then(async response => {
+          if (response.message == 'success') {
+            console.log(response);
+          } else {
+            console.log('Faild');
+          }
+        })
+        .catch(error => {
+          Utils.showAlert(true, '', error.data.message, this.props);
+        });
+    }
   }
 
   renderUserListModal() {
