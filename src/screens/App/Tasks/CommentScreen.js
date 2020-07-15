@@ -741,7 +741,7 @@ class ChatScreen extends Component {
             chatText: this.state.chatText.concat(
               '<img src=' +
                 response.data +
-                ' class="e-rte-image e-imginline" width="auto" height="auto" style="min-width: 0px; min-height: 0px; marginTop: 10px">',
+                ' class="e-rte-image e-imginline" width="auto" height="auto" style="min-width: 0px; min-height: 0px; marginTop: 10px">&nbsp;',
             ),
           });
         } else {
