@@ -74,7 +74,7 @@ let taskData = [
   {
     id: 6,
     name: 'Comments',
-    icon: icons.filesRoundedOrange,
+    icon: icons.commentsRoundPurple,
     renderImage: false,
     disabled: false,
   },
