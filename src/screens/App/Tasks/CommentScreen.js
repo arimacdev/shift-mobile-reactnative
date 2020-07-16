@@ -1015,14 +1015,12 @@ class ChatScreen extends Component {
     }
 
     if (text == '') {
-      this.setState({showUserListModal: false, chatText: ''});
+      this.setState({showUserListModal: false, chatText: '', userName: ''});
       this.selectedUserList = [];
     }
   }
 
   async onSelectUser(item) {
-    // let reg = /@\[([^\]]+?)\]\(id:([^\]]+?)\)/gim;
-
     this.selectedUserList.push({
       username: item.label,
       userId: item.key,
