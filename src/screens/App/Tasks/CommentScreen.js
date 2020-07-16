@@ -921,12 +921,14 @@ class ChatScreen extends Component {
     this.setState({url: text});
   }
 
-  addUrlPress() {
+  async addUrlPress() {
+    let html = await this.richText.current?.getContentHtml();
+    await this.setState({chatText: html});
     let URL = this.state.url;
     let urlTitle = this.state.urlTitle != '' ? this.state.urlTitle : URL;
     this.setState({
       chatText: this.state.chatText.concat(
-        '<div><a href=' + URL + '>' + urlTitle + '</a></div>',
+        '<a href=' + URL + '>' + urlTitle + '</a>&nbsp;',
       ),
     });
     this.onCloseTaskModal();
@@ -997,7 +999,11 @@ class ChatScreen extends Component {
   }
 
   showEnterUrlModal() {
-    this.setState({showEnterUrlModal: true});
+    this.setState({
+      showEnterUrlModal: true,
+      showUserListModal: false,
+      userName: '',
+    });
   }
 
   onChangeEditorText(text) {
