@@ -1001,13 +1001,14 @@ class ChatScreen extends Component {
   }
 
   onChangeEditorText(text) {
-    console.log('text', text);
-    let replaceText = text;
-    this.setState({chatTextAll: text});
-    let subStringText = replaceText.substring(replaceText.indexOf(' @') + 1);
+    // console.log('text', text);
+    // let replaceText = text;
+    // let subStringText = replaceText.substring(replaceText.indexOf(' @') + 1);
 
-    if (subStringText.match('@')) {
-      let name = subStringText.replace(/(<([^>]+)>)/gi, '');
+    this.setState({chatTextAll: text});
+
+    if (text.match('@')) {
+      let name = text.replace(/(<([^>]+)>)/gi, '');
       let n = name.lastIndexOf('@');
       let result = name.substring(n + 1);
       this.setState({showUserListModal: true, userName: result});
