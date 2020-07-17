@@ -1140,7 +1140,7 @@ class ChatScreen extends Component {
               style={styles.crossIconStyle}
               onPress={() => this.onCrossPress()}>
               <Image
-                style={styles.addFileIcon}
+                style={styles.clearIcon}
                 source={icons.cross}
                 resizeMode={'contain'}
               />
@@ -1357,7 +1357,7 @@ const styles = EStyleSheet.create({
     // justifyContent: 'flex-end',
     // margin: 0,
   },
-  addFileIcon: {
+  clearIcon: {
     width: '18rem',
     height: '18rem',
     marginTop: '4rem',

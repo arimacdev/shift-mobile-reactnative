@@ -82,5 +82,6 @@ const icons = {
   keyboardIcon: require('./keyboard_icon.png'),
   addRoundedBlue: require('./add_rounded_blue.png'),
   commentsRoundPurple: require('./comments_round_purple.png'),
+  crossRoundedRed: require('./cross_rounded_red.png'),
 };
 export default icons;
