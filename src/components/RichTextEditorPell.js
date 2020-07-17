@@ -148,7 +148,7 @@ class RichTextEditorPell extends React.Component {
             style={[styles.rich, themeBg]}
             placeholder={'please input content'}
             initialContentHTML={initHTML}
-            onChange={(text)=>this.props.onChangeEditorText(text)}
+            onChange={text => this.props.onChangeEditorText(text)}
           />
         </ScrollView>
         <KeyboardAvoidingView behavior={'padding'}>

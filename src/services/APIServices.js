@@ -3211,7 +3211,11 @@ async function uploadFileToComment(file, taskId) {
   );
 }
 
-async function addCommentMentionNotificationData(commentId, taskId, recipients) {
+async function addCommentMentionNotificationData(
+  commentId,
+  taskId,
+  recipients,
+) {
   let baseURL = null;
   baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;

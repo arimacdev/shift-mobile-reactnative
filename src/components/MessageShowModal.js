@@ -141,7 +141,6 @@ const styles = EStyleSheet.create({
     flexDirection: 'row',
     marginHorizontal: '20rem',
     marginVertical: '20rem',
-    // alignItems: 'center',
   },
   imageContainer: {
     alignItems: 'center',

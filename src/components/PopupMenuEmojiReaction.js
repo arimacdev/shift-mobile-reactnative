@@ -174,13 +174,10 @@ const styles = EStyleSheet.create({
   menuIcon: {
     width: '18rem',
     height: '18rem',
-    // marginTop: '3rem',
-    // marginRight: '-10rem',
   },
   dropView: {
     flexDirection: 'row',
     alignItems: 'center',
-    // paddingRight: '8rem',
   },
   dropContainer: {
     flexDirection: 'column',
@@ -197,7 +194,6 @@ const styles = EStyleSheet.create({
   menuItemText: {
     fontFamily: Platform.OS == 'ios' ? 'CircularStd-Medium' : 'Product Sans',
     fontSize: '15rem',
-    // paddingLeft: '5rem',
   },
   menuStyle: {
     marginRight: '15rem',
