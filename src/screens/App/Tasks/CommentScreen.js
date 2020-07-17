@@ -1227,44 +1227,6 @@ const styles = EStyleSheet.create({
   flalListReactions: {
     marginBottom: '5rem',
   },
-  taskStateIcon: {
-    width: '25rem',
-    height: '25rem',
-  },
-  editDeleteIcon: {
-    width: '25rem',
-    height: '25rem',
-  },
-  button: {
-    flexDirection: 'row',
-    backgroundColor: colors.lightBlue,
-    borderRadius: '5rem',
-    marginTop: '17rem',
-    marginBottom: '17rem',
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: '12rem',
-    height: '55rem',
-    marginHorizontal: '20rem',
-  },
-  buttonText: {
-    fontSize: '12rem',
-    color: colors.white,
-    lineHeight: '17rem',
-    fontFamily: 'CircularStd-Book',
-    fontWeight: 'bold',
-  },
-  addIcon: {
-    width: '28rem',
-    height: '28rem',
-    marginRight: '10rem',
-  },
-  bottomBarIcon: {
-    width: '20rem',
-    height: '20rem',
-    marginRight: '15rem',
-    marginLeft: '10rem',
-  },
   userIcon: {
     width: '45rem',
     height: '45rem',
@@ -1277,24 +1239,6 @@ const styles = EStyleSheet.create({
   },
   nameView: {
     marginTop: '-4rem',
-  },
-  chatFieldView: {
-    backgroundColor: colors.projectBgColor,
-    borderRadius: '5rem',
-    marginBottom: '15rem',
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingLeft: '12rem',
-    height: '100rem',
-    marginHorizontal: '20rem',
-  },
-  textInput: {
-    fontSize: '12rem',
-    color: colors.gray,
-    textAlign: 'center',
-    lineHeight: '17rem',
-    fontFamily: 'CircularStd-Book',
-    textAlign: 'left',
   },
   chatIcon: {
     width: '23rem',
