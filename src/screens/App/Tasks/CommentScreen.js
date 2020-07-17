@@ -1135,26 +1135,6 @@ class ChatScreen extends Component {
               bottom:
                 Platform.OS == 'ios' ? this.state.currentKeyboardHeight : 0,
             }}> */}
-          <TouchableOpacity
-            style={styles.crossIconStyle}
-            onPress={() => this.onCrossPress()}>
-            <Image
-              style={styles.addFileIcon}
-              source={icons.cross}
-              resizeMode={'contain'}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.sendIconStyle}
-            onPress={() => {
-              this.sendMessage();
-            }}>
-            <Image
-              style={styles.chatIcon}
-              source={icons.forwordGreen}
-              resizeMode={'contain'}
-            />
-          </TouchableOpacity>
           <View style={styles.textEditorStyle}>
             <TouchableOpacity
               style={styles.crossIconStyle}
