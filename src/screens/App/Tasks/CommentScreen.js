@@ -113,6 +113,7 @@ class ChatScreen extends Component {
       userName: '',
       chatTextAll: '',
       ownCommnter: '',
+      showImagePickerModal: false,
     };
     this.editor = null;
   }
@@ -623,23 +624,67 @@ class ChatScreen extends Component {
     }
   }
 
-  async FilePicker() {
-    Alert.alert(
-      'Add Files',
-      'Select the file source',
-      [
-        {text: 'Camera', onPress: () => this.selectCamera()},
-        {text: 'Gallery', onPress: () => this.selectGallery()},
-        // {text: 'Files', onPress: () => this.doumentPicker()},
-        {text: 'Cancel', onPress: () => console.log('Back')},
-      ],
-      {
-        cancelable: true,
-      },
+  onCloseImagePickerModal() {
+    this.setState({showImagePickerModal: false});
+  }
+
+  renderImagePickerModal() {
+    return (
+      <Modal
+        // isVisible={true}
+        isVisible={this.state.showImagePickerModal}
+        style={styles.modalStyleImagePicker}
+        onBackButtonPress={() => this.onCloseImagePickerModal()}
+        onBackdropPress={() => this.onCloseImagePickerModal()}
+        onRequestClose={() => this.onCloseImagePickerModal()}
+        coverScreen={false}
+        backdropTransitionOutTiming={0}>
+        <View style={styles.imagePickerModalInnerStyle}>
+          <Text style={styles.imagePickerModalTitleStyle}>Add Files</Text>
+          <Text style={styles.imagePickerModalTextStyle}>
+            Select the file source
+          </Text>
+          <View style={styles.imagePickerButtonViewStyle}>
+            <TouchableOpacity
+              style={styles.cameraButtonStyle}
+              onPress={() => this.selectCamera()}>
+              <Text style={styles.positiveTextStyle}>Camera</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.galleryButtonStyle}
+              onPress={() => this.selectGallery()}>
+              <Text style={styles.positiveTextStyle}>Gallery</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.cancelButtonStyle}
+              onPress={() => this.onCloseImagePickerModal()}>
+              <Text style={styles.cancelTextStyle}>Cancel</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     );
   }
 
+  async FilePicker() {
+    this.setState({showImagePickerModal: true});
+    // Alert.alert(
+    //   'Add Files',
+    //   'Select the file source',
+    //   [
+    //     {text: 'Camera', onPress: () => this.selectCamera()},
+    //     {text: 'Gallery', onPress: () => this.selectGallery()},
+    //     // {text: 'Files', onPress: () => this.doumentPicker()},
+    //     {text: 'Cancel', onPress: () => console.log('Back')},
+    //   ],
+    //   {
+    //     cancelable: true,
+    //   },
+    // );
+  }
+
   async selectCamera() {
+    await this.setState({showImagePickerModal: false});
     const options = {
       title: 'Select pictures',
       storageOptions: {
@@ -659,6 +704,7 @@ class ChatScreen extends Component {
   }
 
   async selectGallery() {
+    await this.setState({showImagePickerModal: false});
     const options = {
       title: 'Select pictures',
       storageOptions: {
@@ -1168,6 +1214,7 @@ class ChatScreen extends Component {
           {this.state.status != 'Connected' && <Loader />}
           {this.renderEnterUrlModal()}
           {this.renderUserListModal()}
+          {this.renderImagePickerModal()}
           <MessageShowModal
             showMessageModal={this.state.showMessageModal}
             details={this.deleteDetails}
@@ -1405,6 +1452,52 @@ const styles = EStyleSheet.create({
     marginLeft: '11rem',
     marginTop: '0rem',
     marginRight: '10rem',
+  },
+  modalStyleImagePicker: {
+    justifyContent: 'flex-end',
+    margin: 0,
+  },
+  imagePickerButtonViewStyle: {
+    marginTop: '20rem',
+    marginBottom: '10rem',
+  },
+  imagePickerModalInnerStyle: {
+    backgroundColor: colors.white,
+    borderRadius: '5rem',
+    padding: '20rem',
+  },
+  imagePickerModalTitleStyle: {
+    fontSize: '20rem',
+    marginBottom: '5rem',
+  },
+  imagePickerModalTextStyle: {
+    fontSize: '15rem',
+  },
+  cameraButtonStyle: {
+    height: '45rem',
+    backgroundColor: colors.lightGreen,
+    borderRadius: '5rem',
+    paddingHorizontal: '40rem',
+    paddingVertical: '10rem',
+    justifyContent: 'center',
+    marginBottom: '10rem',
+  },
+  galleryButtonStyle: {
+    height: '45rem',
+    backgroundColor: colors.lightBlue,
+    borderRadius: '5rem',
+    paddingHorizontal: '40rem',
+    paddingVertical: '10rem',
+    justifyContent: 'center',
+    marginBottom: '10rem',
+  },
+  cancelButtonStyle: {
+    height: '45rem',
+    backgroundColor: colors.colorCoralRed,
+    borderRadius: '5rem',
+    paddingHorizontal: '40rem',
+    paddingVertical: '10rem',
+    justifyContent: 'center',
   },
 });
 
