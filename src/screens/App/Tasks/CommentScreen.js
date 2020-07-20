@@ -114,6 +114,7 @@ class ChatScreen extends Component {
       chatTextAll: '',
       ownCommnter: '',
       showImagePickerModal: false,
+      commentListHeight: null
     };
     this.editor = null;
   }
@@ -231,6 +232,7 @@ class ChatScreen extends Component {
       '',
       '/',
     );
+    
   }
 
   async fetchData(taskId, startIndex, endIndex) {
@@ -886,9 +888,16 @@ class ChatScreen extends Component {
     if (Platform.OS == 'ios') {
       const {height: windowHeight} = Dimensions.get('window');
       const keyboardHeight = event.endCoordinates.height;
-      this.setState({
-        currentKeyboardHeight: windowHeight - keyboardHeight - 200,
-      });
+        this.commentList.measure( (fx, fy, width, height, px, py) => {
+          this.setState({ commentListHeight: height }, () => {
+            if (this.state.commentListHeight > 400) {
+              this.setState({
+                currentKeyboardHeight: windowHeight - keyboardHeight - 200,
+              });
+            } else {
+            }
+        });
+      }) 
       const currentlyFocusedField =
         TextInputState.currentlyFocusedField() == null
           ? 0
@@ -1165,6 +1174,7 @@ class ChatScreen extends Component {
       <MenuProvider>
         <View style={styles.container}>
           <View
+            ref={view => { this.commentList = view; }}
             style={{
               bottom:
                 Platform.OS == 'ios' ? this.state.currentKeyboardHeight : 0,
@@ -1182,11 +1192,11 @@ class ChatScreen extends Component {
               ListEmptyComponent={<EmptyListView />}
             />
           </View>
-          {/* <View
+          <View
             style={{
               bottom:
                 Platform.OS == 'ios' ? this.state.currentKeyboardHeight : 0,
-            }}> */}
+            }}>
           <View style={styles.textEditorStyle}>
             <TouchableOpacity
               style={styles.crossIconStyle}
@@ -1220,7 +1230,7 @@ class ChatScreen extends Component {
               onChangeEditorText={text => this.onChangeEditorText(text)}
             />
           </View>
-          {/* </View> */}
+          </View>
           {this.state.status != 'Connected' && <Loader />}
           {this.renderEnterUrlModal()}
           {this.renderUserListModal()}
@@ -1274,6 +1284,7 @@ const styles = EStyleSheet.create({
   },
   flalList: {
     marginBottom: '135rem',
+    // height: '400rem'
   },
   flalListReactions: {
     marginBottom: '5rem',
