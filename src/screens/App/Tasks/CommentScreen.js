@@ -685,6 +685,7 @@ class ChatScreen extends Component {
 
   async selectCamera() {
     await this.setState({showImagePickerModal: false});
+    
     const options = {
       title: 'Select pictures',
       storageOptions: {
@@ -693,18 +694,22 @@ class ChatScreen extends Component {
       },
       quality: 0.2,
     };
-    ImagePicker.launchCamera(options, res => {
-      if (res.didCancel) {
-      } else if (res.error) {
-      } else if (res.customButton) {
-      } else {
-        this.setImageForFile(res);
-      }
-    });
+
+    setTimeout(() => {
+      ImagePicker.launchCamera(options, res => {
+        if (res.didCancel) {
+        } else if (res.error) {
+        } else if (res.customButton) {
+        } else {
+          this.setImageForFile(res);
+        }
+      });
+    }, 100);
   }
 
   async selectGallery() {
     await this.setState({showImagePickerModal: false});
+
     const options = {
       title: 'Select pictures',
       storageOptions: {
@@ -714,14 +719,16 @@ class ChatScreen extends Component {
       quality: 0.2,
     };
 
-    ImagePicker.launchImageLibrary(options, res => {
-      if (res.didCancel) {
-      } else if (res.error) {
-      } else if (res.customButton) {
-      } else {
-        this.setImageForFile(res);
-      }
-    });
+    setTimeout(() => {
+      ImagePicker.launchImageLibrary(options, res => {
+        if (res.didCancel) {
+        } else if (res.error) {
+        } else if (res.customButton) {
+        } else {
+          this.setImageForFile(res);
+        }
+      });
+    }, 100);
   }
 
   deleteCommentAlert(commentId) {
