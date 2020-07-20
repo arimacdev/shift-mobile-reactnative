@@ -30,15 +30,14 @@ export default class Home extends Component {
     this.props.navigation.navigate('aaa');
   }
 
-  onUsernameChange(text){
-    this.setState({userName:text});
+  onUsernameChange(text) {
+    this.setState({userName: text});
   }
 
-  onPasswordChange(text){
-    if(text==''){
-      
+  onPasswordChange(text) {
+    if (text == '') {
     }
-    this.setState({password:text});
+    this.setState({password: text});
   }
 
   render() {
@@ -57,7 +56,7 @@ export default class Home extends Component {
               style={styles.textInput}
               placeholder={'Username'}
               value={this.state.userName}
-              onChangeText={text=>this.onUsernameChange(text)}
+              onChangeText={text => this.onUsernameChange(text)}
             />
           </View>
           <View style={styles.textInputView}>
@@ -66,7 +65,7 @@ export default class Home extends Component {
               style={styles.textInput}
               placeholder={'Password'}
               value={this.state.password}
-              onChangeText={text=>this.onPasswordChange(text)}
+              onChangeText={text => this.onPasswordChange(text)}
             />
           </View>
           <View>
