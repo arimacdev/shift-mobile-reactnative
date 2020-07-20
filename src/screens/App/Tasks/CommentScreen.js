@@ -436,12 +436,7 @@ class ChatScreen extends Component {
       if (supported) {
         Linking.openURL(href);
       } else {
-        Utils.showAlert(
-          true,
-          '',
-          "Cannot open the link. May be missing 'http://'",
-          this.props,
-        );
+        Utils.showAlert(true, '', 'Cannot open. Invalid link', this.props);
       }
     });
   }
@@ -628,14 +623,14 @@ class ChatScreen extends Component {
     }
   }
 
-  async iOSFilePicker() {
+  async FilePicker() {
     Alert.alert(
       'Add Files',
       'Select the file source',
       [
         {text: 'Camera', onPress: () => this.selectCamera()},
         {text: 'Gallery', onPress: () => this.selectGallery()},
-        {text: 'Files', onPress: () => this.doumentPicker()},
+        // {text: 'Files', onPress: () => this.doumentPicker()},
         {text: 'Cancel', onPress: () => console.log('Back')},
       ],
       {
@@ -923,7 +918,8 @@ class ChatScreen extends Component {
 
   async addUrlPress() {
     let html = await this.richText.current?.getContentHtml();
-    await this.setState({chatText: html});
+    let replacedHtml = html.replace(/(<div[^>]+?>|<div>|<\/div>)/gi, '');
+    await this.setState({chatText: replacedHtml});
     let URL = this.state.url;
     let urlTitle = this.state.urlTitle != '' ? this.state.urlTitle : URL;
     this.setState({
@@ -1162,9 +1158,7 @@ class ChatScreen extends Component {
               taskId={this.state.taskId}
               getRefEditor={refEditor => this.getRefEditor(refEditor)}
               doumentPicker={() => {
-                Platform.OS == 'ios'
-                  ? this.iOSFilePicker()
-                  : this.doumentPicker();
+                this.FilePicker();
               }}
               onInsertLink={() => this.showEnterUrlModal()}
               onChangeEditorText={text => this.onChangeEditorText(text)}
