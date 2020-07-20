@@ -114,7 +114,9 @@ class TasksTabScreen extends Component {
     super(props);
     this.lazyGetAllTaskInProject = this.lazyGetAllTaskInProject.bind(this);
     this.lazyGetMyTaskInProject = this.lazyGetMyTaskInProject.bind(this);
-    this.getAllTaskInProjectDirectly = this.getAllTaskInProjectDirectly.bind(this);
+    this.getAllTaskInProjectDirectly = this.getAllTaskInProjectDirectly.bind(
+      this,
+    );
     this.state = {
       filterdDataAllTaks: [],
       filterdAndMyTasksData: [],
@@ -144,7 +146,7 @@ class TasksTabScreen extends Component {
       myListEndIndex: 10,
       cachecdData: [],
       cachecdMyListData: [],
-      listScrolled: false
+      listScrolled: false,
     };
 
     this.onDateChange = this.onDateChange.bind(this);
@@ -179,7 +181,7 @@ class TasksTabScreen extends Component {
     ) {
       this.setState({
         filterdDataAllTaks: this.props.allTaskByProject,
-        cachecdData: this.props.allTaskByProject
+        cachecdData: this.props.allTaskByProject,
       });
     }
 
@@ -252,47 +254,77 @@ class TasksTabScreen extends Component {
     });
     let selectedProjectID = this.state.selectedProjectID;
     AsyncStorage.getItem('userID').then(userID => {
-      this.props.getAllTaskInProjects(userID, selectedProjectID, startIndex, endIndex);
+      this.props.getAllTaskInProjects(
+        userID,
+        selectedProjectID,
+        startIndex,
+        endIndex,
+      );
     });
   }
- 
+
   lazyGetAllTaskInProject = async () => {
     let selectedProjectID = this.state.selectedProjectID;
     this.setState({
       filterType: 'None',
     });
-    if (this.state.cachecdData.length == 10 && this.state.listScrolled == true) {
+    if (
+      this.state.cachecdData.length == 10 &&
+      this.state.listScrolled == true
+    ) {
       let listStartIndex = this.state.listStartIndex + 1 + 10;
       let listEndIndex = this.state.listEndIndex + 10;
       AsyncStorage.getItem('userID').then(userID => {
-      this.getAllTaskInProjectDirectly(userID, selectedProjectID, listStartIndex, listEndIndex)
+        this.getAllTaskInProjectDirectly(
+          userID,
+          selectedProjectID,
+          listStartIndex,
+          listEndIndex,
+        );
       });
-      this.setState({listStartIndex: listStartIndex - 1, listEndIndex: listEndIndex});
+      this.setState({
+        listStartIndex: listStartIndex - 1,
+        listEndIndex: listEndIndex,
+      });
     } else {
       // TODO: Add toast
     }
-  }
+  };
 
-  getAllTaskInProjectDirectly = async (userID, selectedProjectID, listStartIndex, listEndIndex) => {
+  getAllTaskInProjectDirectly = async (
+    userID,
+    selectedProjectID,
+    listStartIndex,
+    listEndIndex,
+  ) => {
     this.setState({dataLoading: true, cachecdData: []});
-    await APIServices.getAllTaskInProjectsData(userID, selectedProjectID, listStartIndex, listEndIndex)
-    .then(response => {
-      if (response.message == 'success') {
-        this.setState({
-          filterdDataAllTaks: this.state.filterdDataAllTaks.concat(response.data),
-          cachecdData: response.data,
-          dataLoading: false,
-        }, () => {
-      });  
-      } else {
+    await APIServices.getAllTaskInProjectsData(
+      userID,
+      selectedProjectID,
+      listStartIndex,
+      listEndIndex,
+    )
+      .then(response => {
+        if (response.message == 'success') {
+          this.setState(
+            {
+              filterdDataAllTaks: this.state.filterdDataAllTaks.concat(
+                response.data,
+              ),
+              cachecdData: response.data,
+              dataLoading: false,
+            },
+            () => {},
+          );
+        } else {
+          this.setState({dataLoading: false});
+        }
+      })
+      .catch(error => {
         this.setState({dataLoading: false});
-      }
-    })
-    .catch(error => {
-      this.setState({dataLoading: false});
-      // Utils.showAlert(true, '', error.data.message, this.props);
-    });
-  }
+        // Utils.showAlert(true, '', error.data.message, this.props);
+      });
+  };
 
   async getMyTaskInProject() {
     let myListStartIndex = 0;
@@ -302,7 +334,12 @@ class TasksTabScreen extends Component {
     });
     let selectedProjectID = this.state.selectedProjectID;
     AsyncStorage.getItem('userID').then(userID => {
-      this.props.getMyTaskInProjects(userID, selectedProjectID, myListStartIndex, myListEndIndex);
+      this.props.getMyTaskInProjects(
+        userID,
+        selectedProjectID,
+        myListStartIndex,
+        myListEndIndex,
+      );
     });
   }
 
@@ -311,13 +348,24 @@ class TasksTabScreen extends Component {
     this.setState({
       filterType: 'None',
     });
-    if (this.state.cachecdMyListData.length == 10 && this.state.listScrolled == true) {
+    if (
+      this.state.cachecdMyListData.length == 10 &&
+      this.state.listScrolled == true
+    ) {
       let myListStartIndex = this.state.myListStartIndex + 1 + 10;
       let myListEndIndex = this.state.myListEndIndex + 10;
       AsyncStorage.getItem('userID').then(userID => {
-      this.getAllMyTaskInProjectDirectly(userID, selectedProjectID, myListStartIndex, myListEndIndex)
+        this.getAllMyTaskInProjectDirectly(
+          userID,
+          selectedProjectID,
+          myListStartIndex,
+          myListEndIndex,
+        );
       });
-      this.setState({myListStartIndex: myListStartIndex - 1, myListEndIndex: myListEndIndex});
+      this.setState({
+        myListStartIndex: myListStartIndex - 1,
+        myListEndIndex: myListEndIndex,
+      });
     } else {
       // TODO: Add toast
     }
@@ -325,31 +373,45 @@ class TasksTabScreen extends Component {
     // AsyncStorage.getItem('userID').then(userID => {
     //   this.props.getMyTaskInProjects(userID, selectedProjectID, myListStartIndex, myListEndIndex);
     // });
-  }
+  };
 
-  getAllMyTaskInProjectDirectly = async (userID, selectedProjectID, listStartIndex, listEndIndex) => {
+  getAllMyTaskInProjectDirectly = async (
+    userID,
+    selectedProjectID,
+    listStartIndex,
+    listEndIndex,
+  ) => {
     this.setState({dataLoading: true, cachecdMyListData: []});
-    await APIServices.getMyTaskInProjectsData(userID, selectedProjectID, listStartIndex, listEndIndex)
-    .then(response => {
-      if (response.message == 'success') {
-        this.setState({
-          filterdAndMyTasksData: this.state.filterdAndMyTasksData.concat(response.data),
-          cachecdMyListData: response.data,
-          dataLoading: false,
-        }, () => {
-      });  
-      } else {
+    await APIServices.getMyTaskInProjectsData(
+      userID,
+      selectedProjectID,
+      listStartIndex,
+      listEndIndex,
+    )
+      .then(response => {
+        if (response.message == 'success') {
+          this.setState(
+            {
+              filterdAndMyTasksData: this.state.filterdAndMyTasksData.concat(
+                response.data,
+              ),
+              cachecdMyListData: response.data,
+              dataLoading: false,
+            },
+            () => {},
+          );
+        } else {
+          this.setState({dataLoading: false});
+        }
+      })
+      .catch(error => {
         this.setState({dataLoading: false});
-      }
-    })
-    .catch(error => {
-      this.setState({dataLoading: false});
-      // Utils.showAlert(true, '', error.data.message, this.props);
-    });
-  }
+        // Utils.showAlert(true, '', error.data.message, this.props);
+      });
+  };
 
-  onMyListScroll (event) {
-    this.setState({ listScrolled: true})
+  onMyListScroll(event) {
+    this.setState({listScrolled: true});
   }
 
   dateViewMyAndFilter = function(item) {
@@ -1251,7 +1313,7 @@ class TasksTabScreen extends Component {
         onRequestClose={() => this.onCloseModel()}
         coverScreen={false}
         backdropTransitionOutTiming={0}>
-        <View style={{margin: 10}}>
+        <View style={styles.modalView}>
           <View>
             <CalendarPicker
               startFromMonday={true}
@@ -1804,7 +1866,7 @@ const styles = EStyleSheet.create({
   ButtonViewStyle: {
     flexDirection: 'row',
     marginTop: '10rem',
-    marginBottom: '10rem',
+    marginBottom: '15rem',
     justifyContent: 'center',
     alignItems: 'center',
     marginHorizontal: '15rem',
@@ -1837,8 +1899,13 @@ const styles = EStyleSheet.create({
     textAlign: 'center',
   },
   modalStyle: {
+    // backgroundColor: colors.white,
+    // marginVertical: '45rem',
+    // borderRadius: '5rem',
+  },
+  modalView: {
+    margin: '10rem',
     backgroundColor: colors.white,
-    marginVertical: '45rem',
     borderRadius: '5rem',
   },
   parentTaskView: {

@@ -271,7 +271,7 @@ class WorkloadTabScreen extends Component {
         onRequestClose={() => this.onCloseModel()}
         coverScreen={false}
         backdropTransitionOutTiming={0}>
-        <View style={{margin: 10}}>
+        <View style={styles.modalView}>
           <View>
             <CalendarPicker
               startFromMonday={true}
@@ -409,7 +409,7 @@ const styles = EStyleSheet.create({
   ButtonViewStyle: {
     flexDirection: 'row',
     marginTop: '10rem',
-    marginBottom: '10rem',
+    marginBottom: '15rem',
     justifyContent: 'center',
     alignItems: 'center',
     marginHorizontal: '15rem',
@@ -442,8 +442,12 @@ const styles = EStyleSheet.create({
     textAlign: 'center',
   },
   modalStyle: {
+    // marginVertical: '100rem',
+    // borderRadius: '5rem',
+  },
+  modalView: {
+    margin: '10rem',
     backgroundColor: colors.white,
-    marginVertical: '100rem',
     borderRadius: '5rem',
   },
 });
