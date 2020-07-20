@@ -23,7 +23,6 @@ import AddEditSubTaskScreen from '../screens/App/Tasks/AddEditSubTaskScreen';
 import FilesView from '../screens/App/Tasks/FilesView';
 import AddEditSprint from '../screens/App/Board/AddEditSprint';
 import TasksLogScreen from '../screens/App/Tasks/TasksLogScreen';
-import SubTasksDetailsScreen from '../screens/App/Tasks/SubTasksDetailsScreen';
 
 export const ProjectsStackNavigator = createStackNavigator(
   {
@@ -236,12 +235,6 @@ export const ProjectsStackNavigator = createStackNavigator(
             onPress={() => navigation.goBack()}
           />
         ),
-      }),
-    },
-    SubTasksDetailsScreen: {
-      screen: SubTasksDetailsScreen,
-      navigationOptions: ({navigation}) => ({
-        header: null,
       }),
     },
   },
