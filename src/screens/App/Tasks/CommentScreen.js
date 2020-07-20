@@ -685,7 +685,7 @@ class ChatScreen extends Component {
 
   async selectCamera() {
     await this.setState({showImagePickerModal: false});
-    
+
     const options = {
       title: 'Select pictures',
       storageOptions: {
@@ -765,7 +765,10 @@ class ChatScreen extends Component {
       uri: res.uri,
       type: res.type, // mime type
       // name: 'Img' + new Date().getTime() + '.png',
-      name: res.fileName,
+      name:
+        Platform.OS == 'ios'
+          ? 'Img' + new Date().getTime() + '.png'
+          : res.fileName,
       size: res.fileSize,
       dateTime:
         moment().format('YYYY/MM/DD') + ' | ' + moment().format('HH:mm'),
@@ -1461,8 +1464,8 @@ const styles = EStyleSheet.create({
     marginRight: '10rem',
   },
   modalStyleImagePicker: {
-    justifyContent: 'flex-end',
-    margin: 0,
+    // justifyContent: 'flex-end',
+    // margin: 0,
   },
   imagePickerButtonViewStyle: {
     marginTop: '20rem',
