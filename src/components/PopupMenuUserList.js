@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import {
   View,
   ScrollView,
@@ -13,10 +13,10 @@ import colors from '../config/colors';
 import icons from '../asserts/icons/icons';
 import EStyleSheet from 'react-native-extended-stylesheet';
 const entireScreenWidth = Dimensions.get('window').width;
-EStyleSheet.build({ $rem: entireScreenWidth / 380 });
-const { height, width } = Dimensions.get('window');
+EStyleSheet.build({$rem: entireScreenWidth / 380});
+const {height, width} = Dimensions.get('window');
 import * as actions from '../redux/actions';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import Modal from 'react-native-modal';
 
 import {
@@ -58,16 +58,16 @@ class PopupMenuUserList extends Component {
     console.log('Keyboard Show');
     this.DataLength = this.state.allActiveUsers.length;
     // alert('Keyboard Shown');
-    this.setState({ keyboardHeight: height * 0.85 - e.endCoordinates.height });
+    this.setState({keyboardHeight: height * 0.85 - e.endCoordinates.height});
   }
 
   _keyboardDidHide(e) {
     console.log('KeyBoard Hide');
-    this.setState({ keyboardHeight: height * 0.23 - e.endCoordinates.height });
+    this.setState({keyboardHeight: height * 0.23 - e.endCoordinates.height});
     // alert('Keyboard Hidden');
   }
   onTriggerPress() {
-    this.setState({ opened: true });
+    this.setState({opened: true});
   }
 
   componentDidMount() {
@@ -75,7 +75,7 @@ class PopupMenuUserList extends Component {
     if (this.state.userName != '') {
       this.onSearchTextChange(this.state.userName);
     }
-    this.setState({ opened: false });
+    this.setState({opened: false});
   }
 
   async getUserList() {
@@ -126,14 +126,14 @@ class PopupMenuUserList extends Component {
       prevProps.addPeopleModelVisible !== this.props.addPeopleModelVisible &&
       this.props.addPeopleModelVisible
     ) {
-      this.setState({ opened: this.props.addPeopleModelVisible });
+      this.setState({opened: this.props.addPeopleModelVisible});
     }
 
     if (
       prevProps.addPeopleModelVisible !== this.props.addPeopleModelVisible &&
       !this.props.addPeopleModelVisible
     ) {
-      this.setState({ opened: this.props.addPeopleModelVisible });
+      this.setState({opened: this.props.addPeopleModelVisible});
     }
 
     if (prevProps.userName !== this.props.userName && this.props.userName) {
@@ -142,28 +142,28 @@ class PopupMenuUserList extends Component {
   }
 
   async onBackdropPress() {
-    this.setState({ opened: false });
+    this.setState({opened: false});
   }
 
   async onSearchTextChange(text) {
-    this.setState({ userName: text, opened: true });
+    this.setState({userName: text, opened: true});
     let result = this.state.allActiveUsers.filter(data =>
       data.label.toLowerCase().includes(text.toLowerCase()),
     );
     if (text == '') {
-      this.setState({ activeUsers: this.state.allActiveUsers });
+      this.setState({activeUsers: this.state.allActiveUsers});
     } else {
-      this.setState({ activeUsers: result });
+      this.setState({activeUsers: result});
     }
   }
 
-  userImage = function (item) {
+  userImage = function(item) {
     let userImage = item.userImage;
 
     if (userImage) {
       return (
         <FadeIn>
-          <Image source={{ uri: userImage }} style={styles.userIcon} />
+          <Image source={{uri: userImage}} style={styles.userIcon} />
         </FadeIn>
       );
     } else {
@@ -178,7 +178,7 @@ class PopupMenuUserList extends Component {
   };
 
   menuOptions(item) {
-    const { navigation } = this.props;
+    const {navigation} = this.props;
     return (
       <View
         style={[
@@ -191,7 +191,7 @@ class PopupMenuUserList extends Component {
           },
         ]}>
         {this.userImage(item)}
-        <View style={{ flex: 1 }}>
+        <View style={{flex: 1}}>
           <Text style={styles.text}>{item.label}</Text>
         </View>
       </View>
@@ -199,7 +199,7 @@ class PopupMenuUserList extends Component {
   }
 
   onSelect(item) {
-    this.setState({ userName: item.label, opened: false });
+    this.setState({userName: item.label, opened: false});
     this.props.onSelect(item);
   }
 
@@ -227,11 +227,13 @@ class PopupMenuUserList extends Component {
         animationOutTiming={600}
         backdropTransitionInTiming={600}
         backdropTransitionOutTiming={600}>
-        {Platform.OS == 'ios' ?
+        {Platform.OS == 'ios' ? (
           <View
             style={{
-              bottom:
-                Platform.OS == 'ios' ? 200 : 0, height: '60%', backgroundColor: colors.projectBgColor, borderRadius: 5
+              bottom: Platform.OS == 'ios' ? 200 : 0,
+              height: '60%',
+              backgroundColor: colors.projectBgColor,
+              borderRadius: 5,
             }}>
             <ScrollView style={scrollStyle.scrollViewMenuOption}>
               {this.state.activeUsers.map(item => {
@@ -243,8 +245,9 @@ class PopupMenuUserList extends Component {
               })}
             </ScrollView>
           </View>
-          :
-          <View style={{ backgroundColor: colors.projectBgColor, borderRadius: 5 }}>
+        ) : (
+          <View
+            style={{backgroundColor: colors.projectBgColor, borderRadius: 5}}>
             <ScrollView style={scrollStyle.scrollViewMenuOption}>
               {this.state.activeUsers.map(item => {
                 return (
@@ -255,10 +258,7 @@ class PopupMenuUserList extends Component {
               })}
             </ScrollView>
           </View>
-        }
-
-
-
+        )}
       </Modal>
     );
   }

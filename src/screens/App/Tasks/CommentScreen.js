@@ -771,7 +771,6 @@ class ChatScreen extends Component {
     await this.state.files.push({
       uri: res.uri,
       type: res.type, // mime type
-      // name: 'Img' + new Date().getTime() + '.png',
       name: imgName,
       size: res.fileSize,
       dateTime:
