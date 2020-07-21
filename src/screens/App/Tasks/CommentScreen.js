@@ -114,7 +114,7 @@ class ChatScreen extends Component {
       chatTextAll: '',
       ownCommnter: '',
       showImagePickerModal: false,
-      commentListHeight: null
+      commentListHeight: null,
     };
     this.editor = null;
   }
@@ -232,7 +232,6 @@ class ChatScreen extends Component {
       '',
       '/',
     );
-    
   }
 
   async fetchData(taskId, startIndex, endIndex) {
@@ -893,16 +892,16 @@ class ChatScreen extends Component {
     if (Platform.OS == 'ios') {
       const {height: windowHeight} = Dimensions.get('window');
       const keyboardHeight = event.endCoordinates.height;
-        this.commentList.measure( (fx, fy, width, height, px, py) => {
-          this.setState({ commentListHeight: height }, () => {
-            if (this.state.commentListHeight > 400) {
-              this.setState({
-                currentKeyboardHeight: windowHeight - keyboardHeight - 200,
-              });
-            } else {
-            }
+      this.commentList.measure((fx, fy, width, height, px, py) => {
+        this.setState({commentListHeight: height}, () => {
+          if (this.state.commentListHeight > 400) {
+            this.setState({
+              currentKeyboardHeight: windowHeight - keyboardHeight - 200,
+            });
+          } else {
+          }
         });
-      }) 
+      });
       const currentlyFocusedField =
         TextInputState.currentlyFocusedField() == null
           ? 0
@@ -1179,7 +1178,9 @@ class ChatScreen extends Component {
       <MenuProvider>
         <View style={styles.container}>
           <View
-            ref={view => { this.commentList = view; }}
+            ref={view => {
+              this.commentList = view;
+            }}
             style={{
               bottom:
                 Platform.OS == 'ios' ? this.state.currentKeyboardHeight : 0,
@@ -1199,42 +1200,43 @@ class ChatScreen extends Component {
           </View>
           <View
             style={{
+              flex: 1,
               bottom:
                 Platform.OS == 'ios' ? this.state.currentKeyboardHeight : 0,
             }}>
-          <View style={styles.textEditorStyle}>
-            <TouchableOpacity
-              style={styles.crossIconStyle}
-              onPress={() => this.onCrossPress()}>
-              <Image
-                style={styles.clearIcon}
-                source={icons.cross}
-                resizeMode={'contain'}
+            <View style={styles.textEditorStyle}>
+              <TouchableOpacity
+                style={styles.crossIconStyle}
+                onPress={() => this.onCrossPress()}>
+                <Image
+                  style={styles.clearIcon}
+                  source={icons.cross}
+                  resizeMode={'contain'}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.sendIconStyle}
+                onPress={() => {
+                  this.sendMessage();
+                }}>
+                <Image
+                  style={styles.chatIcon}
+                  source={icons.forwordGreen}
+                  resizeMode={'contain'}
+                />
+              </TouchableOpacity>
+              <RichTextEditorPell
+                chatText={this.state.chatText}
+                timeTextChange={this.state.timeTextChange}
+                taskId={this.state.taskId}
+                getRefEditor={refEditor => this.getRefEditor(refEditor)}
+                doumentPicker={() => {
+                  this.FilePicker();
+                }}
+                onInsertLink={() => this.showEnterUrlModal()}
+                onChangeEditorText={text => this.onChangeEditorText(text)}
               />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.sendIconStyle}
-              onPress={() => {
-                this.sendMessage();
-              }}>
-              <Image
-                style={styles.chatIcon}
-                source={icons.forwordGreen}
-                resizeMode={'contain'}
-              />
-            </TouchableOpacity>
-            <RichTextEditorPell
-              chatText={this.state.chatText}
-              timeTextChange={this.state.timeTextChange}
-              taskId={this.state.taskId}
-              getRefEditor={refEditor => this.getRefEditor(refEditor)}
-              doumentPicker={() => {
-                this.FilePicker();
-              }}
-              onInsertLink={() => this.showEnterUrlModal()}
-              onChangeEditorText={text => this.onChangeEditorText(text)}
-            />
-          </View>
+            </View>
           </View>
           {this.state.status != 'Connected' && <Loader />}
           {this.renderEnterUrlModal()}
