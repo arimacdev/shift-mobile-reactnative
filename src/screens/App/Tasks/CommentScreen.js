@@ -763,14 +763,16 @@ class ChatScreen extends Component {
   async setImageForFile(res) {
     let taskId = this.state.taskId;
     this.onFilesCrossPress(res.uri);
+    let imgName = res.fileName;
+    if(typeof imgName === "undefined"){
+        var getFilename = res.uri.split("/");
+        imgName = getFilename[getFilename.length - 1];
+    }
     await this.state.files.push({
       uri: res.uri,
       type: res.type, // mime type
       // name: 'Img' + new Date().getTime() + '.png',
-      name:
-        Platform.OS == 'ios'
-          ? 'Img' + new Date().getTime() + '.png'
-          : res.fileName,
+      name: imgName,
       size: res.fileSize,
       dateTime:
         moment().format('YYYY/MM/DD') + ' | ' + moment().format('HH:mm'),
