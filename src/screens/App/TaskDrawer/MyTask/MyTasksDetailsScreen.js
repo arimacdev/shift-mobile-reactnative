@@ -231,8 +231,8 @@ class MyTasksDetailsScreen extends Component {
       this.setState({dataLoading: false, taskResult: taskResult});
     } else {
       this.setState({dataLoading: false});
-      if(error.data.status == 404){
-        Utils.showAlert(true,'','This task was deleted',this.props);
+      if (error.data.status == 404) {
+        Utils.showAlert(true, '', 'This task was deleted', this.props);
         this.props.navigation.goBack();
       }
     }
@@ -405,10 +405,15 @@ class MyTasksDetailsScreen extends Component {
 
   async setImageForFile(res) {
     this.onFilesCrossPress(res.uri);
+    let imgName = res.fileName;
+    if (typeof imgName === 'undefined' || imgName == null) {
+      var getFilename = res.uri.split('/');
+      imgName = getFilename[getFilename.length - 1];
+    }
     await this.state.files.push({
       uri: res.uri,
       type: res.type, // mime type
-      name: 'Img ' + new Date().getTime(),
+      name: imgName,
       size: res.fileSize,
       dateTime:
         moment().format('YYYY/MM/DD') + ' | ' + moment().format('HH:mm'),
@@ -1233,32 +1238,32 @@ class MyTasksDetailsScreen extends Component {
   //API change task status
   async changeTaskStatus(selectedTaskStatusID, selectedTaskStatusName) {
     this.setState({dataLoading: true, showMessageModal: false});
-    try{
-    let selectedTaskID = this.state.selectedTaskID;
-    let resultData = await APIServices.myTaskUpdateTaskStatusData(
-      selectedTaskID,
-      selectedTaskStatusID,
-    );
-    if (resultData.message == 'success') {
-      this.details = {
-        icon: icons.taskBlue,
-        type: 'success',
-        title: 'Sucsess',
-        description: 'Task status has been updated successfully',
-        buttons: {},
-      };
-      this.setState({
-        dataLoading: false,
-        showMessageModal: true,
-        taskStatus: selectedTaskStatusName,
-      });
-    } else {
+    try {
+      let selectedTaskID = this.state.selectedTaskID;
+      let resultData = await APIServices.myTaskUpdateTaskStatusData(
+        selectedTaskID,
+        selectedTaskStatusID,
+      );
+      if (resultData.message == 'success') {
+        this.details = {
+          icon: icons.taskBlue,
+          type: 'success',
+          title: 'Sucsess',
+          description: 'Task status has been updated successfully',
+          buttons: {},
+        };
+        this.setState({
+          dataLoading: false,
+          showMessageModal: true,
+          taskStatus: selectedTaskStatusName,
+        });
+      } else {
+        this.setState({dataLoading: false});
+      }
+    } catch {
       this.setState({dataLoading: false});
+      this.showAlert('', 'Task status update failed');
     }
-  } catch {
-    this.setState({dataLoading: false});
-    this.showAlert('', 'Task status update failed');
-  }
   }
 
   // change name of task
@@ -1273,28 +1278,28 @@ class MyTasksDetailsScreen extends Component {
       showMessageModal: false,
       taskNameEditable: false,
     });
-    try{
-    let selectedTaskID = this.state.selectedTaskID;
-    let resultData = await APIServices.myTaskUpdateTaskNameData(
-      selectedTaskID,
-      text,
-    );
-    if (resultData.message == 'success') {
-      this.details = {
-        icon: icons.taskBlue,
-        type: 'success',
-        title: 'Sucsess',
-        description: 'Task name has been updated successfully',
-        buttons: {},
-      };
-      this.setState({dataLoading: false, showMessageModal: true});
-    } else {
+    try {
+      let selectedTaskID = this.state.selectedTaskID;
+      let resultData = await APIServices.myTaskUpdateTaskNameData(
+        selectedTaskID,
+        text,
+      );
+      if (resultData.message == 'success') {
+        this.details = {
+          icon: icons.taskBlue,
+          type: 'success',
+          title: 'Sucsess',
+          description: 'Task name has been updated successfully',
+          buttons: {},
+        };
+        this.setState({dataLoading: false, showMessageModal: true});
+      } else {
+        this.setState({dataLoading: false});
+      }
+    } catch {
       this.setState({dataLoading: false});
+      this.showAlert('', 'Task name update failed');
     }
-  } catch {
-    this.setState({dataLoading: false});
-    this.showAlert('', 'Task name update failed');
-  }
   }
 
   // change note of task
@@ -1305,67 +1310,71 @@ class MyTasksDetailsScreen extends Component {
   // change note of task API
   async onSubmitTaskNote(note) {
     this.setState({dataLoading: true, showMessageModal: false});
-    try{
-    let selectedTaskID = this.state.selectedTaskID;
-    let resultData = await APIServices.myTaskUpdateTaskNoteData(
-      selectedTaskID,
-      note,
-    );
-    if (resultData.message == 'success') {
-      this.details = {
-        icon: icons.noteRed,
-        type: 'success',
-        title: 'Sucsess',
-        description: 'Notes has been updated successfully',
-        buttons: {},
-      };
-      this.setState({dataLoading: false, showMessageModal: false, note: note});
-    } else {
+    try {
+      let selectedTaskID = this.state.selectedTaskID;
+      let resultData = await APIServices.myTaskUpdateTaskNoteData(
+        selectedTaskID,
+        note,
+      );
+      if (resultData.message == 'success') {
+        this.details = {
+          icon: icons.noteRed,
+          type: 'success',
+          title: 'Sucsess',
+          description: 'Notes has been updated successfully',
+          buttons: {},
+        };
+        this.setState({
+          dataLoading: false,
+          showMessageModal: false,
+          note: note,
+        });
+      } else {
+        this.setState({dataLoading: false});
+      }
+    } catch {
       this.setState({dataLoading: false});
+      this.showAlert('', 'Notes update failed');
     }
-  } catch {
-    this.setState({dataLoading: false});
-    this.showAlert('', 'Notes update failed');
-  }
   }
 
   // change due date of task API DONE
   async changeTaskDueDate() {
-    try{
-    let duedateValue = this.state.duedateValue;
-    let dueTime = this.state.dueTime;
-    let selectedTaskID = this.state.selectedTaskID;
+    try {
+      let duedateValue = this.state.duedateValue;
+      let dueTime = this.state.dueTime;
+      let selectedTaskID = this.state.selectedTaskID;
 
-    let IsoDueDate = duedateValue
-      ? moment(duedateValue + dueTime, 'DD/MM/YYYY hh:mmA').format(
-          'YYYY-MM-DD[T]HH:mm:ss',
-        )
-      : '';
-    this.setState({dataLoading: true, showMessageModal: false});
-    await APIServices.myTaskUpdateDueDateData(selectedTaskID, IsoDueDate)
-      .then(response => {
-        if (response.message == 'success') {
-          this.details = {
-            icon: icons.calendarBlue,
-            type: 'success',
-            title: 'Sucsess',
-            description: 'Due date has been updated successfully',
-            buttons: {},
-          };
-          this.setState({dataLoading: false, showMessageModal: true});
-          this.fetchData(selectedTaskID);
-        } else {
+      let IsoDueDate = duedateValue
+        ? moment(duedateValue + dueTime, 'DD/MM/YYYY hh:mmA').format(
+            'YYYY-MM-DD[T]HH:mm:ss',
+          )
+        : '';
+      this.setState({dataLoading: true, showMessageModal: false});
+      await APIServices.myTaskUpdateDueDateData(selectedTaskID, IsoDueDate)
+        .then(response => {
+          if (response.message == 'success') {
+            this.details = {
+              icon: icons.calendarBlue,
+              type: 'success',
+              title: 'Sucsess',
+              description: 'Due date has been updated successfully',
+              buttons: {},
+            };
+            this.setState({dataLoading: false, showMessageModal: true});
+            this.fetchData(selectedTaskID);
+          } else {
+            this.setState({dataLoading: false});
+            this.setDueDate(this.state.taskResult);
+          }
+        })
+        .catch(error => {
+          //if (error.status == 401 || error.status == 403) {
           this.setState({dataLoading: false});
+          this.showAlert('', error.data.message);
           this.setDueDate(this.state.taskResult);
-        }
-      })
-      .catch(error => {
-        //if (error.status == 401 || error.status == 403) {
-        this.setState({dataLoading: false});
-        this.showAlert('', error.data.message);
-        this.setDueDate(this.state.taskResult);
-        //}
-      });
+          //}
+        });
     } catch {
       this.setState({dataLoading: false});
       this.showAlert('', 'Due date update failed');
@@ -1374,47 +1383,47 @@ class MyTasksDetailsScreen extends Component {
 
   // change reminder date of task API DONE
   async changeTaskReminderDate() {
-    try{
-    let remindDateValue = this.state.remindDateValue;
-    let reminderTime = this.state.reminderTime;
-    let selectedTaskID = this.state.selectedTaskID;
+    try {
+      let remindDateValue = this.state.remindDateValue;
+      let reminderTime = this.state.reminderTime;
+      let selectedTaskID = this.state.selectedTaskID;
 
-    let IsoReminderDate = remindDateValue
-      ? moment(remindDateValue + reminderTime, 'DD/MM/YYYY hh:mmA').format(
-          'YYYY-MM-DD[T]HH:mm:ss',
-        )
-      : '';
-    this.setState({dataLoading: true, showMessageModal: false});
-    await APIServices.myTaskUpdateReminderDateData(
-      selectedTaskID,
-      IsoReminderDate,
-    )
-      .then(response => {
-        if (response.message == 'success') {
-          this.details = {
-            icon: icons.clockOrange,
-            type: 'success',
-            title: 'Sucsess',
-            description: 'Remind date has been updated successfully',
-            buttons: {},
-          };
-          this.setState({dataLoading: false, showMessageModal: true});
-          this.fetchData(selectedTaskID);
-        } else {
+      let IsoReminderDate = remindDateValue
+        ? moment(remindDateValue + reminderTime, 'DD/MM/YYYY hh:mmA').format(
+            'YYYY-MM-DD[T]HH:mm:ss',
+          )
+        : '';
+      this.setState({dataLoading: true, showMessageModal: false});
+      await APIServices.myTaskUpdateReminderDateData(
+        selectedTaskID,
+        IsoReminderDate,
+      )
+        .then(response => {
+          if (response.message == 'success') {
+            this.details = {
+              icon: icons.clockOrange,
+              type: 'success',
+              title: 'Sucsess',
+              description: 'Remind date has been updated successfully',
+              buttons: {},
+            };
+            this.setState({dataLoading: false, showMessageModal: true});
+            this.fetchData(selectedTaskID);
+          } else {
+            this.setState({dataLoading: false});
+            this.setReminderDate(this.state.taskResult);
+          }
+        })
+        .catch(error => {
+          //if (error.status == 401 || error.status == 403) {
           this.setState({dataLoading: false});
+          this.showAlert('', error.data.message);
           this.setReminderDate(this.state.taskResult);
-        }
-      })
-      .catch(error => {
-        //if (error.status == 401 || error.status == 403) {
-        this.setState({dataLoading: false});
-        this.showAlert('', error.data.message);
-        this.setReminderDate(this.state.taskResult);
-        //}
-      });
+          //}
+        });
     } catch {
-        this.setState({dataLoading: false});
-        this.showAlert('', 'Remind date update failed');
+      this.setState({dataLoading: false});
+      this.showAlert('', 'Remind date update failed');
     }
   }
 
@@ -1623,24 +1632,24 @@ class MyTasksDetailsScreen extends Component {
           {dataLoading && <Loader />}
         </ScrollView>
         <AwesomeAlert
-            show={showAlert}
-            showProgress={false}
-            title={alertTitle}
-            message={alertMsg}
-            closeOnTouchOutside={true}
-            closeOnHardwareBackPress={false}
-            showCancelButton={false}
-            showConfirmButton={true}
-            cancelText=""
-            confirmText="OK"
-            confirmButtonColor={colors.primary}
-            onConfirmPressed={() => {
-              this.hideAlert();
-            }}
-            overlayStyle={{backgroundColor: colors.alertOverlayColor}}
-            contentContainerStyle={styles.alertContainerStyle}
-            confirmButtonStyle={styles.alertConfirmButtonStyle}
-          />
+          show={showAlert}
+          showProgress={false}
+          title={alertTitle}
+          message={alertMsg}
+          closeOnTouchOutside={true}
+          closeOnHardwareBackPress={false}
+          showCancelButton={false}
+          showConfirmButton={true}
+          cancelText=""
+          confirmText="OK"
+          confirmButtonColor={colors.primary}
+          onConfirmPressed={() => {
+            this.hideAlert();
+          }}
+          overlayStyle={{backgroundColor: colors.alertOverlayColor}}
+          contentContainerStyle={styles.alertContainerStyle}
+          confirmButtonStyle={styles.alertConfirmButtonStyle}
+        />
         <MessageShowModal
           showMessageModal={this.state.showMessageModal}
           details={this.details}
@@ -1953,7 +1962,7 @@ const styles = EStyleSheet.create({
     borderRadius: 0,
     borderTopStartRadius: '5rem',
     borderTopEndRadius: '5rem',
-    zIndex: 100000
+    zIndex: 100000,
   },
   alertConfirmButtonStyle: {
     width: '100rem',

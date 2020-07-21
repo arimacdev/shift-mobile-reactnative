@@ -701,10 +701,15 @@ class AddNewTasksScreen extends Component {
 
   async setImageForFile(res) {
     this.onFilesCrossPress(res.uri);
+    let imgName = res.fileName;
+    if (typeof imgName === 'undefined' || imgName == null) {
+      var getFilename = res.uri.split('/');
+      imgName = getFilename[getFilename.length - 1];
+    }
     await this.state.files.push({
       uri: res.uri,
       type: res.type, // mime type
-      name: 'Img ' + new Date().getTime(),
+      name: imgName,
       size: res.fileSize,
       dateTime:
         moment().format('YYYY/MM/DD') + ' | ' + moment().format('HH:mm'),

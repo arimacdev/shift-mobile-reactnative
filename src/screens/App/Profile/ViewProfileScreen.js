@@ -208,7 +208,12 @@ class ViewProfileScreen extends Component {
       } else if (response.error) {
       } else if (response.customButton) {
       } else {
-        this.uploadFiles(response.uri, response.name, response.type);
+        let imgName = response.fileName;
+        if (typeof imgName === 'undefined' || imgName == null) {
+          var getFilename = response.uri.split('/');
+          imgName = getFilename[getFilename.length - 1];
+        }
+        this.uploadFiles(response.uri, imgName, response.type);
       }
     });
   }
@@ -228,7 +233,12 @@ class ViewProfileScreen extends Component {
       } else if (response.error) {
       } else if (response.customButton) {
       } else {
-        this.uploadFiles(response.uri, response.fileName, response.type);
+        let imgName = response.fileName;
+        if (typeof imgName === 'undefined' || imgName == null) {
+          var getFilename = response.uri.split('/');
+          imgName = getFilename[getFilename.length - 1];
+        }
+        this.uploadFiles(response.uri, imgName, response.type);
       }
     });
   }
