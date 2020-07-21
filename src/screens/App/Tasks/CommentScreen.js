@@ -763,9 +763,9 @@ class ChatScreen extends Component {
     let taskId = this.state.taskId;
     this.onFilesCrossPress(res.uri);
     let imgName = res.fileName;
-    if(typeof imgName === "undefined" || imgName == null){
-        var getFilename = res.uri.split("/");
-        imgName = getFilename[getFilename.length - 1];
+    if (typeof imgName === 'undefined' || imgName == null) {
+      var getFilename = res.uri.split('/');
+      imgName = getFilename[getFilename.length - 1];
     }
     await this.state.files.push({
       uri: res.uri,
@@ -820,10 +820,10 @@ class ChatScreen extends Component {
       });
       for (const res of results) {
         this.onFilesCrossPress(res.uri);
-        let imgName = res.fileName;
-        if(typeof imgName === "undefined"){
-            var getFilename = res.uri.split("/");
-            imgName = getFilename[getFilename.length - 1];
+        let imgName = res.name;
+        if (typeof imgName === 'undefined') {
+          var getFilename = res.uri.split('/');
+          imgName = getFilename[getFilename.length - 1];
         }
         await this.state.files.push({
           uri: res.uri,
