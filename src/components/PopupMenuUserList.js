@@ -229,12 +229,7 @@ class PopupMenuUserList extends Component {
         backdropTransitionOutTiming={600}>
         {Platform.OS == 'ios' ? (
           <View
-            style={{
-              bottom: Platform.OS == 'ios' ? 200 : 0,
-              height: '60%',
-              backgroundColor: colors.projectBgColor,
-              borderRadius: 5,
-            }}>
+            style={styles.menuStyleIOS}>
             <ScrollView style={scrollStyle.scrollViewMenuOption}>
               {this.state.activeUsers.map(item => {
                 return (
@@ -246,8 +241,7 @@ class PopupMenuUserList extends Component {
             </ScrollView>
           </View>
         ) : (
-          <View
-            style={{backgroundColor: colors.projectBgColor, borderRadius: 5}}>
+          <View style={styles.menuStyle}>
             <ScrollView style={scrollStyle.scrollViewMenuOption}>
               {this.state.activeUsers.map(item => {
                 return (
@@ -294,6 +288,16 @@ const styles = EStyleSheet.create({
     marginBottom: '135rem',
     justifyContent: 'flex-end',
   },
+  menuStyle: {
+    backgroundColor: colors.projectBgColor,
+    borderRadius: '5rem',
+  },
+  menuStyleIOS:{
+    bottom: 200,
+    height: '60%',
+    backgroundColor: colors.projectBgColor,
+    borderRadius: '5rem',
+  }
 });
 
 const mapStateToProps = state => {
