@@ -36,6 +36,17 @@ let successDetails = {
   buttons: {},
 };
 
+let dropData = [
+  {
+    id: 'time',
+    value: 'Time',
+  },
+  {
+    id: 'story',
+    value: 'Story',
+  },
+];
+
 class CreateNewProjectScreen extends Component {
   constructor(props) {
     super(props);
@@ -70,6 +81,7 @@ class CreateNewProjectScreen extends Component {
       isDateNeedLoading: false,
       projectAlias: '',
       showMessageModal: false,
+      weightMeasures:'Time'
     };
   }
 
@@ -462,6 +474,7 @@ class CreateNewProjectScreen extends Component {
     let projectStartTime = this.state.projectStartTime;
     let projectEndTime = this.state.projectEndTime;
     let projectAlias = this.state.projectAlias;
+    let weightMeasures = this.state.weightMeasures;
     if (projectStartDate && projectEndDate) {
       let startDate = moment(projectStartDateValue, 'DD MM YYYY');
       let endDate = moment(projectEndDateValue, 'DD MM YYYY');
@@ -495,7 +508,7 @@ class CreateNewProjectScreen extends Component {
 
     return (
       <View style={{flex: 1}}>
-        <ScrollView style={{marginBottom: EStyleSheet.value('80rem')}}>
+        <ScrollView style={{marginBottom: EStyleSheet.value('90rem')}}>
           <View style={styles.titleView}>
             <Text style={styles.titleText}>
               You’re about to start a new project
@@ -569,13 +582,30 @@ class CreateNewProjectScreen extends Component {
               editable={false}
             />
           </View>
-          <View style={[styles.taskFieldView]}>
-            <TextInput
-              style={[styles.textInput, {width: '95%'}]}
-              placeholder={'Weight measures*'}
-              value={projectAlias}
-              maxLength={6}
-              onChangeText={projectAlias => this.setState({projectAlias})}
+          <View style={styles.taskFieldView}>
+            <Dropdown
+              style={{paddingLeft: 5}}
+              label=""
+              labelFontSize={0}
+              fontSize={13}
+              data={dropData}
+              textColor={colors.gray}
+              error={''}
+              animationDuration={0.5}
+              containerStyle={{width: '100%'}}
+              overlayStyle={{width: '100%'}}
+              pickerStyle={styles.projectFilterStyle}
+              dropdownPosition={0}
+              value={weightMeasures}
+              itemColor={'black'}
+              selectedItemColor={'black'}
+              dropdownOffset={{top: 10}}
+              baseColor={colors.projectBgColor}
+              // renderBase={this.renderBase}
+              renderAccessory={this.renderBase}
+              itemTextStyle={{marginLeft: 15}}
+              itemPadding={10}
+              onChangeText={value => this.onFilter(value)}
             />
           </View>
           {this.state.showPicker ? this.renderDatePicker() : null}
@@ -725,6 +755,11 @@ const styles = EStyleSheet.create({
     bottom: 0,
     width: '100%',
     marginBottom: 15,
+  },
+  projectFilterStyle: {
+    width: '89.5%',
+    marginTop: '64rem',
+    marginLeft: '13rem',
   },
   alertContainerStyle: {
     bottom: 0,
