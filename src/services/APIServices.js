@@ -3262,7 +3262,34 @@ async function updateProjectWeightTypeData(projectId, weightType) {
       url: baseURL + UPDATE_PROJECT_WEIGHT_TYPE + '/' + projectId + '/weight',
       method: 'PUT',
       data: {
-        weightType: weightType
+        weightType: weightType,
+      },
+    },
+    true,
+    headers,
+  );
+}
+
+async function updateTaskWeightData(projectID, taskID, estimatedWeight, actualWeight) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
+  let userIDHeder = null;
+  userIDHeder = await AsyncStorage.getItem('userID');
+
+  let headers = {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+    user: userIDHeder,
+  };
+
+  return request(
+    {
+      url: baseURL + UPDATE_PROJECT_TASK + '/' + projectID + '/tasks/' + taskID,
+      method: 'PUT',
+      data: {
+        estimatedWeight: estimatedWeight, 
+        actualWeight: actualWeight,
+        taskType: 'project',
       },
     },
     true,
@@ -3382,7 +3409,8 @@ const APIServices = {
   getCommentsCountData,
   uploadFileToComment,
   addCommentMentionNotificationData,
-  updateProjectWeightTypeData
+  updateProjectWeightTypeData,
+  updateTaskWeightData
 };
 
 export default APIServices;
