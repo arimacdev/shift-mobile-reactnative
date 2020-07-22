@@ -732,11 +732,15 @@ class EditProjectScreen extends Component {
   };
 
   onUpdateWeightType() {
-    this.setState({showWeighModal: true});
+    this.setState({showWeighModal: true, projectNameForWeight: ''});
   }
 
   onCloseWeightModal() {
-    this.setState({showWeighModal: false});
+    this.setState({showWeighModal: false, projectNameForWeight: ''});
+  }
+
+  onProjectNameChange(text) {
+    this.setState({projectNameForWeight: text});
   }
 
   renderUpdateWeightTypeModal() {
@@ -750,35 +754,14 @@ class EditProjectScreen extends Component {
         coverScreen={false}
         backdropTransitionOutTiming={0}>
         <View style={styles.weightModalInnerStyle}>
-          <View
-            style={[
-              styles.imageContainer,
-              {
-                marginBottom:
-                  details.type == 'success' ? EStyleSheet.value('15rem') : 0,
-              },
-            ]}>
+          <View style={styles.imageContainer}>
             <Image
               style={styles.iconStyle}
-              source={details.icon}
+              source={icons.alertRed}
               resizeMode="contain"
             />
-            <Text
-              style={[
-                styles.modalHeadderText,
-                {
-                  color: colors.colorBlackRussian,
-                },
-              ]}>
-              Update Weight Type
-            </Text>
-            <Text
-              style={[
-                styles.textDescription,
-                {
-                  color: colors.colorShuttleGrey,
-                },
-              ]}>
+            <Text style={styles.modalHeadderText}>Update Weight Type</Text>
+            <Text style={styles.textDescription}>
               Updating project weight type will remove already existing weight
               allocation from all tasks of the project
             </Text>
@@ -790,9 +773,9 @@ class EditProjectScreen extends Component {
             <View style={styles.weightModalInputTextViewInnerStyle}>
               <TextInput
                 style={styles.weightModalInputTextInnerStyle}
-                placeholder={'http://example.com'}
+                placeholder={'Project name'}
                 value={this.state.projectNameForWeight}
-                onChangeText={text => this.onUrlChange(text)}
+                onChangeText={text => this.onProjectNameChange(text)}
               />
             </View>
           </View>
@@ -808,8 +791,8 @@ class EditProjectScreen extends Component {
                 },
               ]}
               disabled={this.state.projectNameForWeight == '' ? true : false}
-              onPress={() => this.addUrlPress()}>
-              <Text style={styles.positiveTextStyle}>Insert</Text>
+              onPress={() => this.updateProjectWeightType()}>
+              <Text style={styles.positiveTextStyle}>Update</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.cancelStyle}
@@ -825,37 +808,47 @@ class EditProjectScreen extends Component {
   async updateProjectWeightType() {
     let projectID = this.state.projectID;
     let weightType = this.state.weightType;
+    let projectName = this.state.projectName;
+    let projectNameForWeight = this.state.projectNameForWeight;
 
-    this.setState({dataLoading: true, showMessageModal: false});
-    await APIServices.updateProjectWeightTypeData(projectID, weightType)
-      .then(response => {
-        if (response.message == 'success') {
-          successDetails = {
-            icon: icons.folderGreen,
-            type: 'success',
-            title: 'Success',
-            description: 'Project weight type have been updated successfully',
-            buttons: {},
-          };
-          this.setState({
-            dataLoading: false,
-            showMessageModal: true,
-            name: name,
-          });
-        } else {
-          this.setState({dataLoading: false});
-          Utils.showAlert(true, '', response.message, this.props);
-        }
-      })
-      .catch(error => {
-        this.setState({dataLoading: false});
-        Utils.showAlert(
-          true,
-          '',
-          'Project weight type update faild',
-          this.props,
-        );
+    if (projectName == projectNameForWeight) {
+      this.setState({
+        dataLoading: true,
+        showMessageModal: false,
+        showWeighModal: false,
       });
+      await APIServices.updateProjectWeightTypeData(projectID, weightType)
+        .then(response => {
+          if (response.message == 'success') {
+            successDetails = {
+              icon: icons.folderGreen,
+              type: 'success',
+              title: 'Success',
+              description: 'Project weight type have been updated successfully',
+              buttons: {},
+            };
+            this.setState({
+              dataLoading: false,
+              showMessageModal: true,
+              name: name,
+            });
+          } else {
+            this.setState({dataLoading: false});
+            Utils.showAlert(true, '', response.message, this.props);
+          }
+        })
+        .catch(error => {
+          this.setState({dataLoading: false});
+          Utils.showAlert(
+            true,
+            '',
+            'Project weight type update faild',
+            this.props,
+          );
+        });
+    } else {
+      Utils.showAlert(true, '', 'Project name not matched', this.props);
+    }
   }
 
   render() {
@@ -1299,6 +1292,99 @@ const styles = EStyleSheet.create({
   },
   weightModalInnerStyle: {
     backgroundColor: colors.white,
+    borderRadius: '5rem',
+  },
+  modalHeaderView: {
+    flexDirection: 'row',
+    marginHorizontal: '20rem',
+    marginVertical: '20rem',
+  },
+  imageContainer: {
+    marginTop: '10rem',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  modalHeadderText: {
+    fontSize: '16rem',
+    fontFamily: 'CircularStd-Bold',
+    marginHorizontal: '20rem',
+    textAlign: 'center',
+    color: colors.colorBlackRussian,
+  },
+  textDescription: {
+    marginTop: '10rem',
+    marginBottom: '20rem',
+    fontSize: '12rem',
+    fontFamily: 'CircularStd-Book',
+    marginHorizontal: '40rem',
+    color: colors.colorShuttleGrey,
+    textAlign: 'center',
+  },
+  iconStyle: {
+    width: '42rem',
+    height: '42rem',
+    marginTop: '12rem',
+    marginBottom: '10rem',
+  },
+  weightModalTextStyle: {
+    marginTop: '10rem',
+    marginBottom: '10rem',
+    fontSize: '12rem',
+    fontFamily: 'CircularStd-Book',
+    fontWeight: 'bold',
+    marginHorizontal: '40rem',
+    color: colors.black,
+    textAlign: 'center',
+  },
+  weightModalInputTextViewInnerStyle: {
+    backgroundColor: colors.colorWhisper,
+    borderRadius: '5rem',
+    marginTop: '5rem',
+    height: Platform.OS == 'ios' ? '35rem' : '50rem',
+    marginHorizontal: '20rem',
+  },
+  weightModalInputTextInnerStyle: {
+    marginLeft: '10rem',
+    marginTop: Platform.OS == 'ios' ? '10rem' : '0rem',
+  },
+  ButtonViewStyle: {
+    flexDirection: 'row',
+    marginTop: '15rem',
+    marginHorizontal: '20rem',
+    marginBottom: '15rem',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  positiveStyle: {
+    flex: 1,
+    height: '45rem',
+    backgroundColor: colors.lightGreen,
+    borderRadius: '5rem',
+    paddingHorizontal: '40rem',
+    paddingVertical: '10rem',
+    justifyContent: 'center',
+  },
+  positiveTextStyle: {
+    fontSize: '15rem',
+    color: colors.white,
+    textAlign: 'center',
+    fontFamily: 'CircularStd-Medium',
+  },
+  cancelStyle: {
+    flex: 1,
+    height: '45rem',
+    marginLeft: '10rem',
+    backgroundColor: colors.lightRed,
+    borderRadius: '5rem',
+    paddingHorizontal: '40rem',
+    paddingVertical: '10rem',
+    justifyContent: 'center',
+  },
+  cancelTextStyle: {
+    fontSize: '15rem',
+    color: colors.white,
+    textAlign: 'center',
+    fontFamily: 'CircularStd-Medium',
   },
 });
 
