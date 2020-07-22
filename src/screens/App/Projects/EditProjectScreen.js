@@ -29,6 +29,9 @@ import Loader from '../../../components/Loader';
 import APIServices from '../../../services/APIServices';
 import NavigationService from '../../../services/NavigationService';
 import MessageShowModal from '../../../components/MessageShowModal';
+import Utils from '../../../utils/Utils';
+import Modal from 'react-native-modal';
+
 const {height, width} = Dimensions.get('window');
 
 let dropData = [
@@ -90,15 +93,14 @@ let deleteDetails = {
   buttons: {positive: 'Delete', negative: 'Cancel'},
 };
 
-let successDetails = {
-  icon: icons.folderGreen,
-  type: 'success',
-  title: 'Success',
-  description: 'Project details have been edited successfully',
-  buttons: {},
-};
-
 class EditProjectScreen extends Component {
+  successDetails = {
+    icon: icons.folderGreen,
+    type: 'success',
+    title: 'Success',
+    description: 'Project details have been edited successfully',
+    buttons: {},
+  };
   constructor(props) {
     super(props);
     this.state = {
@@ -141,6 +143,8 @@ class EditProjectScreen extends Component {
       deleteButtonPress: false,
       weightType: '',
       weightTypeValue: '',
+      showWeighModal: false,
+      projectNameForWeight: '',
     };
   }
 
@@ -214,6 +218,8 @@ class EditProjectScreen extends Component {
           projectClient: projectData.data.clientId,
           projectAlias: projectData.data.projectAlias,
           weightType: projectData.data.weightType,
+          weightTypeValue:
+            projectData.data.weightType == 'time' ? 'Time' : 'Story',
           //projectStartDate : startDate,
           //projectEndDate : endDate,
           //projectStatus : projectStatus,
@@ -725,6 +731,133 @@ class EditProjectScreen extends Component {
     this.setState({weightType: weightTypeId, weightTypeValue: weightTypeValue});
   };
 
+  onUpdateWeightType() {
+    this.setState({showWeighModal: true});
+  }
+
+  onCloseWeightModal() {
+    this.setState({showWeighModal: false});
+  }
+
+  renderUpdateWeightTypeModal() {
+    return (
+      <Modal
+        isVisible={this.state.showWeighModal}
+        style={styles.modalStyleWeight}
+        onBackButtonPress={() => this.onCloseWeightModal()}
+        onBackdropPress={() => this.onCloseWeightModal()}
+        onRequestClose={() => this.onCloseWeightModal()}
+        coverScreen={false}
+        backdropTransitionOutTiming={0}>
+        <View style={styles.weightModalInnerStyle}>
+          <View
+            style={[
+              styles.imageContainer,
+              {
+                marginBottom:
+                  details.type == 'success' ? EStyleSheet.value('15rem') : 0,
+              },
+            ]}>
+            <Image
+              style={styles.iconStyle}
+              source={details.icon}
+              resizeMode="contain"
+            />
+            <Text
+              style={[
+                styles.modalHeadderText,
+                {
+                  color: colors.colorBlackRussian,
+                },
+              ]}>
+              Update Weight Type
+            </Text>
+            <Text
+              style={[
+                styles.textDescription,
+                {
+                  color: colors.colorShuttleGrey,
+                },
+              ]}>
+              Updating project weight type will remove already existing weight
+              allocation from all tasks of the project
+            </Text>
+          </View>
+          <View style={styles.weightModalInputTextViewStyle}>
+            <Text style={styles.weightModalTextStyle}>
+              Enter project name to proceed
+            </Text>
+            <View style={styles.weightModalInputTextViewInnerStyle}>
+              <TextInput
+                style={styles.weightModalInputTextInnerStyle}
+                placeholder={'http://example.com'}
+                value={this.state.projectNameForWeight}
+                onChangeText={text => this.onUrlChange(text)}
+              />
+            </View>
+          </View>
+          <View style={styles.ButtonViewStyle}>
+            <TouchableOpacity
+              style={[
+                styles.positiveStyle,
+                {
+                  backgroundColor:
+                    this.state.projectNameForWeight == ''
+                      ? colors.lighterGray
+                      : colors.lightGreen,
+                },
+              ]}
+              disabled={this.state.projectNameForWeight == '' ? true : false}
+              onPress={() => this.addUrlPress()}>
+              <Text style={styles.positiveTextStyle}>Insert</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.cancelStyle}
+              onPress={() => this.onCloseWeightModal()}>
+              <Text style={styles.cancelTextStyle}>Cancel</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+    );
+  }
+
+  async updateProjectWeightType() {
+    let projectID = this.state.projectID;
+    let weightType = this.state.weightType;
+
+    this.setState({dataLoading: true, showMessageModal: false});
+    await APIServices.updateProjectWeightTypeData(projectID, weightType)
+      .then(response => {
+        if (response.message == 'success') {
+          successDetails = {
+            icon: icons.folderGreen,
+            type: 'success',
+            title: 'Success',
+            description: 'Project weight type have been updated successfully',
+            buttons: {},
+          };
+          this.setState({
+            dataLoading: false,
+            showMessageModal: true,
+            name: name,
+          });
+        } else {
+          this.setState({dataLoading: false});
+          Utils.showAlert(true, '', response.message, this.props);
+        }
+      })
+      .catch(error => {
+        this.setState({dataLoading: false});
+        Utils.showAlert(
+          true,
+          '',
+          'Project weight type update faild',
+          this.props,
+        );
+      });
+  }
+
   render() {
     let projectName = this.state.projectName;
     let projectClient = this.state.projectClient;
@@ -859,7 +992,7 @@ class EditProjectScreen extends Component {
           </View>
           <TouchableOpacity
             style={styles.updateWeightTypeView}
-            onPress={() => this.onSubmitTaskNote(this.state.note)}>
+            onPress={() => this.onUpdateWeightType()}>
             <Text style={styles.updateWeightTypeText}>UPDATE WEIGHT TYPE</Text>
           </TouchableOpacity>
           {this.state.showPicker ? this.renderDatePicker() : null}
@@ -930,10 +1063,11 @@ class EditProjectScreen extends Component {
         />
         <MessageShowModal
           showMessageModal={this.state.showMessageModal}
-          details={deleteButtonPress ? deleteDetails : successDetails}
+          details={deleteButtonPress ? deleteDetails : this.successDetails}
           onPress={() => this.reomoveProjectSuccess(this)}
           onPressCancel={() => this.onPressCancel(this)}
         />
+        {this.renderUpdateWeightTypeModal()}
         {dataLoading && <Loader />}
         {updateProjectLoading && <Loader />}
         {deleteProjectErrorMessage && <Loader />}
@@ -1162,6 +1296,9 @@ const styles = EStyleSheet.create({
     fontSize: '11rem',
     fontWeight: 'bold',
     fontFamily: 'CircularStd-Medium',
+  },
+  weightModalInnerStyle: {
+    backgroundColor: colors.white,
   },
 });
 

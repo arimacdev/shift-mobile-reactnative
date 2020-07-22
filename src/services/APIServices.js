@@ -84,6 +84,7 @@ import {
   GET_COMMENTS_COUNT,
   UPLOAD_FILE_TO_COMMENT,
   ADD_COMMENT_MENTION_NOTIFICATION,
+  UPDATE_PROJECT_WEIGHT_TYPE,
 } from '../api/API';
 import AsyncStorage from '@react-native-community/async-storage';
 import {SET_UPLOAD_PROGRESS} from '../redux/types';
@@ -3244,6 +3245,31 @@ async function addCommentMentionNotificationData(
   );
 }
 
+async function updateProjectWeightTypeData(projectId, weightType) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
+  let userIDHeder = null;
+  userIDHeder = await AsyncStorage.getItem('userID');
+
+  let headers = {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+    userId: userIDHeder,
+  };
+
+  return request(
+    {
+      url: baseURL + UPDATE_PROJECT_WEIGHT_TYPE + '/' + projectId + '/weight',
+      method: 'PUT',
+      data: {
+        weightType: weightType
+      },
+    },
+    true,
+    headers,
+  );
+}
+
 const APIServices = {
   getAllProjectsByUserData,
   getUserData,
@@ -3356,6 +3382,7 @@ const APIServices = {
   getCommentsCountData,
   uploadFileToComment,
   addCommentMentionNotificationData,
+  updateProjectWeightTypeData
 };
 
 export default APIServices;

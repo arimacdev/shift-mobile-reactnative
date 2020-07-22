@@ -101,3 +101,5 @@ export const DELETE_COMMENT_REACTION = `task/comment`;
 export const GET_COMMENTS_COUNT = `task`;
 export const UPLOAD_FILE_TO_COMMENT = `task`;
 export const ADD_COMMENT_MENTION_NOTIFICATION = `notification/mention`;
+
+export const UPDATE_PROJECT_WEIGHT_TYPE = `projects`
