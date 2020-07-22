@@ -495,7 +495,7 @@ class CreateNewProjectScreen extends Component {
 
     return (
       <View style={{flex: 1}}>
-        <ScrollView style={{marginBottom: EStyleSheet.value('02rem')}}>
+        <ScrollView style={{marginBottom: EStyleSheet.value('80rem')}}>
           <View style={styles.titleView}>
             <Text style={styles.titleText}>
               You’re about to start a new project
@@ -567,6 +567,15 @@ class CreateNewProjectScreen extends Component {
               value={estimateDatesText}
               onChangeText={estimateDates => this.setState({estimateDatesText})}
               editable={false}
+            />
+          </View>
+          <View style={[styles.taskFieldView]}>
+            <TextInput
+              style={[styles.textInput, {width: '95%'}]}
+              placeholder={'Weight measures*'}
+              value={projectAlias}
+              maxLength={6}
+              onChangeText={projectAlias => this.setState({projectAlias})}
             />
           </View>
           {this.state.showPicker ? this.renderDatePicker() : null}
