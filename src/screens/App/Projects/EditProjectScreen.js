@@ -70,6 +70,17 @@ let dropData = [
   },
 ];
 
+let weightTypeDropData = [
+  {
+    id: 'time',
+    value: 'Time',
+  },
+  {
+    id: 'story',
+    value: 'Story',
+  },
+];
+
 let deleteDetails = {
   icon: icons.alertRed,
   type: 'confirm',
@@ -128,6 +139,8 @@ class EditProjectScreen extends Component {
       projectAlias: '',
       showMessageModal: false,
       deleteButtonPress: false,
+      weightType: '',
+      weightTypeValue: '',
     };
   }
 
@@ -187,30 +200,31 @@ class EditProjectScreen extends Component {
         state: {params},
       },
     } = this.props;
-    try{
-    let projectId = params.projDetails;
-    this.setState({dataLoading: true});
-    let projectData = await APIServices.getProjectData(projectId);
-    if (projectData.message == 'success') {
-      await this.setProjectStartDate(projectData.data.projectStartDate);
-      await this.setProjectEndDate(projectData.data.projectEndDate);
-      await this.setProjectStatus(projectData.data.projectStatus);
-      this.setState({
-        projectID: projectData.data.projectId,
-        projectName: projectData.data.projectName,
-        projectClient: projectData.data.clientId,
-        projectAlias: projectData.data.projectAlias,
-        //projectStartDate : startDate,
-        //projectEndDate : endDate,
-        //projectStatus : projectStatus,
-        dataLoading: false,
-      });
-    } else {
+    try {
+      let projectId = params.projDetails;
+      this.setState({dataLoading: true});
+      let projectData = await APIServices.getProjectData(projectId);
+      if (projectData.message == 'success') {
+        await this.setProjectStartDate(projectData.data.projectStartDate);
+        await this.setProjectEndDate(projectData.data.projectEndDate);
+        await this.setProjectStatus(projectData.data.projectStatus);
+        this.setState({
+          projectID: projectData.data.projectId,
+          projectName: projectData.data.projectName,
+          projectClient: projectData.data.clientId,
+          projectAlias: projectData.data.projectAlias,
+          weightType: projectData.data.weightType,
+          //projectStartDate : startDate,
+          //projectEndDate : endDate,
+          //projectStatus : projectStatus,
+          dataLoading: false,
+        });
+      } else {
+        this.setState({dataLoading: false});
+      }
+    } catch {
       this.setState({dataLoading: false});
     }
-  } catch {
-    this.setState({dataLoading: false})
-  }
   }
 
   setProjectStartDate(selectedDate) {
@@ -704,6 +718,13 @@ class EditProjectScreen extends Component {
     this.setState({showMessageModal: false});
   }
 
+  onWeightTypeChange = (value, index, data) => {
+    let weightTypeId = data[index].id;
+    let weightTypeValue = data[index].value;
+
+    this.setState({weightType: weightTypeId, weightTypeValue: weightTypeValue});
+  };
+
   render() {
     let projectName = this.state.projectName;
     let projectClient = this.state.projectClient;
@@ -720,6 +741,7 @@ class EditProjectScreen extends Component {
     let deleteProjectErrorMessage = this.state.deleteProjectErrorMessage;
     let projectAlias = this.state.projectAlias;
     let deleteButtonPress = this.state.deleteButtonPress;
+    let weightTypeValue = this.state.weightTypeValue;
 
     return (
       <View style={{flex: 1}}>
@@ -808,6 +830,37 @@ class EditProjectScreen extends Component {
                 resizeMode={'contain'}
               />
             </View>
+          </TouchableOpacity>
+          <View style={styles.taskFieldView}>
+            <Dropdown
+              style={{paddingLeft: 5}}
+              label=""
+              labelFontSize={0}
+              fontSize={13}
+              data={weightTypeDropData}
+              textColor={colors.gray}
+              error={''}
+              animationDuration={0.5}
+              containerStyle={{width: '100%'}}
+              overlayStyle={{width: '100%'}}
+              pickerStyle={styles.projectFilterStyle}
+              dropdownPosition={0}
+              value={weightTypeValue}
+              itemColor={'black'}
+              selectedItemColor={'black'}
+              dropdownOffset={{top: 10}}
+              baseColor={colors.projectBgColor}
+              // renderBase={this.renderBase}
+              renderAccessory={this.renderBase}
+              itemTextStyle={{marginLeft: 15}}
+              itemPadding={10}
+              onChangeText={this.onWeightTypeChange}
+            />
+          </View>
+          <TouchableOpacity
+            style={styles.updateWeightTypeView}
+            onPress={() => this.onSubmitTaskNote(this.state.note)}>
+            <Text style={styles.updateWeightTypeText}>UPDATE WEIGHT TYPE</Text>
           </TouchableOpacity>
           {this.state.showPicker ? this.renderDatePicker() : null}
           {this.state.showTimePicker ? this.renderTimePicker() : null}
@@ -1092,6 +1145,23 @@ const styles = EStyleSheet.create({
     width: '100rem',
     backgroundColor: colors.colorBittersweet,
     alignItems: 'center',
+  },
+  updateWeightTypeView: {
+    backgroundColor: colors.lightBlue,
+    height: '30rem',
+    width: '150rem',
+    marginLeft: '20rem',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: '5rem',
+    marginBottom: '20rem',
+    top: Platform.OS === 'ios' ? '10rem' : '0rem',
+  },
+  updateWeightTypeText: {
+    color: colors.white,
+    fontSize: '11rem',
+    fontWeight: 'bold',
+    fontFamily: 'CircularStd-Medium',
   },
 });
 

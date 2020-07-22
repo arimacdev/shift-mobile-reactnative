@@ -81,7 +81,8 @@ class CreateNewProjectScreen extends Component {
       isDateNeedLoading: false,
       projectAlias: '',
       showMessageModal: false,
-      weightMeasures:'Time'
+      weightType: 'time',
+      weightTypeValue: 'Time',
     };
   }
 
@@ -356,6 +357,7 @@ class CreateNewProjectScreen extends Component {
     let projectStartTime = this.state.projectStartTime;
     let projectEndTime = this.state.projectEndTime;
     let projectAlias = this.state.projectAlias;
+    let weightType = this.state.weightType;
 
     if (
       this.validateProject(
@@ -386,6 +388,7 @@ class CreateNewProjectScreen extends Component {
           IsoSEndDate,
           userID,
           projectAlias,
+          weightType,
         );
       });
     }
@@ -459,6 +462,13 @@ class CreateNewProjectScreen extends Component {
     });
   }
 
+  onWeightTypeChange = (value, index, data) => {
+    let weightTypeId = data[index].id;
+    let weightTypeValue = data[index].value;
+
+    this.setState({weightType: weightTypeId, weightTypeValue: weightTypeValue});
+  };
+
   render() {
     let projectName = this.state.projectName;
     let projectClient = this.state.projectClient;
@@ -474,7 +484,7 @@ class CreateNewProjectScreen extends Component {
     let projectStartTime = this.state.projectStartTime;
     let projectEndTime = this.state.projectEndTime;
     let projectAlias = this.state.projectAlias;
-    let weightMeasures = this.state.weightMeasures;
+    let weightTypeValue = this.state.weightTypeValue;
     if (projectStartDate && projectEndDate) {
       let startDate = moment(projectStartDateValue, 'DD MM YYYY');
       let endDate = moment(projectEndDateValue, 'DD MM YYYY');
@@ -596,7 +606,7 @@ class CreateNewProjectScreen extends Component {
               overlayStyle={{width: '100%'}}
               pickerStyle={styles.projectFilterStyle}
               dropdownPosition={0}
-              value={weightMeasures}
+              value={weightTypeValue}
               itemColor={'black'}
               selectedItemColor={'black'}
               dropdownOffset={{top: 10}}
@@ -605,7 +615,7 @@ class CreateNewProjectScreen extends Component {
               renderAccessory={this.renderBase}
               itemTextStyle={{marginLeft: 15}}
               itemPadding={10}
-              onChangeText={value => this.onFilter(value)}
+              onChangeText={this.onWeightTypeChange}
             />
           </View>
           {this.state.showPicker ? this.renderDatePicker() : null}

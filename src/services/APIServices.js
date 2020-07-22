@@ -282,6 +282,7 @@ async function addprojectData(
   IsoSEndDate,
   projectOwner,
   projectAlias,
+  weightType,
 ) {
   let baseURL = null;
   baseURL = await AsyncStorage.getItem('baseURL');
@@ -300,6 +301,7 @@ async function addprojectData(
         projectStartDate: IsoStartDate,
         projectEndDate: IsoSEndDate,
         projectAlias: projectAlias,
+        weightType: weightType,
       },
     },
     true,

@@ -80,14 +80,28 @@ class ProjectsScreen extends Component {
       let filteredData = this.props.projects.filter(function(item) {
         return item.projectStatus.includes(searchValue);
       });
+      let sortData = filteredData.sort(this.arrayCompare);
       this.setState({
-        projects: filteredData,
+        projects: sortData,
         allProjects: this.props.projects,
       });
     }
   }
 
   componentDidMount() {}
+
+  arrayCompare(a, b) {
+    const projectNameA = a.projectName.toUpperCase();
+    const projectNameB = b.projectName.toUpperCase();
+
+    let comparison = 0;
+    if (projectNameA > projectNameB) {
+      comparison = 1;
+    } else if (projectNameA < projectNameB) {
+      comparison = -1;
+    }
+    return comparison;
+  }
 
   onFilter(key) {
     let value = key;
@@ -125,9 +139,9 @@ class ProjectsScreen extends Component {
     let filteredData = this.state.allProjects.filter(function(item) {
       return item.projectStatus.includes(searchValue);
     });
-
+    let sortData = filteredData.sort(this.arrayCompare);
     this.setState({
-      projects: filteredData,
+      projects: sortData,
       selectedType: key,
     });
   }

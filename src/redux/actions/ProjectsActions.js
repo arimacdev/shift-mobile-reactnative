@@ -113,6 +113,7 @@ export const addproject = (
   IsoSEndDate,
   projectOwner,
   projectAlias,
+  weightType
 ) => {
   return dispatch => {
     dispatch({type: ADD_PROJECT});
@@ -123,6 +124,7 @@ export const addproject = (
       IsoSEndDate,
       projectOwner,
       projectAlias,
+      weightType
     )
       .then(response => {
         if (response.message == 'success') {
