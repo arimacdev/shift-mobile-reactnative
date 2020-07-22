@@ -326,6 +326,13 @@ class TasksDetailsScreen extends Component {
       deleteTaskSuccess: false,
       loadDetails: true,
       parentID: '',
+      istimeBasedWeight: false,
+      estimatedHours: '',
+      estimatedMins: '',
+      actualHours: '',
+      actualMins: '',
+      estimatedPoints: '',
+      actualPoints: '',
     };
   }
 
@@ -2515,6 +2522,36 @@ class TasksDetailsScreen extends Component {
     this.setState({showMessageModal: false});
   }
 
+  changeTimeWeight(val, type) {
+    switch (type) {
+      case 'est-hours':
+        this.setState({estimatedHours: val});
+        break;
+
+      case 'est-mins':
+        this.setState({estimatedMins: val});
+        break;
+
+      case 'act-hours':
+        this.setState({actualHours: val});
+        break;
+
+      case 'act-mins':
+        this.setState({actualMins: val});
+        break;
+
+      case 'est_points':
+        this.setState({estimatedPoints: val});
+        break;
+
+      case 'act-points':
+        this.setState({actualPoints: val});
+        break;
+
+      default:
+    }
+  }
+
   render() {
     let taskStatusValue = this.state.taskStatusValue;
     let dataLoading = this.state.dataLoading;
@@ -2774,7 +2811,6 @@ class TasksDetailsScreen extends Component {
                 </View>
               </View>
             </View>
-
             <View style={styles.notesMainView}>
               <Image
                 style={styles.iconStyle}
@@ -2799,6 +2835,128 @@ class TasksDetailsScreen extends Component {
                 </TouchableOpacity>
               </View>
             </View>
+            <View style={styles.borderStyle} />
+            <View style={styles.notesMainView}>
+              <Image
+                style={styles.iconStyle}
+                source={icons.weightTypeRoundedBlue}
+                resizeMode="contain"
+              />
+              <View style={styles.notesView}>
+                <Text style={styles.noteText}>
+                  {this.state.istimeBasedWeight
+                    ? 'Task Weight - Time'
+                    : 'Task Weight - Story Points'}
+                </Text>
+                {this.state.istimeBasedWeight ? (
+                  <View>
+                    <Text style={styles.weightText}>{'Estimated Time'}</Text>
+                    <View style={styles.weightWrap}>
+                      <View style={styles.weightInputFlexing}>
+                        <TextInput
+                          style={styles.notesTextInput}
+                          placeholder={'hours'}
+                          value={this.state.estimatedHours}
+                          multiline={false}
+                          // blurOnSubmit={true}
+                          onChangeText={text =>
+                            this.changeTimeWeight(text, 'est-hours')
+                          }
+                          // onSubmitEditing={() => this.onSubmitTaskNote(this.state.note)}
+                        />
+                      </View>
+                      <View style={styles.weightInputFlexing}>
+                        <TextInput
+                          style={styles.notesTextInput}
+                          placeholder={'minutes'}
+                          value={this.state.estimatedMins}
+                          multiline={false}
+                          // blurOnSubmit={true}
+                          onChangeText={text =>
+                            this.changeTimeWeight(text, 'est-mins')
+                          }
+                          // onSubmitEditing={() => this.onSubmitTaskNote(this.state.note)}
+                        />
+                      </View>
+                    </View>
+                  </View>
+                ) : (
+                  <View style={styles.pointsParentWrap}>
+                    <View style={styles.weightInputFlexing}>
+                      <Text style={styles.weightPointText}>{'Estimated'}</Text>
+                      <View style={styles.pointsInnerWrap}>
+                        <TextInput
+                          style={styles.notesTextInput}
+                          placeholder={'points'}
+                          value={this.state.estimatedPoints}
+                          multiline={false}
+                          // blurOnSubmit={true}
+                          onChangeText={text =>
+                            this.changeTimeWeight(text, 'est_points')
+                          }
+                          // onSubmitEditing={() => this.onSubmitTaskNote(this.state.note)}
+                        />
+                      </View>
+                    </View>
+                    <View style={styles.weightInputFlexing}>
+                      <Text style={styles.weightPointText}>{'Actual'}</Text>
+                      <View style={styles.pointsInnerWrap}>
+                        <TextInput
+                          style={styles.notesTextInput}
+                          placeholder={'points'}
+                          value={this.state.actualPoints}
+                          multiline={false}
+                          // blurOnSubmit={true}
+                          onChangeText={text =>
+                            this.changeTimeWeight(text, 'act-points')
+                          }
+                          // onSubmitEditing={() => this.onSubmitTaskNote(this.state.note)}
+                        />
+                      </View>
+                    </View>
+                  </View>
+                )}
+                {this.state.istimeBasedWeight ? (
+                  <View>
+                    <Text style={styles.weightText}>{'Actual Time'}</Text>
+                    <View style={styles.weightWrap}>
+                      <View style={styles.weightInputFlexing}>
+                        <TextInput
+                          style={styles.notesTextInput}
+                          placeholder={'hours'}
+                          value={this.state.actualHours}
+                          multiline={false}
+                          // blurOnSubmit={true}
+                          onChangeText={text =>
+                            this.changeTimeWeight(text, 'act-hours')
+                          }
+                          // onSubmitEditing={() => this.onSubmitTaskNote(this.state.note)}
+                        />
+                      </View>
+                      <View style={styles.weightInputFlexing}>
+                        <TextInput
+                          style={styles.notesTextInput}
+                          placeholder={'minutes'}
+                          value={this.state.actualMins}
+                          multiline={false}
+                          // blurOnSubmit={true}
+                          onChangeText={text =>
+                            this.changeTimeWeight(text, 'act-mins')
+                          }
+                          // onSubmitEditing={() => this.onSubmitTaskNote(this.state.note)}
+                        />
+                      </View>
+                    </View>
+                  </View>
+                ) : null}
+                {/* <TouchableOpacity
+                  style={styles.updateNotesView}
+                  onPress={() => this.onSubmitTaskNote(this.state.note)}>
+                  <Text style={styles.updateNotesText}>UPDATE NOTES</Text>
+                </TouchableOpacity> */}
+              </View>
+            </View>
+
             <View style={styles.borderStyle} />
             <FlatList
               data={taskData}
@@ -3126,6 +3284,22 @@ const styles = EStyleSheet.create({
     color: colors.projectTaskNameColor,
     marginBottom: '-5rem',
   },
+  weightText: {
+    fontSize: '9.5rem',
+    fontFamily: 'CircularStd-Medium',
+    color: 'gray',
+    marginTop: '14rem',
+    marginLeft: '10rem',
+    marginBottom: '-7rem',
+  },
+  weightPointText: {
+    fontSize: '9.5rem',
+    fontFamily: 'CircularStd-Medium',
+    color: 'gray',
+    marginTop: '10rem',
+    marginLeft: '10rem',
+    marginBottom: '2rem',
+  },
   textHeader: {
     fontSize: '10rem',
     fontFamily: 'CircularStd-Medium',
@@ -3398,6 +3572,24 @@ const styles = EStyleSheet.create({
     width: '100rem',
     backgroundColor: colors.colorBittersweet,
     alignItems: 'center',
+  },
+  weightWrap: {
+    flex: 1,
+    flexDirection: 'row',
+    height: 20,
+    marginTop: 10,
+    marginLeft: 20,
+  },
+  pointsInnerWrap: {
+    flex: 5,
+    marginLeft: 20,
+  },
+  weightInputFlexing: {
+    flex: 5,
+  },
+  pointsParentWrap: {
+    flex: 1,
+    flexDirection: 'row',
   },
 });
 
