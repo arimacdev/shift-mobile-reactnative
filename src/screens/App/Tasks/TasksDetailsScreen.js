@@ -2949,11 +2949,11 @@ class TasksDetailsScreen extends Component {
                     </View>
                   </View>
                 )}
-                {/* <TouchableOpacity
-                  style={styles.updateNotesView}
-                  onPress={() => this.onSubmitTaskNote(this.state.note)}>
-                  <Text style={styles.updateNotesText}>UPDATE NOTES</Text>
-                </TouchableOpacity> */}
+                <TouchableOpacity
+                  style={styles.updateWeightView}
+                  onPress={() => this.onSubmitWeight()}>
+                  <Text style={styles.updateWeightText}>UPDATE WEIGHT</Text>
+                </TouchableOpacity>
               </View>
             </View>
 
@@ -3591,7 +3591,6 @@ const styles = EStyleSheet.create({
   },
   weightView: {
     flex: 1,
-    marginBottom: '1rem',
   },
   weightTextInput: {
     fontSize: '11rem',
@@ -3644,6 +3643,22 @@ const styles = EStyleSheet.create({
   },
   mainActualTimeView: {
     marginBottom: '15rem',
+  },
+  updateWeightView: {
+    backgroundColor: colors.lightBlue,
+    height: '30rem',
+    width: '120rem',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: '5rem',
+    marginBottom: '20rem',
+    top: Platform.OS === 'ios' ? '10rem' : '0rem',
+  },
+  updateWeightText: {
+    color: colors.white,
+    fontSize: '11rem',
+    fontWeight: 'bold',
+    fontFamily: 'CircularStd-Medium',
   },
 });
 
