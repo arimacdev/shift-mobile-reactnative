@@ -35,8 +35,10 @@ class UsersScreen extends Component {
       this.props.users &&
       this.props.users.length > 0
     ) {
+      let sortData = this.props.users.sort(this.arrayCompare);
+
       this.setState({
-        users: this.props.users,
+        users: sortData,
         allUsers: this.props.users,
       });
     }
@@ -56,6 +58,19 @@ class UsersScreen extends Component {
     this.setState({users: [], allUsers: []}, function() {
       this.props.getAllUsers();
     });
+  }
+
+  arrayCompare(a, b) {
+    const firstNameA = a.firstName.toUpperCase();
+    const firstNameB = b.firstName.toUpperCase();
+
+    let comparison = 0;
+    if (firstNameA > firstNameB) {
+      comparison = 1;
+    } else if (firstNameA < firstNameB) {
+      comparison = -1;
+    }
+    return comparison;
   }
 
   userIcon = function(item) {
