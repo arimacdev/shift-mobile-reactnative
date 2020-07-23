@@ -2552,6 +2552,42 @@ class TasksDetailsScreen extends Component {
     }
   }
 
+  onSubmitWeight(){
+
+    let selectedProjectID = this.state.selectedProjectID;
+    let selectedProjectTaskID = this.state.selectedProjectTaskID;
+    let selectedProjectID = this.state.selectedProjectID;
+    let selectedProjectID = this.state.selectedProjectID;
+
+
+    await APIServices.updateTaskWeightData(
+      selectedProjectID,
+      selectedProjectTaskID,
+
+    )
+      .then(async response => {
+        if (response.message == 'success') {
+          this.details = {
+            icon: icons.fileOrange,
+            type: 'success',
+            title: 'Sucsess',
+            description: 'Weight has been deleted successfully',
+            buttons: {},
+          };
+          this.setState({dataLoading: false, showMessageModal: true});
+         
+        } else {
+          this.setState({dataLoading: false});
+        }
+      })
+      .catch(error => {
+        //if (error.status == 401 || error.status == 403) {
+        this.setState({dataLoading: false});
+        this.showAlert('', error.data.message);
+        //}
+      });
+  }
+
   render() {
     let taskStatusValue = this.state.taskStatusValue;
     let dataLoading = this.state.dataLoading;
