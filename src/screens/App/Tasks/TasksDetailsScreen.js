@@ -326,7 +326,7 @@ class TasksDetailsScreen extends Component {
       deleteTaskSuccess: false,
       loadDetails: true,
       parentID: '',
-      istimeBasedWeight: true,
+      istimeBasedWeight: false,
       estimatedHours: '',
       estimatedMins: '',
       actualHours: '',
@@ -2853,31 +2853,64 @@ class TasksDetailsScreen extends Component {
                 {this.state.istimeBasedWeight ? (
                   <View>
                     <Text style={styles.weightText}>{'Estimated Time'}</Text>
-                    <View style={styles.weightInputFlexingLeft}>
-                      <TextInput
-                        style={styles.weightTextInput}
-                        placeholder={'hours'}
-                        value={this.state.estimatedHours}
-                        multiline={false}
-                        // blurOnSubmit={true}
-                        onChangeText={text =>
-                          this.changeTimeWeight(text, 'est-hours')
-                        }
-                        // onSubmitEditing={() => this.onSubmitTaskNote(this.state.note)}
-                      />
+                    <View style={styles.pointsParentWrap}>
+                      <View style={styles.pointsInnerWrapLeft}>
+                        <TextInput
+                          style={styles.weightTextInput}
+                          placeholder={'hours'}
+                          value={this.state.estimatedHours}
+                          multiline={false}
+                          // blurOnSubmit={true}
+                          onChangeText={text =>
+                            this.changeTimeWeight(text, 'est-hours')
+                          }
+                          // onSubmitEditing={() => this.onSubmitTaskNote(this.state.note)}
+                        />
+                      </View>
+                      <View style={styles.pointsInnerWrapRight}>
+                        <TextInput
+                          style={styles.weightTextInput}
+                          placeholder={'minutes'}
+                          value={this.state.estimatedMins}
+                          multiline={false}
+                          // blurOnSubmit={true}
+                          onChangeText={text =>
+                            this.changeTimeWeight(text, 'est-mins')
+                          }
+                          // onSubmitEditing={() => this.onSubmitTaskNote(this.state.note)}
+                        />
+                      </View>
                     </View>
-                    <View style={styles.weightInputFlexingRight}>
-                      <TextInput
-                        style={styles.notesTextInput}
-                        placeholder={'minutes'}
-                        value={this.state.estimatedMins}
-                        multiline={false}
-                        // blurOnSubmit={true}
-                        onChangeText={text =>
-                          this.changeTimeWeight(text, 'est-mins')
-                        }
-                        // onSubmitEditing={() => this.onSubmitTaskNote(this.state.note)}
-                      />
+                    <View style={styles.mainActualTimeView}>
+                      <Text style={styles.weightText}>{'Actual Time'}</Text>
+                      <View style={styles.pointsParentWrap}>
+                        <View style={styles.pointsInnerWrapLeft}>
+                          <TextInput
+                            style={styles.weightTextInput}
+                            placeholder={'hours'}
+                            value={this.state.actualHours}
+                            multiline={false}
+                            // blurOnSubmit={true}
+                            onChangeText={text =>
+                              this.changeTimeWeight(text, 'act-hours')
+                            }
+                            // onSubmitEditing={() => this.onSubmitTaskNote(this.state.note)}
+                          />
+                        </View>
+                        <View style={styles.pointsInnerWrapRight}>
+                          <TextInput
+                            style={styles.weightTextInput}
+                            placeholder={'minutes'}
+                            value={this.state.actualMins}
+                            multiline={false}
+                            // blurOnSubmit={true}
+                            onChangeText={text =>
+                              this.changeTimeWeight(text, 'act-mins')
+                            }
+                            // onSubmitEditing={() => this.onSubmitTaskNote(this.state.note)}
+                          />
+                        </View>
+                      </View>
                     </View>
                   </View>
                 ) : (
@@ -2916,39 +2949,6 @@ class TasksDetailsScreen extends Component {
                     </View>
                   </View>
                 )}
-                {this.state.istimeBasedWeight ? (
-                  <View>
-                    <Text style={styles.weightText}>{'Actual Time'}</Text>
-                    <View style={styles.weightWrap}>
-                      <View style={styles.weightInputFlexing}>
-                        <TextInput
-                          style={styles.weightTextInput}
-                          placeholder={'hours'}
-                          value={this.state.actualHours}
-                          multiline={false}
-                          // blurOnSubmit={true}
-                          onChangeText={text =>
-                            this.changeTimeWeight(text, 'act-hours')
-                          }
-                          // onSubmitEditing={() => this.onSubmitTaskNote(this.state.note)}
-                        />
-                      </View>
-                      <View style={styles.weightInputFlexing}>
-                        <TextInput
-                          style={styles.weightTextInput}
-                          placeholder={'minutes'}
-                          value={this.state.actualMins}
-                          multiline={false}
-                          // blurOnSubmit={true}
-                          onChangeText={text =>
-                            this.changeTimeWeight(text, 'act-mins')
-                          }
-                          // onSubmitEditing={() => this.onSubmitTaskNote(this.state.note)}
-                        />
-                      </View>
-                    </View>
-                  </View>
-                ) : null}
                 {/* <TouchableOpacity
                   style={styles.updateNotesView}
                   onPress={() => this.onSubmitTaskNote(this.state.note)}>
@@ -3285,48 +3285,6 @@ const styles = EStyleSheet.create({
     color: colors.projectTaskNameColor,
     marginBottom: '-5rem',
   },
-
-  weightMainView: {
-    marginHorizontal: '20rem',
-    marginTop: '15rem',
-    flexDirection: 'row',
-  },
-  weightView: {
-    flex: 1,
-    marginBottom: '1rem',
-  },
-  weightTextInput: {
-    fontSize: '11rem',
-    color: colors.detailsViewText,
-    // lineHeight: '17rem',
-    fontFamily: 'CircularStd-Medium',
-    textAlign: 'left',
-    marginLeft: Platform.OS == 'ios' ? '0rem' : '0rem',
-    width: '100%',
-    textAlignVertical: 'top',
-  },
-  weightTitleText: {
-    fontSize: '10rem',
-    fontFamily: 'CircularStd-Medium',
-    color: colors.projectTaskNameColor,
-    marginBottom: '-5rem',
-  },
-  weightText: {
-    fontSize: '9.5rem',
-    fontFamily: 'CircularStd-Medium',
-    color: 'gray',
-    marginTop: '14rem',
-    // marginLeft: '10rem',
-    marginBottom: '-7rem',
-  },
-  weightPointText: {
-    fontSize: '9.5rem',
-    fontFamily: 'CircularStd-Medium',
-    color: 'gray',
-    marginTop: '15rem',
-    marginLeft: '2rem',
-    marginBottom: '2rem',
-  },
   textHeader: {
     fontSize: '10rem',
     fontFamily: 'CircularStd-Medium',
@@ -3612,6 +3570,7 @@ const styles = EStyleSheet.create({
     marginBottom: '20rem',
     marginTop: '5rem',
     borderRadius: '5rem',
+    height: '40rem',
   },
   weightInputFlexingLeft: {
     flex: 1,
@@ -3624,6 +3583,67 @@ const styles = EStyleSheet.create({
   pointsParentWrap: {
     flex: 1,
     flexDirection: 'row',
+  },
+  weightMainView: {
+    marginHorizontal: '20rem',
+    marginTop: '15rem',
+    flexDirection: 'row',
+  },
+  weightView: {
+    flex: 1,
+    marginBottom: '1rem',
+  },
+  weightTextInput: {
+    fontSize: '11rem',
+    color: colors.detailsViewText,
+    fontFamily: 'CircularStd-Medium',
+    textAlign: 'left',
+    marginLeft: Platform.OS == 'ios' ? '0rem' : '0rem',
+    width: '100%',
+    textAlignVertical: 'top',
+    marginLeft: '10rem',
+  },
+  weightTitleText: {
+    fontSize: '10rem',
+    fontFamily: 'CircularStd-Medium',
+    color: colors.projectTaskNameColor,
+    marginBottom: '-5rem',
+  },
+  weightText: {
+    fontSize: '9.5rem',
+    fontFamily: 'CircularStd-Medium',
+    color: 'gray',
+    marginTop: '15rem',
+    marginLeft: '2rem',
+  },
+  weightPointText: {
+    fontSize: '9.5rem',
+    fontFamily: 'CircularStd-Medium',
+    color: 'gray',
+    marginTop: '15rem',
+    marginLeft: '2rem',
+    marginBottom: '2rem',
+  },
+  pointsInnerWrapLeft: {
+    backgroundColor: colors.projectBgColor,
+    marginBottom: '5rem',
+    marginTop: '5rem',
+    borderRadius: '5rem',
+    height: '40rem',
+    flex: 1,
+    marginRight: '5rem',
+  },
+  pointsInnerWrapRight: {
+    backgroundColor: colors.projectBgColor,
+    marginBottom: '5rem',
+    marginTop: '5rem',
+    borderRadius: '5rem',
+    height: '40rem',
+    flex: 1,
+    marginLeft: '5rem',
+  },
+  mainActualTimeView: {
+    marginBottom: '15rem',
   },
 });
 
