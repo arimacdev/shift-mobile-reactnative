@@ -821,7 +821,7 @@ class EditProjectScreen extends Component {
         .then(response => {
           if (response.message == 'success') {
             this.successDetails = {
-              icon: icons.folderGreen,
+              icon: icons.weightTypeRoundedBlue,
               type: 'success',
               title: 'Success',
               description: 'Project weight type have been updated successfully',

@@ -1080,19 +1080,19 @@ class TasksDetailsScreen extends Component {
     if (weightMeasure == 'time') {
       let estimatedHours =
         estimatedWeight.split('.')[0] == undefined
-          ? '0'
+          ? ''
           : estimatedWeight.split('.')[0];
       let estimatedMins =
         estimatedWeight.split('.')[1] == undefined
-          ? '0'
+          ? ''
           : estimatedWeight.split('.')[1];
       let actualHours =
         actualWeight.split('.')[0] == undefined
-          ? '0'
+          ? ''
           : actualWeight.split('.')[0];
       let actualMins =
         actualWeight.split('.')[1] == undefined
-          ? '0'
+          ? ''
           : actualWeight.split('.')[1];
 
       this.setState({
