@@ -508,7 +508,7 @@ class TasksDetailsScreen extends Component {
     }
   }
 
-  async getProjectDetails(selectedProjectID) {
+  async getProjectDetails(taskResult, selectedProjectID) {
     try {
       this.setState({dataLoading: true});
       let projectData = await APIServices.getProjectData(selectedProjectID);
@@ -517,6 +517,7 @@ class TasksDetailsScreen extends Component {
           istimeBasedWeight: projectData.data.weightMeasure,
           dataLoading: false,
         });
+        this.setWeightType(taskResult, projectData.data.weightMeasure);
       } else {
         this.setState({dataLoading: false});
       }
@@ -999,10 +1000,9 @@ class TasksDetailsScreen extends Component {
         this.setIsParent(taskResult);
         this.setIssueType(taskResult);
         this.setSprintId(taskResult);
-        this.setWeightType(taskResult);
         this.fetchFilesData(selectedProjectID, selectedProjectTaskID);
         this.getAllTaskInProject(selectedProjectID);
-        this.getProjectDetails(selectedProjectID);
+        this.getProjectDetails(taskResult, selectedProjectID);
         this.setState({dataLoading: false, taskResult: taskResult});
       } else {
         this.setState({dataLoading: false});
@@ -1073,20 +1073,39 @@ class TasksDetailsScreen extends Component {
     );
   }
 
-  setWeightType(taskResult){
-    let estimatedWeight = taskResult.data.estimatedWeight;
-    let actualWeight = taskResult.data.actualWeight;
+  setWeightType(taskResult, weightMeasure) {
+    let estimatedWeight = taskResult.data.estimatedWeight.toString();
+    let actualWeight = taskResult.data.actualWeight.toString();
 
-    if (this.state.istimeBasedWeight == 'time') {
+    if (weightMeasure == 'time') {
+      let estimatedHours =
+        estimatedWeight.split('.')[0] == undefined
+          ? '0'
+          : estimatedWeight.split('.')[0];
+      let estimatedMins =
+        estimatedWeight.split('.')[1] == undefined
+          ? '0'
+          : estimatedWeight.split('.')[1];
+      let actualHours =
+        actualWeight.split('.')[0] == undefined
+          ? '0'
+          : actualWeight.split('.')[0];
+      let actualMins =
+        actualWeight.split('.')[1] == undefined
+          ? '0'
+          : actualWeight.split('.')[1];
 
-
-      this.setState({actualHours:actualWeight});
-
-      estimatedWeight =
-        this.state.estimatedHours + '.' + this.state.estimatedMins;
-      actualWeight = this.state.actualHours + '.' + this.state.actualMins;
+      this.setState({
+        estimatedHours: estimatedHours,
+        estimatedMins: estimatedMins,
+        actualHours: actualHours,
+        actualMins: actualMins,
+      });
     } else {
-      this.setState({estimatedPoints:estimatedWeight, actualPoints:actualWeight});
+      this.setState({
+        estimatedPoints: estimatedWeight,
+        actualPoints: actualWeight,
+      });
     }
   }
 
@@ -2600,6 +2619,8 @@ class TasksDetailsScreen extends Component {
     let selectedProjectTaskID = this.state.selectedProjectTaskID;
     let estimatedWeight = '';
     let actualWeight = '';
+    let estimatedWeightFlot = 0;
+    let actualWeightFlot = 0;
 
     if (this.state.istimeBasedWeight == 'time') {
       estimatedWeight =
@@ -2610,16 +2631,19 @@ class TasksDetailsScreen extends Component {
       actualWeight = this.state.actualPoints;
     }
 
+    estimatedWeightFlot = parseFloat(estimatedWeight);
+    actualWeightFlot = parseFloat(actualWeight);
+
     await APIServices.updateTaskWeightData(
       selectedProjectID,
       selectedProjectTaskID,
-      estimatedWeight,
-      actualWeight,
+      estimatedWeightFlot,
+      actualWeightFlot,
     )
       .then(async response => {
         if (response.message == 'success') {
           this.details = {
-            icon: icons.fileOrange,
+            icon: icons.weightTypeRoundedBlue,
             type: 'success',
             title: 'Sucsess',
             description: 'Weight type has been updated successfully',
