@@ -2552,18 +2552,26 @@ class TasksDetailsScreen extends Component {
     }
   }
 
-  onSubmitWeight(){
-
+  async onSubmitWeight() {
     let selectedProjectID = this.state.selectedProjectID;
     let selectedProjectTaskID = this.state.selectedProjectTaskID;
-    let selectedProjectID = this.state.selectedProjectID;
-    let selectedProjectID = this.state.selectedProjectID;
+    let estimatedWeight = '';
+    let actualWeight = '';
 
+    if (this.state.istimeBasedWeight) {
+      estimatedWeight =
+        this.state.estimatedHours + '.' + this.state.estimatedMins;
+      actualWeight = this.state.actualHours + '.' + this.state.actualMins;
+    } else {
+      estimatedWeight = this.state.estimatedPoints;
+      actualWeight = this.state.actualPoints;
+    }
 
     await APIServices.updateTaskWeightData(
       selectedProjectID,
       selectedProjectTaskID,
-
+      estimatedWeight,
+      actualWeight,
     )
       .then(async response => {
         if (response.message == 'success') {
@@ -2571,11 +2579,10 @@ class TasksDetailsScreen extends Component {
             icon: icons.fileOrange,
             type: 'success',
             title: 'Sucsess',
-            description: 'Weight has been deleted successfully',
+            description: 'Weight type has been updated successfully',
             buttons: {},
           };
           this.setState({dataLoading: false, showMessageModal: true});
-         
         } else {
           this.setState({dataLoading: false});
         }
