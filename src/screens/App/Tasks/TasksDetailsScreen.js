@@ -326,7 +326,7 @@ class TasksDetailsScreen extends Component {
       deleteTaskSuccess: false,
       loadDetails: true,
       parentID: '',
-      istimeBasedWeight: false,
+      istimeBasedWeight: '',
       estimatedHours: '',
       estimatedMins: '',
       actualHours: '',
@@ -505,6 +505,23 @@ class TasksDetailsScreen extends Component {
       //   value: 'No data avilable',
       // });
       this.setState({selectedTaskName: 'No data avilable'});
+    }
+  }
+
+  async getProjectDetails(selectedProjectID) {
+    try {
+      this.setState({dataLoading: true});
+      let projectData = await APIServices.getProjectData(selectedProjectID);
+      if (projectData.message == 'success') {
+        this.setState({
+          istimeBasedWeight: projectData.data.weightMeasure,
+          dataLoading: false,
+        });
+      } else {
+        this.setState({dataLoading: false});
+      }
+    } catch {
+      this.setState({dataLoading: false});
     }
   }
 
@@ -982,8 +999,10 @@ class TasksDetailsScreen extends Component {
         this.setIsParent(taskResult);
         this.setIssueType(taskResult);
         this.setSprintId(taskResult);
+        this.setWeightType(taskResult);
         this.fetchFilesData(selectedProjectID, selectedProjectTaskID);
         this.getAllTaskInProject(selectedProjectID);
+        this.getProjectDetails(selectedProjectID);
         this.setState({dataLoading: false, taskResult: taskResult});
       } else {
         this.setState({dataLoading: false});
@@ -1052,6 +1071,23 @@ class TasksDetailsScreen extends Component {
       this.state.selectedProjectID,
       this.state.sprintId,
     );
+  }
+
+  setWeightType(taskResult){
+    let estimatedWeight = taskResult.data.estimatedWeight;
+    let actualWeight = taskResult.data.actualWeight;
+
+    if (this.state.istimeBasedWeight == 'time') {
+
+
+      this.setState({actualHours:actualWeight});
+
+      estimatedWeight =
+        this.state.estimatedHours + '.' + this.state.estimatedMins;
+      actualWeight = this.state.actualHours + '.' + this.state.actualMins;
+    } else {
+      this.setState({estimatedPoints:estimatedWeight, actualPoints:actualWeight});
+    }
   }
 
   hideAlert() {
@@ -2336,11 +2372,18 @@ class TasksDetailsScreen extends Component {
   };
 
   async getAllTaskInProject(selectedProjectID) {
+    let startIndex = 0;
+    let endIndex = 10;
     this.setState({
       filterType: 'None',
     });
     AsyncStorage.getItem('userID').then(userID => {
-      this.props.getAllTaskInProjects(userID, selectedProjectID);
+      this.props.getAllTaskInProjects(
+        userID,
+        selectedProjectID,
+        startIndex,
+        endIndex,
+      );
     });
   }
 
@@ -2558,7 +2601,7 @@ class TasksDetailsScreen extends Component {
     let estimatedWeight = '';
     let actualWeight = '';
 
-    if (this.state.istimeBasedWeight) {
+    if (this.state.istimeBasedWeight == 'time') {
       estimatedWeight =
         this.state.estimatedHours + '.' + this.state.estimatedMins;
       actualWeight = this.state.actualHours + '.' + this.state.actualMins;
@@ -2889,11 +2932,11 @@ class TasksDetailsScreen extends Component {
               />
               <View style={styles.weightView}>
                 <Text style={styles.weightTitleText}>
-                  {this.state.istimeBasedWeight
+                  {this.state.istimeBasedWeight == 'time'
                     ? 'Task Weight - Time'
-                    : 'Task Weight - Story Points'}
+                    : 'Task Weight - Story'}
                 </Text>
-                {this.state.istimeBasedWeight ? (
+                {this.state.istimeBasedWeight == 'time' ? (
                   <View>
                     <Text style={styles.weightText}>{'Estimated Time'}</Text>
                     <View style={styles.pointsParentWrap}>
