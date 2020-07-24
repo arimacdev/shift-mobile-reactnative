@@ -83,8 +83,6 @@ class WorkloadTabTasksScreen extends Component {
       to,
     );
     if (workloadTasks.message == 'success') {
-      // this.setProjectTaskData(projectTaskDetailsData.data);
-      // projectData = await APIServices.getProjectData(selectedProjectID);
       if (workloadTasks.message == 'success') {
         this.setState({workloadTasks: workloadTasks.data, dataLoading: false});
         if (workloadTasks.data.length > 0) {

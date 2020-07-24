@@ -217,9 +217,9 @@ class EditProjectScreen extends Component {
           projectName: projectData.data.projectName,
           projectClient: projectData.data.clientId,
           projectAlias: projectData.data.projectAlias,
-          weightType: projectData.data.weightType,
+          weightType: projectData.data.weightMeasure,
           weightTypeValue:
-            projectData.data.weightType == 'time' ? 'Time' : 'Story',
+            projectData.data.weightMeasure == 'time' ? 'Time' : 'Story',
           //projectStartDate : startDate,
           //projectEndDate : endDate,
           //projectStatus : projectStatus,
@@ -820,7 +820,7 @@ class EditProjectScreen extends Component {
       await APIServices.updateProjectWeightTypeData(projectID, weightType)
         .then(response => {
           if (response.message == 'success') {
-            successDetails = {
+            this.successDetails = {
               icon: icons.folderGreen,
               type: 'success',
               title: 'Success',
