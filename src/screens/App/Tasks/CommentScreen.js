@@ -15,6 +15,7 @@ import {
   KeyboardAvoidingView,
   Linking,
   Platform,
+  StatusBar
 } from 'react-native';
 import {connect} from 'react-redux';
 import * as actions from '../../../redux/actions';
@@ -49,6 +50,7 @@ import AndroidKeyboardAdjust from 'react-native-android-keyboard-adjust';
 import PopupMenuUserList from '../../../components/PopupMenuUserList';
 import DOMParser from 'react-native-html-parser';
 import DomSelector from 'react-native-dom-parser';
+import DeviceInfo from 'react-native-device-info';
 
 const reactionDetails = [
   {value: '&#128077', text: '👍'},
@@ -115,6 +117,7 @@ class ChatScreen extends Component {
       ownCommnter: '',
       showImagePickerModal: false,
       commentListHeight: null,
+      iskeyboardOn: false
     };
     this.editor = null;
   }
@@ -939,7 +942,7 @@ class ChatScreen extends Component {
 
   handleKeyboardDidHide = () => {
     if (Platform.OS == 'ios') {
-      this.setState({currentKeyboardHeight: 0});
+      this.setState({currentKeyboardHeight: 0, iskeyboardOn: false});
       this.setState({listHeghtWithKeyboard: '100%'});
       Animated.timing(this.state.shift, {
         toValue: 0,
@@ -1209,7 +1212,7 @@ class ChatScreen extends Component {
             }}>
             <View style={styles.textEditorStyle}>
               <TouchableOpacity
-                style={styles.crossIconStyle}
+                style={!this.state.iskeyboardOn && Platform.OS=='ios'? styles.crossIconStyle :styles.crossIconStyleKeyUp}
                 onPress={() => this.onCrossPress()}>
                 <Image
                   style={styles.clearIcon}
@@ -1218,7 +1221,7 @@ class ChatScreen extends Component {
                 />
               </TouchableOpacity>
               <TouchableOpacity
-                style={styles.sendIconStyle}
+                style={!this.state.iskeyboardOn && Platform.OS=='ios'? styles.sendIconStyle :styles.sendIconStyleKeyUp}
                 onPress={() => {
                   this.sendMessage();
                 }}>
@@ -1398,6 +1401,17 @@ const styles = EStyleSheet.create({
   crossIconStyle: {
     flexDirection: 'row',
     position: 'absolute',
+    bottom: (Platform.OS=='ios' && DeviceInfo.hasNotch()? 35: 0),
+    zIndex: 1,
+    alignSelf: 'flex-start',
+    marginLeft: '15rem',
+    alignItems: 'center',
+    height: '50rem',
+    marginBottom: '2rem',
+  },
+  crossIconStyleKeyUp: {
+    flexDirection: 'row',
+    position: 'absolute',
     bottom: 0,
     zIndex: 1,
     alignSelf: 'flex-start',
@@ -1407,6 +1421,17 @@ const styles = EStyleSheet.create({
     marginBottom: '2rem',
   },
   sendIconStyle: {
+    flexDirection: 'row',
+    position: 'absolute',
+    bottom: (Platform.OS=='ios' && DeviceInfo.hasNotch()? 35: 0),
+    zIndex: 1,
+    alignSelf: 'flex-end',
+    alignItems: 'center',
+    width: '35rem',
+    height: '50rem',
+    marginBottom: '2rem',
+  },
+  sendIconStyleKeyUp: {
     flexDirection: 'row',
     position: 'absolute',
     bottom: 0,
