@@ -327,12 +327,12 @@ class TasksDetailsScreen extends Component {
       loadDetails: true,
       parentID: '',
       istimeBasedWeight: '',
-      estimatedHours: '',
-      estimatedMins: '',
-      actualHours: '',
-      actualMins: '',
-      estimatedPoints: '',
-      actualPoints: '',
+      estimatedHours: '0',
+      estimatedMins: '0',
+      actualHours: '0',
+      actualMins: '0',
+      estimatedPoints: '0',
+      actualPoints: '0',
     };
   }
 
@@ -1080,19 +1080,19 @@ class TasksDetailsScreen extends Component {
     if (weightMeasure == 'time') {
       let estimatedHours =
         estimatedWeight.split('.')[0] == undefined
-          ? ''
+          ? '0'
           : estimatedWeight.split('.')[0];
       let estimatedMins =
         estimatedWeight.split('.')[1] == undefined
-          ? ''
+          ? '0'
           : estimatedWeight.split('.')[1];
       let actualHours =
         actualWeight.split('.')[0] == undefined
-          ? ''
+          ? '0'
           : actualWeight.split('.')[0];
       let actualMins =
         actualWeight.split('.')[1] == undefined
-          ? ''
+          ? '0'
           : actualWeight.split('.')[1];
 
       this.setState({
@@ -2964,61 +2964,65 @@ class TasksDetailsScreen extends Component {
                   <View>
                     <Text style={styles.weightText}>{'Estimated Time'}</Text>
                     <View style={styles.pointsParentWrap}>
-                      <View style={styles.pointsInnerWrapLeft}>
-                        <TextInput
-                          style={styles.weightTextInput}
-                          placeholder={'hours'}
-                          value={this.state.estimatedHours}
-                          multiline={false}
-                          // blurOnSubmit={true}
-                          onChangeText={text =>
-                            this.changeTimeWeight(text, 'est-hours')
-                          }
-                          // onSubmitEditing={() => this.onSubmitTaskNote(this.state.note)}
-                        />
+                      <View style={styles.weightInputFlexingLeft}>
+                        <Text style={styles.weightsubText}>{'hours'}</Text>
+                        <View style={styles.pointsInnerWrapLeft}>
+                          <TextInput
+                            style={styles.weightTextInput}
+                            // placeholder={'hours'}
+                            value={this.state.estimatedHours}
+                            multiline={false}
+                            onChangeText={text =>
+                              this.changeTimeWeight(text, 'est-hours')
+                            }
+                          />
+                        </View>
                       </View>
-                      <View style={styles.pointsInnerWrapRight}>
-                        <TextInput
-                          style={styles.weightTextInput}
-                          placeholder={'minutes'}
-                          value={this.state.estimatedMins}
-                          multiline={false}
-                          // blurOnSubmit={true}
-                          onChangeText={text =>
-                            this.changeTimeWeight(text, 'est-mins')
-                          }
-                          // onSubmitEditing={() => this.onSubmitTaskNote(this.state.note)}
-                        />
+                      <View style={styles.weightInputFlexingRight}>
+                        <Text style={styles.weightsubText}>{'minutes'}</Text>
+                        <View style={styles.pointsInnerWrapRight}>
+                          <TextInput
+                            style={styles.weightTextInput}
+                            // placeholder={'minutes'}
+                            value={this.state.estimatedMins}
+                            multiline={false}
+                            onChangeText={text =>
+                              this.changeTimeWeight(text, 'est-mins')
+                            }
+                          />
+                        </View>
                       </View>
                     </View>
                     <View style={styles.mainActualTimeView}>
                       <Text style={styles.weightText}>{'Actual Time'}</Text>
                       <View style={styles.pointsParentWrap}>
-                        <View style={styles.pointsInnerWrapLeft}>
-                          <TextInput
-                            style={styles.weightTextInput}
-                            placeholder={'hours'}
-                            value={this.state.actualHours}
-                            multiline={false}
-                            // blurOnSubmit={true}
-                            onChangeText={text =>
-                              this.changeTimeWeight(text, 'act-hours')
-                            }
-                            // onSubmitEditing={() => this.onSubmitTaskNote(this.state.note)}
-                          />
+                        <View style={styles.weightInputFlexingLeft}>
+                          <Text style={styles.weightsubText}>{'hours'}</Text>
+                          <View style={styles.pointsInnerWrapLeft}>
+                            <TextInput
+                              style={styles.weightTextInput}
+                              // placeholder={'hours'}
+                              value={this.state.actualHours}
+                              multiline={false}
+                              onChangeText={text =>
+                                this.changeTimeWeight(text, 'act-hours')
+                              }
+                            />
+                          </View>
                         </View>
-                        <View style={styles.pointsInnerWrapRight}>
-                          <TextInput
-                            style={styles.weightTextInput}
-                            placeholder={'minutes'}
-                            value={this.state.actualMins}
-                            multiline={false}
-                            // blurOnSubmit={true}
-                            onChangeText={text =>
-                              this.changeTimeWeight(text, 'act-mins')
-                            }
-                            // onSubmitEditing={() => this.onSubmitTaskNote(this.state.note)}
-                          />
+                        <View style={styles.weightInputFlexingRight}>
+                          <Text style={styles.weightsubText}>{'minutes'}</Text>
+                          <View style={styles.pointsInnerWrapRight}>
+                            <TextInput
+                              style={styles.weightTextInput}
+                              // placeholder={'minutes'}
+                              value={this.state.actualMins}
+                              multiline={false}
+                              onChangeText={text =>
+                                this.changeTimeWeight(text, 'act-mins')
+                              }
+                            />
+                          </View>
                         </View>
                       </View>
                     </View>
@@ -3033,11 +3037,9 @@ class TasksDetailsScreen extends Component {
                           placeholder={'points'}
                           value={this.state.estimatedPoints}
                           multiline={false}
-                          // blurOnSubmit={true}
                           onChangeText={text =>
                             this.changeTimeWeight(text, 'est_points')
                           }
-                          // onSubmitEditing={() => this.onSubmitTaskNote(this.state.note)}
                         />
                       </View>
                     </View>
@@ -3049,11 +3051,9 @@ class TasksDetailsScreen extends Component {
                           placeholder={'points'}
                           value={this.state.actualPoints}
                           multiline={false}
-                          // blurOnSubmit={true}
                           onChangeText={text =>
                             this.changeTimeWeight(text, 'act-points')
                           }
-                          // onSubmitEditing={() => this.onSubmitTaskNote(this.state.note)}
                         />
                       </View>
                     </View>
@@ -3719,14 +3719,21 @@ const styles = EStyleSheet.create({
     marginBottom: '-5rem',
   },
   weightText: {
-    fontSize: '9.5rem',
+    fontSize: '10rem',
     fontFamily: 'CircularStd-Medium',
     color: 'gray',
     marginTop: '15rem',
     marginLeft: '2rem',
   },
+  weightsubText: {
+    fontSize: '9rem',
+    fontFamily: 'CircularStd-Medium',
+    color: 'gray',
+    marginTop: '5rem',
+    marginLeft: '2rem',
+  },
   weightPointText: {
-    fontSize: '9.5rem',
+    fontSize: '10rem',
     fontFamily: 'CircularStd-Medium',
     color: 'gray',
     marginTop: '15rem',
@@ -3740,7 +3747,7 @@ const styles = EStyleSheet.create({
     borderRadius: '5rem',
     height: '40rem',
     flex: 1,
-    marginRight: '5rem',
+    // marginRight: '5rem',
   },
   pointsInnerWrapRight: {
     backgroundColor: colors.projectBgColor,
@@ -3749,7 +3756,7 @@ const styles = EStyleSheet.create({
     borderRadius: '5rem',
     height: '40rem',
     flex: 1,
-    marginLeft: '5rem',
+    // marginLeft: '5rem',
   },
   mainActualTimeView: {
     marginBottom: '15rem',
