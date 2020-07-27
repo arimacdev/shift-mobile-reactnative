@@ -145,6 +145,7 @@ class EditProjectScreen extends Component {
       weightTypeValue: '',
       showWeighModal: false,
       projectNameForWeight: '',
+      updateButtonDisabled: true,
     };
   }
 
@@ -732,15 +733,30 @@ class EditProjectScreen extends Component {
   };
 
   onUpdateWeightType() {
-    this.setState({showWeighModal: true, projectNameForWeight: ''});
+    this.setState({
+      showWeighModal: true,
+      projectNameForWeight: '',
+      updateButtonDisabled: true,
+    });
   }
 
   onCloseWeightModal() {
-    this.setState({showWeighModal: false, projectNameForWeight: ''});
+    this.setState({
+      showWeighModal: false,
+      projectNameForWeight: '',
+      updateButtonDisabled: true,
+    });
   }
 
   onProjectNameChange(text) {
     this.setState({projectNameForWeight: text});
+    let projectName = this.state.projectName;
+
+    if (projectName === text) {
+      this.setState({updateButtonDisabled: false});
+    } else {
+      this.setState({updateButtonDisabled: true});
+    }
   }
 
   renderUpdateWeightTypeModal() {
@@ -784,13 +800,12 @@ class EditProjectScreen extends Component {
               style={[
                 styles.positiveStyle,
                 {
-                  backgroundColor:
-                    this.state.projectNameForWeight == ''
-                      ? colors.lighterGray
-                      : colors.lightGreen,
+                  backgroundColor: this.state.updateButtonDisabled
+                    ? colors.lighterGray
+                    : colors.lightGreen,
                 },
               ]}
-              disabled={this.state.projectNameForWeight == '' ? true : false}
+              disabled={this.state.updateButtonDisabled}
               onPress={() => this.updateProjectWeightType()}>
               <Text style={styles.positiveTextStyle}>Update</Text>
             </TouchableOpacity>
