@@ -333,8 +333,14 @@ class TasksDetailsScreen extends Component {
       actualMins: '0',
       estimatedPoints: '0',
       actualPoints: '0',
+      invalidEstMimutesError: false,
+      invalidActMimutesError: false,
     };
   }
+
+  // componentWillMount() {
+  //   this.pageOpen();
+  // }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (
@@ -1097,9 +1103,10 @@ class TasksDetailsScreen extends Component {
 
       this.setState({
         estimatedHours: estimatedHours,
-        estimatedMins: estimatedMins,
+        estimatedMins:
+          estimatedMins.length > 1 ? estimatedMins : estimatedMins + '0',
         actualHours: actualHours,
-        actualMins: actualMins,
+        actualMins: actualMins.length > 1 ? actualMins : actualMins + '0',
       });
     } else {
       this.setState({
@@ -2592,6 +2599,11 @@ class TasksDetailsScreen extends Component {
 
       case 'est-mins':
         this.setState({estimatedMins: val});
+        if (parseInt(val) > 59) {
+          this.setState({invalidEstMimutesError: true});
+        } else {
+          this.setState({invalidEstMimutesError: false});
+        }
         break;
 
       case 'act-hours':
@@ -2600,6 +2612,11 @@ class TasksDetailsScreen extends Component {
 
       case 'act-mins':
         this.setState({actualMins: val});
+        if (parseInt(val) > 59) {
+          this.setState({invalidActMimutesError: true});
+        } else {
+          this.setState({invalidActMimutesError: false});
+        }
         break;
 
       case 'est_points':
@@ -2676,6 +2693,8 @@ class TasksDetailsScreen extends Component {
     let addParentTaskShow = this.state.addParentTaskShow;
     let addChildTaskShow = this.state.addChildTaskShow;
     let isSecondDetailViewOpen = this.props.isSecondDetailViewOpen;
+    let invalidEstMimutesError = this.state.invalidEstMimutesError;
+    let invalidActMimutesError = this.state.invalidActMimutesError;
 
     return (
       <View style={styles.container}>
@@ -2969,7 +2988,7 @@ class TasksDetailsScreen extends Component {
                         <View style={styles.pointsInnerWrapLeft}>
                           <TextInput
                             style={styles.weightTextInput}
-                            // placeholder={'hours'}
+                            placeholder={'Enter value'}
                             value={this.state.estimatedHours}
                             multiline={false}
                             onChangeText={text =>
@@ -2983,7 +3002,7 @@ class TasksDetailsScreen extends Component {
                         <View style={styles.pointsInnerWrapRight}>
                           <TextInput
                             style={styles.weightTextInput}
-                            // placeholder={'minutes'}
+                            placeholder={'Enter value'}
                             value={this.state.estimatedMins}
                             multiline={false}
                             onChangeText={text =>
@@ -2991,6 +3010,11 @@ class TasksDetailsScreen extends Component {
                             }
                           />
                         </View>
+                        {this.state.invalidEstMimutesError ? (
+                          <Text style={styles.minutesErrorText}>
+                            {'Invalid minutes'}
+                          </Text>
+                        ) : null}
                       </View>
                     </View>
                     <View style={styles.mainActualTimeView}>
@@ -3001,7 +3025,7 @@ class TasksDetailsScreen extends Component {
                           <View style={styles.pointsInnerWrapLeft}>
                             <TextInput
                               style={styles.weightTextInput}
-                              // placeholder={'hours'}
+                              placeholder={'Enter value'}
                               value={this.state.actualHours}
                               multiline={false}
                               onChangeText={text =>
@@ -3015,7 +3039,7 @@ class TasksDetailsScreen extends Component {
                           <View style={styles.pointsInnerWrapRight}>
                             <TextInput
                               style={styles.weightTextInput}
-                              // placeholder={'minutes'}
+                              placeholder={'Enter value'}
                               value={this.state.actualMins}
                               multiline={false}
                               onChangeText={text =>
@@ -3023,6 +3047,11 @@ class TasksDetailsScreen extends Component {
                               }
                             />
                           </View>
+                          {this.state.invalidActMimutesError ? (
+                            <Text style={styles.minutesErrorText}>
+                              {'Invalid minutes'}
+                            </Text>
+                          ) : null}
                         </View>
                       </View>
                     </View>
@@ -3060,7 +3089,16 @@ class TasksDetailsScreen extends Component {
                   </View>
                 )}
                 <TouchableOpacity
-                  style={styles.updateWeightView}
+                  style={[
+                    styles.updateWeightView,
+                    {
+                      backgroundColor:
+                        invalidEstMimutesError || invalidActMimutesError
+                          ? colors.lightgray
+                          : colors.lightBlue,
+                    },
+                  ]}
+                  disabled={invalidEstMimutesError || invalidActMimutesError}
                   onPress={() => this.onSubmitWeight()}>
                   <Text style={styles.updateWeightText}>UPDATE WEIGHT</Text>
                 </TouchableOpacity>
@@ -3746,7 +3784,7 @@ const styles = EStyleSheet.create({
     marginTop: '5rem',
     borderRadius: '5rem',
     height: '40rem',
-    flex: 1,
+    // flex: 1,
     // marginRight: '5rem',
   },
   pointsInnerWrapRight: {
@@ -3755,7 +3793,7 @@ const styles = EStyleSheet.create({
     marginTop: '5rem',
     borderRadius: '5rem',
     height: '40rem',
-    flex: 1,
+    // flex: 1,
     // marginLeft: '5rem',
   },
   mainActualTimeView: {
@@ -3776,6 +3814,12 @@ const styles = EStyleSheet.create({
     fontSize: '11rem',
     fontWeight: 'bold',
     fontFamily: 'CircularStd-Medium',
+  },
+  minutesErrorText: {
+    color: colors.colorCoralRed,
+    fontSize: '9rem',
+    fontFamily: 'CircularStd-Medium',
+    marginLeft: '2rem',
   },
 });
 
