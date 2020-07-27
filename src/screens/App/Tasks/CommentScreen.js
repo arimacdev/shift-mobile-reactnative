@@ -894,7 +894,7 @@ class ChatScreen extends Component {
       const keyboardHeight = event.endCoordinates.height;
       this.commentList.measure((fx, fy, width, height, px, py) => {
         this.setState({commentListHeight: height}, () => {
-          if (this.state.commentListHeight > 400) {
+          if (this.state.commentListHeight > 400 || this.state.commentListHeight < 400) {
             this.setState({
               currentKeyboardHeight: windowHeight - keyboardHeight - 200,
             });
