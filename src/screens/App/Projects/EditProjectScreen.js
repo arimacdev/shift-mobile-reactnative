@@ -853,12 +853,7 @@ class EditProjectScreen extends Component {
         })
         .catch(error => {
           this.setState({dataLoading: false});
-          Utils.showAlert(
-            true,
-            '',
-            error.data.message,
-            this.props,
-          );
+          Utils.showAlert(true, '', error.data.message, this.props);
         });
     } else {
       Utils.showAlert(true, '', 'Project name not matched', this.props);
