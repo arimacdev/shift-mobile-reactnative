@@ -845,7 +845,6 @@ class EditProjectScreen extends Component {
             this.setState({
               dataLoading: false,
               showMessageModal: true,
-              name: name,
             });
           } else {
             this.setState({dataLoading: false});
@@ -857,7 +856,7 @@ class EditProjectScreen extends Component {
           Utils.showAlert(
             true,
             '',
-            'Project weight type update faild',
+            error.data.message,
             this.props,
           );
         });
