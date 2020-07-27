@@ -80,7 +80,7 @@ let weightTypeDropData = [
   },
   {
     id: 'story',
-    value: 'Story',
+    value: 'Story Points',
   },
 ];
 
@@ -219,7 +219,7 @@ class EditProjectScreen extends Component {
           projectAlias: projectData.data.projectAlias,
           weightType: projectData.data.weightMeasure,
           weightTypeValue:
-            projectData.data.weightMeasure == 'time' ? 'Time' : 'Story',
+            projectData.data.weightMeasure == 'time' ? 'Time' : 'Story Points',
           //projectStartDate : startDate,
           //projectEndDate : endDate,
           //projectStatus : projectStatus,

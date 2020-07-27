@@ -2958,7 +2958,7 @@ class TasksDetailsScreen extends Component {
                 <Text style={styles.weightTitleText}>
                   {this.state.istimeBasedWeight == 'time'
                     ? 'Task Weight - Time'
-                    : 'Task Weight - Story'}
+                    : 'Task Weight - Story Points'}
                 </Text>
                 {this.state.istimeBasedWeight == 'time' ? (
                   <View>

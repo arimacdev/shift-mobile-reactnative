@@ -43,7 +43,7 @@ let dropData = [
   },
   {
     id: 'story',
-    value: 'Story',
+    value: 'Story Points',
   },
 ];
 
