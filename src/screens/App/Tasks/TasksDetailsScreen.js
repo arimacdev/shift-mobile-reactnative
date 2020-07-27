@@ -792,19 +792,6 @@ class TasksDetailsScreen extends Component {
   }
 
   deleteFileAlert(item) {
-    // Alert.alert(
-    //   'Delete File',
-    //   'You are about to permanantly delete this file,\n If you are not sure, you can cancel this action.',
-    //   [
-    //     {
-    //       text: 'Cancel',
-    //       onPress: () => console.log('Cancel Pressed'),
-    //       style: 'cancel',
-    //     },
-    //     {text: 'Ok', onPress: () => this.deleteFile(item)},
-    //   ],
-    //   {cancelable: false},
-    // );
     this.details = {
       icon: icons.alertRed,
       type: 'confirm',
@@ -2129,24 +2116,6 @@ class TasksDetailsScreen extends Component {
     let taskName = this.state.taskName;
 
     this.deleteTsakOkPress(projectID, taskID, taskName, tskInitiator);
-
-    // Alert.alert(
-    //   'Delete Task',
-    //   "You're about to permanently delete this task, its comments\n and attachments, and all of its data.\nIf you're not sure, you can close this pop up.",
-    //   [
-    //     {
-    //       text: 'Cancel',
-    //       onPress: () => console.log('Cancel Pressed'),
-    //       style: 'cancel',
-    //     },
-    //     {
-    //       text: 'Delete',
-    //       onPress: () =>
-    //         this.deleteTsakOkPress(projectID, taskID, taskName, tskInitiator),
-    //     },
-    //   ],
-    //   {cancelable: false},
-    // );
   }
 
   deleteTsakOkPress(projectID, taskId, taskName, tskInitiator) {
