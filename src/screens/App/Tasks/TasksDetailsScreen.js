@@ -3718,6 +3718,7 @@ const styles = EStyleSheet.create({
     width: '100%',
     textAlignVertical: 'top',
     marginLeft: '10rem',
+    marginTop: Platform.OS=='ios'? '12rem': '0rem'
   },
   weightTitleText: {
     fontSize: '10rem',
