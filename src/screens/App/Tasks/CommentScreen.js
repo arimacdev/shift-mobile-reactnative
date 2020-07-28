@@ -15,7 +15,7 @@ import {
   KeyboardAvoidingView,
   Linking,
   Platform,
-  StatusBar
+  StatusBar,
 } from 'react-native';
 import {connect} from 'react-redux';
 import * as actions from '../../../redux/actions';
@@ -117,7 +117,7 @@ class ChatScreen extends Component {
       ownCommnter: '',
       showImagePickerModal: false,
       commentListHeight: null,
-      iskeyboardOn: false
+      iskeyboardOn: false,
     };
     this.editor = null;
   }
@@ -1212,7 +1212,11 @@ class ChatScreen extends Component {
             }}>
             <View style={styles.textEditorStyle}>
               <TouchableOpacity
-                style={!this.state.iskeyboardOn && Platform.OS=='ios'? styles.crossIconStyle :styles.crossIconStyleKeyUp}
+                style={
+                  !this.state.iskeyboardOn && Platform.OS == 'ios'
+                    ? styles.crossIconStyle
+                    : styles.crossIconStyleKeyUp
+                }
                 onPress={() => this.onCrossPress()}>
                 <Image
                   style={styles.clearIcon}
@@ -1221,7 +1225,11 @@ class ChatScreen extends Component {
                 />
               </TouchableOpacity>
               <TouchableOpacity
-                style={!this.state.iskeyboardOn && Platform.OS=='ios'? styles.sendIconStyle :styles.sendIconStyleKeyUp}
+                style={
+                  !this.state.iskeyboardOn && Platform.OS == 'ios'
+                    ? styles.sendIconStyle
+                    : styles.sendIconStyleKeyUp
+                }
                 onPress={() => {
                   this.sendMessage();
                 }}>
@@ -1401,7 +1409,7 @@ const styles = EStyleSheet.create({
   crossIconStyle: {
     flexDirection: 'row',
     position: 'absolute',
-    bottom: (Platform.OS=='ios' && DeviceInfo.hasNotch()? 35: 0),
+    bottom: Platform.OS == 'ios' && DeviceInfo.hasNotch() ? 35 : 0,
     zIndex: 1,
     alignSelf: 'flex-start',
     marginLeft: '15rem',
@@ -1423,7 +1431,7 @@ const styles = EStyleSheet.create({
   sendIconStyle: {
     flexDirection: 'row',
     position: 'absolute',
-    bottom: (Platform.OS=='ios' && DeviceInfo.hasNotch()? 35: 0),
+    bottom: Platform.OS == 'ios' && DeviceInfo.hasNotch() ? 35 : 0,
     zIndex: 1,
     alignSelf: 'flex-end',
     alignItems: 'center',
