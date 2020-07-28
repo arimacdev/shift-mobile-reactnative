@@ -66,10 +66,20 @@ export const getAllProjectsByUser = userID => {
   };
 };
 
-export const getAllTaskInProjects = (userID, projectID, startIndex, endIndex) => {
+export const getAllTaskInProjects = (
+  userID,
+  projectID,
+  startIndex,
+  endIndex,
+) => {
   return dispatch => {
     dispatch({type: GET_ALL_TASK_BY_PROJECT});
-    APIServices.getAllTaskInProjectsData(userID, projectID, startIndex, endIndex)
+    APIServices.getAllTaskInProjectsData(
+      userID,
+      projectID,
+      startIndex,
+      endIndex,
+    )
       .then(response => {
         if (response.message == 'success') {
           dispatch({
@@ -86,10 +96,20 @@ export const getAllTaskInProjects = (userID, projectID, startIndex, endIndex) =>
   };
 };
 
-export const getMyTaskInProjects = (userID, projectID, myListStartIndex, myListEndIndex) => {
+export const getMyTaskInProjects = (
+  userID,
+  projectID,
+  myListStartIndex,
+  myListEndIndex,
+) => {
   return dispatch => {
     dispatch({type: GET_MY_TASK_BY_PROJECT});
-    APIServices.getMyTaskInProjectsData(userID, projectID, myListStartIndex, myListEndIndex)
+    APIServices.getMyTaskInProjectsData(
+      userID,
+      projectID,
+      myListStartIndex,
+      myListEndIndex,
+    )
       .then(response => {
         if (response.message == 'success') {
           dispatch({
@@ -113,7 +133,7 @@ export const addproject = (
   IsoSEndDate,
   projectOwner,
   projectAlias,
-  weightType
+  weightType,
 ) => {
   return dispatch => {
     dispatch({type: ADD_PROJECT});
@@ -124,7 +144,7 @@ export const addproject = (
       IsoSEndDate,
       projectOwner,
       projectAlias,
-      weightType
+      weightType,
     )
       .then(response => {
         if (response.message == 'success') {
@@ -183,15 +203,16 @@ export const updateproject = (
         }
       })
       .catch(error => {
-        if (error.status == 403 || error.status == 422) {
-          let errorMsg = error.data.message;
-          dispatch({
-            type: EDIT_PROJECT_FAILED_MASSAGE,
-            payload: errorMsg,
-          });
-        } else {
-          dispatch({type: EDIT_PROJECT_FAILED});
-        }
+        let errorMsg = error.data.message;
+        dispatch({
+          type: EDIT_PROJECT_FAILED_MASSAGE,
+          payload: errorMsg,
+        });
+        // if (error.status == 403 || error.status == 422) {
+
+        // } else {
+        //   dispatch({type: EDIT_PROJECT_FAILED});
+        // }
       });
   };
 };
