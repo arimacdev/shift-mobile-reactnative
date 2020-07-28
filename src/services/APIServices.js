@@ -348,19 +348,34 @@ async function updateProjectData(
     'Content-Type': 'application/json',
   };
 
+  let data = {};
+
+  if (projectAlias !== '') {
+    data = {
+      modifierId: userID,
+      projectName: projectName,
+      clientId: projectClient,
+      projectStatus: projectStatus,
+      projectStartDate: IsoStartDate,
+      projectEndDate: IsoSEndDate,
+      projectAlias: projectAlias,
+    };
+  } else {
+    data = {
+      modifierId: userID,
+      projectName: projectName,
+      clientId: projectClient,
+      projectStatus: projectStatus,
+      projectStartDate: IsoStartDate,
+      projectEndDate: IsoSEndDate,
+    };
+  }
+
   return request(
     {
       url: baseURL + UPDATE_PROJECT + '/' + projectID,
       method: 'PUT',
-      data: {
-        modifierId: userID,
-        projectName: projectName,
-        clientId: projectClient,
-        projectStatus: projectStatus,
-        projectStartDate: IsoStartDate,
-        projectEndDate: IsoSEndDate,
-        projectAlias: projectAlias,
-      },
+      data: data,
     },
     true,
     headers,

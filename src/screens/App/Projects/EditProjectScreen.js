@@ -140,6 +140,7 @@ class EditProjectScreen extends Component {
       startDateChanged: false,
       endDateChanged: false,
       projectAlias: '',
+      projectAliasOrg:'',
       showMessageModal: false,
       deleteButtonPress: false,
       weightType: '',
@@ -219,6 +220,7 @@ class EditProjectScreen extends Component {
           projectName: projectData.data.projectName,
           projectClient: projectData.data.clientId,
           projectAlias: projectData.data.projectAlias,
+          projectAliasOrg: projectData.data.projectAlias,
           weightType: projectData.data.weightMeasure,
           weightTypeValue:
             projectData.data.weightMeasure == 'time' ? 'Time' : 'Story Points',
@@ -554,6 +556,14 @@ class EditProjectScreen extends Component {
     let endDateChanged = this.state.endDateChanged;
     let projectStatusValue = this.state.projectStatusValue;
     let projectAlias = this.state.projectAlias;
+    let projectAliasOrg = this.state.projectAliasOrg;
+    let projectAliasUpdate = '';
+
+    if(projectAlias !== projectAliasOrg){
+      projectAliasUpdate = projectAlias
+    } else {
+      projectAliasUpdate='';
+    }
 
     if (
       this.validateProject(
@@ -588,7 +598,7 @@ class EditProjectScreen extends Component {
           IsoStartDate,
           IsoSEndDate,
           projectStatusValue,
-          projectAlias,
+          projectAliasUpdate,
         );
       });
     }
