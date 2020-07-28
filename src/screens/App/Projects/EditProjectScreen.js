@@ -31,6 +31,7 @@ import NavigationService from '../../../services/NavigationService';
 import MessageShowModal from '../../../components/MessageShowModal';
 import Utils from '../../../utils/Utils';
 import Modal from 'react-native-modal';
+import DeviceInfo from 'react-native-device-info';
 
 const {height, width} = Dimensions.get('window');
 
@@ -1083,7 +1084,7 @@ const styles = EStyleSheet.create({
     flex: 1,
   },
   scrollView: {
-    marginBottom: Platform.OS == 'ios' ? height - 600 : height - 510,
+    marginBottom: Platform.OS == 'ios' ? (DeviceInfo.hasNotch()? height - 700:height - 550) : height - 510,
     flex: 1,
   },
   titleView: {
