@@ -3721,7 +3721,7 @@ const styles = EStyleSheet.create({
     color: colors.detailsViewText,
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
-    marginLeft: Platform.OS == 'ios' ? '0rem' : '0rem',
+    marginTop: Platform.OS == 'ios' ? '5rem' : '2rem',
     width: '100%',
     textAlignVertical: 'top',
     marginLeft: '10rem',
