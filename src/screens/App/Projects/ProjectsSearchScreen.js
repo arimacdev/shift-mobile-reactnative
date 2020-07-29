@@ -184,7 +184,7 @@ const styles = EStyleSheet.create({
   },
   projectFilerView: {
     backgroundColor: colors.projectBgColor,
-    borderRadius: 5,
+    borderRadius: '5rem',
     marginTop: '17rem',
     marginBottom: '12rem',
     flexDirection: 'row',
@@ -193,13 +193,6 @@ const styles = EStyleSheet.create({
     height: '45rem',
     marginHorizontal: '20rem',
     flexDirection: 'row',
-  },
-  textFilter: {
-    fontSize: '14rem',
-    color: colors.white,
-    textAlign: 'center',
-    lineHeight: '17rem',
-    fontFamily: 'CircularStd-Medium',
   },
   projectView: {
     backgroundColor: colors.projectBgColor,
@@ -221,17 +214,13 @@ const styles = EStyleSheet.create({
     textAlign: 'left',
     marginLeft: '10rem',
   },
-  userIcon: {
-    width: '20rem',
-    height: '20rem',
-  },
   statusView: {
     backgroundColor: colors.gray,
     width: '5rem',
     height: '60rem',
     alignItems: 'flex-end',
-    borderTopRightRadius: 5,
-    borderBottomRightRadius: 5,
+    borderTopRightRadius: '5rem',
+    borderBottomRightRadius: '5rem',
   },
   dropIcon: {
     width: '13rem',
