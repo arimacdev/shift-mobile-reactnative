@@ -394,14 +394,6 @@ const styles = EStyleSheet.create({
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
   },
-  checkBoxText: {
-    fontSize: '12rem',
-    color: colors.gray,
-    textAlign: 'center',
-    lineHeight: '17rem',
-    fontFamily: 'CircularStd-Medium',
-    textAlign: 'left',
-  },
   button: {
     flexDirection: 'row',
     backgroundColor: colors.lightGreen,
