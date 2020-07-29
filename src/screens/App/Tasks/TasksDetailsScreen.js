@@ -2561,7 +2561,14 @@ class TasksDetailsScreen extends Component {
   }
 
   changeTimeWeight(val, type) {
-    var removedText = val.replace(/\D+/g, '');
+    let removedText = val.replace(/\D+/g, '');
+    let removedTextPoints = val
+      .replace(',', '.')
+      .replace(/[^\d\.]/g, '')
+      .replace(/\./, 'x')
+      .replace(/\./g, '')
+      .replace(/x/, '.');
+
     switch (type) {
       case 'est-hours':
         this.setState({estimatedHours: removedText});
@@ -2569,7 +2576,7 @@ class TasksDetailsScreen extends Component {
 
       case 'est-mins':
         this.setState({estimatedMins: removedText});
-        if (parseInt(removedText) > 59) {
+        if (parseInt(removedText) > 59 || removedText.length > 2) {
           this.setState({invalidEstMimutesError: true});
         } else {
           this.setState({invalidEstMimutesError: false});
@@ -2582,7 +2589,7 @@ class TasksDetailsScreen extends Component {
 
       case 'act-mins':
         this.setState({actualMins: removedText});
-        if (parseInt(removedText) > 59) {
+        if (parseInt(removedText) > 59 || removedText.length > 2) {
           this.setState({invalidActMimutesError: true});
         } else {
           this.setState({invalidActMimutesError: false});
@@ -2590,11 +2597,11 @@ class TasksDetailsScreen extends Component {
         break;
 
       case 'est_points':
-        this.setState({estimatedPoints: removedText});
+        this.setState({estimatedPoints: removedTextPoints});
         break;
 
       case 'act-points':
-        this.setState({actualPoints: removedText});
+        this.setState({actualPoints: removedTextPoints});
         break;
 
       default:
