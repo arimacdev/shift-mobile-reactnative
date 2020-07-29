@@ -2985,11 +2985,7 @@ class TasksDetailsScreen extends Component {
                             style={styles.weightTextInput}
                             placeholder={'Enter value'}
                             value={this.state.estimatedHours}
-                            keyboardType={
-                              Platform.OS === 'android'
-                                ? 'numeric'
-                                : 'numeric'
-                            }
+                            keyboardType={'numeric'}
                             multiline={false}
                             onChangeText={text =>
                               this.changeTimeWeight(text, 'est-hours')
@@ -3004,11 +3000,7 @@ class TasksDetailsScreen extends Component {
                             style={styles.weightTextInput}
                             placeholder={'Enter value'}
                             value={this.state.estimatedMins}
-                            keyboardType={
-                              Platform.OS === 'android'
-                                ? 'numeric'
-                                : 'numeric'
-                            }
+                            keyboardType={'numeric'}
                             multiline={false}
                             onChangeText={text =>
                               this.changeTimeWeight(text, 'est-mins')
@@ -3032,11 +3024,7 @@ class TasksDetailsScreen extends Component {
                               style={styles.weightTextInput}
                               placeholder={'Enter value'}
                               value={this.state.actualHours}
-                              keyboardType={
-                                Platform.OS === 'android'
-                                  ? 'numeric'
-                                  : 'numeric'
-                              }
+                              keyboardType={'numeric'}
                               multiline={false}
                               onChangeText={text =>
                                 this.changeTimeWeight(text, 'act-hours')
@@ -3051,11 +3039,7 @@ class TasksDetailsScreen extends Component {
                               style={styles.weightTextInput}
                               placeholder={'Enter value'}
                               value={this.state.actualMins}
-                              keyboardType={
-                                Platform.OS === 'android'
-                                  ? 'numeric'
-                                  : 'numeric'
-                              }
+                              keyboardType={'numeric'}
                               multiline={false}
                               onChangeText={text =>
                                 this.changeTimeWeight(text, 'act-mins')
@@ -3080,9 +3064,7 @@ class TasksDetailsScreen extends Component {
                           style={styles.weightTextInput}
                           placeholder={'points'}
                           value={this.state.estimatedPoints}
-                          keyboardType={
-                            Platform.OS === 'android' ? 'numeric' : 'numeric'
-                          }
+                          keyboardType={'numeric'}
                           multiline={false}
                           onChangeText={text =>
                             this.changeTimeWeight(text, 'est_points')
@@ -3102,9 +3084,7 @@ class TasksDetailsScreen extends Component {
                           style={styles.weightTextInput}
                           placeholder={'points'}
                           value={this.state.actualPoints}
-                          keyboardType={
-                            Platform.OS === 'android' ? 'numeric' : 'numeric'
-                          }
+                          keyboardType={'numeric'}
                           multiline={false}
                           onChangeText={text =>
                             this.changeTimeWeight(text, 'act-points')
@@ -3846,7 +3826,7 @@ const styles = EStyleSheet.create({
     alignItems: 'center',
     borderRadius: '5rem',
     marginBottom: '20rem',
-    marginTop:'15rem',
+    marginTop: '15rem',
     top: Platform.OS === 'ios' ? '10rem' : '0rem',
   },
   updateWeightText: {
