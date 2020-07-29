@@ -844,10 +844,6 @@ const styles = EStyleSheet.create({
     marginRight: '15rem',
     marginLeft: '10rem',
   },
-  addIcon: {
-    width: '28rem',
-    height: '28rem',
-  },
   mainFlatListStyle: {
     marginHorizontal: '20rem',
     marginBottom: '10rem',

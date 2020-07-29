@@ -674,44 +674,6 @@ const styles = EStyleSheet.create({
     width: '40rem',
     height: '40rem',
   },
-  editDeleteIcon: {
-    width: '25rem',
-    height: '25rem',
-  },
-  button: {
-    flexDirection: 'row',
-    backgroundColor: colors.lightBlue,
-    borderRadius: '5rem',
-    flexDirection: 'row',
-    alignItems: 'center',
-    // justifyContent: 'center',
-    paddingHorizontal: '12rem',
-    height: '55rem',
-    marginHorizontal: '20rem',
-  },
-  buttonText: {
-    fontSize: '12rem',
-    color: colors.white,
-    lineHeight: '17rem',
-    fontFamily: 'CircularStd-Medium',
-    fontWeight: 'bold',
-  },
-  addIcon: {
-    width: '28rem',
-    height: '28rem',
-    marginRight: '10rem',
-  },
-  bottomBarIcon: {
-    width: '20rem',
-    height: '20rem',
-    marginRight: '15rem',
-    marginLeft: '10rem',
-  },
-  userIcon: {
-    width: '28rem',
-    height: '28rem',
-    borderRadius: 56 / 2,
-  },
   taskFieldDocPickView: {
     backgroundColor: colors.projectBgColor,
     borderRadius: '5rem',
@@ -745,6 +707,7 @@ const styles = EStyleSheet.create({
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
+    marginLeft: '7rem',
   },
   uploadingText: {
     marginTop: '5rem',
@@ -764,15 +727,6 @@ const styles = EStyleSheet.create({
     height: '45rem',
     marginHorizontal: '20rem',
     flexDirection: 'row',
-  },
-  textInput: {
-    fontSize: '12rem',
-    color: colors.gray,
-    textAlign: 'center',
-    lineHeight: '17rem',
-    fontFamily: 'CircularStd-Medium',
-    textAlign: 'left',
-    marginLeft: '7rem',
   },
   searchIcon: {
     width: '17rem',
