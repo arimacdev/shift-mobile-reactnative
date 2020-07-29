@@ -335,6 +335,8 @@ class TasksDetailsScreen extends Component {
       actualPoints: '0',
       invalidEstMimutesError: false,
       invalidActMimutesError: false,
+      invalidEstPointsError: false,
+      invalidActPointsError: false,
     };
   }
 
@@ -2568,6 +2570,10 @@ class TasksDetailsScreen extends Component {
       .replace(/\./, 'x')
       .replace(/\./g, '')
       .replace(/x/, '.');
+    let removedTextPointsLength =
+      removedTextPoints.split('.')[1] != undefined
+        ? removedTextPoints.split('.')[1].length
+        : null;
 
     switch (type) {
       case 'est-hours':
@@ -2598,10 +2604,20 @@ class TasksDetailsScreen extends Component {
 
       case 'est_points':
         this.setState({estimatedPoints: removedTextPoints});
+        if (removedTextPointsLength > 1) {
+          this.setState({invalidEstPointsError: true});
+        } else {
+          this.setState({invalidEstPointsError: false});
+        }
         break;
 
       case 'act-points':
         this.setState({actualPoints: removedTextPoints});
+        if (removedTextPointsLength > 1) {
+          this.setState({invalidActPointsError: true});
+        } else {
+          this.setState({invalidActPointsError: false});
+        }
         break;
 
       default:
@@ -2672,6 +2688,8 @@ class TasksDetailsScreen extends Component {
     let isSecondDetailViewOpen = this.props.isSecondDetailViewOpen;
     let invalidEstMimutesError = this.state.invalidEstMimutesError;
     let invalidActMimutesError = this.state.invalidActMimutesError;
+    let invalidEstPointsError = this.state.invalidEstPointsError;
+    let invalidActPointsError = this.state.invalidActPointsError;
 
     return (
       <View style={styles.container}>
@@ -3071,6 +3089,11 @@ class TasksDetailsScreen extends Component {
                           }
                         />
                       </View>
+                      {this.state.invalidEstPointsError ? (
+                        <Text style={styles.minutesErrorText}>
+                          {'Invalid points'}
+                        </Text>
+                      ) : null}
                     </View>
                     <View style={styles.weightInputFlexingRight}>
                       <Text style={styles.weightPointText}>{'Actual'}</Text>
@@ -3088,6 +3111,11 @@ class TasksDetailsScreen extends Component {
                           }
                         />
                       </View>
+                      {this.state.invalidActPointsError ? (
+                        <Text style={styles.minutesErrorText}>
+                          {'Invalid points'}
+                        </Text>
+                      ) : null}
                     </View>
                   </View>
                 )}
@@ -3096,12 +3124,20 @@ class TasksDetailsScreen extends Component {
                     styles.updateWeightView,
                     {
                       backgroundColor:
-                        invalidEstMimutesError || invalidActMimutesError
+                        invalidEstMimutesError ||
+                        invalidActMimutesError ||
+                        invalidEstPointsError ||
+                        invalidActPointsError
                           ? colors.lightgray
                           : colors.lightBlue,
                     },
                   ]}
-                  disabled={invalidEstMimutesError || invalidActMimutesError}
+                  disabled={
+                    invalidEstMimutesError ||
+                    invalidActMimutesError ||
+                    invalidEstPointsError ||
+                    invalidActPointsError
+                  }
                   onPress={() => this.onSubmitWeight()}>
                   <Text style={styles.updateWeightText}>UPDATE WEIGHT</Text>
                 </TouchableOpacity>
@@ -3718,7 +3754,7 @@ const styles = EStyleSheet.create({
   },
   pointsInnerWrap: {
     backgroundColor: colors.projectBgColor,
-    marginBottom: '20rem',
+    marginBottom: '5rem',
     marginTop: '5rem',
     borderRadius: '5rem',
     height: '40rem',
@@ -3800,7 +3836,7 @@ const styles = EStyleSheet.create({
     // marginLeft: '5rem',
   },
   mainActualTimeView: {
-    marginBottom: '15rem',
+    marginBottom: '0rem',
   },
   updateWeightView: {
     backgroundColor: colors.lightBlue,
@@ -3810,6 +3846,7 @@ const styles = EStyleSheet.create({
     alignItems: 'center',
     borderRadius: '5rem',
     marginBottom: '20rem',
+    marginTop:'15rem',
     top: Platform.OS === 'ios' ? '10rem' : '0rem',
   },
   updateWeightText: {
