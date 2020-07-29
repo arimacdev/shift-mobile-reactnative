@@ -238,17 +238,6 @@ class AddEditSprint extends Component {
 }
 
 const styles = EStyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  titleView: {
-    marginTop: '20rem',
-    marginLeft: '20rem',
-  },
-  titleText: {
-    color: colors.gray,
-    fontSize: '14rem',
-  },
   taskFieldView: {
     backgroundColor: colors.projectBgColor,
     borderRadius: '5rem',
@@ -259,60 +248,6 @@ const styles = EStyleSheet.create({
     paddingHorizontal: '12rem',
     height: '60rem',
     marginHorizontal: '20rem',
-  },
-  textFilter: {
-    fontSize: '14rem',
-    color: colors.white,
-    textAlign: 'center',
-    lineHeight: '17rem',
-    fontFamily: 'CircularStd-Medium',
-  },
-  projectView: {
-    backgroundColor: colors.projectBgColor,
-    borderRadius: '5rem',
-    height: '60rem',
-    marginTop: '7rem',
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: '12rem',
-    marginHorizontal: '20rem',
-  },
-  text: {
-    fontSize: '12rem',
-    color: colors.projectText,
-    textAlign: 'center',
-    fontWeight: 'bold',
-    lineHeight: '17rem',
-    fontFamily: 'CircularStd-Medium',
-    textAlign: 'left',
-    marginLeft: '10rem',
-  },
-  textDate: {
-    fontSize: '9rem',
-    color: colors.projectText,
-    textAlign: 'center',
-    fontWeight: 'bold',
-    lineHeight: '17rem',
-    fontFamily: 'CircularStd-Medium',
-    textAlign: 'left',
-    marginLeft: '10rem',
-  },
-  avatarIcon: {
-    width: '20rem',
-    height: '20rem',
-    marginLeft: '10rem',
-  },
-  statusView: {
-    alignItems: 'center',
-    flexDirection: 'row',
-  },
-  dropIcon: {
-    width: '13rem',
-    height: '13rem',
-  },
-  completionIcon: {
-    width: '40rem',
-    height: '40rem',
   },
   bottomBarIcon: {
     width: '20rem',
@@ -325,29 +260,6 @@ const styles = EStyleSheet.create({
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
-  },
-  calendarIcon: {
-    width: '23rem',
-    height: '23rem',
-  },
-  taskFieldDocPickView: {
-    backgroundColor: colors.projectBgColor,
-    borderRadius: '5rem',
-    marginTop: '0rem',
-    marginBottom: '7rem',
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: '12rem',
-    marginHorizontal: '20rem',
-    paddingVertical: '6rem',
-  },
-  gallaryIcon: {
-    width: '24rem',
-    height: '24rem',
-  },
-  cross: {
-    width: '7rem',
-    height: '7rem',
   },
   button: {
     flexDirection: 'row',
