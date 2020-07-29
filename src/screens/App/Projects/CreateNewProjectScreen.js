@@ -677,9 +677,6 @@ class CreateNewProjectScreen extends Component {
 }
 
 const styles = EStyleSheet.create({
-  container: {
-    flex: 1,
-  },
   titleView: {
     marginTop: '20rem',
     marginLeft: '20rem',
@@ -718,25 +715,6 @@ const styles = EStyleSheet.create({
   calendarIcon: {
     width: '23rem',
     height: '23rem',
-  },
-  taskFieldDocPickView: {
-    backgroundColor: colors.projectBgColor,
-    borderRadius: 5,
-    marginTop: '0rem',
-    marginBottom: '7rem',
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: '12rem',
-    marginHorizontal: '20rem',
-    paddingVertical: '6rem',
-  },
-  gallaryIcon: {
-    width: '24rem',
-    height: '24rem',
-  },
-  cross: {
-    width: '7rem',
-    height: '7rem',
   },
   button: {
     flexDirection: 'row',

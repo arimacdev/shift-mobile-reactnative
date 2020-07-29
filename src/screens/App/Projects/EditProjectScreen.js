@@ -140,7 +140,7 @@ class EditProjectScreen extends Component {
       startDateChanged: false,
       endDateChanged: false,
       projectAlias: '',
-      projectAliasOrg:'',
+      projectAliasOrg: '',
       showMessageModal: false,
       deleteButtonPress: false,
       weightType: '',
@@ -559,10 +559,10 @@ class EditProjectScreen extends Component {
     let projectAliasOrg = this.state.projectAliasOrg;
     let projectAliasUpdate = '';
 
-    if(projectAlias !== projectAliasOrg){
-      projectAliasUpdate = projectAlias
+    if (projectAlias !== projectAliasOrg) {
+      projectAliasUpdate = projectAlias;
     } else {
-      projectAliasUpdate='';
+      projectAliasUpdate = '';
     }
 
     if (
@@ -1090,20 +1090,14 @@ class EditProjectScreen extends Component {
 }
 
 const styles = EStyleSheet.create({
-  container: {
-    flex: 1,
-  },
   scrollView: {
-    marginBottom: Platform.OS == 'ios' ? (DeviceInfo.hasNotch()? height - 700:height - 550) : height - 510,
+    marginBottom:
+      Platform.OS == 'ios'
+        ? DeviceInfo.hasNotch()
+          ? height - 700
+          : height - 550
+        : height - 510,
     flex: 1,
-  },
-  titleView: {
-    marginTop: '20rem',
-    marginLeft: '20rem',
-  },
-  titleText: {
-    color: colors.gray,
-    fontSize: '14rem',
   },
   taskFieldView: {
     backgroundColor: colors.projectBgColor,
@@ -1116,23 +1110,6 @@ const styles = EStyleSheet.create({
     height: '60rem',
     marginHorizontal: '20rem',
   },
-  textFilter: {
-    fontSize: '14rem',
-    color: colors.white,
-    textAlign: 'center',
-    lineHeight: '17rem',
-    fontFamily: 'CircularStd-Medium',
-  },
-  projectView: {
-    backgroundColor: colors.projectBgColor,
-    borderRadius: 5,
-    height: '60rem',
-    marginTop: '7rem',
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: '12rem',
-    marginHorizontal: '20rem',
-  },
   text: {
     fontSize: '12rem',
     color: colors.projectText,
@@ -1143,60 +1120,9 @@ const styles = EStyleSheet.create({
     textAlign: 'left',
     marginLeft: '10rem',
   },
-  textDate: {
-    fontSize: '9rem',
-    color: colors.projectText,
-    textAlign: 'center',
-    fontWeight: 'bold',
-    lineHeight: '17rem',
-    fontFamily: 'CircularStd-Medium',
-    textAlign: 'left',
-    marginLeft: '10rem',
-  },
-  avatarIcon: {
-    width: '20rem',
-    height: '20rem',
-    marginLeft: 10,
-  },
-  statusView: {
-    alignItems: 'center',
-    flexDirection: 'row',
-  },
   dropIcon: {
     width: '13rem',
     height: '13rem',
-  },
-  completionIcon: {
-    width: '40rem',
-    height: '40rem',
-  },
-  bottomBarContainer: {
-    position: 'absolute',
-    bottom: 0,
-    height: 80,
-    width: '100%',
-    backgroundColor: colors.projectBgColor,
-  },
-  bottomBarInnerContainer: {
-    flexDirection: 'row',
-    height: 80,
-  },
-  bottomItemView: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'row',
-  },
-  bottomItemTouch: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: '100%',
-  },
-  horizontalLine: {
-    backgroundColor: colors.gray,
-    width: 1,
-    height: 40,
   },
   bottomBarIcon: {
     width: '20rem',
@@ -1214,33 +1140,13 @@ const styles = EStyleSheet.create({
     width: '23rem',
     height: '23rem',
   },
-  taskFieldDocPickView: {
-    backgroundColor: colors.projectBgColor,
-    borderRadius: 5,
-    marginTop: '0rem',
-    marginBottom: '7rem',
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: '12rem',
-    marginHorizontal: '20rem',
-    paddingVertical: '6rem',
-  },
-  gallaryIcon: {
-    width: '24rem',
-    height: '24rem',
-  },
-  cross: {
-    width: '7rem',
-    height: '7rem',
-  },
   button: {
     flexDirection: 'row',
     backgroundColor: colors.lightGreen,
-    borderRadius: 5,
+    borderRadius: '5rem',
     marginTop: '17rem',
     flexDirection: 'row',
     alignItems: 'center',
-    // justifyContent: 'center',
     paddingHorizontal: '12rem',
     height: '55rem',
     marginHorizontal: '20rem',
@@ -1248,11 +1154,10 @@ const styles = EStyleSheet.create({
   buttonDelete: {
     flexDirection: 'row',
     backgroundColor: colors.lightRed,
-    borderRadius: 5,
+    borderRadius: '5rem',
     marginTop: '17rem',
     flexDirection: 'row',
     alignItems: 'center',
-    // justifyContent: 'center',
     paddingHorizontal: '12rem',
     height: '55rem',
     marginHorizontal: '20rem',
@@ -1313,11 +1218,6 @@ const styles = EStyleSheet.create({
   weightModalInnerStyle: {
     backgroundColor: colors.white,
     borderRadius: '5rem',
-  },
-  modalHeaderView: {
-    flexDirection: 'row',
-    marginHorizontal: '20rem',
-    marginVertical: '20rem',
   },
   imageContainer: {
     marginTop: '10rem',

@@ -396,22 +396,6 @@ const styles = EStyleSheet.create({
     fontWeight: '400',
     textAlign: 'left',
   },
-  userIcon: {
-    width: '20rem',
-    height: '20rem',
-  },
-  statusView: {
-    backgroundColor: colors.gray,
-    width: '5rem',
-    height: '60rem',
-    alignItems: 'flex-end',
-    borderTopRightRadius: '5rem',
-    borderBottomRightRadius: '5rem',
-  },
-  dropIcon: {
-    width: '13rem',
-    height: '13rem',
-  },
   editIcon: {
     width: '35rem',
     height: '35rem',
