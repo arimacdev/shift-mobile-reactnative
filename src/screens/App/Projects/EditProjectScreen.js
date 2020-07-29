@@ -1406,6 +1406,9 @@ const styles = EStyleSheet.create({
     textAlign: 'center',
     fontFamily: 'CircularStd-Medium',
   },
+  modalStyleWeight: {
+    bottom: Platform.OS=='ios'?'15%': '0%'
+  }
 });
 
 const mapStateToProps = state => {
