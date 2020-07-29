@@ -239,7 +239,7 @@ class PeopleScreen extends Component {
 const styles = EStyleSheet.create({
   mainContainer: {
     backgroundColor: colors.projectBgColor,
-    borderRadius: 5,
+    borderRadius: '5rem',
     marginHorizontal: '20rem',
     marginVertical: '7rem',
   },
@@ -249,7 +249,7 @@ const styles = EStyleSheet.create({
   button: {
     flexDirection: 'row',
     backgroundColor: colors.lightBlue,
-    borderRadius: 5,
+    borderRadius: '5rem',
     marginTop: '17rem',
     flexDirection: 'row',
     alignItems: 'center',
@@ -274,7 +274,7 @@ const styles = EStyleSheet.create({
   },
   userView: {
     backgroundColor: colors.projectBgColor,
-    borderRadius: 5,
+    borderRadius: '5rem',
     height: '60rem',
     flexDirection: 'row',
     alignItems: 'center',

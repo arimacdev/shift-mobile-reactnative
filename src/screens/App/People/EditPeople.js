@@ -302,28 +302,9 @@ const styles = EStyleSheet.create({
   topContainer: {
     marginTop: '20rem',
   },
-  taskFieldView: {
-    backgroundColor: colors.projectBgColor,
-    borderRadius: '5rem',
-    marginTop: '0rem',
-    marginBottom: '7rem',
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: '12rem',
-    height: '60rem',
-    marginHorizontal: '20rem',
-  },
   bottomBarIcon: {
     width: '20rem',
     height: '20rem',
-  },
-  textInput: {
-    fontSize: '12rem',
-    color: colors.gray,
-    textAlign: 'center',
-    lineHeight: '17rem',
-    fontFamily: 'CircularStd-Medium',
-    textAlign: 'left',
   },
   boxTextInput: {
     fontSize: '12rem',
