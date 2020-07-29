@@ -2988,7 +2988,7 @@ class TasksDetailsScreen extends Component {
                             keyboardType={
                               Platform.OS === 'android'
                                 ? 'numeric'
-                                : 'number-pad'
+                                : 'numeric'
                             }
                             multiline={false}
                             onChangeText={text =>
@@ -3007,7 +3007,7 @@ class TasksDetailsScreen extends Component {
                             keyboardType={
                               Platform.OS === 'android'
                                 ? 'numeric'
-                                : 'number-pad'
+                                : 'numeric'
                             }
                             multiline={false}
                             onChangeText={text =>
@@ -3035,7 +3035,7 @@ class TasksDetailsScreen extends Component {
                               keyboardType={
                                 Platform.OS === 'android'
                                   ? 'numeric'
-                                  : 'number-pad'
+                                  : 'numeric'
                               }
                               multiline={false}
                               onChangeText={text =>
@@ -3054,7 +3054,7 @@ class TasksDetailsScreen extends Component {
                               keyboardType={
                                 Platform.OS === 'android'
                                   ? 'numeric'
-                                  : 'number-pad'
+                                  : 'numeric'
                               }
                               multiline={false}
                               onChangeText={text =>
@@ -3081,7 +3081,7 @@ class TasksDetailsScreen extends Component {
                           placeholder={'points'}
                           value={this.state.estimatedPoints}
                           keyboardType={
-                            Platform.OS === 'android' ? 'numeric' : 'number-pad'
+                            Platform.OS === 'android' ? 'numeric' : 'numeric'
                           }
                           multiline={false}
                           onChangeText={text =>
@@ -3103,7 +3103,7 @@ class TasksDetailsScreen extends Component {
                           placeholder={'points'}
                           value={this.state.actualPoints}
                           keyboardType={
-                            Platform.OS === 'android' ? 'numeric' : 'number-pad'
+                            Platform.OS === 'android' ? 'numeric' : 'numeric'
                           }
                           multiline={false}
                           onChangeText={text =>
