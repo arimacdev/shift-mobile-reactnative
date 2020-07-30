@@ -30,6 +30,7 @@ import ImagePicker from 'react-native-image-picker';
 import EmptyListView from '../../../components/EmptyListView';
 import MessageShowModal from '../../../components/MessageShowModal';
 import PopupMenuFileUpload from '../../../components/PopupMenuFileUpload';
+import Modal from 'react-native-modal';
 
 menuItems = [
   {value: 0, text: 'Add New Folder', icon: icons.addFolderGray},
@@ -67,6 +68,8 @@ class ProjectFilesScreen extends Component {
       searchText: '',
       showMessageModal: false,
       folderData: [{name: 'Design'}, {name: 'Project'}, {name: 'Task'}],
+      showNewFolderModal: false,
+      folderName: '',
     };
   }
 
@@ -539,7 +542,7 @@ class ProjectFilesScreen extends Component {
   onMenuItemChange(item) {
     switch (item.value) {
       case 0:
-        this.goToEditSprint();
+        this.showNewFolderModal();
         break;
       case 1:
         Platform.OS == 'ios' ? this.iOSFilePicker() : this.doumentPicker();
@@ -554,7 +557,8 @@ class ProjectFilesScreen extends Component {
     let oddNumber = (folderData.length - 1) % 2;
 
     return (
-      <View
+      <TouchableOpacity
+        onPress={() => this.onFolderViewPress()}
         style={[
           styles.folderListView,
           {
@@ -564,7 +568,76 @@ class ProjectFilesScreen extends Component {
         ]}>
         <Image style={styles.folderIconStyle} source={icons.folderFilledGray} />
         <Text style={{marginHorizontal: 20}}>{item.name}</Text>
-      </View>
+      </TouchableOpacity>
+    );
+  }
+
+  onFolderViewPress() {
+    //Navigation
+  }
+
+  showNewFolderModal() {
+    this.setState({showNewFolderModal: true});
+  }
+
+  onCloseNewFolderModal() {
+    this.setState({showNewFolderModal: false});
+  }
+
+  onFolderNameChange(text) {
+    this.setState({folderName: text});
+  }
+
+  createNewFolder() {
+    //Add API
+  }
+
+  renderNewFolderModal() {
+    return (
+      <Modal
+        isVisible={this.state.showNewFolderModal}
+        style={styles.modalStyleUrl}
+        onBackButtonPress={() => this.onCloseNewFolderModal()}
+        onBackdropPress={() => this.onCloseNewFolderModal()}
+        onRequestClose={() => this.onCloseNewFolderModal()}
+        coverScreen={false}
+        backdropTransitionOutTiming={0}>
+        <View style={styles.modalInnerStyle}>
+          <Text style={styles.modalTitleStyle}>New Folder</Text>
+          <View style={styles.modalInputTextViewStyle}>
+            {/* <Text style={styles.modalTextStyle}>Folder</Text> */}
+            <View style={styles.modalInputTextViewInnerStyle}>
+              <TextInput
+                style={styles.modalInputTextInnerStyle}
+                placeholder={'Folder Name'}
+                value={this.state.folderName}
+                onChangeText={text => this.onFolderNameChange(text)}
+              />
+            </View>
+          </View>
+          <View style={styles.ButtonViewStyle}>
+            <TouchableOpacity
+              style={[
+                styles.positiveStyle,
+                {
+                  backgroundColor:
+                    this.state.url == ''
+                      ? colors.lighterGray
+                      : colors.lightGreen,
+                },
+              ]}
+              disabled={this.state.url == '' ? true : false}
+              onPress={() => this.createNewFolder()}>
+              <Text style={styles.positiveTextStyle}>Create</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.cancelStyle}
+              onPress={() => this.onCloseNewFolderModal()}>
+              <Text style={styles.cancelTextStyle}>Cancel</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     );
   }
 
@@ -645,6 +718,7 @@ class ProjectFilesScreen extends Component {
         </ScrollView>
         {dataLoading && <Loader />}
         {addFileTaskLoading && <Loader />}
+        {this.renderNewFolderModal()}
         <AwesomeAlert
           show={showAlert}
           showProgress={false}
@@ -825,6 +899,68 @@ const styles = EStyleSheet.create({
     marginLeft: '5rem',
     marginVertical: '5rem',
     alignItems: 'center',
+  },
+  modalInnerStyle: {
+    backgroundColor: colors.white,
+    borderRadius: '5rem',
+    padding: '20rem',
+  },
+  modalTitleStyle: {
+    fontSize: '20rem',
+  },
+  modalInputTextViewStyle: {
+    marginTop: '20rem',
+  },
+  modalTextStyle: {
+    fontSize: '15rem',
+  },
+  modalInputTextViewInnerStyle: {
+    backgroundColor: colors.colorWhisper,
+    borderRadius: '5rem',
+    marginTop: '5rem',
+    height: Platform.OS == 'ios' ? '35rem' : '50rem',
+  },
+  modalInputTextInnerStyle: {
+    marginLeft: '10rem',
+    marginTop: Platform.OS == 'ios' ? '10rem' : '0rem',
+  },
+  ButtonViewStyle: {
+    flexDirection: 'row',
+    marginTop: '20rem',
+    marginBottom: '10rem',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  positiveStyle: {
+    flex: 1,
+    height: '45rem',
+    backgroundColor: colors.lightGreen,
+    borderRadius: '5rem',
+    paddingHorizontal: '40rem',
+    paddingVertical: '10rem',
+    justifyContent: 'center',
+  },
+  positiveTextStyle: {
+    fontSize: '15rem',
+    color: colors.white,
+    textAlign: 'center',
+    fontFamily: 'CircularStd-Medium',
+  },
+  cancelStyle: {
+    flex: 1,
+    height: '45rem',
+    marginLeft: '10rem',
+    backgroundColor: colors.lightRed,
+    borderRadius: '5rem',
+    paddingHorizontal: '40rem',
+    paddingVertical: '10rem',
+    justifyContent: 'center',
+  },
+  cancelTextStyle: {
+    fontSize: '15rem',
+    color: colors.white,
+    textAlign: 'center',
+    fontFamily: 'CircularStd-Medium',
   },
 });
 const mapStateToProps = state => {
