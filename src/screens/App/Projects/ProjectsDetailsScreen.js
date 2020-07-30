@@ -316,57 +316,62 @@ class ProjectsDetailsScreen extends Component {
     let dataLoading = this.state.dataLoading;
 
     return (
-      <ScrollView style={styles.container}>
-        <NavigationEvents onWillFocus={payload => this.tabOpen(payload)} />
-        <View style={styles.projectDetailsView}>
-          <View style={styles.projDetailsInnerView}>
-            <View style={{flex: 1}}>
-              <Text style={styles.textProjName}>{projectName}</Text>
-              <Text style={styles.textProjCompany}>{projectClient}</Text>
+      <View style={styles.mainContainer}>
+        <ScrollView style={styles.container}>
+          <NavigationEvents onWillFocus={payload => this.tabOpen(payload)} />
+          <View style={styles.projectDetailsView}>
+            <View style={styles.projDetailsInnerView}>
+              <View style={{flex: 1}}>
+                <Text style={styles.textProjName}>{projectName}</Text>
+                <Text style={styles.textProjCompany}>{projectClient}</Text>
+              </View>
+              <View>
+                <TouchableOpacity onPress={() => this.navigateToEditProject()}>
+                  <Image style={styles.editIcon} source={icons.editUser} />
+                </TouchableOpacity>
+              </View>
             </View>
-            <View>
-              <TouchableOpacity onPress={() => this.navigateToEditProject()}>
-                <Image style={styles.editIcon} source={icons.editUser} />
-              </TouchableOpacity>
+            <View style={styles.border} />
+            <View style={styles.projectDetailsInnerView}>
+              <View style={styles.projectDetailsHeadding}>
+                <Text style={styles.projectDetailsHeaddingText}>
+                  {projectStatus}
+                </Text>
+              </View>
+              <View
+                style={[
+                  styles.projectDetailsHeadding,
+                  {backgroundColor: colors.lightGreen},
+                ]}>
+                <Text style={styles.projectDetailsHeaddingText}>Healthy</Text>
+              </View>
             </View>
-          </View>
-          <View style={styles.border} />
-          <View style={styles.projectDetailsInnerView}>
-            <View style={styles.projectDetailsHeadding}>
-              <Text style={styles.projectDetailsHeaddingText}>
-                {projectStatus}
-              </Text>
-            </View>
-            <View
-              style={[
-                styles.projectDetailsHeadding,
-                {backgroundColor: colors.lightGreen},
-              ]}>
-              <Text style={styles.projectDetailsHeaddingText}>Healthy</Text>
-            </View>
+            <FlatList
+              style={styles.projectInnerFlatList}
+              data={projectDatesDetails}
+              numColumns={2}
+              renderItem={({item}) => this.renderInnerList(item)}
+              keyExtractor={item => item.projId}
+            />
           </View>
           <FlatList
-            style={styles.projectInnerFlatList}
-            data={projectDatesDetails}
+            style={styles.projectOuterFlatList}
+            data={projectTaskDetails}
             numColumns={2}
-            renderItem={({item}) => this.renderInnerList(item)}
+            renderItem={({item, index}) => this.renderOuterList(item, index)}
             keyExtractor={item => item.projId}
           />
-        </View>
-        <FlatList
-          style={styles.projectOuterFlatList}
-          data={projectTaskDetails}
-          numColumns={2}
-          renderItem={({item, index}) => this.renderOuterList(item, index)}
-          keyExtractor={item => item.projId}
-        />
+        </ScrollView>
         {dataLoading && <Loader />}
-      </ScrollView>
+      </View>
     );
   }
 }
 
 const styles = EStyleSheet.create({
+  mainContainer: {
+    flex: 1,
+  },
   container: {
     flex: 1,
   },
