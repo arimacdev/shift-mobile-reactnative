@@ -84,5 +84,7 @@ const icons = {
   commentsRoundPurple: require('./comments_round_purple.png'),
   crossRoundedRed: require('./cross_rounded_red.png'),
   weightTypeRoundedBlue: require('./weight_type_rounded_blue.png'),
+  folderFilledGray: require('./folder_filled_gray.png'),
+  plusGray: require('./plus_gray.png'),
 };
 export default icons;

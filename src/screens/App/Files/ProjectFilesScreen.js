@@ -9,6 +9,7 @@ import {
   PermissionsAndroid,
   Alert,
   TextInput,
+  ScrollView,
 } from 'react-native';
 import {connect} from 'react-redux';
 import * as actions from '../../../redux/actions';
@@ -28,7 +29,12 @@ import fileTypes from '../../../asserts/fileTypes/fileTypes';
 import ImagePicker from 'react-native-image-picker';
 import EmptyListView from '../../../components/EmptyListView';
 import MessageShowModal from '../../../components/MessageShowModal';
+import PopupMenuFileUpload from '../../../components/PopupMenuFileUpload';
 
+menuItems = [
+  {value: 0, text: 'Add New Folder', icon: icons.folderGreen},
+  {value: 1, text: 'Add New File', icon: icons.folderGreen},
+];
 class ProjectFilesScreen extends Component {
   deleteDetails = {
     icon: icons.alertRed,
@@ -60,6 +66,7 @@ class ProjectFilesScreen extends Component {
       indeterminate: false,
       searchText: '',
       showMessageModal: false,
+      folderData: [{name: 'Design'}, {name: 'Project'}, {name: 'Task'}],
     };
   }
 
@@ -144,19 +151,6 @@ class ProjectFilesScreen extends Component {
   }
 
   deleteFileAlert(item) {
-    // Alert.alert(
-    //   'Delete File',
-    //   'You are about to permanantly delete this file,\n If you are not sure, you can cancel this action.',
-    //   [
-    //     {
-    //       text: 'Cancel',
-    //       onPress: () => console.log('Cancel Pressed'),
-    //       style: 'cancel',
-    //     },
-    //     {text: 'Ok', onPress: () => this.deleteFile(item)},
-    //   ],
-    //   {cancelable: false},
-    // );
     this.deleteDetails = {
       icon: icons.alertRed,
       type: 'confirm',
@@ -256,37 +250,37 @@ class ProjectFilesScreen extends Component {
     details = size + ' | ' + date + ' by ' + name;
 
     return (
-      // <TouchableOpacity
-      //   onPress={() =>
-      //     this.props.navigation.navigate('FilesView', {filesData: item})
-      //   }>
-      <View style={styles.filesView}>
-        <Image
-          source={this.getTypeIcons(item.projectFileName)}
-          style={styles.taskStateIcon}
-        />
-        <View style={{flex: 1}}>
-          <Text style={styles.text} numberOfLines={1}>
-            {item.projectFileName}
-          </Text>
-          <Text style={styles.textDate} numberOfLines={1}>
-            {details}
-          </Text>
+      <TouchableOpacity
+        onPress={() =>
+          this.props.navigation.navigate('FilesView', {filesData: item})
+        }>
+        <View style={styles.filesView}>
+          <Image
+            source={this.getTypeIcons(item.projectFileName)}
+            style={styles.taskStateIcon}
+          />
+          <View style={{flex: 1}}>
+            <Text style={styles.text} numberOfLines={1}>
+              {item.projectFileName}
+            </Text>
+            <Text style={styles.textDate} numberOfLines={1}>
+              {details}
+            </Text>
+          </View>
+          <View style={styles.controlView}>
+            <TouchableOpacity
+              onPress={() => this.downloadFile(item)}
+              style={{marginLeft: EStyleSheet.value('24rem')}}>
+              <Image style={styles.controlIcon} source={icons.downloadIcon} />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => this.deleteFileAlert(item)}
+              style={{marginLeft: EStyleSheet.value('10rem')}}>
+              <Image style={styles.controlIcon} source={icons.deleteRoundRed} />
+            </TouchableOpacity>
+          </View>
         </View>
-        <View style={styles.controlView}>
-          <TouchableOpacity
-            onPress={() => this.downloadFile(item)}
-            style={{marginLeft: EStyleSheet.value('24rem')}}>
-            <Image style={styles.controlIcon} source={icons.downloadIcon} />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => this.deleteFileAlert(item)}
-            style={{marginLeft: EStyleSheet.value('10rem')}}>
-            <Image style={styles.controlIcon} source={icons.deleteRoundRed} />
-          </TouchableOpacity>
-        </View>
-      </View>
-      // </TouchableOpacity>
+      </TouchableOpacity>
     );
   }
 
@@ -542,6 +536,38 @@ class ProjectFilesScreen extends Component {
     this.setState({showMessageModal: false});
   }
 
+  onMenuItemChange(item) {
+    switch (item.value) {
+      case 0:
+        this.goToEditSprint();
+        break;
+      case 1:
+        Platform.OS == 'ios' ? this.iOSFilePicker() : this.doumentPicker();
+        break;
+      default:
+        break;
+    }
+  }
+
+  renderFolderList(item, index) {
+    let folderData = this.state.folderData;
+    let oddNumber = (folderData.length - 1) % 2;
+
+    return (
+      <View
+        style={[
+          styles.folderListView,
+          {
+            marginRight:
+              oddNumber == 0 && index == folderData.length - 1 ? 15 : 5,
+          },
+        ]}>
+        <Image style={styles.folderIconStyle} source={icons.folderFilledGray} />
+        <Text style={{marginHorizontal: 20}}>{item.name}</Text>
+      </View>
+    );
+  }
+
   render() {
     let filesData = this.state.filesData;
     let dataLoading = this.state.dataLoading;
@@ -550,9 +576,12 @@ class ProjectFilesScreen extends Component {
     let alertMsg = this.state.alertMsg;
     let addFileTaskLoading = this.props.addFileTaskLoading;
     let isFetching = this.state.isFetching;
+    let folderData = this.state.folderData;
+
     return (
       <View style={styles.container}>
-        <View style={styles.projectFilerView}>
+        <ScrollView>
+          {/* <View style={styles.projectFilerView}>
           <Image style={styles.searchIcon} source={icons.searchGray} />
           <TextInput
             style={[styles.textInput, {width: '95%'}]}
@@ -584,18 +613,36 @@ class ProjectFilesScreen extends Component {
               <Text style={[styles.textInput, {flex: 1}]}>Add files</Text>
             </View>
           )}
-        </TouchableOpacity>
-        <View flex={8}>
-          <FlatList
-            style={styles.flalList}
-            data={filesData}
-            renderItem={({item}) => this.renderFilesList(item)}
-            keyExtractor={item => item.projId}
-            onRefresh={() => this.onRefresh()}
-            refreshing={isFetching}
-            ListEmptyComponent={<EmptyListView />}
-          />
-        </View>
+        </TouchableOpacity> */}
+          <View>
+            <PopupMenuFileUpload
+              data={menuItems}
+              onChange={item => this.onMenuItemChange(item)}
+            />
+          </View>
+          <View>
+            <Text style={styles.titleStyle}>Folders</Text>
+            <FlatList
+              style={styles.folderFlatListStyle}
+              data={folderData}
+              numColumns={2}
+              renderItem={({item, index}) => this.renderFolderList(item, index)}
+              keyExtractor={item => item.id}
+            />
+          </View>
+          <View>
+            <Text style={styles.titleStyle}>Files</Text>
+            <FlatList
+              style={styles.flalList}
+              data={filesData}
+              renderItem={({item}) => this.renderFilesList(item)}
+              keyExtractor={item => item.projId}
+              onRefresh={() => this.onRefresh()}
+              refreshing={isFetching}
+              ListEmptyComponent={<EmptyListView />}
+            />
+          </View>
+        </ScrollView>
         {dataLoading && <Loader />}
         {addFileTaskLoading && <Loader />}
         <AwesomeAlert
@@ -669,6 +716,7 @@ const styles = EStyleSheet.create({
   },
   flalList: {
     marginTop: '10rem',
+    marginBottom: '10rem',
   },
   taskStateIcon: {
     width: '40rem',
@@ -748,6 +796,34 @@ const styles = EStyleSheet.create({
   alertConfirmButtonStyle: {
     width: '100rem',
     backgroundColor: colors.colorBittersweet,
+    alignItems: 'center',
+  },
+  titleStyle: {
+    fontSize: '16rem',
+    color: colors.gray,
+    lineHeight: '17rem',
+    fontFamily: 'CircularStd-Medium',
+    marginLeft: '20rem',
+    marginTop: '25rem',
+  },
+  folderFlatListStyle: {
+    marginTop: '10rem',
+    marginHorizontal: '15rem',
+  },
+  folderIconStyle: {
+    marginLeft: '15rem',
+    width: '25rem',
+    height: '25rem',
+  },
+  folderListView: {
+    flex: 0.5,
+    flexDirection: 'row',
+    height: '50rem',
+    borderColor: colors.colorSilver,
+    borderWidth: '1rem',
+    borderRadius: '5rem',
+    marginLeft: '5rem',
+    marginVertical: '5rem',
     alignItems: 'center',
   },
 });
