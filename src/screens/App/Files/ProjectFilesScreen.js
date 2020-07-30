@@ -32,8 +32,8 @@ import MessageShowModal from '../../../components/MessageShowModal';
 import PopupMenuFileUpload from '../../../components/PopupMenuFileUpload';
 
 menuItems = [
-  {value: 0, text: 'Add New Folder', icon: icons.folderGreen},
-  {value: 1, text: 'Add New File', icon: icons.folderGreen},
+  {value: 0, text: 'Add New Folder', icon: icons.addFolderGray},
+  {value: 1, text: 'Add New File', icon: icons.addFileGray},
 ];
 class ProjectFilesScreen extends Component {
   deleteDetails = {

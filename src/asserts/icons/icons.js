@@ -86,5 +86,7 @@ const icons = {
   weightTypeRoundedBlue: require('./weight_type_rounded_blue.png'),
   folderFilledGray: require('./folder_filled_gray.png'),
   plusGray: require('./plus_gray.png'),
+  addFileGray: require('./add_file_gray.png'),
+  addFolderGray: require('./add_folder_gray.png'),
 };
 export default icons;
