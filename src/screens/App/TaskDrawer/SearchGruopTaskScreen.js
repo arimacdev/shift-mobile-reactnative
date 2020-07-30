@@ -130,23 +130,6 @@ const styles = EStyleSheet.create({
     marginHorizontal: '20rem',
     flexDirection: 'row',
   },
-  textFilter: {
-    fontSize: '14rem',
-    color: colors.white,
-    textAlign: 'center',
-    lineHeight: '17rem',
-    fontFamily: 'CircularStd-Medium',
-  },
-  projectView: {
-    backgroundColor: colors.projectBgColor,
-    borderRadius: '5rem',
-    height: '60rem',
-    marginTop: '7rem',
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingLeft: '12rem',
-    marginHorizontal: '20rem',
-  },
   text: {
     fontSize: '14rem',
     color: colors.projectText,
@@ -156,22 +139,6 @@ const styles = EStyleSheet.create({
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
     marginLeft: '10rem',
-  },
-  userIcon: {
-    width: '20rem',
-    height: '20rem',
-  },
-  statusView: {
-    backgroundColor: colors.gray,
-    width: '5rem',
-    height: '60rem',
-    alignItems: 'flex-end',
-    borderTopRightRadius: '5rem',
-    borderBottomRightRadius: '5rem',
-  },
-  dropIcon: {
-    width: '13rem',
-    height: '13rem',
   },
   textInput: {
     fontSize: '12rem',

@@ -655,23 +655,6 @@ const styles = EStyleSheet.create({
     height: '45rem',
     marginHorizontal: '20rem',
   },
-  textFilter: {
-    fontSize: '14rem',
-    color: colors.white,
-    textAlign: 'center',
-    lineHeight: '17rem',
-    fontFamily: 'CircularStd-Medium',
-  },
-  taskView: {
-    backgroundColor: colors.projectBgColor,
-    borderRadius: 5,
-    height: '60rem',
-    marginTop: '7rem',
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: '12rem',
-    marginHorizontal: '20rem',
-  },
   text: {
     fontSize: '11rem',
     color: colors.projectTaskNameColor,
@@ -693,11 +676,6 @@ const styles = EStyleSheet.create({
     textAlign: 'left',
     marginLeft: '10rem',
     marginRight: '5rem',
-  },
-  avatarIcon: {
-    width: '20rem',
-    height: '20rem',
-    marginLeft: '10rem',
   },
   statusView: {
     alignItems: 'center',
@@ -750,17 +728,6 @@ const styles = EStyleSheet.create({
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
     flex: 0.9,
-  },
-  tasksLabelView: {
-    width: '75rem',
-    height: '18rem',
-    borderRadius: '10rem',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  tasksLabelText: {
-    fontSize: '8rem',
-    color: colors.white,
   },
   tasksInnerView: {
     backgroundColor: colors.projectBgColor,

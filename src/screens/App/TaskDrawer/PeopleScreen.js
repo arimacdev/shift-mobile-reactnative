@@ -232,16 +232,6 @@ const styles = EStyleSheet.create({
     width: '45rem',
     height: '45rem',
   },
-  text: {
-    fontSize: '12rem',
-    color: colors.userListUserNameColor,
-    textAlign: 'center',
-    lineHeight: '17rem',
-    fontFamily: 'CircularStd-Medium',
-    textAlign: 'left',
-    marginLeft: '10rem',
-    fontWeight: '600',
-  },
   subText: {
     fontSize: '10rem',
     color: '#b9b9b9',
