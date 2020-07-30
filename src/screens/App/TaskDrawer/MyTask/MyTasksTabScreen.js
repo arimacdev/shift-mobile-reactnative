@@ -80,10 +80,6 @@ class MyTasksTabScreen extends Component {
 }
 
 const styles = EStyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.pageBackGroundColor,
-  },
   indicatorStyle: {
     backgroundColor: colors.darkBlue,
     height: '4rem',

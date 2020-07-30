@@ -333,13 +333,6 @@ const styles = EStyleSheet.create({
     height: '45rem',
     marginHorizontal: '20rem',
   },
-  textFilter: {
-    fontSize: '14rem',
-    color: colors.white,
-    textAlign: 'center',
-    lineHeight: '17rem',
-    fontFamily: 'CircularStd-Medium',
-  },
   taskView: {
     backgroundColor: colors.projectBgColor,
     borderRadius: '5rem',
@@ -372,11 +365,6 @@ const styles = EStyleSheet.create({
     textAlign: 'left',
     marginLeft: '10rem',
     marginRight: '5rem',
-  },
-  avatarIcon: {
-    width: '20rem',
-    height: '20rem',
-    marginLeft: '10rem',
   },
   statusView: {
     alignItems: 'center',

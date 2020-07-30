@@ -1709,11 +1709,6 @@ const styles = EStyleSheet.create({
     width: '13rem',
     height: '13rem',
   },
-  completionIcon: {
-    width: '23rem',
-    height: '23rem',
-    marginHorizontal: '5rem',
-  },
   landing: {
     flex: 1,
     alignItems: 'center',

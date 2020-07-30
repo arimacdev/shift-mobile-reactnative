@@ -189,7 +189,7 @@ const styles = EStyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginHorizontal: '20rem',
-    borderBottomWidth: 1,
+    borderBottomWidth: '1rem',
     borderBottomColor: colors.lighterGray,
   },
   text: {

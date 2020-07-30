@@ -184,7 +184,6 @@ class DrawerTasksScreen extends Component {
 const styles = EStyleSheet.create({
   container: {
     flex: 1,
-    //  backgroundColor: colors.pageBackGroundColor,
   },
   button: {
     flexDirection: 'row',
@@ -207,10 +206,6 @@ const styles = EStyleSheet.create({
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Bold',
     fontWeight: 'bold',
-  },
-  addIcon: {
-    width: '28rem',
-    height: '28rem',
   },
   addNewFieldView: {
     backgroundColor: colors.white,
