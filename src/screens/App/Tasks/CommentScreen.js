@@ -1518,6 +1518,7 @@ const styles = EStyleSheet.create({
     marginRight: '10rem',
   },
   modalStyleImagePicker: {
+    bottom: Platform.OS=='ios'?'15%': '0%'
     // justifyContent: 'flex-end',
     // margin: 0,
   },
