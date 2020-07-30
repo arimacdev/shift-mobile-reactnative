@@ -1267,9 +1267,6 @@ class AddNewTasksScreen extends Component {
 }
 
 const styles = EStyleSheet.create({
-  container: {
-    flex: 1,
-  },
   taskFieldView: {
     backgroundColor: colors.projectBgColor,
     borderRadius: '5rem',

@@ -333,35 +333,10 @@ const styles = EStyleSheet.create({
     fontFamily: 'CircularStd-Bold',
     textAlign: 'center',
   },
-  addIcon: {
-    width: '28rem',
-    height: '28rem',
-    marginRight: '10rem',
-  },
-  bottomBarIcon: {
-    width: '20rem',
-    height: '20rem',
-    marginRight: '15rem',
-    marginLeft: '10rem',
-  },
-  checkBoxContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  subTaskTextContainer: {
-    flex: 8,
-  },
   inputContainer: {
     marginLeft: '10rem',
     marginRight: '5rem',
     marginTop: '20rem',
-  },
-  textInput: {
-    fontSize: '12rem',
-    color: colors.gray,
-    fontFamily: 'CircularStd-Medium',
-    textAlign: 'left',
   },
   addNewFieldView: {
     backgroundColor: '#e5e9ef',

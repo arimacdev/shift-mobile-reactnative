@@ -2275,24 +2275,6 @@ const styles = EStyleSheet.create({
     width: '100rem',
     marginHorizontal: '20rem',
   },
-  projectFilerViewGreen: {
-    backgroundColor: colors.lightGreen,
-    borderRadius: '5rem',
-    marginTop: '5rem',
-    marginBottom: '5rem',
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: '12rem',
-    height: '45rem',
-    marginHorizontal: '20rem',
-  },
-  textFilter: {
-    fontSize: '14rem',
-    color: colors.white,
-    lineHeight: '17rem',
-    fontFamily: 'CircularStd-Medium',
-    textAlign: 'center',
-  },
   projectView: {
     borderRadius: '5rem',
     marginTop: '20rem',
@@ -2316,11 +2298,6 @@ const styles = EStyleSheet.create({
     marginLeft: '10rem',
     marginRight: '5rem',
   },
-  avatarIcon: {
-    width: '20rem',
-    height: '20rem',
-    marginLeft: '10rem',
-  },
   statusView: {
     alignItems: 'center',
     flexDirection: 'row',
@@ -2329,38 +2306,10 @@ const styles = EStyleSheet.create({
     width: '13rem',
     height: '13rem',
   },
-  completionIcon: {
-    width: '23rem',
-    height: '23rem',
-    marginHorizontal: '5rem',
-  },
   landing: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  buttonDelete: {
-    flexDirection: 'row',
-    backgroundColor: colors.lightRed,
-    borderRadius: '5rem',
-    marginTop: '40rem',
-    marginBottom: '30rem',
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: '12rem',
-    height: '55rem',
-    marginHorizontal: '20rem',
-  },
-  buttonText: {
-    fontSize: '12rem',
-    color: colors.white,
-    lineHeight: '17rem',
-    fontFamily: 'CircularStd-Book',
-    fontWeight: 'bold',
-  },
-  deleteIcon: {
-    width: '28rem',
-    height: '28rem',
   },
   headerView: {
     flexDirection: 'row',
@@ -2468,9 +2417,6 @@ const styles = EStyleSheet.create({
   taskTypeNameView: {
     flexDirection: 'row',
     alignItems: 'center',
-  },
-  notesNameView: {
-    flexDirection: 'row',
   },
   notesMainView: {
     marginHorizontal: '20rem',
@@ -2714,14 +2660,6 @@ const styles = EStyleSheet.create({
     marginTop: '5rem',
     justifyContent: 'center',
   },
-  sprintNameView: {
-    marginTop: '5rem',
-    fontFamily: 'CircularStd-Medium',
-    fontSize: '15rem',
-    color: colors.detailsViewText,
-    padding: '08rem',
-  },
-  sprintNameViewMainView: {},
   taskModalDataPicker: {
     width: '79.5%',
     marginTop: '59rem',
