@@ -31,11 +31,14 @@ import EmptyListView from '../../../components/EmptyListView';
 import MessageShowModal from '../../../components/MessageShowModal';
 import PopupMenuFileUpload from '../../../components/PopupMenuFileUpload';
 import Modal from 'react-native-modal';
+import PopupMenuNormal from '../../../components/PopupMenuNormal';
 
 menuItems = [
   {value: 0, text: 'Add New Folder', icon: icons.addFolderGray},
   {value: 1, text: 'Add New File', icon: icons.addFileGray},
 ];
+
+menuItemsFile = [{value: 0, text: 'Move'}, {value: 1, text: 'Delete'}];
 class ProjectFilesScreen extends Component {
   folderNavigation = [];
   deleteDetails = {
@@ -68,7 +71,8 @@ class ProjectFilesScreen extends Component {
       indeterminate: false,
       searchText: '',
       showMessageModal: false,
-      folderData: [{name: 'Design'}, {name: 'Project'}, {name: 'Task'}],
+      folderData: [],
+      allFolderData: [],
       showNewFolderModal: false,
       folderName: '',
     };
@@ -88,6 +92,8 @@ class ProjectFilesScreen extends Component {
         this.setState({
           filesData: filesData.data,
           allFilesData: filesData.data,
+          folderData: [{name: 'Design'}, {name: 'Project'}, {name: 'Task'}],
+          allFolderData: [{name: 'Design'}, {name: 'Project'}, {name: 'Task'}],
           dataLoading: false,
           isFetching: false,
         });
@@ -245,11 +251,27 @@ class ProjectFilesScreen extends Component {
     );
   }
 
+  moveFolder() {}
+
+  onFileMenuItemChange(item, fileItem) {
+    switch (item.value) {
+      case 0:
+        this.moveFolder();
+        break;
+      case 1:
+        this.deleteFileAlert(fileItem);
+        break;
+      default:
+        break;
+    }
+  }
+
   renderFilesList(item) {
     let details = '';
     let size = this.bytesToSize(item.projectFileSize);
     let date = moment(item.projectFileAddedOn).format('YYYY-MM-DD');
     let name = item.firstName + ' ' + item.lastName;
+    let fileItem = item;
 
     details = size + ' | ' + date + ' by ' + name;
 
@@ -277,11 +299,16 @@ class ProjectFilesScreen extends Component {
               style={{marginLeft: EStyleSheet.value('24rem')}}>
               <Image style={styles.controlIcon} source={icons.downloadIcon} />
             </TouchableOpacity>
-            <TouchableOpacity
+            {/* <TouchableOpacity
               onPress={() => this.deleteFileAlert(item)}
               style={{marginLeft: EStyleSheet.value('10rem')}}>
               <Image style={styles.controlIcon} source={icons.deleteRoundRed} />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
+            <PopupMenuNormal
+              data={menuItemsFile}
+              onChange={item => this.onFileMenuItemChange(item, fileItem)}
+              customMenuIcon={styles.customMenuIconStyle}
+            />
           </View>
         </View>
       </TouchableOpacity>
@@ -529,10 +556,16 @@ class ProjectFilesScreen extends Component {
     let result = this.state.allFilesData.filter(data =>
       data.projectFileName.toLowerCase().includes(text.toLowerCase()),
     );
+    let resultFolder = this.state.allFolderData.filter(data =>
+      data.name.toLowerCase().includes(text.toLowerCase()),
+    );
     if (text == '') {
-      this.setState({filesData: this.state.allFilesData});
+      this.setState({
+        filesData: this.state.allFilesData,
+        folderData: this.state.allFolderData,
+      });
     } else {
-      this.setState({filesData: result});
+      this.setState({filesData: result, folderData: resultFolder});
     }
   }
 
@@ -574,7 +607,8 @@ class ProjectFilesScreen extends Component {
   }
 
   onFolderViewPress() {
-    this.folderNavigation.push({id: 1, name: 'Design'}, {id: 2, name: 'Test'});
+    this.folderNavigation.push({id: 1, name: 'Design'});
+    this.fetchData(this.props.selectedProjectID);
   }
 
   showNewFolderModal() {
@@ -589,8 +623,32 @@ class ProjectFilesScreen extends Component {
     this.setState({folderName: text});
   }
 
-  createNewFolder() {
-    //Add API
+  async createNewFolder() {
+    let projectID = this.props.selectedProjectID;
+    let folderName = this.state.folderName;
+
+    this.setState({dataLoading: true, showMessageModal: false});
+
+    await APIServices.addProjectFolderData(projectID, folderName)
+      .then(response => {
+        if (response.message == 'success') {
+          this.deleteDetails = {
+            icon: icons.folder,
+            type: 'success',
+            title: 'Sucsess',
+            description: 'Folder has been created successfully',
+            buttons: {},
+          };
+          this.setState({dataLoading: false, showMessageModal: true});
+          this.fetchData(this.props.selectedProjectID);
+        } else {
+          this.setState({dataLoading: false});
+        }
+      })
+      .catch(error => {
+        this.setState({dataLoading: false});
+        this.showAlert('', error.data.message);
+      });
   }
 
   renderNewFolderModal() {
@@ -655,16 +713,17 @@ class ProjectFilesScreen extends Component {
     return (
       <View style={styles.container}>
         <ScrollView>
-          {/* <View style={styles.projectFilerView}>
-          <Image style={styles.searchIcon} source={icons.searchGray} />
-          <TextInput
-            style={[styles.textInput, {width: '95%'}]}
-            placeholder={'Search'}
-            value={this.state.searchText}
-            onChangeText={text => this.onSearchTextChange(text)}
-          />
-        </View>
-        <TouchableOpacity
+          <View style={styles.projectFilerView}>
+            <Image style={styles.searchIcon} source={icons.searchGray} />
+            <TextInput
+              style={[styles.textInput, {width: '95%'}]}
+              placeholder={'Search'}
+              value={this.state.searchText}
+              onChangeText={text => this.onSearchTextChange(text)}
+            />
+          </View>
+
+          {/*<TouchableOpacity
           onPress={() =>
             Platform.OS == 'ios' ? this.iOSFilePicker() : this.doumentPicker()
           }
@@ -694,34 +753,40 @@ class ProjectFilesScreen extends Component {
               onChange={item => this.onMenuItemChange(item)}
             />
           </View>
-          {folderData.length > 0 ? (
+          {folderData.length > 0 || filesData.length > 0 ? (
             <View>
-              <Text style={styles.titleStyle}>Folders</Text>
-              <FlatList
-                style={styles.folderFlatListStyle}
-                data={folderData}
-                numColumns={2}
-                renderItem={({item, index}) =>
-                  this.renderFolderList(item, index)
-                }
-                keyExtractor={item => item.id}
-              />
+              {folderData.length > 0 ? (
+                <View>
+                  <Text style={styles.titleStyle}>Folders</Text>
+                  <FlatList
+                    style={styles.folderFlatListStyle}
+                    data={folderData}
+                    numColumns={2}
+                    renderItem={({item, index}) =>
+                      this.renderFolderList(item, index)
+                    }
+                    keyExtractor={item => item.id}
+                  />
+                </View>
+              ) : null}
+              {filesData.length > 0 ? (
+                <View>
+                  <Text style={styles.titleStyle}>Files</Text>
+                  <FlatList
+                    style={styles.flalList}
+                    data={filesData}
+                    renderItem={({item}) => this.renderFilesList(item)}
+                    keyExtractor={item => item.projId}
+                    // onRefresh={() => this.onRefresh()}
+                    // refreshing={isFetching}
+                    // ListEmptyComponent={<EmptyListView />}
+                  />
+                </View>
+              ) : null}
             </View>
-          ) : null}
-          <View>
-            {filesData.length > 0 ? (
-              <Text style={styles.titleStyle}>Files</Text>
-            ) : null}
-            <FlatList
-              style={styles.flalList}
-              data={filesData}
-              renderItem={({item}) => this.renderFilesList(item)}
-              keyExtractor={item => item.projId}
-              onRefresh={() => this.onRefresh()}
-              refreshing={isFetching}
-              ListEmptyComponent={<EmptyListView />}
-            />
-          </View>
+          ) : (
+            <EmptyListView />
+          )}
         </ScrollView>
         {dataLoading && <Loader />}
         {addFileTaskLoading && <Loader />}
@@ -968,6 +1033,12 @@ const styles = EStyleSheet.create({
     color: colors.white,
     textAlign: 'center',
     fontFamily: 'CircularStd-Medium',
+  },
+  customMenuIconStyle: {
+    width: '25rem',
+    height: '25rem',
+    marginTop: '-3rem',
+    marginRight: '-15rem',
   },
 });
 const mapStateToProps = state => {
