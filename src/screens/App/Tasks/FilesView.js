@@ -40,10 +40,10 @@ class FilesView extends Component {
     const {filesData} = this.props.navigation.state.params;
     return (
       <View style={styles.container}>
-        <View style={[styles.taskFieldView]}>
+        <View style={[styles.imageViewStyle]}>
           <Image
-            style={[styles.bottomBarIcon]}
-            source={{uri: filesData.taskFileUrl}}
+            style={[styles.imageStyle]}
+            source={{uri: filesData.projectFileUrl}}
             resizeMode={'contain'}
           />
         </View>
@@ -55,51 +55,18 @@ class FilesView extends Component {
 const styles = EStyleSheet.create({
   container: {
     flex: 1,
-  },
-  taskFieldView: {
-    backgroundColor: colors.projectBgColor,
-    borderRadius: '5rem',
-    marginTop: '10rem',
-    marginBottom: '7rem',
-    flexDirection: 'row',
+    backgroundColor: colors.black,
+    justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: '5rem',
-    height: '200rem',
-    marginHorizontal: '20rem',
   },
-  textInput: {
-    fontSize: '12rem',
-    color: colors.gray,
-    textAlign: 'center',
-    lineHeight: '17rem',
-    fontFamily: 'CircularStd-Black',
-    textAlign: 'left',
-  },
-  button: {
+  imageViewStyle: {
     flexDirection: 'row',
-    backgroundColor: colors.lightBlue,
-    borderRadius: '5rem',
-    marginTop: '17rem',
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: '12rem',
-    height: '55rem',
-    marginHorizontal: '20rem',
-  },
-  buttonText: {
-    fontSize: '12rem',
-    color: colors.white,
-    lineHeight: '17rem',
-    fontFamily: 'CircularStd-Book',
-    fontWeight: 'bold',
-  },
-  bottomBarIcon: {
-    width: '100%',
+    height: '100%',
     height: '100%',
   },
-  addIcon: {
-    width: '28rem',
-    height: '28rem',
+  imageStyle: {
+    width: '100%',
+    height: '100%',
   },
 });
 

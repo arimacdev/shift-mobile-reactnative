@@ -75,6 +75,7 @@ class ProjectFilesScreen extends Component {
       allFolderData: [],
       showNewFolderModal: false,
       folderName: '',
+      showMoveFolderModal: false,
     };
   }
 
@@ -251,7 +252,9 @@ class ProjectFilesScreen extends Component {
     );
   }
 
-  moveFolder() {}
+  moveFolder() {
+    this.onShowMoveFolderModal();
+  }
 
   onFileMenuItemChange(item, fileItem) {
     switch (item.value) {
@@ -600,7 +603,9 @@ class ProjectFilesScreen extends Component {
           styles.folderListView,
           {
             marginRight:
-              oddNumber == 0 && index == folderData.length - 1 ? 15 : 5,
+              oddNumber == 0 && index == folderData.length - 1
+                ? EStyleSheet.value('15rem')
+                : EStyleSheet.value('5rem'),
           },
         ]}>
         <Image style={styles.folderIconStyle} source={icons.folderFilledGray} />
@@ -658,7 +663,7 @@ class ProjectFilesScreen extends Component {
     return (
       <Modal
         isVisible={this.state.showNewFolderModal}
-        style={styles.modalStyleUrl}
+        style={styles.modalStyle}
         onBackButtonPress={() => this.onCloseNewFolderModal()}
         onBackdropPress={() => this.onCloseNewFolderModal()}
         onRequestClose={() => this.onCloseNewFolderModal()}
@@ -695,6 +700,84 @@ class ProjectFilesScreen extends Component {
             <TouchableOpacity
               style={styles.cancelStyle}
               onPress={() => this.onCloseNewFolderModal()}>
+              <Text style={styles.cancelTextStyle}>Cancel</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+    );
+  }
+
+  onShowMoveFolderModal() {
+    this.setState({showMoveFolderModal: true});
+  }
+  onCloseMoveFolderModal() {
+    this.setState({showMoveFolderModal: false});
+  }
+
+  renderModalFolderList(item, index) {
+    let folderData = this.state.folderData;
+    let oddNumber = (folderData.length - 1) % 2;
+
+    return (
+      <TouchableOpacity
+        onPress={() => this.onFolderViewPress()}
+        style={[
+          styles.folderModalListView,
+          {
+            marginRight:
+              oddNumber == 0 && index == folderData.length - 1
+                ? EStyleSheet.value('15rem')
+                : EStyleSheet.value('5rem'),
+          },
+        ]}>
+        <Image style={styles.folderIconStyle} source={icons.folderFilledGray} />
+        <Text style={{marginHorizontal: 20}}>{item.name}</Text>
+      </TouchableOpacity>
+    );
+  }
+
+  renderMoveFolderModal() {
+    let folderData = this.state.folderData;
+    return (
+      <Modal
+        // isVisible={true}
+        isVisible={this.state.showMoveFolderModal}
+        style={styles.modalStyleFolderMove}
+        onBackButtonPress={() => this.onCloseMoveFolderModal()}
+        onBackdropPress={() => this.onCloseMoveFolderModal()}
+        onRequestClose={() => this.onCloseMoveFolderModal()}
+        coverScreen={false}
+        backdropTransitionOutTiming={0}>
+        <View style={styles.modalInnerStyle}>
+          <Text style={styles.modalTitleStyle}>Move File to Folder</Text>
+          <FlatList
+            style={styles.moveFolderFlatListStyle}
+            data={folderData}
+            numColumns={2}
+            renderItem={({item, index}) =>
+              this.renderModalFolderList(item, index)
+            }
+            keyExtractor={item => item.id}
+          />
+          <View style={styles.ButtonViewStyle}>
+            <TouchableOpacity
+              style={[
+                styles.positiveStyle,
+                {
+                  backgroundColor:
+                    this.state.url == ''
+                      ? colors.lighterGray
+                      : colors.lightGreen,
+                },
+              ]}
+              disabled={this.state.url == '' ? true : false}
+              onPress={() => this.createNewFolder()}>
+              <Text style={styles.positiveTextStyle}>Move</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.cancelStyle}
+              onPress={() => this.onCloseMoveFolderModal()}>
               <Text style={styles.cancelTextStyle}>Cancel</Text>
             </TouchableOpacity>
           </View>
@@ -794,6 +877,7 @@ class ProjectFilesScreen extends Component {
         {dataLoading && <Loader />}
         {addFileTaskLoading && <Loader />}
         {this.renderNewFolderModal()}
+        {this.renderMoveFolderModal()}
         <AwesomeAlert
           show={showAlert}
           showProgress={false}
@@ -1051,6 +1135,21 @@ const styles = EStyleSheet.create({
   },
   menuStyle: {
     marginRight: '0rem',
+  },
+  moveFolderFlatListStyle: {
+    marginTop: '10rem',
+    maxHeight: '300rem',
+  },
+  folderModalListView: {
+    flex: 0.5,
+    flexDirection: 'row',
+    height: '50rem',
+    borderColor: colors.colorSilver,
+    borderWidth: '1rem',
+    borderRadius: '5rem',
+    // marginLeft: '5rem',
+    marginVertical: '3rem',
+    alignItems: 'center',
   },
 });
 const mapStateToProps = state => {
