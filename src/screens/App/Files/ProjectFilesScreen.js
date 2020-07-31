@@ -183,7 +183,7 @@ class ProjectFilesScreen extends Component {
       .then(response => {
         if (response.message == 'success') {
           this.deleteDetails = {
-            icon: icons.taskBlue,
+            icon: icons.fileOrange,
             type: 'success',
             title: 'Sucsess',
             description: 'File has been deleted successfully',
@@ -307,7 +307,10 @@ class ProjectFilesScreen extends Component {
             <PopupMenuNormal
               data={menuItemsFile}
               onChange={item => this.onFileMenuItemChange(item, fileItem)}
+              menuStyle={styles.menuStyle}
+              customStyle={styles.customStyle}
               customMenuIcon={styles.customMenuIconStyle}
+              menuIcon={icons.menuGray}
             />
           </View>
         </View>
@@ -929,6 +932,7 @@ const styles = EStyleSheet.create({
   controlIcon: {
     width: '28rem',
     height: '28rem',
+    marginRight: '10rem',
   },
   alertContainerStyle: {
     bottom: 0,
@@ -1035,10 +1039,18 @@ const styles = EStyleSheet.create({
     fontFamily: 'CircularStd-Medium',
   },
   customMenuIconStyle: {
-    width: '25rem',
-    height: '25rem',
-    marginTop: '-3rem',
-    marginRight: '-15rem',
+    width: '20rem',
+    height: '20rem',
+    marginTop: '-2rem',
+    marginRight: '-10rem',
+  },
+  customStyle: {
+    flexDirection: 'column',
+    marginTop: '2rem',
+    marginRight: '5rem',
+  },
+  menuStyle: {
+    marginRight: '0rem',
   },
 });
 const mapStateToProps = state => {

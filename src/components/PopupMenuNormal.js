@@ -123,7 +123,7 @@ class PopupMenuNormal extends Component {
     return (
       <View style={[styles.dropContainer, marginDrop, this.props.customStyle]}>
         <Menu
-          style={styles.menuStyle}
+          style={[styles.menuStyle,this.props.menuStyle]}
           opened={this.state.opened}
           onSelect={value => this.onOptionSelect(value)}
           onBackdropPress={() => this.onBackdropPress()}>
@@ -136,7 +136,14 @@ class PopupMenuNormal extends Component {
             onPress={() => this.onTriggerPress()}
             disabled={this.props.disabledOpt}>
             <View style={styles.dropView}>
-              <Image style={[styles.menuIcon]} source={icons.menuVertical} />
+              <Image
+                style={[styles.menuIcon, this.props.customMenuIcon]}
+                source={
+                  this.props.menuIcon
+                    ? this.props.menuIcon
+                    : icons.menuVertical
+                }
+              />
             </View>
           </MenuTrigger>
           <MenuOptions customStyles={customStyles}>
