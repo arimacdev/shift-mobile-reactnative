@@ -2199,8 +2199,10 @@ async function myTaskUpdateSubTask(
     headers,
   );
 }
-
-async function getAllTaskInDefaultBoardData(projectID) {
+//oooooo
+async function getAllTaskInDefaultBoardData(projectID, startIndex, endIndex) {
+  let listStartIndex = startIndex;
+  let listEndIndex = endIndex;
   let baseURL = null;
   baseURL = await AsyncStorage.getItem('baseURL');
   let userID = null;
@@ -2219,7 +2221,11 @@ async function getAllTaskInDefaultBoardData(projectID) {
         GET_MY_TASKS_BY_PROJECT +
         projectID +
         '/tasks?userId=' +
-        userID,
+        userID +
+        '&startIndex=' +
+        listStartIndex +
+        '&endIndex=' +
+        listEndIndex,
       method: 'GET',
     },
     true,

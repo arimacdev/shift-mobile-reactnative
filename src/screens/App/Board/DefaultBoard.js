@@ -26,10 +26,17 @@ import icons from '../../../asserts/icons/icons';
 class DefaultBoard extends Component {
   constructor(props) {
     super(props);
+    this.lazyFetchData = this.lazyFetchData.bind(this);
+    this.onMyListScroll = this.onMyListScroll.bind(this);
     this.state = {
       tasks: [],
       dataLoading: false,
       selectedProjectID: 0,
+      listStartIndex: 0,
+      listEndIndex: 10,
+      cachecdData: [],
+      cachecdMyListData: [],
+      listScrolled: false,
     };
   }
 
@@ -38,19 +45,67 @@ class DefaultBoard extends Component {
   }
 
   async fetchData() {
+    let startIndex = 0;
+    let endIndex = 10;
+    try {
+      this.setState({dataLoading: true});
+      let taskData = await this.getAllTaskInDefaultBoardDataDirectly(
+        startIndex, 
+        endIndex
+      );
+    } catch (error) {
+      this.setState({dataLoading: false});
+    }
+  }
+
+  async lazyFetchData () {
+    if (
+      this.state.cachecdMyListData.length == 10 
+      // && this.state.listScrolled == true
+    ) {
+      let listStartIndex = this.state.listStartIndex + 1 + 10;
+      let listEndIndex = this.state.listEndIndex + 10;
+      try {
+        this.setState({dataLoading: true});
+        await this.getAllTaskInDefaultBoardDataDirectly(
+          listStartIndex, 
+          listEndIndex
+        );
+      } catch (error) {
+        this.setState({dataLoading: false});
+      }
+      this.setState({
+        listStartIndex: listStartIndex - 1,
+        listEndIndex: listEndIndex,
+      });
+    } else {
+      // TODO: Add toast
+    }
+    // let selectedProjectID = this.state.selectedProjectID;
+    // AsyncStorage.getItem('userID').then(userID => {
+    //   this.props.getMyTaskInProjects(userID, selectedProjectID, myListStartIndex, myListEndIndex);
+    // });
+  };
+
+
+  getAllTaskInDefaultBoardDataDirectly = async ( startIndex, endIndex) => {
     let selectedProjectID = this.props.selectedProjectID;
     try {
       this.setState({dataLoading: true});
       let taskData = await APIServices.getAllTaskInDefaultBoardData(
         selectedProjectID,
+        startIndex, 
+        endIndex
       );
       if (taskData.message == 'success') {
         let dataArray = [];
+        let cachedDataArray = [];
         for (let i = 0; i < taskData.data.length; i++) {
           let parentTask = taskData.data[i].parentTask;
           let childTasks = taskData.data[i].childTasks;
           if (parentTask.sprintId == 'default') {
             dataArray.push(parentTask);
+            cachedDataArray.push(parentTask);
           }
           for (let j = 0; j < childTasks.length; j++) {
             let childTasksItem = childTasks[j];
@@ -60,8 +115,12 @@ class DefaultBoard extends Component {
           }
         }
         this.setState({
-          tasks: dataArray,
+          tasks: this.state.tasks.concat(dataArray),
+          cachecdMyListData: cachedDataArray,
           dataLoading: false,
+        }, ()=> {
+          console.log('dataaaa 00000', this.state.cachecdMyListData.length)
+          console.log('dataaaa 111111', this.state.tasks.length)
         });
       } else {
         this.setState({dataLoading: false});
@@ -69,6 +128,11 @@ class DefaultBoard extends Component {
     } catch (error) {
       this.setState({dataLoading: false});
     }
+  }
+
+  onMyListScroll(event) {
+    console.log('aaaaaijijijijijijijijij')
+    this.setState({listScrolled: true});
   }
 
   renderTaskList(item) {
@@ -176,6 +240,9 @@ class DefaultBoard extends Component {
                 data={this.state.tasks}
                 renderItem={({item}) => this.renderTaskList(item)}
                 keyExtractor={item => item.projId}
+                onEndReached={this.lazyFetchData}
+                onEndReachedThreshold={0.5}
+                onScroll={this.onMyListScroll}
                 // ListEmptyComponent={<EmptyListView />}
                 // onRefresh={() => this.onRefresh()}
                 // refreshing={isFetching}

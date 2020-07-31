@@ -36,6 +36,11 @@ class OtherBoard extends Component {
     this.state = {
       dataLoading: false,
       sprints: [],
+      listStartIndex: 0,
+      listEndIndex: 10,
+      cachecdData: [],
+      cachecdMyListData: [],
+      listScrolled: false,
     };
   }
 
@@ -46,31 +51,65 @@ class OtherBoard extends Component {
   }
 
   async getAllTaskDataInProject() {
+    let startIndex = 0;
+    let endIndex = 10;
+    try {
+      this.setState({dataLoading: true});
+      this.getAllTaskInDefaultBoardDataDirectly(
+        startIndex, 
+        endIndex
+      );
+    } catch (error) {
+      this.setState({dataLoading: false});
+    }
+  }
+
+  getAllTaskInDefaultBoardDataDirectly = async ( startIndex, endIndex) => {
     let selectedProjectID = this.props.selectedProjectID;
     try {
       this.setState({dataLoading: true});
       let taskData = await APIServices.getAllTaskInDefaultBoardData(
         selectedProjectID,
+        startIndex, 
+        endIndex
       );
       if (taskData.message == 'success') {
-        this.setState({dataLoading: false});
         let dataArray = [];
+        let cachedDataArray = [];
         for (let i = 0; i < taskData.data.length; i++) {
           let parentTask = taskData.data[i].parentTask;
           let childTasks = taskData.data[i].childTasks;
-          dataArray.push(parentTask);
+          if (parentTask.sprintId == 'default') {
+            dataArray.push(parentTask);
+            cachedDataArray.push(parentTask);
+          }
           for (let j = 0; j < childTasks.length; j++) {
             let childTasksItem = childTasks[j];
-            dataArray.push(childTasksItem);
+            if (childTasksItem.sprintId == 'default') {
+              dataArray.push(childTasksItem);
+            }
           }
+          this.getAllSprintInProject(dataArray);
         }
-        this.getAllSprintInProject(dataArray);
+        this.setState({
+          tasks: this.state.tasks.concat(dataArray),
+          cachecdMyListData: cachedDataArray,
+          dataLoading: false,
+        }, ()=> {
+          console.log('dataaaa 00000', this.state.cachecdMyListData.length)
+          console.log('dataaaa 111111', this.state.tasks.length)
+        });
       } else {
         this.setState({dataLoading: false});
       }
     } catch (error) {
       this.setState({dataLoading: false});
     }
+  }
+
+  onMyListScroll(event) {
+    console.log('aaaaaijijijijijijijijij')
+    this.setState({listScrolled: true});
   }
 
   async getAllSprintInProject(taskData) {
