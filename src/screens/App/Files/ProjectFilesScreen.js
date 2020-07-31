@@ -37,6 +37,7 @@ menuItems = [
   {value: 1, text: 'Add New File', icon: icons.addFileGray},
 ];
 class ProjectFilesScreen extends Component {
+  folderNavigation = [];
   deleteDetails = {
     icon: icons.alertRed,
     type: 'confirm',
@@ -573,7 +574,7 @@ class ProjectFilesScreen extends Component {
   }
 
   onFolderViewPress() {
-    //Navigation
+    this.folderNavigation.push({id: 1, name: 'Design'}, {id: 2, name: 'Test'});
   }
 
   showNewFolderModal() {
@@ -693,18 +694,24 @@ class ProjectFilesScreen extends Component {
               onChange={item => this.onMenuItemChange(item)}
             />
           </View>
+          {folderData.length > 0 ? (
+            <View>
+              <Text style={styles.titleStyle}>Folders</Text>
+              <FlatList
+                style={styles.folderFlatListStyle}
+                data={folderData}
+                numColumns={2}
+                renderItem={({item, index}) =>
+                  this.renderFolderList(item, index)
+                }
+                keyExtractor={item => item.id}
+              />
+            </View>
+          ) : null}
           <View>
-            <Text style={styles.titleStyle}>Folders</Text>
-            <FlatList
-              style={styles.folderFlatListStyle}
-              data={folderData}
-              numColumns={2}
-              renderItem={({item, index}) => this.renderFolderList(item, index)}
-              keyExtractor={item => item.id}
-            />
-          </View>
-          <View>
-            <Text style={styles.titleStyle}>Files</Text>
+            {filesData.length > 0 ? (
+              <Text style={styles.titleStyle}>Files</Text>
+            ) : null}
             <FlatList
               style={styles.flalList}
               data={filesData}
