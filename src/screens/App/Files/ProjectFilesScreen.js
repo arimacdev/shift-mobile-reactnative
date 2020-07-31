@@ -76,6 +76,7 @@ class ProjectFilesScreen extends Component {
       showNewFolderModal: false,
       folderName: '',
       showMoveFolderModal: false,
+      selectedFolderToMove: '',
     };
   }
 
@@ -715,13 +716,45 @@ class ProjectFilesScreen extends Component {
     this.setState({showMoveFolderModal: false});
   }
 
+  onFolderModalViewPress(item) {
+    this.setState({selectedFolderToMove: item.id});
+  }
+
+  async moveFileToFolder() {
+    let projectID = this.props.selectedProjectID;
+    let selectedFolderToMove = this.state.selectedFolderToMove;
+
+    this.setState({dataLoading: true, showMessageModal: false});
+
+    await APIServices.addFileToFolderData(projectID, selectedFolderToMove)
+      .then(response => {
+        if (response.message == 'success') {
+          this.deleteDetails = {
+            icon: icons.folder,
+            type: 'success',
+            title: 'Sucsess',
+            description: 'File has been moved successfully',
+            buttons: {},
+          };
+          this.setState({dataLoading: false, showMessageModal: true});
+          this.fetchData(this.props.selectedProjectID);
+        } else {
+          this.setState({dataLoading: false});
+        }
+      })
+      .catch(error => {
+        this.setState({dataLoading: false});
+        this.showAlert('', error.data.message);
+      });
+  }
+
   renderModalFolderList(item, index) {
     let folderData = this.state.folderData;
     let oddNumber = (folderData.length - 1) % 2;
 
     return (
       <TouchableOpacity
-        onPress={() => this.onFolderViewPress()}
+        onPress={() => this.onFolderModalViewPress(item)}
         style={[
           styles.folderModalListView,
           {
@@ -772,7 +805,7 @@ class ProjectFilesScreen extends Component {
                 },
               ]}
               disabled={this.state.url == '' ? true : false}
-              onPress={() => this.createNewFolder()}>
+              onPress={() => this.moveFileToFolder()}>
               <Text style={styles.positiveTextStyle}>Move</Text>
             </TouchableOpacity>
             <TouchableOpacity
