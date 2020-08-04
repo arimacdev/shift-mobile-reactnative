@@ -90,6 +90,7 @@ import {
   GET_ALL_MAIN_FOLDERS_FILES_IN_PROJECT,
   GET_ALL_SUB_FOLDERS_FILES_IN_PROJECT,
   UPDATE_PROJECT_FOLDER,
+  DELETE_PROJECT_FOLDER,
 } from '../api/API';
 import AsyncStorage from '@react-native-community/async-storage';
 import {SET_UPLOAD_PROGRESS} from '../redux/types';
@@ -1448,7 +1449,7 @@ async function getGroupSingleTaskData(selectedTaskGroupId, selectedTaskID) {
   );
 }
 
-async function uploadFileData(file, selectedProjectID, dispatch) {
+async function uploadFileData(file, selectedProjectID, folderId, dispatch) {
   let baseURL = null;
   baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
@@ -1469,6 +1470,7 @@ async function uploadFileData(file, selectedProjectID, dispatch) {
   const formData = new FormData();
   formData.append('type', 'projectFile');
   formData.append('files', file1);
+  formData.append('folderId', folderId)
   return request(
     {
       url:
@@ -3428,7 +3430,7 @@ async function addFileToFolderData(projectID, folderId) {
   );
 }
 
-async function updateFolderDetailsData(projectID, folderId, folderName) {
+async function updateFolderData(projectID, folderId, folderName) {
   let baseURL = null;
   baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
@@ -3453,6 +3455,34 @@ async function updateFolderDetailsData(projectID, folderId, folderName) {
       data: {
         folderName: folderName,
       },
+    },
+    true,
+    headers,
+  );
+}
+
+async function deleteFolderData(projectID, folderId) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
+  let userIDHeder = null;
+  userIDHeder = await AsyncStorage.getItem('userID');
+
+  let headers = {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+    user: userIDHeder,
+  };
+
+  return request(
+    {
+      url:
+        baseURL +
+        DELETE_PROJECT_FOLDER +
+        '/' +
+        projectID +
+        '/folder/' +
+        folderId,
+      method: 'DELETE',
     },
     true,
     headers,
@@ -3577,7 +3607,8 @@ const APIServices = {
   getAllSubFoldersFilesData,
   addProjectFolderData,
   addFileToFolderData,
-  updateFolderDetailsData,
+  updateFolderData,
+  deleteFolderData,
 };
 
 export default APIServices;

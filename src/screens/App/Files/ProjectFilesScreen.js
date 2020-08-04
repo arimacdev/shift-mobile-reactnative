@@ -323,11 +323,7 @@ class ProjectFilesScreen extends Component {
       showNewFolderModal: false,
     });
 
-    await APIServices.updateFolderDetailsData(
-      projectID,
-      folderItemId,
-      folderName,
-    )
+    await APIServices.updateFolderData(projectID, folderItemId, folderName)
       .then(response => {
         if (response.message == 'success') {
           this.deleteDetails = {
@@ -351,7 +347,46 @@ class ProjectFilesScreen extends Component {
       });
   }
 
-  deleteFolder(folderId) {}
+  deleteFolder(folderItem) {
+    this.deleteDetails = {
+      icon: icons.alertRed,
+      type: 'confirm',
+      title: 'Delete File',
+      description:
+        "You are about to permanantly delete this folder and all of it's data,\n If you are not sure, you can cancel this action.",
+      buttons: {positive: 'Delete', negative: 'Cancel'},
+    };
+    this.onPressMessageModal = () => this.deleteFolderDetails(folderItem);
+    this.setState({showMessageModal: true});
+  }
+
+  async deleteFolderDetails(folderItem) {
+    let projectID = this.props.selectedProjectID;
+    let folderItemId = folderItem.folderId;
+
+    this.setState({dataLoading: true, showMessageModal: false});
+
+    await APIServices.deleteFolderData(projectID, folderItemId)
+      .then(response => {
+        if (response.message == 'success') {
+          this.deleteDetails = {
+            icon: icons.folder,
+            type: 'success',
+            title: 'Sucsess',
+            description: 'Folder name has been deleted successfully',
+            buttons: {},
+          };
+          this.setState({dataLoading: false, showMessageModal: true});
+          this.fetchData(this.props.selectedProjectID);
+        } else {
+          this.setState({dataLoading: false});
+        }
+      })
+      .catch(error => {
+        this.setState({dataLoading: false});
+        this.showAlert('', error.data.message);
+      });
+  }
 
   onFileMenuItemChange(item, fileItem) {
     switch (item.value) {
