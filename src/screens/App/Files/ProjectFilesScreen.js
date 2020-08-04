@@ -40,6 +40,7 @@ menuItems = [
 ];
 
 menuItemsFile = [{value: 0, text: 'Move'}, {value: 1, text: 'Delete'}];
+menuItemsFolder = [{value: 0, text: 'Update'}, {value: 1, text: 'Delete'}];
 class ProjectFilesScreen extends Component {
   deleteDetails = {
     icon: icons.alertRed,
@@ -79,6 +80,8 @@ class ProjectFilesScreen extends Component {
       selectedFolderToMove: '',
       folderNavigation: ['Main'],
       parentFolderId: '',
+      fromUpdateFolder: false,
+      folderItem: '',
     };
     this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
   }
@@ -90,10 +93,10 @@ class ProjectFilesScreen extends Component {
     );
   }
 
-  componentDidUpdate(prevProps, prevState, snapshot) {}
-
-  componentDidMount() {
-    this.fetchData(this.props.selectedProjectID);
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (prevProps.isActive !== this.props.isActive && this.props.isActive) {
+      this.fetchData(this.props.selectedProjectID);
+    }
   }
 
   componentWillUnmount() {
@@ -105,7 +108,7 @@ class ProjectFilesScreen extends Component {
 
   handleBackButtonClick() {
     let length = this.state.folderNavigation.length - 1;
-    
+
     this.state.folderNavigation.splice(length, 1);
 
     if (this.state.folderNavigation.length > 1) {
@@ -287,9 +290,68 @@ class ProjectFilesScreen extends Component {
     );
   }
 
-  moveFolder() {
-    this.onShowMoveFolderModal();
+  onFolderMenuItemChange(item, folderItem) {
+    switch (item.value) {
+      case 0:
+        this.updateFolder(folderItem);
+        break;
+      case 1:
+        this.deleteFolder(folderItem);
+        break;
+      default:
+        break;
+    }
   }
+
+  updateFolder(folderItem) {
+    this.setState({
+      folderItem: folderItem,
+      folderName: folderItem.folderName,
+      fromUpdateFolder: true,
+    });
+    this.showNewFolderModal();
+  }
+
+  async updateFolderDetails() {
+    let projectID = this.props.selectedProjectID;
+    let folderItemId = this.state.folderItem.folderId;
+    let folderName = this.state.folderName;
+
+    this.setState({
+      dataLoading: true,
+      showMessageModal: false,
+      showNewFolderModal: false,
+    });
+
+    await APIServices.updateFolderDetailsData(
+      projectID,
+      folderItemId,
+      folderName,
+    )
+      .then(response => {
+        if (response.message == 'success') {
+          this.deleteDetails = {
+            icon: icons.folder,
+            type: 'success',
+            title: 'Sucsess',
+            description: 'Folder name has been updated successfully',
+            buttons: {},
+          };
+          this.setState({dataLoading: false, showMessageModal: true});
+          this.fetchData(this.props.selectedProjectID);
+        } else {
+          this.setState({dataLoading: false});
+        }
+      })
+      .catch(error => {
+        this.setState({dataLoading: false});
+        if (error.status == 401) {
+          this.showAlert('', error.data.message);
+        }
+      });
+  }
+
+  deleteFolder(folderId) {}
 
   onFileMenuItemChange(item, fileItem) {
     switch (item.value) {
@@ -302,6 +364,10 @@ class ProjectFilesScreen extends Component {
       default:
         break;
     }
+  }
+
+  moveFolder() {
+    this.onShowMoveFolderModal();
   }
 
   renderFilesList(item) {
@@ -617,6 +683,7 @@ class ProjectFilesScreen extends Component {
   onMenuItemChange(item) {
     switch (item.value) {
       case 0:
+        this.setState({fromUpdateFolder: false, folderName: ''});
         this.showNewFolderModal();
         break;
       case 1:
@@ -630,6 +697,7 @@ class ProjectFilesScreen extends Component {
   renderFolderList(item, index) {
     let folderData = this.state.folderData;
     let oddNumber = (folderData.length - 1) % 2;
+    let folderItem = item;
 
     return (
       <TouchableOpacity
@@ -644,7 +712,17 @@ class ProjectFilesScreen extends Component {
           },
         ]}>
         <Image style={styles.folderIconStyle} source={icons.folderFilledGray} />
-        <Text style={{marginHorizontal: 20}}>{item.folderName}</Text>
+        <Text style={styles.folderTextStyle} numberOfLines={1}>
+          {item.folderName}
+        </Text>
+        <PopupMenuNormal
+          data={menuItemsFolder}
+          onChange={item => this.onFolderMenuItemChange(item, folderItem)}
+          menuStyle={styles.menuStyle}
+          customStyle={styles.customStyle}
+          customMenuIcon={styles.customMenuIconStyle}
+          menuIcon={icons.menuGray}
+        />
       </TouchableOpacity>
     );
   }
@@ -723,6 +801,7 @@ class ProjectFilesScreen extends Component {
   }
 
   renderNewFolderModal() {
+    let fromUpdateFolder = this.state.fromUpdateFolder;
     return (
       <Modal
         isVisible={this.state.showNewFolderModal}
@@ -733,7 +812,9 @@ class ProjectFilesScreen extends Component {
         coverScreen={false}
         backdropTransitionOutTiming={0}>
         <View style={styles.modalInnerStyle}>
-          <Text style={styles.modalTitleStyle}>New Folder</Text>
+          <Text style={styles.modalTitleStyle}>
+            {fromUpdateFolder ? 'Update Folder' : 'New Folder'}
+          </Text>
           <View style={styles.modalInputTextViewStyle}>
             {/* <Text style={styles.modalTextStyle}>Folder</Text> */}
             <View style={styles.modalInputTextViewInnerStyle}>
@@ -757,8 +838,14 @@ class ProjectFilesScreen extends Component {
                 },
               ]}
               disabled={this.state.url == '' ? true : false}
-              onPress={() => this.createNewFolder(true)}>
-              <Text style={styles.positiveTextStyle}>Create</Text>
+              onPress={() =>
+                fromUpdateFolder
+                  ? this.updateFolderDetails()
+                  : this.createNewFolder(true)
+              }>
+              <Text style={styles.positiveTextStyle}>
+                {fromUpdateFolder ? 'Update' : 'Create'}
+              </Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.cancelStyle}
@@ -827,7 +914,9 @@ class ProjectFilesScreen extends Component {
           },
         ]}>
         <Image style={styles.folderIconStyle} source={icons.folderFilledGray} />
-        <Text style={{marginHorizontal: 20}}>{item.folderName}</Text>
+        <Text style={{marginHorizontal: 20}} numberOfLines={1}>
+          {item.folderName}
+        </Text>
       </TouchableOpacity>
     );
   }
@@ -1143,6 +1232,10 @@ const styles = EStyleSheet.create({
     marginLeft: '15rem',
     width: '25rem',
     height: '25rem',
+  },
+  folderTextStyle: {
+    marginHorizontal: '20rem',
+    flex: 1,
   },
   folderListView: {
     flex: 0.5,
