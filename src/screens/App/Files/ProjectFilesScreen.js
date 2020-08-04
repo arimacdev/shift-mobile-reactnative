@@ -10,6 +10,7 @@ import {
   Alert,
   TextInput,
   ScrollView,
+  BackHandler
 } from 'react-native';
 import {connect} from 'react-redux';
 import * as actions from '../../../redux/actions';
@@ -40,7 +41,6 @@ menuItems = [
 
 menuItemsFile = [{value: 0, text: 'Move'}, {value: 1, text: 'Delete'}];
 class ProjectFilesScreen extends Component {
-  folderNavigation = [];
   deleteDetails = {
     icon: icons.alertRed,
     type: 'confirm',
@@ -77,13 +77,37 @@ class ProjectFilesScreen extends Component {
       folderName: '',
       showMoveFolderModal: false,
       selectedFolderToMove: '',
+      folderNavigation:[]
     };
+  }
+
+  componentWillMount() {
+    BackHandler.addEventListener(
+      'hardwareBackPress',
+      this.handleBackButtonClick,
+    );
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {}
 
   componentDidMount() {
     this.fetchData(this.props.selectedProjectID);
+  }
+
+  componentWillUnmount() {
+    BackHandler.removeEventListener(
+      'hardwareBackPress',
+      this.handleBackButtonClick,
+    );
+  }
+
+  handleBackButtonClick() {
+    if (this.state.showPicker) {
+      this.onCloseModel();
+    } else {
+      this.props.navigation.goBack(null);
+    }
+    return true;
   }
 
   async fetchData(selectedProjectID) {
@@ -616,7 +640,7 @@ class ProjectFilesScreen extends Component {
   }
 
   onFolderViewPress() {
-    this.folderNavigation.push({id: 1, name: 'Design'});
+    this.state.folderNavigation.push({id: 1, name: 'Design'});
     this.fetchData(this.props.selectedProjectID);
   }
 
