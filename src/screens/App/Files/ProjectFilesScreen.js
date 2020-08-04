@@ -78,7 +78,7 @@ class ProjectFilesScreen extends Component {
       folderName: '',
       showMoveFolderModal: false,
       selectedFolderToMove: '',
-      folderNavigation: ['Main'],
+      folderNavigation: ['default'],
       parentFolderId: '',
       fromUpdateFolder: false,
       folderItem: '',
@@ -91,6 +91,10 @@ class ProjectFilesScreen extends Component {
       'hardwareBackPress',
       this.handleBackButtonClick,
     );
+  }
+
+  componentDidMount() {
+    this.fetchData(this.props.selectedProjectID);
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -108,7 +112,6 @@ class ProjectFilesScreen extends Component {
 
   handleBackButtonClick() {
     let length = this.state.folderNavigation.length - 1;
-
     this.state.folderNavigation.splice(length, 1);
 
     if (this.state.folderNavigation.length > 1) {
@@ -533,6 +536,9 @@ class ProjectFilesScreen extends Component {
   }
 
   async setImageForFile(res) {
+    let length = this.state.folderNavigation.length - 1;
+    let folderId = this.state.folderNavigation[length].folderId;
+
     this.onFilesCrossPress(res.uri);
     let imgName = res.fileName;
     if (typeof imgName === 'undefined' || imgName == null) {
@@ -558,11 +564,12 @@ class ProjectFilesScreen extends Component {
     await APIServices.uploadFileData(
       this.state.files,
       this.props.selectedProjectID,
+      folderId,
     )
       .then(response => {
         if (response.message == 'success') {
           this.setState({indeterminate: false, files: [], Uploading: 100});
-          this.fetchData(this.props.selectedProjectID);
+          this.loadSubFolderData();
         } else {
           this.setState({indeterminate: false, files: [], Uploading: 0});
         }
@@ -578,6 +585,8 @@ class ProjectFilesScreen extends Component {
   }
 
   async doumentPicker() {
+    let length = this.state.folderNavigation.length - 1;
+    let folderId = this.state.folderNavigation[length].folderId;
     // Pick multiple files
     try {
       const results = await DocumentPicker.pickMultiple({
@@ -614,11 +623,12 @@ class ProjectFilesScreen extends Component {
       await APIServices.uploadFileData(
         this.state.files,
         this.props.selectedProjectID,
+        folderId,
       )
         .then(response => {
           if (response.message == 'success') {
             this.setState({indeterminate: false, files: [], Uploading: 100});
-            this.fetchData(this.props.selectedProjectID);
+            this.loadSubFolderData();
           } else {
             this.setState({indeterminate: false, files: [], Uploading: 0});
           }
@@ -628,7 +638,7 @@ class ProjectFilesScreen extends Component {
           if (error.status == 401) {
             this.showAlert('', error.data.message);
           } else {
-            this.showAlert('', error);
+            this.showAlert('', 'File upload error');
           }
         });
       // this.props.uploadFile(this.state.files, this.props.selectedProjectID);
@@ -640,6 +650,16 @@ class ProjectFilesScreen extends Component {
       } else {
         throw err;
       }
+    }
+  }
+
+  loadSubFolderData() {
+    let length = this.state.folderNavigation.length - 1;
+
+    if (this.state.folderNavigation.length > 1) {
+      this.getSubFoldersFiles(this.state.folderNavigation[length].folderId);
+    } else {
+      this.fetchData(this.props.selectedProjectID);
     }
   }
 
