@@ -3357,7 +3357,7 @@ async function addProjectFolderData(projectID, folderName, folderId) {
   let headers = {
     Accept: 'application/json',
     'Content-Type': 'application/json',
-    userId: userIDHeder,
+    user: userIDHeder,
   };
 
   return request(

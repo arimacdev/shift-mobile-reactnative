@@ -10,7 +10,7 @@ import {
   Alert,
   TextInput,
   ScrollView,
-  BackHandler
+  BackHandler,
 } from 'react-native';
 import {connect} from 'react-redux';
 import * as actions from '../../../redux/actions';
@@ -77,7 +77,8 @@ class ProjectFilesScreen extends Component {
       folderName: '',
       showMoveFolderModal: false,
       selectedFolderToMove: '',
-      folderNavigation:[]
+      folderNavigation: [],
+      parentFolderId:''
     };
   }
 
@@ -113,7 +114,9 @@ class ProjectFilesScreen extends Component {
   async fetchData(selectedProjectID) {
     try {
       this.setState({dataLoading: true});
-      let filesData = await APIServices.getAllMainFoldersFilesData(selectedProjectID);
+      let filesData = await APIServices.getAllMainFoldersFilesData(
+        selectedProjectID,
+      );
       if (filesData.message == 'success') {
         this.setState({
           filesData: filesData.data.files,
@@ -129,7 +132,6 @@ class ProjectFilesScreen extends Component {
     } catch (error) {
       this.setState({dataLoading: false});
       this.showAlert('', 'Data loading error');
-      console.log("ddddddddddddddd",error)
     }
   }
 
@@ -589,7 +591,7 @@ class ProjectFilesScreen extends Component {
       data.projectFileName.toLowerCase().includes(text.toLowerCase()),
     );
     let resultFolder = this.state.allFolderData.filter(data =>
-      data.name.toLowerCase().includes(text.toLowerCase()),
+      data.folderName.toLowerCase().includes(text.toLowerCase()),
     );
     if (text == '') {
       this.setState({
@@ -635,7 +637,7 @@ class ProjectFilesScreen extends Component {
           },
         ]}>
         <Image style={styles.folderIconStyle} source={icons.folderFilledGray} />
-        <Text style={{marginHorizontal: 20}}>{item.name}</Text>
+        <Text style={{marginHorizontal: 20}}>{item.folderName}</Text>
       </TouchableOpacity>
     );
   }
@@ -657,13 +659,18 @@ class ProjectFilesScreen extends Component {
     this.setState({folderName: text});
   }
 
-  async createNewFolder() {
+  async createNewFolder(parent) {
     let projectID = this.props.selectedProjectID;
     let folderName = this.state.folderName;
+    let folderId = parent ? null : this.state.parentFolderId;
 
-    this.setState({dataLoading: true, showMessageModal: false});
+    this.setState({
+      dataLoading: true,
+      showMessageModal: false,
+      showNewFolderModal: false,
+    });
 
-    await APIServices.addProjectFolderData(projectID, folderName)
+    await APIServices.addProjectFolderData(projectID, folderName, folderId)
       .then(response => {
         if (response.message == 'success') {
           this.deleteDetails = {
@@ -720,7 +727,7 @@ class ProjectFilesScreen extends Component {
                 },
               ]}
               disabled={this.state.url == '' ? true : false}
-              onPress={() => this.createNewFolder()}>
+              onPress={() => this.createNewFolder(true)}>
               <Text style={styles.positiveTextStyle}>Create</Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -790,7 +797,7 @@ class ProjectFilesScreen extends Component {
           },
         ]}>
         <Image style={styles.folderIconStyle} source={icons.folderFilledGray} />
-        <Text style={{marginHorizontal: 20}}>{item.name}</Text>
+        <Text style={{marginHorizontal: 20}}>{item.folderName}</Text>
       </TouchableOpacity>
     );
   }
