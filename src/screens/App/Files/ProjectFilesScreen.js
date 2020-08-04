@@ -77,9 +77,10 @@ class ProjectFilesScreen extends Component {
       folderName: '',
       showMoveFolderModal: false,
       selectedFolderToMove: '',
-      folderNavigation: [],
-      parentFolderId:''
+      folderNavigation: ['Main'],
+      parentFolderId: '',
     };
+    this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
   }
 
   componentWillMount() {
@@ -103,8 +104,14 @@ class ProjectFilesScreen extends Component {
   }
 
   handleBackButtonClick() {
-    if (this.state.showPicker) {
-      this.onCloseModel();
+    let length = this.state.folderNavigation.length - 1;
+    
+    this.state.folderNavigation.splice(length, 1);
+
+    if (this.state.folderNavigation.length > 1) {
+      this.getSubFoldersFiles(this.state.folderNavigation[length].folderId);
+    } else if (this.state.folderNavigation.length == 1) {
+      this.fetchData(this.props.selectedProjectID);
     } else {
       this.props.navigation.goBack(null);
     }
@@ -626,7 +633,7 @@ class ProjectFilesScreen extends Component {
 
     return (
       <TouchableOpacity
-        onPress={() => this.onFolderViewPress()}
+        onPress={() => this.onFolderViewPress(item.folderId)}
         style={[
           styles.folderListView,
           {
@@ -642,9 +649,32 @@ class ProjectFilesScreen extends Component {
     );
   }
 
-  onFolderViewPress() {
-    this.state.folderNavigation.push({id: 1, name: 'Design'});
-    this.fetchData(this.props.selectedProjectID);
+  onFolderViewPress(folderId) {
+    this.state.folderNavigation.push({folderId: folderId});
+    this.getSubFoldersFiles(folderId);
+  }
+
+  async getSubFoldersFiles(folderId) {
+    let projectID = this.props.selectedProjectID;
+    this.setState({dataLoading: true});
+    await APIServices.getAllSubFoldersFilesData(projectID, folderId)
+      .then(response => {
+        if (response.message == 'success') {
+          this.setState({
+            filesData: response.data.files,
+            allFilesData: response.data.files,
+            folderData: response.data.folders,
+            allFolderData: response.data.folders,
+            dataLoading: false,
+          });
+        } else {
+          this.setState({dataLoading: false});
+        }
+      })
+      .catch(error => {
+        this.setState({dataLoading: false});
+        this.showAlert('', error.data.message);
+      });
   }
 
   showNewFolderModal() {

@@ -88,6 +88,7 @@ import {
   ADD_PROJECT_FOLDER,
   ADD_FILE_TO_PROJECT_FOLDER,
   GET_ALL_MAIN_FOLDERS_FILES_IN_PROJECT,
+  GET_ALL_SUB_FOLDERS_FILES_IN_PROJECT,
 } from '../api/API';
 import AsyncStorage from '@react-native-community/async-storage';
 import {SET_UPLOAD_PROGRESS} from '../redux/types';
@@ -3339,8 +3340,35 @@ async function getAllMainFoldersFilesData(projectID) {
         GET_ALL_MAIN_FOLDERS_FILES_IN_PROJECT +
         '/' +
         projectID +
+        '/folder',
+      method: 'GET',
+    },
+    true,
+    headers,
+  );
+}
+
+async function getAllSubFoldersFilesData(projectID, folderId) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
+  let userIDHeder = null;
+  userIDHeder = await AsyncStorage.getItem('userID');
+
+  let headers = {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+    user: userIDHeder,
+  };
+
+  return request(
+    {
+      url:
+        baseURL +
+        GET_ALL_SUB_FOLDERS_FILES_IN_PROJECT +
         '/' +
-        'folder',
+        projectID +
+        '/folder/' +
+        folderId,
       method: 'GET',
     },
     true,
@@ -3514,6 +3542,7 @@ const APIServices = {
   updateProjectWeightTypeData,
   updateTaskWeightData,
   getAllMainFoldersFilesData,
+  getAllSubFoldersFilesData,
   addProjectFolderData,
   addFileToFolderData,
 };

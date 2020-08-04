@@ -102,8 +102,9 @@ export const GET_COMMENTS_COUNT = `task`;
 export const UPLOAD_FILE_TO_COMMENT = `task`;
 export const ADD_COMMENT_MENTION_NOTIFICATION = `notification/mention`;
 
-export const UPDATE_PROJECT_WEIGHT_TYPE = `projects`
+export const UPDATE_PROJECT_WEIGHT_TYPE = `projects`;
 
-export const GET_ALL_MAIN_FOLDERS_FILES_IN_PROJECT = `projects`
-export const ADD_PROJECT_FOLDER = `projects`
-export const ADD_FILE_TO_PROJECT_FOLDER = `projects`
+export const GET_ALL_MAIN_FOLDERS_FILES_IN_PROJECT = `projects`;
+export const GET_ALL_SUB_FOLDERS_FILES_IN_PROJECT = `projects`;
+export const ADD_PROJECT_FOLDER = `projects`;
+export const ADD_FILE_TO_PROJECT_FOLDER = `projects`;
