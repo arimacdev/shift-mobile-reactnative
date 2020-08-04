@@ -87,6 +87,7 @@ import {
   UPDATE_PROJECT_WEIGHT_TYPE,
   ADD_PROJECT_FOLDER,
   ADD_FILE_TO_PROJECT_FOLDER,
+  GET_ALL_MAIN_FOLDERS_FILES_IN_PROJECT,
 } from '../api/API';
 import AsyncStorage from '@react-native-community/async-storage';
 import {SET_UPLOAD_PROGRESS} from '../redux/types';
@@ -3319,7 +3320,35 @@ async function updateTaskWeightData(
   );
 }
 
-async function addProjectFolderData(projectID, folderName) {
+async function getAllMainFoldersFilesData(projectID) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
+  let userIDHeder = null;
+  userIDHeder = await AsyncStorage.getItem('userID');
+
+  let headers = {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+    user: userIDHeder,
+  };
+
+  return request(
+    {
+      url:
+        baseURL +
+        GET_ALL_MAIN_FOLDERS_FILES_IN_PROJECT +
+        '/' +
+        projectID +
+        '/' +
+        'folder',
+      method: 'GET',
+    },
+    true,
+    headers,
+  );
+}
+
+async function addProjectFolderData(projectID, folderName, folderId) {
   let baseURL = null;
   baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
@@ -3333,10 +3362,11 @@ async function addProjectFolderData(projectID, folderName) {
 
   return request(
     {
-      url: baseURL + ADD_PROJECT_FOLDER + '/' + projectID,
+      url: baseURL + ADD_PROJECT_FOLDER + '/' + projectID + '/' + 'folder',
       method: 'POST',
       data: {
         folderName: folderName,
+        parentFolder: folderId,
       },
     },
     true,
@@ -3483,6 +3513,7 @@ const APIServices = {
   addCommentMentionNotificationData,
   updateProjectWeightTypeData,
   updateTaskWeightData,
+  getAllMainFoldersFilesData,
   addProjectFolderData,
   addFileToFolderData,
 };

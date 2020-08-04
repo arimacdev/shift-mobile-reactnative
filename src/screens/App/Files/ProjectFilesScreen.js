@@ -113,13 +113,13 @@ class ProjectFilesScreen extends Component {
   async fetchData(selectedProjectID) {
     try {
       this.setState({dataLoading: true});
-      let filesData = await APIServices.getProjectFiles(selectedProjectID);
+      let filesData = await APIServices.getAllMainFoldersFilesData(selectedProjectID);
       if (filesData.message == 'success') {
         this.setState({
-          filesData: filesData.data,
-          allFilesData: filesData.data,
-          folderData: [{name: 'Design'}, {name: 'Project'}, {name: 'Task'}],
-          allFolderData: [{name: 'Design'}, {name: 'Project'}, {name: 'Task'}],
+          filesData: filesData.data.files,
+          allFilesData: filesData.data.files,
+          folderData: filesData.data.folders,
+          allFolderData: filesData.data.folders,
           dataLoading: false,
           isFetching: false,
         });
@@ -129,6 +129,7 @@ class ProjectFilesScreen extends Component {
     } catch (error) {
       this.setState({dataLoading: false});
       this.showAlert('', 'Data loading error');
+      console.log("ddddddddddddddd",error)
     }
   }
 
