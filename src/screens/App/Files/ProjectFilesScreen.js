@@ -83,8 +83,6 @@ class ProjectFilesScreen extends Component {
       fromUpdateFolder: false,
       folderItem: '',
       fileItem: '',
-      mainFolderItem: [],
-      onPressFolder: false,
     };
     this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
   }
@@ -152,8 +150,6 @@ class ProjectFilesScreen extends Component {
   }
 
   actualDownload = item => {
-    let mainFolderItem = this.state.mainFolderItem;
-    let onPressFolder = this.state.onPressFolder;
     this.setState({
       progress: 0,
       loading: true,
@@ -162,23 +158,13 @@ class ProjectFilesScreen extends Component {
     RNFetchBlob.config({
       // add this option that makes response data to be stored as a file,
       // this is much more performant.
-      path:
-        dirs.DownloadDir + '/' + onPressFolder &&
-        mainFolderItem.folderType == 'TASK'
-          ? item.taskFileName
-          : item.projectFileName,
+      path: dirs.DownloadDir + '/' + item.projectFileName,
       fileCache: true,
     })
-      .fetch(
-        'GET',
-        onPressFolder && mainFolderItem.folderType == 'TASK'
-          ? item.taskFileUrl
-          : item.projectFileUrl,
-        {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-      )
+      .fetch('GET', item.projectFileUrl, {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      })
       .progress((received, total) => {
         console.log('progress', received / total);
         this.setState({progress: received / total});
@@ -425,19 +411,9 @@ class ProjectFilesScreen extends Component {
   }
 
   renderFilesList(item) {
-    let mainFolderItem = this.state.mainFolderItem;
-    let onPressFolder = this.state.onPressFolder;
     let details = '';
-    let size = this.bytesToSize(
-      mainFolderItem.folderType == 'PROJECT'
-        ? item.projectFileSize
-        : item.taskFileSize,
-    );
-    let date = moment(
-      mainFolderItem.folderType == 'PROJECT'
-        ? item.projectFileAddedOn
-        : item.taskFileDate,
-    ).format('YYYY-MM-DD');
+    let size = this.bytesToSize(item.projectFileSize);
+    let date = moment(item.projectFileAddedOn).format('YYYY-MM-DD');
     let name = item.firstName + ' ' + item.lastName;
     let fileItem = item;
 
@@ -450,18 +426,12 @@ class ProjectFilesScreen extends Component {
         }>
         <View style={styles.filesView}>
           <Image
-            source={this.getTypeIcons(
-              onPressFolder && mainFolderItem.folderType == 'TASK'
-                ? item.taskFileName
-                : item.projectFileName,
-            )}
+            source={this.getTypeIcons(item.projectFileName)}
             style={styles.taskStateIcon}
           />
           <View style={{flex: 1}}>
             <Text style={styles.text} numberOfLines={1}>
-              {onPressFolder && mainFolderItem.folderType == 'TASK'
-                ? item.taskFileName
-                : item.projectFileName}
+              {item.projectFileName}
             </Text>
             <Text style={styles.textDate} numberOfLines={1}>
               {details}
@@ -478,16 +448,14 @@ class ProjectFilesScreen extends Component {
               style={{marginLeft: EStyleSheet.value('10rem')}}>
               <Image style={styles.controlIcon} source={icons.deleteRoundRed} />
             </TouchableOpacity> */}
-            {mainFolderItem.folderType == 'PROJECT' ? (
-              <PopupMenuNormal
-                data={menuItemsFile}
-                onChange={item => this.onFileMenuItemChange(item, fileItem)}
-                menuStyle={styles.menuStyle}
-                customStyle={styles.customStyle}
-                customMenuIcon={styles.customMenuIconStyle}
-                menuIcon={icons.menuGray}
-              />
-            ) : null}
+            <PopupMenuNormal
+              data={menuItemsFile}
+              onChange={item => this.onFileMenuItemChange(item, fileItem)}
+              menuStyle={styles.menuStyle}
+              customStyle={styles.customStyle}
+              customMenuIcon={styles.customMenuIconStyle}
+              menuIcon={icons.menuGray}
+            />
           </View>
         </View>
       </TouchableOpacity>
@@ -790,7 +758,7 @@ class ProjectFilesScreen extends Component {
 
     return (
       <TouchableOpacity
-        onPress={() => this.onFolderViewPress(item)}
+        onPress={() => this.onFolderViewPress(item.folderId)}
         style={[
           styles.folderListView,
           {
@@ -818,10 +786,9 @@ class ProjectFilesScreen extends Component {
     );
   }
 
-  onFolderViewPress(item) {
-    this.state.folderNavigation.push({folderId: item.folderId});
-    this.setState({mainFolderItem: item, onPressFolder: true});
-    this.getSubFoldersFiles(item.folderId);
+  onFolderViewPress(folderId) {
+    this.state.folderNavigation.push({folderId: folderId});
+    this.getSubFoldersFiles(folderId);
   }
 
   async getSubFoldersFiles(folderId) {
