@@ -772,14 +772,16 @@ class ProjectFilesScreen extends Component {
         <Text style={styles.folderTextStyle} numberOfLines={1}>
           {item.folderName}
         </Text>
-        <PopupMenuNormal
-          data={menuItemsFolder}
-          onChange={item => this.onFolderMenuItemChange(item, folderItem)}
-          menuStyle={styles.menuStyle}
-          customStyle={styles.customStyle}
-          customMenuIcon={styles.customMenuIconStyle}
-          menuIcon={icons.menuGray}
-        />
+        {item.folderType == 'PROJECT' ? (
+          <PopupMenuNormal
+            data={menuItemsFolder}
+            onChange={item => this.onFolderMenuItemChange(item, folderItem)}
+            menuStyle={styles.menuStyle}
+            customStyle={styles.customStyle}
+            customMenuIcon={styles.customMenuIconStyle}
+            menuIcon={icons.menuGray}
+          />
+        ) : null}
       </TouchableOpacity>
     );
   }
@@ -932,7 +934,11 @@ class ProjectFilesScreen extends Component {
     let parentFolderId = this.state.parentFolderId;
     let selectedFolderToMove = this.state.selectedFolderToMove;
 
-    this.setState({dataLoading: true, showMessageModal: false});
+    this.setState({
+      dataLoading: true,
+      showMessageModal: false,
+      showMoveFolderModal: false,
+    });
 
     await APIServices.moveFilesBetweenFoldersData(
       projectID,
