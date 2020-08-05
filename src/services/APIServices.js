@@ -91,6 +91,7 @@ import {
   GET_ALL_SUB_FOLDERS_FILES_IN_PROJECT,
   UPDATE_PROJECT_FOLDER,
   DELETE_PROJECT_FOLDER,
+  MOVE_FILES_BETWEEN_FOLDERS,
 } from '../api/API';
 import AsyncStorage from '@react-native-community/async-storage';
 import {SET_UPLOAD_PROGRESS} from '../redux/types';
@@ -1470,7 +1471,7 @@ async function uploadFileData(file, selectedProjectID, folderId, dispatch) {
   const formData = new FormData();
   formData.append('type', 'projectFile');
   formData.append('files', file1);
-  formData.append('folderId', folderId)
+  formData.append('folderId', folderId);
   return request(
     {
       url:
@@ -3489,6 +3490,39 @@ async function deleteFolderData(projectID, folderId) {
   );
 }
 
+async function moveFilesBetweenFoldersData(
+  projectID,
+  fileId,
+  previousParentFolder,
+  newParentFolder,
+) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
+  let userIDHeder = null;
+  userIDHeder = await AsyncStorage.getItem('userID');
+
+  let headers = {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+    userId: userIDHeder,
+  };
+
+  return request(
+    {
+      url:
+        baseURL + MOVE_FILES_BETWEEN_FOLDERS + '/' + projectID + '/folder/copy',
+      method: 'POST',
+      data: {
+        fileId: fileId,
+        previousParentFolder: previousParentFolder,
+        newParentFolder: newParentFolder,
+      },
+    },
+    true,
+    headers,
+  );
+}
+
 const APIServices = {
   getAllProjectsByUserData,
   getUserData,
@@ -3609,6 +3643,7 @@ const APIServices = {
   addFileToFolderData,
   updateFolderData,
   deleteFolderData,
+  moveFilesBetweenFoldersData,
 };
 
 export default APIServices;

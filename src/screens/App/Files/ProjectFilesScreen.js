@@ -82,6 +82,7 @@ class ProjectFilesScreen extends Component {
       parentFolderId: '',
       fromUpdateFolder: false,
       folderItem: '',
+      fileItem: '',
     };
     this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
   }
@@ -232,7 +233,7 @@ class ProjectFilesScreen extends Component {
             buttons: {},
           };
           this.setState({dataLoading: false, showMessageModal: true});
-          this.fetchData(this.props.selectedProjectID);
+          this.loadFolderData();
         } else {
           this.setState({dataLoading: false});
         }
@@ -288,7 +289,7 @@ class ProjectFilesScreen extends Component {
     this.setState(
       {isFetching: false, filesData: [], allFilesData: []},
       function() {
-        this.fetchData(this.props.selectedProjectID);
+        this.loadFolderData();
       },
     );
   }
@@ -337,7 +338,7 @@ class ProjectFilesScreen extends Component {
             buttons: {},
           };
           this.setState({dataLoading: false, showMessageModal: true});
-          this.fetchData(this.props.selectedProjectID);
+          this.loadFolderData();
         } else {
           this.setState({dataLoading: false});
         }
@@ -380,7 +381,7 @@ class ProjectFilesScreen extends Component {
             buttons: {},
           };
           this.setState({dataLoading: false, showMessageModal: true});
-          this.fetchData(this.props.selectedProjectID);
+          this.loadFolderData();
         } else {
           this.setState({dataLoading: false});
         }
@@ -394,7 +395,7 @@ class ProjectFilesScreen extends Component {
   onFileMenuItemChange(item, fileItem) {
     switch (item.value) {
       case 0:
-        this.moveFolder();
+        this.moveFolder(fileItem);
         break;
       case 1:
         this.deleteFileAlert(fileItem);
@@ -404,7 +405,8 @@ class ProjectFilesScreen extends Component {
     }
   }
 
-  moveFolder() {
+  moveFolder(fileItem) {
+    this.setState({fileItem: fileItem});
     this.onShowMoveFolderModal();
   }
 
@@ -569,7 +571,7 @@ class ProjectFilesScreen extends Component {
       .then(response => {
         if (response.message == 'success') {
           this.setState({indeterminate: false, files: [], Uploading: 100});
-          this.loadSubFolderData();
+          this.loadFolderData();
         } else {
           this.setState({indeterminate: false, files: [], Uploading: 0});
         }
@@ -628,7 +630,7 @@ class ProjectFilesScreen extends Component {
         .then(response => {
           if (response.message == 'success') {
             this.setState({indeterminate: false, files: [], Uploading: 100});
-            this.loadSubFolderData();
+            this.loadFolderData();
           } else {
             this.setState({indeterminate: false, files: [], Uploading: 0});
           }
@@ -653,7 +655,7 @@ class ProjectFilesScreen extends Component {
     }
   }
 
-  loadSubFolderData() {
+  loadFolderData() {
     let length = this.state.folderNavigation.length - 1;
 
     if (this.state.folderNavigation.length > 1) {
@@ -844,7 +846,7 @@ class ProjectFilesScreen extends Component {
             buttons: {},
           };
           this.setState({dataLoading: false, showMessageModal: true});
-          this.fetchData(this.props.selectedProjectID);
+          this.loadFolderData();
         } else {
           this.setState({dataLoading: false});
         }
@@ -926,11 +928,18 @@ class ProjectFilesScreen extends Component {
 
   async moveFileToFolder() {
     let projectID = this.props.selectedProjectID;
+    let fileId = this.state.fileItem.projectFileId;
+    let parentFolderId = this.state.parentFolderId;
     let selectedFolderToMove = this.state.selectedFolderToMove;
 
     this.setState({dataLoading: true, showMessageModal: false});
 
-    await APIServices.addFileToFolderData(projectID, selectedFolderToMove)
+    await APIServices.moveFilesBetweenFoldersData(
+      projectID,
+      fileId,
+      parentFolderId,
+      selectedFolderToMove,
+    )
       .then(response => {
         if (response.message == 'success') {
           this.deleteDetails = {
@@ -941,7 +950,7 @@ class ProjectFilesScreen extends Component {
             buttons: {},
           };
           this.setState({dataLoading: false, showMessageModal: true});
-          this.fetchData(this.props.selectedProjectID);
+          this.loadFolderData();
         } else {
           this.setState({dataLoading: false});
         }

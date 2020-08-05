@@ -110,3 +110,4 @@ export const ADD_PROJECT_FOLDER = `projects`;
 export const ADD_FILE_TO_PROJECT_FOLDER = `projects`;
 export const UPDATE_PROJECT_FOLDER = `projects`;
 export const DELETE_PROJECT_FOLDER = `projects`;
+export const MOVE_FILES_BETWEEN_FOLDERS = `projects`;
