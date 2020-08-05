@@ -150,6 +150,10 @@ class ProjectFilesScreen extends Component {
   }
 
   actualDownload = item => {
+    let url =
+      item.fileType == 'PROJECT' ? item.projectFileUrl : item.taskFileUrl;
+    let fileName =
+      item.fileType == 'PROJECT' ? item.projectFileName : item.taskFileName;
     this.setState({
       progress: 0,
       loading: true,
@@ -158,10 +162,10 @@ class ProjectFilesScreen extends Component {
     RNFetchBlob.config({
       // add this option that makes response data to be stored as a file,
       // this is much more performant.
-      path: dirs.DownloadDir + '/' + item.projectFileName,
+      path: dirs.DownloadDir + '/' + fileName,
       fileCache: true,
     })
-      .fetch('GET', item.projectFileUrl, {
+      .fetch('GET', url, {
         Accept: 'application/json',
         'Content-Type': 'application/json',
       })
@@ -178,6 +182,9 @@ class ProjectFilesScreen extends Component {
           '',
           'Your file has been downloaded to downloads folder!',
         );
+      })
+      .catch(error => {
+        console.log(error);
       });
   };
 
@@ -412,8 +419,12 @@ class ProjectFilesScreen extends Component {
 
   renderFilesList(item) {
     let details = '';
-    let size = this.bytesToSize(item.projectFileSize);
-    let date = moment(item.projectFileAddedOn).format('YYYY-MM-DD');
+    let size = this.bytesToSize(
+      item.fileType == 'PROJECT' ? item.projectFileSize : item.taskFileSize,
+    );
+    let date = moment(
+      item.fileType == 'PROJECT' ? item.projectFileAddedOn : item.taskFileDate,
+    ).format('YYYY-MM-DD');
     let name = item.firstName + ' ' + item.lastName;
     let fileItem = item;
 
@@ -426,12 +437,18 @@ class ProjectFilesScreen extends Component {
         }>
         <View style={styles.filesView}>
           <Image
-            source={this.getTypeIcons(item.projectFileName)}
+            source={this.getTypeIcons(
+              item.fileType == 'PROJECT'
+                ? item.projectFileName
+                : item.taskFileName,
+            )}
             style={styles.taskStateIcon}
           />
           <View style={{flex: 1}}>
             <Text style={styles.text} numberOfLines={1}>
-              {item.projectFileName}
+              {item.fileType == 'PROJECT'
+                ? item.projectFileName
+                : item.taskFileName}
             </Text>
             <Text style={styles.textDate} numberOfLines={1}>
               {details}
@@ -448,14 +465,16 @@ class ProjectFilesScreen extends Component {
               style={{marginLeft: EStyleSheet.value('10rem')}}>
               <Image style={styles.controlIcon} source={icons.deleteRoundRed} />
             </TouchableOpacity> */}
-            <PopupMenuNormal
-              data={menuItemsFile}
-              onChange={item => this.onFileMenuItemChange(item, fileItem)}
-              menuStyle={styles.menuStyle}
-              customStyle={styles.customStyle}
-              customMenuIcon={styles.customMenuIconStyle}
-              menuIcon={icons.menuGray}
-            />
+            {item.fileType == 'PROJECT' ? (
+              <PopupMenuNormal
+                data={menuItemsFile}
+                onChange={item => this.onFileMenuItemChange(item, fileItem)}
+                menuStyle={styles.menuStyle}
+                customStyle={styles.customStyle}
+                customMenuIcon={styles.customMenuIconStyle}
+                menuIcon={icons.menuGray}
+              />
+            ) : null}
           </View>
         </View>
       </TouchableOpacity>

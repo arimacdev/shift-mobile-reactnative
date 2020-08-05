@@ -43,7 +43,12 @@ class FilesView extends Component {
         <View style={[styles.imageViewStyle]}>
           <Image
             style={[styles.imageStyle]}
-            source={{uri: filesData.projectFileUrl}}
+            source={{
+              uri:
+                filesData.fileType == 'PROJECT'
+                  ? filesData.projectFileUrl
+                  : filesData.taskFileUrl,
+            }}
             resizeMode={'contain'}
           />
         </View>
