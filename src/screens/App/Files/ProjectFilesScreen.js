@@ -83,6 +83,8 @@ class ProjectFilesScreen extends Component {
       fromUpdateFolder: false,
       folderItem: '',
       fileItem: '',
+      folderDataModal: [],
+      allfolderDataModal: [],
     };
     this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
   }
@@ -137,6 +139,8 @@ class ProjectFilesScreen extends Component {
           allFilesData: filesData.data.files,
           folderData: filesData.data.folders,
           allFolderData: filesData.data.folders,
+          folderDataModal: filesData.data.folders,
+          allfolderDataModal: filesData.data.folders,
           dataLoading: false,
           isFetching: false,
         });
@@ -412,7 +416,22 @@ class ProjectFilesScreen extends Component {
     }
   }
 
-  moveFolder(fileItem) {
+  async moveFolder(fileItem) {
+    await this.setState({folderDataModal:[]});
+    this.setState({folderDataModal: this.state.allfolderDataModal});
+    if (this.state.folderNavigation.length > 1) {
+      this.state.folderDataModal.push({
+        folderCreatedAt: '',
+        folderCreator: '',
+        folderId: null,
+        folderName: 'Main',
+        folderType: 'PROJECT',
+        isDeleted: false,
+        parentFolder: null,
+        projectId: '',
+        taskId: null,
+      });
+    }
     this.setState({fileItem: fileItem});
     this.onShowMoveFolderModal();
   }
@@ -1022,7 +1041,7 @@ class ProjectFilesScreen extends Component {
   }
 
   renderMoveFolderModal() {
-    let folderData = this.state.folderData;
+    let folderDataModal = this.state.folderDataModal;
     return (
       <Modal
         // isVisible={true}
@@ -1037,7 +1056,7 @@ class ProjectFilesScreen extends Component {
           <Text style={styles.modalTitleStyle}>Move File to Folder</Text>
           <FlatList
             style={styles.moveFolderFlatListStyle}
-            data={folderData}
+            data={folderDataModal}
             numColumns={2}
             renderItem={({item, index}) =>
               this.renderModalFolderList(item, index)
