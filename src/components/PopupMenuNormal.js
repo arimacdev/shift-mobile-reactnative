@@ -109,7 +109,7 @@ class PopupMenuNormal extends Component {
         paddingHorizontal: 0,
         marginTop:
           Platform.OS === 'ios'
-            ? EStyleSheet.value('15rem')
+            ? EStyleSheet.value('-40rem')
             : EStyleSheet.value('-28rem'),
         backgroundColor: colors.white,
         borderRadius: EStyleSheet.value('5rem'),
