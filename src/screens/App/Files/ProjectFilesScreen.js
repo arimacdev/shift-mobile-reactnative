@@ -33,6 +33,7 @@ import MessageShowModal from '../../../components/MessageShowModal';
 import PopupMenuFileUpload from '../../../components/PopupMenuFileUpload';
 import Modal from 'react-native-modal';
 import PopupMenuNormal from '../../../components/PopupMenuNormal';
+import Utils from '../../../utils/Utils';
 
 menuItems = [
   {value: 0, text: 'Add New Folder', icon: icons.addFolderGray},
@@ -84,7 +85,6 @@ class ProjectFilesScreen extends Component {
       folderItem: '',
       fileItem: '',
       folderDataModal: [],
-      allfolderDataModal: [],
     };
     this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
   }
@@ -140,7 +140,6 @@ class ProjectFilesScreen extends Component {
           folderData: filesData.data.folders,
           allFolderData: filesData.data.folders,
           folderDataModal: filesData.data.folders,
-          allfolderDataModal: filesData.data.folders,
           dataLoading: false,
           isFetching: false,
         });
@@ -417,9 +416,10 @@ class ProjectFilesScreen extends Component {
   }
 
   async moveFolder(fileItem) {
-    await this.setState({folderDataModal:[]});
-    this.setState({folderDataModal: this.state.allfolderDataModal});
-    if (this.state.folderNavigation.length > 1) {
+    let folderExist = this.state.folderDataModal.filter(item => {
+      return item.folderName == 'Main';
+    });
+    if (this.state.folderNavigation.length > 1 && folderExist.length == 0) {
       this.state.folderDataModal.push({
         folderCreatedAt: '',
         folderCreator: '',
@@ -978,37 +978,40 @@ class ProjectFilesScreen extends Component {
     let parentFolderId = this.state.parentFolderId;
     let selectedFolderToMove = this.state.selectedFolderToMove;
 
-    this.setState({
-      dataLoading: true,
-      showMessageModal: false,
-      showMoveFolderModal: false,
-    });
-
-    await APIServices.moveFilesBetweenFoldersData(
-      projectID,
-      fileId,
-      parentFolderId,
-      selectedFolderToMove,
-    )
-      .then(response => {
-        if (response.message == 'success') {
-          this.deleteDetails = {
-            icon: icons.folder,
-            type: 'success',
-            title: 'Sucsess',
-            description: 'File has been moved successfully',
-            buttons: {},
-          };
-          this.setState({dataLoading: false, showMessageModal: true});
-          this.loadFolderData();
-        } else {
-          this.setState({dataLoading: false});
-        }
-      })
-      .catch(error => {
-        this.setState({dataLoading: false});
-        this.showAlert('', error.data.message);
+    if (selectedFolderToMove != '') {
+      this.setState({
+        dataLoading: true,
+        showMoveFolderModal: false,
+        showMessageModal: false,
       });
+      await APIServices.moveFilesBetweenFoldersData(
+        projectID,
+        fileId,
+        parentFolderId,
+        selectedFolderToMove,
+      )
+        .then(response => {
+          if (response.message == 'success') {
+            this.deleteDetails = {
+              icon: icons.folder,
+              type: 'success',
+              title: 'Sucsess',
+              description: 'File has been moved successfully',
+              buttons: {},
+            };
+            this.setState({dataLoading: false, showMessageModal: true});
+            this.loadFolderData();
+          } else {
+            this.setState({dataLoading: false});
+          }
+        })
+        .catch(error => {
+          this.setState({dataLoading: false});
+          this.showAlert('', error.data.message);
+        });
+    } else {
+      Utils.showAlert(true, '', 'Please choose a folder to move', this.props);
+    }
   }
 
   renderModalFolderList(item, index) {
