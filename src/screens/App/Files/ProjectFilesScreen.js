@@ -35,14 +35,13 @@ import Modal from 'react-native-modal';
 import PopupMenuNormal from '../../../components/PopupMenuNormal';
 import Utils from '../../../utils/Utils';
 
-menuItems = [
-  {value: 0, text: 'Add New Folder', icon: icons.addFolderGray},
-  {value: 1, text: 'Add New File', icon: icons.addFileGray},
-];
-
 menuItemsFile = [{value: 0, text: 'Move'}, {value: 1, text: 'Delete'}];
 menuItemsFolder = [{value: 0, text: 'Update'}, {value: 1, text: 'Delete'}];
 class ProjectFilesScreen extends Component {
+  menuItems = [
+    {value: 0, text: 'Add New Folder', icon: icons.addFolderGray},
+    {value: 1, text: 'Add New File', icon: icons.addFileGray},
+  ];
   deleteDetails = {
     icon: icons.alertRed,
     type: 'confirm',
@@ -120,6 +119,10 @@ class ProjectFilesScreen extends Component {
     if (this.state.folderNavigation.length > 1) {
       this.getSubFoldersFiles(this.state.folderNavigation[length].folderId);
     } else if (this.state.folderNavigation.length == 1) {
+      this.menuItems = [
+        {value: 0, text: 'Add New Folder', icon: icons.addFolderGray},
+        {value: 1, text: 'Add New File', icon: icons.addFileGray},
+      ];
       this.fetchData(this.props.selectedProjectID);
     } else {
       this.props.navigation.goBack(null);
@@ -824,9 +827,12 @@ class ProjectFilesScreen extends Component {
     );
   }
 
-  onFolderViewPress(folderId) {
-    this.state.folderNavigation.push({folderId: folderId});
+  async onFolderViewPress(folderId) {
+    await this.state.folderNavigation.push({folderId: folderId});
     this.getSubFoldersFiles(folderId);
+    this.menuItems = [
+      {value: 1, text: 'Add New File', icon: icons.addFileGray},
+    ];
   }
 
   async getSubFoldersFiles(folderId) {
@@ -999,7 +1005,11 @@ class ProjectFilesScreen extends Component {
               description: 'File has been moved successfully',
               buttons: {},
             };
-            this.setState({dataLoading: false, showMessageModal: true});
+            this.setState({
+              dataLoading: false,
+              showMessageModal: true,
+              selectedFolderToMove: '',
+            });
             this.loadFolderData();
           } else {
             this.setState({dataLoading: false});
@@ -1141,7 +1151,7 @@ class ProjectFilesScreen extends Component {
         </TouchableOpacity> */}
           <View>
             <PopupMenuFileUpload
-              data={menuItems}
+              data={this.menuItems}
               onChange={item => this.onMenuItemChange(item)}
             />
           </View>
