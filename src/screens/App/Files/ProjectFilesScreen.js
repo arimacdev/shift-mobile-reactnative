@@ -790,10 +790,21 @@ class ProjectFilesScreen extends Component {
   }
 
   onSearchTextChange(text) {
+    let folderNavigation = this.state.folderNavigation;
+    let length = this.state.folderNavigation.length - 1;
+
     this.setState({searchText: text});
-    let result = this.state.allFilesData.filter(data =>
-      data.projectFileName.toLowerCase().includes(text.toLowerCase()),
-    );
+    let result = '';
+    if (folderNavigation[length].folderType == 'TASK') {
+      result = this.state.allFilesData.filter(data =>
+        data.taskFileName.toLowerCase().includes(text.toLowerCase()),
+      );
+    } else {
+      result = this.state.allFilesData.filter(data =>
+        data.projectFileName.toLowerCase().includes(text.toLowerCase()),
+      );
+    }
+
     let resultFolder = this.state.allFolderData.filter(data =>
       data.folderName.toLowerCase().includes(text.toLowerCase()),
     );
@@ -864,7 +875,7 @@ class ProjectFilesScreen extends Component {
     await this.state.folderNavigation.push({
       folderId: item.folderId,
       folderName: item.folderName,
-      folderType: folderType,
+      folderType: item.folderType,
     });
     this.getSubFoldersFiles(item.folderId);
     this.menuItems = [
