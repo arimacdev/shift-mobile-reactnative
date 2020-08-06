@@ -940,11 +940,17 @@ class ProjectFilesScreen extends Component {
     this.setState({showMoveFolderModal: true});
   }
   onCloseMoveFolderModal() {
-    this.setState({showMoveFolderModal: false});
+    this.setState({showMoveFolderModal: false, selectedFolderToMove: ''});
   }
 
   onFolderModalViewPress(item) {
-    this.setState({selectedFolderToMove: item.id});
+    let length = this.state.folderNavigation.length - 1;
+    let folderId = this.state.folderNavigation[length].folderId;
+    let parentFolderId = folderId == 'default' ? null : folderId;
+    this.setState({
+      selectedFolderToMove: item.folderId,
+      parentFolderId: parentFolderId,
+    });
   }
 
   async moveFileToFolder() {
@@ -989,6 +995,7 @@ class ProjectFilesScreen extends Component {
   renderModalFolderList(item, index) {
     let folderData = this.state.folderData;
     let oddNumber = (folderData.length - 1) % 2;
+    let selectedFolderToMove = this.state.selectedFolderToMove;
 
     return (
       <TouchableOpacity
@@ -996,6 +1003,10 @@ class ProjectFilesScreen extends Component {
         style={[
           styles.folderModalListView,
           {
+            backgroundColor:
+              selectedFolderToMove == item.folderId
+                ? colors.projectBgColor
+                : colors.white,
             marginRight:
               oddNumber == 0 && index == folderData.length - 1
                 ? EStyleSheet.value('15rem')
@@ -1031,7 +1042,7 @@ class ProjectFilesScreen extends Component {
             renderItem={({item, index}) =>
               this.renderModalFolderList(item, index)
             }
-            keyExtractor={item => item.id}
+            keyExtractor={item => item.folderId}
           />
           <View style={styles.ButtonViewStyle}>
             <TouchableOpacity
@@ -1124,7 +1135,7 @@ class ProjectFilesScreen extends Component {
                     renderItem={({item, index}) =>
                       this.renderFolderList(item, index)
                     }
-                    keyExtractor={item => item.id}
+                    keyExtractor={item => item.folderId}
                   />
                 </View>
               ) : null}
