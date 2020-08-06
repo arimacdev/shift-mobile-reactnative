@@ -78,7 +78,7 @@ class ProjectFilesScreen extends Component {
       folderName: '',
       showMoveFolderModal: false,
       selectedFolderToMove: '',
-      folderNavigation: ['default'],
+      folderNavigation: [{folderId: 'default'}],
       parentFolderId: '',
       fromUpdateFolder: false,
       folderItem: '',
@@ -602,6 +602,7 @@ class ProjectFilesScreen extends Component {
       files: this.state.files,
       indeterminate: true,
       Uploading: 0,
+      dataLoading: true,
     });
 
     await APIServices.uploadFileData(
@@ -611,14 +612,29 @@ class ProjectFilesScreen extends Component {
     )
       .then(response => {
         if (response.message == 'success') {
-          this.setState({indeterminate: false, files: [], Uploading: 100});
+          this.setState({
+            indeterminate: false,
+            files: [],
+            Uploading: 100,
+            dataLoading: false,
+          });
           this.loadFolderData();
         } else {
-          this.setState({indeterminate: false, files: [], Uploading: 0});
+          this.setState({
+            indeterminate: false,
+            files: [],
+            Uploading: 0,
+            dataLoading: false,
+          });
         }
       })
       .catch(error => {
-        this.setState({indeterminate: false, files: [], Uploading: 0});
+        this.setState({
+          indeterminate: false,
+          files: [],
+          Uploading: 0,
+          dataLoading: false,
+        });
         if (error.status == 401) {
           this.showAlert('', error.data.message);
         } else {
@@ -630,6 +646,7 @@ class ProjectFilesScreen extends Component {
   async doumentPicker() {
     let length = this.state.folderNavigation.length - 1;
     let folderId = this.state.folderNavigation[length].folderId;
+    console.log('dsdddddddddddddddddddd', folderId);
     // Pick multiple files
     try {
       const results = await DocumentPicker.pickMultiple({
@@ -661,6 +678,7 @@ class ProjectFilesScreen extends Component {
         files: this.state.files,
         indeterminate: true,
         Uploading: 0,
+        dataLoading: true,
       });
 
       await APIServices.uploadFileData(
@@ -670,14 +688,29 @@ class ProjectFilesScreen extends Component {
       )
         .then(response => {
           if (response.message == 'success') {
-            this.setState({indeterminate: false, files: [], Uploading: 100});
+            this.setState({
+              indeterminate: false,
+              files: [],
+              Uploading: 100,
+              dataLoading: false,
+            });
             this.loadFolderData();
           } else {
-            this.setState({indeterminate: false, files: [], Uploading: 0});
+            this.setState({
+              indeterminate: false,
+              files: [],
+              Uploading: 0,
+              dataLoading: false,
+            });
           }
         })
         .catch(error => {
-          this.setState({indeterminate: false, files: [], Uploading: 0});
+          this.setState({
+            indeterminate: false,
+            files: [],
+            Uploading: 0,
+            dataLoading: false,
+          });
           if (error.status == 401) {
             this.showAlert('', error.data.message);
           } else {
