@@ -78,7 +78,9 @@ class ProjectFilesScreen extends Component {
       folderName: '',
       showMoveFolderModal: false,
       selectedFolderToMove: '',
-      folderNavigation: [{folderId: 'default'}],
+      folderNavigation: [
+        {folderId: 'default', folderName: 'Project', folderType: 'PROJECT'},
+      ],
       parentFolderId: '',
       fromUpdateFolder: false,
       folderItem: '',
@@ -638,7 +640,7 @@ class ProjectFilesScreen extends Component {
         if (error.status == 401) {
           this.showAlert('', error.data.message);
         } else {
-          this.showAlert('', error);
+          this.showAlert('', 'File upload error');
         }
       });
   }
@@ -646,8 +648,6 @@ class ProjectFilesScreen extends Component {
   async doumentPicker() {
     let length = this.state.folderNavigation.length - 1;
     let folderId = this.state.folderNavigation[length].folderId;
-    console.log('dsdddddddddddddddddddd', folderId);
-    // Pick multiple files
     try {
       const results = await DocumentPicker.pickMultiple({
         type: [
@@ -832,7 +832,7 @@ class ProjectFilesScreen extends Component {
 
     return (
       <TouchableOpacity
-        onPress={() => this.onFolderViewPress(item.folderId)}
+        onPress={() => this.onFolderViewPress(item)}
         style={[
           styles.folderListView,
           {
@@ -860,9 +860,13 @@ class ProjectFilesScreen extends Component {
     );
   }
 
-  async onFolderViewPress(folderId) {
-    await this.state.folderNavigation.push({folderId: folderId});
-    this.getSubFoldersFiles(folderId);
+  async onFolderViewPress(item) {
+    await this.state.folderNavigation.push({
+      folderId: item.folderId,
+      folderName: item.folderName,
+      folderType: folderType,
+    });
+    this.getSubFoldersFiles(item.folderId);
     this.menuItems = [
       {value: 1, text: 'Add New File', icon: icons.addFileGray},
     ];
@@ -1135,6 +1139,26 @@ class ProjectFilesScreen extends Component {
     );
   }
 
+  renderFolderNavigationList(item) {
+    return (
+      <View>
+        {item.folderId == 'default' ? (
+          <TouchableOpacity
+            style={{marginLeft: 5}}
+            onPress={() => this.handleBackButtonClick()}>
+            <Text style={{fontSize: 18, color: colors.lightBlue}}>
+              {item.folderName}
+            </Text>
+          </TouchableOpacity>
+        ) : (
+          <Text style={{fontSize: 18, color: colors.colorLightSlateGrey}}>
+            {' > ' + item.folderName}
+          </Text>
+        )}
+      </View>
+    );
+  }
+
   render() {
     let filesData = this.state.filesData;
     let dataLoading = this.state.dataLoading;
@@ -1144,6 +1168,7 @@ class ProjectFilesScreen extends Component {
     let addFileTaskLoading = this.props.addFileTaskLoading;
     let isFetching = this.state.isFetching;
     let folderData = this.state.folderData;
+    let folderNavigation = this.state.folderNavigation;
 
     return (
       <View style={styles.container}>
@@ -1188,6 +1213,17 @@ class ProjectFilesScreen extends Component {
               onChange={item => this.onMenuItemChange(item)}
             />
           </View>
+          {folderNavigation.length > 1 ? (
+            <FlatList
+              style={styles.folderFlatListStyle}
+              data={folderNavigation}
+              horizontal
+              renderItem={({item, index}) =>
+                this.renderFolderNavigationList(item, index)
+              }
+              keyExtractor={item => item.folderId}
+            />
+          ) : null}
           {folderData.length > 0 || filesData.length > 0 ? (
             <View>
               {folderData.length > 0 ? (
