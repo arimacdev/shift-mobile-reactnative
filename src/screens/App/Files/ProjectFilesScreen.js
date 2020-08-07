@@ -916,6 +916,10 @@ class ProjectFilesScreen extends Component {
       });
   }
 
+  removeWhiteSpace(folderName) {
+    return folderName.replace(/^\s+/, '').replace(/\s+$/, '') == '';
+  }
+
   renderNewFolderModal() {
     let fromUpdateFolder = this.state.fromUpdateFolder;
     let folderName = this.state.folderName;
@@ -948,15 +952,13 @@ class ProjectFilesScreen extends Component {
                 styles.positiveStyle,
                 {
                   backgroundColor:
-                    folderName == '' ||
-                    folderName.replace(/^\s+/, '').replace(/\s+$/, '') == ''
+                    folderName == '' || this.removeWhiteSpace(folderName)
                       ? colors.lighterGray
                       : colors.lightGreen,
                 },
               ]}
               disabled={
-                folderName == '' ||
-                folderName.replace(/^\s+/, '').replace(/\s+$/, '') == ''
+                folderName == '' || this.removeWhiteSpace(folderName)
                   ? true
                   : false
               }
