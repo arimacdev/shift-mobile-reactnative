@@ -79,7 +79,11 @@ class ProjectFilesScreen extends Component {
       showMoveFolderModal: false,
       selectedFolderToMove: '',
       folderNavigation: [
-        {folderId: 'default', folderName: 'Project', folderType: 'PROJECT'},
+        {
+          folderId: 'default',
+          folderName: 'Project Files',
+          folderType: 'PROJECT',
+        },
       ],
       parentFolderId: '',
       fromUpdateFolder: false,
@@ -119,7 +123,7 @@ class ProjectFilesScreen extends Component {
     this.state.folderNavigation.splice(length, 1);
 
     if (this.state.folderNavigation.length > 1) {
-      this.getSubFoldersFiles(this.state.folderNavigation[length].folderId);
+      this.getSubFoldersFiles(this.state.folderNavigation[length]);
     } else if (this.state.folderNavigation.length == 1) {
       this.menuItems = [
         {value: 0, text: 'Add New Folder', icon: icons.addFolderGray},
@@ -368,7 +372,7 @@ class ProjectFilesScreen extends Component {
     this.deleteDetails = {
       icon: icons.alertRed,
       type: 'confirm',
-      title: 'Delete File',
+      title: 'Delete Folder',
       description:
         "You are about to permanantly delete this folder and all of it's data,\n If you are not sure, you can cancel this action.",
       buttons: {positive: 'Delete', negative: 'Cancel'},
@@ -390,7 +394,7 @@ class ProjectFilesScreen extends Component {
             icon: icons.folder,
             type: 'success',
             title: 'Sucsess',
-            description: 'Folder name has been deleted successfully',
+            description: 'Folder has been deleted successfully',
             buttons: {},
           };
           this.setState({dataLoading: false, showMessageModal: true});
@@ -683,7 +687,7 @@ class ProjectFilesScreen extends Component {
     this.setState({searchText: ''});
 
     if (this.state.folderNavigation.length > 1) {
-      this.getSubFoldersFiles(this.state.folderNavigation[length].folderId);
+      this.getSubFoldersFiles(this.state.folderNavigation[length]);
     } else {
       this.fetchData(this.props.selectedProjectID);
     }
@@ -813,24 +817,26 @@ class ProjectFilesScreen extends Component {
     );
   }
 
-  async onFolderViewPress(item) {
-    await this.state.folderNavigation.push({
-      folderId: item.folderId,
-      folderName: item.folderName,
-      folderType: item.folderType,
-    });
-    this.getSubFoldersFiles(item.folderId);
-    this.menuItems = [
-      {value: 1, text: 'Add New File', icon: icons.addFileGray},
-    ];
+  onFolderViewPress(item) {
+    this.getSubFoldersFiles(item);
   }
 
-  async getSubFoldersFiles(folderId) {
+  async getSubFoldersFiles(item) {
     let projectID = this.props.selectedProjectID;
+    let folderId = item.folderId;
+
     this.setState({dataLoading: true});
     await APIServices.getAllSubFoldersFilesData(projectID, folderId)
       .then(response => {
         if (response.message == 'success') {
+          this.state.folderNavigation.push({
+            folderId: item.folderId,
+            folderName: item.folderName,
+            folderType: item.folderType,
+          });
+          this.menuItems = [
+            {value: 1, text: 'Add New File', icon: icons.addFileGray},
+          ];
           this.setState({
             filesData: response.data.files,
             allFilesData: response.data.files,
@@ -1313,6 +1319,7 @@ const styles = EStyleSheet.create({
     fontSize: '10rem',
     color: colors.darkBlue,
     fontWeight: 'bold',
+    fontFamily: 'CircularStd-Medium',
   },
   projectFilerView: {
     backgroundColor: colors.projectBgColor,
@@ -1388,12 +1395,14 @@ const styles = EStyleSheet.create({
   },
   modalTitleStyle: {
     fontSize: '20rem',
+    fontFamily: 'CircularStd-Medium',
   },
   modalInputTextViewStyle: {
     marginTop: '20rem',
   },
   modalTextStyle: {
     fontSize: '15rem',
+    fontFamily: 'CircularStd-Medium',
   },
   modalInputTextViewInnerStyle: {
     backgroundColor: colors.colorWhisper,
@@ -1474,10 +1483,12 @@ const styles = EStyleSheet.create({
   navigationMainFolderText: {
     fontSize: '18rem',
     color: colors.lightBlue,
+    fontFamily: 'CircularStd',
   },
   navigationSubFolderText: {
     fontSize: '18rem',
     color: colors.colorLightSlateGrey,
+    fontFamily: 'CircularStd',
   },
   progressBarStyle: {
     width: '100%',
