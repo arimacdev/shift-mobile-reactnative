@@ -983,12 +983,12 @@ class ProjectFilesScreen extends Component {
                 styles.positiveStyle,
                 {
                   backgroundColor:
-                    this.state.url == ''
+                    this.state.folderName == ''
                       ? colors.lighterGray
                       : colors.lightGreen,
                 },
               ]}
-              disabled={this.state.url == '' ? true : false}
+              disabled={this.state.folderName == '' ? true : false}
               onPress={() =>
                 fromUpdateFolder
                   ? this.updateFolderDetails()
@@ -1130,12 +1130,12 @@ class ProjectFilesScreen extends Component {
                 styles.positiveStyle,
                 {
                   backgroundColor:
-                    this.state.url == ''
+                    this.state.selectedFolderToMove == ''
                       ? colors.lighterGray
                       : colors.lightGreen,
                 },
               ]}
-              disabled={this.state.url == '' ? true : false}
+              disabled={this.state.selectedFolderToMove == '' ? true : false}
               onPress={() => this.moveFileToFolder()}>
               <Text style={styles.positiveTextStyle}>Move</Text>
             </TouchableOpacity>
@@ -1180,6 +1180,7 @@ class ProjectFilesScreen extends Component {
     let isFetching = this.state.isFetching;
     let folderData = this.state.folderData;
     let folderNavigation = this.state.folderNavigation;
+    let length = this.state.folderNavigation.length - 1;
 
     return (
       <View style={styles.container}>
@@ -1218,12 +1219,15 @@ class ProjectFilesScreen extends Component {
             </View>
           )}
         </TouchableOpacity> */}
-          <View>
-            <PopupMenuFileUpload
-              data={this.menuItems}
-              onChange={item => this.onMenuItemChange(item)}
-            />
-          </View>
+          {folderNavigation[length].folderType == 'PROJECT' ? (
+            <View>
+              <PopupMenuFileUpload
+                data={this.menuItems}
+                onChange={item => this.onMenuItemChange(item)}
+              />
+            </View>
+          ) : null}
+
           {folderNavigation.length > 1 ? (
             <FlatList
               style={styles.folderFlatListStyle}
