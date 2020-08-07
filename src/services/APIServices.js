@@ -1494,29 +1494,6 @@ async function uploadFileData(file, selectedProjectID, folderId, dispatch) {
     true,
     headers,
   );
-
-  //   if (files.length) {
-  //     files.forEach(async file => {
-  //       const formPayload = new FormData();
-  //       formPayload.append('file', file.file);
-  //       try {
-  //         await axios({
-  //           baseURL: 'http://localhost:5000',
-  //           url: baseURL + '/file',
-  //           method: 'post',
-  //           data: formPayload,
-  //           onUploadProgress: progress => {
-  //             const {loaded, total} = progress;
-  //             const percentageProgress = Math.floor((loaded / total) * 100);
-  //             dispatch(setUploadProgress(file.id, percentageProgress));
-  //           },
-  //         });
-  //         dispatch(successUploadFile(file.id));
-  //       } catch (error) {
-  //         dispatch(failureUploadFile(file.id));
-  //       }
-  //     });
-  //   }
 }
 
 async function getProjectFiles(selectedProjectID) {
