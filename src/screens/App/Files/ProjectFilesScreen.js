@@ -91,10 +91,10 @@ class ProjectFilesScreen extends Component {
   }
 
   componentWillMount() {
-    BackHandler.addEventListener(
-      'hardwareBackPress',
-      this.handleBackButtonClick,
-    );
+    // BackHandler.addEventListener(
+    //   'hardwareBackPress',
+    //   this.handleBackButtonClick,
+    // );
   }
 
   componentDidMount() {
@@ -108,10 +108,10 @@ class ProjectFilesScreen extends Component {
   }
 
   componentWillUnmount() {
-    BackHandler.removeEventListener(
-      'hardwareBackPress',
-      this.handleBackButtonClick,
-    );
+    // BackHandler.removeEventListener(
+    //   'hardwareBackPress',
+    //   this.handleBackButtonClick,
+    // );
   }
 
   handleBackButtonClick() {
@@ -591,20 +591,20 @@ class ProjectFilesScreen extends Component {
       dateTime:
         moment().format('YYYY/MM/DD') + ' | ' + moment().format('HH:mm'),
     });
-    // this.setState({ files: this.state.files });
 
+    await this.setState({files: this.state.files});
+
+    this.uploadFile(this.state.files, this.props.selectedProjectID, folderId);
+  }
+
+  async uploadFile(files, selectedProjectID, folderId) {
     await this.setState({
-      files: this.state.files,
       indeterminate: true,
       Uploading: 0,
       dataLoading: true,
     });
 
-    await APIServices.uploadFileData(
-      this.state.files,
-      this.props.selectedProjectID,
-      folderId,
-    )
+    await APIServices.uploadFileData(files, selectedProjectID, folderId)
       .then(response => {
         if (response.message == 'success') {
           this.setState({
@@ -667,52 +667,8 @@ class ProjectFilesScreen extends Component {
           res.size,
         );
       }
-      await this.setState({
-        files: this.state.files,
-        indeterminate: true,
-        Uploading: 0,
-        dataLoading: true,
-      });
-
-      await APIServices.uploadFileData(
-        this.state.files,
-        this.props.selectedProjectID,
-        folderId,
-      )
-        .then(response => {
-          if (response.message == 'success') {
-            this.setState({
-              indeterminate: false,
-              files: [],
-              Uploading: 100,
-              dataLoading: false,
-            });
-            this.loadFolderData();
-          } else {
-            this.setState({
-              indeterminate: false,
-              files: [],
-              Uploading: 0,
-              dataLoading: false,
-            });
-          }
-        })
-        .catch(error => {
-          this.setState({
-            indeterminate: false,
-            files: [],
-            Uploading: 0,
-            dataLoading: false,
-          });
-          if (error.status == 401) {
-            this.showAlert('', error.data.message);
-          } else {
-            this.showAlert('', 'File upload error');
-          }
-        });
-      // this.props.uploadFile(this.state.files, this.props.selectedProjectID);
-
-      console.log(this.state.files);
+      await this.setState({files: this.state.files});
+      this.uploadFile(this.state.files, this.props.selectedProjectID, folderId);
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
         console.log('file pick error', err);
@@ -724,7 +680,7 @@ class ProjectFilesScreen extends Component {
 
   loadFolderData() {
     let length = this.state.folderNavigation.length - 1;
-    this.setState({searchText:''})
+    this.setState({searchText: ''});
 
     if (this.state.folderNavigation.length > 1) {
       this.getSubFoldersFiles(this.state.folderNavigation[length].folderId);
@@ -939,6 +895,7 @@ class ProjectFilesScreen extends Component {
 
   renderNewFolderModal() {
     let fromUpdateFolder = this.state.fromUpdateFolder;
+    let folderName = this.state.folderName;
     return (
       <Modal
         isVisible={this.state.showNewFolderModal}
@@ -957,7 +914,7 @@ class ProjectFilesScreen extends Component {
               <TextInput
                 style={styles.modalInputTextInnerStyle}
                 placeholder={'Folder Name'}
-                value={this.state.folderName}
+                value={folderName}
                 onChangeText={text => this.onFolderNameChange(text)}
               />
             </View>
@@ -968,12 +925,18 @@ class ProjectFilesScreen extends Component {
                 styles.positiveStyle,
                 {
                   backgroundColor:
-                    this.state.folderName == ''
+                    folderName == '' ||
+                    folderName.replace(/^\s+/, '').replace(/\s+$/, '') == ''
                       ? colors.lighterGray
                       : colors.lightGreen,
                 },
               ]}
-              disabled={this.state.folderName == '' ? true : false}
+              disabled={
+                folderName == '' ||
+                folderName.replace(/^\s+/, '').replace(/\s+$/, '') == ''
+                  ? true
+                  : false
+              }
               onPress={() =>
                 fromUpdateFolder
                   ? this.updateFolderDetails()
@@ -1283,7 +1246,6 @@ const styles = EStyleSheet.create({
   text: {
     fontSize: '12rem',
     color: colors.userListUserNameColor,
-    textAlign: 'center',
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
@@ -1293,7 +1255,6 @@ const styles = EStyleSheet.create({
   textDate: {
     fontSize: '10rem',
     color: colors.textPlaceHolderColor,
-    textAlign: 'center',
     lineHeight: '13rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
