@@ -168,8 +168,6 @@ class ProjectFilesScreen extends Component {
     });
     let dirs = RNFetchBlob.fs.dirs;
     RNFetchBlob.config({
-      // add this option that makes response data to be stored as a file,
-      // this is much more performant.
       path: dirs.DownloadDir + '/' + fileName,
       fileCache: true,
     })
@@ -484,11 +482,6 @@ class ProjectFilesScreen extends Component {
               style={{marginLeft: EStyleSheet.value('24rem')}}>
               <Image style={styles.controlIcon} source={icons.downloadIcon} />
             </TouchableOpacity>
-            {/* <TouchableOpacity
-              onPress={() => this.deleteFileAlert(item)}
-              style={{marginLeft: EStyleSheet.value('10rem')}}>
-              <Image style={styles.controlIcon} source={icons.deleteRoundRed} />
-            </TouchableOpacity> */}
             {item.fileType == 'PROJECT' ? (
               <PopupMenuNormal
                 data={menuItemsFile}
@@ -731,6 +724,7 @@ class ProjectFilesScreen extends Component {
 
   loadFolderData() {
     let length = this.state.folderNavigation.length - 1;
+    this.setState({searchText:''})
 
     if (this.state.folderNavigation.length > 1) {
       this.getSubFoldersFiles(this.state.folderNavigation[length].folderId);
@@ -761,15 +755,7 @@ class ProjectFilesScreen extends Component {
 
   renderDocPickeredView() {
     return (
-      <View
-        style={{
-          width: '100%',
-          height: 50,
-          borderRadius: 5,
-          marginRight: 5,
-          marginTop: 5,
-          justifyContent: 'center',
-        }}>
+      <View style={progressBarStyle}>
         <Progress.Bar
           progress={0.0}
           indeterminate={this.state.indeterminate}
@@ -967,7 +953,6 @@ class ProjectFilesScreen extends Component {
             {fromUpdateFolder ? 'Update Folder' : 'New Folder'}
           </Text>
           <View style={styles.modalInputTextViewStyle}>
-            {/* <Text style={styles.modalTextStyle}>Folder</Text> */}
             <View style={styles.modalInputTextViewInnerStyle}>
               <TextInput
                 style={styles.modalInputTextInnerStyle}
@@ -1094,7 +1079,7 @@ class ProjectFilesScreen extends Component {
           },
         ]}>
         <Image style={styles.folderIconStyle} source={icons.folderFilledGray} />
-        <Text style={{marginHorizontal: 20}} numberOfLines={1}>
+        <Text style={styles.folderNameModalStyle} numberOfLines={1}>
           {item.folderName}
         </Text>
       </TouchableOpacity>
@@ -1105,7 +1090,6 @@ class ProjectFilesScreen extends Component {
     let folderDataModal = this.state.folderDataModal;
     return (
       <Modal
-        // isVisible={true}
         isVisible={this.state.showMoveFolderModal}
         style={styles.modalStyleFolderMove}
         onBackButtonPress={() => this.onCloseMoveFolderModal()}
@@ -1157,12 +1141,12 @@ class ProjectFilesScreen extends Component {
           <TouchableOpacity
             style={{marginLeft: 5}}
             onPress={() => this.handleBackButtonClick()}>
-            <Text style={{fontSize: 18, color: colors.lightBlue}}>
+            <Text style={styles.navigationMainFolderText}>
               {item.folderName}
             </Text>
           </TouchableOpacity>
         ) : (
-          <Text style={{fontSize: 18, color: colors.colorLightSlateGrey}}>
+          <Text style={styles.navigationSubFolderText}>
             {' > ' + item.folderName}
           </Text>
         )}
@@ -1194,31 +1178,6 @@ class ProjectFilesScreen extends Component {
               onChangeText={text => this.onSearchTextChange(text)}
             />
           </View>
-
-          {/*<TouchableOpacity
-          onPress={() =>
-            Platform.OS == 'ios' ? this.iOSFilePicker() : this.doumentPicker()
-          }
-          disabled={this.state.indeterminate}>
-          {this.state.files.length > 0 ? (
-            <View
-              style={[
-                styles.taskFieldDocPickView,
-                {flexDirection: 'row', flexWrap: 'wrap'},
-              ]}>
-              {this.renderDocPickeredView()}
-            </View>
-          ) : (
-            <View style={[styles.taskFieldView, {flexDirection: 'row'}]}>
-              <Image
-                style={[styles.calendarIcon, {marginRight: 10}]}
-                source={icons.upload}
-                resizeMode={'contain'}
-              />
-              <Text style={[styles.textInput, {flex: 1}]}>Add files</Text>
-            </View>
-          )}
-        </TouchableOpacity> */}
           {folderNavigation[length].folderType == 'PROJECT' ? (
             <View>
               <PopupMenuFileUpload
@@ -1263,9 +1222,6 @@ class ProjectFilesScreen extends Component {
                     data={filesData}
                     renderItem={({item}) => this.renderFilesList(item)}
                     keyExtractor={item => item.projId}
-                    // onRefresh={() => this.onRefresh()}
-                    // refreshing={isFetching}
-                    // ListEmptyComponent={<EmptyListView />}
                   />
                 </View>
               ) : null}
@@ -1551,9 +1507,27 @@ const styles = EStyleSheet.create({
     borderColor: colors.colorSilver,
     borderWidth: '1rem',
     borderRadius: '5rem',
-    // marginLeft: '5rem',
     marginVertical: '3rem',
     alignItems: 'center',
+  },
+  navigationMainFolderText: {
+    fontSize: '18rem',
+    color: colors.lightBlue,
+  },
+  navigationSubFolderText: {
+    fontSize: '18rem',
+    color: colors.colorLightSlateGrey,
+  },
+  progressBarStyle: {
+    width: '100%',
+    height: '50rem',
+    borderRadius: '5rem',
+    marginRight: '5rem',
+    marginTop: '5rem',
+    justifyContent: 'center',
+  },
+  folderNameModalStyle: {
+    marginLeft: '5rem',
   },
 });
 const mapStateToProps = state => {
