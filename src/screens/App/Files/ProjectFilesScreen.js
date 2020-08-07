@@ -121,6 +121,7 @@ class ProjectFilesScreen extends Component {
   handleBackButtonClick() {
     let length = this.state.folderNavigation.length - 1;
     this.state.folderNavigation.splice(length, 1);
+    this.setState({searchText: ''});
 
     if (this.state.folderNavigation.length > 1) {
       this.getSubFoldersFiles(this.state.folderNavigation[length]);
@@ -423,9 +424,22 @@ class ProjectFilesScreen extends Component {
   }
 
   async moveFolder(fileItem) {
+    let length = this.state.folderNavigation.length - 1;
+
     let folderExist = this.state.folderDataModal.filter(item => {
       return item.folderName == 'Main';
     });
+
+    let projectFolders = this.state.folderDataModal.filter(item => {
+      return item.folderType == 'PROJECT';
+    });
+
+    let filteredProjectFolders = projectFolders.filter(item => {
+      return item.folderName !== this.state.folderNavigation[length].folderName;
+    });
+
+    await this.setState({folderDataModal: filteredProjectFolders});
+
     if (this.state.folderNavigation.length > 1 && folderExist.length == 0) {
       this.state.folderDataModal.push({
         folderCreatedAt: '',
@@ -454,7 +468,8 @@ class ProjectFilesScreen extends Component {
     let name = item.firstName + ' ' + item.lastName;
     let fileItem = item;
 
-    details = size + ' | ' + date + ' by ' + name;
+    // details = size + ' | ' + date + ' by ' + name;
+    details = size + ' | ' + date;
 
     return (
       <TouchableOpacity
@@ -829,11 +844,13 @@ class ProjectFilesScreen extends Component {
     await APIServices.getAllSubFoldersFilesData(projectID, folderId)
       .then(response => {
         if (response.message == 'success') {
-          this.state.folderNavigation.push({
-            folderId: item.folderId,
-            folderName: item.folderName,
-            folderType: item.folderType,
-          });
+          if (this.state.folderNavigation.length < 2) {
+            this.state.folderNavigation.push({
+              folderId: item.folderId,
+              folderName: item.folderName,
+              folderType: item.folderType,
+            });
+          }
           this.menuItems = [
             {value: 1, text: 'Add New File', icon: icons.addFileGray},
           ];
