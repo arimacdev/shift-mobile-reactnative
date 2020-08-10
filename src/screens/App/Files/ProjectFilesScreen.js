@@ -92,7 +92,7 @@ class ProjectFilesScreen extends Component {
       folderItem: '',
       fileItem: '',
       folderDataModal: [],
-      showImagePickerModal: false,
+      showFilePickerModal: false,
     };
     this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
   }
@@ -545,11 +545,11 @@ class ProjectFilesScreen extends Component {
     return (
       <Modal
         // isVisible={true}
-        isVisible={this.state.showImagePickerModal}
+        isVisible={this.state.showFilePickerModal}
         style={styles.modalStyleImagePicker}
-        onBackButtonPress={() => this.onCloseImagePickerModal()}
-        onBackdropPress={() => this.onCloseImagePickerModal()}
-        onRequestClose={() => this.onCloseImagePickerModal()}
+        onBackButtonPress={() => this.onCloseFilePickerModal()}
+        onBackdropPress={() => this.onCloseFilePickerModal()}
+        onRequestClose={() => this.onCloseFilePickerModal()}
         coverScreen={false}
         backdropTransitionOutTiming={0}>
         <View style={styles.imagePickerModalInnerStyle}>
@@ -570,7 +570,7 @@ class ProjectFilesScreen extends Component {
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.cancelButtonStyle}
-              onPress={() => this.onCloseImagePickerModal()}>
+              onPress={() => this.onCloseFilePickerModal()}>
               <Text style={styles.cancelTextStyle}>Cancel</Text>
             </TouchableOpacity>
           </View>
@@ -579,16 +579,16 @@ class ProjectFilesScreen extends Component {
     );
   }
 
-  onCloseImagePickerModal() {
-    this.setState({showImagePickerModal: false});
+  onCloseFilePickerModal() {
+    this.setState({showFilePickerModal: false});
   }
 
   async filePicker() {
-    this.setState({showImagePickerModal: true});
+    this.setState({showFilePickerModal: true});
   }
 
   async selectCamera() {
-    await this.setState({showImagePickerModal: false});
+    await this.setState({showFilePickerModal: false});
 
     const options = {
       title: 'Select pictures',
@@ -611,7 +611,7 @@ class ProjectFilesScreen extends Component {
   }
 
   async selectGallery() {
-    await this.setState({showImagePickerModal: false});
+    await this.setState({showFilePickerModal: false});
     const options = {
       title: 'Select pictures',
       storageOptions: {
@@ -634,7 +634,7 @@ class ProjectFilesScreen extends Component {
   }
 
   async selectFiles() {
-    await this.setState({showImagePickerModal: false});
+    await this.setState({showFilePickerModal: false});
 
     setTimeout(() => {
       this.doumentPicker();
@@ -1281,8 +1281,8 @@ class ProjectFilesScreen extends Component {
         {this.renderMoveFolderModal()}
         {/* {this.renderImagePickerModal()} */}
         <FilePickerModal
-          showFilePickerModal={this.state.showImagePickerModal}
-          onPressCancel={() => this.onCloseImagePickerModal()}
+          showFilePickerModal={this.state.showFilePickerModal}
+          onPressCancel={() => this.onCloseFilePickerModal()}
           selectCamera={() => this.selectCamera()}
           selectFiles={() => this.selectFiles()}
         />
