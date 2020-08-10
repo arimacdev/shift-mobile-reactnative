@@ -34,6 +34,7 @@ import PopupMenuFileUpload from '../../../components/PopupMenuFileUpload';
 import Modal from 'react-native-modal';
 import PopupMenuNormal from '../../../components/PopupMenuNormal';
 import Utils from '../../../utils/Utils';
+import AndroidKeyboardAdjust from 'react-native-android-keyboard-adjust';
 
 menuItemsFile = [{value: 0, text: 'Move'}, {value: 1, text: 'Delete'}];
 menuItemsFolder = [{value: 0, text: 'Update'}, {value: 1, text: 'Delete'}];
@@ -343,8 +344,9 @@ class ProjectFilesScreen extends Component {
     this.setState({
       dataLoading: true,
       showMessageModal: false,
-      showNewFolderModal: false,
     });
+
+    this.onCloseNewFolderModal();
 
     await APIServices.updateFolderData(projectID, folderItemId, folderName)
       .then(response => {
@@ -698,7 +700,10 @@ class ProjectFilesScreen extends Component {
         if (error.status == 401) {
           this.showAlert('', error.data.message);
         } else if (error.status == 413) {
-          this.showAlert('', 'File size is too large');
+          this.showAlert(
+            '',
+            'File size is too large. Maximum file upload size is 10MB',
+          );
         } else {
           this.showAlert('', 'File upload error');
         }
@@ -917,10 +922,16 @@ class ProjectFilesScreen extends Component {
 
   showNewFolderModal() {
     this.setState({showNewFolderModal: true});
+    if (Platform.OS == 'android') {
+      AndroidKeyboardAdjust.setAdjustResize();
+    }
   }
 
   onCloseNewFolderModal() {
     this.setState({showNewFolderModal: false});
+    if (Platform.OS == 'android') {
+      AndroidKeyboardAdjust.setAdjustPan();
+    }
   }
 
   onFolderNameChange(text) {
@@ -935,8 +946,9 @@ class ProjectFilesScreen extends Component {
     this.setState({
       dataLoading: true,
       showMessageModal: false,
-      showNewFolderModal: false,
     });
+
+    this.onCloseNewFolderModal();
 
     await APIServices.addProjectFolderData(projectID, folderName, folderId)
       .then(response => {
