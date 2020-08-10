@@ -708,9 +708,7 @@ class ProjectFilesScreen extends Component {
     let folderId = this.state.folderNavigation[length].folderId;
     try {
       const results = await DocumentPicker.pickMultiple({
-        type: [
-          DocumentPicker.types.allFiles,
-        ],
+        type: [DocumentPicker.types.allFiles],
       });
       for (const res of results) {
         this.onFilesCrossPress(res.uri);
@@ -992,6 +990,11 @@ class ProjectFilesScreen extends Component {
           </View>
           <View style={styles.ButtonViewStyle}>
             <TouchableOpacity
+              style={styles.cancelStyle}
+              onPress={() => this.onCloseNewFolderModal()}>
+              <Text style={styles.cancelTextStyle}>Cancel</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
               style={[
                 styles.positiveStyle,
                 {
@@ -1014,11 +1017,6 @@ class ProjectFilesScreen extends Component {
               <Text style={styles.positiveTextStyle}>
                 {fromUpdateFolder ? 'Update' : 'Create'}
               </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.cancelStyle}
-              onPress={() => this.onCloseNewFolderModal()}>
-              <Text style={styles.cancelTextStyle}>Cancel</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -1462,6 +1460,7 @@ const styles = EStyleSheet.create({
   positiveStyle: {
     flex: 1,
     height: '45rem',
+    marginLeft: '10rem',
     backgroundColor: colors.lightGreen,
     borderRadius: '5rem',
     paddingHorizontal: '40rem',
@@ -1477,7 +1476,6 @@ const styles = EStyleSheet.create({
   cancelStyle: {
     flex: 1,
     height: '45rem',
-    marginLeft: '10rem',
     backgroundColor: colors.lightRed,
     borderRadius: '5rem',
     paddingHorizontal: '40rem',
