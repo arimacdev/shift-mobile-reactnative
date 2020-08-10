@@ -157,7 +157,16 @@ class PopupMenuNormal extends Component {
                           source={item.icon}
                           resizeMode={'contain'}
                         />
-                        <Text style={styles.menuItemText}>{item.text}</Text>
+                        {index == 1 ? (
+                          <View style={styles.menuItemView}>
+                            <Text style={styles.menuItemText}>{item.text}</Text>
+                            <Text style={styles.menuItemSubText}>
+                              (Maximum upload file size is 10MB)
+                            </Text>
+                          </View>
+                        ) : (
+                          <Text style={styles.menuItemText}>{item.text}</Text>
+                        )}
                       </View>
                     </MenuOption>
                   );
@@ -184,7 +193,7 @@ const styles = EStyleSheet.create({
   menuItemTouchable: {
     flex: 1,
     flexDirection: 'row',
-    alignItems: 'center',
+    // alignItems: 'center',
     paddingRight: '10rem',
     marginLeft: '20rem',
     marginTop: '10rem',
@@ -194,6 +203,12 @@ const styles = EStyleSheet.create({
     fontFamily: Platform.OS == 'ios' ? 'CircularStd-Medium' : 'Product Sans',
     fontSize: '11rem',
     paddingLeft: '10rem',
+  },
+  menuItemSubText: {
+    fontFamily: Platform.OS == 'ios' ? 'CircularStd-Medium' : 'Product Sans',
+    fontSize: '9rem',
+    paddingHorizontal: '10rem',
+    marginTop: '5rem',
   },
   menuItemIcon: {
     width: '15rem',
@@ -226,6 +241,9 @@ const styles = EStyleSheet.create({
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     marginLeft: '10rem',
+  },
+  menuItemView: {
+    flexDirection: 'column',
   },
 });
 

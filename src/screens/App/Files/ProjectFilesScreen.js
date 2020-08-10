@@ -697,6 +697,8 @@ class ProjectFilesScreen extends Component {
         });
         if (error.status == 401) {
           this.showAlert('', error.data.message);
+        } else if (error.status == 413) {
+          this.showAlert('', 'File size is too large');
         } else {
           this.showAlert('', 'File upload error');
         }
