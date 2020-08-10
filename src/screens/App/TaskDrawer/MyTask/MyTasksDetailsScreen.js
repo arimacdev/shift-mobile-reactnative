@@ -452,9 +452,16 @@ class MyTasksDetailsScreen extends Component {
         }
       })
       .catch(error => {
+        this.setState({indeterminate: false, files: [], uploading: 0});
         if (error.status == 401) {
-          this.setState({indeterminate: false, files: [], uploading: 0});
           this.showAlert('', error.data.message);
+        } else if (error.status == 413) {
+          this.showAlert(
+            '',
+            'File size is too large. Maximum file upload size is 10MB',
+          );
+        } else {
+          this.showAlert('', 'File upload error');
         }
       });
   }
@@ -522,8 +529,13 @@ class MyTasksDetailsScreen extends Component {
           this.setState({indeterminate: false, files: [], uploading: 0});
           if (error.status == 401) {
             this.showAlert('', error.data.message);
+          } else if (error.status == 413) {
+            this.showAlert(
+              '',
+              'File size is too large. Maximum file upload size is 10MB',
+            );
           } else {
-            this.showAlert('', error);
+            this.showAlert('', 'File upload error');
           }
         });
       console.log(this.state.files);

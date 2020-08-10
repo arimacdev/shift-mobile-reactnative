@@ -808,8 +808,15 @@ class ChatScreen extends Component {
         this.setState({files: []});
         if (error.status == 401) {
           Utils.showAlert(true, '', error.data.message, this.props);
+        } else if (error.status == 413) {
+          Utils.showAlert(
+            true,
+            '',
+            'File size is too large. Maximum file upload size is 10MB',
+            this.props,
+          );
         } else {
-          Utils.showAlert(true, '', 'File upload failed!', this.props);
+          Utils.showAlert(true, '', 'File upload failed', this.props);
         }
       });
   }
@@ -1518,7 +1525,7 @@ const styles = EStyleSheet.create({
     marginRight: '10rem',
   },
   modalStyleImagePicker: {
-    bottom: Platform.OS=='ios'?'15%': '0%'
+    bottom: Platform.OS == 'ios' ? '15%' : '0%',
     // justifyContent: 'flex-end',
     // margin: 0,
   },

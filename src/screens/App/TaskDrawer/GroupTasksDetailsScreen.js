@@ -467,8 +467,13 @@ class GroupTasksDetailsScreen extends Component {
         this.setState({indeterminate: false, files: [], uploading: 0});
         if (error.status == 401) {
           this.showAlert('', error.data.message);
+        } else if (error.status == 413) {
+          this.showAlert(
+            '',
+            'File size is too large. Maximum file upload size is 10MB',
+          );
         } else {
-          this.showAlert('', error);
+          this.showAlert('', 'File upload error');
         }
       });
   }
@@ -539,8 +544,13 @@ class GroupTasksDetailsScreen extends Component {
           this.setState({indeterminate: false, files: [], uploading: 0});
           if (error.status == 401) {
             this.showAlert('', error.data.message);
+          } else if (error.status == 413) {
+            this.showAlert(
+              '',
+              'File size is too large. Maximum file upload size is 10MB',
+            );
           } else {
-            this.showAlert('', error);
+            this.showAlert('', 'File upload error');
           }
         });
     } catch (err) {
