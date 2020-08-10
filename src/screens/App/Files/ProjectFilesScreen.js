@@ -90,6 +90,7 @@ class ProjectFilesScreen extends Component {
       folderItem: '',
       fileItem: '',
       folderDataModal: [],
+      showImagePickerModal: false,
     };
     this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
   }
@@ -537,23 +538,68 @@ class ProjectFilesScreen extends Component {
     });
   }
 
-  async iOSFilePicker() {
-    Alert.alert(
-      'Add Files',
-      'Select the file source',
-      [
-        {text: 'Camera', onPress: () => this.selectCamera()},
-        {text: 'Gallery', onPress: () => this.selectGallery()},
-        {text: 'Files', onPress: () => this.doumentPicker()},
-        {text: 'Cancel', onPress: () => console.log('Back')},
-      ],
-      {
-        cancelable: true,
-      },
+  renderImagePickerModal() {
+    return (
+      <Modal
+        // isVisible={true}
+        isVisible={this.state.showImagePickerModal}
+        style={styles.modalStyleImagePicker}
+        onBackButtonPress={() => this.onCloseImagePickerModal()}
+        onBackdropPress={() => this.onCloseImagePickerModal()}
+        onRequestClose={() => this.onCloseImagePickerModal()}
+        coverScreen={false}
+        backdropTransitionOutTiming={0}>
+        <View style={styles.imagePickerModalInnerStyle}>
+          <Text style={styles.imagePickerModalTitleStyle}>Add Files</Text>
+          <Text style={styles.imagePickerModalTextStyle}>
+            Select the file source
+          </Text>
+          <View style={styles.imagePickerButtonViewStyle}>
+            <TouchableOpacity
+              style={styles.cameraButtonStyle}
+              onPress={() => this.selectCamera()}>
+              <Text style={styles.positiveTextStyle}>Camera</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.galleryButtonStyle}
+              onPress={() => this.selectGallery()}>
+              <Text style={styles.positiveTextStyle}>Gallery</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.cancelButtonStyle}
+              onPress={() => this.onCloseImagePickerModal()}>
+              <Text style={styles.cancelTextStyle}>Cancel</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     );
   }
 
+  onCloseImagePickerModal() {
+    this.setState({showImagePickerModal: false});
+  }
+
+  async iOSFilePicker() {
+    this.setState({showImagePickerModal: true});
+    // Alert.alert(
+    //   'Add Files',
+    //   'Select the file source',
+    //   [
+    //     {text: 'Camera', onPress: () => this.selectCamera()},
+    //     {text: 'Gallery', onPress: () => this.selectGallery()},
+    //     {text: 'Files', onPress: () => this.doumentPicker()},
+    //     {text: 'Cancel', onPress: () => console.log('Back')},
+    //   ],
+    //   {
+    //     cancelable: true,
+    //   },
+    // );
+  }
+
   async selectCamera() {
+    await this.setState({showImagePickerModal: false});
+
     const options = {
       title: 'Select pictures',
       storageOptions: {
@@ -562,17 +608,20 @@ class ProjectFilesScreen extends Component {
       },
       quality: 0.2,
     };
-    ImagePicker.launchCamera(options, res => {
-      if (res.didCancel) {
-      } else if (res.error) {
-      } else if (res.customButton) {
-      } else {
-        this.setImageForFile(res);
-      }
-    });
+    setTimeout(() => {
+      ImagePicker.launchCamera(options, res => {
+        if (res.didCancel) {
+        } else if (res.error) {
+        } else if (res.customButton) {
+        } else {
+          this.setImageForFile(res);
+        }
+      });
+    }, 100);
   }
 
   async selectGallery() {
+    await this.setState({showImagePickerModal: false});
     const options = {
       title: 'Select pictures',
       storageOptions: {
@@ -582,14 +631,16 @@ class ProjectFilesScreen extends Component {
       quality: 0.2,
     };
 
-    ImagePicker.launchImageLibrary(options, res => {
-      if (res.didCancel) {
-      } else if (res.error) {
-      } else if (res.customButton) {
-      } else {
-        this.setImageForFile(res);
-      }
-    });
+    setTimeout(() => {
+      ImagePicker.launchImageLibrary(options, res => {
+        if (res.didCancel) {
+        } else if (res.error) {
+        } else if (res.customButton) {
+        } else {
+          this.setImageForFile(res);
+        }
+      });
+    }, 100);
   }
 
   async setImageForFile(res) {
@@ -790,7 +841,7 @@ class ProjectFilesScreen extends Component {
         this.showNewFolderModal();
         break;
       case 1:
-        Platform.OS == 'ios' ? this.iOSFilePicker() : this.doumentPicker();
+        this.iOSFilePicker();
         break;
       default:
         break;
@@ -1222,6 +1273,7 @@ class ProjectFilesScreen extends Component {
         {addFileTaskLoading && <Loader />}
         {this.renderNewFolderModal()}
         {this.renderMoveFolderModal()}
+        {this.renderImagePickerModal()}
         <AwesomeAlert
           show={showAlert}
           showProgress={false}
@@ -1493,6 +1545,53 @@ const styles = EStyleSheet.create({
   },
   folderNameModalStyle: {
     marginLeft: '5rem',
+  },
+  modalStyleImagePicker: {
+    bottom: Platform.OS=='ios'?'15%': '0%'
+    // justifyContent: 'flex-end',
+    // margin: 0,
+  },
+  imagePickerButtonViewStyle: {
+    marginTop: '20rem',
+    marginBottom: '10rem',
+  },
+  imagePickerModalInnerStyle: {
+    backgroundColor: colors.white,
+    borderRadius: '5rem',
+    padding: '20rem',
+  },
+  imagePickerModalTitleStyle: {
+    fontSize: '20rem',
+    marginBottom: '5rem',
+  },
+  imagePickerModalTextStyle: {
+    fontSize: '15rem',
+  },
+  cameraButtonStyle: {
+    height: '45rem',
+    backgroundColor: colors.lightGreen,
+    borderRadius: '5rem',
+    paddingHorizontal: '40rem',
+    paddingVertical: '10rem',
+    justifyContent: 'center',
+    marginBottom: '10rem',
+  },
+  galleryButtonStyle: {
+    height: '45rem',
+    backgroundColor: colors.lightBlue,
+    borderRadius: '5rem',
+    paddingHorizontal: '40rem',
+    paddingVertical: '10rem',
+    justifyContent: 'center',
+    marginBottom: '10rem',
+  },
+  cancelButtonStyle: {
+    height: '45rem',
+    backgroundColor: colors.colorCoralRed,
+    borderRadius: '5rem',
+    paddingHorizontal: '40rem',
+    paddingVertical: '10rem',
+    justifyContent: 'center',
   },
 });
 const mapStateToProps = state => {
