@@ -1140,6 +1140,11 @@ class ProjectFilesScreen extends Component {
           />
           <View style={styles.ButtonViewStyle}>
             <TouchableOpacity
+              style={styles.cancelStyle}
+              onPress={() => this.onCloseMoveFolderModal()}>
+              <Text style={styles.cancelTextStyle}>Cancel</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
               style={[
                 styles.positiveStyle,
                 {
@@ -1152,11 +1157,6 @@ class ProjectFilesScreen extends Component {
               disabled={this.state.selectedFolderToMove == '' ? true : false}
               onPress={() => this.moveFileToFolder()}>
               <Text style={styles.positiveTextStyle}>Move</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.cancelStyle}
-              onPress={() => this.onCloseMoveFolderModal()}>
-              <Text style={styles.cancelTextStyle}>Cancel</Text>
             </TouchableOpacity>
           </View>
         </View>
