@@ -562,8 +562,8 @@ class ProjectFilesScreen extends Component {
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.galleryButtonStyle}
-              onPress={() => this.selectGallery()}>
-              <Text style={styles.positiveTextStyle}>Gallery</Text>
+              onPress={() => this.selectFiles()}>
+              <Text style={styles.positiveTextStyle}>Files</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.cancelButtonStyle}
@@ -580,21 +580,8 @@ class ProjectFilesScreen extends Component {
     this.setState({showImagePickerModal: false});
   }
 
-  async iOSFilePicker() {
+  async filePicker() {
     this.setState({showImagePickerModal: true});
-    // Alert.alert(
-    //   'Add Files',
-    //   'Select the file source',
-    //   [
-    //     {text: 'Camera', onPress: () => this.selectCamera()},
-    //     {text: 'Gallery', onPress: () => this.selectGallery()},
-    //     {text: 'Files', onPress: () => this.doumentPicker()},
-    //     {text: 'Cancel', onPress: () => console.log('Back')},
-    //   ],
-    //   {
-    //     cancelable: true,
-    //   },
-    // );
   }
 
   async selectCamera() {
@@ -640,6 +627,14 @@ class ProjectFilesScreen extends Component {
           this.setImageForFile(res);
         }
       });
+    }, 100);
+  }
+
+  async selectFiles() {
+    await this.setState({showImagePickerModal: false});
+
+    setTimeout(() => {
+      this.doumentPicker();
     }, 100);
   }
 
@@ -714,9 +709,7 @@ class ProjectFilesScreen extends Component {
     try {
       const results = await DocumentPicker.pickMultiple({
         type: [
-          DocumentPicker.types.images,
-          DocumentPicker.types.plainText,
-          DocumentPicker.types.pdf,
+          DocumentPicker.types.allFiles,
         ],
       });
       for (const res of results) {
@@ -841,7 +834,7 @@ class ProjectFilesScreen extends Component {
         this.showNewFolderModal();
         break;
       case 1:
-        this.iOSFilePicker();
+        this.filePicker();
         break;
       default:
         break;
@@ -1547,7 +1540,7 @@ const styles = EStyleSheet.create({
     marginLeft: '5rem',
   },
   modalStyleImagePicker: {
-    bottom: Platform.OS=='ios'?'15%': '0%'
+    bottom: Platform.OS == 'ios' ? '15%' : '0%',
     // justifyContent: 'flex-end',
     // margin: 0,
   },
