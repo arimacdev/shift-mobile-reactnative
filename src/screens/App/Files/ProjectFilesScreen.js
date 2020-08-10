@@ -1536,6 +1536,7 @@ const styles = EStyleSheet.create({
   },
   folderNameModalStyle: {
     marginLeft: '5rem',
+    marginRight: '50rem',
   },
   modalStyleImagePicker: {
     bottom: Platform.OS == 'ios' ? '15%' : '0%',
