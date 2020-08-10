@@ -35,6 +35,7 @@ import Modal from 'react-native-modal';
 import PopupMenuNormal from '../../../components/PopupMenuNormal';
 import Utils from '../../../utils/Utils';
 import AndroidKeyboardAdjust from 'react-native-android-keyboard-adjust';
+import FilePickerModal from '../../../components/FilePickerModal';
 
 menuItemsFile = [{value: 0, text: 'Move'}, {value: 1, text: 'Delete'}];
 menuItemsFolder = [{value: 0, text: 'Update'}, {value: 1, text: 'Delete'}];
@@ -1278,7 +1279,13 @@ class ProjectFilesScreen extends Component {
         {addFileTaskLoading && <Loader />}
         {this.renderNewFolderModal()}
         {this.renderMoveFolderModal()}
-        {this.renderImagePickerModal()}
+        {/* {this.renderImagePickerModal()} */}
+        <FilePickerModal
+          showFilePickerModal={this.state.showImagePickerModal}
+          onPressCancel={() => this.onCloseImagePickerModal()}
+          selectCamera={() => this.selectCamera()}
+          selectFiles={() => this.selectFiles()}
+        />
         <AwesomeAlert
           show={showAlert}
           showProgress={false}
