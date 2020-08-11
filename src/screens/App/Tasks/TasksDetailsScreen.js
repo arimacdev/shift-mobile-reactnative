@@ -42,6 +42,7 @@ import {NavigationEvents} from 'react-navigation';
 import ImagePicker from 'react-native-image-picker';
 import MessageShowModal from '../../../components/MessageShowModal';
 import Utils from '../../../utils/Utils';
+import FilePickerModal from '../../../components/FilePickerModal';
 
 const Placeholder = () => (
   <View style={styles.landing}>
@@ -337,6 +338,7 @@ class TasksDetailsScreen extends Component {
       invalidActMimutesError: false,
       invalidEstPointsError: false,
       invalidActPointsError: false,
+      showFilePickerModal: false,
     };
   }
 
@@ -543,23 +545,17 @@ class TasksDetailsScreen extends Component {
     });
   }
 
-  async iOSFilePicker() {
-    Alert.alert(
-      'Add Files',
-      'Select the file source',
-      [
-        {text: 'Camera', onPress: () => this.selectCamera()},
-        {text: 'Gallery', onPress: () => this.selectGallery()},
-        {text: 'Files', onPress: () => this.doumentPicker()},
-        {text: 'Cancel', onPress: () => console.log('Back')},
-      ],
-      {
-        cancelable: true,
-      },
-    );
+  onCloseFilePickerModal() {
+    this.setState({showFilePickerModal: false});
+  }
+
+  async filePicker() {
+    this.setState({showFilePickerModal: true});
   }
 
   async selectCamera() {
+    await this.setState({showFilePickerModal: false});
+
     const options = {
       title: 'Select pictures',
       storageOptions: {
@@ -568,17 +564,20 @@ class TasksDetailsScreen extends Component {
       },
       quality: 0.2,
     };
-    ImagePicker.launchCamera(options, res => {
-      if (res.didCancel) {
-      } else if (res.error) {
-      } else if (res.customButton) {
-      } else {
-        this.setImageForFile(res);
-      }
-    });
+    setTimeout(() => {
+      ImagePicker.launchCamera(options, res => {
+        if (res.didCancel) {
+        } else if (res.error) {
+        } else if (res.customButton) {
+        } else {
+          this.setImageForFile(res);
+        }
+      });
+    }, 100);
   }
 
   async selectGallery() {
+    await this.setState({showFilePickerModal: false});
     const options = {
       title: 'Select pictures',
       storageOptions: {
@@ -588,14 +587,24 @@ class TasksDetailsScreen extends Component {
       quality: 0.2,
     };
 
-    ImagePicker.launchImageLibrary(options, res => {
-      if (res.didCancel) {
-      } else if (res.error) {
-      } else if (res.customButton) {
-      } else {
-        this.setImageForFile(res);
-      }
-    });
+    setTimeout(() => {
+      ImagePicker.launchImageLibrary(options, res => {
+        if (res.didCancel) {
+        } else if (res.error) {
+        } else if (res.customButton) {
+        } else {
+          this.setImageForFile(res);
+        }
+      });
+    }, 100);
+  }
+
+  async selectFiles() {
+    await this.setState({showFilePickerModal: false});
+
+    setTimeout(() => {
+      this.doumentPicker();
+    }, 100);
   }
 
   async setImageForFile(res) {
@@ -651,13 +660,16 @@ class TasksDetailsScreen extends Component {
       })
       .catch(error => {
         this.setState({indeterminate: false, files: [], uploading: 0});
-          if (error.status == 401) {
-            this.showAlert('', error.data.message);
-          } else if (error.status == 413) {
-            this.showAlert('', 'File size is too large. Maximum file upload size is 10MB');
-          } else {
-            this.showAlert('', 'File upload error');
-          }
+        if (error.status == 401) {
+          this.showAlert('', error.data.message);
+        } else if (error.status == 413) {
+          this.showAlert(
+            '',
+            'File size is too large. Maximum file upload size is 10MB',
+          );
+        } else {
+          this.showAlert('', 'File upload error');
+        }
       });
   }
 
@@ -667,11 +679,7 @@ class TasksDetailsScreen extends Component {
     // Pick multiple files
     try {
       const results = await DocumentPicker.pickMultiple({
-        type: [
-          DocumentPicker.types.images,
-          DocumentPicker.types.plainText,
-          DocumentPicker.types.pdf,
-        ],
+        type: [DocumentPicker.types.allFiles],
       });
       for (const res of results) {
         this.onFilesCrossPress(res.uri);
@@ -728,7 +736,10 @@ class TasksDetailsScreen extends Component {
           if (error.status == 401) {
             this.showAlert('', error.data.message);
           } else if (error.status == 413) {
-            this.showAlert('', 'File size is too large. Maximum file upload size is 10MB');
+            this.showAlert(
+              '',
+              'File size is too large. Maximum file upload size is 10MB',
+            );
           } else {
             this.showAlert('', 'File upload error');
           }
@@ -3138,11 +3149,7 @@ class TasksDetailsScreen extends Component {
               keyExtractor={item => item.taskId}
             />
             <TouchableOpacity
-              onPress={() =>
-                Platform.OS == 'ios'
-                  ? this.iOSFilePicker()
-                  : this.doumentPicker()
-              }
+              onPress={() => this.filePicker()}
               disabled={this.state.indeterminate}>
               {this.state.files.length > 0 ? (
                 <View
@@ -3178,6 +3185,12 @@ class TasksDetailsScreen extends Component {
             {this.renderTaskModal()}
           </View>
         </ScrollView>
+        <FilePickerModal
+          showFilePickerModal={this.state.showFilePickerModal}
+          onPressCancel={() => this.onCloseFilePickerModal()}
+          selectCamera={() => this.selectCamera()}
+          selectFiles={() => this.selectFiles()}
+        />
         <AwesomeAlert
           show={showAlert}
           showProgress={false}

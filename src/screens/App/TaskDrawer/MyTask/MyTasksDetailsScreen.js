@@ -40,6 +40,7 @@ import Modal from 'react-native-modal';
 import ImagePicker from 'react-native-image-picker';
 import MessageShowModal from '../../../../components/MessageShowModal';
 import Utils from '../../../../utils/Utils';
+import FilePickerModal from '../../../../components/FilePickerModal';
 
 const Placeholder = () => (
   <View style={styles.landing}>
@@ -137,6 +138,7 @@ class MyTasksDetailsScreen extends Component {
       taskResult: [],
       showMessageModal: false,
       deleteTaskSuccess: false,
+      showFilePickerModal: false,
     };
   }
 
@@ -348,23 +350,17 @@ class MyTasksDetailsScreen extends Component {
     );
   }
 
-  async iOSFilePicker() {
-    Alert.alert(
-      'Add Files',
-      'Select the file source',
-      [
-        {text: 'Camera', onPress: () => this.selectCamera()},
-        {text: 'Gallery', onPress: () => this.selectGallery()},
-        {text: 'Files', onPress: () => this.doumentPicker()},
-        {text: 'Cancel', onPress: () => console.log('Back')},
-      ],
-      {
-        cancelable: true,
-      },
-    );
+  onCloseFilePickerModal() {
+    this.setState({showFilePickerModal: false});
+  }
+
+  async filePicker() {
+    this.setState({showFilePickerModal: true});
   }
 
   async selectCamera() {
+    await this.setState({showFilePickerModal: false});
+
     const options = {
       title: 'Select pictures',
       storageOptions: {
@@ -373,17 +369,20 @@ class MyTasksDetailsScreen extends Component {
       },
       quality: 0.2,
     };
-    ImagePicker.launchCamera(options, res => {
-      if (res.didCancel) {
-      } else if (res.error) {
-      } else if (res.customButton) {
-      } else {
-        this.setImageForFile(res);
-      }
-    });
+    setTimeout(() => {
+      ImagePicker.launchCamera(options, res => {
+        if (res.didCancel) {
+        } else if (res.error) {
+        } else if (res.customButton) {
+        } else {
+          this.setImageForFile(res);
+        }
+      });
+    }, 100);
   }
 
   async selectGallery() {
+    await this.setState({showFilePickerModal: false});
     const options = {
       title: 'Select pictures',
       storageOptions: {
@@ -393,14 +392,24 @@ class MyTasksDetailsScreen extends Component {
       quality: 0.2,
     };
 
-    ImagePicker.launchImageLibrary(options, res => {
-      if (res.didCancel) {
-      } else if (res.error) {
-      } else if (res.customButton) {
-      } else {
-        this.setImageForFile(res);
-      }
-    });
+    setTimeout(() => {
+      ImagePicker.launchImageLibrary(options, res => {
+        if (res.didCancel) {
+        } else if (res.error) {
+        } else if (res.customButton) {
+        } else {
+          this.setImageForFile(res);
+        }
+      });
+    }, 100);
+  }
+
+  async selectFiles() {
+    await this.setState({showFilePickerModal: false});
+
+    setTimeout(() => {
+      this.doumentPicker();
+    }, 100);
   }
 
   async setImageForFile(res) {
@@ -470,11 +479,7 @@ class MyTasksDetailsScreen extends Component {
     // Pick multiple files
     try {
       const results = await DocumentPicker.pickMultiple({
-        type: [
-          DocumentPicker.types.images,
-          DocumentPicker.types.plainText,
-          DocumentPicker.types.pdf,
-        ],
+        type: [DocumentPicker.types.allFiles],
       });
       for (const res of results) {
         this.onFilesCrossPress(res.uri);
@@ -1605,11 +1610,7 @@ class MyTasksDetailsScreen extends Component {
               keyExtractor={item => item.taskId}
             />
             <TouchableOpacity
-              onPress={() =>
-                Platform.OS == 'ios'
-                  ? this.iOSFilePicker()
-                  : this.doumentPicker()
-              }
+              onPress={() => this.filePicker()}
               disabled={this.state.indeterminate}>
               {this.state.files.length > 0 ? (
                 <View
@@ -1643,6 +1644,12 @@ class MyTasksDetailsScreen extends Component {
           </View>
           {dataLoading && <Loader />}
         </ScrollView>
+        <FilePickerModal
+          showFilePickerModal={this.state.showFilePickerModal}
+          onPressCancel={() => this.onCloseFilePickerModal()}
+          selectCamera={() => this.selectCamera()}
+          selectFiles={() => this.selectFiles()}
+        />
         <AwesomeAlert
           show={showAlert}
           showProgress={false}

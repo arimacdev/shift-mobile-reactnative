@@ -221,11 +221,7 @@ class MyTasksFilesScreen extends Component {
     // Pick multiple files
     try {
       const results = await DocumentPicker.pickMultiple({
-        type: [
-          DocumentPicker.types.images,
-          DocumentPicker.types.plainText,
-          DocumentPicker.types.pdf,
-        ],
+        type: [DocumentPicker.types.allFiles],
       });
       for (const res of results) {
         this.onFilesCrossPress(res.uri);
