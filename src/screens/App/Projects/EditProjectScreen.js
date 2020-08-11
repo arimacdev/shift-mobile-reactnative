@@ -808,6 +808,11 @@ class EditProjectScreen extends Component {
           </View>
           <View style={styles.ButtonViewStyle}>
             <TouchableOpacity
+              style={styles.cancelStyle}
+              onPress={() => this.onCloseWeightModal()}>
+              <Text style={styles.cancelTextStyle}>Cancel</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
               style={[
                 styles.positiveStyle,
                 {
@@ -819,11 +824,6 @@ class EditProjectScreen extends Component {
               disabled={this.state.updateButtonDisabled}
               onPress={() => this.updateProjectWeightType()}>
               <Text style={styles.positiveTextStyle}>Update</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.cancelStyle}
-              onPress={() => this.onCloseWeightModal()}>
-              <Text style={styles.cancelTextStyle}>Cancel</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -1278,6 +1278,7 @@ const styles = EStyleSheet.create({
   positiveStyle: {
     flex: 1,
     height: '45rem',
+    marginLeft: '10rem',
     backgroundColor: colors.lightGreen,
     borderRadius: '5rem',
     paddingHorizontal: '40rem',
@@ -1293,7 +1294,6 @@ const styles = EStyleSheet.create({
   cancelStyle: {
     flex: 1,
     height: '45rem',
-    marginLeft: '10rem',
     backgroundColor: colors.lightRed,
     borderRadius: '5rem',
     paddingHorizontal: '40rem',
@@ -1307,8 +1307,8 @@ const styles = EStyleSheet.create({
     fontFamily: 'CircularStd-Medium',
   },
   modalStyleWeight: {
-    bottom: Platform.OS=='ios'?'15%': '0%'
-  }
+    bottom: Platform.OS == 'ios' ? '15%' : '0%',
+  },
 });
 
 const mapStateToProps = state => {
