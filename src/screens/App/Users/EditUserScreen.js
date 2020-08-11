@@ -20,6 +20,7 @@ import _ from 'lodash';
 import AwesomeAlert from 'react-native-awesome-alerts';
 import APIServices from '../../../services/APIServices';
 import MessageShowModal from '../../../components/MessageShowModal';
+import Utils from '../../../utils/Utils';
 const {height} = Dimensions.get('window');
 
 let successDetails = {
@@ -87,18 +88,24 @@ class EditUserScreen extends Component {
 
   async fetchUserData(userID) {
     this.setState({dataLoading: true});
-    userData = await APIServices.getUserData(userID);
-    if (userData.message == 'success') {
-      this.setState({
-        userID: userData.data.userId,
-        firstName: userData.data.firstName,
-        lastName: userData.data.lastName,
-        userName: userData.data.userName,
-        email: userData.data.email,
-        dataLoading: false,
-      });
-    } else {
+    try {
+      let userData = await APIServices.getUserData(userID);
+      if (userData.message == 'success') {
+        this.setState({
+          userID: userData.data.userId,
+          firstName: userData.data.firstName,
+          lastName: userData.data.lastName,
+          userName: userData.data.userName,
+          email: userData.data.email,
+          dataLoading: false,
+        });
+      } else {
+        this.setState({dataLoading: false});
+      }
+    } catch (error) {
       this.setState({dataLoading: false});
+      this.props.navigation.goBack();
+      Utils.showAlert(true, '', error.data.message, this.props);
     }
   }
 
@@ -348,12 +355,9 @@ class EditUserScreen extends Component {
 const styles = EStyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.pageBackGroundColor,
-  },
-  container: {
-    flex: 1,
     flexDirection: 'column',
     marginBottom: height - 600,
+    backgroundColor: colors.white,
   },
   userFieldView: {
     backgroundColor: colors.projectBgColor,

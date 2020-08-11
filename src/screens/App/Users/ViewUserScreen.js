@@ -9,6 +9,7 @@ EStyleSheet.build({$rem: entireScreenWidth / 380});
 import Loader from '../../../components/Loader';
 import APIServices from '../../../services/APIServices';
 import icons from '../../../asserts/icons/icons';
+import Utils from '../../../utils/Utils';
 
 class ViewUserScreen extends Component {
   constructor(props) {
@@ -35,17 +36,23 @@ class ViewUserScreen extends Component {
 
   async fetchUserData(userID) {
     this.setState({dataLoading: true});
-    userData = await APIServices.getUserData(userID);
-    if (userData.message == 'success') {
-      this.setState({
-        userFirstName: userData.data.firstName,
-        userLastName: userData.data.lastName,
-        userLastEmail: userData.data.email,
-        userLastImage: userData.data.profileImage,
-        dataLoading: false,
-      });
-    } else {
+    try {
+      let userData = await APIServices.getUserData(userID);
+      if (userData.message == 'success') {
+        this.setState({
+          userFirstName: userData.data.firstName,
+          userLastName: userData.data.lastName,
+          userLastEmail: userData.data.email,
+          userLastImage: userData.data.profileImage,
+          dataLoading: false,
+        });
+      } else {
+        this.setState({dataLoading: false});
+      }
+    } catch (error) {
       this.setState({dataLoading: false});
+      this.props.navigation.goBack();
+      Utils.showAlert(true, '', error.data.message, this.props);
     }
   }
 
