@@ -283,10 +283,6 @@ const styles = EStyleSheet.create({
     fontFamily: 'CircularStd-Black',
     marginHorizontal: '30rem',
   },
-  userIcon: {
-    width: '20rem',
-    height: '20rem',
-  },
   loginButton: {
     backgroundColor: colors.loginButton,
     borderRadius: '5rem',

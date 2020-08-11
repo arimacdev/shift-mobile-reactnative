@@ -153,10 +153,6 @@ const styles = EStyleSheet.create({
     marginHorizontal: '30rem',
     lineHeight: '17rem',
   },
-  userIcon: {
-    width: '20rem',
-    height: '20rem',
-  },
   loginButton: {
     backgroundColor: colors.loginButton,
     borderRadius: '5rem',
