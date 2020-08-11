@@ -1334,11 +1334,6 @@ const styles = EStyleSheet.create({
     width: '23rem',
     height: '23rem',
   },
-  emojiChatIconStyle: {
-    width: '23rem',
-    height: '23rem',
-    marginRight: '15rem',
-  },
   innerView: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -1347,15 +1342,6 @@ const styles = EStyleSheet.create({
     justifyContent: 'flex-end',
     alignSelf: 'flex-start',
     marginTop: '10rem',
-  },
-  emojiIcon: {
-    width: '18rem',
-    height: '18rem',
-  },
-  uploadImage: {
-    width: '100rem',
-    height: '100rem',
-    marginLeft: '10rem',
   },
   reactionView: {
     flexDirection: 'row',

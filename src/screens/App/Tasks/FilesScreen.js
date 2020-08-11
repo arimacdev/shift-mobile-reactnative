@@ -323,10 +323,6 @@ const styles = EStyleSheet.create({
     width: '25rem',
     height: '25rem',
   },
-  editDeleteIcon: {
-    width: '25rem',
-    height: '25rem',
-  },
   button: {
     flexDirection: 'row',
     backgroundColor: colors.lightBlue,
@@ -354,11 +350,6 @@ const styles = EStyleSheet.create({
     height: '20rem',
     marginRight: '15rem',
     marginLeft: '10rem',
-  },
-  userIcon: {
-    width: '28rem',
-    height: '28rem',
-    borderRadius: 56 / 2,
   },
   deleteIconStyle: {
     width: '38rem',
