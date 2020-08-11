@@ -1052,6 +1052,11 @@ class ChatScreen extends Component {
           </View>
           <View style={styles.ButtonViewStyle}>
             <TouchableOpacity
+              style={styles.cancelStyle}
+              onPress={() => this.onCloseTaskModal()}>
+              <Text style={styles.cancelTextStyle}>Cancel</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
               style={[
                 styles.positiveStyle,
                 {
@@ -1064,11 +1069,6 @@ class ChatScreen extends Component {
               disabled={this.state.url == '' ? true : false}
               onPress={() => this.addUrlPress()}>
               <Text style={styles.positiveTextStyle}>Insert</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.cancelStyle}
-              onPress={() => this.onCloseTaskModal()}>
-              <Text style={styles.cancelTextStyle}>Cancel</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -1491,6 +1491,7 @@ const styles = EStyleSheet.create({
   positiveStyle: {
     flex: 1,
     height: '45rem',
+    marginLeft: '10rem',
     backgroundColor: colors.lightGreen,
     borderRadius: '5rem',
     paddingHorizontal: '40rem',
@@ -1506,7 +1507,6 @@ const styles = EStyleSheet.create({
   cancelStyle: {
     flex: 1,
     height: '45rem',
-    marginLeft: '10rem',
     backgroundColor: colors.lightRed,
     borderRadius: '5rem',
     paddingHorizontal: '40rem',
