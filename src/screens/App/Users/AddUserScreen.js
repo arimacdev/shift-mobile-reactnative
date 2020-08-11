@@ -325,12 +325,9 @@ class AddUserScreen extends Component {
 const styles = EStyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.pageBackGroundColor,
-  },
-  container: {
-    flex: 1,
     flexDirection: 'column',
     marginBottom: height - 600,
+    backgroundColor: colors.white,
   },
   userFieldView: {
     backgroundColor: colors.projectBgColor,

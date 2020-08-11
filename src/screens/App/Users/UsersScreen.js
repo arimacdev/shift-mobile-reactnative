@@ -178,7 +178,6 @@ const styles = EStyleSheet.create({
   text: {
     fontSize: '12rem',
     color: colors.userListUserNameColor,
-    textAlign: 'center',
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
