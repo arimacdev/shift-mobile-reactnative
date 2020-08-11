@@ -1533,17 +1533,6 @@ const styles = EStyleSheet.create({
   container: {
     flex: 1,
   },
-  projectFilerView: {
-    backgroundColor: colors.projectBgColor,
-    borderRadius: '5rem',
-    marginTop: '17rem',
-    marginBottom: '12rem',
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: '12rem',
-    height: '45rem',
-    marginHorizontal: '20rem',
-  },
   filterByText: {
     fontSize: '15rem',
     color: colors.gray,
@@ -1565,13 +1554,6 @@ const styles = EStyleSheet.create({
     paddingHorizontal: '12rem',
     height: '45rem',
     marginHorizontal: '10rem',
-  },
-  textFilter: {
-    fontSize: '14rem',
-    color: colors.white,
-    lineHeight: '17rem',
-    fontFamily: 'CircularStd-Medium',
-    textAlign: 'center',
   },
   projectView: {
     backgroundColor: colors.darkBlue,
@@ -1654,11 +1636,6 @@ const styles = EStyleSheet.create({
     textAlign: 'left',
     marginLeft: '10rem',
     marginRight: '5rem',
-  },
-  avatarIcon: {
-    width: '20rem',
-    height: '20rem',
-    marginLeft: '10rem',
   },
   statusView: {
     alignItems: 'center',
