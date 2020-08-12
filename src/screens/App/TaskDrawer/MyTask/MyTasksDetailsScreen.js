@@ -234,7 +234,7 @@ class MyTasksDetailsScreen extends Component {
     } else {
       this.setState({dataLoading: false});
       if (error.data.status == 404) {
-        Utils.showAlert(true, '', 'This task was deleted', this.props);
+        Utils.showAlert(true, '', 'Could not load the details', this.props);
         this.props.navigation.goBack();
       }
     }
