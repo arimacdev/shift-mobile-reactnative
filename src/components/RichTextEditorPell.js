@@ -96,11 +96,9 @@ class RichTextEditorPell extends React.Component {
     await this.richText.current?.setContentHTML(chatText);
   }
 
-  onPressAddImage() {
+  onPressAddImage(image) {
     // insert URL
-    this.richText.current?.insertImage(
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/1024px-React-icon.svg.png',
-    );
+    this.richText.current?.insertImage(image);
     // insert base64
     // this.richText.current?.insertImage(`data:${image.mime};base64,${image.data}`);
     this.richText.current?.blurContentEditor();
@@ -177,11 +175,6 @@ const styles = EStyleSheet.create({
     flex: 1,
     backgroundColor: colors.colorAliceBlue,
   },
-  nav: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginHorizontal: '5rem',
-  },
   rich: {
     minHeight: '300rem',
     flex: 1,
@@ -192,18 +185,6 @@ const styles = EStyleSheet.create({
   },
   scroll: {
     backgroundColor: colors.white,
-  },
-  item: {
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderColor: colors.colorWhisper,
-    flexDirection: 'row',
-    height: '40rem',
-    alignItems: 'center',
-    paddingHorizontal: '15rem',
-  },
-
-  input: {
-    flex: 1,
   },
 });
 

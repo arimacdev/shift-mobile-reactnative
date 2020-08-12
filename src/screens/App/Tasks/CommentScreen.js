@@ -990,7 +990,7 @@ class ChatScreen extends Component {
   onCrossPress() {
     this.setContentHTML('');
     this.blurContentEditor('');
-    this.setState({chatText: '', userName: '', showUserListModal: false});
+    this.setState({chatText: '', showUserListModal: false});
     this.selectedUserList = [];
   }
 
@@ -1080,7 +1080,6 @@ class ChatScreen extends Component {
     this.setState({
       showEnterUrlModal: true,
       showUserListModal: false,
-      userName: '',
     });
   }
 
@@ -1095,11 +1094,14 @@ class ChatScreen extends Component {
       let name = text.replace(/(<([^>]+)>)/gi, '');
       let n = name.lastIndexOf('@');
       let result = name.substring(n + 1);
+
       this.setState({showUserListModal: true, userName: result});
+    } else {
+      this.setState({showUserListModal: false});
     }
 
-    if (text == '') {
-      this.setState({showUserListModal: false, chatText: '', userName: ''});
+    if (text.replace(/(<([^>]+)>)/gi, '') == '') {
+      this.setState({showUserListModal: false, chatText: ''});
       this.selectedUserList = [];
     }
   }
@@ -1123,9 +1125,9 @@ class ChatScreen extends Component {
 
     await this.setState({
       showUserListModal: false,
-      userName: '',
       chatText: replasedText.concat('<var>@' + item.label + '</var>&nbsp;'),
     });
+    // this.richText.current?.insertHTML(this.state.chatText)
   }
 
   async getTagUsers(commentId, taskId) {

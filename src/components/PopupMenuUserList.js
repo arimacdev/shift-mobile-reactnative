@@ -109,13 +109,13 @@ class PopupMenuUserList extends Component {
   }
 
   arrayCompare(a, b) {
-    const dateA = a.firstName;
-    const dateB = b.firstName;
+    const firstNameA = a.firstName;
+    const firstNameB = b.firstName;
 
     let comparison = 0;
-    if (dateA > dateB) {
+    if (firstNameA > firstNameB) {
       comparison = 1;
-    } else if (dateA < dateB) {
+    } else if (firstNameA < firstNameB) {
       comparison = -1;
     }
     return comparison;
@@ -136,7 +136,7 @@ class PopupMenuUserList extends Component {
       this.setState({opened: this.props.addPeopleModelVisible});
     }
 
-    if (prevProps.userName !== this.props.userName && this.props.userName) {
+    if (prevProps.userName !== this.props.userName) {
       this.onSearchTextChange(this.props.userName);
     }
   }
@@ -228,8 +228,7 @@ class PopupMenuUserList extends Component {
         backdropTransitionInTiming={600}
         backdropTransitionOutTiming={600}>
         {Platform.OS == 'ios' ? (
-          <View
-            style={styles.menuStyleIOS}>
+          <View style={styles.menuStyleIOS}>
             <ScrollView style={scrollStyle.scrollViewMenuOption}>
               {this.state.activeUsers.map(item => {
                 return (
@@ -292,12 +291,12 @@ const styles = EStyleSheet.create({
     backgroundColor: colors.projectBgColor,
     borderRadius: '5rem',
   },
-  menuStyleIOS:{
+  menuStyleIOS: {
     bottom: 200,
     height: '60%',
     backgroundColor: colors.projectBgColor,
     borderRadius: '5rem',
-  }
+  },
 });
 
 const mapStateToProps = state => {
