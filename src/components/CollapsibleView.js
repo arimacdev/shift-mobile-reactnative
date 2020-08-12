@@ -75,10 +75,6 @@ export default class Accordian extends Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   button: {
     width: '100%',
     height: 54,
@@ -91,10 +87,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: 'bold',
     color: 'gray',
-  },
-  itemActive: {
-    fontSize: 12,
-    color: 'green',
   },
   itemInActive: {
     fontSize: 12,
@@ -129,11 +121,5 @@ const styles = StyleSheet.create({
     height: 1,
     backgroundColor: 'gray',
     width: '100%',
-  },
-  colorActive: {
-    borderColor: 'green',
-  },
-  colorInActive: {
-    borderColor: 'gray',
   },
 });

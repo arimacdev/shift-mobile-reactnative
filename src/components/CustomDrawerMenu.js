@@ -301,11 +301,6 @@ const styles = EStyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  thumbnail: {
-    width: '71rem',
-    height: '71rem',
-    borderRadius: '50rem',
-  },
   headerLeft: {
     flex: 1,
     justifyContent: 'center',
@@ -349,11 +344,6 @@ const styles = EStyleSheet.create({
     paddingHorizontal: '18rem',
     marginTop: '30rem',
     alignItems: 'center',
-  },
-  iconBack: {
-    fontSize: '32rem',
-    color: colors.yellow,
-    fontWeight: '800',
   },
   headerClose: {
     position: 'absolute',
