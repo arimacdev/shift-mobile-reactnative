@@ -122,12 +122,6 @@ class MessageShowModal extends Component {
 }
 
 const styles = EStyleSheet.create({
-  container: {
-    width: '100%',
-    height: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   modalStyle: {
     justifyContent: 'flex-end',
     margin: 0,
@@ -136,11 +130,6 @@ const styles = EStyleSheet.create({
     backgroundColor: colors.white,
     borderTopStartRadius: '5rem',
     borderTopEndRadius: '5rem',
-  },
-  modalHeaderView: {
-    flexDirection: 'row',
-    marginHorizontal: '20rem',
-    marginVertical: '20rem',
   },
   imageContainer: {
     alignItems: 'center',
@@ -200,11 +189,6 @@ const styles = EStyleSheet.create({
     color: colors.white,
     textAlign: 'center',
     fontFamily: 'CircularStd-Medium',
-  },
-  iconBorderStyle: {
-    borderRadius: '10rem',
-    borderColor: colors.gray,
-    borderWidth: '0.5rem',
   },
   iconStyle: {
     width: '42rem',

@@ -86,12 +86,6 @@ class NoInternetModal extends Component {
 }
 
 const styles = EStyleSheet.create({
-  container: {
-    width: '100%',
-    height: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   modalMainView: {
     backgroundColor: colors.white,
     borderRadius: '5rem',
@@ -105,19 +99,6 @@ const styles = EStyleSheet.create({
     fontSize: '20rem',
     fontFamily: 'CircularStd-Medium',
     marginLeft: Platform.OS == 'ios' ? '30rem' : '20rem',
-  },
-  currentVersion: {
-    marginTop: '10rem',
-    fontSize: '12rem',
-    fontFamily: 'CircularStd-Medium',
-    marginLeft: '20rem',
-    color: colors.gray,
-  },
-  latestVersion: {
-    fontSize: '12rem',
-    fontFamily: 'CircularStd-Medium',
-    marginLeft: '20rem',
-    color: colors.gray,
   },
   textDescription: {
     marginTop: '10rem',

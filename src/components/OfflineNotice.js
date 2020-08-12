@@ -72,11 +72,6 @@ const styles = EStyleSheet.create({
     fontFamily: 'HelveticaNeueMedium',
     marginTop: '5rem',
   },
-  image: {
-    width: '90rem',
-    height: '90rem',
-    resizeMode: 'contain',
-  },
 });
 
 export {OfflineNotice};
