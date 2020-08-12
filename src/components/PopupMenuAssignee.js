@@ -243,11 +243,6 @@ const optionsStyles = {
 };
 
 const styles = EStyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: 'column',
-    marginBottom: height - 700,
-  },
   taskFieldView: {
     backgroundColor: colors.projectBgColor,
     borderRadius: 5,
@@ -259,22 +254,6 @@ const styles = EStyleSheet.create({
     height: '45rem',
     width: '100%',
     marginRight: '0rem',
-  },
-  inputsText: {
-    fontFamily: Platform.OS == 'ios' ? 'CircularStd-Medium' : 'Product Sans',
-    height: 45,
-    flex: 1,
-    marginTop: '28rem',
-    color: colors.gray,
-    textAlign: 'left',
-  },
-  inputsTextDefualt: {
-    fontFamily: 'CircularStd-Medium',
-    height: 45,
-    flex: 1,
-    marginTop: '28rem',
-    color: colors.textPlaceHolderColor,
-    textAlign: 'left',
   },
   textInput: {
     fontSize: '12rem',

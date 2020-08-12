@@ -180,10 +180,6 @@ class PopupMenuNormal extends Component {
   }
 }
 
-const localColors = {
-  borderColor: 'rgba(0, 0, 0, 0.12)',
-};
-
 const styles = EStyleSheet.create({
   dropContainer: {
     flexDirection: 'column',
@@ -193,7 +189,6 @@ const styles = EStyleSheet.create({
   menuItemTouchable: {
     flex: 1,
     flexDirection: 'row',
-    // alignItems: 'center',
     paddingRight: '10rem',
     marginLeft: '20rem',
     marginTop: '10rem',

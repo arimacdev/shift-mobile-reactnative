@@ -123,7 +123,7 @@ class PopupMenuNormal extends Component {
     return (
       <View style={[styles.dropContainer, marginDrop, this.props.customStyle]}>
         <Menu
-          style={[styles.menuStyle,this.props.menuStyle]}
+          style={[styles.menuStyle, this.props.menuStyle]}
           opened={this.state.opened}
           onSelect={value => this.onOptionSelect(value)}
           onBackdropPress={() => this.onBackdropPress()}>
@@ -139,9 +139,7 @@ class PopupMenuNormal extends Component {
               <Image
                 style={[styles.menuIcon, this.props.customMenuIcon]}
                 source={
-                  this.props.menuIcon
-                    ? this.props.menuIcon
-                    : icons.menuVertical
+                  this.props.menuIcon ? this.props.menuIcon : icons.menuVertical
                 }
               />
             </View>
@@ -177,10 +175,6 @@ class PopupMenuNormal extends Component {
     );
   }
 }
-
-const localColors = {
-  borderColor: 'rgba(0, 0, 0, 0.12)',
-};
 
 const styles = EStyleSheet.create({
   menuIcon: {
