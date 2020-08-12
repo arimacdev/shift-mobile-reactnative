@@ -188,35 +188,6 @@ const styles = EStyleSheet.create({
     marginHorizontal: '20rem',
     marginVertical: '7rem',
   },
-  subContainer: {
-    marginBottom: '65rem',
-  },
-  button: {
-    flexDirection: 'row',
-    backgroundColor: colors.lightBlue,
-    borderRadius: '5rem',
-    marginTop: '17rem',
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: '12rem',
-    height: '55rem',
-    marginHorizontal: '20rem',
-  },
-  buttonText: {
-    fontSize: '12rem',
-    color: colors.white,
-    lineHeight: '17rem',
-    fontFamily: 'CircularStd-Medium',
-    fontWeight: 'bold',
-  },
-  addIcon: {
-    width: '28rem',
-    height: '28rem',
-  },
-  bottomBarIcon: {
-    width: '20rem',
-    height: '20rem',
-  },
   userView: {
     backgroundColor: colors.projectBgColor,
     borderRadius: '5rem',
@@ -249,22 +220,9 @@ const styles = EStyleSheet.create({
     marginLeft: '10rem',
     fontWeight: '400',
   },
-  controlView: {
-    alignItems: 'center',
-    flexDirection: 'row',
-  },
   flalList: {
     marginTop: '0rem',
     marginBottom: '0rem',
-  },
-  subTitle: {
-    marginHorizontal: '20rem',
-    fontSize: '16rem',
-    color: colors.projDetailsProjectName,
-    fontFamily: 'CircularStd-Medium',
-    textAlign: 'left',
-    top: '12rem',
-    fontWeight: 'bold',
   },
   progressBarContainer: {
     marginHorizontal: '10rem',
