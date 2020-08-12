@@ -166,10 +166,6 @@ class PopupMenuEmojiReaction extends Component {
   }
 }
 
-const localColors = {
-  borderColor: 'rgba(0, 0, 0, 0.12)',
-};
-
 const styles = EStyleSheet.create({
   menuIcon: {
     width: '18rem',

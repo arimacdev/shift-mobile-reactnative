@@ -61,7 +61,6 @@ class PopupMenu extends Component {
 
   render() {
     return (
-      //   <MenuContext style={{height:100}} ref={mc => (this.menuContext = mc)}>
       <Menu
         opened={this.state.opened}
         onBackdropPress={() => this.onBackdropPress()}
@@ -79,7 +78,6 @@ class PopupMenu extends Component {
           </ScrollView>
         </MenuOptions>
       </Menu>
-      //   </MenuContext>
     );
   }
 }
@@ -92,40 +90,7 @@ const optionsStyles = {
   },
 };
 
-const styles = EStyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: 'column',
-    marginBottom: height - 500,
-  },
-  taskFieldView: {
-    backgroundColor: colors.projectBgColor,
-    borderRadius: 5,
-    marginTop: '0rem',
-    marginBottom: '7rem',
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: '12rem',
-    height: '60rem',
-    marginHorizontal: '20rem',
-  },
-  inputsText: {
-    fontFamily: Platform.OS == 'ios' ? 'CircularStd-Medium' : 'Product Sans',
-    height: 45,
-    flex: 1,
-    marginTop: '28rem',
-    color: colors.gray,
-    textAlign: 'left',
-  },
-  inputsTextDefualt: {
-    fontFamily: 'CircularStd-Medium',
-    height: 45,
-    flex: 1,
-    marginTop: '28rem',
-    color: colors.textPlaceHolderColor,
-    textAlign: 'left',
-  },
-});
+const styles = EStyleSheet.create({});
 
 const mapStateToProps = state => {
   return {
