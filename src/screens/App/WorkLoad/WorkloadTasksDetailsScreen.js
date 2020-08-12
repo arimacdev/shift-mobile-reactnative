@@ -310,7 +310,7 @@ class WorkloadTasksDetailsScreen extends Component {
   render() {
     let dataLoading = this.state.dataLoading;
     return (
-      <View style={{flex:1}}>
+      <View style={{flex: 1}}>
         <ScrollView style={styles.container}>
           <View style={styles.innerContainer}>
             <View style={styles.projectFilerView}>
@@ -371,17 +371,6 @@ const styles = EStyleSheet.create({
     textAlign: 'left',
     marginLeft: '10rem',
     fontWeight: '400',
-  },
-  textDate: {
-    fontFamily: 'CircularStd-Book',
-    fontSize: '9rem',
-    fontWeight: '400',
-    textAlign: 'center',
-    lineHeight: '17rem',
-    fontFamily: 'CircularStd-Medium',
-    textAlign: 'left',
-    marginLeft: '10rem',
-    marginRight: '5rem',
   },
   completionIcon: {
     width: '23rem',
