@@ -136,13 +136,6 @@ const styles = EStyleSheet.create({
     paddingVertical: '10rem',
     justifyContent: 'center',
   },
-  ButtonViewStyle: {
-    flexDirection: 'row',
-    marginTop: '20rem',
-    marginBottom: '10rem',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   positiveTextStyle: {
     fontSize: '15rem',
     color: colors.white,

@@ -278,9 +278,6 @@ class Header extends Component {
 }
 
 const styles = EStyleSheet.create({
-  container: {
-    backgroundColor: colors.primary,
-  },
   header: {
     height: '56rem',
     backgroundColor: colors.primary,
@@ -307,10 +304,6 @@ const styles = EStyleSheet.create({
     flexDirection: 'row',
     marginRight: '5rem',
   },
-  nameContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   title: {
     fontSize: '20rem',
     color: colors.white,
@@ -318,32 +311,6 @@ const styles = EStyleSheet.create({
     fontWeight: '500',
     textAlign: 'left',
     marginLeft: '08rem',
-  },
-  textName: {
-    fontSize: '13rem',
-    color: colors.white,
-    marginRight: '4rem',
-    fontFamily: 'CircularStd-Medium',
-    fontWeight: Platform.OS === 'ios' ? '500' : '400',
-  },
-  thumbnail: {
-    width: '28rem',
-    height: '28rem',
-  },
-  drawerToggle: {
-    paddingRight: '15rem',
-  },
-  headerLogo: {
-    width: '55rem',
-    height: '32rem',
-  },
-  textWelcome: {
-    fontSize: '9rem',
-    color: colors.white,
-    marginRight: '4rem',
-    opacity: 0.69,
-    fontFamily: 'CircularStd-Medium',
-    fontWeight: Platform.OS === 'ios' ? '500' : '400',
   },
   icon: {
     width: '28rem',
@@ -371,11 +338,6 @@ const styles = EStyleSheet.create({
     height: '20rem',
     // borderRadius: '10rem',
     marginLeft: '5rem',
-  },
-  iconFilter: {
-    fontSize: '23rem',
-    color: colors.white,
-    fontWeight: '800',
   },
   completionIcon: {
     width: '25rem',
