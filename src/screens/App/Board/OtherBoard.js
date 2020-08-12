@@ -55,23 +55,20 @@ class OtherBoard extends Component {
     let endIndex = 10;
     try {
       this.setState({dataLoading: true});
-      this.getAllTaskInDefaultBoardDataDirectly(
-        startIndex, 
-        endIndex
-      );
+      this.getAllTaskInDefaultBoardDataDirectly(startIndex, endIndex);
     } catch (error) {
       this.setState({dataLoading: false});
     }
   }
 
-  getAllTaskInDefaultBoardDataDirectly = async ( startIndex, endIndex) => {
+  getAllTaskInDefaultBoardDataDirectly = async (startIndex, endIndex) => {
     let selectedProjectID = this.props.selectedProjectID;
     try {
       this.setState({dataLoading: true});
       let taskData = await APIServices.getAllTaskInDefaultBoardData(
         selectedProjectID,
-        startIndex, 
-        endIndex
+        startIndex,
+        endIndex,
       );
       if (taskData.message == 'success') {
         let dataArray = [];
@@ -91,24 +88,23 @@ class OtherBoard extends Component {
           }
           this.getAllSprintInProject(dataArray);
         }
-        this.setState({
-          tasks: this.state.tasks.concat(dataArray),
-          cachecdMyListData: cachedDataArray,
-          dataLoading: false,
-        }, ()=> {
-          console.log('dataaaa 00000', this.state.cachecdMyListData.length)
-          console.log('dataaaa 111111', this.state.tasks.length)
-        });
+        this.setState(
+          {
+            tasks: this.state.tasks.concat(dataArray),
+            cachecdMyListData: cachedDataArray,
+            dataLoading: false,
+          },
+          () => {},
+        );
       } else {
         this.setState({dataLoading: false});
       }
     } catch (error) {
       this.setState({dataLoading: false});
     }
-  }
+  };
 
   onMyListScroll(event) {
-    console.log('aaaaaijijijijijijijijij')
     this.setState({listScrolled: true});
   }
 
@@ -158,6 +154,7 @@ class OtherBoard extends Component {
   }
 
   renderItemMainTile(data) {
+    console.log("sssssssssssssssss",data)
     return (
       <View style={{flex: 1}}>
         <View style={styles.item}>
@@ -219,7 +216,7 @@ class OtherBoard extends Component {
                 <Triangle
                   width={30}
                   height={30}
-                  color={'#0bafff'}
+                  color={colors.colorDeepSkyBlue}
                   style={{borderTopEndRadius: EStyleSheet.value('5rem')}}
                   direction={'up-right'}
                 />
@@ -303,7 +300,7 @@ class OtherBoard extends Component {
   render() {
     return (
       <View>
-        <NavigationEvents onWillFocus={payload => this.loadBords(payload)} />
+        {/* <NavigationEvents onWillFocus={payload => this.loadBords(payload)} /> */}
         <TouchableOpacity onPress={() => this.goToAddSprint()}>
           <View style={styles.button}>
             <View style={{flex: 1}}>

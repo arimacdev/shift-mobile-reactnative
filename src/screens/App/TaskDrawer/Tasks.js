@@ -502,7 +502,7 @@ class Tasks extends Component {
                 <Triangle
                   width={30}
                   height={30}
-                  color={'#0bafff'}
+                  color={colors.colorDeepSkyBlue}
                   style={{borderTopEndRadius: EStyleSheet.value('5rem')}}
                   direction={'up-right'}
                 />

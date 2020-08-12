@@ -50,17 +50,17 @@ class DefaultBoard extends Component {
     try {
       this.setState({dataLoading: true});
       let taskData = await this.getAllTaskInDefaultBoardDataDirectly(
-        startIndex, 
-        endIndex
+        startIndex,
+        endIndex,
       );
     } catch (error) {
       this.setState({dataLoading: false});
     }
   }
 
-  async lazyFetchData () {
+  async lazyFetchData() {
     if (
-      this.state.cachecdMyListData.length == 10 
+      this.state.cachecdMyListData.length == 10
       // && this.state.listScrolled == true
     ) {
       let listStartIndex = this.state.listStartIndex + 1 + 10;
@@ -68,8 +68,8 @@ class DefaultBoard extends Component {
       try {
         this.setState({dataLoading: true});
         await this.getAllTaskInDefaultBoardDataDirectly(
-          listStartIndex, 
-          listEndIndex
+          listStartIndex,
+          listEndIndex,
         );
       } catch (error) {
         this.setState({dataLoading: false});
@@ -85,17 +85,16 @@ class DefaultBoard extends Component {
     // AsyncStorage.getItem('userID').then(userID => {
     //   this.props.getMyTaskInProjects(userID, selectedProjectID, myListStartIndex, myListEndIndex);
     // });
-  };
+  }
 
-
-  getAllTaskInDefaultBoardDataDirectly = async ( startIndex, endIndex) => {
+  getAllTaskInDefaultBoardDataDirectly = async (startIndex, endIndex) => {
     let selectedProjectID = this.props.selectedProjectID;
     try {
       this.setState({dataLoading: true});
       let taskData = await APIServices.getAllTaskInDefaultBoardData(
         selectedProjectID,
-        startIndex, 
-        endIndex
+        startIndex,
+        endIndex,
       );
       if (taskData.message == 'success') {
         let dataArray = [];
@@ -114,24 +113,26 @@ class DefaultBoard extends Component {
             }
           }
         }
-        this.setState({
-          tasks: this.state.tasks.concat(dataArray),
-          cachecdMyListData: cachedDataArray,
-          dataLoading: false,
-        }, ()=> {
-          console.log('dataaaa 00000', this.state.cachecdMyListData.length)
-          console.log('dataaaa 111111', this.state.tasks.length)
-        });
+        this.setState(
+          {
+            tasks: this.state.tasks.concat(dataArray),
+            cachecdMyListData: cachedDataArray,
+            dataLoading: false,
+          },
+          () => {
+            console.log('dataaaa 00000', this.state.cachecdMyListData.length);
+            console.log('dataaaa 111111', this.state.tasks.length);
+          },
+        );
       } else {
         this.setState({dataLoading: false});
       }
     } catch (error) {
       this.setState({dataLoading: false});
     }
-  }
+  };
 
   onMyListScroll(event) {
-    console.log('aaaaaijijijijijijijijij')
     this.setState({listScrolled: true});
   }
 
@@ -162,7 +163,7 @@ class DefaultBoard extends Component {
               <Triangle
                 width={30}
                 height={30}
-                color={'#0bafff'}
+                color={colors.colorDeepSkyBlue}
                 style={{borderTopEndRadius: EStyleSheet.value('5rem')}}
                 direction={'up-right'}
               />
