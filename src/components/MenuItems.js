@@ -181,19 +181,11 @@ const localColors = {
 };
 
 const styles = EStyleSheet.create({
-  defaultSelectedText: {
-    fontSize: '15rem',
-    marginLeft: '15rem',
-    marginRight: '15rem',
-  },
   filterIcon: {
     width: '21rem',
     height: '21rem',
     marginTop: '2rem',
     marginRight: '-10rem',
-  },
-  dropDownText: {
-    fontSize: '11rem',
   },
   dropView: {
     flexDirection: 'row',
@@ -212,23 +204,9 @@ const styles = EStyleSheet.create({
     marginTop: '10rem',
     marginBottom: '10rem',
   },
-  selectedItemBorder: {
-    width: '100%',
-    borderBottomWidth: '1rem',
-    borderBottomColor: localColors.borderColor,
-  },
   menuItemText: {
     paddingLeft: '15rem',
     color: colors.gray,
-  },
-  menuItemArrowWrapper: {
-    width: '24rem',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  menuItemArrow: {
-    width: '12rem',
-    height: '12rem',
   },
   menuStyle: {
     marginRight: '18rem',
