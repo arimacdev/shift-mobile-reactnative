@@ -103,7 +103,7 @@ class DefaultBoard extends Component {
         selectedProjectID,
         startIndex,
         endIndex,
-        allTasks
+        allTasks,
       );
       if (taskData.message == 'success') {
         let dataArray = [];
@@ -128,10 +128,7 @@ class DefaultBoard extends Component {
             cachecdMyListData: cachedDataArray,
             dataLoading: false,
           },
-          () => {
-            console.log('dataaaa 00000', this.state.cachecdMyListData.length);
-            console.log('dataaaa 111111', this.state.tasks.length);
-          },
+          () => {},
         );
       } else {
         this.setState({dataLoading: false});

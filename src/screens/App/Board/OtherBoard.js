@@ -62,7 +62,11 @@ class OtherBoard extends Component {
     }
   }
 
-  getAllTaskInDefaultBoardDataDirectly = async (startIndex, endIndex, allTasks) => {
+  getAllTaskInDefaultBoardDataDirectly = async (
+    startIndex,
+    endIndex,
+    allTasks,
+  ) => {
     let selectedProjectID = this.props.selectedProjectID;
     try {
       this.setState({dataLoading: true});
@@ -70,7 +74,7 @@ class OtherBoard extends Component {
         selectedProjectID,
         startIndex,
         endIndex,
-        allTasks
+        allTasks,
       );
       if (taskData.message == 'success') {
         let dataArray = [];
@@ -311,7 +315,6 @@ class OtherBoard extends Component {
             />
           </View>
         </TouchableOpacity>
-
         <FlatList
           data={this.state.sprints}
           horizontal={true}
