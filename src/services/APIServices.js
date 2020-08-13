@@ -2180,7 +2180,12 @@ async function myTaskUpdateSubTask(
   );
 }
 //oooooo
-async function getAllTaskInDefaultBoardData(projectID, startIndex, endIndex) {
+async function getAllTaskInDefaultBoardData(
+  projectID,
+  startIndex,
+  endIndex,
+  allTasks,
+) {
   let listStartIndex = startIndex;
   let listEndIndex = endIndex;
   let baseURL = null;
@@ -2205,7 +2210,9 @@ async function getAllTaskInDefaultBoardData(projectID, startIndex, endIndex) {
         '&startIndex=' +
         listStartIndex +
         '&endIndex=' +
-        listEndIndex,
+        listEndIndex +
+        '&allTasks=' +
+        allTasks,
       method: 'GET',
     },
     true,

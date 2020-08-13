@@ -47,11 +47,13 @@ class DefaultBoard extends Component {
   async fetchData() {
     let startIndex = 0;
     let endIndex = 10;
+    let allTasks = false;
     try {
       this.setState({dataLoading: true});
       let taskData = await this.getAllTaskInDefaultBoardDataDirectly(
         startIndex,
         endIndex,
+        allTasks,
       );
     } catch (error) {
       this.setState({dataLoading: false});
@@ -65,11 +67,13 @@ class DefaultBoard extends Component {
     ) {
       let listStartIndex = this.state.listStartIndex + 1 + 10;
       let listEndIndex = this.state.listEndIndex + 10;
+      let allTasks = false;
       try {
         this.setState({dataLoading: true});
         await this.getAllTaskInDefaultBoardDataDirectly(
           listStartIndex,
           listEndIndex,
+          allTasks,
         );
       } catch (error) {
         this.setState({dataLoading: false});
@@ -87,7 +91,11 @@ class DefaultBoard extends Component {
     // });
   }
 
-  getAllTaskInDefaultBoardDataDirectly = async (startIndex, endIndex) => {
+  getAllTaskInDefaultBoardDataDirectly = async (
+    startIndex,
+    endIndex,
+    allTasks,
+  ) => {
     let selectedProjectID = this.props.selectedProjectID;
     try {
       this.setState({dataLoading: true});
@@ -95,6 +103,7 @@ class DefaultBoard extends Component {
         selectedProjectID,
         startIndex,
         endIndex,
+        allTasks
       );
       if (taskData.message == 'success') {
         let dataArray = [];

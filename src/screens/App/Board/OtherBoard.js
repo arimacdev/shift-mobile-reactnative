@@ -53,15 +53,16 @@ class OtherBoard extends Component {
   async getAllTaskDataInProject() {
     let startIndex = 0;
     let endIndex = 10;
+    let allTasks = false;
     try {
       this.setState({dataLoading: true});
-      this.getAllTaskInDefaultBoardDataDirectly(startIndex, endIndex);
+      this.getAllTaskInDefaultBoardDataDirectly(startIndex, endIndex, allTasks);
     } catch (error) {
       this.setState({dataLoading: false});
     }
   }
 
-  getAllTaskInDefaultBoardDataDirectly = async (startIndex, endIndex) => {
+  getAllTaskInDefaultBoardDataDirectly = async (startIndex, endIndex, allTasks) => {
     let selectedProjectID = this.props.selectedProjectID;
     try {
       this.setState({dataLoading: true});
@@ -69,6 +70,7 @@ class OtherBoard extends Component {
         selectedProjectID,
         startIndex,
         endIndex,
+        allTasks
       );
       if (taskData.message == 'success') {
         let dataArray = [];
