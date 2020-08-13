@@ -53,7 +53,7 @@ class OtherBoard extends Component {
   async getAllTaskDataInProject() {
     let startIndex = 0;
     let endIndex = 10;
-    let allTasks = false;
+    let allTasks = true;
     try {
       this.setState({dataLoading: true});
       this.getAllTaskInDefaultBoardDataDirectly(startIndex, endIndex, allTasks);
@@ -173,14 +173,14 @@ class OtherBoard extends Component {
             </View>
           </View>
 
-          <ScrollView style={styles.sub_scrollView}>
+          <View style={styles.sub_scrollView}>
             <FlatList
               data={data.item.tasks}
               renderItem={this.renderItemSubTile.bind(this)}
               keyExtractor={item => item.id}
               // ListEmptyComponent={<EmptyListView />}
             />
-          </ScrollView>
+          </View>
         </View>
       </View>
     );
@@ -425,7 +425,7 @@ const styles = EStyleSheet.create({
     alignItems: 'center',
   },
   sub_scrollView: {
-    height: Platform.OS == 'ios' ? '70%' : '76%',
+    height: Platform.OS == 'ios' ? '70%' : '78%',
     width: '100%',
     backgroundColor: colors.projectBgColor,
   },

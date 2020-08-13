@@ -37,6 +37,7 @@ class DefaultBoard extends Component {
       cachecdData: [],
       cachecdMyListData: [],
       listScrolled: false,
+      dalaLength: 0,
     };
   }
 
@@ -61,10 +62,7 @@ class DefaultBoard extends Component {
   }
 
   async lazyFetchData() {
-    if (
-      this.state.cachecdMyListData.length == 10
-      // && this.state.listScrolled == true
-    ) {
+    if (this.state.dalaLength == 10 && this.state.listScrolled == true) {
       let listStartIndex = this.state.listStartIndex + 1 + 10;
       let listEndIndex = this.state.listEndIndex + 10;
       let allTasks = false;
@@ -126,6 +124,7 @@ class DefaultBoard extends Component {
           {
             tasks: this.state.tasks.concat(dataArray),
             cachecdMyListData: cachedDataArray,
+            dalaLength: taskData.data.length,
             dataLoading: false,
           },
           () => {},
@@ -236,25 +235,25 @@ class DefaultBoard extends Component {
     let dataLoading = this.state.dataLoading;
     return (
       <View>
-        <NavigationEvents
+        {/* <NavigationEvents
           onWillFocus={payload => this.loadDefulatBords(payload)}
-        />
+        /> */}
         <View>
           {this.state.tasks.length > 0 && (
-            <ScrollView style={styles.subContainer}>
+            <View style={styles.subContainer}>
               <FlatList
                 style={styles.flalList}
                 data={this.state.tasks}
                 renderItem={({item}) => this.renderTaskList(item)}
                 keyExtractor={item => item.projId}
                 onEndReached={this.lazyFetchData}
-                onEndReachedThreshold={0.5}
+                onEndReachedThreshold={0.7}
                 onScroll={this.onMyListScroll}
                 // ListEmptyComponent={<EmptyListView />}
                 // onRefresh={() => this.onRefresh()}
                 // refreshing={isFetching}
               />
-            </ScrollView>
+            </View>
           )}
         </View>
         {dataLoading && <Loader />}
@@ -269,7 +268,7 @@ const styles = EStyleSheet.create({
     borderRadius: '5rem',
     marginHorizontal: '20rem',
     marginTop: '7rem',
-    marginBottom: '200rem',
+    marginBottom: '180rem',
   },
   flalList: {
     marginTop: '8rem',

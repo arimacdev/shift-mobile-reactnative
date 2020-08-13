@@ -252,6 +252,8 @@ class TasksTabScreen extends Component {
     let allTasks = false;
     this.setState({
       filterType: 'None',
+      listStartIndex: 0,
+      listEndIndex: 10,
     });
     let selectedProjectID = this.state.selectedProjectID;
     AsyncStorage.getItem('userID').then(userID => {
@@ -260,7 +262,7 @@ class TasksTabScreen extends Component {
         selectedProjectID,
         startIndex,
         endIndex,
-        allTasks
+        allTasks,
       );
     });
   }
@@ -283,7 +285,7 @@ class TasksTabScreen extends Component {
           selectedProjectID,
           listStartIndex,
           listEndIndex,
-          allTasks
+          allTasks,
         );
       });
       this.setState({
@@ -300,7 +302,7 @@ class TasksTabScreen extends Component {
     selectedProjectID,
     listStartIndex,
     listEndIndex,
-    allTasks
+    allTasks,
   ) => {
     this.setState({dataLoading: true, cachecdData: []});
     await APIServices.getAllTaskInProjectsData(
@@ -308,7 +310,7 @@ class TasksTabScreen extends Component {
       selectedProjectID,
       listStartIndex,
       listEndIndex,
-      allTasks
+      allTasks,
     )
       .then(response => {
         if (response.message == 'success') {
@@ -1001,7 +1003,7 @@ class TasksTabScreen extends Component {
       let selectedProjectID = this.state.selectedProjectID;
       let taskId = item.parentTask.taskId;
       this.setState({dataLoading: true});
-      newTaskData = await APIServices.addSubTaskToProjectData(
+      let newTaskData = await APIServices.addSubTaskToProjectData(
         subTasksName,
         selectedProjectID,
         taskId,
@@ -1027,7 +1029,7 @@ class TasksTabScreen extends Component {
       let tasksName = this.state.tasksName;
       let selectedProjectID = this.state.selectedProjectID;
       this.setState({dataLoading: true});
-      newTaskData = await APIServices.addMainTaskToProjectData(
+      let newTaskData = await APIServices.addMainTaskToProjectData(
         tasksName,
         selectedProjectID,
       );
@@ -1048,7 +1050,7 @@ class TasksTabScreen extends Component {
       let selectedProjectID = this.state.selectedProjectID;
       let index = this.state.index;
       this.setState({dataLoading: true});
-      filtedData = await APIServices.filterTaskByTaskTypeData(
+      let filtedData = await APIServices.filterTaskByTaskTypeData(
         selectedProjectID,
         'development',
       );
@@ -1084,7 +1086,7 @@ class TasksTabScreen extends Component {
       let selectedProjectID = this.state.selectedProjectID;
       let index = this.state.index;
       this.setState({dataLoading: true});
-      filtedData = await APIServices.filterTaskByTaskTypeData(
+      let filtedData = await APIServices.filterTaskByTaskTypeData(
         selectedProjectID,
         issueTypeID,
       );
@@ -1134,7 +1136,7 @@ class TasksTabScreen extends Component {
     try {
       let selectedProjectID = this.state.selectedProjectID;
       this.setState({dataLoading: true});
-      filtedData = await APIServices.filterTaskByUser(
+      let filtedData = await APIServices.filterTaskByUser(
         selectedProjectID,
         assignee,
       );
@@ -1248,7 +1250,7 @@ class TasksTabScreen extends Component {
       let selectedProjectID = this.state.selectedProjectID;
       let index = this.state.index;
       this.setState({dataLoading: true});
-      filtedData = await APIServices.filterTaskByDate(
+      let filtedData = await APIServices.filterTaskByDate(
         selectedProjectID,
         selectedStartDate,
         selectedEndDate,
