@@ -40,7 +40,7 @@ const colors = {
   black: '#000000',
   selectedRange: '#7300e6',
   detailsViewText: '#424f64',
-  alertOverlayColor:'rgba(0,0,0,0.8)',
+  alertOverlayColor: 'rgba(0,0,0,0.8)',
   colorMagenta: '#ff33ff',
   colorFreeSpeechGreen: '#22ff22',
   colorRed: '#FF0000',
@@ -65,6 +65,6 @@ const colors = {
   colorBlackRussian: '#040428',
   colorPaleCornflowerBlue: '#B6D3F1',
   colorAliceBlue: '#F5FCFF',
-  colorWhisper: '#EEEEEE'
+  colorWhisper: '#EEEEEE',
 };
 export default colors;

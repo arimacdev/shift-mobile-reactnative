@@ -336,7 +336,6 @@ const styles = EStyleSheet.create({
   iconEdit: {
     width: '20rem',
     height: '20rem',
-    // borderRadius: '10rem',
     marginLeft: '5rem',
   },
   completionIcon: {
