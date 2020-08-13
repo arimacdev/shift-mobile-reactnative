@@ -76,18 +76,14 @@ class OtherBoard extends Component {
         for (let i = 0; i < taskData.data.length; i++) {
           let parentTask = taskData.data[i].parentTask;
           let childTasks = taskData.data[i].childTasks;
-          if (parentTask.sprintId == 'default') {
-            dataArray.push(parentTask);
-            cachedDataArray.push(parentTask);
-          }
+          dataArray.push(parentTask);
+          cachedDataArray.push(parentTask);
           for (let j = 0; j < childTasks.length; j++) {
             let childTasksItem = childTasks[j];
-            if (childTasksItem.sprintId == 'default') {
-              dataArray.push(childTasksItem);
-            }
+            dataArray.push(childTasksItem);
           }
-          this.getAllSprintInProject(dataArray);
         }
+        this.getAllSprintInProject(dataArray);
         this.setState(
           {
             tasks: this.state.tasks.concat(dataArray),
@@ -154,7 +150,6 @@ class OtherBoard extends Component {
   }
 
   renderItemMainTile(data) {
-    console.log("sssssssssssssssss",data)
     return (
       <View style={{flex: 1}}>
         <View style={styles.item}>
