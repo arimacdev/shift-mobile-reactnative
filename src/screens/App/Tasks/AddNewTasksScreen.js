@@ -796,7 +796,7 @@ class AddNewTasksScreen extends Component {
         parentTaskId: parentTaskId,
       });
     }
-   
+
     if (parentTaskName && parentTaskName == 'No parent') {
       this.setState({viewSprint: true});
     } else {
@@ -1365,7 +1365,7 @@ const styles = EStyleSheet.create({
     borderRadius: 0,
     borderTopStartRadius: '5rem',
     borderTopEndRadius: '5rem',
-    zIndex:100
+    zIndex: 100,
   },
   alertConfirmButtonStyle: {
     width: '100rem',

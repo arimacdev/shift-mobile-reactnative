@@ -157,24 +157,24 @@ class DrawerTasksScreen extends Component {
           ListEmptyComponent={<EmptyListView />}
         />
         <AwesomeAlert
-            show={showAlert}
-            showProgress={false}
-            title={alertTitle}
-            message={alertMsg}
-            closeOnTouchOutside={true}
-            closeOnHardwareBackPress={false}
-            showCancelButton={false}
-            showConfirmButton={true}
-            cancelText=""
-            confirmText="OK"
-            confirmButtonColor={colors.primary}
-            onConfirmPressed={() => {
-              this.hideAlert();
-            }}
-            overlayStyle={{backgroundColor: colors.alertOverlayColor}}
-            contentContainerStyle={styles.alertContainerStyle}
-            confirmButtonStyle={styles.alertConfirmButtonStyle}
-          />
+          show={showAlert}
+          showProgress={false}
+          title={alertTitle}
+          message={alertMsg}
+          closeOnTouchOutside={true}
+          closeOnHardwareBackPress={false}
+          showCancelButton={false}
+          showConfirmButton={true}
+          cancelText=""
+          confirmText="OK"
+          confirmButtonColor={colors.primary}
+          onConfirmPressed={() => {
+            this.hideAlert();
+          }}
+          overlayStyle={{backgroundColor: colors.alertOverlayColor}}
+          contentContainerStyle={styles.alertContainerStyle}
+          confirmButtonStyle={styles.alertConfirmButtonStyle}
+        />
         {dataLoading && <Loader />}
       </View>
     );

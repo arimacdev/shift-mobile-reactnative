@@ -48,7 +48,9 @@ class PeopleScreen extends Component {
   async fetchData() {
     let selectedTaskGroupId = this.props.selectedTaskGroupId;
     this.setState({dataLoading: true});
-    let taskPeopleData = await APIServices.getTaskPeopleData(selectedTaskGroupId);
+    let taskPeopleData = await APIServices.getTaskPeopleData(
+      selectedTaskGroupId,
+    );
     if (taskPeopleData.message == 'success') {
       let ownerArray = [];
       let usersArray = [];
