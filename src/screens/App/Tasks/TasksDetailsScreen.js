@@ -3367,6 +3367,7 @@ const styles = EStyleSheet.create({
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
     marginLeft: '5rem',
+    flex: 0.9,
   },
   iconStyle: {
     width: '30rem',
