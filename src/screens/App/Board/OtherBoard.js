@@ -154,7 +154,6 @@ class OtherBoard extends Component {
   }
 
   renderItemMainTile(data) {
-    console.log("sssssssssssssssss",data)
     return (
       <View style={{flex: 1}}>
         <View style={styles.item}>
@@ -300,7 +299,7 @@ class OtherBoard extends Component {
   render() {
     return (
       <View>
-        {/* <NavigationEvents onWillFocus={payload => this.loadBords(payload)} /> */}
+        <NavigationEvents onWillFocus={payload => this.loadBords(payload)} />
         <TouchableOpacity onPress={() => this.goToAddSprint()}>
           <View style={styles.button}>
             <View style={{flex: 1}}>

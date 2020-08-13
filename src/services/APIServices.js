@@ -140,6 +140,7 @@ async function getAllTaskInProjectsData(
   projectID,
   startIndex,
   endIndex,
+  allTasks,
 ) {
   let listStartIndex = startIndex;
   let listEndIndex = endIndex;
@@ -162,7 +163,9 @@ async function getAllTaskInProjectsData(
         '&startIndex=' +
         listStartIndex +
         '&endIndex=' +
-        listEndIndex,
+        listEndIndex +
+        '&allTasks=' +
+        allTasks,
       method: 'GET',
     },
     true,

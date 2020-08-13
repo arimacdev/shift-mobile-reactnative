@@ -2388,6 +2388,7 @@ class TasksDetailsScreen extends Component {
   async getAllTaskInProject(selectedProjectID) {
     let startIndex = 0;
     let endIndex = 10;
+    let allTasks = true;
     this.setState({
       filterType: 'None',
     });
@@ -2397,6 +2398,7 @@ class TasksDetailsScreen extends Component {
         selectedProjectID,
         startIndex,
         endIndex,
+        allTasks
       );
     });
   }

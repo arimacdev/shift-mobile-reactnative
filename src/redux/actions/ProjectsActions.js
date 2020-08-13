@@ -71,6 +71,7 @@ export const getAllTaskInProjects = (
   projectID,
   startIndex,
   endIndex,
+  allTasks
 ) => {
   return dispatch => {
     dispatch({type: GET_ALL_TASK_BY_PROJECT});
@@ -79,6 +80,7 @@ export const getAllTaskInProjects = (
       projectID,
       startIndex,
       endIndex,
+      allTasks
     )
       .then(response => {
         if (response.message == 'success') {

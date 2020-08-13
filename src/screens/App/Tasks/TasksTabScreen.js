@@ -249,6 +249,7 @@ class TasksTabScreen extends Component {
   async getAllTaskInProject() {
     let startIndex = 0;
     let endIndex = 10;
+    let allTasks = true;
     this.setState({
       filterType: 'None',
     });
@@ -259,6 +260,7 @@ class TasksTabScreen extends Component {
         selectedProjectID,
         startIndex,
         endIndex,
+        allTasks
       );
     });
   }
@@ -274,12 +276,14 @@ class TasksTabScreen extends Component {
     ) {
       let listStartIndex = this.state.listStartIndex + 1 + 10;
       let listEndIndex = this.state.listEndIndex + 10;
+      let allTasks = false;
       AsyncStorage.getItem('userID').then(userID => {
         this.getAllTaskInProjectDirectly(
           userID,
           selectedProjectID,
           listStartIndex,
           listEndIndex,
+          allTasks
         );
       });
       this.setState({
@@ -296,6 +300,7 @@ class TasksTabScreen extends Component {
     selectedProjectID,
     listStartIndex,
     listEndIndex,
+    allTasks
   ) => {
     this.setState({dataLoading: true, cachecdData: []});
     await APIServices.getAllTaskInProjectsData(
@@ -303,6 +308,7 @@ class TasksTabScreen extends Component {
       selectedProjectID,
       listStartIndex,
       listEndIndex,
+      allTasks
     )
       .then(response => {
         if (response.message == 'success') {
