@@ -217,7 +217,7 @@ class PopupMenuUserList extends Component {
     return (
       <Modal
         isVisible={this.state.opened}
-        style={styles.modalStyle}
+        style={[styles.modalStyle, this.props.customModalStyle]}
         hideModalContentWhileAnimating={true}
         hasBackdrop={false}
         coverScreen={false}

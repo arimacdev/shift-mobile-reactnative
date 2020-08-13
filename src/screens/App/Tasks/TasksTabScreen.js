@@ -32,6 +32,7 @@ import {Icon} from 'native-base';
 import APIServices from '../../../services/APIServices';
 import EmptyListView from '../../../components/EmptyListView';
 import AwesomeAlert from 'react-native-awesome-alerts';
+import PopupMenuUserList from '../../../components/PopupMenuUserList';
 
 const Placeholder = () => (
   <View style={styles.landing}>
@@ -147,6 +148,8 @@ class TasksTabScreen extends Component {
       cachecdData: [],
       cachecdMyListData: [],
       listScrolled: false,
+      showUserListModal: false,
+      userName: '',
     };
 
     this.onDateChange = this.onDateChange.bind(this);
@@ -993,6 +996,17 @@ class TasksTabScreen extends Component {
     this.getAllTaskInProject();
   }
 
+  renderUserListModal() {
+    return (
+      <PopupMenuUserList
+        addPeopleModelVisible={this.state.showUserListModal}
+        onSelect={item => this.onSelectUser(item)}
+        userName={this.state.userName}
+        customModalStyle={styles.popupMenuModalStyle}
+      />
+    );
+  }
+
   onNewSubTasksNameChange(text) {
     this.setState({subTasksName: text});
   }
@@ -1022,6 +1036,14 @@ class TasksTabScreen extends Component {
 
   onNewTasksNameChange(text) {
     this.setState({tasksName: text});
+    if (text.match('@')) {
+      let n = text.lastIndexOf('@');
+      let result = text.substring(n + 1);
+
+      this.setState({showUserListModal: true, userName: result});
+    } else {
+      this.setState({showUserListModal: false});
+    }
   }
 
   async onNewTasksNameSubmit(text) {
@@ -1510,6 +1532,7 @@ class TasksTabScreen extends Component {
 
         {this.renderBottomBar()}
         {this.renderCalender()}
+        {this.renderUserListModal()}
         {allTaskByProjectLoading && <Loader />}
         {myTaskByProjectLoading && <Loader />}
         {dataLoading && <Loader />}
@@ -1941,6 +1964,10 @@ const styles = EStyleSheet.create({
     width: '100rem',
     backgroundColor: colors.colorBittersweet,
     alignItems: 'center',
+  },
+  popupMenuModalStyle: {
+    marginTop: '140rem',
+    justifyContent: 'flex-start',
   },
 });
 
