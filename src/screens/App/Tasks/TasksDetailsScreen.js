@@ -3350,6 +3350,7 @@ const styles = EStyleSheet.create({
   subTasksNameStyle: {
     flex: 1,
     flexDirection: 'row',
+    marginRight: '60rem'
   },
   subTaskMainText: {
     fontSize: '11rem',

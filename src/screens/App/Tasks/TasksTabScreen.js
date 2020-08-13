@@ -249,7 +249,7 @@ class TasksTabScreen extends Component {
   async getAllTaskInProject() {
     let startIndex = 0;
     let endIndex = 10;
-    let allTasks = true;
+    let allTasks = false;
     this.setState({
       filterType: 'None',
     });
