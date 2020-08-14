@@ -2124,8 +2124,7 @@ class GroupTasksDetailsScreen extends Component {
                 <Accordion
                   underlayColor={colors.white}
                   sections={this.state.subTaskList}
-                  // sectionContainerStyle={{height:200}}
-                  containerStyle={{flex: 1, marginBottom: 20, marginTop: 0}}
+                  containerStyle={styles.accordionStyle}
                   activeSections={this.state.activeSections}
                   renderHeader={() => this._renderHeader()}
                   renderContent={item => this._renderContent(item)}
@@ -2717,6 +2716,11 @@ const styles = EStyleSheet.create({
     width: '100rem',
     backgroundColor: colors.colorBittersweet,
     alignItems: 'center',
+  },
+  accordionStyle: {
+    flex: 1,
+    marginBottom: '20rem',
+    marginTop: '0rem',
   },
 });
 

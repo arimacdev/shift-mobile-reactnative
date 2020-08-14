@@ -305,7 +305,7 @@ class WorkloadTabTasksScreen extends Component {
             <Accordion
               underlayColor={colors.white}
               sections={this.state.workloadTasks}
-              containerStyle={{marginBottom: 20, marginTop: 10}}
+              containerStyle={styles.accordionStyle}
               activeSections={this.state.activeSections}
               renderHeader={this._renderHeader}
               renderContent={item =>
@@ -408,6 +408,10 @@ const styles = EStyleSheet.create({
     width: '22rem',
     height: '22rem',
     borderRadius: 50 / 2,
+  },
+  accordionStyle: {
+    marginBottom: '20rem',
+    marginTop: '10rem',
   },
 });
 
