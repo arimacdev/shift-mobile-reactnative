@@ -111,6 +111,8 @@ let issueTypeList = [
 ];
 
 class TasksTabScreen extends Component {
+  selectedUserList = [];
+
   constructor(props) {
     super(props);
     this.lazyGetAllTaskInProject = this.lazyGetAllTaskInProject.bind(this);
@@ -1000,7 +1002,7 @@ class TasksTabScreen extends Component {
     return (
       <PopupMenuUserList
         addPeopleModelVisible={this.state.showUserListModal}
-        onSelect={item => this.onSelectUser(item)}
+        onSelect={item => this.onTaskSelectUser(item)}
         userName={this.state.userName}
         customModalStyle={styles.popupMenuModalStyle}
       />
@@ -1045,6 +1047,24 @@ class TasksTabScreen extends Component {
       this.setState({showUserListModal: false});
     }
   }
+
+  async onTaskSelectUser(item) {
+    this.selectedUserList.push({
+      username: item.label,
+      userId: item.key,
+    });
+
+    let name = this.state.tasksName;
+    let replasedText = name
+      .substring(0, name.lastIndexOf('@'))
+      .replace('/' + this.state.userName + '/', '');
+
+    await this.setState({
+      showUserListModal: false,
+      tasksName: replasedText.concat(item.label + ' '),
+    });
+  }
+
 
   async onNewTasksNameSubmit(text) {
     try {
