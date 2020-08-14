@@ -997,18 +997,27 @@ class TasksTabScreen extends Component {
   }
 
   renderUserListModal() {
+    let mainTaskTextChange = this.state.mainTaskTextChange;
     return (
       <PopupMenuUserList
         addPeopleModelVisible={this.state.showUserListModal}
         onSelect={item => this.onTaskSelectUser(item)}
         userName={this.state.userName}
-        customModalStyle={styles.popupMenuModalStyle}
+        keyboardValue={mainTaskTextChange ? 0.23 : 0.3}
+        backgroundColor={colors.userViewData}
+        textColor={colors.white}
+        customMenuStyle={styles.customMenuStyle}
+        customModalStyle={
+          mainTaskTextChange
+            ? styles.popupMenuModalStyle
+            : styles.popupMenuModalsubTaskStyle
+        }
       />
     );
   }
 
   onNewSubTasksNameChange(subTasksName, indexMain) {
-    this.setState({subtaskTextInputIndex: indexMain});
+    this.setState({subtaskTextInputIndex: indexMain, tasksName: ''});
 
     let {textInputs} = this.state;
     textInputs[indexMain] = subTasksName;
@@ -1031,7 +1040,7 @@ class TasksTabScreen extends Component {
       let subTasksName =
         this.state.textInputs[indexMain].split('@')[0] == undefined
           ? this.state.textInputs[indexMain]
-          : this.state.textInputs[indexMain].split('@')[0];
+          : this.state.textInputs[indexMain].split('@')[0].trim();
       let selectedProjectID = this.state.selectedProjectID;
       let taskId = item.parentTask.taskId;
       this.setState({dataLoading: true});
@@ -1055,6 +1064,7 @@ class TasksTabScreen extends Component {
   onNewTasksNameChange(text) {
     this.setState({
       tasksName: text,
+      textInputs: [],
       mainTaskTextChange: true,
     });
     if (text.match('@')) {
@@ -1079,9 +1089,9 @@ class TasksTabScreen extends Component {
       userId: item.key,
     });
 
-    let name = mainTaskTextChange ? tasksName : textInputs[subtaskTextInputIndex];
-
-    console.log("sssssssssssssssssssss",name)
+    let name = mainTaskTextChange
+      ? tasksName
+      : textInputs[subtaskTextInputIndex];
 
     let replasedText = name
       .substring(0, name.lastIndexOf('@'))
@@ -1099,9 +1109,7 @@ class TasksTabScreen extends Component {
       textInputs[subtaskTextInputIndex] = replasedText.concat(
         '@' + item.label + ' ',
       );
-      this.setState({
-        textInputs: textInputs[subtaskTextInputIndex],
-      });
+      this.setState({textInputs});
     }
   }
 
@@ -2031,6 +2039,14 @@ const styles = EStyleSheet.create({
     marginTop: '140rem',
     justifyContent: 'flex-start',
   },
+  popupMenuModalsubTaskStyle:{
+    marginBottom: '260rem',
+    justifyContent: 'flex-end',
+  },
+  customMenuStyle:{
+    backgroundColor: colors.userViewData,
+    borderRadius: '5rem',
+  }
 });
 
 const mapStateToProps = state => {

@@ -63,7 +63,8 @@ class PopupMenuUserList extends Component {
 
   _keyboardDidHide(e) {
     console.log('KeyBoard Hide');
-    this.setState({keyboardHeight: height * 0.23 - e.endCoordinates.height});
+    let value = this.props.keyboardValue ? this.props.keyboardValue : 0.23;
+    this.setState({keyboardHeight: height * value - e.endCoordinates.height});
     // alert('Keyboard Hidden');
   }
   onTriggerPress() {
@@ -184,15 +185,24 @@ class PopupMenuUserList extends Component {
         style={[
           styles.projectView,
           {
-            backgroundColor: colors.projectBgColor,
-            // item.label == this.props.userName
-            //   ? colors.projectBgColor
-            //   : '',
+            backgroundColor: this.props.backgroundColor
+              ? this.props.backgroundColor
+              : colors.projectBgColor,
           },
         ]}>
         {this.userImage(item)}
         <View style={{flex: 1}}>
-          <Text style={styles.text}>{item.label}</Text>
+          <Text
+            style={[
+              styles.text,
+              {
+                color: this.props.textColor
+                  ? this.props.textColor
+                  : colors.projectText,
+              },
+            ]}>
+            {item.label}
+          </Text>
         </View>
       </View>
     );
@@ -240,7 +250,7 @@ class PopupMenuUserList extends Component {
             </ScrollView>
           </View>
         ) : (
-          <View style={styles.menuStyle}>
+          <View style={[styles.menuStyle, this.props.customMenuStyle]}>
             <ScrollView style={scrollStyle.scrollViewMenuOption}>
               {this.state.activeUsers.map(item => {
                 return (
@@ -275,7 +285,6 @@ const styles = EStyleSheet.create({
   },
   text: {
     fontSize: '12rem',
-    color: colors.projectText,
     textAlign: 'center',
     fontWeight: 'bold',
     lineHeight: '17rem',
