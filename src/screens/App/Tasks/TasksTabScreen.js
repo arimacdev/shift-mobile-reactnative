@@ -850,7 +850,7 @@ class TasksTabScreen extends Component {
 
   async onBottomItemPress(index) {
     // let color;
-    this.setState({showUserListModal: false})
+    this.setState({showUserListModal: false});
     this.setState({index: index});
     switch (index) {
       case 0:
@@ -973,8 +973,8 @@ class TasksTabScreen extends Component {
       selectedStartDate: null,
       selectedEndDate: null,
       filter: false,
-      tasksName:'',
-      textInputs:[]
+      tasksName: '',
+      textInputs: [],
     });
   }
 
@@ -1125,11 +1125,13 @@ class TasksTabScreen extends Component {
         this.state.tasksName.split('@')[0] == undefined
           ? this.state.tasksName
           : this.state.tasksName.split('@')[0].trim();
+      let taskInitiator = this.selectedUserList[0].userId
       let selectedProjectID = this.state.selectedProjectID;
       this.setState({dataLoading: true});
       let newTaskData = await APIServices.addMainTaskToProjectData(
         tasksName,
         selectedProjectID,
+        taskInitiator
       );
       if (newTaskData.message == 'success') {
         this.setState({dataLoading: false, tasksName: ''});
