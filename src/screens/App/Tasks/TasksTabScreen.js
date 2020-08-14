@@ -172,6 +172,9 @@ class TasksTabScreen extends Component {
           filterType: 'None',
           filter: false,
           index: 0,
+          showUserListModal: false,
+          tasksName: '',
+          textInputs: [],
         },
         () => {
           this.getAllTaskInProject();
@@ -847,6 +850,7 @@ class TasksTabScreen extends Component {
 
   async onBottomItemPress(index) {
     // let color;
+    this.setState({showUserListModal: false})
     this.setState({index: index});
     switch (index) {
       case 0:
@@ -969,6 +973,8 @@ class TasksTabScreen extends Component {
       selectedStartDate: null,
       selectedEndDate: null,
       filter: false,
+      tasksName:'',
+      textInputs:[]
     });
   }
 
@@ -1004,7 +1010,7 @@ class TasksTabScreen extends Component {
         onSelect={item => this.onTaskSelectUser(item)}
         userName={this.state.userName}
         keyboardValue={mainTaskTextChange ? 0.23 : 0.3}
-        backgroundColor={colors.userViewData}
+        backgroundColor={colors.colorShuttleGrey}
         textColor={colors.white}
         customMenuStyle={styles.customMenuStyle}
         customModalStyle={
@@ -2039,14 +2045,14 @@ const styles = EStyleSheet.create({
     marginTop: '140rem',
     justifyContent: 'flex-start',
   },
-  popupMenuModalsubTaskStyle:{
+  popupMenuModalsubTaskStyle: {
     marginBottom: '260rem',
     justifyContent: 'flex-end',
   },
-  customMenuStyle:{
-    backgroundColor: colors.userViewData,
+  customMenuStyle: {
+    backgroundColor: colors.colorShuttleGrey,
     borderRadius: '5rem',
-  }
+  },
 });
 
 const mapStateToProps = state => {
