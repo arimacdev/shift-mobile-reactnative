@@ -152,6 +152,8 @@ class TasksTabScreen extends Component {
       listScrolled: false,
       showUserListModal: false,
       userName: '',
+      mainTaskTextChange: true,
+      subtaskTextInputIndex: 0,
     };
 
     this.onDateChange = this.onDateChange.bind(this);
@@ -738,13 +740,9 @@ class TasksTabScreen extends Component {
                 placeholder={'Add a sub task...'}
                 maxLength={100}
                 placeholderTextColor={colors.white}
-                onChangeText={subTasksName => {
-                  let {textInputs} = this.state;
-                  textInputs[indexMain] = subTasksName;
-                  this.setState({
-                    textInputs,
-                  });
-                }}
+                onChangeText={subTasksName =>
+                  this.onNewSubTasksNameChange(subTasksName, indexMain)
+                }
                 value={this.state.textInputs[indexMain]}
                 onSubmitEditing={() =>
                   this.onNewSubTasksNameSubmit(
@@ -1009,13 +1007,31 @@ class TasksTabScreen extends Component {
     );
   }
 
-  onNewSubTasksNameChange(text) {
-    this.setState({subTasksName: text});
+  onNewSubTasksNameChange(subTasksName, indexMain) {
+    this.setState({subtaskTextInputIndex: indexMain});
+
+    let {textInputs} = this.state;
+    textInputs[indexMain] = subTasksName;
+    this.setState({
+      textInputs,
+      mainTaskTextChange: false,
+    });
+
+    if (textInputs[indexMain].match('@')) {
+      let n = textInputs[indexMain].lastIndexOf('@');
+      let result = textInputs[indexMain].substring(n + 1);
+      this.setState({showUserListModal: true, userName: result});
+    } else {
+      this.setState({showUserListModal: false});
+    }
   }
 
   async onNewSubTasksNameSubmit(text, item, indexMain) {
     try {
-      let subTasksName = this.state.textInputs[indexMain];
+      let subTasksName =
+        this.state.textInputs[indexMain].split('@')[0] == undefined
+          ? this.state.textInputs[indexMain]
+          : this.state.textInputs[indexMain].split('@')[0];
       let selectedProjectID = this.state.selectedProjectID;
       let taskId = item.parentTask.taskId;
       this.setState({dataLoading: true});
@@ -1037,11 +1053,13 @@ class TasksTabScreen extends Component {
   }
 
   onNewTasksNameChange(text) {
-    this.setState({tasksName: text});
+    this.setState({
+      tasksName: text,
+      mainTaskTextChange: true,
+    });
     if (text.match('@')) {
       let n = text.lastIndexOf('@');
       let result = text.substring(n + 1);
-
       this.setState({showUserListModal: true, userName: result});
     } else {
       this.setState({showUserListModal: false});
@@ -1049,26 +1067,50 @@ class TasksTabScreen extends Component {
   }
 
   async onTaskSelectUser(item) {
+    let {textInputs} = this.state;
+    let mainTaskTextChange = this.state.mainTaskTextChange;
+    let tasksName = this.state.tasksName;
+    let subtaskTextInputIndex = this.state.subtaskTextInputIndex;
+    let userName = this.state.userName;
+
+    this.selectedUserList = [];
     this.selectedUserList.push({
       username: item.label,
       userId: item.key,
     });
 
-    let name = this.state.tasksName;
+    let name = mainTaskTextChange ? tasksName : textInputs[subtaskTextInputIndex];
+
+    console.log("sssssssssssssssssssss",name)
+
     let replasedText = name
       .substring(0, name.lastIndexOf('@'))
-      .replace('/' + this.state.userName + '/', '');
+      .replace('/' + userName + '/', '');
 
     await this.setState({
       showUserListModal: false,
-      tasksName: replasedText.concat(item.label + ' '),
     });
-  }
 
+    if (mainTaskTextChange) {
+      this.setState({
+        tasksName: replasedText.concat('@' + item.label + ' '),
+      });
+    } else {
+      textInputs[subtaskTextInputIndex] = replasedText.concat(
+        '@' + item.label + ' ',
+      );
+      this.setState({
+        textInputs: textInputs[subtaskTextInputIndex],
+      });
+    }
+  }
 
   async onNewTasksNameSubmit(text) {
     try {
-      let tasksName = this.state.tasksName;
+      let tasksName =
+        this.state.tasksName.split('@')[0] == undefined
+          ? this.state.tasksName
+          : this.state.tasksName.split('@')[0].trim();
       let selectedProjectID = this.state.selectedProjectID;
       this.setState({dataLoading: true});
       let newTaskData = await APIServices.addMainTaskToProjectData(
