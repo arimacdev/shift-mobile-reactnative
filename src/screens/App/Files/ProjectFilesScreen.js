@@ -1144,15 +1144,21 @@ class ProjectFilesScreen extends Component {
         backdropTransitionOutTiming={0}>
         <View style={styles.modalInnerStyle}>
           <Text style={styles.modalTitleStyle}>Move File to Folder</Text>
-          <FlatList
-            style={styles.moveFolderFlatListStyle}
-            data={folderDataModal}
-            numColumns={2}
-            renderItem={({item, index}) =>
-              this.renderModalFolderList(item, index)
-            }
-            keyExtractor={item => item.folderId}
-          />
+          {folderDataModal.length > 0 ? (
+            <FlatList
+              style={styles.moveFolderFlatListStyle}
+              data={folderDataModal}
+              numColumns={2}
+              renderItem={({item, index}) =>
+                this.renderModalFolderList(item, index)
+              }
+              keyExtractor={item => item.folderId}
+            />
+          ) : (
+            <Text style={styles.noFoldersTextStyle}>
+              No project folders to move
+            </Text>
+          )}
           <View style={styles.ButtonViewStyle}>
             <TouchableOpacity
               style={styles.cancelStyle}
@@ -1609,6 +1615,13 @@ const styles = EStyleSheet.create({
     paddingVertical: '10rem',
     justifyContent: 'center',
   },
+  noFoldersTextStyle:{
+    fontSize: '15rem',
+    color: colors.colorSilver,
+    textAlign: 'center',
+    fontFamily: 'CircularStd-Medium',
+    marginVertical: '40rem'
+  }
 });
 const mapStateToProps = state => {
   return {
