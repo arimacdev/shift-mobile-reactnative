@@ -1050,6 +1050,9 @@ class TasksTabScreen extends Component {
       let n = textInputs[indexMain].lastIndexOf('@');
       let result = textInputs[indexMain].substring(n + 1);
       this.setState({showUserListModal: true, userName: result});
+      setTimeout(() => {
+        this.flatList.scrollToOffset({offset:200, animated: true});
+      }, 500);
     } else {
       this.setState({showUserListModal: false});
       this.selectedUserList = [];
@@ -1745,6 +1748,7 @@ class TasksTabScreen extends Component {
             {/* render all tasks without filters */}
             {index == 0 && !this.state.filter && (
               <FlatList
+                ref={r => (this.flatList = r)}
                 style={styles.tasksFlatList}
                 data={filterdDataAllTaks}
                 renderItem={({item, index}) => this.renderTaskList(item, index)}
