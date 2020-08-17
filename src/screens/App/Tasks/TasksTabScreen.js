@@ -1075,12 +1075,22 @@ class TasksTabScreen extends Component {
       textInputs: [],
       mainTaskTextChange: true,
     });
+
     if (text.match('@')) {
       let n = text.lastIndexOf('@');
       let result = text.substring(n + 1);
       this.setState({showUserListModal: true, userName: result});
     } else {
       this.setState({showUserListModal: false});
+    }
+
+    //showPicker
+    if (text.match('#')) {
+      let n = text.lastIndexOf('#');
+      let result = text.substring(n + 1);
+      this.setState({showPicker: true});
+    } else {
+      this.setState({showPicker: false});
     }
   }
 
@@ -1127,13 +1137,13 @@ class TasksTabScreen extends Component {
         this.state.tasksName.split('@')[0] == undefined
           ? this.state.tasksName
           : this.state.tasksName.split('@')[0].trim();
-      let taskInitiator = this.selectedUserList[0].userId
+      let taskInitiator = this.selectedUserList[0].userId;
       let selectedProjectID = this.state.selectedProjectID;
       this.setState({dataLoading: true});
       let newTaskData = await APIServices.addMainTaskToProjectData(
         tasksName,
         selectedProjectID,
-        taskInitiator
+        taskInitiator,
       );
       if (newTaskData.message == 'success') {
         this.setState({dataLoading: false, tasksName: ''});
