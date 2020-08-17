@@ -1010,7 +1010,7 @@ class TasksTabScreen extends Component {
         onSelect={item => this.onTaskSelectUser(item)}
         userName={this.state.userName}
         activeUsers={true}
-        projectID={this.state.selectedProjectID}
+        projectID={this.props.selectedProjectID}
         keyboardValue={mainTaskTextChange ? 0.23 : 0.3}
         backgroundColor={colors.colorShuttleGrey}
         textColor={colors.white}
