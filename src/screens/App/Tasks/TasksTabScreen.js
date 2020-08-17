@@ -435,6 +435,10 @@ class TasksTabScreen extends Component {
 
   onMyListScroll(event) {
     this.setState({listScrolled: true});
+    console.log(
+      'event.nativeEvent.contentOffset.y',
+      event.nativeEvent.contentOffset.y,
+    );
   }
 
   dateViewMyAndFilter = function(item) {
@@ -2229,6 +2233,7 @@ const styles = EStyleSheet.create({
   popupMenuModalsubTaskStyle: {
     marginBottom: '260rem',
     justifyContent: 'flex-end',
+    marginHorizontal: '30rem',
   },
   customMenuStyle: {
     backgroundColor: colors.colorShuttleGrey,

@@ -218,7 +218,7 @@ class PopupMenuUserList extends Component {
     return (
       <View
         style={[
-          styles.projectView,
+          styles.userView,
           {
             backgroundColor: this.props.backgroundColor
               ? this.props.backgroundColor
@@ -308,7 +308,7 @@ const styles = EStyleSheet.create({
     height: '45rem',
     borderRadius: 90 / 2,
   },
-  projectView: {
+  userView: {
     height: '55rem',
     flexDirection: 'row',
     alignItems: 'center',
