@@ -1009,6 +1009,8 @@ class TasksTabScreen extends Component {
         addPeopleModelVisible={this.state.showUserListModal}
         onSelect={item => this.onTaskSelectUser(item)}
         userName={this.state.userName}
+        activeUsers={true}
+        projectID={this.state.selectedProjectID}
         keyboardValue={mainTaskTextChange ? 0.23 : 0.3}
         backgroundColor={colors.colorShuttleGrey}
         textColor={colors.white}

@@ -72,7 +72,12 @@ class PopupMenuUserList extends Component {
   }
 
   componentDidMount() {
-    this.getUserList();
+    if (this.props.activeUsers) {
+      this.getActiveUserList(this.props.projectID);
+    } else {
+      this.getUserList();
+    }
+
     if (this.state.userName != '') {
       this.onSearchTextChange(this.state.userName);
     }
@@ -82,6 +87,36 @@ class PopupMenuUserList extends Component {
   async getUserList() {
     // this.setState({dataLoading: true});
     let activeUsers = await APIServices.getAllUsersData();
+    if (activeUsers.message == 'success') {
+      let userList = [];
+      activeUsers.data.sort(this.arrayCompare);
+      for (let i = 0; i < activeUsers.data.length; i++) {
+        if (activeUsers.data[i].firstName && activeUsers.data[i].lastName) {
+          userList.push({
+            key: activeUsers.data[i].userId,
+            label:
+              activeUsers.data[i].firstName +
+              ' ' +
+              activeUsers.data[i].lastName,
+            userImage: activeUsers.data[i].profileImage,
+          });
+        }
+      }
+      this.setState({
+        activeUsers: userList,
+        allActiveUsers: userList,
+        // dataLoading: false,
+      });
+      this.DataLength = userList.length;
+    } else {
+      console.log('error');
+      // this.setState({dataLoading: false});
+    }
+  }
+
+  async getActiveUserList(projectID) {
+    // this.setState({dataLoading: true});
+    let activeUsers = await APIServices.getAllUsersByProjectId(projectID);
     if (activeUsers.message == 'success') {
       let userList = [];
       activeUsers.data.sort(this.arrayCompare);
