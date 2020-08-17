@@ -153,6 +153,7 @@ class TasksTabScreen extends Component {
       showUserListModal: false,
       userName: '',
       mainTaskTextChange: true,
+      subTaskTextChange: false,
       subtaskTextInputIndex: 0,
     };
 
@@ -1032,6 +1033,7 @@ class TasksTabScreen extends Component {
     this.setState({
       textInputs,
       mainTaskTextChange: false,
+      subTaskTextChange: true,
     });
 
     if (textInputs[indexMain].match('@')) {
@@ -1074,6 +1076,7 @@ class TasksTabScreen extends Component {
       tasksName: text,
       textInputs: [],
       mainTaskTextChange: true,
+      subTaskTextChange: false,
     });
 
     if (text.match('@')) {
@@ -1131,19 +1134,50 @@ class TasksTabScreen extends Component {
     }
   }
 
+  onChangeDate(event, selectedDate) {
+    let date = new Date(selectedDate);
+    let newDate = '';
+
+    newDate = moment(date).format('MMMM DD, YYYY');
+
+    if (event.type == 'set') {
+      this.setState({
+        duedate: newDate,
+        showPicker: false,
+        showTimePicker: true,
+        date: new Date(selectedDate),
+      });
+    } else {
+      this.setState({
+        showPicker: false,
+        showTimePicker: false,
+      });
+      if (this.state.reminder) {
+        this.setReminderDate(this.state.taskResult);
+      } else {
+        this.setDueDate(this.state.taskResult);
+      }
+    }
+  }
+
   async onNewTasksNameSubmit(text) {
     try {
       let tasksName =
         this.state.tasksName.split('@')[0] == undefined
           ? this.state.tasksName
           : this.state.tasksName.split('@')[0].trim();
-      let taskInitiator = this.selectedUserList[0].userId;
+      let taskAssignee = this.selectedUserList[0].userId;
       let selectedProjectID = this.state.selectedProjectID;
+      let taskDueDate = moment(new Date(), 'DD/MM/YYYY hh:mmA').format(
+        'YYYY-MM-DD[T]HH:mm:ss',
+      );
+
       this.setState({dataLoading: true});
       let newTaskData = await APIServices.addMainTaskToProjectData(
         tasksName,
         selectedProjectID,
-        taskInitiator,
+        taskAssignee,
+        taskDueDate,
       );
       if (newTaskData.message == 'success') {
         this.setState({dataLoading: false, tasksName: ''});
@@ -1152,6 +1186,7 @@ class TasksTabScreen extends Component {
         this.setState({dataLoading: false});
       }
     } catch (e) {
+      console.log('wwwwwwwwwwwwwwwwwwwwwwwwww', e);
       this.showAlert('', 'New main task added fail');
       this.setState({dataLoading: false});
     }

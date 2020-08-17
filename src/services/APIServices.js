@@ -2339,7 +2339,12 @@ async function changeSprint(
   );
 }
 
-async function addMainTaskToProjectData(taskName, selectedProjectID, taskInitiator) {
+async function addMainTaskToProjectData(
+  taskName,
+  selectedProjectID,
+  taskAssignee,
+  taskDueDate,
+) {
   let baseURL = null;
   baseURL = await AsyncStorage.getItem('baseURL');
   let userID = null;
@@ -2358,7 +2363,9 @@ async function addMainTaskToProjectData(taskName, selectedProjectID, taskInitiat
       data: {
         taskName: taskName,
         projectId: selectedProjectID,
-        taskInitiator: taskInitiator ? taskInitiator : userID,
+        taskInitiator: userID,
+        taskAssignee: taskAssignee,
+        taskDueDate: taskDueDate,
         //taskType: "project",
         issueType: 'general',
       },
