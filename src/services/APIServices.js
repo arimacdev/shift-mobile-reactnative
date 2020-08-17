@@ -2375,7 +2375,13 @@ async function addMainTaskToProjectData(
   );
 }
 
-async function addSubTaskToProjectData(taskName, selectedProjectID, taskID) {
+async function addSubTaskToProjectData(
+  taskName,
+  selectedProjectID,
+  taskID,
+  taskAssignee,
+  taskDueDate,
+) {
   let baseURL = null;
   baseURL = await AsyncStorage.getItem('baseURL');
   let userID = null;
@@ -2395,6 +2401,8 @@ async function addSubTaskToProjectData(taskName, selectedProjectID, taskID) {
         taskName: taskName,
         projectId: selectedProjectID,
         taskInitiator: userID,
+        taskAssignee: taskAssignee == '' ? userID : taskAssignee,
+        taskDueDate: taskDueDate,
         //taskType: "project",
         issueType: 'development',
         parentTaskId: taskID,

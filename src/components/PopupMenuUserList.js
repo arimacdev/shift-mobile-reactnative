@@ -145,8 +145,8 @@ class PopupMenuUserList extends Component {
   }
 
   arrayCompare(a, b) {
-    const firstNameA = a.firstName;
-    const firstNameB = b.firstName;
+    const firstNameA = a.firstName.toUpperCase();
+    const firstNameB = b.firstName.toUpperCase();
 
     let comparison = 0;
     if (firstNameA > firstNameB) {

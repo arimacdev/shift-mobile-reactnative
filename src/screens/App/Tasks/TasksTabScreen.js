@@ -154,7 +154,6 @@ class TasksTabScreen extends Component {
       showUserListModal: false,
       userName: '',
       mainTaskTextChange: true,
-      subTaskTextChange: false,
       subtaskTextInputIndex: 0,
       showDatePicker: false,
       showTimePicker: false,
@@ -1031,15 +1030,17 @@ class TasksTabScreen extends Component {
   }
 
   onNewSubTasksNameChange(subTasksName, indexMain) {
-    this.setState({subtaskTextInputIndex: indexMain, tasksName: ''});
+    this.setState({
+      subtaskTextInputIndex: indexMain,
+      mainTaskTextChange: false,
+      tasksName: '',
+      duedate: '',
+      dueTime: '',
+    });
 
     let {textInputs} = this.state;
     textInputs[indexMain] = subTasksName;
-    this.setState({
-      textInputs,
-      mainTaskTextChange: false,
-      subTaskTextChange: true,
-    });
+    this.setState({textInputs});
 
     if (textInputs[indexMain].match('@')) {
       let n = textInputs[indexMain].lastIndexOf('@');
@@ -1047,23 +1048,57 @@ class TasksTabScreen extends Component {
       this.setState({showUserListModal: true, userName: result});
     } else {
       this.setState({showUserListModal: false});
+      this.selectedUserList = [];
+    }
+
+    //showDatePicker
+    let n = textInputs[indexMain].lastIndexOf('#');
+    let result = textInputs[indexMain].substring(n + 1);
+    if (textInputs[indexMain].match('#') && result == '') {
+      this.setState({showDatePicker: true});
+    } else {
+      this.setState({showDatePicker: false});
     }
   }
 
   async onNewSubTasksNameSubmit(text, item, indexMain) {
+    let duedate = this.state.duedate != '' ? this.state.duedate : '';
+    let dueTime = this.state.dueTime != '' ? this.state.dueTime : '';
+    let selectedProjectID = this.state.selectedProjectID;
+    let taskId = item.parentTask.taskId;
+
     try {
       let subTasksName =
         this.state.textInputs[indexMain].split('@')[0] == undefined
           ? this.state.textInputs[indexMain]
           : this.state.textInputs[indexMain].split('@')[0].trim();
-      let selectedProjectID = this.state.selectedProjectID;
-      let taskId = item.parentTask.taskId;
+
+      let subTasksNameFilter =
+        subTasksName.split('#')[0] == undefined
+          ? subTasksName
+          : subTasksName.split('#')[0].trim();
+
+      let taskAssignee =
+        this.selectedUserList.length > 0 ? this.selectedUserList[0].userId : '';
+
+      let taskDueDate =
+        duedate != ''
+          ? moment(
+              moment(duedate).format('DD MM YYYY') + dueTime,
+              'DD/MM/YYYY hh:mmA',
+            ).format('YYYY-MM-DD[T]HH:mm:ss')
+          : '';
+
       this.setState({dataLoading: true});
+
       let newTaskData = await APIServices.addSubTaskToProjectData(
-        subTasksName,
+        subTasksNameFilter,
         selectedProjectID,
         taskId,
+        taskAssignee,
+        taskDueDate,
       );
+
       if (newTaskData.message == 'success') {
         this.setState({dataLoading: false, textInputs: []});
         this.getAllTaskInProject();
@@ -1081,7 +1116,8 @@ class TasksTabScreen extends Component {
       tasksName: text,
       textInputs: [],
       mainTaskTextChange: true,
-      subTaskTextChange: false,
+      duedate: '',
+      dueTime: '',
     });
 
     //showAssignee
@@ -1091,6 +1127,7 @@ class TasksTabScreen extends Component {
       this.setState({showUserListModal: true, userName: result});
     } else {
       this.setState({showUserListModal: false});
+      this.selectedUserList = [];
     }
 
     //showDatePicker
@@ -1145,6 +1182,8 @@ class TasksTabScreen extends Component {
   };
 
   handleDateConfirm = date => {
+    let {textInputs} = this.state;
+    let subtaskTextInputIndex = this.state.subtaskTextInputIndex;
     let mainTaskTextChange = this.state.mainTaskTextChange;
     this.hideDatePicker();
     this.setState({isDateNeedLoading: true});
@@ -1185,6 +1224,8 @@ class TasksTabScreen extends Component {
   };
 
   handleTimeConfirm = time => {
+    let {textInputs} = this.state;
+    let subtaskTextInputIndex = this.state.subtaskTextInputIndex;
     let mainTaskTextChange = this.state.mainTaskTextChange;
     this.hideTimePicker();
     let selectedTime = new Date(time);
@@ -1276,7 +1317,6 @@ class TasksTabScreen extends Component {
         this.setState({dataLoading: false});
       }
     } catch (e) {
-      console.log('dddddddddddddddddddddd', e);
       this.showAlert('', 'New main task added fail');
       this.setState({dataLoading: false});
     }
