@@ -2364,7 +2364,7 @@ async function addMainTaskToProjectData(
         taskName: taskName,
         projectId: selectedProjectID,
         taskInitiator: userID,
-        taskAssignee: taskAssignee,
+        taskAssignee: taskAssignee == '' ? userID : taskAssignee,
         taskDueDate: taskDueDate,
         //taskType: "project",
         issueType: 'general',

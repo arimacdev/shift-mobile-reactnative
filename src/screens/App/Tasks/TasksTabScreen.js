@@ -33,6 +33,7 @@ import APIServices from '../../../services/APIServices';
 import EmptyListView from '../../../components/EmptyListView';
 import AwesomeAlert from 'react-native-awesome-alerts';
 import PopupMenuUserList from '../../../components/PopupMenuUserList';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
 const Placeholder = () => (
   <View style={styles.landing}>
@@ -155,6 +156,10 @@ class TasksTabScreen extends Component {
       mainTaskTextChange: true,
       subTaskTextChange: false,
       subtaskTextInputIndex: 0,
+      showDatePicker: false,
+      showTimePicker: false,
+      duedate: '',
+      dueTime: '',
     };
 
     this.onDateChange = this.onDateChange.bind(this);
@@ -1079,6 +1084,7 @@ class TasksTabScreen extends Component {
       subTaskTextChange: false,
     });
 
+    //showAssignee
     if (text.match('@')) {
       let n = text.lastIndexOf('@');
       let result = text.substring(n + 1);
@@ -1087,13 +1093,13 @@ class TasksTabScreen extends Component {
       this.setState({showUserListModal: false});
     }
 
-    //showPicker
-    if (text.match('#')) {
-      let n = text.lastIndexOf('#');
-      let result = text.substring(n + 1);
-      this.setState({showPicker: true});
+    //showDatePicker
+    let n = text.lastIndexOf('#');
+    let result = text.substring(n + 1);
+    if (text.match('#') && result == '') {
+      this.setState({showDatePicker: true});
     } else {
-      this.setState({showPicker: false});
+      this.setState({showDatePicker: false});
     }
   }
 
@@ -1134,47 +1140,131 @@ class TasksTabScreen extends Component {
     }
   }
 
-  onChangeDate(event, selectedDate) {
-    let date = new Date(selectedDate);
+  hideDatePicker = () => {
+    this.setState({showDatePicker: false});
+  };
+
+  handleDateConfirm = date => {
+    let mainTaskTextChange = this.state.mainTaskTextChange;
+    this.hideDatePicker();
+    this.setState({isDateNeedLoading: true});
+    let selectedDate = new Date(date);
     let newDate = '';
 
-    newDate = moment(date).format('MMMM DD, YYYY');
+    newDate = moment(selectedDate).format('MMMM DD, YYYY');
 
-    if (event.type == 'set') {
+    this.setState({
+      duedate: newDate,
+    });
+
+    setTimeout(() => {
       this.setState({
-        duedate: newDate,
-        showPicker: false,
+        isDateNeedLoading: false,
         showTimePicker: true,
-        date: new Date(selectedDate),
+      });
+    }, 100);
+
+    if (mainTaskTextChange) {
+      this.setState({
+        tasksName: this.state.tasksName.concat(newDate + ' '),
       });
     } else {
-      this.setState({
-        showPicker: false,
-        showTimePicker: false,
-      });
-      if (this.state.reminder) {
-        this.setReminderDate(this.state.taskResult);
-      } else {
-        this.setDueDate(this.state.taskResult);
-      }
+      textInputs[subtaskTextInputIndex] = textInputs[
+        subtaskTextInputIndex
+      ].concat(newDate);
+      this.setState({textInputs});
     }
+  };
+
+  showTimePicker = () => {
+    this.setState({showTimePicker: true});
+  };
+
+  hideTimePicker = () => {
+    this.setState({showTimePicker: false});
+  };
+
+  handleTimeConfirm = time => {
+    let mainTaskTextChange = this.state.mainTaskTextChange;
+    this.hideTimePicker();
+    let selectedTime = new Date(time);
+    let newTime = moment(selectedTime).format('hh:mmA');
+
+    this.setState({
+      dueTime: newTime,
+      showDatePicker: false,
+      showTimePicker: false,
+    });
+
+    if (mainTaskTextChange) {
+      this.setState({
+        tasksName: this.state.tasksName.concat(newTime),
+      });
+    } else {
+      textInputs[subtaskTextInputIndex] = textInputs[
+        subtaskTextInputIndex
+      ].concat(newTime);
+      this.setState({textInputs});
+    }
+  };
+
+  renderDatePicker() {
+    return (
+      <View>
+        <DateTimePickerModal
+          isVisible={this.state.showDatePicker}
+          mode="date"
+          onConfirm={this.handleDateConfirm}
+          onCancel={this.hideDatePicker}
+        />
+      </View>
+    );
+  }
+
+  renderTimePicker() {
+    return (
+      <View>
+        <DateTimePickerModal
+          isVisible={this.state.showTimePicker}
+          mode="time"
+          onConfirm={this.handleTimeConfirm}
+          onCancel={this.hideTimePicker}
+        />
+      </View>
+    );
   }
 
   async onNewTasksNameSubmit(text) {
+    let duedate = this.state.duedate != '' ? this.state.duedate : '';
+    let dueTime = this.state.dueTime != '' ? this.state.dueTime : '';
+
     try {
       let tasksName =
         this.state.tasksName.split('@')[0] == undefined
           ? this.state.tasksName
           : this.state.tasksName.split('@')[0].trim();
-      let taskAssignee = this.selectedUserList[0].userId;
+
+      let tasksNameFilter =
+        tasksName.split('#')[0] == undefined
+          ? tasksName
+          : tasksName.split('#')[0].trim();
+
+      let taskAssignee =
+        this.selectedUserList.length > 0 ? this.selectedUserList[0].userId : '';
+
       let selectedProjectID = this.state.selectedProjectID;
-      let taskDueDate = moment(new Date(), 'DD/MM/YYYY hh:mmA').format(
-        'YYYY-MM-DD[T]HH:mm:ss',
-      );
+
+      let taskDueDate =
+        duedate != ''
+          ? moment(
+              moment(duedate).format('DD MM YYYY') + dueTime,
+              'DD/MM/YYYY hh:mmA',
+            ).format('YYYY-MM-DD[T]HH:mm:ss')
+          : '';
 
       this.setState({dataLoading: true});
       let newTaskData = await APIServices.addMainTaskToProjectData(
-        tasksName,
+        tasksNameFilter,
         selectedProjectID,
         taskAssignee,
         taskDueDate,
@@ -1186,7 +1276,7 @@ class TasksTabScreen extends Component {
         this.setState({dataLoading: false});
       }
     } catch (e) {
-      console.log('wwwwwwwwwwwwwwwwwwwwwwwwww', e);
+      console.log('dddddddddddddddddddddd', e);
       this.showAlert('', 'New main task added fail');
       this.setState({dataLoading: false});
     }
@@ -1658,6 +1748,8 @@ class TasksTabScreen extends Component {
         {this.renderBottomBar()}
         {this.renderCalender()}
         {this.renderUserListModal()}
+        {this.state.showDatePicker ? this.renderDatePicker() : null}
+        {this.state.showTimePicker ? this.renderTimePicker() : null}
         {allTaskByProjectLoading && <Loader />}
         {myTaskByProjectLoading && <Loader />}
         {dataLoading && <Loader />}
