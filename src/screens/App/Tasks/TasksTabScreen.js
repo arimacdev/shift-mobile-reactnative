@@ -443,12 +443,12 @@ class TasksTabScreen extends Component {
   }
 
   onTouchStart() {
-    let subtaskTextInputIndex = this.state.subtaskTextInputIndex;
-    let textInputs = this.state.textInputs;
+    // let subtaskTextInputIndex = this.state.subtaskTextInputIndex;
+    // let textInputs = this.state.textInputs;
 
-    if (textInputs[subtaskTextInputIndex] == '') {
-      this.setState({showUserListModal: false});
-    }
+    // if (textInputs[subtaskTextInputIndex] == '') {
+    //   this.setState({showUserListModal: false});
+    // }
   }
 
   onTouchMove() {
@@ -462,8 +462,16 @@ class TasksTabScreen extends Component {
   //   }
   // }
 
-  onFocusMainTextInput(){
+  onFocusMainTextInput() {
     if (this.state.tasksName == '') {
+      this.setState({showUserListModal: false});
+    }
+  }
+
+  onFocusSubTextInput(indexMain) {
+    let textInputs = this.state.textInputs;
+
+    if (textInputs[indexMain] == '' || textInputs[indexMain] == undefined) {
       this.setState({showUserListModal: false});
     }
   }
@@ -801,7 +809,7 @@ class TasksTabScreen extends Component {
                     indexMain,
                   )
                 }
-                onFocus={() => this.onFocusSubTextInput()}
+                onFocus={() => this.onFocusSubTextInput(indexMain)}
               />
             </View>
             <FlatList
@@ -1084,7 +1092,6 @@ class TasksTabScreen extends Component {
   }
 
   async onNewSubTasksNameChange(subTasksName, indexMain) {
-    let flatListScrollOffset = this.state.flatListScrollOffset;
     this.setState({
       subtaskTextInputIndex: indexMain,
       mainTaskTextChange: false,
@@ -1108,15 +1115,6 @@ class TasksTabScreen extends Component {
       let n = textInputs[indexMain].lastIndexOf('@');
       let result = textInputs[indexMain].substring(n + 1);
       this.setState({showUserListModal: true, userName: result});
-      // setTimeout(() => {
-      //   this.flatList.scrollToOffset({
-      //     offset:
-      //       flatListScrollOffset > 0
-      //         ? flatListScrollOffset + 100
-      //         : flatListScrollOffset,
-      //     animated: false,
-      //   });
-      // }, 500);
       this.flatList.scrollToIndex({animated: true, index: indexMain});
     } else {
       this.setState({showUserListModal: false});
