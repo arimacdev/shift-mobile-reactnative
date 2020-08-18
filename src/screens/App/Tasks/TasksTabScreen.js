@@ -443,8 +443,12 @@ class TasksTabScreen extends Component {
   }
 
   onTouchStart() {
-    // this.setState({showUserListModal: false});
-    // Keyboard.dismiss();
+    let subtaskTextInputIndex = this.state.subtaskTextInputIndex;
+    let textInputs = this.state.textInputs;
+
+    if (textInputs[subtaskTextInputIndex] == '') {
+      this.setState({showUserListModal: false});
+    }
   }
 
   onTouchMove() {
@@ -452,7 +456,13 @@ class TasksTabScreen extends Component {
     Keyboard.dismiss();
   }
 
-  onTouchStartMainTextInput() {
+  // onTouchStartMainTextInput() {
+  //   if (this.state.tasksName == '') {
+  //     this.setState({showUserListModal: false});
+  //   }
+  // }
+
+  onFocusMainTextInput(){
     if (this.state.tasksName == '') {
       this.setState({showUserListModal: false});
     }
@@ -791,6 +801,7 @@ class TasksTabScreen extends Component {
                     indexMain,
                   )
                 }
+                onFocus={() => this.onFocusSubTextInput()}
               />
             </View>
             <FlatList
@@ -1798,7 +1809,8 @@ class TasksTabScreen extends Component {
                   onSubmitEditing={() =>
                     this.onNewTasksNameSubmit(this.state.tasksName)
                   }
-                  onTouchStart={() => this.onTouchStartMainTextInput()}
+                  // onTouchStart={() => this.onTouchStartMainTextInput()}
+                  onFocus={() => this.onFocusMainTextInput()}
                 />
               </View>
             ) : null}
