@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   TextInput,
   BackHandler,
+  Keyboard,
 } from 'react-native';
 import {connect} from 'react-redux';
 import * as actions from '../../../redux/actions';
@@ -434,12 +435,16 @@ class TasksTabScreen extends Component {
       });
   };
 
-  onMyListScroll(event) {
+  onTaskListScroll(event) {
     this.setState({
       listScrolled: true,
       flatListScrollOffset: event.nativeEvent.contentOffset.y,
-      // showUserListModal: false
     });
+  }
+
+  onTouchStart() {
+    this.setState({showUserListModal: false});
+    Keyboard.dismiss();
   }
 
   dateViewMyAndFilter = function(item) {
@@ -1784,7 +1789,11 @@ class TasksTabScreen extends Component {
                 ListEmptyComponent={<EmptyListView />}
                 onEndReached={this.lazyGetAllTaskInProject}
                 onEndReachedThreshold={0.7}
-                onScroll={this.onMyListScroll.bind(this)}
+                onScroll={this.onTaskListScroll.bind(this)}
+                onTouchStart={event => this.onTouchStart(event)}
+                onTouchMove={event => {
+                  console.log('flatlist onTouchMove');
+                }}
               />
             )}
 
@@ -1802,7 +1811,7 @@ class TasksTabScreen extends Component {
                 data={filterdAndMyTasksData}
                 onEndReached={this.lazyGetMyTaskInProject}
                 onEndReachedThreshold={0.7}
-                onScroll={this.onMyListScroll.bind(this)}
+                onScroll={this.onTaskListScroll.bind(this)}
                 renderItem={({item, index}) =>
                   this.renderMyTasksAndFilterTaskList(item, index)
                 }
