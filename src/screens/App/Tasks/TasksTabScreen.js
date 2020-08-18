@@ -438,11 +438,8 @@ class TasksTabScreen extends Component {
     this.setState({
       listScrolled: true,
       flatListScrollOffset: event.nativeEvent.contentOffset.y,
+      // showUserListModal: false
     });
-    console.log(
-      'event.nativeEvent.contentOffset.y',
-      event.nativeEvent.contentOffset.y,
-    );
   }
 
   dateViewMyAndFilter = function(item) {
@@ -1017,6 +1014,9 @@ class TasksTabScreen extends Component {
 
   renderUserListModal() {
     let mainTaskTextChange = this.state.mainTaskTextChange;
+    let subtaskTextInputIndex = this.state.subtaskTextInputIndex;
+    let flatListScrollOffset = this.state.flatListScrollOffset;
+
     return (
       <PopupMenuUserList
         addPeopleModelVisible={this.state.showUserListModal}
@@ -1031,13 +1031,21 @@ class TasksTabScreen extends Component {
         customModalStyle={
           mainTaskTextChange
             ? styles.popupMenuModalStyle
-            : styles.popupMenuModalsubTaskStyle
+            : [
+                styles.popupMenuModalsubTaskStyle,
+                {
+                  marginBottom:
+                    subtaskTextInputIndex == 0 || flatListScrollOffset == 0
+                      ? EStyleSheet.value('267rem')
+                      : EStyleSheet.value('247rem'),
+                },
+              ]
         }
       />
     );
   }
 
-  onNewSubTasksNameChange(subTasksName, indexMain) {
+  async onNewSubTasksNameChange(subTasksName, indexMain) {
     let flatListScrollOffset = this.state.flatListScrollOffset;
     this.setState({
       subtaskTextInputIndex: indexMain,
@@ -1049,18 +1057,29 @@ class TasksTabScreen extends Component {
 
     let {textInputs} = this.state;
     textInputs[indexMain] = subTasksName;
-    this.setState({textInputs});
+    await this.setState({textInputs});
+
+    for (let index = 0; index < this.state.textInputs.length; index++) {
+      if (index != indexMain) {
+        textInputs[index] = '';
+        this.setState({textInputs});
+      }
+    }
 
     if (textInputs[indexMain].match('@')) {
       let n = textInputs[indexMain].lastIndexOf('@');
       let result = textInputs[indexMain].substring(n + 1);
       this.setState({showUserListModal: true, userName: result});
-      setTimeout(() => {
-        this.flatList.scrollToOffset({
-          offset: flatListScrollOffset + 100,
-          animated: true,
-        });
-      }, 500);
+      // setTimeout(() => {
+      //   this.flatList.scrollToOffset({
+      //     offset:
+      //       flatListScrollOffset > 0
+      //         ? flatListScrollOffset + 100
+      //         : flatListScrollOffset,
+      //     animated: false,
+      //   });
+      // }, 500);
+      this.flatList.scrollToIndex({animated: true, index: indexMain});
     } else {
       this.setState({showUserListModal: false});
       this.selectedUserList = [];
@@ -1214,7 +1233,8 @@ class TasksTabScreen extends Component {
     setTimeout(() => {
       this.setState({
         isDateNeedLoading: false,
-        showTimePicker: true,
+        showTimePicker: false, //This set to false according to the requirement.
+        //If this change to true can set the time while creating the tasks.
       });
     }, 100);
 
@@ -2243,7 +2263,6 @@ const styles = EStyleSheet.create({
     justifyContent: 'flex-start',
   },
   popupMenuModalsubTaskStyle: {
-    marginBottom: '260rem',
     justifyContent: 'flex-end',
     marginHorizontal: '30rem',
   },
