@@ -443,8 +443,30 @@ class TasksTabScreen extends Component {
   }
 
   onTouchStart() {
+    // this.setState({showUserListModal: false});
+    // Keyboard.dismiss();
+  }
+
+  onTouchMove() {
     this.setState({showUserListModal: false});
     Keyboard.dismiss();
+  }
+
+  onTouchStartMainTextInput() {
+    if (this.state.tasksName == '') {
+      this.setState({showUserListModal: false});
+    }
+  }
+
+  onTouchStartFilterDropDown() {
+    Keyboard.dismiss();
+    this.setState({
+      showUserListModal: false,
+      tasksName: '',
+      textInputs: [],
+      duedate: '',
+      dueTime: '',
+    });
   }
 
   dateViewMyAndFilter = function(item) {
@@ -1720,7 +1742,9 @@ class TasksTabScreen extends Component {
           <View>
             <View style={styles.tasksFilterMainView}>
               <Text style={styles.filterByText}>Filter By : </Text>
-              <View style={styles.tasksFilerView}>
+              <View
+                style={styles.tasksFilerView}
+                onTouchStart={event => this.onTouchStartFilterDropDown(event)}>
                 <Dropdown
                   // style={{}}
                   label=""
@@ -1774,6 +1798,7 @@ class TasksTabScreen extends Component {
                   onSubmitEditing={() =>
                     this.onNewTasksNameSubmit(this.state.tasksName)
                   }
+                  onTouchStart={() => this.onTouchStartMainTextInput()}
                 />
               </View>
             ) : null}
@@ -1791,9 +1816,7 @@ class TasksTabScreen extends Component {
                 onEndReachedThreshold={0.7}
                 onScroll={this.onTaskListScroll.bind(this)}
                 onTouchStart={event => this.onTouchStart(event)}
-                onTouchMove={event => {
-                  console.log('flatlist onTouchMove');
-                }}
+                onTouchMove={event => this.onTouchMove(event)}
               />
             )}
 
@@ -2241,7 +2264,7 @@ const styles = EStyleSheet.create({
   filterMainPicker: {
     width: '69%',
     marginTop: '58rem',
-    marginLeft: '89rem',
+    marginLeft: '92rem',
   },
   filterTaskTypePicker: {
     width: '89.5%',
