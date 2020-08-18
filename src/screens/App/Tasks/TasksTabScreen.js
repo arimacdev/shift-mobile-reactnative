@@ -159,6 +159,7 @@ class TasksTabScreen extends Component {
       showTimePicker: false,
       duedate: '',
       dueTime: '',
+      flatListScrollOffset: 0,
     };
 
     this.onDateChange = this.onDateChange.bind(this);
@@ -434,7 +435,10 @@ class TasksTabScreen extends Component {
   };
 
   onMyListScroll(event) {
-    this.setState({listScrolled: true});
+    this.setState({
+      listScrolled: true,
+      flatListScrollOffset: event.nativeEvent.contentOffset.y,
+    });
     console.log(
       'event.nativeEvent.contentOffset.y',
       event.nativeEvent.contentOffset.y,
@@ -1034,6 +1038,7 @@ class TasksTabScreen extends Component {
   }
 
   onNewSubTasksNameChange(subTasksName, indexMain) {
+    let flatListScrollOffset = this.state.flatListScrollOffset;
     this.setState({
       subtaskTextInputIndex: indexMain,
       mainTaskTextChange: false,
@@ -1051,7 +1056,10 @@ class TasksTabScreen extends Component {
       let result = textInputs[indexMain].substring(n + 1);
       this.setState({showUserListModal: true, userName: result});
       setTimeout(() => {
-        this.flatList.scrollToOffset({offset:200, animated: true});
+        this.flatList.scrollToOffset({
+          offset: flatListScrollOffset + 100,
+          animated: true,
+        });
       }, 500);
     } else {
       this.setState({showUserListModal: false});
