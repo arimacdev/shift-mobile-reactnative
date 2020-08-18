@@ -259,11 +259,17 @@ class AddNewTasksScreen extends Component {
 
   async getAllParentTasks(selectedProjectID) {
     let userID = await AsyncStorage.getItem('userID');
+    let listStartIndex = 0;
+    let listEndIndex = 10;
+    let allTasks = true;
     // let selectedProjectID = this.props.selectedProjectID;
     this.setState({dataLoading: true});
     let parentTaskData = await APIServices.getAllTaskInProjectsData(
       userID,
       selectedProjectID,
+      listStartIndex,
+      listEndIndex,
+      allTasks,
     );
     if (parentTaskData.message == 'success') {
       let taskModalData = [{id: 0, value: 'No parent'}];
