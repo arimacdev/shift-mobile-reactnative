@@ -445,7 +445,6 @@ class TasksTabScreen extends Component {
   onTouchStart() {
     // let subtaskTextInputIndex = this.state.subtaskTextInputIndex;
     // let textInputs = this.state.textInputs;
-
     // if (textInputs[subtaskTextInputIndex] == '') {
     //   this.setState({showUserListModal: false});
     // }
@@ -1046,6 +1045,9 @@ class TasksTabScreen extends Component {
         filterType: 'None',
         filter: false,
         index: 0,
+        showUserListModal: false,
+        textInputs: [],
+        tasksName: '',
       },
       () => {
         this.getAllTaskInProject();
@@ -1111,7 +1113,8 @@ class TasksTabScreen extends Component {
       }
     }
 
-    if (textInputs[indexMain].match('@')) {
+    let lengthOfAt = textInputs[indexMain].split('@').length - 1;
+    if (textInputs[indexMain].match('@') && lengthOfAt == 1) {
       let n = textInputs[indexMain].lastIndexOf('@');
       let result = textInputs[indexMain].substring(n + 1);
       this.setState({showUserListModal: true, userName: result});
@@ -1122,9 +1125,10 @@ class TasksTabScreen extends Component {
     }
 
     //showDatePicker
+    let lengthOfHash = textInputs[indexMain].split('#').length - 1;
     let n = textInputs[indexMain].lastIndexOf('#');
     let result = textInputs[indexMain].substring(n + 1);
-    if (textInputs[indexMain].match('#') && result == '') {
+    if (textInputs[indexMain].match('#') && result == '' && lengthOfHash == 1) {
       this.setState({showDatePicker: true});
     } else {
       this.setState({showDatePicker: false});
@@ -1154,7 +1158,7 @@ class TasksTabScreen extends Component {
       let taskDueDate =
         duedate != ''
           ? moment(
-              moment(duedate).format('DD MM YYYY') + dueTime,
+              moment(duedate).format('DD MM YYYY'),
               'DD/MM/YYYY hh:mmA',
             ).format('YYYY-MM-DD[T]HH:mm:ss')
           : '';
@@ -1191,7 +1195,8 @@ class TasksTabScreen extends Component {
     });
 
     //showAssignee
-    if (text.match('@')) {
+    let lengthOfAt = text.split('@').length - 1;
+    if (text.match('@') && lengthOfAt == 1) {
       let n = text.lastIndexOf('@');
       let result = text.substring(n + 1);
       this.setState({showUserListModal: true, userName: result});
@@ -1201,9 +1206,10 @@ class TasksTabScreen extends Component {
     }
 
     //showDatePicker
+    let lengthOfHash = text.split('#').length - 1;
     let n = text.lastIndexOf('#');
     let result = text.substring(n + 1);
-    if (text.match('#') && result == '') {
+    if (text.match('#') && result == '' && lengthOfHash == 1) {
       this.setState({showDatePicker: true});
     } else {
       this.setState({showDatePicker: false});
@@ -1369,7 +1375,7 @@ class TasksTabScreen extends Component {
       let taskDueDate =
         duedate != ''
           ? moment(
-              moment(duedate).format('DD MM YYYY') + dueTime,
+              moment(duedate).format('DD MM YYYY'),
               'DD/MM/YYYY hh:mmA',
             ).format('YYYY-MM-DD[T]HH:mm:ss')
           : '';
