@@ -1262,23 +1262,19 @@ class TasksTabScreen extends Component {
     let subtaskTextInputIndex = this.state.subtaskTextInputIndex;
     let mainTaskTextChange = this.state.mainTaskTextChange;
     this.hideDatePicker();
-    this.setState({isDateNeedLoading: true});
     let selectedDate = new Date(date);
     let newDate = '';
 
     newDate = moment(selectedDate).format('MMMM DD, YYYY');
 
-    this.setState({
-      duedate: newDate,
-    });
+    this.setState({duedate: newDate});
 
-    setTimeout(() => {
-      this.setState({
-        isDateNeedLoading: false,
-        showTimePicker: false, //This set to false according to the requirement.
-        //If this change to true can set the time while creating the tasks.
-      });
-    }, 100);
+    //This set to false according to the requirement. If this change to true can set the time while creating the tasks.
+    // setTimeout(() => {
+    //   this.setState({
+    //     showTimePicker: false,
+    //   });
+    // }, 100);
 
     if (mainTaskTextChange) {
       this.setState({
