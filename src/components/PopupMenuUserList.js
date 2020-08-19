@@ -263,15 +263,17 @@ class PopupMenuUserList extends Component {
       <Modal
         isVisible={this.state.opened}
         style={[styles.modalStyle, this.props.customModalStyle]}
+        onBackdropPress={() => this.onBackdropPress()}
         hideModalContentWhileAnimating={true}
-        hasBackdrop={false}
+        hasBackdrop={this.props.hasBackdrop ? this.props.hasBackdrop : false}
         coverScreen={false}
-        animationIn="zoomInDown"
-        animationOut="zoomOutUp"
-        animationInTiming={600}
-        animationOutTiming={600}
-        backdropTransitionInTiming={600}
-        backdropTransitionOutTiming={600}>
+        // animationIn="slideInDown"
+        // animationOut="slideOutUp"
+        // animationInTiming={600}
+        // animationOutTiming={600}
+        // backdropTransitionInTiming={600}
+        // backdropTransitionOutTiming={600}
+      >
         {Platform.OS == 'ios' ? (
           <View style={styles.menuStyleIOS}>
             <ScrollView style={scrollStyle.scrollViewMenuOption}>

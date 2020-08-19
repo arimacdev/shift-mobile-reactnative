@@ -1076,6 +1076,7 @@ class TasksTabScreen extends Component {
         backgroundColor={colors.colorShuttleGrey}
         textColor={colors.white}
         customMenuStyle={styles.customMenuStyle}
+        hasBackdrop={true}
         customModalStyle={
           mainTaskTextChange
             ? styles.popupMenuModalStyle
@@ -1193,13 +1194,13 @@ class TasksTabScreen extends Component {
       duedate: '',
       dueTime: '',
     });
-
     //showAssignee
     let lengthOfAt = text.split('@').length - 1;
-    if (text.match('@') && lengthOfAt == 1) {
-      let n = text.lastIndexOf('@');
-      let result = text.substring(n + 1);
-      this.setState({showUserListModal: true, userName: result});
+    let nAt = text.lastIndexOf('@');
+      let resultAt = text.substring(nAt + 1);
+    if (text.match('@') && resultAt == '' && lengthOfAt == 1) {
+      
+      this.setState({showUserListModal: true, userName: ''});
     } else {
       this.setState({showUserListModal: false});
       this.selectedUserList = [];
