@@ -1914,14 +1914,15 @@ const styles = EStyleSheet.create({
   tasksFilerView: {
     backgroundColor: colors.lightgray,
     borderRadius: '5rem',
-    width: '264rem',
+    // width: '264rem',
     marginTop: '17rem',
     marginBottom: '12rem',
+    marginLeft: '10rem',
+    marginRight: '70rem',
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: '12rem',
     height: '45rem',
-    marginHorizontal: '10rem',
   },
   projectView: {
     backgroundColor: colors.darkBlue,
@@ -2276,7 +2277,7 @@ const styles = EStyleSheet.create({
   filterMainPicker: {
     width: '69%',
     marginTop: '58rem',
-    marginLeft: '92rem',
+    marginLeft: '89rem',
   },
   filterTaskTypePicker: {
     width: '89.5%',
