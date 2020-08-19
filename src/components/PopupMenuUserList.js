@@ -54,6 +54,7 @@ class PopupMenuUserList extends Component {
     this.keyboardDidShowListener.remove();
     this.keyboardDidHideListener.remove();
   }
+  
   _keyboardDidShow(e) {
     console.log('Keyboard Show');
     this.DataLength = this.state.allActiveUsers.length;
@@ -266,7 +267,7 @@ class PopupMenuUserList extends Component {
         onBackdropPress={() => this.onBackdropPress()}
         hideModalContentWhileAnimating={true}
         hasBackdrop={this.props.hasBackdrop ? this.props.hasBackdrop : false}
-        coverScreen={false}
+        coverScreen={this.props.coverScreen ? this.props.coverScreen : false}
         // animationIn="slideInDown"
         // animationOut="slideOutUp"
         // animationInTiming={600}
@@ -276,7 +277,11 @@ class PopupMenuUserList extends Component {
       >
         {Platform.OS == 'ios' ? (
           <View style={styles.menuStyleIOS}>
-            <ScrollView style={scrollStyle.scrollViewMenuOption}>
+            <ScrollView
+              style={[
+                scrollStyle.scrollViewMenuOption,
+                this.props.customScrollStyle,
+              ]}>
               {this.state.activeUsers.map(item => {
                 return (
                   <MenuOption onSelect={() => this.onSelect(item)}>
@@ -288,7 +293,11 @@ class PopupMenuUserList extends Component {
           </View>
         ) : (
           <View style={[styles.menuStyle, this.props.customMenuStyle]}>
-            <ScrollView style={scrollStyle.scrollViewMenuOption}>
+            <ScrollView
+              style={[
+                scrollStyle.scrollViewMenuOption,
+                this.props.customScrollStyle,
+              ]}>
               {this.state.activeUsers.map(item => {
                 return (
                   <MenuOption onSelect={() => this.onSelect(item)}>

@@ -232,6 +232,7 @@ class TasksTabScreen extends Component {
       'hardwareBackPress',
       this.handleBackButtonClick,
     );
+    // this.getAllTaskInProject();
   }
 
   componentWillUnmount() {
@@ -1072,24 +1073,14 @@ class TasksTabScreen extends Component {
         userName={this.state.userName}
         activeUsers={true}
         projectID={this.props.selectedProjectID}
-        keyboardValue={mainTaskTextChange ? 0.23 : 0.3}
-        backgroundColor={colors.colorShuttleGrey}
-        textColor={colors.white}
-        customMenuStyle={styles.customMenuStyle}
+        keyboardValue={0}
+        // backgroundColor={colors.colorShuttleGrey}
+        // textColor={colors.white}
+        // customMenuStyle={styles.customMenuStyle}
+        customScrollStyle={styles.customScrollStyle}
         hasBackdrop={true}
-        customModalStyle={
-          mainTaskTextChange
-            ? styles.popupMenuModalStyle
-            : [
-                styles.popupMenuModalsubTaskStyle,
-                {
-                  marginBottom:
-                    subtaskTextInputIndex == 0 || flatListScrollOffset == 0
-                      ? EStyleSheet.value('267rem')
-                      : EStyleSheet.value('247rem'),
-                },
-              ]
-        }
+        coverScreen={true}
+        customModalStyle={styles.popupMenuModalStyle}
       />
     );
   }
@@ -1115,10 +1106,10 @@ class TasksTabScreen extends Component {
     }
 
     let lengthOfAt = textInputs[indexMain].split('@').length - 1;
-    if (textInputs[indexMain].match('@') && lengthOfAt == 1) {
-      let n = textInputs[indexMain].lastIndexOf('@');
-      let result = textInputs[indexMain].substring(n + 1);
-      this.setState({showUserListModal: true, userName: result});
+    let nAt = textInputs[indexMain].lastIndexOf('@');
+    let resultAt = textInputs[indexMain].substring(nAt + 1);
+    if (textInputs[indexMain].match('@') && resultAt == '' && lengthOfAt == 1) {
+      this.setState({showUserListModal: true, userName: ''});
       this.flatList.scrollToIndex({animated: true, index: indexMain});
     } else {
       this.setState({showUserListModal: false});
@@ -1176,6 +1167,7 @@ class TasksTabScreen extends Component {
 
       if (newTaskData.message == 'success') {
         this.setState({dataLoading: false, textInputs: []});
+        this.selectedUserList = [];
         this.getAllTaskInProject();
       } else {
         this.setState({dataLoading: false, textInputs: []});
@@ -1194,12 +1186,12 @@ class TasksTabScreen extends Component {
       duedate: '',
       dueTime: '',
     });
+
     //showAssignee
     let lengthOfAt = text.split('@').length - 1;
     let nAt = text.lastIndexOf('@');
-      let resultAt = text.substring(nAt + 1);
+    let resultAt = text.substring(nAt + 1);
     if (text.match('@') && resultAt == '' && lengthOfAt == 1) {
-      
       this.setState({showUserListModal: true, userName: ''});
     } else {
       this.setState({showUserListModal: false});
@@ -1386,6 +1378,7 @@ class TasksTabScreen extends Component {
       );
       if (newTaskData.message == 'success') {
         this.setState({dataLoading: false, tasksName: ''});
+        this.selectedUserList = [];
         this.getAllTaskInProject();
       } else {
         this.setState({dataLoading: false});
@@ -2305,8 +2298,9 @@ const styles = EStyleSheet.create({
     alignItems: 'center',
   },
   popupMenuModalStyle: {
-    marginTop: '140rem',
-    justifyContent: 'flex-start',
+    // marginTop: '140rem',
+    marginBottom: 0,
+    justifyContent: 'center',
   },
   popupMenuModalsubTaskStyle: {
     justifyContent: 'flex-end',
@@ -2315,6 +2309,9 @@ const styles = EStyleSheet.create({
   customMenuStyle: {
     backgroundColor: colors.colorShuttleGrey,
     borderRadius: '5rem',
+  },
+  customScrollStyle: {
+    maxHeight: '300rem',
   },
 });
 

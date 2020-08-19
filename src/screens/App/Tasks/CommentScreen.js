@@ -118,6 +118,7 @@ class ChatScreen extends Component {
       showImagePickerModal: false,
       commentListHeight: null,
       iskeyboardOn: false,
+      projectId:''
     };
     this.editor = null;
   }
@@ -134,9 +135,11 @@ class ChatScreen extends Component {
     } = this.props;
 
     let taskId = params.taskId;
+    let projectId = params.projectId;
 
     this.setState({
       taskId: taskId,
+      projectId:projectId
     });
     this.fetchData(taskId, this.state.listStartIndex, this.state.listEndIndex);
     this.keyboardDidShowSub = Keyboard.addListener(
@@ -1178,6 +1181,8 @@ class ChatScreen extends Component {
         addPeopleModelVisible={this.state.showUserListModal}
         onSelect={item => this.onSelectUser(item)}
         userName={this.state.userName}
+        activeUsers={true}
+        projectID={this.state.projectId}
       />
     );
   }
