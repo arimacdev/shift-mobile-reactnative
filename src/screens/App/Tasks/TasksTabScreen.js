@@ -114,6 +114,7 @@ let issueTypeList = [
 
 class TasksTabScreen extends Component {
   selectedUserList = [];
+  subTaskTextInputs = [];
 
   constructor(props) {
     super(props);
@@ -464,7 +465,13 @@ class TasksTabScreen extends Component {
 
   onFocusMainTextInput() {
     if (this.state.tasksName == '') {
-      this.setState({showUserListModal: false});
+      this.setState({
+        showUserListModal: false,
+        textInputs: [],
+        duedate: '',
+        dueTime: '',
+      });
+      this.selectedUserList = [];
     }
   }
 
@@ -472,7 +479,13 @@ class TasksTabScreen extends Component {
     let textInputs = this.state.textInputs;
 
     if (textInputs[indexMain] == '' || textInputs[indexMain] == undefined) {
-      this.setState({showUserListModal: false});
+      this.setState({
+        showUserListModal: false,
+        tasksName: '',
+        duedate: '',
+        dueTime: '',
+      });
+      this.selectedUserList = [];
     }
   }
 
@@ -485,6 +498,7 @@ class TasksTabScreen extends Component {
       duedate: '',
       dueTime: '',
     });
+    this.selectedUserList = [];
   }
 
   dateViewMyAndFilter = function(item) {
@@ -794,8 +808,9 @@ class TasksTabScreen extends Component {
                 resizeMode={'contain'}
               />
               <TextInput
+                ref={ref => (this.subTaskTextInputs[indexMain] = ref)}
                 style={[styles.subTaskTextInput, {width: '95%'}]}
-                placeholder={'Add a sub task...'}
+                placeholder={'Add a sub task... (opt: @Assignee #Due Date)'}
                 maxLength={100}
                 placeholderTextColor={colors.white}
                 onChangeText={subTasksName =>
@@ -1090,8 +1105,6 @@ class TasksTabScreen extends Component {
       subtaskTextInputIndex: indexMain,
       mainTaskTextChange: false,
       tasksName: '',
-      duedate: '',
-      dueTime: '',
     });
 
     let {textInputs} = this.state;
@@ -1111,9 +1124,9 @@ class TasksTabScreen extends Component {
     if (textInputs[indexMain].match('@') && resultAt == '' && lengthOfAt == 1) {
       this.setState({showUserListModal: true, userName: ''});
       this.flatList.scrollToIndex({animated: true, index: indexMain});
+      this.subTaskTextInputs[indexMain].blur();
     } else {
       this.setState({showUserListModal: false});
-      this.selectedUserList = [];
     }
 
     //showDatePicker
@@ -1183,8 +1196,6 @@ class TasksTabScreen extends Component {
       tasksName: text,
       textInputs: [],
       mainTaskTextChange: true,
-      duedate: '',
-      dueTime: '',
     });
 
     //showAssignee
@@ -1193,9 +1204,9 @@ class TasksTabScreen extends Component {
     let resultAt = text.substring(nAt + 1);
     if (text.match('@') && resultAt == '' && lengthOfAt == 1) {
       this.setState({showUserListModal: true, userName: ''});
+      this.mainTaskTextInput.blur();
     } else {
       this.setState({showUserListModal: false});
-      this.selectedUserList = [];
     }
 
     //showDatePicker
@@ -1238,11 +1249,13 @@ class TasksTabScreen extends Component {
       this.setState({
         tasksName: replasedText.concat('@' + item.label + ' '),
       });
+      this.mainTaskTextInput.focus();
     } else {
       textInputs[subtaskTextInputIndex] = replasedText.concat(
         '@' + item.label + ' ',
       );
       this.setState({textInputs});
+      this.subTaskTextInputs[subtaskTextInputIndex].focus();
     }
   }
 
@@ -1793,8 +1806,9 @@ class TasksTabScreen extends Component {
                   resizeMode={'contain'}
                 />
                 <TextInput
+                  ref={ref => (this.mainTaskTextInput = ref)}
                   style={[styles.textInput, {width: '95%'}]}
-                  placeholder={'Add a main task...'}
+                  placeholder={'Add a main task... (opt: @Assignee #Due Date)'}
                   value={tasksName}
                   maxLength={100}
                   onChangeText={tasksName =>

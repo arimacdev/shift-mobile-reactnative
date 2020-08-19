@@ -118,7 +118,7 @@ class ChatScreen extends Component {
       showImagePickerModal: false,
       commentListHeight: null,
       iskeyboardOn: false,
-      projectId:''
+      projectId: '',
     };
     this.editor = null;
   }
@@ -139,7 +139,7 @@ class ChatScreen extends Component {
 
     this.setState({
       taskId: taskId,
-      projectId:projectId
+      projectId: projectId,
     });
     this.fetchData(taskId, this.state.listStartIndex, this.state.listEndIndex);
     this.keyboardDidShowSub = Keyboard.addListener(

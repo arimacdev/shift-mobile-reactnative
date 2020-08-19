@@ -54,7 +54,7 @@ class PopupMenuUserList extends Component {
     this.keyboardDidShowListener.remove();
     this.keyboardDidHideListener.remove();
   }
-  
+
   _keyboardDidShow(e) {
     console.log('Keyboard Show');
     this.DataLength = this.state.allActiveUsers.length;
