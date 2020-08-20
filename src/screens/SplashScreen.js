@@ -113,6 +113,8 @@ class SplashScreen extends Component {
             this.fetchDataUserData(userID, userType);
           }
         });
+      } else{
+        NavigationService.navigate('Auth');
       }
     });
   }
