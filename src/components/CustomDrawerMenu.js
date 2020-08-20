@@ -52,11 +52,9 @@ const CustomDrawerContentComponent = props => {
   const logOut = async () => {
     const accessToken = await AsyncStorage.getItem('accessToken');
     const logoutEndpoint = await AsyncStorage.getItem('logoutEndpoint');
-    const userId = await AsyncStorage.getItem('userId');
-
     try {
       let response = await axios({
-        url: logoutEndpoint + '?federated&state='+userId+'&id_token_hint=' + accessToken,
+        url: logoutEndpoint + '?id_token_hint=' + accessToken,
         method: 'GET',
       });
       if (response.status === 200) {
