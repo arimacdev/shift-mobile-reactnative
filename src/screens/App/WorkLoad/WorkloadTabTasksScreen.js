@@ -77,14 +77,17 @@ class WorkloadTabTasksScreen extends Component {
 
   async getAllWorkloadTasks(selectedUserId, from, to) {
     this.setState({dataLoading: true, noData: '', workloadTasks: []});
-    let workloadTasks = await APIServices.getWorkloadWithAssignTasksCompletion(
-      selectedUserId,
-      from,
-      to,
-    );
-    if (workloadTasks.message == 'success') {
+    try {
+      let workloadTasks = await APIServices.getWorkloadWithAssignTasksCompletion(
+        selectedUserId,
+        from,
+        to,
+      );
       if (workloadTasks.message == 'success') {
-        this.setState({workloadTasks: workloadTasks.data, dataLoading: false});
+        this.setState({
+          workloadTasks: workloadTasks.data,
+          dataLoading: false,
+        });
         if (workloadTasks.data.length > 0) {
           this.setState({noData: ''});
         } else {
@@ -93,7 +96,7 @@ class WorkloadTabTasksScreen extends Component {
       } else {
         this.setState({dataLoading: false});
       }
-    } else {
+    } catch (error) {
       this.setState({dataLoading: false});
     }
   }

@@ -50,28 +50,34 @@ class WorkloadSearchScreen extends Component {
 
   async fetchDataAdmin() {
     this.setState({dataLoading: true});
-    let workloadData = await APIServices.getWorkloadWithCompletionAll();
-
-    if (workloadData.message == 'success') {
-      this.setState({dataLoading: false});
-      let workloadArray = [];
-      workloadArray = workloadData.data;
-      this.setState({workload: workloadArray, allWorkload: workloadArray});
-    } else {
+    try {
+      let workloadData = await APIServices.getWorkloadWithCompletionAll();
+      if (workloadData.message == 'success') {
+        this.setState({dataLoading: false});
+        let workloadArray = [];
+        workloadArray = workloadData.data;
+        this.setState({workload: workloadArray, allWorkload: workloadArray});
+      } else {
+        this.setState({dataLoading: false});
+      }
+    } catch (error) {
       this.setState({dataLoading: false});
     }
   }
 
   async fetchDataUser() {
     this.setState({dataLoading: true});
-    let workloadData = await APIServices.getWorkloadWithCompletionUser();
-
-    if (workloadData.message == 'success') {
-      this.setState({dataLoading: false});
-      let workloadArray = [];
-      workloadArray = workloadData.data;
-      this.setState({workload: workloadArray, allWorkload: workloadArray});
-    } else {
+    try {
+      let workloadData = await APIServices.getWorkloadWithCompletionUser();
+      if (workloadData.message == 'success') {
+        this.setState({dataLoading: false});
+        let workloadArray = [];
+        workloadArray = workloadData.data;
+        this.setState({workload: workloadArray, allWorkload: workloadArray});
+      } else {
+        this.setState({dataLoading: false});
+      }
+    } catch (error) {
       this.setState({dataLoading: false});
     }
   }

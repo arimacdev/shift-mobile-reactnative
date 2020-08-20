@@ -44,36 +44,42 @@ class WorkloadScreen extends Component {
 
   async fetchDataAdmin() {
     this.setState({dataLoading: true});
-    let workloadData = await APIServices.getWorkloadWithCompletionAll();
-
-    if (workloadData.message == 'success') {
-      this.setState({dataLoading: false});
-      let userIDHeder = null;
-      userIDHeder = await AsyncStorage.getItem('userID');
-      let workloadArray = [];
-      workloadArray = workloadData.data;
-      workloadArray.forEach(function(item, i) {
-        if (item.userId === userIDHeder) {
-          workloadArray.splice(i, 1);
-          workloadArray.unshift(item);
-        }
-      });
-      this.setState({workload: workloadArray});
-    } else {
+    try {
+      let workloadData = await APIServices.getWorkloadWithCompletionAll();
+      if (workloadData.message == 'success') {
+        this.setState({dataLoading: false});
+        let userIDHeder = null;
+        userIDHeder = await AsyncStorage.getItem('userID');
+        let workloadArray = [];
+        workloadArray = workloadData.data;
+        workloadArray.forEach(function(item, i) {
+          if (item.userId === userIDHeder) {
+            workloadArray.splice(i, 1);
+            workloadArray.unshift(item);
+          }
+        });
+        this.setState({workload: workloadArray});
+      } else {
+        this.setState({dataLoading: false});
+      }
+    } catch (error) {
       this.setState({dataLoading: false});
     }
   }
 
   async fetchDataUser() {
     this.setState({dataLoading: true});
-    let workloadData = await APIServices.getWorkloadWithCompletionUser();
-
-    if (workloadData.message == 'success') {
-      this.setState({dataLoading: false});
-      let workloadArray = [];
-      workloadArray = workloadData.data;
-      this.setState({workload: workloadArray});
-    } else {
+    try {
+      let workloadData = await APIServices.getWorkloadWithCompletionUser();
+      if (workloadData.message == 'success') {
+        this.setState({dataLoading: false});
+        let workloadArray = [];
+        workloadArray = workloadData.data;
+        this.setState({workload: workloadArray});
+      } else {
+        this.setState({dataLoading: false});
+      }
+    } catch (error) {
       this.setState({dataLoading: false});
     }
   }
