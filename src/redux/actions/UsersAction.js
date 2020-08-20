@@ -13,6 +13,7 @@ import {
   USER_DATA_SUCCESS,
   USER_TYPE_DATA_SUCCESS,
   DRAWER_ITEM_SELECT,
+  DESTROY_SESSION,
 } from '../types';
 import APIServices from '../../services/APIServices';
 
@@ -138,5 +139,14 @@ export const drawerItemSelect = data => {
   return {
     type: DRAWER_ITEM_SELECT,
     payload: data,
+  };
+};
+
+export const destroySession = () => {
+  return dispatch => {
+    dispatch({
+      type: DESTROY_SESSION,
+      payload: undefined,
+    });
   };
 };

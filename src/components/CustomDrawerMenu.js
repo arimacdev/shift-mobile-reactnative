@@ -23,6 +23,7 @@ import OneSignal from 'react-native-onesignal';
 import APIServices from '../services/APIServices';
 import MessageShowModal from './MessageShowModal';
 import Utils from '../utils/Utils';
+import {DESTROY_SESSION} from '../redux/types';
 
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
@@ -60,6 +61,7 @@ const CustomDrawerContentComponent = props => {
         AsyncStorage.clear();
         OneSignal.setSubscription(false);
         NavigationService.navigate('ConfigurationScreen');
+        props.destroySession();
       }
     } catch (error) {
       Utils.showAlert(true, '', 'Logout error', props);
