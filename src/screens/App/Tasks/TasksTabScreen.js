@@ -295,7 +295,7 @@ class TasksTabScreen extends Component {
       this.state.cachecdData.length == 10 &&
       this.state.listScrolled == true
     ) {
-      let listStartIndex = this.state.listStartIndex + 1 + 10;
+      let listStartIndex = this.state.listStartIndex + 10;
       let listEndIndex = this.state.listEndIndex + 10;
       let allTasks = false;
       AsyncStorage.getItem('userID').then(userID => {
@@ -308,7 +308,7 @@ class TasksTabScreen extends Component {
         );
       });
       this.setState({
-        listStartIndex: listStartIndex - 1,
+        listStartIndex: listStartIndex,
         listEndIndex: listEndIndex,
       });
     } else {
@@ -379,7 +379,7 @@ class TasksTabScreen extends Component {
       this.state.cachecdMyListData.length == 10 &&
       this.state.listScrolled == true
     ) {
-      let myListStartIndex = this.state.myListStartIndex + 1 + 10;
+      let myListStartIndex = this.state.myListStartIndex + 10;
       let myListEndIndex = this.state.myListEndIndex + 10;
       AsyncStorage.getItem('userID').then(userID => {
         this.getAllMyTaskInProjectDirectly(
@@ -390,7 +390,7 @@ class TasksTabScreen extends Component {
         );
       });
       this.setState({
-        myListStartIndex: myListStartIndex - 1,
+        myListStartIndex: myListStartIndex,
         myListEndIndex: myListEndIndex,
       });
     } else {

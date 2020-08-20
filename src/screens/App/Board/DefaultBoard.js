@@ -63,7 +63,7 @@ class DefaultBoard extends Component {
 
   async lazyFetchData() {
     if (this.state.dalaLength == 10 && this.state.listScrolled == true) {
-      let listStartIndex = this.state.listStartIndex + 1 + 10;
+      let listStartIndex = this.state.listStartIndex + 10;
       let listEndIndex = this.state.listEndIndex + 10;
       let allTasks = false;
       try {
@@ -77,7 +77,7 @@ class DefaultBoard extends Component {
         this.setState({dataLoading: false});
       }
       this.setState({
-        listStartIndex: listStartIndex - 1,
+        listStartIndex: listStartIndex,
         listEndIndex: listEndIndex,
       });
     } else {
