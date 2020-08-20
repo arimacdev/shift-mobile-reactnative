@@ -247,7 +247,11 @@ class ChatScreen extends Component {
         if (response.message == 'success') {
           this.setState({dataLoading: false, comments: response.data});
           if (response.data.length == 10) {
-            this.setState({isListLoadable: true});
+            this.setState({
+              isListLoadable: true,
+              listStartIndex: 0,
+              listEndIndex: 10,
+            });
           } else {
             this.setState({isListLoadable: false});
           }
@@ -270,6 +274,11 @@ class ChatScreen extends Component {
             comments: this.state.comments.concat(response.data),
             dataLoading: false,
           });
+          if (response.data.length == 10) {
+            this.setState({isListLoadable: true});
+          } else {
+            this.setState({isListLoadable: false});
+          }
         } else {
           this.setState({dataLoading: false});
         }
@@ -283,11 +292,11 @@ class ChatScreen extends Component {
   onRefresh() {
     this.setState({isDeleteEvent: true, isEasyLoading: true});
     if (this.state.isListLoadable) {
-      let startIndex = this.state.listStartIndex + 1 + 10;
+      let startIndex = this.state.listStartIndex + 10;
       let endIndex = this.state.listEndIndex + 10;
       this.setState({isFetching: true}, function() {
         this.LazyFetchData(this.state.taskId, startIndex, endIndex);
-        this.setState({listStartIndex: startIndex - 1, listEndIndex: endIndex});
+        this.setState({listStartIndex: startIndex, listEndIndex: endIndex});
       });
     } else {
       // show toast
