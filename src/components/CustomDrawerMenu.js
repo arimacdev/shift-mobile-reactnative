@@ -49,6 +49,23 @@ const CustomDrawerContentComponent = props => {
     setShowMessageModal(false);
   };
 
+  //Refer https://auth0.com/docs/logout/log-users-out-of-idps#federated-logout-support
+  //But not worked
+  const googleLogOut = async () => {
+    const logoutEndpoint = await AsyncStorage.getItem('logoutEndpoint');
+    try {
+      let response = await axios({
+        url: logoutEndpoint + '?federated',
+        method: 'GET',
+      });
+      if (response.status === 200) {
+        //code here
+      }
+    } catch (error) {
+      Utils.showAlert(true, '', 'Logout error', props);
+    }
+  };
+
   const logOut = async () => {
     const accessToken = await AsyncStorage.getItem('accessToken');
     const logoutEndpoint = await AsyncStorage.getItem('logoutEndpoint');
@@ -58,6 +75,7 @@ const CustomDrawerContentComponent = props => {
         method: 'GET',
       });
       if (response.status === 200) {
+        // googleLogOut();
         AsyncStorage.clear();
         OneSignal.setSubscription(false);
         NavigationService.navigate('ConfigurationScreen');
