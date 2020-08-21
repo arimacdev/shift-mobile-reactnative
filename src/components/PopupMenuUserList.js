@@ -73,8 +73,14 @@ class PopupMenuUserList extends Component {
   }
 
   componentDidMount() {
-    if (this.props.activeUsers) {
-      this.getActiveUserList(this.props.projectID);
+    if (this.props.activeUsersData) {
+      // this.getActiveUserList(this.props.projectID);
+      this.DataLength = this.props.dataLength;
+      this.setState({
+        activeUsers: this.props.activeUsers,
+        allActiveUsers: this.props.activeUsers,
+        // dataLoading: false,
+      });
     } else {
       this.getUserList();
     }
@@ -163,14 +169,22 @@ class PopupMenuUserList extends Component {
       prevProps.addPeopleModelVisible !== this.props.addPeopleModelVisible &&
       this.props.addPeopleModelVisible
     ) {
-      this.setState({opened: this.props.addPeopleModelVisible});
+      this.setState({
+        opened: this.props.addPeopleModelVisible,
+        activeUsers: this.props.activeUsers,
+        allActiveUsers: this.props.activeUsers,
+      });
     }
 
     if (
       prevProps.addPeopleModelVisible !== this.props.addPeopleModelVisible &&
       !this.props.addPeopleModelVisible
     ) {
-      this.setState({opened: this.props.addPeopleModelVisible});
+      this.setState({
+        opened: this.props.addPeopleModelVisible,
+        activeUsers: this.props.activeUsers,
+        allActiveUsers: this.props.activeUsers,
+      });
     }
 
     if (prevProps.userName !== this.props.userName) {

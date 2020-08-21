@@ -162,6 +162,8 @@ class TasksTabScreen extends Component {
       duedate: '',
       dueTime: '',
       flatListScrollOffset: 0,
+      activeUsers: [],
+      dataLength: 0,
     };
 
     this.onDateChange = this.onDateChange.bind(this);
@@ -186,6 +188,7 @@ class TasksTabScreen extends Component {
         },
         () => {
           this.getAllTaskInProject();
+          this.getActiveUserList(selectedProjectID);
         },
       );
     }
@@ -226,14 +229,17 @@ class TasksTabScreen extends Component {
     //     this.getAllTaskInProject();
     //   },
     // );
+    // this.getActiveUserList(selectedProjectID);
   }
 
   componentWillMount() {
+    let selectedProjectID = this.props.selectedProjectID;
+
     BackHandler.addEventListener(
       'hardwareBackPress',
       this.handleBackButtonClick,
     );
-    // this.getAllTaskInProject();
+    this.getActiveUserList(selectedProjectID);
   }
 
   componentWillUnmount() {
@@ -263,6 +269,48 @@ class TasksTabScreen extends Component {
         selectedEndDate: null,
       });
     }
+  }
+
+  async getActiveUserList(projectID) {
+    this.setState({dataLoading: true});
+    let activeUsers = await APIServices.getAllUsersByProjectId(projectID);
+    if (activeUsers.message == 'success') {
+      let userList = [];
+      activeUsers.data.sort(this.arrayCompare);
+      for (let i = 0; i < activeUsers.data.length; i++) {
+        if (activeUsers.data[i].firstName && activeUsers.data[i].lastName) {
+          userList.push({
+            key: activeUsers.data[i].userId,
+            label:
+              activeUsers.data[i].firstName +
+              ' ' +
+              activeUsers.data[i].lastName,
+            userImage: activeUsers.data[i].profileImage,
+          });
+        }
+      }
+      this.setState({
+        activeUsers: userList,
+        dataLength: userList.length,
+        dataLoading: false,
+      });
+    } else {
+      console.log('error');
+      this.setState({dataLoading: false});
+    }
+  }
+
+  arrayCompare(a, b) {
+    const firstNameA = a.firstName.toUpperCase();
+    const firstNameB = b.firstName.toUpperCase();
+
+    let comparison = 0;
+    if (firstNameA > firstNameB) {
+      comparison = 1;
+    } else if (firstNameA < firstNameB) {
+      comparison = -1;
+    }
+    return comparison;
   }
 
   async getAllTaskInProject() {
@@ -1080,14 +1128,18 @@ class TasksTabScreen extends Component {
     let mainTaskTextChange = this.state.mainTaskTextChange;
     let subtaskTextInputIndex = this.state.subtaskTextInputIndex;
     let flatListScrollOffset = this.state.flatListScrollOffset;
+    let activeUsers = this.state.activeUsers;
+    let dataLength = this.state.dataLength;
 
     return (
       <PopupMenuUserList
         addPeopleModelVisible={this.state.showUserListModal}
         onSelect={item => this.onTaskSelectUser(item)}
         userName={this.state.userName}
-        activeUsers={true}
+        activeUsersData={true}
         projectID={this.props.selectedProjectID}
+        activeUsers={activeUsers}
+        dataLength={dataLength}
         keyboardValue={0}
         // backgroundColor={colors.colorShuttleGrey}
         // textColor={colors.white}

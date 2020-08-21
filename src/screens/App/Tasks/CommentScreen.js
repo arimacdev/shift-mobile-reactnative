@@ -119,6 +119,8 @@ class ChatScreen extends Component {
       commentListHeight: null,
       iskeyboardOn: false,
       projectId: '',
+      activeUsers: [],
+      dataLength: 0,
     };
     this.editor = null;
   }
@@ -142,6 +144,7 @@ class ChatScreen extends Component {
       projectId: projectId,
     });
     this.fetchData(taskId, this.state.listStartIndex, this.state.listEndIndex);
+    this.getActiveUserList(projectId);
     this.keyboardDidShowSub = Keyboard.addListener(
       'keyboardDidShow',
       this.handleKeyboardDidShow,
@@ -1184,14 +1187,62 @@ class ChatScreen extends Component {
     }
   }
 
+  async getActiveUserList(projectID) {
+    this.setState({dataLoading: true});
+    let activeUsers = await APIServices.getAllUsersByProjectId(projectID);
+    if (activeUsers.message == 'success') {
+      let userList = [];
+      activeUsers.data.sort(this.arrayCompareUser);
+      for (let i = 0; i < activeUsers.data.length; i++) {
+        if (activeUsers.data[i].firstName && activeUsers.data[i].lastName) {
+          userList.push({
+            key: activeUsers.data[i].userId,
+            label:
+              activeUsers.data[i].firstName +
+              ' ' +
+              activeUsers.data[i].lastName,
+            userImage: activeUsers.data[i].profileImage,
+          });
+        }
+      }
+      this.setState({
+        activeUsers: userList,
+        dataLength: userList.length,
+        dataLoading: false,
+      });
+    } else {
+      console.log('error');
+      this.setState({dataLoading: false});
+    }
+  }
+
+  arrayCompareUser(a, b) {
+    const firstNameA = a.firstName.toUpperCase();
+    const firstNameB = b.firstName.toUpperCase();
+
+    let comparison = 0;
+    if (firstNameA > firstNameB) {
+      comparison = 1;
+    } else if (firstNameA < firstNameB) {
+      comparison = -1;
+    }
+    return comparison;
+  }
+
   renderUserListModal() {
+    let activeUsers = this.state.activeUsers;
+    let dataLength = this.state.dataLength;
     return (
       <PopupMenuUserList
         addPeopleModelVisible={this.state.showUserListModal}
         onSelect={item => this.onSelectUser(item)}
         userName={this.state.userName}
-        activeUsers={true}
+        activeUsersData={true}
         projectID={this.state.projectId}
+        activeUsers={activeUsers}
+        dataLength={dataLength}
+        hasBackdrop={false}
+        coverScreen={false}
       />
     );
   }
