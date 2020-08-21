@@ -57,7 +57,7 @@ class PopupMenuUserList extends Component {
 
   _keyboardDidShow(e) {
     console.log('Keyboard Show');
-    this.DataLength = this.state.allActiveUsers.length;
+    this.DataLength = this.props.activeUsers.length;
     // alert('Keyboard Shown');
     this.setState({keyboardHeight: height * 0.85 - e.endCoordinates.height});
   }
