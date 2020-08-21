@@ -41,7 +41,10 @@ class OtherBoard extends Component {
       cachecdData: [],
       cachecdMyListData: [],
       listScrolled: false,
+      dalaLength: 0,
     };
+    this.lazyFetchData = this.lazyFetchData.bind(this);
+    this.onMyListScroll = this.onMyListScroll.bind(this);
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {}
@@ -53,7 +56,7 @@ class OtherBoard extends Component {
   async getAllTaskDataInProject() {
     let startIndex = 0;
     let endIndex = 10;
-    let allTasks = true;
+    let allTasks = false;
     try {
       this.setState({dataLoading: true});
       this.getAllTaskInDefaultBoardDataDirectly(startIndex, endIndex, allTasks);
@@ -95,6 +98,7 @@ class OtherBoard extends Component {
             tasks: this.state.tasks.concat(dataArray),
             cachecdMyListData: cachedDataArray,
             dataLoading: false,
+            dalaLength: taskData.data.length,
           },
           () => {},
         );
@@ -108,6 +112,34 @@ class OtherBoard extends Component {
 
   onMyListScroll(event) {
     this.setState({listScrolled: true});
+  }
+
+  async lazyFetchData() {
+    if (this.state.dalaLength == 10 && this.state.listScrolled == true) {
+      let listStartIndex = this.state.listStartIndex + 10;
+      let listEndIndex = this.state.listEndIndex + 10;
+      let allTasks = false;
+      try {
+        this.setState({dataLoading: true});
+        await this.getAllTaskInDefaultBoardDataDirectly(
+          listStartIndex,
+          listEndIndex,
+          allTasks,
+        );
+      } catch (error) {
+        this.setState({dataLoading: false});
+      }
+      this.setState({
+        listStartIndex: listStartIndex,
+        listEndIndex: listEndIndex,
+      });
+    } else {
+      // TODO: Add toast
+    }
+    // let selectedProjectID = this.state.selectedProjectID;
+    // AsyncStorage.getItem('userID').then(userID => {
+    //   this.props.getMyTaskInProjects(userID, selectedProjectID, myListStartIndex, myListEndIndex);
+    // });
   }
 
   async getAllSprintInProject(taskData) {
@@ -178,6 +210,9 @@ class OtherBoard extends Component {
               data={data.item.tasks}
               renderItem={this.renderItemSubTile.bind(this)}
               keyExtractor={item => item.id}
+              onEndReached={this.lazyFetchData}
+              onEndReachedThreshold={0.7}
+              onScroll={this.onMyListScroll}
               // ListEmptyComponent={<EmptyListView />}
             />
           </View>
