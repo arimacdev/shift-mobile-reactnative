@@ -138,7 +138,9 @@ class LoginScreen extends Component {
       })
       .catch(err => {
         this.setState({dataLoading: false});
-        Utils.showAlert(true, '', 'Data loading error', this.props);
+        if(err.responce.status != 422){
+          Utils.showAlert(true, '', 'Data loading error', this.props);
+        }
       });
   }
 

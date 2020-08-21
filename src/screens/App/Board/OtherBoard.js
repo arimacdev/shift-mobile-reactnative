@@ -207,9 +207,9 @@ class OtherBoard extends Component {
               data={data.item.tasks}
               renderItem={this.renderItemSubTile.bind(this)}
               keyExtractor={item => item.id}
-              onEndReached={this.lazyFetchData}
-              onEndReachedThreshold={0.7}
-              onScroll={this.onMyListScroll}
+              // onEndReached={this.lazyFetchData}
+              // onEndReachedThreshold={0.7}
+              // onScroll={this.onMyListScroll}
               // ListEmptyComponent={<EmptyListView />}
             />
           </View>
