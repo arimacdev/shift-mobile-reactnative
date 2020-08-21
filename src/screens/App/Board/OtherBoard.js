@@ -93,15 +93,12 @@ class OtherBoard extends Component {
           }
         }
         this.getAllSprintInProject(dataArray);
-        this.setState(
-          {
-            tasks: this.state.tasks.concat(dataArray),
-            cachecdMyListData: cachedDataArray,
-            dataLoading: false,
-            dalaLength: taskData.data.length,
-          },
-          () => {},
-        );
+        this.setState({
+          tasks: this.state.tasks.concat(dataArray),
+          cachecdMyListData: cachedDataArray,
+          dataLoading: false,
+          dalaLength: taskData.data.length,
+        });
       } else {
         this.setState({dataLoading: false});
       }
