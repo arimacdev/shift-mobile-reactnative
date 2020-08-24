@@ -139,51 +139,7 @@ class LoginScreen extends Component {
       .catch(async error => {
         this.setState({dataLoading: false});
         if (error.status == 422) {
-          // this.initialUserLogin();
-          const refreshToken = await AsyncStorage.getItem('refreshToken');
-          const issuer = await AsyncStorage.getItem('issuer');
-          const authorizationEndpoint = await AsyncStorage.getItem(
-            'authorizationEndpoint',
-          );
-          const tokenEndpoint = await AsyncStorage.getItem('tokenEndpoint');
-
-          const config = {
-            issuer: issuer,
-            serviceConfiguration: {
-              authorizationEndpoint: authorizationEndpoint,
-              tokenEndpoint: tokenEndpoint,
-            },
-            clientId: 'pmtool-frontend',
-            redirectUrl: 'com.arimacpmtool:/oauthredirect',
-            scopes: ['openid', 'roles', 'profile'],
-            dangerouslyAllowInsecureHttpRequests: true,
-          };
-          try {
-            const result = await refresh(config, {
-              refreshToken: refreshToken,
-            });
-            AsyncStorage.setItem('accessToken', result.accessToken);
-            AsyncStorage.setItem('refreshToken', result.refreshToken);
-            console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', error);
-            console.log('result.refreshToken',result.refreshToken);
-            let decoded = jwtDecode(result.accessToken);
-            let accessTokenExpirationDate = decoded.exp.toString();
-            AsyncStorage.setItem(
-              'accessTokenExpirationDate',
-              accessTokenExpirationDate,
-            );
-            AsyncStorage.setItem('userID', decoded.userId);
-            AsyncStorage.setItem('userLoggedIn', 'true');
-            let userType = decoded.realm_access.roles[0]
-              ? decoded.realm_access.roles[0]
-              : '';
-            AsyncStorage.setItem('userType', userType);
-            this.fetchDataUserData(decoded.userId, userType);
-          } catch (error) {
-            console.log('xxxxxxxxxxxxxxxxxxxxxxxx', error);
-            AsyncStorage.clear();
-            NavigationService.navigate('Splash');
-          }
+          this.refreshToken();
         } else {
           Utils.showAlert(true, '', 'Data loading error', this.props);
         }
@@ -215,12 +171,12 @@ class LoginScreen extends Component {
   }
 
   async refreshToken() {
-    const refreshToken = await AsyncStorage.getItem('refreshToken');
     const issuer = await AsyncStorage.getItem('issuer');
     const authorizationEndpoint = await AsyncStorage.getItem(
       'authorizationEndpoint',
     );
     const tokenEndpoint = await AsyncStorage.getItem('tokenEndpoint');
+    const refreshToken = await AsyncStorage.getItem('refreshToken');
 
     const config = {
       issuer: issuer,
@@ -233,6 +189,29 @@ class LoginScreen extends Component {
       scopes: ['openid', 'roles', 'profile'],
       dangerouslyAllowInsecureHttpRequests: true,
     };
+    try {
+      const result = await refresh(config, {
+        refreshToken: refreshToken,
+      });
+      AsyncStorage.setItem('accessToken', result.accessToken);
+      AsyncStorage.setItem('refreshToken', result.refreshToken);
+      let decoded = jwtDecode(result.accessToken);
+      let accessTokenExpirationDate = decoded.exp.toString();
+      AsyncStorage.setItem(
+        'accessTokenExpirationDate',
+        accessTokenExpirationDate,
+      );
+      AsyncStorage.setItem('userID', decoded.userId);
+      AsyncStorage.setItem('userLoggedIn', 'true');
+      let userType = decoded.realm_access.roles[0]
+        ? decoded.realm_access.roles[0]
+        : '';
+      AsyncStorage.setItem('userType', userType);
+      this.fetchDataUserData(decoded.userId, userType);
+    } catch (error) {
+      AsyncStorage.clear();
+      NavigationService.navigate('Auth');
+    }
   }
 
   async initialUserLogin() {
@@ -251,15 +230,20 @@ class LoginScreen extends Component {
         'accessTokenExpirationDate',
         accessTokenExpirationDate,
       );
-      AsyncStorage.setItem('userID', decoded.userId);
+      AsyncStorage.setItem(
+        'userID',
+        decoded.userId == null ? 'null' : decoded.userId,
+      );
       AsyncStorage.setItem('userLoggedIn', 'true');
       let userType = decoded.realm_access.roles[0]
         ? decoded.realm_access.roles[0]
         : '';
       AsyncStorage.setItem('userType', userType);
       this.fetchDataUserData(decoded.userId, userType);
-      //NavigationService.navigate('App');
-    } catch (error) {}
+    } catch (error) {
+      AsyncStorage.clear();
+      NavigationService.navigate('Auth');
+    }
   }
 
   render() {
