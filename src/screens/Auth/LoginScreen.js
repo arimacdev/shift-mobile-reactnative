@@ -171,26 +171,9 @@ class LoginScreen extends Component {
   }
 
   async refreshToken() {
-    const issuer = await AsyncStorage.getItem('issuer');
-    const authorizationEndpoint = await AsyncStorage.getItem(
-      'authorizationEndpoint',
-    );
-    const tokenEndpoint = await AsyncStorage.getItem('tokenEndpoint');
     const refreshToken = await AsyncStorage.getItem('refreshToken');
-
-    const config = {
-      issuer: issuer,
-      serviceConfiguration: {
-        authorizationEndpoint: authorizationEndpoint,
-        tokenEndpoint: tokenEndpoint,
-      },
-      clientId: 'pmtool-frontend',
-      redirectUrl: 'com.arimacpmtool:/oauthredirect',
-      scopes: ['openid', 'roles', 'profile'],
-      dangerouslyAllowInsecureHttpRequests: true,
-    };
     try {
-      const result = await refresh(config, {
+      const result = await refresh(this.config, {
         refreshToken: refreshToken,
       });
       AsyncStorage.setItem('accessToken', result.accessToken);
