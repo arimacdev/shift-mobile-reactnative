@@ -13,7 +13,7 @@ import {connect} from 'react-redux';
 import * as actions from '../../redux/actions';
 import colors from '../../config/colors';
 import strings from '../../config/strings';
-import {authorize} from 'react-native-app-auth';
+import {authorize, refresh} from 'react-native-app-auth';
 import AsyncStorage from '@react-native-community/async-storage';
 import NavigationService from '../../services/NavigationService';
 import EStyleSheet from 'react-native-extended-stylesheet';
@@ -136,10 +136,54 @@ class LoginScreen extends Component {
         this.setOneSignalUserId();
         NavigationService.navigate('App');
       })
-      .catch(err => {
+      .catch(async error => {
         this.setState({dataLoading: false});
-        if(err.responce.status == 422){
-          this.initialUserLogin();
+        if (error.status == 422) {
+          // this.initialUserLogin();
+          const refreshToken = await AsyncStorage.getItem('refreshToken');
+          const issuer = await AsyncStorage.getItem('issuer');
+          const authorizationEndpoint = await AsyncStorage.getItem(
+            'authorizationEndpoint',
+          );
+          const tokenEndpoint = await AsyncStorage.getItem('tokenEndpoint');
+
+          const config = {
+            issuer: issuer,
+            serviceConfiguration: {
+              authorizationEndpoint: authorizationEndpoint,
+              tokenEndpoint: tokenEndpoint,
+            },
+            clientId: 'pmtool-frontend',
+            redirectUrl: 'com.arimacpmtool:/oauthredirect',
+            scopes: ['openid', 'roles', 'profile'],
+            dangerouslyAllowInsecureHttpRequests: true,
+          };
+          try {
+            const result = await refresh(config, {
+              refreshToken: refreshToken,
+            });
+            AsyncStorage.setItem('accessToken', result.accessToken);
+            AsyncStorage.setItem('refreshToken', result.refreshToken);
+            console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', error);
+            console.log('result.refreshToken',result.refreshToken);
+            let decoded = jwtDecode(result.accessToken);
+            let accessTokenExpirationDate = decoded.exp.toString();
+            AsyncStorage.setItem(
+              'accessTokenExpirationDate',
+              accessTokenExpirationDate,
+            );
+            AsyncStorage.setItem('userID', decoded.userId);
+            AsyncStorage.setItem('userLoggedIn', 'true');
+            let userType = decoded.realm_access.roles[0]
+              ? decoded.realm_access.roles[0]
+              : '';
+            AsyncStorage.setItem('userType', userType);
+            this.fetchDataUserData(decoded.userId, userType);
+          } catch (error) {
+            console.log('xxxxxxxxxxxxxxxxxxxxxxxx', error);
+            AsyncStorage.clear();
+            NavigationService.navigate('Splash');
+          }
         } else {
           Utils.showAlert(true, '', 'Data loading error', this.props);
         }
@@ -168,6 +212,27 @@ class LoginScreen extends Component {
           });
       }
     });
+  }
+
+  async refreshToken() {
+    const refreshToken = await AsyncStorage.getItem('refreshToken');
+    const issuer = await AsyncStorage.getItem('issuer');
+    const authorizationEndpoint = await AsyncStorage.getItem(
+      'authorizationEndpoint',
+    );
+    const tokenEndpoint = await AsyncStorage.getItem('tokenEndpoint');
+
+    const config = {
+      issuer: issuer,
+      serviceConfiguration: {
+        authorizationEndpoint: authorizationEndpoint,
+        tokenEndpoint: tokenEndpoint,
+      },
+      clientId: 'pmtool-frontend',
+      redirectUrl: 'com.arimacpmtool:/oauthredirect',
+      scopes: ['openid', 'roles', 'profile'],
+      dangerouslyAllowInsecureHttpRequests: true,
+    };
   }
 
   async initialUserLogin() {
