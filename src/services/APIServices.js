@@ -3547,9 +3547,19 @@ async function blockUserData(projectID, userId) {
   return request(
     {
       url:
-        baseURL + BLOCK_USER + '/' + projectID + '/users/' + userId + '/block',
+        baseURL +
+        BLOCK_USER +
+        '/' +
+        projectID +
+        '/users/' +
+        userIDHeder +
+        '/block',
       method: 'POST',
-      data: {},
+      data: {
+        blockedStatus: true,
+        blockedUserId: userId,
+        executorId: userIDHeder,
+      },
     },
     true,
     headers,
