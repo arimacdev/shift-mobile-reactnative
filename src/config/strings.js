@@ -28,6 +28,7 @@ const strings = {
       tokenEndpoint: 'https://slack.com/api/oauth.v2.access',
     },
     dangerouslyAllowInsecureHttpRequests: true,
+    // additionalParameters: { prompt: 'login' } // If uncommment then the user will always be shown the login prompt.
   },
 
   oneSignal: {
