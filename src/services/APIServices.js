@@ -92,6 +92,7 @@ import {
   UPDATE_PROJECT_FOLDER,
   DELETE_PROJECT_FOLDER,
   MOVE_FILES_BETWEEN_FOLDERS,
+  BLOCK_USER,
 } from '../api/API';
 import AsyncStorage from '@react-native-community/async-storage';
 import {SET_UPLOAD_PROGRESS} from '../redux/types';
@@ -3531,6 +3532,30 @@ async function moveFilesBetweenFoldersData(
   );
 }
 
+async function blockUserData(projectID, userId) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
+  let userIDHeder = null;
+  userIDHeder = await AsyncStorage.getItem('userID');
+
+  let headers = {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+    user: userIDHeder,
+  };
+
+  return request(
+    {
+      url:
+        baseURL + BLOCK_USER + '/' + projectID + '/users/' + userId + '/block',
+      method: 'POST',
+      data: {},
+    },
+    true,
+    headers,
+  );
+}
+
 const APIServices = {
   getAllProjectsByUserData,
   getUserData,
@@ -3652,6 +3677,7 @@ const APIServices = {
   updateFolderData,
   deleteFolderData,
   moveFilesBetweenFoldersData,
+  blockUserData,
 };
 
 export default APIServices;
