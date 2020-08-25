@@ -24,9 +24,19 @@ import AsyncStorage from '@react-native-community/async-storage';
 import Loader from '../../../components/Loader';
 import {NavigationEvents} from 'react-navigation';
 import EmptyListView from '../../../components/EmptyListView';
+import MessageShowModal from '../../../components/MessageShowModal';
 const initialLayout = {width: entireScreenWidth};
 
 class PeopleScreen extends Component {
+  details = {
+    icon: icons.alertRed,
+    type: 'confirm',
+    title: 'Block User',
+    description:
+      "You're about to permanently block this user from the project.\nIf you're not sure, you can close this pop up.",
+    buttons: {positive: 'Delete', negative: 'Cancel'},
+  };
+
   constructor(props) {
     super(props);
     this.state = {
@@ -34,6 +44,8 @@ class PeopleScreen extends Component {
       admins: [],
       users: [],
       dataLoading: false,
+      showMessageModal: false,
+      blockUserId: '',
     };
   }
 
@@ -111,6 +123,43 @@ class PeopleScreen extends Component {
     });
   };
 
+  blockPeople(item) {
+    this.setState({showMessageModal: true, blockUserId: item.assigneeId});
+  }
+
+  async blockUser() {
+    let selectedProjectID = this.props.selectedProjectID;
+    let blockUserId = this.state.blockUserId;
+    try {
+      this.setState({dataLoading: true, showMessageModal: false});
+      let blockPeopleData = await APIServices.blockUserData(
+        selectedProjectID,
+        blockUserId,
+      );
+      if (blockPeopleData.message == 'success') {
+        this.details = {
+          icon: icons.userGreen,
+          type: 'success',
+          title: 'Success',
+          description: 'User have been blocked successfully',
+          buttons: {},
+        };
+        this.setState({
+          dataLoading: false,
+          showMessageModal: true,
+        });
+      } else {
+        this.setState({dataLoading: false});
+      }
+    } catch (error) {
+      this.setState({dataLoading: false});
+    }
+  }
+
+  onPressCancel() {
+    this.setState({showMessageModal: false});
+  }
+
   userIcon = function(item) {
     let userImage = item.assigneeProfileImage;
     if (userImage) {
@@ -148,14 +197,14 @@ class PeopleScreen extends Component {
                   source={icons.editRoundWhite}
                 />
               </TouchableOpacity>
-
-              {/*do not remove. this for further implementation*/}
-              {/* <TouchableOpacity style={{marginLeft: EStyleSheet.value('24rem')}}>
-              <Image
-                style={styles.controlIcon}
-                source={icons.deleteRoundRed}
-              />
-            </TouchableOpacity> */}
+              <TouchableOpacity
+                onPress={() => this.blockPeople(item)}
+                style={{marginLeft: EStyleSheet.value('24rem')}}>
+                <Image
+                  style={styles.controlIcon}
+                  source={icons.deleteRoundRed}
+                />
+              </TouchableOpacity>
             </View>
           ) : null}
         </View>
@@ -231,6 +280,12 @@ class PeopleScreen extends Component {
           />
         </ScrollView>
         {dataLoading && <Loader />}
+        <MessageShowModal
+          showMessageModal={this.state.showMessageModal}
+          details={this.details}
+          onPress={() => this.blockUser(this)}
+          onPressCancel={() => this.onPressCancel(this)}
+        />
       </View>
     );
   }
