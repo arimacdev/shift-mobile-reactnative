@@ -51,20 +51,12 @@ class PeopleScreen extends Component {
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (prevProps.isActive !== this.props.isActive && this.props.isActive) {
-      AsyncStorage.getItem('userID').then(userID => {
-        if (userID) {
-          this.fetchData(userID);
-        }
-      });
+      this.tabOpen();
     }
   }
 
   componentDidMount() {
-    AsyncStorage.getItem('userID').then(userID => {
-      if (userID) {
-        this.fetchData(userID);
-      }
-    });
+    this.tabOpen();
   }
 
   async fetchData(userID) {
@@ -124,6 +116,14 @@ class PeopleScreen extends Component {
   };
 
   blockPeople(item) {
+    this.details = {
+      icon: icons.alertRed,
+      type: 'confirm',
+      title: 'Block User',
+      description:
+        "You're about to permanently block this user from the project.\nIf you're not sure, you can close this pop up.",
+      buttons: {positive: 'Delete', negative: 'Cancel'},
+    };
     this.setState({showMessageModal: true, blockUserId: item.assigneeId});
   }
 
@@ -148,6 +148,7 @@ class PeopleScreen extends Component {
           dataLoading: false,
           showMessageModal: true,
         });
+        this.tabOpen();
       } else {
         this.setState({dataLoading: false});
       }
