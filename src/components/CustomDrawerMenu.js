@@ -23,7 +23,6 @@ import OneSignal from 'react-native-onesignal';
 import APIServices from '../services/APIServices';
 import MessageShowModal from './MessageShowModal';
 import Utils from '../utils/Utils';
-import {revoke} from 'react-native-app-auth';
 
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
@@ -49,54 +48,6 @@ const CustomDrawerContentComponent = props => {
     setShowMessageModal(false);
   };
 
-  //Refer https://auth0.com/docs/logout/log-users-out-of-idps#federated-logout-support
-  //But not worked
-  const googleLogOut = async () => {
-    try {
-      const refreshToken = await AsyncStorage.getItem('refreshToken');
-      const accessToken = await AsyncStorage.getItem('accessToken');
-      const issuer = await AsyncStorage.getItem('issuer');
-      const authorizationEndpoint = await AsyncStorage.getItem(
-        'authorizationEndpoint',
-      );
-      const tokenEndpoint = await AsyncStorage.getItem('tokenEndpoint');
-
-      const config = {
-        issuer: 'https://accounts.google.com',
-        clientId:
-          '148457760054-hn0hmmph37b1fa7ii2paf1jrhv9a1h5d.apps.googleusercontent.com',
-        redirectUrl:
-          'com.googleusercontent.apps.148457760054-hn0hmmph37b1fa7ii2paf1jrhv9a1h5d:/oauth2redirect/google',
-        scopes: ['openid', 'profile'],
-        dangerouslyAllowInsecureHttpRequests: true,
-        additionalParameters: { prompt: 'login' }
-      };
-
-      const result = await revoke(config, {
-        tokenToRevoke: accessToken,
-        // includeBasicAuth: true,
-        // sendClientId: true,
-      });
-
-      console.log('result', result);
-    } catch (error) {
-      console.log('error', error);
-    }
-
-    // const logoutEndpoint = await AsyncStorage.getItem('logoutEndpoint');
-    // try {
-    //   let response = await axios({
-    //     url: logoutEndpoint + '?federated',
-    //     method: 'GET',
-    //   });
-    //   if (response.status === 200) {
-    //     //code here
-    //   }
-    // } catch (error) {
-    //   Utils.showAlert(true, '', 'Logout error', props);
-    // }
-  };
-
   const logOut = async () => {
     const accessToken = await AsyncStorage.getItem('accessToken');
     const logoutEndpoint = await AsyncStorage.getItem('logoutEndpoint');
@@ -106,7 +57,6 @@ const CustomDrawerContentComponent = props => {
         method: 'GET',
       });
       if (response.status === 200) {
-        // googleLogOut();
         AsyncStorage.clear();
         OneSignal.setSubscription(false);
         NavigationService.navigate('ConfigurationScreen');

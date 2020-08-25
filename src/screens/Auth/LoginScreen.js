@@ -97,6 +97,7 @@ class LoginScreen extends Component {
           redirectUrl: 'com.arimacpmtool:/oauthredirect',
           scopes: ['openid', 'roles', 'profile'],
           dangerouslyAllowInsecureHttpRequests: true,
+          additionalParameters: {prompt: 'login'},
         };
         if (
           platform == 'android' &&
