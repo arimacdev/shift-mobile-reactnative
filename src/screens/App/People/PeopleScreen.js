@@ -43,6 +43,7 @@ class PeopleScreen extends Component {
       owner: [],
       admins: [],
       users: [],
+      blockedUsers: [],
       dataLoading: false,
       showMessageModal: false,
       blockUserId: '',
@@ -73,6 +74,8 @@ class PeopleScreen extends Component {
         let ownerArray = [];
         let adminsArray = [];
         let usersArray = [];
+        let blockedusersArray = [];
+
         ownerArray = projectPeopleData.data.filter(function(obj) {
           return obj.projectRoleId == 1;
         });
@@ -80,13 +83,17 @@ class PeopleScreen extends Component {
           return obj.projectRoleId == 2;
         });
         usersArray = projectPeopleData.data.filter(function(obj) {
-          return obj.projectRoleId == 3;
+          return obj.projectRoleId == 3 && obj.isBlocked == false;
+        });
+        blockedusersArray = projectPeopleData.data.filter(function(obj) {
+          return obj.projectRoleId == 3 && obj.isBlocked == true;
         });
 
         this.setState({
           owner: ownerArray,
           admins: adminsArray,
           users: usersArray,
+          blockedUsers: blockedusersArray,
           dataLoading: false,
         });
       } else {
@@ -265,9 +272,7 @@ class PeopleScreen extends Component {
 
   render() {
     let dataLoading = this.state.dataLoading;
-    let owner = this.state.owner;
-    let admins = this.state.admins;
-    let users = this.state.users;
+    
     return (
       <View style={{flex: 1}}>
         <TouchableOpacity onPress={() => this.goToAddPeople()}>
@@ -317,7 +322,7 @@ class PeopleScreen extends Component {
           <Text style={styles.subTitle}>Blocked Users</Text>
           <FlatList
             style={styles.flalList}
-            data={this.state.users}
+            data={this.state.blockedUsers}
             renderItem={({item}) => this.renderPeopleList(item, false, true)}
             keyExtractor={item => item.projId}
           />
