@@ -34,7 +34,7 @@ class PeopleScreen extends Component {
     title: 'Block User',
     description:
       "You're about to permanently block this user from the project.\nIf you're not sure, you can close this pop up.",
-    buttons: {positive: 'Delete', negative: 'Cancel'},
+    buttons: {positive: 'Block', negative: 'Cancel'},
   };
 
   constructor(props) {
@@ -123,7 +123,7 @@ class PeopleScreen extends Component {
       title: 'Block User',
       description:
         "You're about to permanently block this user from the project.\nIf you're not sure, you can close this pop up.",
-      buttons: {positive: 'Delete', negative: 'Cancel'},
+      buttons: {positive: 'Block', negative: 'Cancel'},
     };
     this.setState({showMessageModal: true, blockUserId: item.assigneeId});
   }
@@ -131,10 +131,13 @@ class PeopleScreen extends Component {
   async blockUser() {
     let selectedProjectID = this.props.selectedProjectID;
     let blockUserId = this.state.blockUserId;
+    let blockedStatus = true;
+
     try {
       this.setState({dataLoading: true, showMessageModal: false});
-      let blockPeopleData = await APIServices.blockUserData(
+      let blockPeopleData = await APIServices.blockUnblockUserData(
         selectedProjectID,
+        blockedStatus,
         blockUserId,
       );
       if (blockPeopleData.message == 'success') {

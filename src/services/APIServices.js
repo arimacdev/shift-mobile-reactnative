@@ -3532,7 +3532,7 @@ async function moveFilesBetweenFoldersData(
   );
 }
 
-async function blockUserData(projectID, userId) {
+async function blockUnblockUserData(projectID, blockedStatus, blockedUserId) {
   let baseURL = null;
   baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
@@ -3556,8 +3556,8 @@ async function blockUserData(projectID, userId) {
         '/block',
       method: 'POST',
       data: {
-        blockedStatus: true,
-        blockedUserId: userId,
+        blockedStatus: blockedStatus,
+        blockedUserId: blockedUserId,
         executorId: userIDHeder,
       },
     },
@@ -3687,7 +3687,7 @@ const APIServices = {
   updateFolderData,
   deleteFolderData,
   moveFilesBetweenFoldersData,
-  blockUserData,
+  blockUnblockUserData,
 };
 
 export default APIServices;
