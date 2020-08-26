@@ -292,6 +292,12 @@ export const addUserToProject = (
             type: ADD_PEOPLE_TO_PROJECT_FAILED_MASSAGE,
             payload: errorMsg,
           });
+        } else if (error.status == 500) {
+          let errorMsg = error.data.message;
+          dispatch({
+            type: ADD_PEOPLE_TO_PROJECT_FAILED_MASSAGE,
+            payload: 'User alrady exist in this project',
+          });
         } else {
           dispatch({type: ADD_PEOPLE_TO_PROJECT_FAILED});
         }
