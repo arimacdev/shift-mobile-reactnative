@@ -68,6 +68,7 @@ class PeopleScreen extends Component {
         userID,
       );
       if (projectPeopleData.message == 'success') {
+        this.props.setProjectUsers(projectPeopleData);
         let ownerArray = [];
         let adminsArray = [];
         let usersArray = [];

@@ -547,6 +547,7 @@ const mapStateToProps = state => {
     addPeopleProjectError: state.project.addPeopleProjectError,
     addPeopleProjectSuccess: state.project.addPeopleProjectSuccess,
     addPeopleProjectErrorMessage: state.project.addPeopleProjectErrorMessage,
+    projectUsers: state.users.projectUsers
   };
 };
 export default connect(
