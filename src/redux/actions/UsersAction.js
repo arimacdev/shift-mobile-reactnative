@@ -14,6 +14,7 @@ import {
   USER_TYPE_DATA_SUCCESS,
   DRAWER_ITEM_SELECT,
   DESTROY_SESSION,
+  GET_PROJECT_USERS,
 } from '../types';
 import APIServices from '../../services/APIServices';
 
@@ -147,6 +148,15 @@ export const destroySession = () => {
     dispatch({
       type: DESTROY_SESSION,
       payload: undefined,
+    });
+  };
+};
+
+export const setProjectUsers = (data) => {
+  return dispatch => {
+    dispatch({
+      type: GET_PROJECT_USERS,
+      payload: data,
     });
   };
 };
