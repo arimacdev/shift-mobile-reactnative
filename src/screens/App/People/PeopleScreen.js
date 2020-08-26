@@ -83,10 +83,10 @@ class PeopleScreen extends Component {
           return obj.projectRoleId == 2;
         });
         usersArray = projectPeopleData.data.filter(function(obj) {
-          return obj.projectRoleId == 3 && obj.isBlocked == false;
+          return obj.projectRoleId == 3 && obj.isUserBlocked == false;
         });
         blockedusersArray = projectPeopleData.data.filter(function(obj) {
-          return obj.projectRoleId == 3 && obj.isBlocked == true;
+          return obj.projectRoleId == 3 && obj.isUserBlocked == true;
         });
 
         this.setState({
@@ -272,7 +272,11 @@ class PeopleScreen extends Component {
 
   render() {
     let dataLoading = this.state.dataLoading;
-    
+    let owner = this.state.owner;
+    let admins = this.state.admins;
+    let users = this.state.users;
+    let blockedUsers = this.state.blockedUsers;
+
     return (
       <View style={{flex: 1}}>
         <TouchableOpacity onPress={() => this.goToAddPeople()}>
@@ -295,37 +299,64 @@ class PeopleScreen extends Component {
         </TouchableOpacity>
 
         <ScrollView style={styles.subContainer}>
-          <Text style={styles.subTitle}>Project Owner</Text>
-          <FlatList
-            style={styles.flalList}
-            data={this.state.owner}
-            renderItem={({item}) => this.renderPeopleList(item, true, false)}
-            keyExtractor={item => item.projId}
-            // ListEmptyComponent={<EmptyListView />}
-            // onRefresh={() => this.onRefresh()}
-            // refreshing={isFetching}
-          />
-          <Text style={styles.subTitle}>Admins</Text>
-          <FlatList
-            style={styles.flalList}
-            data={this.state.admins}
-            renderItem={({item}) => this.renderPeopleList(item, false, false)}
-            keyExtractor={item => item.projId}
-          />
-          <Text style={styles.subTitle}>Other Users</Text>
-          <FlatList
-            style={styles.flalList}
-            data={this.state.users}
-            renderItem={({item}) => this.renderPeopleList(item, false, false)}
-            keyExtractor={item => item.projId}
-          />
-          <Text style={styles.subTitle}>Blocked Users</Text>
-          <FlatList
-            style={styles.flalList}
-            data={this.state.blockedUsers}
-            renderItem={({item}) => this.renderPeopleList(item, false, true)}
-            keyExtractor={item => item.projId}
-          />
+          {owner.length > 0 ? (
+            <View>
+              <Text style={styles.subTitle}>Project Owner</Text>
+              <FlatList
+                style={styles.flalList}
+                data={owner}
+                renderItem={({item}) =>
+                  this.renderPeopleList(item, true, false)
+                }
+                keyExtractor={item => item.projId}
+                // ListEmptyComponent={<EmptyListView />}
+                // onRefresh={() => this.onRefresh()}
+                // refreshing={isFetching}
+              />
+            </View>
+          ) : null}
+
+          {admins.length > 0 ? (
+            <View>
+              <Text style={styles.subTitle}>Admins</Text>
+              <FlatList
+                style={styles.flalList}
+                data={admins}
+                renderItem={({item}) =>
+                  this.renderPeopleList(item, false, false)
+                }
+                keyExtractor={item => item.projId}
+              />
+            </View>
+          ) : null}
+
+          {users.length > 0 ? (
+            <View>
+              <Text style={styles.subTitle}>Other Users</Text>
+              <FlatList
+                style={styles.flalList}
+                data={users}
+                renderItem={({item}) =>
+                  this.renderPeopleList(item, false, false)
+                }
+                keyExtractor={item => item.projId}
+              />
+            </View>
+          ) : null}
+
+          {blockedUsers.length > 0 ? (
+            <View>
+              <Text style={styles.subTitle}>Blocked Users</Text>
+              <FlatList
+                style={styles.flalList}
+                data={blockedUsers}
+                renderItem={({item}) =>
+                  this.renderPeopleList(item, false, true)
+                }
+                keyExtractor={item => item.projId}
+              />
+            </View>
+          ) : null}
         </ScrollView>
         {dataLoading && <Loader />}
         <MessageShowModal
@@ -344,10 +375,10 @@ const styles = EStyleSheet.create({
     backgroundColor: colors.projectBgColor,
     borderRadius: '5rem',
     marginHorizontal: '20rem',
-    marginVertical: '7rem',
+    marginVertical: '5rem',
   },
   subContainer: {
-    // marginBottom: '65rem',
+    marginTop: '15rem',
   },
   button: {
     flexDirection: 'row',
@@ -422,7 +453,7 @@ const styles = EStyleSheet.create({
     flexDirection: 'row',
   },
   flalList: {
-    marginTop: '30rem',
+    marginTop: '15rem',
     marginBottom: '10rem',
   },
   subTitle: {
