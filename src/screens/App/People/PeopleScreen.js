@@ -33,7 +33,7 @@ class PeopleScreen extends Component {
     type: 'confirm',
     title: 'Block User',
     description:
-      "You're about to permanently block this user from the project.\nIf you're not sure, you can close this pop up.",
+      "You're about to block this user from the project.\nIf you're not sure, you can close this pop up.",
     buttons: {positive: 'Block', negative: 'Cancel'},
   };
 
@@ -46,6 +46,7 @@ class PeopleScreen extends Component {
       dataLoading: false,
       showMessageModal: false,
       blockUserId: '',
+      blockUserStatus: false,
     };
   }
 
@@ -68,7 +69,7 @@ class PeopleScreen extends Component {
         userID,
       );
       if (projectPeopleData.message == 'success') {
-        this.props.setProjectUsers(projectPeopleData);
+        // this.props.setProjectUsers(projectPeopleData);
         let ownerArray = [];
         let adminsArray = [];
         let usersArray = [];
@@ -122,16 +123,36 @@ class PeopleScreen extends Component {
       type: 'confirm',
       title: 'Block User',
       description:
-        "You're about to permanently block this user from the project.\nIf you're not sure, you can close this pop up.",
+        "You're about to block this user from the project.\nIf you're not sure, you can close this pop up.",
       buttons: {positive: 'Block', negative: 'Cancel'},
     };
-    this.setState({showMessageModal: true, blockUserId: item.assigneeId});
+    this.setState({
+      showMessageModal: true,
+      blockUserId: item.assigneeId,
+      blockUserStatus: true,
+    });
   }
 
-  async blockUser() {
+  unblockPeople(item) {
+    this.details = {
+      icon: icons.alertRed,
+      type: 'confirm',
+      title: 'Unblock User',
+      description:
+        "You're about to unblock this user from the project.\nIf you're not sure, you can close this pop up.",
+      buttons: {positive: 'Unblock', negative: 'Cancel'},
+    };
+    this.setState({
+      showMessageModal: true,
+      blockUserId: item.assigneeId,
+      blockUserStatus: false,
+    });
+  }
+
+  async blockUnblockUser() {
     let selectedProjectID = this.props.selectedProjectID;
     let blockUserId = this.state.blockUserId;
-    let blockedStatus = true;
+    let blockedStatus = this.state.blockUserStatus;
 
     try {
       this.setState({dataLoading: true, showMessageModal: false});
@@ -145,7 +166,9 @@ class PeopleScreen extends Component {
           icon: icons.userGreen,
           type: 'success',
           title: 'Success',
-          description: 'User have been blocked successfully',
+          description: blockedStatus
+            ? 'User have been blocked successfully'
+            : 'User have been unblocked successfully',
           buttons: {},
         };
         this.setState({
@@ -178,7 +201,7 @@ class PeopleScreen extends Component {
     }
   };
 
-  renderPeopleList(item, fromOwner) {
+  renderPeopleList(item, fromOwner, fromUnblock) {
     let progress = 0;
     if (item.totalTasks > 0) {
       progress = item.tasksCompleted / item.totalTasks;
@@ -203,11 +226,19 @@ class PeopleScreen extends Component {
                 />
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={() => this.blockPeople(item)}
+                onPress={() =>
+                  fromUnblock
+                    ? this.unblockPeople(item)
+                    : this.blockPeople(item)
+                }
                 style={{marginLeft: EStyleSheet.value('24rem')}}>
                 <Image
                   style={styles.controlIcon}
-                  source={icons.deleteRoundRed}
+                  source={
+                    fromUnblock
+                      ? icons.addUserRoundedGreen
+                      : icons.deleteRoundRed
+                  }
                 />
               </TouchableOpacity>
             </View>
@@ -238,7 +269,7 @@ class PeopleScreen extends Component {
     let admins = this.state.admins;
     let users = this.state.users;
     return (
-      <View>
+      <View style={{flex: 1}}>
         <TouchableOpacity onPress={() => this.goToAddPeople()}>
           <View style={styles.button}>
             <Image
@@ -263,7 +294,7 @@ class PeopleScreen extends Component {
           <FlatList
             style={styles.flalList}
             data={this.state.owner}
-            renderItem={({item}) => this.renderPeopleList(item, true)}
+            renderItem={({item}) => this.renderPeopleList(item, true, false)}
             keyExtractor={item => item.projId}
             // ListEmptyComponent={<EmptyListView />}
             // onRefresh={() => this.onRefresh()}
@@ -273,14 +304,21 @@ class PeopleScreen extends Component {
           <FlatList
             style={styles.flalList}
             data={this.state.admins}
-            renderItem={({item}) => this.renderPeopleList(item, false)}
+            renderItem={({item}) => this.renderPeopleList(item, false, false)}
             keyExtractor={item => item.projId}
           />
           <Text style={styles.subTitle}>Other Users</Text>
           <FlatList
             style={styles.flalList}
             data={this.state.users}
-            renderItem={({item}) => this.renderPeopleList(item, false)}
+            renderItem={({item}) => this.renderPeopleList(item, false, false)}
+            keyExtractor={item => item.projId}
+          />
+          <Text style={styles.subTitle}>Blocked Users</Text>
+          <FlatList
+            style={styles.flalList}
+            data={this.state.users}
+            renderItem={({item}) => this.renderPeopleList(item, false, true)}
             keyExtractor={item => item.projId}
           />
         </ScrollView>
@@ -288,7 +326,7 @@ class PeopleScreen extends Component {
         <MessageShowModal
           showMessageModal={this.state.showMessageModal}
           details={this.details}
-          onPress={() => this.blockUser(this)}
+          onPress={() => this.blockUnblockUser(this)}
           onPressCancel={() => this.onPressCancel(this)}
         />
       </View>
@@ -304,7 +342,7 @@ const styles = EStyleSheet.create({
     marginVertical: '7rem',
   },
   subContainer: {
-    marginBottom: '65rem',
+    // marginBottom: '65rem',
   },
   button: {
     flexDirection: 'row',
