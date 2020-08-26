@@ -193,7 +193,6 @@ class LoginScreen extends Component {
       AsyncStorage.setItem('userType', userType);
       this.fetchDataUserData(decoded.userId, userType);
     } catch (error) {
-      AsyncStorage.clear();
       NavigationService.navigate('Auth');
     }
   }
@@ -225,7 +224,6 @@ class LoginScreen extends Component {
       AsyncStorage.setItem('userType', userType);
       this.fetchDataUserData(decoded.userId, userType);
     } catch (error) {
-      AsyncStorage.clear();
       NavigationService.navigate('Auth');
     }
   }
