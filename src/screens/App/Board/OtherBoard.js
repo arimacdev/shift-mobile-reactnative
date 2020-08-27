@@ -195,7 +195,6 @@ class OtherBoard extends Component {
             </View>
             <View style={{alignSelf: 'flex-start'}}>
               <PopupMenuNormal
-                // customStyle={styles.menuItems}
                 data={menuItems}
                 onChange={item => this.onMenuItemChange(item, data)}
               />
