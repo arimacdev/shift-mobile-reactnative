@@ -45,10 +45,17 @@ class DefaultBoard extends Component {
     this.fetchData();
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.isActive !== this.props.isActive && this.props.isActive) {
+      this.fetchData();
+    }
+    
+  }
+
   async fetchData() {
     let startIndex = 0;
     let endIndex = 10;
-    let allTasks = false;
+    let allTasks = true;
     try {
       this.setState({dataLoading: true});
       let taskData = await this.getAllTaskInDefaultBoardDataDirectly(

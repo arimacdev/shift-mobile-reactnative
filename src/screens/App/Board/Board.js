@@ -40,7 +40,7 @@ class Board extends Component {
             selectedProjectID={projectId}
             navigation={this.props.navigation}
             selectedProjectName={projectName}
-            //   isActive={isActive}
+            isActive={this.props.isActive}
           />
         );
       case 1:
@@ -57,6 +57,7 @@ class Board extends Component {
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (prevProps.isActive !== this.props.isActive && this.props.isActive) {
+      this.setState({selectedIndex: 0});
       AsyncStorage.getItem('userID').then(userID => {
         if (userID) {
           // this.fetchData(userID);
