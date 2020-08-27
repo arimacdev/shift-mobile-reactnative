@@ -80,13 +80,13 @@ class PeopleScreen extends Component {
           return obj.projectRoleId == 1;
         });
         adminsArray = projectPeopleData.data.filter(function(obj) {
-          return obj.projectRoleId == 2;
+          return obj.projectRoleId == 2 && obj.isUserBlocked == false;
         });
         usersArray = projectPeopleData.data.filter(function(obj) {
           return obj.projectRoleId == 3 && obj.isUserBlocked == false;
         });
         blockedusersArray = projectPeopleData.data.filter(function(obj) {
-          return obj.projectRoleId == 3 && obj.isUserBlocked == true;
+          return obj.isUserBlocked == true;
         });
 
         this.setState({
