@@ -235,9 +235,9 @@ class DefaultBoard extends Component {
     let dataLoading = this.state.dataLoading;
     return (
       <View>
-        {/* <NavigationEvents
+        <NavigationEvents
           onWillFocus={payload => this.loadDefulatBords(payload)}
-        /> */}
+        />
         <View>
           {this.state.tasks.length > 0 && (
             <View style={styles.subContainer}>
