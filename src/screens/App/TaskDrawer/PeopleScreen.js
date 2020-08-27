@@ -139,7 +139,7 @@ class PeopleScreen extends Component {
     let owner = this.state.owner;
     let users = this.state.users;
     return (
-      <View>
+      <View style={{flex:1}}>
         <NavigationEvents onWillFocus={payload => this.tabOpen(payload)} />
         <TouchableOpacity onPress={() => this.goToAddPeople()}>
           <View style={styles.button}>
@@ -191,10 +191,10 @@ const styles = EStyleSheet.create({
     backgroundColor: colors.projectBgColor,
     borderRadius: '5rem',
     marginHorizontal: '20rem',
-    marginVertical: '7rem',
+    marginVertical: '5rem',
   },
   subContainer: {
-    marginBottom: '65rem',
+    marginTop: '15rem',
   },
   button: {
     flexDirection: 'row',
@@ -259,7 +259,7 @@ const styles = EStyleSheet.create({
     flexDirection: 'row',
   },
   flalList: {
-    marginTop: '30rem',
+    marginTop: '15rem',
     marginBottom: '10rem',
   },
   subTitle: {
