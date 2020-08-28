@@ -299,7 +299,12 @@ class ChatScreen extends Component {
       let endIndex = this.state.listEndIndex + 10;
       let allComments = false;
       this.setState({isFetching: true}, function() {
-        this.LazyFetchData(this.state.taskId, startIndex, endIndex, allComments);
+        this.LazyFetchData(
+          this.state.taskId,
+          startIndex,
+          endIndex,
+          allComments,
+        );
         this.setState({listStartIndex: startIndex, listEndIndex: endIndex});
       });
     } else {
