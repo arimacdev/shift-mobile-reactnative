@@ -413,7 +413,7 @@ class Tasks extends Component {
               style={{
                 marginBottom: EStyleSheet.value('15rem'),
               }}
-              data={index == 0 ? item.childTasks : item.childTasks}
+              data={item.childTasks}
               renderItem={({item}) =>
                 this.renderSubTasksList(item, parentTaskName)
               }
@@ -518,7 +518,6 @@ class Tasks extends Component {
     let filterdDataAllTaks = this.state.filterdDataAllTaks;
     let selectedTypeAllTasks = this.state.selectedTypeAllTasks;
     let dataLoading = this.state.dataLoading;
-    selectedTypeAllTasks;
     let taskName = this.state.taskName;
     let filter = this.state.filter;
     let showAlert = this.state.showAlert;
@@ -629,20 +628,17 @@ const styles = EStyleSheet.create({
     flex: 1,
   },
   subContainerWhite: {
-    marginBottom: '65rem',
     backgroundColor: colors.white,
     borderRadius: '5rem',
-    marginHorizontal: '05rem',
     marginTop: '7rem',
     marginBottom: '150rem',
   },
   subContainer: {
-    marginBottom: '65rem',
+    marginBottom: '80rem',
     backgroundColor: colors.projectBgColor,
     borderRadius: '5rem',
-    marginHorizontal: '0rem',
-    marginTop: '7rem',
-    marginBottom: '150rem',
+    marginHorizontal: '20rem',
+    marginTop: '5rem',
   },
   projectFilerView: {
     backgroundColor: colors.projectBgColor,
@@ -658,19 +654,15 @@ const styles = EStyleSheet.create({
   text: {
     fontSize: '11rem',
     color: colors.projectTaskNameColor,
-    textAlign: 'center',
     fontWeight: 'bold',
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
     marginLeft: '10rem',
-    fontWeight: '400',
   },
   textDate: {
-    fontFamily: 'CircularStd-Book',
     fontSize: '9rem',
     fontWeight: '400',
-    textAlign: 'center',
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
