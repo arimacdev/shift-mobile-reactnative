@@ -1253,10 +1253,15 @@ async function getAllTaskByGroup(selectedTaskGroupId) {
   );
 }
 
-async function addTaskGroupTaskData(taskName, taskGroupId) {
+async function addTaskGroupTaskData(
+  taskName,
+  taskGroupId,
+  taskAssignee,
+  taskDueDate,
+) {
   let baseURL = null;
   baseURL = await AsyncStorage.getItem('baseURL');
-  let taskGroupCreator = null;
+  let taskInitiator = null;
   taskInitiator = await AsyncStorage.getItem('userID');
 
   let headers = {
@@ -1273,6 +1278,8 @@ async function addTaskGroupTaskData(taskName, taskGroupId) {
         taskGroupId: taskGroupId,
         taskInitiator: taskInitiator,
         parentTaskId: null,
+        taskAssignee: taskAssignee == '' ? taskInitiator : taskAssignee,
+        taskDueDate: taskDueDate,
       },
     },
     true,

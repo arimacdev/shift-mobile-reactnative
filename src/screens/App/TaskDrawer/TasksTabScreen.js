@@ -8,6 +8,7 @@ import EditTask from './EditTask';
 import PeopleScreen from './PeopleScreen';
 import {TabView, TabBar} from 'react-native-tab-view';
 import EStyleSheet from 'react-native-extended-stylesheet';
+import { MenuProvider } from 'react-native-popup-menu';
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
 
@@ -85,14 +86,16 @@ class TasksTabScreen extends Component {
 
   render() {
     return (
-      <TabView
-        lazy
-        navigationState={{index: this.state.index, routes: this.state.routes}}
-        renderScene={route => this.renderScene(route)}
-        onIndexChange={index => this.setState({index})}
-        initialLayout={initialLayout}
-        renderTabBar={props => this.renderTabBar(props)}
-      />
+      <MenuProvider style={{flex: 1}}>
+        <TabView
+          lazy
+          navigationState={{index: this.state.index, routes: this.state.routes}}
+          renderScene={route => this.renderScene(route)}
+          onIndexChange={index => this.setState({index})}
+          initialLayout={initialLayout}
+          renderTabBar={props => this.renderTabBar(props)}
+        />
+      </MenuProvider>
     );
   }
 }
