@@ -8,7 +8,7 @@ const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
 import DefaultBoard from './DefaultBoard';
 import OtherBoard from './OtherBoard';
-import AsyncStorage from '@react-native-community/async-storage';
+import colors from '../../../config/colors';
 
 class Board extends Component {
   constructor(props) {
@@ -58,21 +58,10 @@ class Board extends Component {
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (prevProps.isActive !== this.props.isActive && this.props.isActive) {
       this.setState({selectedIndex: 0});
-      AsyncStorage.getItem('userID').then(userID => {
-        if (userID) {
-          // this.fetchData(userID);
-        }
-      });
     }
   }
 
-  componentDidMount() {
-    AsyncStorage.getItem('userID').then(userID => {
-      if (userID) {
-        // this.fetchData(userID);
-      }
-    });
-  }
+  componentDidMount() {}
 
   render() {
     const buttons = ['Default Borad', 'Other Borad'];
@@ -86,13 +75,13 @@ class Board extends Component {
           containerStyle={
             selectedIndex == 0 ? styles.defaultBoardView : styles.otherBoardView
           }
-          selectedButtonStyle={{backgroundColor: '#0bafff'}}
+          selectedButtonStyle={{backgroundColor: colors.colorDeepSkyBlue}}
           textStyle={{
             fontFamily: 'CircularStd-Medium',
             fontWeight: 'bold',
             fontSize: 14,
           }}
-          disabledTextStyle={{color: '#080848'}}
+          disabledTextStyle={{color: colors.colorMidnightExpress}}
         />
         {this.renderPage()}
       </View>
