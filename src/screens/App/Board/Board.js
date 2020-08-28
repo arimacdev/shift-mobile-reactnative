@@ -97,7 +97,7 @@ const styles = EStyleSheet.create({
     marginLeft: '5%',
     marginRight: '5%',
     borderRadius: 10,
-    backgroundColor: '#edf0f5',
+    backgroundColor: colors.projectBgColor,
   },
   otherBoardView: {
     height: 60,
@@ -106,7 +106,7 @@ const styles = EStyleSheet.create({
     marginLeft: '5%',
     marginRight: '8%',
     borderRadius: '10rem',
-    backgroundColor: '#edf0f5',
+    backgroundColor: colors.projectBgColor,
   },
 });
 
