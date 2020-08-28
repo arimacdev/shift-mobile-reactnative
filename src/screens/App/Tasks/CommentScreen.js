@@ -9,13 +9,9 @@ import {
   TextInput,
   Animated,
   Keyboard,
-  Alert,
   UIManager,
-  TouchableWithoutFeedback,
-  KeyboardAvoidingView,
   Linking,
   Platform,
-  StatusBar,
 } from 'react-native';
 import {connect} from 'react-redux';
 import * as actions from '../../../redux/actions';
@@ -23,16 +19,14 @@ import colors from '../../../config/colors';
 import icons from '../../../asserts/icons/icons';
 import EStyleSheet from 'react-native-extended-stylesheet';
 const entireScreenWidth = Dimensions.get('window').width;
-const entireScreenHeight = Dimensions.get('window').height;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
 import FadeIn from 'react-native-fade-in-image';
 import Loader from '../../../components/Loader';
 import ImagePicker from 'react-native-image-picker';
-import {NavigationEvents} from 'react-navigation';
 // import io from 'socket.io-client';
 import APIServices from '../../../services/APIServices';
 import moment from 'moment';
-import {StompEventTypes, withStomp, Client} from 'react-stompjs';
+import {StompEventTypes, withStomp} from 'react-stompjs';
 import EmojiSelector from 'react-native-emoji-selector';
 import Modal from 'react-native-modal';
 import Utils from '../../../utils/Utils';
@@ -42,15 +36,14 @@ import {MenuProvider} from 'react-native-popup-menu';
 import DocumentPicker from 'react-native-document-picker';
 import AsyncStorage from '@react-native-community/async-storage';
 import Swipeable from 'react-native-swipeable';
-import RichTextEditor from '../../../components/RichTextEditor';
 import MessageShowModal from '../../../components/MessageShowModal';
 import RichTextEditorPell from '../../../components/RichTextEditorPell';
 import EmptyListView from '../../../components/EmptyListView';
 import AndroidKeyboardAdjust from 'react-native-android-keyboard-adjust';
 import PopupMenuUserList from '../../../components/PopupMenuUserList';
-import DOMParser from 'react-native-html-parser';
 import DomSelector from 'react-native-dom-parser';
 import DeviceInfo from 'react-native-device-info';
+import Toast from 'react-native-simple-toast';
 
 const reactionDetails = [
   {value: '&#128077', text: '👍'},
@@ -143,7 +136,7 @@ class ChatScreen extends Component {
       taskId: taskId,
       projectId: projectId,
     });
-    this.fetchData(taskId, this.state.listStartIndex, this.state.listEndIndex);
+    this.fetchData(taskId);
     this.getActiveUserList(projectId);
     this.keyboardDidShowSub = Keyboard.addListener(
       'keyboardDidShow',
@@ -202,7 +195,6 @@ class ChatScreen extends Component {
 
   componentDidMount() {
     let taskId = this.state.taskId;
-    let userId = AsyncStorage.getItem('userID');
 
     this.props.stompContext.addStompEventListener(
       StompEventTypes.Connect,
@@ -214,11 +206,7 @@ class ChatScreen extends Component {
             let messageDecode = JSON.parse(message.body);
             console.log('messageDecode', messageDecode);
             // if (messageDecode.sender != userId) {
-            this.fetchData(
-              taskId,
-              this.state.listStartIndex,
-              this.state.listEndIndex,
-            );
+            this.fetchData(taskId);
             // }
           });
       },
@@ -243,7 +231,7 @@ class ChatScreen extends Component {
     );
   }
 
-  async fetchData(taskId, startIndex, endIndex) {
+  async fetchData(taskId) {
     this.setState({dataLoading: true});
     await APIServices.getCommentsData(taskId, 0, 10, false)
       .then(response => {
@@ -262,7 +250,7 @@ class ChatScreen extends Component {
           this.setState({dataLoading: false});
         }
       })
-      .catch(error => {
+      .catch(() => {
         this.setState({dataLoading: false});
         // Utils.showAlert(true, '', error.data.message, this.props);
       });
@@ -286,7 +274,7 @@ class ChatScreen extends Component {
           this.setState({dataLoading: false});
         }
       })
-      .catch(error => {
+      .catch(() => {
         this.setState({dataLoading: false});
         Utils.showAlert(true, '', 'Data loading error', this.props);
       });
@@ -308,7 +296,7 @@ class ChatScreen extends Component {
         this.setState({listStartIndex: startIndex, listEndIndex: endIndex});
       });
     } else {
-      // show toast
+      Toast.show('All comments are loadded');
     }
   }
 
@@ -356,7 +344,7 @@ class ChatScreen extends Component {
           this.setState({dataLoading: false});
         }
       })
-      .catch(error => {
+      .catch(() => {
         this.setState({dataLoading: false});
         Utils.showAlert(true, '', 'Faild to submit the reaction', this.props);
       });
@@ -923,7 +911,7 @@ class ChatScreen extends Component {
     if (Platform.OS == 'ios') {
       const {height: windowHeight} = Dimensions.get('window');
       const keyboardHeight = event.endCoordinates.height;
-      this.commentList.measure((fx, fy, width, height, px, py) => {
+      this.commentList.measure((fx, fy, width, height) => {
         this.setState({commentListHeight: height, iskeyboardOn: true}, () => {
           if (
             this.state.commentListHeight > 400 ||
@@ -932,7 +920,6 @@ class ChatScreen extends Component {
             this.setState({
               currentKeyboardHeight: windowHeight - keyboardHeight - 200,
             });
-          } else {
           }
         });
       });
@@ -1257,8 +1244,6 @@ class ChatScreen extends Component {
     let comments = this.state.comments;
     let isFetching = this.state.isFetching;
     let sortedData = comments.sort(this.arrayCompare);
-    let edit = this.state.edit;
-    const {shift} = this.state;
 
     return (
       <MenuProvider>
