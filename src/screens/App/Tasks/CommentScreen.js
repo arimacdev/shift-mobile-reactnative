@@ -245,7 +245,7 @@ class ChatScreen extends Component {
 
   async fetchData(taskId, startIndex, endIndex) {
     this.setState({dataLoading: true});
-    await APIServices.getCommentsData(taskId, 0, 10)
+    await APIServices.getCommentsData(taskId, 0, 10, false)
       .then(response => {
         if (response.message == 'success') {
           this.setState({dataLoading: false, comments: response.data});
@@ -268,9 +268,9 @@ class ChatScreen extends Component {
       });
   }
 
-  async LazyFetchData(taskId, startIndex, endIndex) {
+  async LazyFetchData(taskId, startIndex, endIndex, allComments) {
     this.setState({dataLoading: true});
-    await APIServices.getCommentsData(taskId, startIndex, endIndex)
+    await APIServices.getCommentsData(taskId, startIndex, endIndex, allComments)
       .then(response => {
         if (response.message == 'success') {
           this.setState({
@@ -297,8 +297,9 @@ class ChatScreen extends Component {
     if (this.state.isListLoadable) {
       let startIndex = this.state.listStartIndex + 10;
       let endIndex = this.state.listEndIndex + 10;
+      let allComments = false;
       this.setState({isFetching: true}, function() {
-        this.LazyFetchData(this.state.taskId, startIndex, endIndex);
+        this.LazyFetchData(this.state.taskId, startIndex, endIndex, allComments);
         this.setState({listStartIndex: startIndex, listEndIndex: endIndex});
       });
     } else {

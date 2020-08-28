@@ -3033,7 +3033,7 @@ async function setOneSignalNotificationStatusData(
     headers,
   );
 }
-async function getCommentsData(taskId, startIndex, endIndex) {
+async function getCommentsData(taskId, startIndex, endIndex, allComments) {
   let commentstartIndex = startIndex;
   let commentendIndex = endIndex;
   let baseURL = null;
@@ -3057,7 +3057,9 @@ async function getCommentsData(taskId, startIndex, endIndex) {
         '/comment?startIndex=' +
         commentstartIndex +
         '&endIndex=' +
-        commentendIndex,
+        commentendIndex +
+        '&allComments=' +
+        allComments,
       method: 'GET',
     },
     true,
