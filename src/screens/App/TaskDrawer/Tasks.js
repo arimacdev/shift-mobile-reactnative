@@ -118,7 +118,6 @@ class Tasks extends Component {
     let selectedTaskGroupId = this.state.selectedTaskGroupId;
     this.setState({dataLoading: true});
     let allTaskData = await APIServices.getAllTaskByGroup(selectedTaskGroupId);
-    console.log(allTaskData);
     if (allTaskData.message == 'success') {
       this.setState({
         dataLoading: false,

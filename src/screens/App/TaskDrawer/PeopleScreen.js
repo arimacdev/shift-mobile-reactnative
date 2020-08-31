@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {
-  StyleSheet,
   View,
   FlatList,
   Image,
@@ -20,7 +19,6 @@ import FadeIn from 'react-native-fade-in-image';
 import * as Progress from 'react-native-progress';
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
-import AsyncStorage from '@react-native-community/async-storage';
 import Loader from '../../../components/Loader';
 import {NavigationEvents} from 'react-navigation';
 const initialLayout = {width: entireScreenWidth};
@@ -206,7 +204,6 @@ const styles = EStyleSheet.create({
     backgroundColor: colors.lightBlue,
     borderRadius: '5rem',
     marginTop: '17rem',
-    flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: '12rem',
     height: '55rem',
@@ -241,8 +238,7 @@ const styles = EStyleSheet.create({
   },
   subText: {
     fontSize: '10rem',
-    color: '#b9b9b9',
-    textAlign: 'center',
+    color: colors.colorSilver,
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
@@ -251,8 +247,7 @@ const styles = EStyleSheet.create({
   },
   subTextName: {
     fontSize: '12rem',
-    color: '#080848',
-    textAlign: 'center',
+    color: colors.colorMidnightExpress,
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
