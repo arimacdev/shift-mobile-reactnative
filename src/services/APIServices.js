@@ -2521,7 +2521,13 @@ async function filterTaskByTaskTypeData(selectedProjectID, issueType) {
   );
 }
 
-async function addSubTaskGroupTaskData(taskName, taskGroupId, parentTaskId) {
+async function addSubTaskGroupTaskData(
+  taskName,
+  taskGroupId,
+  parentTaskId,
+  taskAssignee,
+  taskDueDate,
+) {
   let baseURL = null;
   baseURL = await AsyncStorage.getItem('baseURL');
   let taskInitiator = await AsyncStorage.getItem('userID');
@@ -2540,6 +2546,8 @@ async function addSubTaskGroupTaskData(taskName, taskGroupId, parentTaskId) {
         taskGroupId: taskGroupId,
         taskInitiator: taskInitiator,
         parentTaskId: parentTaskId,
+        taskAssignee: taskAssignee == '' ? taskInitiator : taskAssignee,
+        taskDueDate: taskDueDate,
       },
     },
     true,
