@@ -15,7 +15,6 @@ import icons from '../../../asserts/icons/icons';
 import EStyleSheet from 'react-native-extended-stylesheet';
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
-import AsyncStorage from '@react-native-community/async-storage';
 import Loader from '../../../components/Loader';
 import FadeIn from 'react-native-fade-in-image';
 import APIServices from '../../../services/APIServices';
@@ -181,7 +180,6 @@ const styles = EStyleSheet.create({
     paddingHorizontal: '12rem',
     height: '45rem',
     marginHorizontal: '20rem',
-    flexDirection: 'row',
   },
   projectView: {
     height: '70rem',
@@ -194,7 +192,6 @@ const styles = EStyleSheet.create({
   text: {
     fontSize: '12rem',
     color: colors.projectText,
-    textAlign: 'center',
     fontWeight: 'bold',
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
@@ -209,7 +206,6 @@ const styles = EStyleSheet.create({
   textInput: {
     fontSize: '12rem',
     color: colors.gray,
-    textAlign: 'center',
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Book',
     textAlign: 'left',
