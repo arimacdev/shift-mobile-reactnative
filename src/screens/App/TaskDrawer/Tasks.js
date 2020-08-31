@@ -25,6 +25,7 @@ import APIServices from '../../../services/APIServices';
 import Triangle from 'react-native-triangle';
 import EmptyListView from '../../../components/EmptyListView';
 import AwesomeAlert from 'react-native-awesome-alerts';
+import PopupMenuUserList from '../../../components/PopupMenuUserList';
 
 let dropData = [
   {
@@ -42,6 +43,9 @@ let dropData = [
 ];
 
 class Tasks extends Component {
+  selectedUserList = [];
+  subTaskTextInputs = [];
+
   constructor(props) {
     super(props);
     this.state = {
@@ -59,7 +63,20 @@ class Tasks extends Component {
       showAlert: false,
       alertTitle: '',
       alertMsg: '',
+      duedate: '',
+      mainTaskTextChange: true,
+      userName: '',
+      subtaskTextInputIndex: 0,
+      showUserListModal: false,
+      showDatePicker: false,
+      activeUsers: [],
+      dataLength: 0,
     };
+  }
+
+  componentWillMount() {
+    let selectedTaskGroupId = this.props.selectedTaskGroupId;
+    this.getActiveUserList(selectedTaskGroupId);
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -71,6 +88,7 @@ class Tasks extends Component {
         },
         () => {
           this.getAllTaskInGroup();
+          this.getActiveUserList(selectedTaskGroupId);
         },
       );
     }
@@ -273,18 +291,74 @@ class Tasks extends Component {
     });
   }
 
+  onFocusMainTextInput() {
+    if (this.state.taskName == '') {
+      this.setState({
+        showUserListModal: false,
+        textInputs: [],
+        duedate: '',
+      });
+      this.selectedUserList = [];
+    }
+  }
+
   onNewTaskNameChange(text) {
-    this.setState({taskName: text});
+    this.setState({taskName: text, textInputs: [], mainTaskTextChange: true});
+
+    //showAssignee
+    let lengthOfAt = text.split('@').length - 1;
+    let nAt = text.lastIndexOf('@');
+    let resultAt = text.substring(nAt + 1);
+    if (text.match('@') && resultAt == '' && lengthOfAt == 1) {
+      this.setState({showUserListModal: true, userName: ''});
+      this.mainTaskTextInput.blur();
+    } else {
+      this.setState({showUserListModal: false});
+    }
+
+    //showDatePicker
+    let lengthOfHash = text.split('#').length - 1;
+    let n = text.lastIndexOf('#');
+    let result = text.substring(n + 1);
+    if (text.match('#') && result == '' && lengthOfHash == 1) {
+      this.setState({showDatePicker: true});
+    } else {
+      this.setState({showDatePicker: false});
+    }
   }
 
   async onNewTaskNameSubmit() {
+    let duedate = this.state.duedate != '' ? this.state.duedate : '';
     try {
-      let taskName = this.state.taskName;
+      let taskName =
+        this.state.taskName.split('@')[0] == undefined
+          ? this.state.taskName
+          : this.state.taskName.split('@')[0].trim();
+
+      let tasksNameFilter =
+        taskName.split('#')[0] == undefined
+          ? taskName
+          : taskName.split('#')[0].trim();
+
+      let taskAssignee =
+        this.selectedUserList.length > 0 ? this.selectedUserList[0].userId : '';
+
+      let taskDueDate =
+        duedate != ''
+          ? moment(
+              moment(duedate).format('DD MM YYYY'),
+              'DD/MM/YYYY hh:mmA',
+            ).format('YYYY-MM-DD[T]HH:mm:ss')
+          : '';
+
       let selectedTaskGroupId = this.state.selectedTaskGroupId;
+
       this.setState({dataLoading: true});
       let newGroupTaskData = await APIServices.addTaskGroupTaskData(
-        taskName,
+        tasksNameFilter,
         selectedTaskGroupId,
+        taskAssignee,
+        taskDueDate,
       );
       if (newGroupTaskData.message == 'success') {
         this.setState({dataLoading: false, taskName: ''});
@@ -323,6 +397,111 @@ class Tasks extends Component {
       this.setState({dataLoading: false, textInputs: []});
       this.showAlert('', 'New sub task added fail');
     }
+  }
+
+  async onTaskSelectUser(item) {
+    let {textInputs} = this.state;
+    let mainTaskTextChange = this.state.mainTaskTextChange;
+    let taskName = this.state.taskName;
+    let subtaskTextInputIndex = this.state.subtaskTextInputIndex;
+    let userName = this.state.userName;
+
+    this.selectedUserList = [];
+    this.selectedUserList.push({
+      username: item.label,
+      userId: item.key,
+    });
+
+    let name = mainTaskTextChange
+      ? taskName
+      : textInputs[subtaskTextInputIndex];
+
+    let replasedText = name
+      .substring(0, name.lastIndexOf('@'))
+      .replace('/' + userName + '/', '');
+
+    await this.setState({
+      showUserListModal: false,
+    });
+
+    if (mainTaskTextChange) {
+      this.setState({
+        taskName: replasedText.concat('@' + item.label + ' '),
+      });
+      this.mainTaskTextInput.focus();
+    } else {
+      textInputs[subtaskTextInputIndex] = replasedText.concat(
+        '@' + item.label + ' ',
+      );
+      this.setState({textInputs});
+      this.subTaskTextInputs[subtaskTextInputIndex].focus();
+    }
+  }
+
+  async getActiveUserList(selectedTaskGroupId) {
+    this.setState({dataLoading: true});
+    let activeUsers = await APIServices.getTaskPeopleData(selectedTaskGroupId);
+    if (activeUsers.message == 'success') {
+      let userList = [];
+      activeUsers.data.sort(this.arrayCompare);
+      for (let i = 0; i < activeUsers.data.length; i++) {
+        if (
+          activeUsers.data[i].assigneeFirstName &&
+          activeUsers.data[i].assigneeLastName
+        ) {
+          userList.push({
+            key: activeUsers.data[i].assigneeId,
+            label:
+              activeUsers.data[i].assigneeFirstName +
+              ' ' +
+              activeUsers.data[i].assigneeLastName,
+            userImage: activeUsers.data[i].assigneeProfileImage,
+          });
+        }
+      }
+      await this.setState({
+        activeUsers: userList,
+        dataLength: userList.length,
+        dataLoading: false,
+      });
+    } else {
+      console.log('error');
+      this.setState({dataLoading: false});
+    }
+  }
+
+  arrayCompare(a, b) {
+    const firstNameA = a.assigneeFirstName.toUpperCase();
+    const firstNameB = b.assigneeFirstName.toUpperCase();
+
+    let comparison = 0;
+    if (firstNameA > firstNameB) {
+      comparison = 1;
+    } else if (firstNameA < firstNameB) {
+      comparison = -1;
+    }
+    return comparison;
+  }
+
+  renderUserListModal() {
+    let activeUsers = this.state.activeUsers;
+    let dataLength = this.state.dataLength;
+
+    return (
+      <PopupMenuUserList
+        addPeopleModelVisible={this.state.showUserListModal}
+        onSelect={item => this.onTaskSelectUser(item)}
+        userName={this.state.userName}
+        activeUsersData={true}
+        activeUsers={activeUsers}
+        dataLength={dataLength}
+        keyboardValue={0}
+        customScrollStyle={styles.customScrollStyle}
+        hasBackdrop={true}
+        coverScreen={true}
+        customModalStyle={styles.popupMenuModalStyle}
+      />
+    );
   }
 
   // render main list without filter
@@ -558,12 +737,20 @@ class Tasks extends Component {
           </View>
           {!filter && (
             <View style={[styles.addNewFieldView, {flexDirection: 'row'}]}>
+              <Image
+                style={styles.addNewIcon}
+                source={icons.blueAdd}
+                resizeMode={'contain'}
+              />
               <TextInput
+                ref={ref => (this.mainTaskTextInput = ref)}
                 style={[styles.textInput, {width: '95%'}]}
-                placeholder={'Add a task'}
+                placeholder={'Add a task... (opt: @Assignee #Due Date)'}
                 value={taskName}
+                maxLength={100}
                 onChangeText={taskName => this.onNewTaskNameChange(taskName)}
                 onSubmitEditing={() => this.onNewTaskNameSubmit()}
+                onFocus={() => this.onFocusMainTextInput()}
               />
             </View>
           )}
@@ -598,6 +785,7 @@ class Tasks extends Component {
             />
           </View>
         )}
+        {this.renderUserListModal()}
         <AwesomeAlert
           show={showAlert}
           showProgress={false}
@@ -805,6 +993,25 @@ const styles = EStyleSheet.create({
     width: '100rem',
     backgroundColor: colors.colorBittersweet,
     alignItems: 'center',
+  },
+  addNewIcon: {
+    width: '25rem',
+    height: '25rem',
+  },
+  textInput: {
+    fontSize: '12rem',
+    color: colors.gray,
+    lineHeight: '17rem',
+    fontFamily: 'CircularStd-Medium',
+    textAlign: 'left',
+    marginLeft: '5rem',
+  },
+  popupMenuModalStyle: {
+    marginBottom: 0,
+    justifyContent: 'center',
+  },
+  customScrollStyle: {
+    maxHeight: '300rem',
   },
 });
 
