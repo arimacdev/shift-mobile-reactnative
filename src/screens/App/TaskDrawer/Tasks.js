@@ -7,6 +7,7 @@ import {
   Image,
   TouchableOpacity,
   TextInput,
+  Keyboard,
 } from 'react-native';
 import {connect} from 'react-redux';
 import * as actions from '../../../redux/actions';
@@ -26,6 +27,7 @@ import Triangle from 'react-native-triangle';
 import EmptyListView from '../../../components/EmptyListView';
 import AwesomeAlert from 'react-native-awesome-alerts';
 import PopupMenuUserList from '../../../components/PopupMenuUserList';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
 let dropData = [
   {
@@ -85,6 +87,9 @@ class Tasks extends Component {
       this.setState(
         {
           selectedTaskGroupId: selectedTaskGroupId,
+          showUserListModal: false,
+          tasksName: '',
+          textInputs: [],
         },
         () => {
           this.getAllTaskInGroup();
@@ -131,6 +136,9 @@ class Tasks extends Component {
     this.setState(
       {
         selectedTaskGroupId: selectedTaskGroupId,
+        showUserListModal: false,
+        tasksName: '',
+        textInputs: [],
       },
       () => {
         this.getAllTaskInGroup();
@@ -302,6 +310,71 @@ class Tasks extends Component {
     }
   }
 
+  onFocusSubTextInput(indexMain) {
+    let textInputs = this.state.textInputs;
+
+    if (textInputs[indexMain] == '' || textInputs[indexMain] == undefined) {
+      this.setState({
+        showUserListModal: false,
+        taskName: '',
+        duedate: '',
+      });
+      this.selectedUserList = [];
+    }
+  }
+
+  onTouchStartFilterDropDown() {
+    Keyboard.dismiss();
+    this.setState({
+      showUserListModal: false,
+      taskName: '',
+      textInputs: [],
+      duedate: '',
+    });
+    this.selectedUserList = [];
+  }
+
+  hideDatePicker = () => {
+    this.setState({showDatePicker: false});
+  };
+
+  handleDateConfirm = date => {
+    let {textInputs} = this.state;
+    let subtaskTextInputIndex = this.state.subtaskTextInputIndex;
+    let mainTaskTextChange = this.state.mainTaskTextChange;
+    this.hideDatePicker();
+    let selectedDate = new Date(date);
+    let newDate = '';
+
+    newDate = moment(selectedDate).format('MMMM DD, YYYY');
+
+    this.setState({duedate: newDate});
+
+    if (mainTaskTextChange) {
+      this.setState({
+        taskName: this.state.taskName.concat(newDate + ' '),
+      });
+    } else {
+      textInputs[subtaskTextInputIndex] = textInputs[
+        subtaskTextInputIndex
+      ].concat(newDate);
+      this.setState({textInputs});
+    }
+  };
+
+  renderDatePicker() {
+    return (
+      <View>
+        <DateTimePickerModal
+          isVisible={this.state.showDatePicker}
+          mode="date"
+          onConfirm={this.handleDateConfirm}
+          onCancel={this.hideDatePicker}
+        />
+      </View>
+    );
+  }
+
   onNewTaskNameChange(text) {
     this.setState({taskName: text, textInputs: [], mainTaskTextChange: true});
 
@@ -362,6 +435,7 @@ class Tasks extends Component {
       );
       if (newGroupTaskData.message == 'success') {
         this.setState({dataLoading: false, taskName: ''});
+        this.selectedUserList = [];
         this.getAllTaskInGroup();
       } else {
         this.setState({dataLoading: false});
@@ -372,28 +446,91 @@ class Tasks extends Component {
     }
   }
 
-  onNewSubTasksNameChange(text) {
-    this.setState({subTasksName: text});
+  async onNewSubTasksNameChange(subTasksName, indexMain) {
+    this.setState({
+      subtaskTextInputIndex: indexMain,
+      mainTaskTextChange: false,
+      taskName: '',
+    });
+
+    let {textInputs} = this.state;
+    textInputs[indexMain] = subTasksName;
+    await this.setState({textInputs});
+
+    for (let index = 0; index < this.state.textInputs.length; index++) {
+      if (index != indexMain) {
+        textInputs[index] = '';
+        this.setState({textInputs});
+      }
+    }
+
+    let lengthOfAt = textInputs[indexMain].split('@').length - 1;
+    let nAt = textInputs[indexMain].lastIndexOf('@');
+    let resultAt = textInputs[indexMain].substring(nAt + 1);
+    if (textInputs[indexMain].match('@') && resultAt == '' && lengthOfAt == 1) {
+      this.setState({showUserListModal: true, userName: ''});
+      this.flatList.scrollToIndex({animated: true, index: indexMain});
+      this.subTaskTextInputs[indexMain].blur();
+    } else {
+      this.setState({showUserListModal: false});
+    }
+
+    //showDatePicker
+    let lengthOfHash = textInputs[indexMain].split('#').length - 1;
+    let n = textInputs[indexMain].lastIndexOf('#');
+    let result = textInputs[indexMain].substring(n + 1);
+    if (textInputs[indexMain].match('#') && result == '' && lengthOfHash == 1) {
+      this.setState({showDatePicker: true});
+    } else {
+      this.setState({showDatePicker: false});
+    }
   }
 
   async onNewSubTasksNameSubmit(item, indexMain) {
+    let duedate = this.state.duedate != '' ? this.state.duedate : '';
     try {
-      let subTasksName = this.state.textInputs[indexMain];
+      let subTasksName =
+        this.state.textInputs[indexMain].split('@')[0] == undefined
+          ? this.state.textInputs[indexMain]
+          : this.state.textInputs[indexMain].split('@')[0].trim();
+
+      let subTasksNameFilter =
+        subTasksName.split('#')[0] == undefined
+          ? subTasksName
+          : subTasksName.split('#')[0].trim();
+
+      let taskAssignee =
+        this.selectedUserList.length > 0 ? this.selectedUserList[0].userId : '';
+
+      let taskDueDate =
+        duedate != ''
+          ? moment(
+              moment(duedate).format('DD MM YYYY'),
+              'DD/MM/YYYY hh:mmA',
+            ).format('YYYY-MM-DD[T]HH:mm:ss')
+          : '';
+
       let selectedTaskGroupId = this.state.selectedTaskGroupId;
+
       let taskId = item.parentTask.taskId;
+
       this.setState({dataLoading: true});
+
       let newTaskData = await APIServices.addSubTaskGroupTaskData(
-        subTasksName,
+        subTasksNameFilter,
         selectedTaskGroupId,
         taskId,
+        taskAssignee,
+        taskDueDate,
       );
       if (newTaskData.message == 'success') {
         this.setState({dataLoading: false, textInputs: []});
+        this.selectedUserList = [];
         this.getAllTaskInGroup();
       } else {
         this.setState({dataLoading: false, textInputs: []});
       }
-    } catch (e) {
+    } catch (error) {
       this.setState({dataLoading: false, textInputs: []});
       this.showAlert('', 'New sub task added fail');
     }
@@ -573,19 +710,16 @@ class Tasks extends Component {
               />
               <TextInput
                 style={[styles.subTaskTextInput, {width: '95%'}]}
-                placeholder={'Add a sub task...'}
+                placeholder={'Add a sub task... (opt: @Assignee #Due Date)'}
                 placeholderTextColor={colors.white}
-                onChangeText={subTasksName => {
-                  let {textInputs} = this.state;
-                  textInputs[indexMain] = subTasksName;
-                  this.setState({
-                    textInputs,
-                  });
-                }}
+                onChangeText={subTasksName =>
+                  this.onNewSubTasksNameChange(subTasksName, indexMain)
+                }
                 value={this.state.textInputs[indexMain]}
                 onSubmitEditing={() =>
                   this.onNewSubTasksNameSubmit(item, indexMain)
                 }
+                onFocus={() => this.onFocusSubTextInput(indexMain)}
               />
             </View>
             <FlatList
@@ -709,7 +843,9 @@ class Tasks extends Component {
           onWillFocus={payload => this.tabOpenTaskTab(payload)}
         />
         <View>
-          <View style={styles.projectFilerView}>
+          <View
+            style={styles.projectFilerView}
+            onTouchStart={event => this.onTouchStartFilterDropDown(event)}>
             <Dropdown
               label=""
               labelFontSize={0}
@@ -786,6 +922,7 @@ class Tasks extends Component {
           </View>
         )}
         {this.renderUserListModal()}
+        {this.state.showDatePicker ? this.renderDatePicker() : null}
         <AwesomeAlert
           show={showAlert}
           showProgress={false}
