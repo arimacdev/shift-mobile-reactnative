@@ -275,6 +275,11 @@ class MyTasks extends Component {
             />
           </View>
           <View style={[styles.addNewFieldView, {flexDirection: 'row'}]}>
+            <Image
+              style={styles.addNewIcon}
+              source={icons.blueAdd}
+              resizeMode={'contain'}
+            />
             <TextInput
               style={[styles.textInput, {width: '95%'}]}
               placeholder={'Add a task'}
@@ -346,20 +351,16 @@ const styles = EStyleSheet.create({
   text: {
     fontSize: '11rem',
     color: colors.projectTaskNameColor,
-    textAlign: 'center',
     fontWeight: 'bold',
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
     marginLeft: '10rem',
-    fontWeight: '400',
     marginRight: '10rem',
   },
   textDate: {
-    fontFamily: 'CircularStd-Book',
     fontSize: '9rem',
     fontWeight: '400',
-    textAlign: 'center',
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
@@ -419,6 +420,18 @@ const styles = EStyleSheet.create({
     width: '100rem',
     backgroundColor: colors.colorBittersweet,
     alignItems: 'center',
+  },
+  addNewIcon: {
+    width: '25rem',
+    height: '25rem',
+  },
+  textInput: {
+    fontSize: '12rem',
+    color: colors.gray,
+    lineHeight: '17rem',
+    fontFamily: 'CircularStd-Medium',
+    textAlign: 'left',
+    marginLeft: '5rem',
   },
 });
 
