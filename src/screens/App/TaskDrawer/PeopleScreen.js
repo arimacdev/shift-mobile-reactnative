@@ -139,7 +139,7 @@ class PeopleScreen extends Component {
     let owner = this.state.owner;
     let users = this.state.users;
     return (
-      <View style={{flex:1}}>
+      <View style={{flex: 1}}>
         <NavigationEvents onWillFocus={payload => this.tabOpen(payload)} />
         <TouchableOpacity onPress={() => this.goToAddPeople()}>
           <View style={styles.button}>
@@ -161,24 +161,29 @@ class PeopleScreen extends Component {
         </TouchableOpacity>
 
         <ScrollView style={styles.subContainer}>
-          <Text style={styles.subTitle}>Group owner</Text>
-          <FlatList
-            style={styles.flalList}
-            data={this.state.owner}
-            renderItem={({item}) => this.renderPeopleList(item)}
-            keyExtractor={item => item.projId}
-            // onRefresh={() => this.onRefresh()}
-            // refreshing={isFetching}
-          />
-          <Text style={styles.subTitle}>Group members</Text>
-          <FlatList
-            style={styles.flalList}
-            data={this.state.users}
-            renderItem={({item}) => this.renderPeopleList(item)}
-            keyExtractor={item => item.projId}
-            // onRefresh={() => this.onRefresh()}
-            // refreshing={isFetching}
-          />
+          {owner.length > 0 ? (
+            <View>
+              <Text style={styles.subTitle}>Group owner</Text>
+              <FlatList
+                style={styles.flalList}
+                data={owner}
+                renderItem={({item}) => this.renderPeopleList(item)}
+                keyExtractor={item => item.projId}
+              />
+            </View>
+          ) : null}
+
+          {users.length > 0 ? (
+            <View>
+              <Text style={styles.subTitle}>Group members</Text>
+              <FlatList
+                style={styles.flalList}
+                data={this.state.users}
+                renderItem={({item}) => this.renderPeopleList(item)}
+                keyExtractor={item => item.projId}
+              />
+            </View>
+          ) : null}
         </ScrollView>
         {dataLoading && <Loader />}
       </View>
