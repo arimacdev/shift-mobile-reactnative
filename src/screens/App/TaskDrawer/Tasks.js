@@ -88,7 +88,7 @@ class Tasks extends Component {
         {
           selectedTaskGroupId: selectedTaskGroupId,
           showUserListModal: false,
-          tasksName: '',
+          taskName: '',
           textInputs: [],
         },
         () => {
@@ -137,7 +137,7 @@ class Tasks extends Component {
       {
         selectedTaskGroupId: selectedTaskGroupId,
         showUserListModal: false,
-        tasksName: '',
+        taskName: '',
         textInputs: [],
       },
       () => {
@@ -332,6 +332,11 @@ class Tasks extends Component {
       duedate: '',
     });
     this.selectedUserList = [];
+  }
+
+  onTouchMove() {
+    this.setState({showUserListModal: false});
+    Keyboard.dismiss();
   }
 
   hideDatePicker = () => {
@@ -903,6 +908,7 @@ class Tasks extends Component {
               renderItem={({item, index}) => this.renderTaskList(item, index)}
               keyExtractor={item => item.parentTask.taskId}
               ListEmptyComponent={<EmptyListView />}
+              onTouchMove={event => this.onTouchMove(event)}
             />
           </View>
         )}
