@@ -1535,12 +1535,12 @@ class TasksTabScreen extends Component {
 
   onSelectUser = async item => {
     let assignee = item.key;
-    this.setState({
-      // visiblePeopleModal: false,
-      userName: item.label,
-      userID: item.key,
-      // popupMenuOpen:false
-    });
+    // this.setState({
+    //   // visiblePeopleModal: false,
+    //   userName: item.label,
+    //   userID: item.key,
+    //   // popupMenuOpen:false
+    // });
     await this.props.addPeopleModal(false);
     try {
       let selectedProjectID = this.state.selectedProjectID;
@@ -2030,7 +2030,6 @@ const styles = EStyleSheet.create({
   },
   parentTextMain: {
     fontSize: '11rem',
-    color: colors.colorMidnightExpress,
     fontWeight: 'bold',
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
@@ -2056,7 +2055,6 @@ const styles = EStyleSheet.create({
     flex: 0.9,
   },
   textDate: {
-    fontFamily: 'CircularStd-Book',
     fontSize: '9rem',
     fontWeight: '400',
     lineHeight: '17rem',
