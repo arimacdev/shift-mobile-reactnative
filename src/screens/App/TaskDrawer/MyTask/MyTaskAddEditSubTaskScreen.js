@@ -257,7 +257,6 @@ const styles = EStyleSheet.create({
     borderRadius: '5rem',
     marginTop: '17rem',
     marginBottom: '17rem',
-    flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: '12rem',
     height: '55rem',

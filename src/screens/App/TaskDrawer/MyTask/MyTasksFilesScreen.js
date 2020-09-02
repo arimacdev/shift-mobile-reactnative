@@ -65,7 +65,7 @@ class MyTasksFilesScreen extends Component {
   async fetchData() {
     let taskID = this.state.taskID;
     this.setState({dataLoading: true});
-    filesData = await APIServices.getFilesInMyTaskData(taskID);
+    let filesData = await APIServices.getFilesInMyTaskData(taskID);
     if (filesData.message == 'success') {
       this.setState({files: filesData.data, dataLoading: false});
     } else {
@@ -79,7 +79,7 @@ class MyTasksFilesScreen extends Component {
 
     this.setState({dataLoading: true});
     try {
-      resultObj = await APIServices.deleteFileInMyTaskData(taskID, taskFileId);
+      let resultObj = await APIServices.deleteFileInMyTaskData(taskID, taskFileId);
       if (resultObj.message == 'success') {
         this.setState({dataLoading: false});
         this.fetchData();
@@ -353,7 +353,6 @@ const styles = EStyleSheet.create({
   text: {
     fontSize: '12rem',
     color: colors.userListUserNameColor,
-    textAlign: 'center',
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
@@ -363,7 +362,6 @@ const styles = EStyleSheet.create({
   textDate: {
     fontSize: '10rem',
     color: colors.lightgray,
-    textAlign: 'center',
     lineHeight: '13rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
@@ -384,7 +382,6 @@ const styles = EStyleSheet.create({
     flexDirection: 'row',
     backgroundColor: colors.lightBlue,
     borderRadius: '5rem',
-    flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: '12rem',
     height: '55rem',

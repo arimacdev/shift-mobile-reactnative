@@ -64,7 +64,7 @@ class MyTaskSubTaskScreen extends Component {
   async fetchData() {
     let selectedTaskID = this.state.selectedTaskID;
     this.setState({dataLoading: true});
-    subTaskData = await APIServices.getMyTaskSubTaskData(selectedTaskID);
+    let subTaskData = await APIServices.getMyTaskSubTaskData(selectedTaskID);
     if (subTaskData.message == 'success') {
       this.setState({
         subTasks: subTaskData.data,
@@ -79,7 +79,7 @@ class MyTaskSubTaskScreen extends Component {
     let selectedTaskID = this.state.selectedTaskID;
     this.setState({dataLoading: true});
     try {
-      resultObj = await APIServices.myTaskdeleteSubTask(
+      let resultObj = await APIServices.myTaskdeleteSubTask(
         selectedTaskID,
         item.subtaskId,
       );
@@ -256,7 +256,6 @@ const styles = EStyleSheet.create({
   text: {
     fontSize: '12rem',
     color: colors.userListUserNameColor,
-    textAlign: 'center',
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
@@ -285,7 +284,6 @@ const styles = EStyleSheet.create({
     borderRadius: '5rem',
     marginTop: '17rem',
     marginBottom: '17rem',
-    flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: '12rem',
     height: '55rem',
