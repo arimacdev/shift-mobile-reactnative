@@ -37,8 +37,8 @@ import Utils from '../../../utils/Utils';
 import AndroidKeyboardAdjust from 'react-native-android-keyboard-adjust';
 import FilePickerModal from '../../../components/FilePickerModal';
 
-menuItemsFile = [{value: 0, text: 'Move'}, {value: 1, text: 'Delete'}];
-menuItemsFolder = [{value: 0, text: 'Update'}, {value: 1, text: 'Delete'}];
+let menuItemsFile = [{value: 0, text: 'Move'}, {value: 1, text: 'Delete'}];
+let menuItemsFolder = [{value: 0, text: 'Update'}, {value: 1, text: 'Delete'}];
 class ProjectFilesScreen extends Component {
   menuItems = [
     {value: 0, text: 'Add New Folder', icon: icons.addFolderGray},
@@ -1370,7 +1370,6 @@ const styles = EStyleSheet.create({
   textInput: {
     fontSize: '12rem',
     color: colors.gray,
-    textAlign: 'center',
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
@@ -1394,7 +1393,6 @@ const styles = EStyleSheet.create({
     paddingHorizontal: '12rem',
     height: '45rem',
     marginHorizontal: '20rem',
-    flexDirection: 'row',
   },
   searchIcon: {
     width: '17rem',
@@ -1615,13 +1613,13 @@ const styles = EStyleSheet.create({
     paddingVertical: '10rem',
     justifyContent: 'center',
   },
-  noFoldersTextStyle:{
+  noFoldersTextStyle: {
     fontSize: '15rem',
     color: colors.colorSilver,
     textAlign: 'center',
     fontFamily: 'CircularStd-Medium',
-    marginVertical: '40rem'
-  }
+    marginVertical: '40rem',
+  },
 });
 const mapStateToProps = state => {
   return {
