@@ -308,7 +308,6 @@ const styles = EStyleSheet.create({
     borderRadius: '5rem',
     marginTop: '17rem',
     marginBottom: '17rem',
-    flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: '12rem',
     height: '55rem',
@@ -320,10 +319,10 @@ const styles = EStyleSheet.create({
     borderRadius: '5rem',
     marginTop: '17rem',
     marginBottom: '17rem',
-    flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: '12rem',
     height: '55rem',
+    marginHorizontal:'10rem'
   },
   buttonText: {
     fontSize: '15rem',
@@ -349,6 +348,7 @@ const styles = EStyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: '12rem',
     height: '57rem',
+    marginHorizontal:'10rem'
   },
   bottomView: {
     position: 'absolute',
