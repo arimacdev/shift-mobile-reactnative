@@ -154,18 +154,12 @@ class ProjectsScreen extends Component {
         onPress={() =>
           this.props.navigation.navigate('TasksScreen', {projDetails: item})
         }>
-        <View style={styles.projectView}>
-          {this.folderIcon(item)}
-          <View style={{flex: 1}}>
-            <Text style={styles.text}>{item.projectName}</Text>
-          </View>
-          {this.colorCode(item)}
-        </View>
+        {this.renderProjectDetails(item)}
       </TouchableOpacity>
     );
   }
 
-  folderIcon = function(item) {
+  renderProjectDetails = function(item) {
     let color = '';
     switch (item.projectStatus) {
       case 'presales':
@@ -187,36 +181,18 @@ class ProjectsScreen extends Component {
         break;
     }
     return (
-      <Icon
-        name={'folder'}
-        type={'Feather'}
-        style={{fontSize: EStyleSheet.value('22rem'), color: color}}
-      />
+      <View style={styles.projectView}>
+        <Icon
+          name={'folder'}
+          type={'Feather'}
+          style={{fontSize: EStyleSheet.value('22rem'), color: color}}
+        />
+        <View style={{flex: 1}}>
+          <Text style={styles.text}>{item.projectName}</Text>
+        </View>
+        <View style={[styles.statusView, {backgroundColor: color}]} />
+      </View>
     );
-  };
-
-  colorCode = function(item) {
-    let color = '';
-    switch (item.projectStatus) {
-      case 'presales':
-      case 'presalesPD':
-      case 'preSalesQS':
-      case 'preSalesN':
-      case 'preSalesC':
-      case 'preSalesL':
-        color = colors.colorTomato;
-        break;
-      case 'ongoing':
-        color = colors.colorAmber;
-        break;
-      case 'support':
-        color = colors.colorFreeSpeechMagenta;
-        break;
-      case 'finished':
-        color = colors.colorDeepSkyBlue;
-        break;
-    }
-    return <View style={[styles.statusView, {backgroundColor: color}]} />;
   };
 
   renderBase() {
