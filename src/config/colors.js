@@ -33,7 +33,7 @@ const colors = {
   slackBgColor: '#4a154b',
   noTasksColor: '#acacac',
   taskBorderColor: '#0bafff',
-  colorRed: '#ff6363',
+  colorDueToday: '#ff6363',
   thisWeekColor: '#5acde6',
   colorOrange: '#ffa800',
   customColor: '#5e98f0',
@@ -66,5 +66,8 @@ const colors = {
   colorPaleCornflowerBlue: '#B6D3F1',
   colorAliceBlue: '#F5FCFF',
   colorWhisper: '#EEEEEE',
+  colorTomato: '#FF7043',
+  colorAmber: '#FFC212',
+  colorFreeSpeechMagenta: '#ED5ED1',
 };
 export default colors;

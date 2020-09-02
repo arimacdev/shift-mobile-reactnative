@@ -169,27 +169,21 @@ class ProjectsScreen extends Component {
     let color = '';
     switch (item.projectStatus) {
       case 'presales':
-        color = '#ff7043';
       case 'presalesPD':
-        color = '#ff7043';
       case 'preSalesQS':
-        color = '#ff7043';
       case 'preSalesN':
-        color = '#ff7043';
       case 'preSalesC':
-        color = '#ff7043';
-        break;
       case 'preSalesL':
-        color = '#ff7043';
+        color = colors.colorTomato;
         break;
       case 'ongoing':
-        color = '#ffc212';
+        color = colors.colorAmber;
         break;
       case 'support':
-        color = '#ed5ed1';
+        color = colors.colorFreeSpeechMagenta;
         break;
       case 'finished':
-        color = '#0bafff';
+        color = colors.colorDeepSkyBlue;
         break;
     }
     return (
@@ -205,27 +199,21 @@ class ProjectsScreen extends Component {
     let color = '';
     switch (item.projectStatus) {
       case 'presales':
-        color = '#ff7043';
       case 'presalesPD':
-        color = '#ff7043';
       case 'preSalesQS':
-        color = '#ff7043';
       case 'preSalesN':
-        color = '#ff7043';
       case 'preSalesC':
-        color = '#ff7043';
-        break;
       case 'preSalesL':
-        color = '#ff7043';
+        color = colors.colorTomato;
         break;
       case 'ongoing':
-        color = '#ffc212';
+        color = colors.colorAmber;
         break;
       case 'support':
-        color = '#ed5ed1';
+        color = colors.colorFreeSpeechMagenta;
         break;
       case 'finished':
-        color = '#0bafff';
+        color = colors.colorDeepSkyBlue;
         break;
     }
     return <View style={[styles.statusView, {backgroundColor: color}]} />;
@@ -319,7 +307,6 @@ const styles = EStyleSheet.create({
   text: {
     fontSize: '14rem',
     color: colors.projectText,
-    textAlign: 'center',
     fontWeight: 'bold',
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',

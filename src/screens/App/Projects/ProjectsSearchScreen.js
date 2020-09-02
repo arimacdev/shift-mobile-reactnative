@@ -70,27 +70,21 @@ class ProjectsSearchScreen extends Component {
     let color = '';
     switch (item.projectStatus) {
       case 'presales':
-        color = '#ff7043';
       case 'presalesPD':
-        color = '#ff7043';
       case 'preSalesQS':
-        color = '#ff7043';
       case 'preSalesN':
-        color = '#ff7043';
       case 'preSalesC':
-        color = '#ff7043';
-        break;
       case 'preSalesL':
-        color = '#ff7043';
+        color = colors.colorTomato;
         break;
       case 'ongoing':
-        color = '#ffc212';
+        color = colors.colorAmber;
         break;
       case 'support':
-        color = '#ed5ed1';
+        color = colors.colorFreeSpeechMagenta;
         break;
       case 'finished':
-        color = '#0bafff';
+        color = colors.colorDeepSkyBlue;
         break;
     }
     return (
@@ -106,27 +100,21 @@ class ProjectsSearchScreen extends Component {
     let color = '';
     switch (item.projectStatus) {
       case 'presales':
-        color = '#ff7043';
       case 'presalesPD':
-        color = '#ff7043';
       case 'preSalesQS':
-        color = '#ff7043';
       case 'preSalesN':
-        color = '#ff7043';
       case 'preSalesC':
-        color = '#ff7043';
-        break;
       case 'preSalesL':
-        color = '#ff7043';
+        color = colors.colorTomato;
         break;
       case 'ongoing':
-        color = '#ffc212';
+        color = colors.colorAmber;
         break;
       case 'support':
-        color = '#ed5ed1';
+        color = colors.colorFreeSpeechMagenta;
         break;
       case 'finished':
-        color = '#0bafff';
+        color = colors.colorDeepSkyBlue;
         break;
     }
     return <View style={[styles.statusView, {backgroundColor: color}]} />;
@@ -192,11 +180,10 @@ const styles = EStyleSheet.create({
     paddingHorizontal: '12rem',
     height: '45rem',
     marginHorizontal: '20rem',
-    flexDirection: 'row',
   },
   projectView: {
     backgroundColor: colors.projectBgColor,
-    borderRadius: 5,
+    borderRadius: '5rem',
     height: '60rem',
     marginTop: '7rem',
     flexDirection: 'row',
@@ -207,7 +194,6 @@ const styles = EStyleSheet.create({
   text: {
     fontSize: '14rem',
     color: colors.projectText,
-    textAlign: 'center',
     fontWeight: 'bold',
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
@@ -229,7 +215,6 @@ const styles = EStyleSheet.create({
   textInput: {
     fontSize: '12rem',
     color: colors.gray,
-    textAlign: 'center',
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Book',
     textAlign: 'left',
