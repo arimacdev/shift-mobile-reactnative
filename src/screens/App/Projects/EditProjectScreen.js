@@ -1,14 +1,12 @@
 import React, {Component} from 'react';
 import {
   View,
-  FlatList,
   Text,
   Dimensions,
   Image,
   TouchableOpacity,
   TextInput,
   ScrollView,
-  Alert,
 } from 'react-native';
 import {connect} from 'react-redux';
 import * as actions from '../../../redux/actions';
@@ -20,7 +18,6 @@ EStyleSheet.build({$rem: entireScreenWidth / 380});
 import {Dropdown} from 'react-native-material-dropdown';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import DocumentPicker from 'react-native-document-picker';
 import moment from 'moment';
 import _ from 'lodash';
 import AwesomeAlert from 'react-native-awesome-alerts';
@@ -196,7 +193,7 @@ class EditProjectScreen extends Component {
       prevProps.deleteProjectSuccess !== this.props.deleteProjectSuccess &&
       this.props.deleteProjectSuccess
     ) {
-      this.showAlert('', 'Project Deleted');
+      // this.showAlert('', 'Project Deleted');
       NavigationService.navigate('ProjectsScreen');
     }
   }
@@ -522,19 +519,6 @@ class EditProjectScreen extends Component {
 
   reomoveProject() {
     this.setState({deleteButtonPress: true, showMessageModal: true});
-    // Alert.alert(
-    //   'Delete Project',
-    //   'Are you sure you want to delete this project',
-    //   [
-    //     {
-    //       text: 'Cancel',
-    //       onPress: () => console.log('Cancel Pressed'),
-    //       style: 'cancel',
-    //     },
-    //     {text: 'Ok', onPress: () => this.reomoveProjectSuccess()},
-    //   ],
-    //   {cancelable: false},
-    // );
   }
 
   reomoveProjectSuccess = () => {
@@ -729,8 +713,7 @@ class EditProjectScreen extends Component {
   }
 
   onPressCancel() {
-    if (this.state.deleteButtonPress) {
-    } else {
+    if (!this.state.deleteButtonPress) {
       this.props.navigation.goBack();
     }
     this.setState({showMessageModal: false});

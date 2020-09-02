@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {
   View,
-  FlatList,
   Text,
   Dimensions,
   Image,
@@ -19,7 +18,6 @@ EStyleSheet.build({$rem: entireScreenWidth / 380});
 import {Dropdown} from 'react-native-material-dropdown';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import DocumentPicker from 'react-native-document-picker';
 import moment from 'moment';
 import _ from 'lodash';
 import AwesomeAlert from 'react-native-awesome-alerts';
@@ -707,7 +705,6 @@ const styles = EStyleSheet.create({
   textInput: {
     fontSize: '12rem',
     color: colors.gray,
-    textAlign: 'center',
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
@@ -721,7 +718,6 @@ const styles = EStyleSheet.create({
     backgroundColor: colors.lightBlue,
     borderRadius: 5,
     marginTop: '17rem',
-    flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: '12rem',
     height: '55rem',
