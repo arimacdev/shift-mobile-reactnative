@@ -44,6 +44,7 @@ import PopupMenuUserList from '../../../components/PopupMenuUserList';
 import DomSelector from 'react-native-dom-parser';
 import DeviceInfo from 'react-native-device-info';
 import Toast from 'react-native-simple-toast';
+import {CHAT_SERVICE} from '../../../api/API';
 
 const reactionDetails = [
   {value: '&#128077', text: '👍'},
@@ -193,6 +194,12 @@ class ChatScreen extends Component {
     this.setState({ownCommnter: userId});
   }
 
+  async connectToChatService() {
+    let baseURL = await AsyncStorage.getItem('baseURL');
+    let chatURL = baseURL + CHAT_SERVICE;
+    this.props.stompContext.newStompClient(chatURL, '', '', '/');
+  }
+
   componentDidMount() {
     let taskId = this.state.taskId;
 
@@ -223,12 +230,7 @@ class ChatScreen extends Component {
         this.setState({status: 'Disconnected (not graceful)'});
       },
     );
-    this.props.stompContext.newStompClient(
-      'https://pmtool.devops.arimac.xyz/api/pm-service/chat',
-      '',
-      '',
-      '/',
-    );
+    this.connectToChatService();
   }
 
   async fetchData(taskId) {

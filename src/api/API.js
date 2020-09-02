@@ -4,6 +4,9 @@ export const PROTOCOL = 'https://';
 export const WORKSPACE = `${PROTOCOL}pmtool.devops.arimac.xyz/api/bff/`;
 
 export const GET_ORGANIZATION_WORK_SPACE = `${WORKSPACE}organization?`;
+
+export const CHAT_SERVICE = `chat`;
+
 export const GET_ALL_PROJECTS_BY_USER = `projects?`;
 export const GET_ALL_TASKS_BY_PROJECT = `projects/`;
 export const GET_MY_TASKS_BY_PROJECT = `projects/`;
