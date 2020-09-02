@@ -182,7 +182,6 @@ const styles = EStyleSheet.create({
     paddingHorizontal: '12rem',
     height: '45rem',
     marginHorizontal: '20rem',
-    flexDirection: 'row',
   },
   projectView: {
     height: '70rem',
@@ -195,7 +194,6 @@ const styles = EStyleSheet.create({
   text: {
     fontSize: '12rem',
     color: colors.projectText,
-    textAlign: 'center',
     fontWeight: 'bold',
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
@@ -210,7 +208,6 @@ const styles = EStyleSheet.create({
   textInput: {
     fontSize: '12rem',
     color: colors.gray,
-    textAlign: 'center',
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Book',
     textAlign: 'left',
