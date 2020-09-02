@@ -13,15 +13,12 @@ import {connect} from 'react-redux';
 import * as actions from '../../redux/actions';
 import colors from '../../config/colors';
 import strings from '../../config/strings';
-import {authorize} from 'react-native-app-auth';
 import AsyncStorage from '@react-native-community/async-storage';
 import NavigationService from '../../services/NavigationService';
 import EStyleSheet from 'react-native-extended-stylesheet';
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
-import jwtDecode from 'jwt-decode';
 import APIServices from '../../services/APIServices';
-import ForceUpdateModal from '../../components/ForceUpdateModal';
 import DeviceInfo from 'react-native-device-info';
 import Loader from '../../components/Loader';
 import icons from '../../asserts/icons/icons';
@@ -167,7 +164,6 @@ const styles = EStyleSheet.create({
   textLogin: {
     fontSize: '14rem',
     color: colors.white,
-    textAlign: 'center',
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'center',
