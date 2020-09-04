@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {
-  StyleSheet,
   View,
   FlatList,
   Image,
@@ -23,7 +22,6 @@ EStyleSheet.build({$rem: entireScreenWidth / 380});
 import AsyncStorage from '@react-native-community/async-storage';
 import Loader from '../../../components/Loader';
 import {NavigationEvents} from 'react-navigation';
-import EmptyListView from '../../../components/EmptyListView';
 import MessageShowModal from '../../../components/MessageShowModal';
 const initialLayout = {width: entireScreenWidth};
 

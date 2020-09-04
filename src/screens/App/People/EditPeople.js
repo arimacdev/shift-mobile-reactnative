@@ -309,7 +309,6 @@ const styles = EStyleSheet.create({
   boxTextInput: {
     fontSize: '12rem',
     color: colors.gray,
-    textAlign: 'center',
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
@@ -318,7 +317,6 @@ const styles = EStyleSheet.create({
   checkBoxText: {
     fontSize: '12rem',
     color: colors.gray,
-    textAlign: 'center',
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
@@ -326,7 +324,6 @@ const styles = EStyleSheet.create({
   boxText: {
     fontSize: '12rem',
     color: 'black',
-    textAlign: 'center',
     fontWeight: 'bold',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
@@ -338,7 +335,6 @@ const styles = EStyleSheet.create({
     backgroundColor: colors.lightGreen,
     borderRadius: '5rem',
     marginTop: '17rem',
-    flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: '12rem',
     height: '55rem',
@@ -349,7 +345,6 @@ const styles = EStyleSheet.create({
     backgroundColor: colors.lightRed,
     borderRadius: '5rem',
     marginTop: '10rem',
-    flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: '12rem',
     height: '55rem',
