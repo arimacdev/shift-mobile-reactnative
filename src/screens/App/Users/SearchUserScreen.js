@@ -186,7 +186,6 @@ const styles = EStyleSheet.create({
     paddingHorizontal: '12rem',
     height: '45rem',
     marginHorizontal: '20rem',
-    flexDirection: 'row',
   },
   text: {
     fontSize: '12rem',
@@ -205,7 +204,6 @@ const styles = EStyleSheet.create({
   textInput: {
     fontSize: '12rem',
     color: colors.gray,
-    textAlign: 'center',
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Book',
     textAlign: 'left',

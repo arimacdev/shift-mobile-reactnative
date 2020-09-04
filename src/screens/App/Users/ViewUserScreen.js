@@ -108,7 +108,6 @@ const styles = EStyleSheet.create({
   avatar: {
     width: '130rem',
     height: '130rem',
-    borderRadius: '75rem',
     alignSelf: 'center',
     position: 'absolute',
     marginTop: '30rem',
