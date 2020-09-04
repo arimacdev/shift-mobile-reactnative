@@ -277,8 +277,8 @@ class ProjectsDetailsScreen extends Component {
             marginRight:
               index == projectTaskDetails.length - 1 &&
               (projectTaskDetails.length - 1) % 2 == 0
-                ? 20
-                : 3,
+                ? EStyleSheet.value('20rem')
+                : EStyleSheet.value('3rem'),
             backgroundColor: item.color,
           },
         ]}>
