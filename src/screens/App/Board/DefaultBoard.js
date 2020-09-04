@@ -49,7 +49,6 @@ class DefaultBoard extends Component {
     if (prevProps.isActive !== this.props.isActive && this.props.isActive) {
       this.fetchData();
     }
-    
   }
 
   async fetchData() {
@@ -298,7 +297,6 @@ const styles = EStyleSheet.create({
   text: {
     fontSize: '12rem',
     color: colors.userListUserNameColor,
-    textAlign: 'center',
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
@@ -308,7 +306,6 @@ const styles = EStyleSheet.create({
   subText: {
     fontSize: '10rem',
     color: colors.textPlaceHolderColor,
-    textAlign: 'center',
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
