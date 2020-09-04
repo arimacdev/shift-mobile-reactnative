@@ -2361,7 +2361,6 @@ const styles = EStyleSheet.create({
     alignItems: 'center',
   },
   popupMenuModalStyle: {
-    // marginTop: '140rem',
     marginBottom: 0,
     justifyContent: 'center',
   },
@@ -2374,7 +2373,7 @@ const styles = EStyleSheet.create({
     borderRadius: '5rem',
   },
   customScrollStyle: {
-    maxHeight: '300rem',
+    maxHeight: '450rem',
   },
 });
 
