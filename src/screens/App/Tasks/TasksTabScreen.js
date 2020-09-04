@@ -1105,21 +1105,23 @@ class TasksTabScreen extends Component {
   async tabOpenTaskTab() {
     let selectedProjectID = this.props.selectedProjectID;
     let selectedProjectName = this.props.projDetails.projectName;
-    this.setState(
-      {
-        selectedProjectID: selectedProjectID,
-        selectedProjectName: selectedProjectName,
-        filterType: 'None',
-        filter: false,
-        index: 0,
-        showUserListModal: false,
-        textInputs: [],
-        tasksName: '',
-      },
-      () => {
-        this.getAllTaskInProject();
-      },
-    );
+    if (!this.state.filter) {
+      this.setState(
+        {
+          selectedProjectID: selectedProjectID,
+          selectedProjectName: selectedProjectName,
+          filterType: 'None',
+          filter: false,
+          index: 0,
+          showUserListModal: false,
+          textInputs: [],
+          tasksName: '',
+        },
+        () => {
+          this.getAllTaskInProject();
+        },
+      );
+    }
   }
 
   onSuccess(text) {
