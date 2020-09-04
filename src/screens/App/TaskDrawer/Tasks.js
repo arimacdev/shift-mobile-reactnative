@@ -20,7 +20,6 @@ import {Dropdown} from 'react-native-material-dropdown';
 import Loader from '../../../components/Loader';
 import moment from 'moment';
 import FadeIn from 'react-native-fade-in-image';
-import {SkypeIndicator} from 'react-native-indicators';
 import {NavigationEvents} from 'react-navigation';
 import APIServices from '../../../services/APIServices';
 import Triangle from 'react-native-triangle';
@@ -713,8 +712,10 @@ class Tasks extends Component {
                 resizeMode={'contain'}
               />
               <TextInput
+                ref={ref => (this.subTaskTextInputs[indexMain] = ref)}
                 style={[styles.subTaskTextInput, {width: '95%'}]}
                 placeholder={'Add a sub task... (opt: @Assignee #Due Date)'}
+                maxLength={100}
                 placeholderTextColor={colors.white}
                 onChangeText={subTasksName =>
                   this.onNewSubTasksNameChange(subTasksName, indexMain)
@@ -899,6 +900,7 @@ class Tasks extends Component {
         {!filter && filterdDataAllTaks.length > 0 && (
           <View style={styles.subContainerWhite}>
             <FlatList
+              ref={r => (this.flatList = r)}
               style={{
                 marginBottom: EStyleSheet.value('10rem'),
                 marginTop: EStyleSheet.value('10rem'),
@@ -1153,7 +1155,7 @@ const styles = EStyleSheet.create({
     justifyContent: 'center',
   },
   customScrollStyle: {
-    maxHeight: '300rem',
+    maxHeight: '450rem',
   },
 });
 
