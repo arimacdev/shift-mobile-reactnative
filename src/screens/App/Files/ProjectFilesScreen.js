@@ -41,8 +41,13 @@ let menuItemsFile = [{value: 0, text: 'Move'}, {value: 1, text: 'Delete'}];
 let menuItemsFolder = [{value: 0, text: 'Update'}, {value: 1, text: 'Delete'}];
 class ProjectFilesScreen extends Component {
   menuItems = [
-    {value: 0, text: 'Add New Folder', icon: icons.addFolderGray},
-    {value: 1, text: 'Add New File', icon: icons.addFileGray},
+    {value: 0, text: 'Add New Folder', subText: '', icon: icons.addFolderGray},
+    {
+      value: 1,
+      text: 'Add New File',
+      subText: '(Maximum upload file size is 10MB)',
+      icon: icons.addFileGray,
+    },
   ];
   deleteDetails = {
     icon: icons.alertRed,
@@ -130,8 +135,18 @@ class ProjectFilesScreen extends Component {
       this.getSubFoldersFiles(this.state.folderNavigation[length]);
     } else if (this.state.folderNavigation.length == 1) {
       this.menuItems = [
-        {value: 0, text: 'Add New Folder', icon: icons.addFolderGray},
-        {value: 1, text: 'Add New File', icon: icons.addFileGray},
+        {
+          value: 0,
+          text: 'Add New Folder',
+          subText: '',
+          icon: icons.addFolderGray,
+        },
+        {
+          value: 1,
+          text: 'Add New File',
+          subText: '(Maximum upload file size is 10MB)',
+          icon: icons.addFileGray,
+        },
       ];
       this.fetchData(this.props.selectedProjectID);
     } else {
@@ -902,7 +917,12 @@ class ProjectFilesScreen extends Component {
             });
           }
           this.menuItems = [
-            {value: 1, text: 'Add New File', icon: icons.addFileGray},
+            {
+              value: 1,
+              text: 'Add New File',
+              subText: '(Maximum upload file size is 10MB)',
+              icon: icons.addFileGray,
+            },
           ];
           this.setState({
             filesData: response.data.files,

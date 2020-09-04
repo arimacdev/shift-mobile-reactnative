@@ -1,13 +1,5 @@
 import React, {Component} from 'react';
-import {
-  View,
-  StyleSheet,
-  Text,
-  Image,
-  FlatList,
-  Platform,
-  Dimensions,
-} from 'react-native';
+import {View, Text, Image, FlatList, Platform, Dimensions} from 'react-native';
 import {
   Menu,
   MenuOptions,
@@ -32,6 +24,8 @@ class PopupMenuNormal extends Component {
     this.state = {
       opened: false,
       text: props.text || props.data.length > 0 ? props.data[0].text : '',
+      subText:
+        props.subText || props.data.length > 0 ? props.data[0].subText : '',
       icon: props.icon || props.data.length > 0 ? props.data[0].icon : '',
     };
   }
@@ -45,6 +39,7 @@ class PopupMenuNormal extends Component {
       if (!this.props.selectedItem && nextProps.data.length > 1) {
         this.setState({
           text: nextProps.data[0].text,
+          subText: nextProps.data[0].subText,
           icon: nextProps.data[0].icon,
         });
       }
@@ -59,6 +54,7 @@ class PopupMenuNormal extends Component {
       this.setState({
         opened: false,
         text: item.text,
+        subText: item.subText,
         icon: item.icon,
         selectdItem: item,
       });
@@ -69,6 +65,7 @@ class PopupMenuNormal extends Component {
     this.setState({
       opened: false,
       text: item.text,
+      subText: item.subText,
       icon: item.icon,
       selectdItem: item,
     });
@@ -157,16 +154,14 @@ class PopupMenuNormal extends Component {
                           source={item.icon}
                           resizeMode={'contain'}
                         />
-                        {index == 1 ? (
-                          <View style={styles.menuItemView}>
-                            <Text style={styles.menuItemText}>{item.text}</Text>
-                            <Text style={styles.menuItemSubText}>
-                              (Maximum upload file size is 10MB)
-                            </Text>
-                          </View>
-                        ) : (
+                        <View style={styles.menuItemView}>
                           <Text style={styles.menuItemText}>{item.text}</Text>
-                        )}
+                          {item.subText != '' ? (
+                            <Text style={styles.menuItemSubText}>
+                              {item.subText}
+                            </Text>
+                          ) : null}
+                        </View>
                       </View>
                     </MenuOption>
                   );
