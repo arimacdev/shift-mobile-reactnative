@@ -189,6 +189,7 @@ class TasksTabScreen extends Component {
         () => {
           this.getAllTaskInProject();
           this.getActiveUserList(selectedProjectID);
+          this.resetValues();
         },
       );
     }
@@ -420,9 +421,9 @@ class TasksTabScreen extends Component {
 
   lazyGetMyTaskInProject = async () => {
     let selectedProjectID = this.state.selectedProjectID;
-    this.setState({
-      filterType: 'None',
-    });
+    // this.setState({
+    //   filterType: 'None',
+    // });
     if (
       this.state.cachecdMyListData.length == 10 &&
       this.state.listScrolled == true
@@ -1081,6 +1082,8 @@ class TasksTabScreen extends Component {
       filterType: key,
       selectedStartDate: null,
       selectedEndDate: null,
+      filterdAndMyTasksData: [],
+      filterdDataAllTaks: [],
     });
   }
 
@@ -1899,12 +1902,14 @@ class TasksTabScreen extends Component {
                   styles.myTasksFlatList,
                   {
                     marginBottom: this.state.filter
-                      ? EStyleSheet.value('210rem')
+                      ? EStyleSheet.value('220rem')
                       : EStyleSheet.value('160rem'),
                   },
                 ]}
                 data={filterdAndMyTasksData}
-                onEndReached={this.lazyGetMyTaskInProject}
+                onEndReached={
+                  !this.state.filter ? this.lazyGetMyTaskInProject : null
+                }
                 onEndReachedThreshold={0.7}
                 onScroll={this.onTaskListScroll.bind(this)}
                 renderItem={({item, index}) =>
