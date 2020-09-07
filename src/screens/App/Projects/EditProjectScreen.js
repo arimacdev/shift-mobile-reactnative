@@ -311,13 +311,10 @@ class EditProjectScreen extends Component {
     let date1 = new Date(date);
     let newDate = '';
     let newDateValue = '';
-    if (this.state.reminder) {
-      newDate = moment(date1).format('Do MMMM YYYY');
-      newDateValue = moment(date1).format('DD MM YYYY');
-    } else {
-      newDate = moment(date1).format('Do MMMM YYYY');
-      newDateValue = moment(date1).format('DD MM YYYY');
-    }
+
+    newDate = moment(date1).format('Do MMMM YYYY');
+    newDateValue = moment(date1).format('DD MM YYYY');
+
     if (this.state.reminder) {
       this.setState({
         projectEndDate: newDate,
@@ -384,13 +381,8 @@ class EditProjectScreen extends Component {
     let newDate = '';
     let newDateValue = '';
 
-    if (this.state.reminder) {
-      newDate = moment(date).format('Do MMMM YYYY');
-      newDateValue = moment(date).format('DD MM YYYY');
-    } else {
-      newDate = moment(date).format('Do MMMM YYYY');
-      newDateValue = moment(date).format('DD MM YYYY');
-    }
+    newDate = moment(date).format('Do MMMM YYYY');
+    newDateValue = moment(date).format('DD MM YYYY');
 
     if (event.type == 'set') {
       if (this.state.reminder) {
