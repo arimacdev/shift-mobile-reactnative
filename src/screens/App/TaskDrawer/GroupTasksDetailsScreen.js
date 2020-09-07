@@ -20,7 +20,6 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
 import {Dropdown} from 'react-native-material-dropdown';
-import AsyncStorage from '@react-native-community/async-storage';
 import Loader from '../../../components/Loader';
 import moment from 'moment';
 import FadeIn from 'react-native-fade-in-image';

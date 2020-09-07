@@ -3,10 +3,8 @@ import {
   View,
   Dimensions,
   TouchableOpacity,
-  Image,
   Text,
   TextInput,
-  Alert,
 } from 'react-native';
 import {connect} from 'react-redux';
 import * as actions from '../../../redux/actions';
@@ -108,19 +106,6 @@ class EditTask extends Component {
   }
 
   deleteGroupdeleteGroupAlert() {
-    // Alert.alert(
-    //   'Delete Group',
-    //   'You are about to permanantly delete this group and all of its data.\n If you are not sure, you can cancel this action.',
-    //   [
-    //     {
-    //       text: 'Cancel',
-    //       onPress: () => console.log('Cancel Pressed'),
-    //       style: 'cancel',
-    //     },
-    //     {text: 'Ok', onPress: () => this.deleteGroupdeleteGroup()},
-    //   ],
-    //   {cancelable: false},
-    // );
     this.details = {
       icon: icons.alertRed,
       type: 'confirm',
@@ -322,7 +307,7 @@ const styles = EStyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: '12rem',
     height: '55rem',
-    marginHorizontal:'10rem'
+    marginHorizontal: '10rem',
   },
   buttonText: {
     fontSize: '15rem',
@@ -348,7 +333,7 @@ const styles = EStyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: '12rem',
     height: '57rem',
-    marginHorizontal:'10rem'
+    marginHorizontal: '10rem',
   },
   bottomView: {
     position: 'absolute',
