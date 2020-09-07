@@ -20,6 +20,7 @@ import moment from 'moment';
 import AwesomeAlert from 'react-native-awesome-alerts';
 import DocumentPicker from 'react-native-document-picker';
 import ImagePicker from 'react-native-image-picker';
+import Utils from '../../../../utils/Utils';
 
 class MyTasksFilesScreen extends Component {
   constructor(props) {
@@ -79,7 +80,10 @@ class MyTasksFilesScreen extends Component {
 
     this.setState({dataLoading: true});
     try {
-      let resultObj = await APIServices.deleteFileInMyTaskData(taskID, taskFileId);
+      let resultObj = await APIServices.deleteFileInMyTaskData(
+        taskID,
+        taskFileId,
+      );
       if (resultObj.message == 'success') {
         this.setState({dataLoading: false});
         this.fetchData();
@@ -165,8 +169,11 @@ class MyTasksFilesScreen extends Component {
     };
     ImagePicker.launchCamera(options, res => {
       if (res.didCancel) {
+        console.log('User cancelled image picker');
       } else if (res.error) {
+        Utils.showAlert(true, '', 'ImagePicker Error', this.props);
       } else if (res.customButton) {
+        console.log('User tapped custom button');
       } else {
         this.setImageForFile(res);
       }
@@ -185,8 +192,11 @@ class MyTasksFilesScreen extends Component {
 
     ImagePicker.launchImageLibrary(options, res => {
       if (res.didCancel) {
+        console.log('User cancelled image picker');
       } else if (res.error) {
+        Utils.showAlert(true, '', 'ImagePicker Error', this.props);
       } else if (res.customButton) {
+        console.log('User tapped custom button');
       } else {
         this.setImageForFile(res);
       }

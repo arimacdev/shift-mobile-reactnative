@@ -372,8 +372,11 @@ class MyTasksDetailsScreen extends Component {
     setTimeout(() => {
       ImagePicker.launchCamera(options, res => {
         if (res.didCancel) {
+          console.log('User cancelled image picker');
         } else if (res.error) {
+          Utils.showAlert(true, '', 'ImagePicker Error', this.props);
         } else if (res.customButton) {
+          console.log('User tapped custom button');
         } else {
           this.setImageForFile(res);
         }
@@ -395,8 +398,11 @@ class MyTasksDetailsScreen extends Component {
     setTimeout(() => {
       ImagePicker.launchImageLibrary(options, res => {
         if (res.didCancel) {
+          console.log('User cancelled image picker');
         } else if (res.error) {
+          Utils.showAlert(true, '', 'ImagePicker Error', this.props);
         } else if (res.customButton) {
+          console.log('User tapped custom button');
         } else {
           this.setImageForFile(res);
         }
