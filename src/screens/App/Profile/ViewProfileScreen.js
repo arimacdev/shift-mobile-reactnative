@@ -28,6 +28,7 @@ import DocumentPicker from 'react-native-document-picker';
 import moment from 'moment';
 import ImagePicker from 'react-native-image-picker';
 import MessageShowModal from '../../../components/MessageShowModal';
+import Utils from '../../../utils/Utils';
 
 const config = strings.slack;
 
@@ -205,8 +206,11 @@ class ViewProfileScreen extends Component {
 
     ImagePicker.launchCamera(options, response => {
       if (response.didCancel) {
+        console.log('User cancelled image picker');
       } else if (response.error) {
+        Utils.showAlert(true, '', 'ImagePicker Error', this.props);
       } else if (response.customButton) {
+        console.log('User tapped custom button');
       } else {
         let imgName = response.fileName;
         if (typeof imgName === 'undefined' || imgName == null) {
@@ -230,8 +234,11 @@ class ViewProfileScreen extends Component {
 
     ImagePicker.launchImageLibrary(options, response => {
       if (response.didCancel) {
+        console.log('User cancelled image picker');
       } else if (response.error) {
+        Utils.showAlert(true, '', 'ImagePicker Error', this.props);
       } else if (response.customButton) {
+        console.log('User tapped custom button');
       } else {
         let imgName = response.fileName;
         if (typeof imgName === 'undefined' || imgName == null) {
