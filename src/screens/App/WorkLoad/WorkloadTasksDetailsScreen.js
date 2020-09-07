@@ -95,7 +95,7 @@ class WorkloadTasksDetailsScreen extends Component {
   async fetchSubTasksData(selectedProjectID, selectedProjectTaskID, userID) {
     this.setState({dataLoading: true});
     try {
-      subTaskData = await APIServices.getChildTasksOfParentData(
+      let subTaskData = await APIServices.getChildTasksOfParentData(
         selectedProjectID,
         selectedProjectTaskID,
       );
@@ -115,7 +115,7 @@ class WorkloadTasksDetailsScreen extends Component {
   async fetchFilesData(projectID, taskID, userID) {
     this.setState({dataLoading: true});
     try {
-      filesData = await APIServices.getFilesInTaskData(
+      let filesData = await APIServices.getFilesInTaskData(
         projectID,
         taskID,
         userID,
@@ -198,6 +198,7 @@ class WorkloadTasksDetailsScreen extends Component {
         break;
       case 'deployed':
         statusValue = 'Deployed';
+        break;
       case 'closed':
         statusValue = 'Closed';
         break;
@@ -271,15 +272,7 @@ class WorkloadTasksDetailsScreen extends Component {
             : null}
           {item.id == 2 ? (
             this.state.taskNotes !== '' && this.state.taskNotes !== null ? (
-              <Text
-                style={{
-                  fontSize: 11,
-                  color: colors.gray,
-                  marginBottom: 10,
-                  marginLeft: 8,
-                }}>
-                {this.state.taskNotes}
-              </Text>
+              <Text style={styles.taskNotesStyle}>{this.state.taskNotes}</Text>
             ) : null
           ) : null}
           {item.id == 3
@@ -364,13 +357,11 @@ const styles = EStyleSheet.create({
   text: {
     fontSize: '11rem',
     color: colors.projectTaskNameColor,
-    textAlign: 'center',
     fontWeight: 'bold',
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
     marginLeft: '10rem',
-    fontWeight: '400',
   },
   completionIcon: {
     width: '23rem',
@@ -400,6 +391,12 @@ const styles = EStyleSheet.create({
     color: colors.gray,
     marginLeft: '5rem',
     marginRight: '10rem',
+  },
+  taskNotesStyle: {
+    fontSize: '10rem',
+    color: colors.gray,
+    marginBottom: '10rem',
+    marginLeft: '8rem',
   },
 });
 
