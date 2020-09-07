@@ -73,39 +73,39 @@ class ProjectsDetailsScreen extends Component {
       text: data.tasksDueToday.toString(),
       details: 'Due today',
       icon: icons.calenderWhite,
-      color: '#ffb129',
-    }),
-      // Overdue task
-      taskData.push({
-        text: data.tasksOverDue.toString(),
-        details: 'Overdue',
-        icon: icons.warningWhite,
-        color: '#e65c62',
-      }),
-      // left task
-      taskData.push({
-        text: data.tasksLeft.toString(),
-        details: 'Left',
-        icon: icons.clockWhite,
-        color: '#704cf1',
-      }),
-      // today due task
-      taskData.push({
-        text: data.tasksAssigned.toString(),
-        details: 'Assigned to you',
-        icon: icons.userWhiteProj,
-        color: '#67d2e0',
-      }),
-      // Completed task
-      taskData.push({
-        text: data.tasksCompleted.toString(),
-        details: 'Completed',
-        icon: icons.rightWhite,
-        color: '#6fcd17',
-      }),
-      this.setState({
-        projectTaskDetails: taskData,
-      });
+      color: colors.colorSupernova,
+    });
+    // Overdue task
+    taskData.push({
+      text: data.tasksOverDue.toString(),
+      details: 'Overdue',
+      icon: icons.warningWhite,
+      color: colors.colorFroly,
+    });
+    // left task
+    taskData.push({
+      text: data.tasksLeft.toString(),
+      details: 'Left',
+      icon: icons.clockWhite,
+      color: colors.colorMediumSlateBlue,
+    });
+    // today due task
+    taskData.push({
+      text: data.tasksAssigned.toString(),
+      details: 'Assigned to you',
+      icon: icons.userWhiteProj,
+      color: colors.colorTurquoiseBlue,
+    });
+    // Completed task
+    taskData.push({
+      text: data.tasksCompleted.toString(),
+      details: 'Completed',
+      icon: icons.rightWhite,
+      color: colors.colorChristi,
+    });
+    this.setState({
+      projectTaskDetails: taskData,
+    });
   }
 
   setProjectData(data) {
@@ -188,8 +188,7 @@ class ProjectsDetailsScreen extends Component {
       let dateTextEsstimated = Math.floor(parseInt(totalDatesEsstimated) % 7);
       datesTextEsstimated =
         weeksTextEsstimated.toString() +
-        ' week(s)' +
-        ' ' +
+        ' week(s) ' +
         dateTextEsstimated.toString() +
         ' day(s)';
     } else if (totalDatesEsstimated > 0 && totalDatesEsstimated >= 30) {
@@ -197,10 +196,9 @@ class ProjectsDetailsScreen extends Component {
       let dateTextEsstimated = Math.floor(parseInt(totalDatesEsstimated) % 30);
       datesTextEsstimated =
         monthsText.toString() +
-        'month(s)' +
-        ' ' +
+        ' month(s) ' +
         dateTextEsstimated.toString() +
-        'day(s)';
+        ' day(s)';
     } else {
       datesTextEsstimated = '0 days';
     }
@@ -211,19 +209,17 @@ class ProjectsDetailsScreen extends Component {
       let dateTextAcctual = Math.floor(parseInt(totalDatesAcctual) % 7);
       datesTextAcctual =
         weeksTextAcctual.toString() +
-        ' week(s)' +
-        ' ' +
+        ' week(s) ' +
         dateTextAcctual.toString() +
         ' day(s)';
     } else if (totalDatesAcctual > 0 && totalDatesAcctual >= 30) {
       let monthsText = Math.floor(parseInt(totalDatesAcctual) / 30);
       let dateTextAcctual = Math.floor(parseInt(totalDatesAcctual) % 30);
-      dateTextAcctual =
+      datesTextAcctual =
         monthsText.toString() +
-        'month(s)' +
-        ' ' +
+        ' month(s) ' +
         dateTextAcctual.toString() +
-        'day(s)';
+        ' day(s)';
     } else {
       datesTextAcctual = '0 days';
     }

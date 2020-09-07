@@ -69,5 +69,10 @@ const colors = {
   colorTomato: '#FF7043',
   colorAmber: '#FFC212',
   colorFreeSpeechMagenta: '#ED5ED1',
+  colorSupernova: '#FFB129',
+  colorFroly: '#E65C62',
+  colorMediumSlateBlue: '#704CF1',
+  colorTurquoiseBlue: '#67D2E0',
+  colorChristi: '#6FCD17',
 };
 export default colors;
