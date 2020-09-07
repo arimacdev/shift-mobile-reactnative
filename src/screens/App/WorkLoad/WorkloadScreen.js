@@ -211,7 +211,6 @@ const styles = EStyleSheet.create({
   text: {
     fontSize: '15rem',
     color: colors.userListUserNameColor,
-    textAlign: 'center',
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
@@ -221,7 +220,6 @@ const styles = EStyleSheet.create({
   textMy: {
     fontSize: '15rem',
     color: colors.white,
-    textAlign: 'center',
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
@@ -231,7 +229,6 @@ const styles = EStyleSheet.create({
   subText: {
     fontSize: '10rem',
     color: 'gray',
-    textAlign: 'center',
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
@@ -241,7 +238,6 @@ const styles = EStyleSheet.create({
   subTextMy: {
     fontSize: '10rem',
     color: colors.white,
-    textAlign: 'center',
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
