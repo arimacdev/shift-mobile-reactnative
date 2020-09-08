@@ -1,11 +1,8 @@
 import React, {Component} from 'react';
 import {
-  StyleSheet,
   View,
-  FlatList,
   Text,
   TouchableOpacity,
-  ScrollView,
   Dimensions,
   BackHandler,
 } from 'react-native';
@@ -13,15 +10,12 @@ import {connect} from 'react-redux';
 import * as actions from '../../../redux/actions';
 import colors from '../../../config/colors';
 import Tasks from './WorkloadTabTasksScreen';
-import Projects from '../Projects/ProjectsDetailsScreen';
-import PeopleScreen from '../People/PeopleScreen';
-import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
+import {TabView, TabBar} from 'react-native-tab-view';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import Header from '../../../components/Header';
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
 import {MenuProvider} from 'react-native-popup-menu';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
 import CalendarPicker from 'react-native-calendar-picker';
 import Modal from 'react-native-modal';
@@ -30,7 +24,7 @@ import {Icon} from 'native-base';
 
 const initialLayout = {width: entireScreenWidth};
 const menuItems = [
-  {value: 0, text: 'Due today', color: colors.colorRed},
+  {value: 0, text: 'Due today', color: colors.colorDueToday},
   {value: 1, text: 'This Week', color: colors.thisWeekColor},
   {value: 2, text: 'This Month', color: colors.colorOrange},
   {value: 3, text: 'Custom', color: colors.customColor},
