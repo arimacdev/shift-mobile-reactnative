@@ -37,13 +37,7 @@ export const deleteTaskInGroupTasks = (selectedTaskGroupId, taskID) => {
         }
       })
       .catch(error => {
-        if (error.status == 401) {
-          let errorMsg = error.data.message;
-          dispatch({
-            type: DELETE_SINGLE_TASK_IN_GROUP_TASKS_FAILED_MASSAGE,
-            payload: errorMsg,
-          });
-        } else if (error.status == 403) {
+        if (error.status == 401 || error.status == 403) {
           let errorMsg = error.data.message;
           dispatch({
             type: DELETE_SINGLE_TASK_IN_GROUP_TASKS_FAILED_MASSAGE,
@@ -71,13 +65,7 @@ export const addFileToMyTask = (file, taskId) => {
         }
       })
       .catch(error => {
-        if (error.status == 403) {
-          let errorMsg = error.data.message;
-          dispatch({
-            type: ADD_FILE_TO_MY_TASK_FAILED_MASSAGE,
-            payload: errorMsg,
-          });
-        } else if (error.status == 400) {
+        if (error.status == 403 || error.status == 400) {
           let errorMsg = error.data.message;
           dispatch({
             type: ADD_FILE_TO_MY_TASK_FAILED_MASSAGE,
@@ -110,13 +98,7 @@ export const deleteTaskInMyTasks = taskID => {
         }
       })
       .catch(error => {
-        if (error.status == 401) {
-          let errorMsg = error.data.message;
-          dispatch({
-            type: DELETE_SINGLE_TASK_IN_MY_TASKS_FAILED_MASSAGE,
-            payload: errorMsg,
-          });
-        } else if (error.status == 403) {
+        if (error.status == 401 || error.status == 403) {
           let errorMsg = error.data.message;
           dispatch({
             type: DELETE_SINGLE_TASK_IN_MY_TASKS_FAILED_MASSAGE,
@@ -171,13 +153,7 @@ export const deleteSubTaskInGroupTasks = (selectedTaskGroupId, taskID) => {
         }
       })
       .catch(error => {
-        if (error.status == 401) {
-          let errorMsg = error.data.message;
-          dispatch({
-            type: DELETE_SINGLE_SUB_TASK_IN_GROUP_TASKS_FAILED_MASSAGE,
-            payload: errorMsg,
-          });
-        } else if (error.status == 403) {
+        if (error.status == 401 || error.status == 403) {
           let errorMsg = error.data.message;
           dispatch({
             type: DELETE_SINGLE_SUB_TASK_IN_GROUP_TASKS_FAILED_MASSAGE,
