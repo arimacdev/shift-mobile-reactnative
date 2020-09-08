@@ -1129,7 +1129,7 @@ async function updateRolePeopleData(
   let baseURL = null;
   baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
-  userID = await AsyncStorage.getItem('userID');
+  userIDHeder = await AsyncStorage.getItem('userID');
 
   let headers = {
     Accept: 'application/json',
@@ -2659,12 +2659,13 @@ async function updateParentToChild(projectId, taskId, newParent) {
 async function getTaskLogData(taskId) {
   let baseURL = null;
   baseURL = await AsyncStorage.getItem('baseURL');
-  let userID = null;
-  userID = await AsyncStorage.getItem('userID');
+  let userIDHeder = null;
+  userIDHeder = await AsyncStorage.getItem('userID');
 
   let headers = {
     Accept: 'application/json',
     'Content-Type': 'application/json',
+    user: userIDHeder,
   };
 
   return request(
@@ -3635,7 +3636,6 @@ const APIServices = {
   uploadFileData,
   getProjectFiles,
   deleteProjectFile,
-  addUserToGroupTask,
   addUserToGroupTask,
   groupTaskUpdateTaskNameData,
   groupTaskUpdateTaskStatusData,
