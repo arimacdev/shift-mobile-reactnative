@@ -16,9 +16,6 @@ import icons from '../../../asserts/icons/icons';
 import EStyleSheet from 'react-native-extended-stylesheet';
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
-import {Dropdown} from 'react-native-material-dropdown';
-import AddNewTasksScreen from '../Tasks/AddNewTasksScreen';
-import AsyncStorage from '@react-native-community/async-storage';
 import Loader from '../../../components/Loader';
 import moment from 'moment';
 import FadeIn from 'react-native-fade-in-image';
@@ -27,7 +24,6 @@ import {NavigationEvents} from 'react-navigation';
 import APIServices from '../../../services/APIServices';
 import Accordion from 'react-native-collapsible/Accordion';
 import * as Animatable from 'react-native-animatable';
-import Collapsible from '../../../components/CollapsibleView';
 import EmptyListView from '../../../components/EmptyListView';
 const {height, width} = Dimensions.get('window');
 
