@@ -1,12 +1,10 @@
 import React, {Component} from 'react';
 import {
-  StyleSheet,
   View,
   FlatList,
   Image,
   Text,
   TouchableOpacity,
-  ScrollView,
   Dimensions,
   TextInput,
 } from 'react-native';
@@ -14,16 +12,13 @@ import {connect} from 'react-redux';
 import * as actions from '../../../redux/actions';
 import colors from '../../../config/colors';
 import icons from '../../../asserts/icons/icons';
-import NavigationService from '../../../services/NavigationService';
 import APIServices from '../../../services/APIServices';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import FadeIn from 'react-native-fade-in-image';
 import * as Progress from 'react-native-progress';
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
-import AsyncStorage from '@react-native-community/async-storage';
 import Loader from '../../../components/Loader';
-import {NavigationEvents} from 'react-navigation';
 import EmptyListView from '../../../components/EmptyListView';
 const initialLayout = {width: entireScreenWidth};
 
@@ -209,7 +204,6 @@ const styles = EStyleSheet.create({
   text: {
     fontSize: '12rem',
     color: colors.userListUserNameColor,
-    textAlign: 'center',
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
@@ -219,7 +213,6 @@ const styles = EStyleSheet.create({
   subText: {
     fontSize: '10rem',
     color: 'gray',
-    textAlign: 'center',
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
@@ -244,7 +237,6 @@ const styles = EStyleSheet.create({
     paddingHorizontal: '12rem',
     height: '45rem',
     marginHorizontal: '20rem',
-    flexDirection: 'row',
   },
   searchIcon: {
     width: '17rem',
@@ -253,7 +245,6 @@ const styles = EStyleSheet.create({
   textInput: {
     fontSize: '12rem',
     color: colors.gray,
-    textAlign: 'center',
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
