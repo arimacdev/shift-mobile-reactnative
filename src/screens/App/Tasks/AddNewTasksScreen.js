@@ -29,6 +29,7 @@ import moment from 'moment';
 import Loader from '../../../components/Loader';
 import ImagePicker from 'react-native-image-picker';
 import MessageShowModal from '../../../components/MessageShowModal';
+import Utils from '../../../utils/Utils';
 
 let dropData = [
   {
@@ -677,8 +678,11 @@ class AddNewTasksScreen extends Component {
     };
     ImagePicker.launchCamera(options, res => {
       if (res.didCancel) {
+        console.log('User cancelled image picker');
       } else if (res.error) {
+        Utils.showAlert(true, '', 'ImagePicker Error', this.props);
       } else if (res.customButton) {
+        console.log('User tapped custom button');
       } else {
         this.setImageForFile(res);
       }
@@ -697,8 +701,11 @@ class AddNewTasksScreen extends Component {
 
     ImagePicker.launchImageLibrary(options, res => {
       if (res.didCancel) {
+        console.log('User cancelled image picker');
       } else if (res.error) {
+        Utils.showAlert(true, '', 'ImagePicker Error', this.props);
       } else if (res.customButton) {
+        console.log('User tapped custom button');
       } else {
         this.setImageForFile(res);
       }
@@ -1295,7 +1302,6 @@ const styles = EStyleSheet.create({
   textInput: {
     fontSize: '12rem',
     color: colors.gray,
-    textAlign: 'center',
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Book',
     textAlign: 'left',
@@ -1328,7 +1334,6 @@ const styles = EStyleSheet.create({
     backgroundColor: colors.lightBlue,
     borderRadius: '5rem',
     marginTop: '17rem',
-    flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: '12rem',
     height: '55rem',
