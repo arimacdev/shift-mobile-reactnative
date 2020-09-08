@@ -274,25 +274,12 @@ export const addUserToProject = (
         }
       })
       .catch(error => {
-        if (error.status == 403) {
-          let errorMsg = error.data.message;
-          dispatch({
-            type: ADD_PEOPLE_TO_PROJECT_FAILED_MASSAGE,
-            payload: errorMsg,
-          });
-        } else if (error.status == 400) {
-          let errorMsg = error.data.message;
-          dispatch({
-            type: ADD_PEOPLE_TO_PROJECT_FAILED_MASSAGE,
-            payload: errorMsg,
-          });
-        } else if (error.status == 401) {
-          let errorMsg = error.data.message;
-          dispatch({
-            type: ADD_PEOPLE_TO_PROJECT_FAILED_MASSAGE,
-            payload: errorMsg,
-          });
-        } else if (error.status == 422) {
+        if (
+          error.status == 403 ||
+          error.status == 400 ||
+          error.status == 401 ||
+          error.status == 422
+        ) {
           let errorMsg = error.data.message;
           dispatch({
             type: ADD_PEOPLE_TO_PROJECT_FAILED_MASSAGE,
@@ -345,13 +332,7 @@ export const addTaskToProject = (
         }
       })
       .catch(error => {
-        if (error.status == 403) {
-          let errorMsg = error.data.message;
-          dispatch({
-            type: ADD_TASK_TO_PROJECT_FAILED_MASSAGE,
-            payload: errorMsg,
-          });
-        } else if (error.status == 400) {
+        if (error.status == 403 || error.status == 400) {
           let errorMsg = error.data.message;
           dispatch({
             type: ADD_TASK_TO_PROJECT_FAILED_MASSAGE,
@@ -380,13 +361,7 @@ export const addFileToTask = (file, taskId, selectedProjectID) => {
         }
       })
       .catch(error => {
-        if (error.status == 403) {
-          let errorMsg = error.data.message;
-          dispatch({
-            type: ADD_FILE_TO_TASK_FAILED_MASSAGE,
-            payload: errorMsg,
-          });
-        } else if (error.status == 400) {
+        if (error.status == 403 || error.status == 400) {
           let errorMsg = error.data.message;
           dispatch({
             type: ADD_FILE_TO_TASK_FAILED_MASSAGE,
@@ -414,13 +389,7 @@ export const deleteTask = (selectedProjectID, taskId, taskName, initiator) => {
         }
       })
       .catch(error => {
-        if (error.status == 401) {
-          let errorMsg = error.data.message;
-          dispatch({
-            type: DELETE_TASK_FAILED_MASSAGE,
-            payload: errorMsg,
-          });
-        } else if (error.status == 403) {
+        if (error.status == 401 || error.status == 403) {
           let errorMsg = error.data.message;
           dispatch({
             type: DELETE_TASK_FAILED_MASSAGE,
@@ -467,13 +436,7 @@ export const deleteSubTask = (
         }
       })
       .catch(error => {
-        if (error.status == 401) {
-          let errorMsg = error.data.message;
-          dispatch({
-            type: DELETE_SUB_TASK_FAILED_MASSAGE,
-            payload: errorMsg,
-          });
-        } else if (error.status == 403) {
+        if (error.status == 401 || error.status == 403) {
           let errorMsg = error.data.message;
           dispatch({
             type: DELETE_SUB_TASK_FAILED_MASSAGE,
