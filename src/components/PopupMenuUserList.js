@@ -4,8 +4,6 @@ import {
   ScrollView,
   Text,
   Dimensions,
-  TextInput,
-  TouchableOpacity,
   Image,
   Keyboard,
 } from 'react-native';
@@ -18,14 +16,7 @@ const {height, width} = Dimensions.get('window');
 import * as actions from '../redux/actions';
 import {connect} from 'react-redux';
 import Modal from 'react-native-modal';
-
-import {
-  MenuContext,
-  Menu,
-  MenuOptions,
-  MenuOption,
-  MenuTrigger,
-} from 'react-native-popup-menu';
+import {MenuOption} from 'react-native-popup-menu';
 import APIServices from '../services/APIServices';
 import FadeIn from 'react-native-fade-in-image';
 
@@ -289,39 +280,25 @@ class PopupMenuUserList extends Component {
         // backdropTransitionInTiming={600}
         // backdropTransitionOutTiming={600}
       >
-        {Platform.OS == 'ios' ? (
-          <View style={styles.menuStyleIOS}>
-            <ScrollView
-              style={[
-                scrollStyle.scrollViewMenuOption,
-                this.props.customScrollStyle,
-              ]}>
-              {this.state.activeUsers.map(item => {
-                return (
-                  <MenuOption onSelect={() => this.onSelect(item)}>
-                    {this.menuOptions(item)}
-                  </MenuOption>
-                );
-              })}
-            </ScrollView>
-          </View>
-        ) : (
-          <View style={[styles.menuStyle, this.props.customMenuStyle]}>
-            <ScrollView
-              style={[
-                scrollStyle.scrollViewMenuOption,
-                this.props.customScrollStyle,
-              ]}>
-              {this.state.activeUsers.map(item => {
-                return (
-                  <MenuOption onSelect={() => this.onSelect(item)}>
-                    {this.menuOptions(item)}
-                  </MenuOption>
-                );
-              })}
-            </ScrollView>
-          </View>
-        )}
+        <View
+          style={[
+            Platform.OS == 'ios' ? styles.menuStyleIOS : styles.menuStyle,
+            this.props.customMenuStyle,
+          ]}>
+          <ScrollView
+            style={[
+              scrollStyle.scrollViewMenuOption,
+              this.props.customScrollStyle,
+            ]}>
+            {this.state.activeUsers.map(item => {
+              return (
+                <MenuOption onSelect={() => this.onSelect(item)}>
+                  {this.menuOptions(item)}
+                </MenuOption>
+              );
+            })}
+          </ScrollView>
+        </View>
       </Modal>
     );
   }
@@ -345,7 +322,6 @@ const styles = EStyleSheet.create({
   },
   text: {
     fontSize: '12rem',
-    textAlign: 'center',
     fontWeight: 'bold',
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
