@@ -165,6 +165,7 @@ class TasksTabScreen extends Component {
       flatListScrollOffset: 0,
       activeUsers: [],
       dataLength: 0,
+      assigneeId: '',
     };
 
     this.onDateChange = this.onDateChange.bind(this);
@@ -1106,7 +1107,25 @@ class TasksTabScreen extends Component {
   async tabOpenTaskTab() {
     let selectedProjectID = this.props.selectedProjectID;
     let selectedProjectName = this.props.projDetails.projectName;
-    if (!this.state.filter) {
+    let value = this.state.filterType;
+    let filterTaskType = this.state.filterTaskType;
+    let assigneeId = this.state.assigneeId;
+
+    if (this.state.filter) {
+      switch (value) {
+        case 'Date':
+          this.onDateSet();
+          break;
+        case 'Assignee':
+          this.getfilterTaskByUser(assigneeId);
+          break;
+        case 'Task type':
+          this.fetchDataWithTaskType(filterTaskType);
+          break;
+        default:
+          break;
+      }
+    } else {
       this.setState(
         {
           selectedProjectID: selectedProjectID,
@@ -1123,6 +1142,10 @@ class TasksTabScreen extends Component {
         },
       );
     }
+
+    // if (!this.state.filter) {
+
+    // }
   }
 
   onSuccess(text) {
@@ -1541,13 +1564,12 @@ class TasksTabScreen extends Component {
 
   onSelectUser = async item => {
     let assignee = item.key;
-    // this.setState({
-    //   // visiblePeopleModal: false,
-    //   userName: item.label,
-    //   userID: item.key,
-    //   // popupMenuOpen:false
-    // });
+    this.setState({assigneeId: item.key});
     await this.props.addPeopleModal(false);
+    this.getfilterTaskByUser(assignee);
+  };
+
+  async getfilterTaskByUser(assignee) {
     try {
       let selectedProjectID = this.state.selectedProjectID;
       this.setState({dataLoading: true});
@@ -1566,7 +1588,7 @@ class TasksTabScreen extends Component {
     } catch (e) {
       this.setState({dataLoading: false});
     }
-  };
+  }
 
   renderFilterType() {
     const {selectedStartDate, selectedEndDate} = this.state;
