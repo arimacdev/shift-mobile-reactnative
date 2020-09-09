@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Text, Dimensions, Image} from 'react-native';
+import {View, Text, Dimensions} from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import NetInfo from '@react-native-community/netinfo';
 import colors from '../config/colors';
@@ -39,11 +39,7 @@ class OfflineNotice extends Component {
   }
 
   handleConnectivityChange = isConnected => {
-    if (isConnected) {
-      this.setState({isConnected});
-    } else {
-      this.setState({isConnected});
-    }
+    this.setState({isConnected});
   };
 
   render() {
