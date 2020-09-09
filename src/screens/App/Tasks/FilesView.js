@@ -67,7 +67,6 @@ const styles = EStyleSheet.create({
   imageViewStyle: {
     flexDirection: 'row',
     height: '100%',
-    height: '100%',
   },
   imageStyle: {
     width: '100%',
