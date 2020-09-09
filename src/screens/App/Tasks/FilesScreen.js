@@ -74,7 +74,7 @@ class FilesScreen extends Component {
     let projectID = this.state.projectID;
     let taskID = this.state.taskID;
     this.setState({dataLoading: true});
-    filesData = await APIServices.getFilesInTaskData(projectID, taskID);
+    let filesData = await APIServices.getFilesInTaskData(projectID, taskID);
     if (filesData.message == 'success') {
       this.setState({files: filesData.data, dataLoading: false});
     } else {
@@ -89,7 +89,7 @@ class FilesScreen extends Component {
 
     this.setState({dataLoading: true});
     try {
-      resultObj = await APIServices.deleteFileInTaskData(
+      let resultObj = await APIServices.deleteFileInTaskData(
         projectID,
         taskID,
         taskFileId,
@@ -296,7 +296,6 @@ const styles = EStyleSheet.create({
   text: {
     fontSize: '12rem',
     color: colors.userListUserNameColor,
-    textAlign: 'center',
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
@@ -306,7 +305,6 @@ const styles = EStyleSheet.create({
   textDate: {
     fontSize: '10rem',
     color: colors.lightgray,
-    textAlign: 'center',
     lineHeight: '13rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
@@ -327,7 +325,6 @@ const styles = EStyleSheet.create({
     flexDirection: 'row',
     backgroundColor: colors.lightBlue,
     borderRadius: '5rem',
-    flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: '12rem',
     height: '55rem',

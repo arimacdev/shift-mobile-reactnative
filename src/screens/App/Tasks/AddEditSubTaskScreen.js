@@ -102,7 +102,7 @@ class AddEditSubTaskScreen extends Component {
     } else {
       this.setState({dataLoading: true});
       try {
-        resultObj = await APIServices.updateSubTask(
+        let resultObj = await APIServices.updateSubTask(
           userID,
           projectID,
           taskID,
@@ -138,7 +138,7 @@ class AddEditSubTaskScreen extends Component {
     } else {
       this.setState({dataLoading: true});
       try {
-        resultObj = await APIServices.addSubTask(
+        let resultObj = await APIServices.addSubTask(
           userID,
           projectID,
           taskID,
@@ -265,7 +265,6 @@ const styles = EStyleSheet.create({
     borderRadius: '5rem',
     marginTop: '17rem',
     marginBottom: '17rem',
-    flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: '12rem',
     height: '55rem',

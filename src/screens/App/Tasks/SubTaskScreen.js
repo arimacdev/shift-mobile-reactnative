@@ -74,7 +74,7 @@ class SubTasksScreen extends Component {
     let selectedProjectID = this.state.selectedProjectID;
     let selectedProjectTaskID = this.state.selectedProjectTaskID;
     this.setState({dataLoading: true});
-    subTaskData = await APIServices.getSubTaskData(
+    let subTaskData = await APIServices.getSubTaskData(
       selectedProjectID,
       selectedProjectTaskID,
       userID,
@@ -95,7 +95,7 @@ class SubTasksScreen extends Component {
     let userID = this.state.userID;
     this.setState({dataLoading: true});
     try {
-      resultObj = await APIServices.deleteSubTask(
+      let resultObj = await APIServices.deleteSubTask(
         selectedProjectID,
         selectedProjectTaskID,
         item.subtaskId,
@@ -277,7 +277,6 @@ const styles = EStyleSheet.create({
   text: {
     fontSize: '12rem',
     color: colors.userListUserNameColor,
-    textAlign: 'center',
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
@@ -306,7 +305,6 @@ const styles = EStyleSheet.create({
     borderRadius: '5rem',
     marginTop: '17rem',
     marginBottom: '17rem',
-    flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: '12rem',
     height: '55rem',
