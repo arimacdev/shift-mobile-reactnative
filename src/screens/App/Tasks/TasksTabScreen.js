@@ -9,6 +9,7 @@ import {
   TextInput,
   BackHandler,
   Keyboard,
+  Platform,
 } from 'react-native';
 import {connect} from 'react-redux';
 import * as actions from '../../../redux/actions';
@@ -2368,7 +2369,7 @@ const styles = EStyleSheet.create({
     alignItems: 'center',
   },
   popupMenuModalStyle: {
-    marginBottom: 0,
+    marginBottom: Platform.OS == 'ios' ? '-370rem' : '0rem',
     justifyContent: 'center',
   },
   popupMenuModalsubTaskStyle: {
@@ -2380,7 +2381,7 @@ const styles = EStyleSheet.create({
     borderRadius: '5rem',
   },
   customScrollStyle: {
-    maxHeight: '450rem',
+    maxHeight: Platform.OS == 'ios' ? '600rem' : '450rem',
   },
 });
 
