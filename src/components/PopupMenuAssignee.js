@@ -5,7 +5,6 @@ import {
   Text,
   Dimensions,
   TextInput,
-  TouchableOpacity,
   Image,
   Keyboard,
 } from 'react-native';
@@ -215,7 +214,8 @@ class PopupMenuAssignee extends Component {
       <Menu
         opened={this.state.opened}
         onBackdropPress={() => this.onBackdropPress()}
-        onSelect={value => this.onOptionSelect(value)}>
+        // onSelect={value => this.onOptionSelect(value)}
+        >
         <MenuTrigger>{this.menuTrigger()}</MenuTrigger>
         <MenuOptions customStyles={optionsStyles}>
           <ScrollView style={scrollStyle.scrollViewMenuOption}>
@@ -258,7 +258,6 @@ const styles = EStyleSheet.create({
   textInput: {
     fontSize: '12rem',
     color: colors.gray,
-    textAlign: 'center',
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
@@ -281,7 +280,6 @@ const styles = EStyleSheet.create({
   text: {
     fontSize: '12rem',
     color: colors.projectText,
-    textAlign: 'center',
     fontWeight: 'bold',
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
