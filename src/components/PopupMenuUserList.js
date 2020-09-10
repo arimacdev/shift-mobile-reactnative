@@ -338,7 +338,7 @@ const styles = EStyleSheet.create({
   },
   menuStyleIOS: {
     bottom: 200,
-    height: '60%',
+    height: '53%',
     backgroundColor: colors.projectBgColor,
     borderRadius: '5rem',
   },
