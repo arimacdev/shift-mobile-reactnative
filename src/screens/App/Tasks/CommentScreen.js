@@ -400,12 +400,9 @@ class ChatScreen extends Component {
             this.getTagUsers(commentId, taskId);
             this.setState({dataLoading: false, edit: false});
             this.sendMessageToSocket(chatText);
-          } else {
-            this.setState({dataLoading: false});
           }
         })
         .catch(error => {
-          this.setState({dataLoading: false});
           if (error.status == 401) {
             Utils.showAlert(
               true,
@@ -585,7 +582,6 @@ class ChatScreen extends Component {
             this.blurContentEditor();
             this.getTagUsers(commentId, taskId);
             this.submitChatMessage(chatText);
-          } else {
           }
         })
         .catch(error => {
@@ -982,7 +978,7 @@ class ChatScreen extends Component {
     if (!this.state.isDeleteEvent) {
       this.flatList.scrollToEnd({animated: true});
     }
-    this.setState({isDeleteEvent: false});
+    // this.setState({isDeleteEvent: false});
   };
 
   async getChatText(html) {
@@ -1153,21 +1149,23 @@ class ChatScreen extends Component {
     this.selectedUsers = [];
     let usersFromHtml = [];
 
-    const rootNode = DomSelector(this.state.chatText);
-    let userListData = rootNode.getElementsByTagName('var');
+    if (this.selectedUserList.length > 0) {
+      const rootNode = DomSelector(this.state.chatText);
+      let userListData = rootNode.getElementsByTagName('var');
 
-    for (let index = 0; index < userListData.length; index++) {
-      const element = userListData[index];
-      let replacedName = element.children[0].text.replace('@', '');
-      usersFromHtml.push(replacedName);
-    }
+      for (let index = 0; index < userListData.length; index++) {
+        const element = userListData[index];
+        let replacedName = element.children[0].text.replace('@', '');
+        usersFromHtml.push(replacedName);
+      }
 
-    for (let i = 0; i < this.selectedUserList.length; i++) {
-      const elementFirstArray = this.selectedUserList[i];
-      for (let j = 0; j < usersFromHtml.length; j++) {
-        const elementSecondArray = usersFromHtml[j];
-        if (elementFirstArray.username == elementSecondArray) {
-          this.selectedUsers.push(elementFirstArray.userId);
+      for (let i = 0; i < this.selectedUserList.length; i++) {
+        const elementFirstArray = this.selectedUserList[i];
+        for (let j = 0; j < usersFromHtml.length; j++) {
+          const elementSecondArray = usersFromHtml[j];
+          if (elementFirstArray.username == elementSecondArray) {
+            this.selectedUsers.push(elementFirstArray.userId);
+          }
         }
       }
     }
