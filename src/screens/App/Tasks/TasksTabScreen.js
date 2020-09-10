@@ -1463,19 +1463,23 @@ class TasksTabScreen extends Component {
             ).format('YYYY-MM-DD[T]HH:mm:ss')
           : '';
 
-      this.setState({dataLoading: true});
-      let newTaskData = await APIServices.addMainTaskToProjectData(
-        tasksNameFilter,
-        selectedProjectID,
-        taskAssignee,
-        taskDueDate,
-      );
-      if (newTaskData.message == 'success') {
-        this.setState({dataLoading: false, tasksName: ''});
-        this.selectedUserList = [];
-        this.getAllTaskInProject();
+      if (tasksNameFilter != '') {
+        this.setState({dataLoading: true});
+        let newTaskData = await APIServices.addMainTaskToProjectData(
+          tasksNameFilter,
+          selectedProjectID,
+          taskAssignee,
+          taskDueDate,
+        );
+        if (newTaskData.message == 'success') {
+          this.setState({dataLoading: false, tasksName: ''});
+          this.selectedUserList = [];
+          this.getAllTaskInProject();
+        } else {
+          this.setState({dataLoading: false});
+        }
       } else {
-        this.setState({dataLoading: false});
+        this.showAlert('', 'Please enter the task name first');
       }
     } catch (e) {
       this.showAlert('', 'New main task added fail');
