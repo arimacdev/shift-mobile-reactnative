@@ -298,7 +298,10 @@ class ChatScreen extends Component {
         this.setState({listStartIndex: startIndex, listEndIndex: endIndex});
       });
     } else {
-      Toast.show('All comments are loadded');
+      Toast.show('All comments are loadded', Toast.SHORT, [
+        'RCTModalHostViewController',
+        'UIAlertController',
+      ]);
     }
   }
 
