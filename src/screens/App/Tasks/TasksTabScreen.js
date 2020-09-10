@@ -1451,7 +1451,14 @@ class TasksTabScreen extends Component {
           : tasksName.split('#')[0].trim();
 
       let taskAssignee =
-        this.selectedUserList.length > 0 ? this.selectedUserList[0].userId : '';
+      this.selectedUserList.length > 0 &&
+      (this.state.tasksName.split('@')[0] == undefined
+        ? ''
+        : this.state.tasksName.split('@')[1].trim() ||
+          this.state.tasksName.split('#')[0].trim()) ==
+        this.selectedUserList[0].username
+        ? this.selectedUserList[0].userId
+        : '';
 
       let selectedProjectID = this.state.selectedProjectID;
 
