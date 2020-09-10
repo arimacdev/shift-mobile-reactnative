@@ -1,7 +1,7 @@
 export const PROTOCOL = 'https://';
 
-// export const WORKSPACE = `${PROTOCOL}project.arimaclanka.com/api/bff/`
-export const WORKSPACE = `${PROTOCOL}pmtool.devops.arimac.xyz/api/bff/`;
+export const WORKSPACE = `${PROTOCOL}project.arimaclanka.com/api/bff/`;
+// export const WORKSPACE = `${PROTOCOL}pmtool.devops.arimac.xyz/api/bff/`;
 
 export const GET_ORGANIZATION_WORK_SPACE = `${WORKSPACE}organization?`;
 
@@ -115,4 +115,4 @@ export const UPDATE_PROJECT_FOLDER = `projects`;
 export const DELETE_PROJECT_FOLDER = `projects`;
 export const MOVE_FILES_BETWEEN_FOLDERS = `projects`;
 
-export const BLOCK_USER = `projects`
+export const BLOCK_USER = `projects`;
