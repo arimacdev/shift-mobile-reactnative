@@ -530,11 +530,13 @@ class TasksTabScreen extends Component {
     let textInputs = this.state.textInputs;
 
     if (textInputs[indexMain] == '' || textInputs[indexMain] == undefined) {
+      textInputs[indexMain] = '';
       this.setState({
         showUserListModal: false,
         tasksName: '',
         duedate: '',
         dueTime: '',
+        textInputs,
       });
       this.selectedUserList = [];
     }
@@ -1124,6 +1126,8 @@ class TasksTabScreen extends Component {
         default:
           break;
       }
+    } else if (index == 1 && value == 'None') {
+      this.getMyTaskInProject();
     } else {
       this.setState(
         {
@@ -1330,13 +1334,17 @@ class TasksTabScreen extends Component {
       this.setState({
         tasksName: replasedText.concat('@' + item.label + ' '),
       });
-      this.mainTaskTextInput.focus();
+      setTimeout(() => {
+        this.mainTaskTextInput.focus();
+      }, 150);
     } else {
       textInputs[subtaskTextInputIndex] = replasedText.concat(
         '@' + item.label + ' ',
       );
       this.setState({textInputs});
-      this.subTaskTextInputs[subtaskTextInputIndex].focus();
+      setTimeout(() => {
+        this.subTaskTextInputs[subtaskTextInputIndex].focus();
+      }, 150);
     }
   }
 
