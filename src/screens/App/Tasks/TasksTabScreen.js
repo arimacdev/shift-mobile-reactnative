@@ -1105,11 +1105,10 @@ class TasksTabScreen extends Component {
   async componentDidMount() {}
 
   async tabOpenTaskTab() {
-    let selectedProjectID = this.props.selectedProjectID;
-    let selectedProjectName = this.props.projDetails.projectName;
     let value = this.state.filterType;
     let filterTaskType = this.state.filterTaskType;
     let assigneeId = this.state.assigneeId;
+    let index = this.state.index;
 
     if (this.state.filter) {
       switch (value) {
@@ -1128,8 +1127,6 @@ class TasksTabScreen extends Component {
     } else {
       this.setState(
         {
-          selectedProjectID: selectedProjectID,
-          selectedProjectName: selectedProjectName,
           filterType: 'None',
           filter: false,
           index: 0,
@@ -1238,8 +1235,7 @@ class TasksTabScreen extends Component {
           ? subTasksName
           : subTasksName.split('#')[0].trim();
 
-      let taskAssignee =
-        this.selectedUserList.length > 0 ? this.selectedUserList[0].userId : '';
+      let taskAssignee = this.getTaskAssignee();
 
       let taskDueDate =
         duedate != ''
@@ -1249,22 +1245,26 @@ class TasksTabScreen extends Component {
             ).format('YYYY-MM-DD[T]HH:mm:ss')
           : '';
 
-      this.setState({dataLoading: true});
+      if (subTasksNameFilter != '') {
+        this.setState({dataLoading: true});
 
-      let newTaskData = await APIServices.addSubTaskToProjectData(
-        subTasksNameFilter,
-        selectedProjectID,
-        taskId,
-        taskAssignee,
-        taskDueDate,
-      );
+        let newTaskData = await APIServices.addSubTaskToProjectData(
+          subTasksNameFilter,
+          selectedProjectID,
+          taskId,
+          taskAssignee,
+          taskDueDate,
+        );
 
-      if (newTaskData.message == 'success') {
-        this.setState({dataLoading: false, textInputs: []});
-        this.selectedUserList = [];
-        this.getAllTaskInProject();
+        if (newTaskData.message == 'success') {
+          this.setState({dataLoading: false, textInputs: []});
+          this.selectedUserList = [];
+          this.getAllTaskInProject();
+        } else {
+          this.setState({dataLoading: false, textInputs: []});
+        }
       } else {
-        this.setState({dataLoading: false, textInputs: []});
+        this.showAlert('', 'Please enter the sub task name first');
       }
     } catch (e) {
       this.showAlert('', 'New sub task added fail');
@@ -1370,7 +1370,7 @@ class TasksTabScreen extends Component {
     } else {
       textInputs[subtaskTextInputIndex] = textInputs[
         subtaskTextInputIndex
-      ].concat(newDate);
+      ].concat(newDate + ' ');
       this.setState({textInputs});
     }
   };
@@ -1435,6 +1435,48 @@ class TasksTabScreen extends Component {
     );
   }
 
+  getTaskAssignee() {
+    let mainTaskTextChange = this.state.mainTaskTextChange;
+    let subtaskTextInputIndex = this.state.subtaskTextInputIndex;
+    let taskAssignee = '';
+
+    if (mainTaskTextChange) {
+      let tasksName =
+        this.state.tasksName.split('@')[1] == undefined
+          ? ''
+          : this.state.tasksName.split('@')[1].trim();
+
+      let tasksNameFilter =
+        tasksName.split('#')[0] == undefined
+          ? ''
+          : tasksName.split('#')[0].trim();
+
+      taskAssignee =
+        this.selectedUserList.length > 0 &&
+        this.selectedUserList[0].username == tasksNameFilter
+          ? this.selectedUserList[0].userId
+          : '';
+    } else {
+      let subTasksName =
+        this.state.textInputs[subtaskTextInputIndex].split('@')[1] == undefined
+          ? ''
+          : this.state.textInputs[subtaskTextInputIndex].split('@')[1].trim();
+
+      let subTasksNameFilter =
+        subTasksName.split('#')[0] == undefined
+          ? ''
+          : subTasksName.split('#')[0].trim();
+
+      taskAssignee =
+        this.selectedUserList.length > 0 &&
+        this.selectedUserList[0].username == subTasksNameFilter
+          ? this.selectedUserList[0].userId
+          : '';
+    }
+
+    return taskAssignee;
+  }
+
   async onNewTasksNameSubmit(text) {
     let duedate = this.state.duedate != '' ? this.state.duedate : '';
     let dueTime = this.state.dueTime != '' ? this.state.dueTime : '';
@@ -1450,8 +1492,7 @@ class TasksTabScreen extends Component {
           ? tasksName
           : tasksName.split('#')[0].trim();
 
-      let taskAssignee =
-        this.selectedUserList.length > 0 ? this.selectedUserList[0].userId : '';
+      let taskAssignee = this.getTaskAssignee();
 
       let selectedProjectID = this.state.selectedProjectID;
 
