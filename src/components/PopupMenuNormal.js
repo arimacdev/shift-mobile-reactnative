@@ -1,13 +1,5 @@
 import React, {Component} from 'react';
-import {
-  View,
-  StyleSheet,
-  Text,
-  Image,
-  FlatList,
-  Platform,
-  Dimensions,
-} from 'react-native';
+import {View, Text, Image, FlatList, Platform, Dimensions} from 'react-native';
 import {
   Menu,
   MenuOptions,

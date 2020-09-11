@@ -6,14 +6,9 @@
 import React from 'react';
 import {
   Appearance,
-  Button,
   KeyboardAvoidingView,
   SafeAreaView,
   ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
   Dimensions,
 } from 'react-native';
 import {RichEditor, RichToolbar} from 'react-native-pell-rich-editor';
