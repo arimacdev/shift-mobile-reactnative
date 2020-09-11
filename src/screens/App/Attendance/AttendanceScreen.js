@@ -320,7 +320,6 @@ const styles = EStyleSheet.create({
   text: {
     fontSize: '14rem',
     color: colors.projectText,
-    textAlign: 'center',
     fontWeight: 'bold',
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
