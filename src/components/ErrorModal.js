@@ -1,13 +1,11 @@
 import React, {Component} from 'react';
-import {Dimensions, View, Text, TouchableOpacity, Image} from 'react-native';
+import {Dimensions} from 'react-native';
 import {connect} from 'react-redux';
 import * as actions from '../redux/actions';
 import colors from '../config/colors';
 import EStyleSheet from 'react-native-extended-stylesheet';
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
-import Modal from 'react-native-modal';
-import icons from '../asserts/icons/icons';
 import AwesomeAlert from 'react-native-awesome-alerts';
 
 class ErrorModal extends Component {
