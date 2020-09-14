@@ -17,6 +17,7 @@ import * as actions from '../redux/actions';
 import NavigationService from '../services/NavigationService';
 import icons from '../asserts/icons/icons';
 import MenuItems from './MenuItems';
+import images from '../asserts/img/images';
 
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
@@ -90,10 +91,7 @@ class Header extends Component {
           <View style={styles.header}>
             <View style={styles.menuIconContatiner}>
               <TouchableOpacity activeOpacity={0.6} onPress={onPress}>
-                <Image
-                  source={require('../asserts/img/drawer.png')}
-                  style={styles.icon}
-                />
+                <Image source={images.drawer} style={styles.icon} />
               </TouchableOpacity>
             </View>
             <View style={styles.leftContainer}>
