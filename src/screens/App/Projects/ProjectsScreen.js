@@ -67,6 +67,7 @@ class ProjectsScreen extends Component {
       projects: [],
       allProjects: [],
       selectedType: 'Presales',
+      searchValue: 'presales',
     };
   }
 
@@ -76,7 +77,8 @@ class ProjectsScreen extends Component {
       this.props.projects &&
       this.props.projects.length > 0
     ) {
-      let searchValue = 'presales';
+      this.props.drawerItemSelect('projects');
+      let searchValue = this.state.searchValue;
       let filteredData = this.props.projects.filter(function(item) {
         return item.projectStatus.includes(searchValue);
       });
@@ -143,6 +145,7 @@ class ProjectsScreen extends Component {
     this.setState({
       projects: sortData,
       selectedType: key,
+      searchValue: searchValue,
     });
   }
 
@@ -205,7 +208,7 @@ class ProjectsScreen extends Component {
 
   loadProjects() {
     this.setState({
-      selectedType: 'Presales',
+      selectedType: this.state.selectedType,
     });
     AsyncStorage.getItem('userID').then(userID => {
       this.props.getAllProjectsByUser(userID);
