@@ -57,6 +57,7 @@ const colors = {
   colorShuttleGrey: '#576377',
   colorForestGreen: '#2E9027',
   colorMidnightBlue: '#0C0C5A',
+  colorMidnightBlueLight: '#252677',
   colorBittersweet: '#FF6161',
   colorDeepSkyBlue: '#0BAFFF',
   colorSolitude: '#E5E9EF',

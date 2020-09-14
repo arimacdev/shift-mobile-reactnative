@@ -6,7 +6,6 @@ import {
   ScrollView,
   TouchableOpacity,
   Image,
-  Alert,
 } from 'react-native';
 import {DrawerNavigatorItems} from 'react-navigation-drawer';
 import {Text} from 'native-base';
@@ -23,6 +22,7 @@ import OneSignal from 'react-native-onesignal';
 import APIServices from '../services/APIServices';
 import MessageShowModal from './MessageShowModal';
 import Utils from '../utils/Utils';
+import images from '../asserts/img/images';
 
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
@@ -131,7 +131,7 @@ const CustomDrawerContentComponent = props => {
             onPress={() => props.navigation.closeDrawer()}
             style={styles.headerClose}>
             <Image
-              source={require('../asserts/img/drawer_close.png')}
+              source={images.drawerClose}
               style={{
                 width: EStyleSheet.value('18rem'),
                 height: EStyleSheet.value('18rem'),
@@ -141,7 +141,7 @@ const CustomDrawerContentComponent = props => {
         </TouchableOpacity>
         <View
           style={{
-            borderBottomColor: '#252677',
+            borderBottomColor: colors.colorMidnightBlueLight,
             borderBottomWidth: 1,
           }}
         />
@@ -160,7 +160,7 @@ const CustomDrawerContentComponent = props => {
                   ? colors.white
                   : colors.colorGovernorBay
               }
-              source={require('../asserts/img/drawer_projects.png')}
+              source={images.drawerProjects}
               style={styles.iconStyle}
               resizeMode={'contain'}
             />
@@ -187,7 +187,7 @@ const CustomDrawerContentComponent = props => {
                   ? colors.white
                   : colors.colorGovernorBay
               }
-              source={require('../asserts/img/drawer_tasks.png')}
+              source={images.drawerTasks}
               style={styles.iconStyle}
               resizeMode={'contain'}
             />
@@ -215,7 +215,7 @@ const CustomDrawerContentComponent = props => {
                   ? colors.white
                   : colors.colorGovernorBay
               }
-              source={require('../asserts/img/drawer_workload.png')}
+              source={images.drawerWorkload}
               style={styles.iconStyle}
               resizeMode={'contain'}
             />
@@ -244,7 +244,7 @@ const CustomDrawerContentComponent = props => {
                   ? colors.white
                   : colors.colorGovernorBay
               }
-              source={require('../asserts/img/drawer_users.png')}
+              source={images.drawerUsers}
               style={styles.iconStyle}
               resizeMode={'contain'}
             />
@@ -268,7 +268,7 @@ const CustomDrawerContentComponent = props => {
                 ? colors.white
                 : colors.colorGovernorBay
             }
-            source={require('../asserts/img/logout.png')}
+            source={images.logout}
             style={styles.iconStyle}
             resizeMode={'contain'}
           />
