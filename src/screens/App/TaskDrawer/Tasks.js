@@ -312,6 +312,7 @@ class Tasks extends Component {
     let textInputs = this.state.textInputs;
 
     if (textInputs[indexMain] == '' || textInputs[indexMain] == undefined) {
+      textInputs[indexMain] = '';
       this.setState({
         showUserListModal: false,
         taskName: '',
@@ -360,7 +361,7 @@ class Tasks extends Component {
     } else {
       textInputs[subtaskTextInputIndex] = textInputs[
         subtaskTextInputIndex
-      ].concat(newDate);
+      ].concat(newDate + ' ');
       this.setState({textInputs});
     }
   };
@@ -376,6 +377,48 @@ class Tasks extends Component {
         />
       </View>
     );
+  }
+
+  getTaskAssignee() {
+    let mainTaskTextChange = this.state.mainTaskTextChange;
+    let subtaskTextInputIndex = this.state.subtaskTextInputIndex;
+    let taskAssignee = '';
+
+    if (mainTaskTextChange) {
+      let taskName =
+        this.state.taskName.split('@')[1] == undefined
+          ? ''
+          : this.state.taskName.split('@')[1].trim();
+
+      let tasksNameFilter =
+        taskName.split('#')[0] == undefined
+          ? ''
+          : taskName.split('#')[0].trim();
+
+      taskAssignee =
+        this.selectedUserList.length > 0 &&
+        this.selectedUserList[0].username == tasksNameFilter
+          ? this.selectedUserList[0].userId
+          : '';
+    } else {
+      let subTasksName =
+        this.state.textInputs[subtaskTextInputIndex].split('@')[1] == undefined
+          ? ''
+          : this.state.textInputs[subtaskTextInputIndex].split('@')[1].trim();
+
+      let subTasksNameFilter =
+        subTasksName.split('#')[0] == undefined
+          ? ''
+          : subTasksName.split('#')[0].trim();
+
+      taskAssignee =
+        this.selectedUserList.length > 0 &&
+        this.selectedUserList[0].username == subTasksNameFilter
+          ? this.selectedUserList[0].userId
+          : '';
+    }
+
+    return taskAssignee;
   }
 
   onNewTaskNameChange(text) {
@@ -416,8 +459,7 @@ class Tasks extends Component {
           ? taskName
           : taskName.split('#')[0].trim();
 
-      let taskAssignee =
-        this.selectedUserList.length > 0 ? this.selectedUserList[0].userId : '';
+      let taskAssignee = this.getTaskAssignee();
 
       let taskDueDate =
         duedate != ''
@@ -429,19 +471,23 @@ class Tasks extends Component {
 
       let selectedTaskGroupId = this.state.selectedTaskGroupId;
 
-      this.setState({dataLoading: true});
-      let newGroupTaskData = await APIServices.addTaskGroupTaskData(
-        tasksNameFilter,
-        selectedTaskGroupId,
-        taskAssignee,
-        taskDueDate,
-      );
-      if (newGroupTaskData.message == 'success') {
-        this.setState({dataLoading: false, taskName: ''});
-        this.selectedUserList = [];
-        this.getAllTaskInGroup();
+      if (tasksNameFilter != '') {
+        this.setState({dataLoading: true});
+        let newGroupTaskData = await APIServices.addTaskGroupTaskData(
+          tasksNameFilter,
+          selectedTaskGroupId,
+          taskAssignee,
+          taskDueDate,
+        );
+        if (newGroupTaskData.message == 'success') {
+          this.setState({dataLoading: false, taskName: ''});
+          this.selectedUserList = [];
+          this.getAllTaskInGroup();
+        } else {
+          this.setState({dataLoading: false});
+        }
       } else {
-        this.setState({dataLoading: false});
+        this.showAlert('', 'Please enter the main task name first');
       }
     } catch (e) {
       this.setState({dataLoading: false});
@@ -502,8 +548,7 @@ class Tasks extends Component {
           ? subTasksName
           : subTasksName.split('#')[0].trim();
 
-      let taskAssignee =
-        this.selectedUserList.length > 0 ? this.selectedUserList[0].userId : '';
+      let taskAssignee = this.getTaskAssignee();
 
       let taskDueDate =
         duedate != ''
@@ -517,21 +562,25 @@ class Tasks extends Component {
 
       let taskId = item.parentTask.taskId;
 
-      this.setState({dataLoading: true});
+      if (subTasksNameFilter != '') {
+        this.setState({dataLoading: true});
 
-      let newTaskData = await APIServices.addSubTaskGroupTaskData(
-        subTasksNameFilter,
-        selectedTaskGroupId,
-        taskId,
-        taskAssignee,
-        taskDueDate,
-      );
-      if (newTaskData.message == 'success') {
-        this.setState({dataLoading: false, textInputs: []});
-        this.selectedUserList = [];
-        this.getAllTaskInGroup();
+        let newTaskData = await APIServices.addSubTaskGroupTaskData(
+          subTasksNameFilter,
+          selectedTaskGroupId,
+          taskId,
+          taskAssignee,
+          taskDueDate,
+        );
+        if (newTaskData.message == 'success') {
+          this.setState({dataLoading: false, textInputs: []});
+          this.selectedUserList = [];
+          this.getAllTaskInGroup();
+        } else {
+          this.setState({dataLoading: false, textInputs: []});
+        }
       } else {
-        this.setState({dataLoading: false, textInputs: []});
+        this.showAlert('', 'Please enter the sub task name first');
       }
     } catch (error) {
       this.setState({dataLoading: false, textInputs: []});
@@ -568,13 +617,17 @@ class Tasks extends Component {
       this.setState({
         taskName: replasedText.concat('@' + item.label + ' '),
       });
-      this.mainTaskTextInput.focus();
+      setTimeout(() => {
+        this.mainTaskTextInput.focus();
+      }, 150);
     } else {
       textInputs[subtaskTextInputIndex] = replasedText.concat(
         '@' + item.label + ' ',
       );
       this.setState({textInputs});
-      this.subTaskTextInputs[subtaskTextInputIndex].focus();
+      setTimeout(() => {
+        this.subTaskTextInputs[subtaskTextInputIndex].focus();
+      }, 150);
     }
   }
 
