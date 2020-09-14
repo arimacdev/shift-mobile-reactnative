@@ -1111,6 +1111,8 @@ class TasksTabScreen extends Component {
     let filterTaskType = this.state.filterTaskType;
     let assigneeId = this.state.assigneeId;
     let index = this.state.index;
+    let selectedProjectID = this.props.selectedProjectID;
+    let selectedProjectName = this.props.projDetails.projectName;
 
     if (this.state.filter) {
       switch (value) {
@@ -1131,6 +1133,8 @@ class TasksTabScreen extends Component {
     } else {
       this.setState(
         {
+          selectedProjectID: selectedProjectID,
+          selectedProjectName: selectedProjectName,
           filterType: 'None',
           filter: false,
           index: 0,
