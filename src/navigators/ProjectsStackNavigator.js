@@ -180,13 +180,7 @@ export const ProjectsStackNavigator = createStackNavigator(
     ViewProfileScreen: {
       screen: ViewProfileScreen,
       navigationOptions: ({navigation}) => ({
-        header: (
-          <Header
-            navigation={navigation}
-            title={'Profile'}
-            onPress={() => navigation.goBack()}
-          />
-        ),
+        header: null,
       }),
     },
     AddEditSubTaskScreen: {

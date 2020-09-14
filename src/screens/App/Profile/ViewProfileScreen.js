@@ -29,6 +29,7 @@ import moment from 'moment';
 import ImagePicker from 'react-native-image-picker';
 import MessageShowModal from '../../../components/MessageShowModal';
 import Utils from '../../../utils/Utils';
+import Header from '../../../components/Header';
 
 const config = strings.slack;
 
@@ -63,6 +64,7 @@ class ViewProfileScreen extends Component {
       // switchValue: false,
       showMessageModal: false,
       userMetricsData: [],
+      selectedScreen: '',
     };
   }
 
@@ -74,7 +76,10 @@ class ViewProfileScreen extends Component {
     } = this.props;
     let profile = params.profile;
     let userID = profile.userId;
-    this.setState({userID: userID});
+    let selectedScreen = params.selectedScreen;
+    console.log('ssssssssssssssssssssssssssssssssss', selectedScreen);
+
+    this.setState({userID: userID, selectedScreen: selectedScreen});
     this.fetchUserData(userID);
   }
 
@@ -573,6 +578,18 @@ class ViewProfileScreen extends Component {
 
     return (
       <View style={{flex: 1}}>
+        <Header
+          navigation={this.props.navigation}
+          title={'Profile'}
+          onPress={() => {
+            console.log("qqqqqqqqqqqqqqqqqqqqqqq",this.state.selectedScreen)
+            if (this.state.selectedScreen == 'Projects') {
+              this.props.navigation.goBack();
+            } else {
+              this.props.navigation.navigate(this.state.selectedScreen);
+            }
+          }}
+        />
         <ScrollView style={styles.container}>
           <View style={styles.header} />
           <View style={styles.avatarView}>

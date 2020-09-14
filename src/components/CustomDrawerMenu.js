@@ -90,6 +90,25 @@ const CustomDrawerContentComponent = props => {
     });
   };
 
+  const getSelectedScreen = () => {
+    let key = props.selectedDrawerItem;
+    let selectedScreen = 'Projects';
+    switch (key) {
+      case 'projects':
+        selectedScreen = 'Projects';
+        break;
+      case 'tasks':
+        selectedScreen = 'DrawerTasksScreen';
+        break;
+      case 'workload':
+        selectedScreen = 'WorkloadScreen';
+        break;
+      default:
+        break;
+    }
+    return selectedScreen;
+  };
+
   return (
     <ScrollView>
       <SafeAreaView
@@ -97,11 +116,13 @@ const CustomDrawerContentComponent = props => {
         forceInset={{top: 'always', horizontal: 'never'}}>
         <TouchableOpacity
           style={styles.header}
-          onPress={() =>
+          onPress={() => {
             props.navigation.navigate('ViewProfileScreen', {
               profile: props.loginUser,
-            })
-          }>
+              selectedScreen: getSelectedScreen(),
+              navigation: props.navigation
+            });
+          }}>
           <View style={styles.headerLeft}>
             {props.loginUser.profileImage ? (
               <FadeIn>
