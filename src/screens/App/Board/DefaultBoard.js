@@ -5,7 +5,6 @@ import {
   Image,
   Text,
   TouchableOpacity,
-  ScrollView,
   Dimensions,
 } from 'react-native';
 import {connect} from 'react-redux';
@@ -22,6 +21,7 @@ import {NavigationEvents} from 'react-navigation';
 import Triangle from 'react-native-triangle';
 import EmptyListView from '../../../components/EmptyListView';
 import icons from '../../../asserts/icons/icons';
+import Toast from 'react-native-simple-toast';
 
 class DefaultBoard extends Component {
   constructor(props) {
@@ -55,16 +55,11 @@ class DefaultBoard extends Component {
     let startIndex = 0;
     let endIndex = 10;
     let allTasks = true;
-    try {
-      this.setState({dataLoading: true});
-      let taskData = await this.getAllTaskInDefaultBoardDataDirectly(
-        startIndex,
-        endIndex,
-        allTasks,
-      );
-    } catch (error) {
-      this.setState({dataLoading: false});
-    }
+    await this.getAllTaskInDefaultBoardDataDirectly(
+      startIndex,
+      endIndex,
+      allTasks,
+    );
   }
 
   async lazyFetchData() {
@@ -72,27 +67,22 @@ class DefaultBoard extends Component {
       let listStartIndex = this.state.listStartIndex + 10;
       let listEndIndex = this.state.listEndIndex + 10;
       let allTasks = false;
-      try {
-        this.setState({dataLoading: true});
-        await this.getAllTaskInDefaultBoardDataDirectly(
-          listStartIndex,
-          listEndIndex,
-          allTasks,
-        );
-      } catch (error) {
-        this.setState({dataLoading: false});
-      }
+
+      await this.getAllTaskInDefaultBoardDataDirectly(
+        listStartIndex,
+        listEndIndex,
+        allTasks,
+      );
       this.setState({
         listStartIndex: listStartIndex,
         listEndIndex: listEndIndex,
       });
     } else {
-      // TODO: Add toast
+      Toast.show('All comments are loadded', Toast.SHORT, [
+        'RCTModalHostViewController',
+        'UIAlertController',
+      ]);
     }
-    // let selectedProjectID = this.state.selectedProjectID;
-    // AsyncStorage.getItem('userID').then(userID => {
-    //   this.props.getMyTaskInProjects(userID, selectedProjectID, myListStartIndex, myListEndIndex);
-    // });
   }
 
   getAllTaskInDefaultBoardDataDirectly = async (
@@ -240,28 +230,25 @@ class DefaultBoard extends Component {
   render() {
     let dataLoading = this.state.dataLoading;
     return (
-      <View>
+      <View style={styles.container}>
         <NavigationEvents
           onWillFocus={payload => this.loadDefulatBords(payload)}
         />
-        <View>
-          {this.state.tasks.length > 0 && (
-            <View style={styles.subContainer}>
-              <FlatList
-                style={styles.flalList}
-                data={this.state.tasks}
-                renderItem={({item}) => this.renderTaskList(item)}
-                keyExtractor={item => item.projId}
-                onEndReached={this.lazyFetchData}
-                onEndReachedThreshold={0.7}
-                onScroll={this.onMyListScroll}
-                // ListEmptyComponent={<EmptyListView />}
-                // onRefresh={() => this.onRefresh()}
-                // refreshing={isFetching}
-              />
-            </View>
-          )}
-        </View>
+        {this.state.tasks.length > 0 ? (
+          <View style={styles.subContainer}>
+            <FlatList
+              style={styles.flalList}
+              data={this.state.tasks}
+              renderItem={({item}) => this.renderTaskList(item)}
+              keyExtractor={item => item.projId}
+              onEndReached={this.lazyFetchData}
+              onEndReachedThreshold={0.7}
+              onScroll={this.onMyListScroll}
+            />
+          </View>
+        ) : (
+          <EmptyListView />
+        )}
         {dataLoading && <Loader />}
       </View>
     );
@@ -269,16 +256,19 @@ class DefaultBoard extends Component {
 }
 
 const styles = EStyleSheet.create({
+  container: {
+    flex: 1,
+  },
   subContainer: {
     backgroundColor: colors.projectBgColor,
     borderRadius: '5rem',
     marginHorizontal: '20rem',
-    marginTop: '7rem',
-    marginBottom: '180rem',
+    marginTop: '5rem',
+    marginBottom: '10rem',
   },
   flalList: {
-    marginTop: '8rem',
-    marginBottom: '4rem',
+    marginTop: '10rem',
+    marginBottom: '5rem',
   },
   mainContainer: {
     backgroundColor: colors.projectBgColor,
