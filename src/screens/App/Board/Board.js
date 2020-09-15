@@ -67,7 +67,7 @@ class Board extends Component {
     const buttons = ['Default Borad', 'Other Borad'];
     const {selectedIndex} = this.state;
     return (
-      <View>
+      <View style={styles.container}>
         <ButtonGroup
           onPress={this.updateIndex}
           selectedIndex={selectedIndex}
@@ -76,11 +76,7 @@ class Board extends Component {
             selectedIndex == 0 ? styles.defaultBoardView : styles.otherBoardView
           }
           selectedButtonStyle={{backgroundColor: colors.colorDeepSkyBlue}}
-          textStyle={{
-            fontFamily: 'CircularStd-Medium',
-            fontWeight: 'bold',
-            fontSize: 14,
-          }}
+          textStyle={styles.textStyle}
           disabledTextStyle={{color: colors.colorMidnightExpress}}
         />
         {this.renderPage()}
@@ -90,6 +86,9 @@ class Board extends Component {
 }
 
 const styles = EStyleSheet.create({
+  container: {
+    flex: 1,
+  },
   defaultBoardView: {
     height: 60,
     marginTop: '7%',
@@ -107,6 +106,11 @@ const styles = EStyleSheet.create({
     marginRight: '8%',
     borderRadius: '10rem',
     backgroundColor: colors.projectBgColor,
+  },
+  textStyle: {
+    fontFamily: 'CircularStd-Medium',
+    fontWeight: 'bold',
+    fontSize: '13rem',
   },
 });
 
