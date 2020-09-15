@@ -23,6 +23,7 @@ import moment from 'moment';
 import PopupMenuNormal from '../../../components/PopupMenuNormal';
 import Triangle from 'react-native-triangle';
 import EmptyListView from '../../../components/EmptyListView';
+import Toast from 'react-native-simple-toast';
 
 const menuItems = [
   {value: 0, text: 'Edit Board Names'},
@@ -56,12 +57,7 @@ class OtherBoard extends Component {
     let startIndex = 0;
     let endIndex = 10;
     let allTasks = false;
-    try {
-      this.setState({dataLoading: true});
-      this.getAllTaskInDefaultBoardDataDirectly(startIndex, endIndex, allTasks);
-    } catch (error) {
-      this.setState({dataLoading: false});
-    }
+    this.getAllTaskInDefaultBoardDataDirectly(startIndex, endIndex, allTasks);
   }
 
   getAllTaskInDefaultBoardDataDirectly = async (
@@ -115,27 +111,21 @@ class OtherBoard extends Component {
       let listStartIndex = this.state.listStartIndex + 10;
       let listEndIndex = this.state.listEndIndex + 10;
       let allTasks = false;
-      try {
-        this.setState({dataLoading: true});
-        await this.getAllTaskInDefaultBoardDataDirectly(
-          listStartIndex,
-          listEndIndex,
-          allTasks,
-        );
-      } catch (error) {
-        this.setState({dataLoading: false});
-      }
+      await this.getAllTaskInDefaultBoardDataDirectly(
+        listStartIndex,
+        listEndIndex,
+        allTasks,
+      );
       this.setState({
         listStartIndex: listStartIndex,
         listEndIndex: listEndIndex,
       });
     } else {
-      // TODO: Add toast
+      Toast.show('All comments are loadded', Toast.SHORT, [
+        'RCTModalHostViewController',
+        'UIAlertController',
+      ]);
     }
-    // let selectedProjectID = this.state.selectedProjectID;
-    // AsyncStorage.getItem('userID').then(userID => {
-    //   this.props.getMyTaskInProjects(userID, selectedProjectID, myListStartIndex, myListEndIndex);
-    // });
   }
 
   async getAllSprintInProject(taskData) {
@@ -205,10 +195,7 @@ class OtherBoard extends Component {
               data={data.item.tasks}
               renderItem={this.renderItemSubTile.bind(this)}
               keyExtractor={item => item.id}
-              // onEndReached={this.lazyFetchData}
-              // onEndReachedThreshold={0.7}
-              // onScroll={this.onMyListScroll}
-              // ListEmptyComponent={<EmptyListView />}
+              ListEmptyComponent={<EmptyListView />}
             />
           </View>
         </View>
@@ -330,7 +317,7 @@ class OtherBoard extends Component {
 
   render() {
     return (
-      <View>
+      <View style={styles.container}>
         <NavigationEvents onWillFocus={payload => this.loadBords(payload)} />
         <TouchableOpacity onPress={() => this.goToAddSprint()}>
           <View style={styles.button}>
@@ -345,19 +332,16 @@ class OtherBoard extends Component {
             />
           </View>
         </TouchableOpacity>
-        <FlatList
-          data={this.state.sprints}
-          horizontal={true}
-          renderItem={this.renderItemMainTile.bind(this)}
-          keyExtractor={item => item.id}
-          style={{
-            marginBottom:
-              Platform.OS == 'ios'
-                ? EStyleSheet.value('25rem')
-                : EStyleSheet.value('260rem'),
-          }}
-          // ListEmptyComponent={<EmptyListView />}
-        />
+        {this.state.sprints.length > 0 ? (
+          <FlatList
+            data={this.state.sprints}
+            horizontal={true}
+            renderItem={this.renderItemMainTile.bind(this)}
+            keyExtractor={item => item.id}
+          />
+        ) : (
+          <EmptyListView />
+        )}
         {this.state.dataLoading && <Loader />}
       </View>
     );
@@ -365,6 +349,9 @@ class OtherBoard extends Component {
 }
 
 const styles = EStyleSheet.create({
+  container: {
+    flex: 1,
+  },
   button: {
     flexDirection: 'row',
     backgroundColor: colors.lightGreen,
@@ -452,8 +439,9 @@ const styles = EStyleSheet.create({
     alignItems: 'center',
   },
   sub_scrollView: {
-    height: Platform.OS == 'ios' ? '70%' : '78%',
+    height: Platform.OS == 'ios' ? '70%' : '80%',
     width: '100%',
+    marginBottom: '15rem',
     backgroundColor: colors.projectBgColor,
   },
   triangleShape: {
