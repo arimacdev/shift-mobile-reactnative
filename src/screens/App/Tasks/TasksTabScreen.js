@@ -36,6 +36,8 @@ import EmptyListView from '../../../components/EmptyListView';
 import AwesomeAlert from 'react-native-awesome-alerts';
 import PopupMenuUserList from '../../../components/PopupMenuUserList';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import Toast from 'react-native-simple-toast';
+import Utils from '../../../utils/Utils';
 
 const Placeholder = () => (
   <View style={styles.landing}>
@@ -222,19 +224,6 @@ class TasksTabScreen extends Component {
     }
   }
 
-  componentDidMount() {
-    // let selectedProjectID = this.props.selectedProjectID;
-    // this.setState(
-    //   {
-    //     selectedProjectID: selectedProjectID,
-    //   },
-    //   () => {
-    //     this.getAllTaskInProject();
-    //   },
-    // );
-    // this.getActiveUserList(selectedProjectID);
-  }
-
   componentWillMount() {
     let selectedProjectID = this.props.selectedProjectID;
 
@@ -363,7 +352,10 @@ class TasksTabScreen extends Component {
         listEndIndex: listEndIndex,
       });
     } else {
-      // TODO: Add toast
+      Toast.show('All comments are loadded', Toast.SHORT, [
+        'RCTModalHostViewController',
+        'UIAlertController',
+      ]);
     }
   };
 
@@ -400,7 +392,7 @@ class TasksTabScreen extends Component {
       })
       .catch(error => {
         this.setState({dataLoading: false});
-        // Utils.showAlert(true, '', error.data.message, this.props);
+        Utils.showAlert(true, '', 'Data loading error', this.props);
       });
   };
 
@@ -423,9 +415,6 @@ class TasksTabScreen extends Component {
 
   lazyGetMyTaskInProject = async () => {
     let selectedProjectID = this.state.selectedProjectID;
-    // this.setState({
-    //   filterType: 'None',
-    // });
     if (
       this.state.cachecdMyListData.length == 10 &&
       this.state.listScrolled == true
@@ -447,10 +436,6 @@ class TasksTabScreen extends Component {
     } else {
       // TODO: Add toast
     }
-    // let selectedProjectID = this.state.selectedProjectID;
-    // AsyncStorage.getItem('userID').then(userID => {
-    //   this.props.getMyTaskInProjects(userID, selectedProjectID, myListStartIndex, myListEndIndex);
-    // });
   };
 
   getAllMyTaskInProjectDirectly = async (
@@ -484,7 +469,7 @@ class TasksTabScreen extends Component {
       })
       .catch(error => {
         this.setState({dataLoading: false});
-        // Utils.showAlert(true, '', error.data.message, this.props);
+        Utils.showAlert(true, '', 'Data loading error', this.props);
       });
   };
 
@@ -722,8 +707,6 @@ class TasksTabScreen extends Component {
   }
 
   renderSubTasksList(item, parentTaskName) {
-    let selectedProjectID = this.state.selectedProjectID;
-    let selectedProjectName = this.state.selectedProjectName;
     return (
       <TouchableOpacity onPress={() => this.subTaskClick(item, parentTaskName)}>
         <View style={styles.subTasksView}>
@@ -741,8 +724,6 @@ class TasksTabScreen extends Component {
               <Text style={styles.subText} numberOfLines={1}>
                 {item.taskName}
               </Text>
-
-              {/* <Text style={styles.subTextMain}>{item.taskName}</Text> */}
             </View>
             <View
               style={[
@@ -779,9 +760,7 @@ class TasksTabScreen extends Component {
   }
 
   renderTaskList(item, indexMain) {
-    let index = this.state.index;
     let selectedProjectID = this.state.selectedProjectID;
-    let subTasksName = this.state.subTasksName;
     let selectedProjectName = this.state.selectedProjectName;
     let parentTaskName = item.parentTask.taskName;
     return (
@@ -829,8 +808,6 @@ class TasksTabScreen extends Component {
                 <Text style={styles.text} numberOfLines={1}>
                   {item.parentTask.taskName}
                 </Text>
-
-                {/* <Text style={styles.textMain}>{item.parentTask.taskName}</Text> */}
               </View>
               <View
                 style={[
@@ -884,7 +861,7 @@ class TasksTabScreen extends Component {
               style={{
                 marginBottom: EStyleSheet.value('15rem'),
               }}
-              data={index == 0 ? item.childTasks : item.childTasks}
+              data={item.childTasks}
               renderItem={({item}) =>
                 this.renderSubTasksList(item, parentTaskName)
               }
@@ -910,10 +887,6 @@ class TasksTabScreen extends Component {
   }
 
   renderMyTasksAndFilterTaskList(item, indexMain) {
-    let selectedProjectID = this.state.selectedProjectID;
-    let selectedProjectName = this.state.selectedProjectName;
-    let parentTaskName = '';
-
     return (
       <TouchableOpacity onPress={() => this.filterTaskClick(item)}>
         <View
@@ -928,11 +901,6 @@ class TasksTabScreen extends Component {
           />
           <View style={styles.subTasksMainView}>
             <View style={styles.subTasksTextView}>
-              {/* <Text style={styles.subTextMain}>
-                {this.state.selectedProjectName}
-              </Text>
-              <Text style={styles.subText}>{item.taskName}</Text> */}
-
               <Text
                 style={
                   item.isParent ? styles.parentTextMain : styles.subTextMain
@@ -1104,8 +1072,6 @@ class TasksTabScreen extends Component {
     });
   }
 
-  async componentDidMount() {}
-
   async tabOpenTaskTab() {
     let value = this.state.filterType;
     let filterTaskType = this.state.filterTaskType;
@@ -1159,9 +1125,6 @@ class TasksTabScreen extends Component {
   }
 
   renderUserListModal() {
-    let mainTaskTextChange = this.state.mainTaskTextChange;
-    let subtaskTextInputIndex = this.state.subtaskTextInputIndex;
-    let flatListScrollOffset = this.state.flatListScrollOffset;
     let activeUsers = this.state.activeUsers;
     let dataLength = this.state.dataLength;
 
