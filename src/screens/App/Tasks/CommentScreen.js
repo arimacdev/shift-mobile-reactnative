@@ -363,24 +363,6 @@ class ChatScreen extends Component {
       isDeleteEvent: true,
     });
     this.state.currentlyOpenSwipeable.recenter();
-
-    // let html = await this.richText.current?.getContentHtml();
-    // let src = '';
-    // try {
-    //   src = html.match(/src="([^"]*)/)[1];
-    // } catch (error) {
-    //   console.log('no image attached', src);
-    // }
-
-    // if (src != '') {
-    //   await this.setState({
-    //     chatText: this.state.chatText.replace(html,
-    //       '<img src=' +
-    //         src +
-    //         ' class="e-rte-image e-imginline" width="auto" height="auto" style="min-width: 0px; min-height: 0px; marginTop: 10px">',
-    //     ),
-    //   });
-    // }
   }
 
   async updateComment() {
@@ -682,19 +664,6 @@ class ChatScreen extends Component {
 
   async FilePicker() {
     this.setState({showImagePickerModal: true});
-    // Alert.alert(
-    //   'Add Files',
-    //   'Select the file source',
-    //   [
-    //     {text: 'Camera', onPress: () => this.selectCamera()},
-    //     {text: 'Gallery', onPress: () => this.selectGallery()},
-    //     // {text: 'Files', onPress: () => this.doumentPicker()},
-    //     {text: 'Cancel', onPress: () => console.log('Back')},
-    //   ],
-    //   {
-    //     cancelable: true,
-    //   },
-    // );
   }
 
   async selectCamera() {
@@ -806,7 +775,6 @@ class ChatScreen extends Component {
     await APIServices.uploadFileToComment(files, taskId)
       .then(response => {
         if (response.message == 'success') {
-          // this.richText.current?.insertImage('https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/1024px-React-icon.svg.png');
           this.richText.current?.blurContentEditor();
           this.setState({
             files: [],
@@ -1099,10 +1067,6 @@ class ChatScreen extends Component {
   }
 
   onChangeEditorText(text) {
-    // console.log('text', text);
-    // let replaceText = text;
-    // let subStringText = replaceText.substring(replaceText.indexOf(' @') + 1);
-
     this.setState({chatTextAll: text});
 
     if (text.match('@')) {
@@ -1142,7 +1106,6 @@ class ChatScreen extends Component {
       showUserListModal: false,
       chatText: replasedText.concat('<var>@' + item.label + '</var>&nbsp;'),
     });
-    // this.richText.current?.insertHTML(this.state.chatText)
   }
 
   async getTagUsers(commentId, taskId) {
@@ -1379,7 +1342,6 @@ const styles = EStyleSheet.create({
   },
   flalList: {
     marginBottom: '135rem',
-    // height: '400rem'
   },
   flalListReactions: {
     marginBottom: '5rem',
