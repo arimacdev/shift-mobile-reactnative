@@ -20,7 +20,7 @@ export default class App extends Component {
     this.state = {};
     this.store = createStore(reducers, {}, applyMiddleware(ReduxThunk));
     //Remove this method to stop OneSignal Debugging
-    OneSignal.setLogLevel(6, 0);
+    // OneSignal.setLogLevel(6, 0);
 
     OneSignal.init(strings.oneSignal.oneSignalAppId, {
       kOSSettingsKeyAutoPrompt: false,
