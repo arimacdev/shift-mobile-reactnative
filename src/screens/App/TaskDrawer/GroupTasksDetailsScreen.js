@@ -1024,12 +1024,7 @@ class GroupTasksDetailsScreen extends Component {
 
   setIsParent(taskResult) {
     let isParent = taskResult.data.isParent;
-    let subTaskListLength = this.state.subTaskListLength;
-    this.setState({
-      isParent: isParent,
-      // addParentTaskShow: subTaskListLength > 0 ? false : true,
-      // addChildTaskShow: isParent ? true : false,
-    });
+    this.setState({isParent: isParent});
 
     if (!isParent) {
       this.setState({
@@ -1085,13 +1080,10 @@ class GroupTasksDetailsScreen extends Component {
     let date1 = new Date(date);
     let newDate = '';
     let newDateValue = '';
-    if (this.state.reminder) {
-      newDate = moment(date1).format('MMMM DD, YYYY');
-      newDateValue = moment(date1).format('DD MM YYYY');
-    } else {
-      newDate = moment(date1).format('MMMM DD, YYYY');
-      newDateValue = moment(date1).format('DD MM YYYY');
-    }
+
+    newDate = moment(date1).format('MMMM DD, YYYY');
+    newDateValue = moment(date1).format('DD MM YYYY');
+
     if (this.state.reminder) {
       this.setState({
         remindDate: newDate,
@@ -1164,13 +1156,8 @@ class GroupTasksDetailsScreen extends Component {
     let newDate = '';
     let newDateValue = '';
 
-    if (this.state.reminder) {
-      newDate = moment(date).format('MMMM DD, YYYY');
-      newDateValue = moment(date).format('DD MM YYYY');
-    } else {
-      newDate = moment(date).format('MMMM DD, YYYY');
-      newDateValue = moment(date).format('DD MM YYYY');
-    }
+    newDate = moment(date).format('MMMM DD, YYYY');
+    newDateValue = moment(date).format('DD MM YYYY');
 
     if (event.type == 'set') {
       if (this.state.reminder) {
@@ -1909,7 +1896,6 @@ class GroupTasksDetailsScreen extends Component {
       ? this.state.selectedTaskID
       : this.state.selectedTaskIDFromModal;
 
-    let selectedTaskNameModal = this.state.selectedTaskName;
     let parentTaskName = this.state.selectedTaskName;
 
     this.setState({
@@ -2040,8 +2026,6 @@ class GroupTasksDetailsScreen extends Component {
     let alertTitle = this.state.alertTitle;
     let alertMsg = this.state.alertMsg;
     let taskName = this.state.taskName;
-    let selectedSprint = this.state.selectedSprint;
-    let sprints = this.state.sprints;
     let secondaryTaskId = this.state.secondaryTaskId;
     let isParent = this.state.isParent;
     let addParentTaskShow = this.state.addParentTaskShow;
@@ -2055,7 +2039,7 @@ class GroupTasksDetailsScreen extends Component {
         <Header
           isDelete={true}
           navigation={this.props.navigation}
-          title={this.state.taskName}
+          title={taskName}
           // drawStatus={true}
           // taskStatus={taskStatus ? taskStatus : ''}
           onPress={() => this.props.navigation.goBack()}
