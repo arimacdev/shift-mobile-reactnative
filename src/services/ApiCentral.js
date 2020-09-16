@@ -1,16 +1,14 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
 import jwtDecode from 'jwt-decode';
-import {BASE_URL, GET_NEW_TOKENS} from '../api/API';
+import {BASE_URL} from '../api/API';
 import NavigationService from '../services/NavigationService';
-import {authorize, refresh} from 'react-native-app-auth';
-import moment from 'moment';
+import {refresh} from 'react-native-app-auth';
 
 const request = async function(options, isHeader, headers) {
   let authHeader = null;
 
   if (isHeader) {
-    let currentTime = moment().format();
     const accessTokenExpirationDate = parseInt(
       await AsyncStorage.getItem('accessTokenExpirationDate'),
     );
