@@ -2153,12 +2153,6 @@ class TasksDetailsScreen extends Component {
             deleteTaskSuccess: true,
             showMessageModal: true,
           });
-          // Alert.alert(
-          //   'Success',
-          //   'Task Deleted',
-          //   [{text: 'OK', onPress: () => this.props.navigation.goBack()}],
-          //   {cancelable: false},
-          // );
         } else {
           this.setState({dataLoading: false, deleteTaskSuccess: false});
         }
@@ -2412,9 +2406,6 @@ class TasksDetailsScreen extends Component {
             selectedProjectTaskID: newParent,
           });
           this.fetchData(selectedProjectID, newParent);
-          // this.fetchFilesData(selectedProjectID, newParent);
-          // this.getAllSprintInProject(selectedProjectID, this.state.sprintId);
-          // this.getAllTaskInProject(selectedProjectID);
         } else {
           this.setState({dataLoading: false});
         }
@@ -2741,9 +2732,7 @@ class TasksDetailsScreen extends Component {
                 editable={this.state.taskNameEditable}
                 onBlur={() => this.onTaskNameChangeSubmit(taskName)}
                 onChangeText={text => this.onTaskNameChange(text)}
-                onSubmitEditing={() =>
-                  this.onTaskNameChangeSubmit(taskName)
-                }
+                onSubmitEditing={() => this.onTaskNameChangeSubmit(taskName)}
                 maxLength={100}
                 multiline={true}
               />
