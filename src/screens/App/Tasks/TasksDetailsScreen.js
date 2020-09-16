@@ -1311,7 +1311,6 @@ class TasksDetailsScreen extends Component {
 
   setIsParent(taskResult) {
     let isParent = taskResult.data.isParent;
-    let subTaskListLength = this.state.subTaskListLength;
     this.setState({isParent: isParent});
 
     if (!isParent) {
@@ -1409,13 +1408,10 @@ class TasksDetailsScreen extends Component {
     let date1 = new Date(date);
     let newDate = '';
     let newDateValue = '';
-    if (this.state.reminder) {
-      newDate = moment(date1).format('MMMM DD, YYYY');
-      newDateValue = moment(date1).format('DD MM YYYY');
-    } else {
-      newDate = moment(date1).format('MMMM DD, YYYY');
-      newDateValue = moment(date1).format('DD MM YYYY');
-    }
+
+    newDate = moment(date1).format('MMMM DD, YYYY');
+    newDateValue = moment(date1).format('DD MM YYYY');
+
     if (this.state.reminder) {
       this.setState({
         remindDate: newDate,
@@ -1488,13 +1484,8 @@ class TasksDetailsScreen extends Component {
     let newDate = '';
     let newDateValue = '';
 
-    if (this.state.reminder) {
-      newDate = moment(date).format('MMMM DD, YYYY');
-      newDateValue = moment(date).format('DD MM YYYY');
-    } else {
-      newDate = moment(date).format('MMMM DD, YYYY');
-      newDateValue = moment(date).format('DD MM YYYY');
-    }
+    newDate = moment(date).format('MMMM DD, YYYY');
+    newDateValue = moment(date).format('DD MM YYYY');
 
     if (event.type == 'set') {
       if (this.state.reminder) {
@@ -1919,7 +1910,6 @@ class TasksDetailsScreen extends Component {
 
   async changeTaskStatusDropDown(selectedIssueTypeId) {
     let taskTypeArray = [];
-    let taskStatusValue = this.state.taskStatusValue;
     switch (selectedIssueTypeId) {
       case 'development':
         taskTypeArray = development;
@@ -2445,9 +2435,7 @@ class TasksDetailsScreen extends Component {
       ? this.state.selectedProjectTaskID
       : this.state.selectedTaskID;
 
-    let selectedTaskNameModal = this.state.selectedTaskName;
     let parentTaskName = this.state.selectedTaskName;
-    let projectTaskInitiator = this.state.projectTaskInitiator;
 
     this.setState({
       dataLoading: true,
@@ -2473,11 +2461,6 @@ class TasksDetailsScreen extends Component {
           };
           this.setState({dataLoading: false, showMessageModal: true});
           this.fetchData(selectedProjectID, this.state.selectedProjectTaskID);
-          // this.fetchFilesData(
-          //   selectedProjectID,
-          //   this.state.selectedProjectTaskID,
-          // );
-          // this.getAllTaskInProject(selectedProjectID);
           this.setState({parentTaskName: parentTaskName});
         } else {
           this.setState({dataLoading: false});
@@ -2705,7 +2688,6 @@ class TasksDetailsScreen extends Component {
     let alertTitle = this.state.alertTitle;
     let alertMsg = this.state.alertMsg;
     let taskName = this.state.taskName;
-    let selectedSprint = this.state.selectedSprint;
     let sprints = this.state.sprints;
     let secondaryTaskId = this.state.secondaryTaskId;
     let isParent = this.state.isParent;
@@ -2755,12 +2737,12 @@ class TasksDetailsScreen extends Component {
                 style={[styles.taskNameStyle]}
                 placeholder={'Task name'}
                 multiline={true}
-                value={this.state.taskName}
+                value={taskName}
                 editable={this.state.taskNameEditable}
-                onBlur={() => this.onTaskNameChangeSubmit(this.state.taskName)}
+                onBlur={() => this.onTaskNameChangeSubmit(taskName)}
                 onChangeText={text => this.onTaskNameChange(text)}
                 onSubmitEditing={() =>
-                  this.onTaskNameChangeSubmit(this.state.taskName)
+                  this.onTaskNameChangeSubmit(taskName)
                 }
                 maxLength={100}
                 multiline={true}
