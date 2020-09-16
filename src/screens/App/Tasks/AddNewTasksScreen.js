@@ -138,7 +138,6 @@ class AddNewTasksScreen extends Component {
       sprintId: '',
       parentTaskStatus: 'No parent',
       parentTaskId: '',
-      selectedOperarionalId: '',
       selectedOperarionalId: 'general',
       viewSprint: true,
       selectSprintName: '',
@@ -169,14 +168,6 @@ class AddNewTasksScreen extends Component {
       this.props.addTaskToProjectSuccess
     ) {
       const taskID = this.props.taskId.data.taskId;
-
-      // Alert.alert(
-      //   'Success',
-      //   'Task successfully added',
-      //   [{text: 'OK', onPress: () => this.onSuccess('sssssssssssssssssssss')}],
-      //   {cancelable: false},
-      // );
-
       this.setState({showMessageModal: true});
 
       let files = this.state.files;
@@ -316,13 +307,10 @@ class AddNewTasksScreen extends Component {
     let date1 = new Date(date);
     let newDate = '';
     let newDateValue = '';
-    if (this.state.reminder) {
-      newDate = moment(date1).format('Do MMMM YYYY');
-      newDateValue = moment(date1).format('DD MM YYYY');
-    } else {
-      newDate = moment(date1).format('Do MMMM YYYY');
-      newDateValue = moment(date1).format('DD MM YYYY');
-    }
+
+    newDate = moment(date1).format('Do MMMM YYYY');
+    newDateValue = moment(date1).format('DD MM YYYY');
+
     if (this.state.reminder) {
       this.setState({
         selectedDateReminder: newDate,
@@ -357,8 +345,7 @@ class AddNewTasksScreen extends Component {
     this.hideTimePicker();
     let time = new Date(time1);
     let newTime = moment(time).format('hh:mmA');
-    // let newTime = time.getHours() + ':' + time.getMinutes();
-    // if (event.type == 'set') {
+
     if (this.state.reminder) {
       this.setState({
         selectedTimeReminder: newTime,
@@ -374,83 +361,6 @@ class AddNewTasksScreen extends Component {
         time: new Date(time1),
       });
     }
-    this.setState({showPicker: true});
-  };
-
-  hideDatePicker = () => {
-    this.setState({showPicker: false});
-  };
-
-  handleDateConfirm = date => {
-    this.hideDatePicker();
-    this.setState({isDateNeedLoading: true});
-    let date1 = new Date(date);
-    let newDate = '';
-    let newDateValue = '';
-    if (this.state.reminder) {
-      newDate = moment(date1).format('Do MMMM YYYY');
-      newDateValue = moment(date1).format('DD MM YYYY');
-    } else {
-      newDate = moment(date1).format('Do MMMM YYYY');
-      newDateValue = moment(date1).format('DD MM YYYY');
-    }
-    if (this.state.reminder) {
-      this.setState({
-        selectedDateReminder: newDate,
-        selectedDateReminderValue: newDateValue,
-        dateReminder: new Date(date1),
-      });
-    } else {
-      this.setState({
-        selectedDate: newDate,
-        selectedDateValue: newDateValue,
-        date: new Date(date1),
-      });
-    }
-    setTimeout(() => {
-      this.setState({
-        isDateNeedLoading: false,
-        showTimePicker: true,
-      });
-    }, 500);
-  };
-
-  showTimePicker = () => {
-    this.setState({showTimePicker: true});
-  };
-
-  hideTimePicker = () => {
-    this.setState({showTimePicker: false});
-  };
-
-  handleTimeConfirm = time1 => {
-    console.log(time1, 'time');
-    this.hideTimePicker();
-    let time = new Date(time1);
-    let newTime = moment(time).format('hh:mmA');
-    // let newTime = time.getHours() + ':' + time.getMinutes();
-    // if (event.type == 'set') {
-    if (this.state.reminder) {
-      this.setState({
-        selectedTimeReminder: newTime,
-        showPicker: false,
-        showTimePicker: false,
-        timeReminder: new Date(time1),
-      });
-    } else {
-      this.setState({
-        selectedTime: newTime,
-        showPicker: false,
-        showTimePicker: false,
-        time: new Date(time1),
-      });
-    }
-    // } else {
-    //   this.setState({
-    //     showPicker: false,
-    //     showTimePicker: false,
-    //   });
-    // }
   };
 
   onChangeDate(event, selectedDate) {
@@ -458,13 +368,9 @@ class AddNewTasksScreen extends Component {
     let newDate = '';
     let newDateValue = '';
 
-    if (this.state.reminder) {
-      newDate = moment(date).format('Do MMMM YYYY');
-      newDateValue = moment(date).format('DD MM YYYY');
-    } else {
-      newDate = moment(date).format('Do MMMM YYYY');
-      newDateValue = moment(date).format('DD MM YYYY');
-    }
+    newDate = moment(date).format('Do MMMM YYYY');
+    newDateValue = moment(date).format('DD MM YYYY');
+
     if (event.type == 'set') {
       if (this.state.reminder) {
         this.setState({
@@ -983,7 +889,6 @@ class AddNewTasksScreen extends Component {
     let alertMsg = this.state.alertMsg;
     let addFileTaskLoading = this.props.addFileTaskLoading;
     let addTaskToProjectLoading = this.props.addTaskToProjectLoading;
-    let dropSprintData = this.props.dropSprintData;
     let viewSprint = this.state.viewSprint;
     let selectSprintName = this.state.selectSprintName;
 
