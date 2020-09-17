@@ -2016,34 +2016,37 @@ class TasksDetailsScreen extends Component {
 
   // change name of task API
   async onTaskNameChangeSubmit(text) {
-    this.setState({
-      dataLoading: true,
-      showMessageModal: false,
-      taskNameEditable: false,
-    });
     let projectID = this.state.selectedProjectID;
     let taskID = this.state.selectedProjectTaskID;
-    await APIServices.updateTaskNameData(projectID, taskID, text)
-      .then(response => {
-        if (response.message == 'success') {
-          this.details = {
-            icon: icons.taskBlue,
-            type: 'success',
-            title: 'Sucsess',
-            description: 'Task name has been updated successfully',
-            buttons: {},
-          };
-          this.setState({dataLoading: false, showMessageModal: true});
-        } else {
-          this.setState({dataLoading: false});
-        }
-      })
-      .catch(error => {
-        //if (error.status == 401 || error.status == 403) {
-        this.setState({dataLoading: false});
-        this.showAlert('', error.data.message);
-        //}
+
+    if (text != '') {
+      this.setState({
+        dataLoading: true,
+        showMessageModal: false,
+        taskNameEditable: false,
       });
+      await APIServices.updateTaskNameData(projectID, taskID, text)
+        .then(response => {
+          if (response.message == 'success') {
+            this.details = {
+              icon: icons.taskBlue,
+              type: 'success',
+              title: 'Sucsess',
+              description: 'Task name has been updated successfully',
+              buttons: {},
+            };
+            this.setState({dataLoading: false, showMessageModal: true});
+          } else {
+            this.setState({dataLoading: false});
+          }
+        })
+        .catch(error => {
+          this.setState({dataLoading: false});
+          this.showAlert('', error.data.message);
+        });
+    } else {
+      Utils.showAlert(true, '', 'Please enter the task name', this.props);
+    }
   }
 
   async changeTaskDueDate() {
