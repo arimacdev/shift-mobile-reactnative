@@ -23,13 +23,10 @@ class OfflineNotice extends Component {
     this.state = {
       isConnected: true,
     };
-    //initial network state
   }
 
   componentDidMount() {
     this.unsubscribe = NetInfo.addEventListener(state => {
-      //console.log("Connection type", state.type);
-      //console.log("Is connected?", state.isConnected);
       this.handleConnectivityChange(state.isConnected);
     });
   }
