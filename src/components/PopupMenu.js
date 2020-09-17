@@ -1,16 +1,5 @@
 import React, {Component} from 'react';
-import {
-  View,
-  ScrollView,
-  Text,
-  Dimensions,
-  TextInput,
-  TouchableOpacity,
-  Image,
-  Platform,
-} from 'react-native';
-import colors from '../config/colors';
-import icons from '../asserts/icons/icons';
+import {ScrollView, Dimensions} from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
@@ -19,7 +8,6 @@ import * as actions from '../redux/actions';
 import {connect} from 'react-redux';
 
 import {
-  MenuContext,
   Menu,
   MenuOptions,
   MenuOption,
