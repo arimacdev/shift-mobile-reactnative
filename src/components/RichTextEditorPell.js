@@ -126,8 +126,8 @@ class RichTextEditorPell extends React.Component {
 
   render() {
     let that = this;
-    const {contentStyle, theme, initHTML} = that.state;
-    const {backgroundColor, color, placeholderColor} = contentStyle;
+    const {contentStyle, initHTML} = that.state;
+    const {backgroundColor, color} = contentStyle;
     const themeBg = {backgroundColor};
     return (
       <SafeAreaView style={[styles.container, themeBg]}>
