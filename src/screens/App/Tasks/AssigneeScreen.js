@@ -138,7 +138,6 @@ class AssigneeScreen extends Component {
 
   render() {
     let users = this.state.users;
-    let isFetching = this.state.isFetching;
     let dataLoading = this.state.dataLoading;
 
     return (
@@ -157,8 +156,6 @@ class AssigneeScreen extends Component {
           renderItem={({item}) => this.renderUserList(item)}
           keyExtractor={item => item.projId}
           ListEmptyComponent={<EmptyListView />}
-          //onRefresh={() => this.onRefresh()}
-          //refreshing={isFetching}
         />
         {dataLoading && <Loader />}
       </View>
