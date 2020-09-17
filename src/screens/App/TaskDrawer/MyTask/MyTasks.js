@@ -24,6 +24,7 @@ import {NavigationEvents} from 'react-navigation';
 import APIServices from '../../../../services/APIServices';
 import EmptyListView from '../../../../components/EmptyListView';
 import AwesomeAlert from 'react-native-awesome-alerts';
+import Utils from '../../../../utils/Utils';
 
 const Placeholder = () => (
   <View style={styles.landing}>
@@ -174,7 +175,7 @@ class MyTasks extends Component {
   onFilterAllTasks(key) {
     let value = key;
     let searchValue = '';
-    let index = this.state.index;
+
     switch (value) {
       case 'All':
         searchValue = '';
@@ -200,20 +201,24 @@ class MyTasks extends Component {
     this.setState({taskName: text});
   }
 
-  async onNewTaskNameSubmit(text) {
-    try {
-      let taskName = this.state.taskName;
-      this.setState({dataLoading: true});
-      let newTaskData = await APIServices.addNewMyTaskData(taskName);
-      if (newTaskData.message == 'success') {
-        this.setState({dataLoading: false, taskName: ''});
-        this.getAllTaskInMyTask();
-      } else {
+  async onNewTaskNameSubmit() {
+    let taskName = this.state.taskName;
+    if (taskName != '') {
+      try {
+        this.setState({dataLoading: true});
+        let newTaskData = await APIServices.addNewMyTaskData(taskName);
+        if (newTaskData.message == 'success') {
+          this.setState({dataLoading: false, taskName: ''});
+          this.getAllTaskInMyTask();
+        } else {
+          this.setState({dataLoading: false});
+        }
+      } catch (e) {
         this.setState({dataLoading: false});
+        this.showAlert('', 'New task added fail');
       }
-    } catch (e) {
-      this.setState({dataLoading: false});
-      this.showAlert('', 'New task added fail');
+    } else {
+      Utils.showAlert(true, '', 'Please enter the task name', this.props);
     }
   }
 
@@ -285,13 +290,11 @@ class MyTasks extends Component {
               placeholder={'Add a task'}
               value={taskName}
               onChangeText={taskName => this.onNewTaskNameChange(taskName)}
-              onSubmitEditing={() =>
-                this.onNewTaskNameSubmit(this.state.taskName)
-              }
+              onSubmitEditing={() => this.onNewTaskNameSubmit()}
             />
           </View>
           <FlatList
-            style={{marginBottom: EStyleSheet.value('145rem')}}
+            style={styles.flatListStyle}
             data={filterdDataAllTaks}
             renderItem={({item}) => this.renderTaskList(item)}
             keyExtractor={item => item.taskId}
@@ -342,7 +345,7 @@ const styles = EStyleSheet.create({
     backgroundColor: colors.projectBgColor,
     borderRadius: '5rem',
     height: '60rem',
-    marginTop: '7rem',
+    marginBottom: '7rem',
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: '12rem',
@@ -432,6 +435,10 @@ const styles = EStyleSheet.create({
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
     marginLeft: '5rem',
+  },
+  flatListStyle: {
+    marginBottom: '145rem',
+    marginTop: '10rem',
   },
 });
 
