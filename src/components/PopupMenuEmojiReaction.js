@@ -38,9 +38,6 @@ class PopupMenuEmojiReaction extends Component {
           text: nextProps.data[0].text,
         });
       }
-      // if (nextProps.data.length === 1) {
-      //   this.onDefaultOptionSelect(nextProps.data[0]);
-      // }
     }
   }
 
@@ -60,26 +57,11 @@ class PopupMenuEmojiReaction extends Component {
       text: item.text,
       selectdItem: item,
     });
-    // this.updateDataOrder(item);
+
     if (this.props.onChange) {
       this.props.onChange(item);
     }
   }
-
-  // onDefaultOptionSelect(item) {
-  //   if (this.props.onChange && !this.defaultRan) {
-  //     this.defaultRan = true;
-  //     this.props.onChange(item);
-  //   }
-  // }
-
-  // updateDataOrder(item) {
-  //   const currentIndex = this.props.data.findIndex(elem => {
-  //     return elem.value === item.value;
-  //   });
-  //   const newData = Utils.moveElementInArray(this.props.data, currentIndex, 0);
-  //   this.props.data = newData;
-  // }
 
   onTriggerPress() {
     this.setState({opened: true});
