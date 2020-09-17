@@ -367,6 +367,11 @@ export const addFileToTask = (file, taskId, selectedProjectID) => {
             type: ADD_FILE_TO_TASK_FAILED_MASSAGE,
             payload: errorMsg,
           });
+        } else if (error.status == 413) {
+          dispatch({
+            type: ADD_FILE_TO_TASK_FAILED_MASSAGE,
+            payload: 'File size is too large. Maximum file upload size is 10MB',
+          });
         } else {
           dispatch({type: ADD_FILE_TO_TASK_FAILED});
         }

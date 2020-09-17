@@ -89,7 +89,7 @@ const INITIAL_STATE = {
   addFileTaskLoading: false,
   addFileTaskSuccess: false,
   addFileTaskError: false,
-  addFileeTaskErrorMessage: '',
+  addFileTaskErrorMessage: '',
 
   addPeopleModelVisible: false,
   myTaskAddEditSubTask: false,
@@ -344,18 +344,24 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         addFileTaskLoading: true,
         addFileTaskSuccess: false,
+        addFileTaskError: false,
+        addFileTaskErrorMessage: '',
       };
     case ADD_FILE_TO_TASK_SUCCESS:
       return {
         ...state,
         addFileTaskLoading: false,
         addFileTaskSuccess: true,
+        addFileTaskError: false,
+        addFileTaskErrorMessage: '',
       };
     case ADD_FILE_TO_TASK_FAILED_MASSAGE:
       return {
         ...state,
         addFileTaskLoading: false,
         addFileTaskSuccess: false,
+        addFileTaskError: true,
+        addFileTaskErrorMessage: action.payload,
       };
     case ADD_FILE_TO_TASK_FAILED:
       return {
