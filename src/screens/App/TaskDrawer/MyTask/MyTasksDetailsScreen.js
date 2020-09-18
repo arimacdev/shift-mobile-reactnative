@@ -1288,32 +1288,36 @@ class MyTasksDetailsScreen extends Component {
 
   //API change name of task API
   async onTaskNameChangeSubmit(text) {
-    this.setState({
-      dataLoading: true,
-      showMessageModal: false,
-      taskNameEditable: false,
-    });
-    try {
-      let selectedTaskID = this.state.selectedTaskID;
-      let resultData = await APIServices.myTaskUpdateTaskNameData(
-        selectedTaskID,
-        text,
-      );
-      if (resultData.message == 'success') {
-        this.details = {
-          icon: icons.taskBlue,
-          type: 'success',
-          title: 'Sucsess',
-          description: 'Task name has been updated successfully',
-          buttons: {},
-        };
-        this.setState({dataLoading: false, showMessageModal: true});
-      } else {
+    if (text != '') {
+      this.setState({
+        dataLoading: true,
+        showMessageModal: false,
+        taskNameEditable: false,
+      });
+      try {
+        let selectedTaskID = this.state.selectedTaskID;
+        let resultData = await APIServices.myTaskUpdateTaskNameData(
+          selectedTaskID,
+          text,
+        );
+        if (resultData.message == 'success') {
+          this.details = {
+            icon: icons.taskBlue,
+            type: 'success',
+            title: 'Sucsess',
+            description: 'Task name has been updated successfully',
+            buttons: {},
+          };
+          this.setState({dataLoading: false, showMessageModal: true});
+        } else {
+          this.setState({dataLoading: false});
+        }
+      } catch {
         this.setState({dataLoading: false});
+        this.showAlert('', 'Task name update failed');
       }
-    } catch {
-      this.setState({dataLoading: false});
-      this.showAlert('', 'Task name update failed');
+    } else {
+      Utils.showAlert(true, '', 'Please enter the task name', this.props);
     }
   }
 
@@ -1519,12 +1523,10 @@ class MyTasksDetailsScreen extends Component {
                 placeholder={'Task name'}
                 multiline={true}
                 editable={this.state.taskNameEditable}
-                value={this.state.taskName}
-                onBlur={() => this.onTaskNameChangeSubmit(this.state.taskName)}
+                value={taskName}
+                onBlur={() => this.onTaskNameChangeSubmit(taskName)}
                 onChangeText={text => this.onTaskNameChange(text)}
-                onSubmitEditing={() =>
-                  this.onTaskNameChangeSubmit(this.state.taskName)
-                }
+                onSubmitEditing={() => this.onTaskNameChangeSubmit(taskName)}
               />
               <TouchableOpacity onPress={() => this.onTaskNameEditPress()}>
                 <Image
