@@ -30,6 +30,7 @@ import Loader from '../../../components/Loader';
 import ImagePicker from 'react-native-image-picker';
 import MessageShowModal from '../../../components/MessageShowModal';
 import Utils from '../../../utils/Utils';
+import FilePickerModal from '../../../components/FilePickerModal';
 
 let dropData = [
   {
@@ -142,6 +143,7 @@ class AddNewTasksScreen extends Component {
       viewSprint: true,
       selectSprintName: '',
       showMessageModal: false,
+      showFilePickerModal: false,
     };
   }
 
@@ -175,6 +177,14 @@ class AddNewTasksScreen extends Component {
         this.uploadFiles(this.state.files, taskID);
       }
       // this.uploadFiles(this.state.files, 'b6ba3dcf-4494-4bb5-80dc-17376c628187')
+    }
+
+    if (
+      prevProps.addFileTaskError !== this.props.addFileTaskError &&
+      this.props.addFileTaskError &&
+      this.props.addFileTaskErrorMessage != ''
+    ) {
+      Utils.showAlert(true, '', this.props.addFileTaskErrorMessage, this.props);
     }
   }
 
@@ -389,6 +399,11 @@ class AddNewTasksScreen extends Component {
           date: new Date(selectedDate),
         });
       }
+    } else {
+      this.setState({
+        showPicker: false,
+        showTimePicker: false,
+      });
     }
     // event.dismissed
     // event.set
@@ -557,23 +572,17 @@ class AddNewTasksScreen extends Component {
     );
   }
 
-  async iOSFilePicker() {
-    Alert.alert(
-      'Add Files',
-      'Select the file source',
-      [
-        {text: 'Camera', onPress: () => this.selectCamera()},
-        {text: 'Gallery', onPress: () => this.selectGallery()},
-        {text: 'Files', onPress: () => this.doumentPicker()},
-        {text: 'Cancel', onPress: () => console.log('Back')},
-      ],
-      {
-        cancelable: true,
-      },
-    );
+  onCloseFilePickerModal() {
+    this.setState({showFilePickerModal: false});
+  }
+
+  async filePicker() {
+    this.setState({showFilePickerModal: true});
   }
 
   async selectCamera() {
+    await this.setState({showFilePickerModal: false});
+
     const options = {
       title: 'Select pictures',
       storageOptions: {
@@ -582,20 +591,23 @@ class AddNewTasksScreen extends Component {
       },
       quality: 0.2,
     };
-    ImagePicker.launchCamera(options, res => {
-      if (res.didCancel) {
-        console.log('User cancelled image picker');
-      } else if (res.error) {
-        Utils.showAlert(true, '', 'ImagePicker Error', this.props);
-      } else if (res.customButton) {
-        console.log('User tapped custom button');
-      } else {
-        this.setImageForFile(res);
-      }
-    });
+    setTimeout(() => {
+      ImagePicker.launchCamera(options, res => {
+        if (res.didCancel) {
+          console.log('User cancelled image picker');
+        } else if (res.error) {
+          Utils.showAlert(true, '', 'ImagePicker Error', this.props);
+        } else if (res.customButton) {
+          console.log('User tapped custom button');
+        } else {
+          this.setImageForFile(res);
+        }
+      });
+    }, 100);
   }
 
   async selectGallery() {
+    await this.setState({showFilePickerModal: false});
     const options = {
       title: 'Select pictures',
       storageOptions: {
@@ -605,17 +617,27 @@ class AddNewTasksScreen extends Component {
       quality: 0.2,
     };
 
-    ImagePicker.launchImageLibrary(options, res => {
-      if (res.didCancel) {
-        console.log('User cancelled image picker');
-      } else if (res.error) {
-        Utils.showAlert(true, '', 'ImagePicker Error', this.props);
-      } else if (res.customButton) {
-        console.log('User tapped custom button');
-      } else {
-        this.setImageForFile(res);
-      }
-    });
+    setTimeout(() => {
+      ImagePicker.launchImageLibrary(options, res => {
+        if (res.didCancel) {
+          console.log('User cancelled image picker');
+        } else if (res.error) {
+          Utils.showAlert(true, '', 'ImagePicker Error', this.props);
+        } else if (res.customButton) {
+          console.log('User tapped custom button');
+        } else {
+          this.setImageForFile(res);
+        }
+      });
+    }, 100);
+  }
+
+  async selectFiles() {
+    await this.setState({showFilePickerModal: false});
+
+    setTimeout(() => {
+      this.doumentPicker();
+    }, 100);
   }
 
   async setImageForFile(res) {
@@ -640,11 +662,7 @@ class AddNewTasksScreen extends Component {
     // Pick multiple files
     try {
       const results = await DocumentPicker.pickMultiple({
-        type: [
-          DocumentPicker.types.images,
-          DocumentPicker.types.plainText,
-          DocumentPicker.types.pdf,
-        ],
+        type: [DocumentPicker.types.allFiles],
       });
       for (const res of results) {
         this.onFilesCrossPress(res.uri);
@@ -1090,10 +1108,7 @@ class AddNewTasksScreen extends Component {
               />
             </View>
           </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() =>
-              Platform.OS == 'ios' ? this.iOSFilePicker() : this.doumentPicker()
-            }>
+          <TouchableOpacity onPress={() => this.filePicker()}>
             {this.state.files.length > 0 ? (
               <View
                 style={[
@@ -1151,6 +1166,12 @@ class AddNewTasksScreen extends Component {
           {this.state.showPicker ? this.renderDatePicker() : null}
           {this.state.showTimePicker ? this.renderTimePicker() : null}
         </ScrollView>
+        <FilePickerModal
+          showFilePickerModal={this.state.showFilePickerModal}
+          onPressCancel={() => this.onCloseFilePickerModal()}
+          selectCamera={() => this.selectCamera()}
+          selectFiles={() => this.selectFiles()}
+        />
         {this.state.isDateNeedLoading && <Loader />}
         {addTaskToProjectLoading && <Loader />}
         {addFileTaskLoading && <Loader />}
@@ -1298,6 +1319,8 @@ const mapStateToProps = state => {
     addTaskToProjectErrorMessage: state.project.addTaskToProjectErrorMessage,
     taskId: state.project.taskId,
     addFileTaskLoading: state.project.addFileTaskLoading,
+    addFileTaskError: state.project.addFileTaskError,
+    addFileTaskErrorMessage: state.project.addFileTaskErrorMessage,
   };
 };
 export default connect(
