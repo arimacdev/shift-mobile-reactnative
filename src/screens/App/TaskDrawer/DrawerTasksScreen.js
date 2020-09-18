@@ -20,6 +20,7 @@ import Loader from '../../../components/Loader';
 import {NavigationEvents} from 'react-navigation';
 import EmptyListView from '../../../components/EmptyListView';
 import AwesomeAlert from 'react-native-awesome-alerts';
+import Utils from '../../../utils/Utils';
 
 class DrawerTasksScreen extends Component {
   constructor(props) {
@@ -52,20 +53,24 @@ class DrawerTasksScreen extends Component {
     this.setState({groupName: text});
   }
 
-  async onNewGroupNameSubmit(text) {
-    try {
-      let groupName = this.state.groupName;
-      this.setState({dataLoading: true});
-      let newGroupTaskData = await APIServices.addGroupTaskData(groupName);
-      if (newGroupTaskData.message == 'success') {
-        this.setState({dataLoading: false, groupName: ''});
-        this.fetchData();
-      } else {
+  async onNewGroupNameSubmit() {
+    let groupName = this.state.groupName;
+    if (groupName != '') {
+      try {
+        this.setState({dataLoading: true});
+        let newGroupTaskData = await APIServices.addGroupTaskData(groupName);
+        if (newGroupTaskData.message == 'success') {
+          this.setState({dataLoading: false, groupName: ''});
+          this.fetchData();
+        } else {
+          this.setState({dataLoading: false});
+        }
+      } catch (e) {
         this.setState({dataLoading: false});
+        this.showAlert('', e.data.message);
       }
-    } catch (e) {
-      this.setState({dataLoading: false});
-      this.showAlert('', e.data.message);
+    } else {
+      Utils.showAlert(true, '', 'Please enter the group name', this.props);
     }
   }
 
@@ -143,9 +148,7 @@ class DrawerTasksScreen extends Component {
             placeholder={'Add a new group'}
             value={groupName}
             onChangeText={groupName => this.onNewGroupNameChange(groupName)}
-            onSubmitEditing={() =>
-              this.onNewGroupNameSubmit(this.state.groupName)
-            }
+            onSubmitEditing={() => this.onNewGroupNameSubmit()}
           />
         </View>
         <FlatList
