@@ -351,11 +351,6 @@ class TasksTabScreen extends Component {
         listStartIndex: listStartIndex,
         listEndIndex: listEndIndex,
       });
-    } else {
-      Toast.show('All comments are loadded', Toast.SHORT, [
-        'RCTModalHostViewController',
-        'UIAlertController',
-      ]);
     }
   };
 
@@ -1120,7 +1115,14 @@ class TasksTabScreen extends Component {
   }
 
   onSuccess(text) {
-    this.setState({index: 0});
+    this.setState({
+      filterType: 'None',
+      filter: false,
+      index: 0,
+      showUserListModal: false,
+      textInputs: [],
+      tasksName: '',
+    });
     this.getAllTaskInProject();
   }
 
