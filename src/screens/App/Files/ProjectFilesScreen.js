@@ -668,22 +668,35 @@ class ProjectFilesScreen extends Component {
 
     this.onFilesCrossPress(res.uri);
     let imgName = res.fileName;
+
+    let fileSize = res.fileSize / 1000000;
+
     if (typeof imgName === 'undefined' || imgName == null) {
       var getFilename = res.uri.split('/');
       imgName = getFilename[getFilename.length - 1];
     }
-    await this.state.files.push({
-      uri: res.uri,
-      type: res.type, // mime type
-      name: imgName,
-      size: res.fileSize,
-      dateTime:
-        moment().format('YYYY/MM/DD') + ' | ' + moment().format('HH:mm'),
-    });
 
-    await this.setState({files: this.state.files});
+    if (fileSize <= 10) {
+      await this.state.files.push({
+        uri: res.uri,
+        type: res.type, // mime type
+        name: imgName,
+        size: res.fileSize,
+        dateTime:
+          moment().format('YYYY/MM/DD') + ' | ' + moment().format('HH:mm'),
+      });
 
-    this.uploadFile(this.state.files, this.props.selectedProjectID, folderId);
+      await this.setState({files: this.state.files});
+
+      this.uploadFile(this.state.files, this.props.selectedProjectID, folderId);
+    } else {
+      Utils.showAlert(
+        true,
+        '',
+        'File size is too large. Maximum file upload size is 10MB',
+        this.props,
+      );
+    }
   }
 
   async uploadFile(files, selectedProjectID, folderId) {
@@ -735,30 +748,42 @@ class ProjectFilesScreen extends Component {
   async doumentPicker() {
     let length = this.state.folderNavigation.length - 1;
     let folderId = this.state.folderNavigation[length].folderId;
+    let fileSize = '';
+
     try {
       const results = await DocumentPicker.pickMultiple({
         type: [DocumentPicker.types.allFiles],
       });
       for (const res of results) {
+        fileSize = res.size / 1000000;
         this.onFilesCrossPress(res.uri);
 
-        await this.state.files.push({
-          uri: res.uri,
-          type: res.type, // mime type
-          name: res.name,
-          size: res.size,
-          dateTime:
-            moment().format('YYYY/MM/DD') + ' | ' + moment().format('HH:mm'),
-        });
-        console.log(
-          res.uri,
-          res.type, // mime type
-          res.name,
-          res.size,
+        if (fileSize <= 10) {
+          await this.state.files.push({
+            uri: res.uri,
+            type: res.type, // mime type
+            name: res.name,
+            size: res.size,
+            dateTime:
+              moment().format('YYYY/MM/DD') + ' | ' + moment().format('HH:mm'),
+          });
+        }
+      }
+      if (fileSize <= 10) {
+        await this.setState({files: this.state.files});
+        this.uploadFile(
+          this.state.files,
+          this.props.selectedProjectID,
+          folderId,
+        );
+      } else {
+        Utils.showAlert(
+          true,
+          '',
+          'File size is too large. Maximum file upload size is 10MB',
+          this.props,
         );
       }
-      await this.setState({files: this.state.files});
-      this.uploadFile(this.state.files, this.props.selectedProjectID, folderId);
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
         console.log('file pick error', err);
