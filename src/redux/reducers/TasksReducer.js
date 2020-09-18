@@ -30,7 +30,7 @@ const INITIAL_STATE = {
   addFileTaskLoading: false,
   addFileTaskSuccess: false,
   addFileTaskError: false,
-  addFileeTaskErrorMessage: '',
+  addFileTaskErrorMessage: '',
 
   deleteSingleTaskInMyLoading: false,
   deleteSingleTaskInMySuccess: false,

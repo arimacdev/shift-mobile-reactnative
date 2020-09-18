@@ -368,6 +368,8 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         addFileTaskLoading: false,
         addFileTaskSuccess: false,
+        addFileTaskError: true,
+        addFileTaskErrorMessage: '',
       };
     case MODEL_VISIBLE_CHANGE:
       return {...state, addPeopleModelVisible: action.payload};
