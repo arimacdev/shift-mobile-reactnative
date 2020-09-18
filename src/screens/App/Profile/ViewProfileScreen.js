@@ -29,6 +29,7 @@ import moment from 'moment';
 import ImagePicker from 'react-native-image-picker';
 import MessageShowModal from '../../../components/MessageShowModal';
 import Utils from '../../../utils/Utils';
+import FilePickerModal from '../../../components/FilePickerModal';
 
 const config = strings.slack;
 
@@ -62,6 +63,7 @@ class ViewProfileScreen extends Component {
       // switchValue: false,
       showMessageModal: false,
       userMetricsData: [],
+      showFilePickerModal: false
     };
   }
 
@@ -178,22 +180,17 @@ class ViewProfileScreen extends Component {
     this.setState({editEnabled: true});
   }
 
+  onCloseFilePickerModal() {
+    this.setState({showFilePickerModal: false});
+  }
+
   async setImage() {
-    Alert.alert(
-      'Profile Picture',
-      'Change Profile Picture',
-      [
-        {text: 'Back', onPress: () => console.log('Back')},
-        {text: 'Camera', onPress: () => this.selectCamera()},
-        {text: 'Gallery', onPress: () => this.selectGallery()},
-      ],
-      {
-        cancelable: true,
-      },
-    );
+    this.setState({showFilePickerModal: true});
   }
 
   async selectCamera() {
+    await this.setState({showFilePickerModal: false});
+
     const options = {
       title: 'Select a profile picture',
       storageOptions: {
@@ -202,26 +199,28 @@ class ViewProfileScreen extends Component {
       },
       quality: 0.2,
     };
-
-    ImagePicker.launchCamera(options, response => {
-      if (response.didCancel) {
-        console.log('User cancelled image picker');
-      } else if (response.error) {
-        Utils.showAlert(true, '', 'ImagePicker Error', this.props);
-      } else if (response.customButton) {
-        console.log('User tapped custom button');
-      } else {
-        let imgName = response.fileName;
-        if (typeof imgName === 'undefined' || imgName == null) {
-          var getFilename = response.uri.split('/');
-          imgName = getFilename[getFilename.length - 1];
+    setTimeout(() => {
+      ImagePicker.launchCamera(options, response => {
+        if (response.didCancel) {
+          console.log('User cancelled image picker');
+        } else if (response.error) {
+          Utils.showAlert(true, '', 'ImagePicker Error', this.props);
+        } else if (response.customButton) {
+          console.log('User tapped custom button');
+        } else {
+          let imgName = response.fileName;
+          if (typeof imgName === 'undefined' || imgName == null) {
+            var getFilename = response.uri.split('/');
+            imgName = getFilename[getFilename.length - 1];
+          }
+          this.uploadFiles(response.uri, imgName, response.type);
         }
-        this.uploadFiles(response.uri, imgName, response.type);
-      }
-    });
+      });
+    }, 100);
   }
 
   async selectGallery() {
+    await this.setState({showFilePickerModal: false});
     const options = {
       title: 'Select a profile picture',
       storageOptions: {
@@ -231,22 +230,24 @@ class ViewProfileScreen extends Component {
       quality: 0.2,
     };
 
-    ImagePicker.launchImageLibrary(options, response => {
-      if (response.didCancel) {
-        console.log('User cancelled image picker');
-      } else if (response.error) {
-        Utils.showAlert(true, '', 'ImagePicker Error', this.props);
-      } else if (response.customButton) {
-        console.log('User tapped custom button');
-      } else {
-        let imgName = response.fileName;
-        if (typeof imgName === 'undefined' || imgName == null) {
-          var getFilename = response.uri.split('/');
-          imgName = getFilename[getFilename.length - 1];
+    setTimeout(() => {
+      ImagePicker.launchImageLibrary(options, response => {
+        if (response.didCancel) {
+          console.log('User cancelled image picker');
+        } else if (response.error) {
+          Utils.showAlert(true, '', 'ImagePicker Error', this.props);
+        } else if (response.customButton) {
+          console.log('User tapped custom button');
+        } else {
+          let imgName = response.fileName;
+          if (typeof imgName === 'undefined' || imgName == null) {
+            var getFilename = response.uri.split('/');
+            imgName = getFilename[getFilename.length - 1];
+          }
+          this.uploadFiles(response.uri, imgName, response.type);
         }
-        this.uploadFiles(response.uri, imgName, response.type);
-      }
-    });
+      });
+    }, 100);
   }
 
   async onProfileImageClick() {
@@ -709,6 +710,12 @@ class ViewProfileScreen extends Component {
             </TouchableOpacity>
           </View>
         </ScrollView>
+        <FilePickerModal
+          showFilePickerModal={this.state.showFilePickerModal}
+          onPressCancel={() => this.onCloseFilePickerModal()}
+          selectCamera={() => this.selectCamera()}
+          selectFiles={() => this.selectGallery()}
+        />
         <AwesomeAlert
           show={showAlert}
           showProgress={false}
