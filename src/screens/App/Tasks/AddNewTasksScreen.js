@@ -90,15 +90,15 @@ let issueTypeList = [
   {value: 'General', id: 'general'},
 ];
 
-let successDetails = {
-  icon: icons.taskBlue,
-  type: 'success',
-  title: 'Success',
-  description: 'You have created a task successfully',
-  buttons: {},
-};
-
 class AddNewTasksScreen extends Component {
+  details = {
+    icon: icons.taskBlue,
+    type: 'success',
+    title: 'Success',
+    description: 'You have created a task successfully',
+    buttons: {},
+  };
+
   constructor(props) {
     super(props);
     this.state = {
@@ -170,21 +170,43 @@ class AddNewTasksScreen extends Component {
       this.props.addTaskToProjectSuccess
     ) {
       const taskID = this.props.taskId.data.taskId;
-      this.setState({showMessageModal: true});
 
       let files = this.state.files;
       if (files && files.length > 0) {
         this.uploadFiles(this.state.files, taskID);
+      } else {
+        this.details = {
+          icon: icons.taskBlue,
+          type: 'success',
+          title: 'Success',
+          description: 'You have created a task successfully',
+          buttons: {},
+        };
+        this.setState({showMessageModal: true});
       }
-      // this.uploadFiles(this.state.files, 'b6ba3dcf-4494-4bb5-80dc-17376c628187')
+    }
+
+    if (
+      prevProps.addFileTaskSuccess !== this.props.addFileTaskSuccess &&
+      this.props.addFileTaskSuccess
+    ) {
+      this.setState({showMessageModal: true});
     }
 
     if (
       prevProps.addFileTaskError !== this.props.addFileTaskError &&
-      this.props.addFileTaskError &&
-      this.props.addFileTaskErrorMessage != ''
+      this.props.addFileTaskError
     ) {
-      Utils.showAlert(true, '', this.props.addFileTaskErrorMessage, this.props);
+      this.details = {
+        icon: icons.alertRed,
+        type: 'success',
+        title: 'File upload error!',
+        description:
+          'You have created a task successfully. But error occured while uploading the file. Please go to the task and upload file again.',
+        buttons: {},
+      };
+      this.setState({showMessageModal: true});
+      // Utils.showAlert(true, '', this.props.addFileTaskErrorMessage, this.props);
     }
   }
 
@@ -643,19 +665,31 @@ class AddNewTasksScreen extends Component {
   async setImageForFile(res) {
     this.onFilesCrossPress(res.uri);
     let imgName = res.fileName;
+    let fileSize = res.fileSize / 1000000;
+
     if (typeof imgName === 'undefined' || imgName == null) {
       var getFilename = res.uri.split('/');
       imgName = getFilename[getFilename.length - 1];
     }
-    await this.state.files.push({
-      uri: res.uri,
-      type: res.type, // mime type
-      name: imgName,
-      size: res.fileSize,
-      dateTime:
-        moment().format('YYYY/MM/DD') + ' | ' + moment().format('HH:mm'),
-    });
-    this.setState({files: this.state.files});
+
+    if (fileSize <= 10) {
+      await this.state.files.push({
+        uri: res.uri,
+        type: res.type, // mime type
+        name: imgName,
+        size: res.fileSize,
+        dateTime:
+          moment().format('YYYY/MM/DD') + ' | ' + moment().format('HH:mm'),
+      });
+      this.setState({files: this.state.files});
+    } else {
+      Utils.showAlert(
+        true,
+        '',
+        'File size is too large. Maximum file upload size is 10MB',
+        this.props,
+      );
+    }
   }
 
   async doumentPicker() {
@@ -665,22 +699,32 @@ class AddNewTasksScreen extends Component {
         type: [DocumentPicker.types.allFiles],
       });
       for (const res of results) {
+        let fileSize = res.size / 1000000;
         this.onFilesCrossPress(res.uri);
 
-        await this.state.files.push({
-          uri: res.uri,
-          type: res.type, // mime type
-          name: res.name,
-          size: res.size,
-          dateTime:
-            moment().format('YYYY/MM/DD') + ' | ' + moment().format('HH:mm'),
-        });
-        console.log(
-          res.uri,
-          res.type, // mime type
-          res.name,
-          res.size,
-        );
+        if (fileSize <= 10) {
+          await this.state.files.push({
+            uri: res.uri,
+            type: res.type, // mime type
+            name: res.name,
+            size: res.size,
+            dateTime:
+              moment().format('YYYY/MM/DD') + ' | ' + moment().format('HH:mm'),
+          });
+          console.log(
+            res.uri,
+            res.type, // mime type
+            res.name,
+            res.size,
+          );
+        } else {
+          Utils.showAlert(
+            true,
+            '',
+            'File size is too large. Maximum file upload size is 10MB',
+            this.props,
+          );
+        }
       }
       this.setState({files: this.state.files});
       console.log(this.state.files);
@@ -1196,7 +1240,7 @@ class AddNewTasksScreen extends Component {
         />
         <MessageShowModal
           showMessageModal={this.state.showMessageModal}
-          details={successDetails}
+          details={this.details}
           onPress={() => {}}
           onPressCancel={() => this.onPressCancel(this)}
         />
@@ -1319,6 +1363,7 @@ const mapStateToProps = state => {
     addTaskToProjectErrorMessage: state.project.addTaskToProjectErrorMessage,
     taskId: state.project.taskId,
     addFileTaskLoading: state.project.addFileTaskLoading,
+    addFileTaskSuccess: state.project.addFileTaskSuccess,
     addFileTaskError: state.project.addFileTaskError,
     addFileTaskErrorMessage: state.project.addFileTaskErrorMessage,
   };
