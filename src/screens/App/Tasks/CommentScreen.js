@@ -751,21 +751,33 @@ class ChatScreen extends Component {
     let taskId = this.state.taskId;
     this.onFilesCrossPress(res.uri);
     let imgName = res.fileName;
+    let fileSize = res.fileSize / 1000000;
+
     if (typeof imgName === 'undefined' || imgName == null) {
       var getFilename = res.uri.split('/');
       imgName = getFilename[getFilename.length - 1];
     }
-    await this.state.files.push({
-      uri: res.uri,
-      type: res.type, // mime type
-      name: imgName,
-      size: res.fileSize,
-      dateTime:
-        moment().format('YYYY/MM/DD') + ' | ' + moment().format('HH:mm'),
-    });
-    this.setState({files: this.state.files}, () => {
-      this.uploadFilesToComment(this.state.files, taskId);
-    });
+
+    if (fileSize <= 10) {
+      await this.state.files.push({
+        uri: res.uri,
+        type: res.type, // mime type
+        name: imgName,
+        size: res.fileSize,
+        dateTime:
+          moment().format('YYYY/MM/DD') + ' | ' + moment().format('HH:mm'),
+      });
+      this.setState({files: this.state.files}, () => {
+        this.uploadFilesToComment(this.state.files, taskId);
+      });
+    } else {
+      Utils.showAlert(
+        true,
+        '',
+        'File size is too large. Maximum file upload size is 10MB',
+        this.props,
+      );
+    }
   }
 
   async uploadFilesToComment(files, taskId) {
@@ -808,40 +820,48 @@ class ChatScreen extends Component {
   async doumentPicker() {
     // Pick multiple files
     let taskId = this.state.taskId;
+    let fileSize = '';
+
     try {
       const results = await DocumentPicker.pickMultiple({
         type: [DocumentPicker.types.images],
       });
       for (const res of results) {
+        fileSize = res.size / 1000000;
         this.onFilesCrossPress(res.uri);
         let imgName = res.name;
         if (typeof imgName === 'undefined') {
           var getFilename = res.uri.split('/');
           imgName = getFilename[getFilename.length - 1];
         }
-        await this.state.files.push({
-          uri: res.uri,
-          type: res.type, // mime type
-          name: imgName,
-          size: res.size,
-          dateTime:
-            moment().format('YYYY/MM/DD') + ' | ' + moment().format('HH:mm'),
+        if (fileSize <= 10) {
+          await this.state.files.push({
+            uri: res.uri,
+            type: res.type, // mime type
+            name: imgName,
+            size: res.size,
+            dateTime:
+              moment().format('YYYY/MM/DD') + ' | ' + moment().format('HH:mm'),
+          });
+        }
+      }
+      if (fileSize <= 10) {
+        await this.setState({
+          files: this.state.files,
+          indeterminate: true,
+          uploading: 0,
+          showMessageModal: false,
         });
-        console.log(
-          res.uri,
-          res.type, // mime type
-          res.name,
-          res.size,
+        this.uploadFilesToComment(this.state.files, taskId);
+        console.log(this.state.files);
+      } else {
+        Utils.showAlert(
+          true,
+          '',
+          'File size is too large. Maximum file upload size is 10MB',
+          this.props,
         );
       }
-      await this.setState({
-        files: this.state.files,
-        indeterminate: true,
-        uploading: 0,
-        showMessageModal: false,
-      });
-      this.uploadFilesToComment(this.state.files, taskId);
-      console.log(this.state.files);
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
         console.log('file pick error', err);
