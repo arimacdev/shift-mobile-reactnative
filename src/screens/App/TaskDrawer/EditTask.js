@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   Text,
   TextInput,
+  ScrollView
 } from 'react-native';
 import {connect} from 'react-redux';
 import * as actions from '../../../redux/actions';
@@ -74,7 +75,7 @@ class EditTask extends Component {
     let selectedTaskGroupId = this.state.selectedTaskGroupId;
     let groupName = this.state.groupName;
     if (!groupName && _.isEmpty(groupName)) {
-      this.showAlert('', 'Please Enter the Sub Task Name');
+      this.showAlert('', 'Please enter the group name');
     } else {
       this.setState({dataLoading: true, showMessageModal: false});
       try {
@@ -90,8 +91,11 @@ class EditTask extends Component {
             description: 'Group have been renamed successfully',
             buttons: {},
           };
-          this.setState({dataLoading: false, showMessageModal: true});
-          // this.showAlert('', 'Successfully Updated');
+          this.setState({
+            dataLoading: false,
+            showMessageModal: true,
+            isChange: true,
+          });
         } else {
           this.setState({dataLoading: false});
           this.showAlert('', 'Error');
@@ -158,7 +162,12 @@ class EditTask extends Component {
   }
 
   onChangeTextName(text) {
-    this.setState({groupName: text, isChange: false});
+    this.setState({groupName: text});
+    if (text == '') {
+      this.setState({isChange: true});
+    } else {
+      this.setState({isChange: false});
+    }
   }
 
   hideAlert() {
@@ -221,26 +230,36 @@ class EditTask extends Component {
     return (
       <View style={styles.container}>
         <NavigationEvents onWillFocus={payload => this.tabOpen(payload)} />
-        <View style={styles.inputContainer}>
-          <View style={[styles.addNewFieldView, {flexDirection: 'row'}]}>
-            <TextInput
-              style={[{width: '95%'}]}
-              placeholder={'Add a group name'}
-              value={groupName}
-              onChangeText={groupName => this.onChangeTextName(groupName)}
-            />
-          </View>
-          <TouchableOpacity
-            style={{marginTop: 10}}
-            disabled={isChange}
-            onPress={() => this.renameGroup()}>
-            <View style={styles.buttonEdit}>
-              <View style={{flex: 1}}>
-                <Text style={styles.buttonText}>{'Rename'}</Text>
-              </View>
+        <ScrollView>
+          <View style={styles.inputContainer}>
+            <View style={[styles.addNewFieldView, {flexDirection: 'row'}]}>
+              <TextInput
+                style={[{width: '95%'}]}
+                placeholder={'Add a group name'}
+                value={groupName}
+                onChangeText={groupName => this.onChangeTextName(groupName)}
+              />
             </View>
-          </TouchableOpacity>
-        </View>
+            <TouchableOpacity
+              style={{marginTop: 10}}
+              disabled={isChange}
+              onPress={() => this.renameGroup()}>
+              <View
+                style={[
+                  styles.buttonEdit,
+                  {
+                    backgroundColor: isChange
+                      ? colors.colorSilver
+                      : colors.lightBlue,
+                  },
+                ]}>
+                <View style={{flex: 1}}>
+                  <Text style={styles.buttonText}>{'Rename'}</Text>
+                </View>
+              </View>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
         <View style={styles.bottomView}>
           <TouchableOpacity
             style={{marginTop: 10}}
@@ -252,6 +271,7 @@ class EditTask extends Component {
             </View>
           </TouchableOpacity>
         </View>
+
         {dataLoading && <Loader />}
         <AwesomeAlert
           show={showAlert}
@@ -300,7 +320,6 @@ const styles = EStyleSheet.create({
   },
   buttonEdit: {
     flexDirection: 'row',
-    backgroundColor: colors.lightBlue,
     borderRadius: '5rem',
     marginTop: '17rem',
     marginBottom: '17rem',
@@ -323,10 +342,10 @@ const styles = EStyleSheet.create({
     marginTop: '20rem',
   },
   addNewFieldView: {
-    backgroundColor: '#e5e9ef',
+    backgroundColor: colors.colorSolitude,
     borderRadius: '5rem',
     borderWidth: 2,
-    borderColor: '#e5e9ef',
+    borderColor: colors.colorSolitude,
     marginTop: '10rem',
     marginBottom: '0rem',
     flexDirection: 'row',
