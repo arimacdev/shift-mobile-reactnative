@@ -437,31 +437,93 @@ class GroupTasksDetailsScreen extends Component {
 
     this.onFilesCrossPress(res.uri);
     let imgName = res.fileName;
+    let fileSize = res.fileSize / 1000000;
+
     if (typeof imgName === 'undefined' || imgName == null) {
       var getFilename = res.uri.split('/');
       imgName = getFilename[getFilename.length - 1];
     }
-    await this.state.files.push({
-      uri: res.uri,
-      type: res.type, // mime type
-      name: imgName,
-      size: res.fileSize,
-      dateTime:
-        moment().format('YYYY/MM/DD') + ' | ' + moment().format('HH:mm'),
-    });
-    // this.setState({ files: this.state.files });
 
-    await this.setState({
-      files: this.state.files,
-      indeterminate: true,
-      Uploading: 0,
-      showMessageModal: false,
-    });
+    if (fileSize <= 10) {
+      await this.state.files.push({
+        uri: res.uri,
+        type: res.type, // mime type
+        name: imgName,
+        size: res.fileSize,
+        dateTime:
+          moment().format('YYYY/MM/DD') + ' | ' + moment().format('HH:mm'),
+      });
+      // this.setState({ files: this.state.files });
 
-    this.onCloseFilePickerModal();
+      await this.setState({
+        files: this.state.files,
+        indeterminate: true,
+        Uploading: 0,
+        showMessageModal: false,
+      });
+      this.uploadFile(this.state.files, selectedGroupTaskID, selectedTaskID);
+    } else {
+      Utils.showAlert(
+        true,
+        '',
+        'File size is too large. Maximum file upload size is 10MB',
+        this.props,
+      );
+    }
+  }
 
+  async doumentPicker() {
+    let selectedGroupTaskID = this.state.selectedGroupTaskID;
+    let selectedTaskID = this.state.selectedTaskID;
+    let fileSize = '';
+    // Pick multiple files
+    try {
+      const results = await DocumentPicker.pickMultiple({
+        type: [DocumentPicker.types.allFiles],
+      });
+      for (const res of results) {
+        fileSize = res.size / 1000000;
+        this.onFilesCrossPress(res.uri);
+
+        if (fileSize <= 10) {
+          await this.state.files.push({
+            uri: res.uri,
+            type: res.type, // mime type
+            name: res.name,
+            size: res.size,
+            dateTime:
+              moment().format('YYYY/MM/DD') + ' | ' + moment().format('HH:mm'),
+          });
+        }
+      }
+      if (fileSize <= 10) {
+        await this.setState({
+          files: this.state.files,
+          indeterminate: true,
+          uploading: 0,
+          showMessageModal: false,
+        });
+        this.uploadFile(this.state.files, selectedGroupTaskID, selectedTaskID);
+      } else {
+        Utils.showAlert(
+          true,
+          '',
+          'File size is too large. Maximum file upload size is 10MB',
+          this.props,
+        );
+      }
+    } catch (err) {
+      if (DocumentPicker.isCancel(err)) {
+        console.log('file pick error', err);
+      } else {
+        throw err;
+      }
+    }
+  }
+
+  async uploadFile(files, selectedGroupTaskID, selectedTaskID) {
     await APIServices.addFileToGroupTask(
-      this.state.files,
+      files,
       selectedGroupTaskID,
       selectedTaskID,
     )
@@ -498,86 +560,6 @@ class GroupTasksDetailsScreen extends Component {
           this.showAlert('', 'File upload error');
         }
       });
-  }
-
-  async doumentPicker() {
-    let selectedGroupTaskID = this.state.selectedGroupTaskID;
-    let selectedTaskID = this.state.selectedTaskID;
-    // Pick multiple files
-    try {
-      const results = await DocumentPicker.pickMultiple({
-        type: [DocumentPicker.types.allFiles],
-      });
-      for (const res of results) {
-        this.onFilesCrossPress(res.uri);
-
-        await this.state.files.push({
-          uri: res.uri,
-          type: res.type, // mime type
-          name: res.name,
-          size: res.size,
-          dateTime:
-            moment().format('YYYY/MM/DD') + ' | ' + moment().format('HH:mm'),
-        });
-        console.log(
-          res.uri,
-          res.type, // mime type
-          res.name,
-          res.size,
-        );
-      }
-      await this.setState({
-        files: this.state.files,
-        indeterminate: true,
-        uploading: 0,
-        showMessageModal: false,
-      });
-
-      await APIServices.addFileToGroupTask(
-        this.state.files,
-        selectedGroupTaskID,
-        selectedTaskID,
-      )
-        .then(response => {
-          if (response.message == 'success') {
-            this.details = {
-              icon: icons.fileOrange,
-              type: 'success',
-              title: 'Sucsess',
-              description: 'File has been added successfully',
-              buttons: {},
-            };
-            this.setState({
-              indeterminate: false,
-              files: [],
-              uploading: 100,
-              showMessageModal: true,
-            });
-            this.fetchFilesData(selectedGroupTaskID, selectedTaskID);
-          } else {
-            this.setState({indeterminate: false, files: [], uploading: 0});
-          }
-        })
-        .catch(error => {
-          this.setState({indeterminate: false, files: [], uploading: 0});
-          if (error.status == 401) {
-            this.showAlert('', error.data.message);
-          } else if (error.status == 413) {
-            this.showAlert(
-              '',
-              'File size is too large. Maximum file upload size is 10MB',
-            );
-          } else {
-            this.showAlert('', 'File upload error');
-          }
-        });
-    } catch (err) {
-      if (DocumentPicker.isCancel(err)) {
-        console.log('file pick error', err);
-      } else {
-        throw err;
-      }
-    }
   }
 
   actualDownload = item => {
