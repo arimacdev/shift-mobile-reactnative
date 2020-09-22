@@ -120,11 +120,6 @@ class OtherBoard extends Component {
         listStartIndex: listStartIndex,
         listEndIndex: listEndIndex,
       });
-    } else {
-      Toast.show('All comments are loadded', Toast.SHORT, [
-        'RCTModalHostViewController',
-        'UIAlertController',
-      ]);
     }
   }
 
