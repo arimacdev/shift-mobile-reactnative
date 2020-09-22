@@ -63,7 +63,7 @@ class ViewProfileScreen extends Component {
       // switchValue: false,
       showMessageModal: false,
       userMetricsData: [],
-      showFilePickerModal: false
+      showFilePickerModal: false,
     };
   }
 
@@ -208,12 +208,7 @@ class ViewProfileScreen extends Component {
         } else if (response.customButton) {
           console.log('User tapped custom button');
         } else {
-          let imgName = response.fileName;
-          if (typeof imgName === 'undefined' || imgName == null) {
-            var getFilename = response.uri.split('/');
-            imgName = getFilename[getFilename.length - 1];
-          }
-          this.uploadFiles(response.uri, imgName, response.type);
+          this.setImageForFile(response);
         }
       });
     }, 100);
@@ -239,15 +234,31 @@ class ViewProfileScreen extends Component {
         } else if (response.customButton) {
           console.log('User tapped custom button');
         } else {
-          let imgName = response.fileName;
-          if (typeof imgName === 'undefined' || imgName == null) {
-            var getFilename = response.uri.split('/');
-            imgName = getFilename[getFilename.length - 1];
-          }
-          this.uploadFiles(response.uri, imgName, response.type);
+          this.setImageForFile(response);
         }
       });
     }, 100);
+  }
+
+  async setImageForFile(res) {
+    let imgName = res.fileName;
+    let fileSize = res.fileSize / 1000000;
+
+    if (typeof imgName === 'undefined' || imgName == null) {
+      var getFilename = res.uri.split('/');
+      imgName = getFilename[getFilename.length - 1];
+    }
+
+    if (fileSize <= 10) {
+      this.uploadFiles(res.uri, imgName, res.type);
+    } else {
+      Utils.showAlert(
+        true,
+        '',
+        'File size is too large. Maximum file upload size is 10MB',
+        this.props,
+      );
+    }
   }
 
   async onProfileImageClick() {
@@ -318,11 +329,8 @@ class ViewProfileScreen extends Component {
         this.setState({dataLoading: false});
       }
     } catch (e) {
-      //if(e.status == 500){
-      //console.log('error', e);
       this.setState({dataLoading: false});
-      this.showAlert('', 'Profile image upload faild');
-      //}
+      this.showAlert('', 'Profile image upload failed');
     }
   }
 
