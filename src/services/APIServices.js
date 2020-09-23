@@ -3587,7 +3587,6 @@ async function blockUnblockUserData(projectID, blockedStatus, blockedUserId) {
 
 async function initiatMeetingData(
   projectId,
-  meetingDate,
   meetingTopic,
   meetingVenue,
   meetingExpectedTime,
@@ -3611,12 +3610,16 @@ async function initiatMeetingData(
       method: 'POST',
       data: {
         projectId: projectId,
-        meetingDate: meetingDate,
         meetingTopic: meetingTopic,
         meetingVenue: meetingVenue,
         meetingExpectedTime: meetingExpectedTime,
         meetingActualTime: meetingActualTime,
         expectedDuration: expectedDuration,
+        meetingAttended: [],
+        meetingChaired: [],
+        meetingAbsent: [],
+        meetingCopiesTo: [],
+        meetingPrepared: [],
       },
     },
     true,
