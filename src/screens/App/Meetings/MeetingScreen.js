@@ -11,7 +11,7 @@ import {
 import {connect} from 'react-redux';
 import * as actions from '../../../redux/actions';
 import colors from '../../../config/colors';
-import EStyleSheet from 'react-native-extended-stylesheet';
+import EStyleSheet, {value} from 'react-native-extended-stylesheet';
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
 import EmptyListView from '../../../components/EmptyListView';
@@ -19,11 +19,10 @@ import icons from '../../../asserts/icons/icons';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import moment from 'moment';
 
-
 const initialLayout = {width: entireScreenWidth};
 
 class MeetingScreen extends Component {
-  taskNameTextInput = [];
+  textInputValuesArray = [];
   constructor(props) {
     super(props);
     this.state = {
@@ -60,7 +59,15 @@ class MeetingScreen extends Component {
         },
       ],
       showPicker: false,
+      date: false,
+      actual: false,
+      dateMeeting: new Date(),
+      scheduleTime: new Date(),
+      actualTime: new Date(),
       dateOfMeeting: '',
+      scheduleTimeOfMeeting: '',
+      actualTimeOfMeeting: '',
+      textInputs: [],
     };
   }
 
@@ -68,7 +75,11 @@ class MeetingScreen extends Component {
 
   componentDidMount() {}
 
-  onChangeText(text) {}
+  async onChangeText(text, index) {
+    let {textInputs} = this.state;
+    textInputs[index] = text;
+    await this.setState({textInputs});
+  }
 
   initiateMeeting() {}
 
@@ -76,42 +87,60 @@ class MeetingScreen extends Component {
     this.setState({showPicker: false});
   };
 
-  handleDateTimeConfirm = date => {
+  handleDateTimeConfirm = selectedDateTime => {
     this.hideDateTimePicker();
-    let dateOfMeeting = new Date(date);
+    let dateTime = new Date(selectedDateTime);
     let newDate = '';
     let newDateValue = '';
 
-    newDate = moment(dateOfMeeting).format('MMMM DD, YYYY');
-    newDateValue = moment(dateOfMeeting).format('DD MM YYYY');
+    if (this.state.date && !this.state.actual) {
+      newDate = moment(dateTime).format('MMMM DD, YYYY');
+      newDateValue = moment(dateTime).format('DD MM YYYY');
+    } else {
+      newDate = moment(dateTime).format('hh:mm A');
+      newDateValue = moment(dateTime).format('hh:mm A');
+    }
 
     if (this.state.date && !this.state.actual) {
       this.setState({
         dateOfMeeting: newDate,
         dateOfMeetingValue: newDateValue,
-        date: new Date(dateOfMeeting),
+        dateMeeting: new Date(dateTime),
       });
     } else if (!this.state.date && this.state.actual) {
       this.setState({
         actualTimeOfMeeting: newDate,
         actualTimeOfMeetingValue: newDateValue,
-        actualTime: new Date(dateOfMeeting),
+        actualTime: new Date(dateTime),
       });
     } else {
       this.setState({
         scheduleTimeOfMeeting: newDate,
         scheduleTimeOfMeetingValue: newDateValue,
-        scheduleTime: new Date(dateOfMeeting),
+        scheduleTime: new Date(dateTime),
       });
     }
   };
 
   renderDateTimePicker() {
+    let date = this.state.date;
+    let actual = this.state.actual;
+    let dateMeeting = this.state.dateMeeting;
+    let actualTime = this.state.actualTime;
+    let scheduleTime = this.state.scheduleTime;
+
     return (
       <View>
         <DateTimePickerModal
           isVisible={this.state.showPicker}
-          mode="date"
+          date={
+            date && !actual
+              ? dateMeeting
+              : !date && actual
+              ? actualTime
+              : scheduleTime
+          }
+          mode={date && !actual ? 'date' : 'time'}
           onConfirm={this.handleDateTimeConfirm}
           onCancel={this.hideDateTimePicker}
         />
@@ -135,8 +164,35 @@ class MeetingScreen extends Component {
     }
   }
 
-  renderView(item) {
+  getChangedValue(item) {
     let key = item.id;
+    let value = '';
+    switch (key) {
+      case 1:
+        value = this.state.dateOfMeeting;
+        break;
+      case 2:
+        value = this.state.b;
+        break;
+      case 3:
+        value = this.state.b;
+        break;
+      case 4:
+        value = this.state.scheduleTimeOfMeeting;
+        break;
+      case 5:
+        value = this.state.actualTimeOfMeeting;
+        break;
+      default:
+        break;
+    }
+
+    return value;
+  }
+
+  renderView(item, index) {
+    let key = item.id;
+    let value = this.getChangedValue(item);
     switch (key) {
       case 1:
       case 4:
@@ -147,11 +203,8 @@ class MeetingScreen extends Component {
             <TouchableOpacity
               style={styles.textInputFieldView}
               onPress={() => this.onItemPress(item)}>
-              {this.state.dateOfMeeting != '' ? (
-                <Text
-                  style={styles.textInput}>
-                  {this.state.dateOfMeeting}
-                </Text>
+              {value != '' ? (
+                <Text style={styles.textInput}>{value}</Text>
               ) : (
                 <Text
                   style={[styles.textInput, {color: colors.colorGreyChateau}]}>
@@ -169,14 +222,12 @@ class MeetingScreen extends Component {
             <Text style={styles.fieldName}>{item.name}</Text>
             <View style={styles.textInputFieldView}>
               <TextInput
-                ref={input => {
-                  this.taskNameTextInput = input;
-                }}
+                ref={ref => (this.textInputValuesArray[index] = ref)}
                 style={styles.textInput}
                 placeholder={item.placeHolder}
                 multiline={true}
-                value={''}
-                onChangeText={text => this.onChangeText(text)}
+                value={this.textInputValuesArray[index]}
+                onChangeText={text => this.onChangeText(text, index)}
                 maxLength={100}
                 multiline={true}
               />
@@ -195,7 +246,7 @@ class MeetingScreen extends Component {
         <FlatList
           style={styles.flatListStyle}
           data={textInputArray}
-          renderItem={({item}) => this.renderView(item)}
+          renderItem={({item, index}) => this.renderView(item, index)}
           keyExtractor={item => item.id}
         />
         <View style={styles.bottomContainer}>
