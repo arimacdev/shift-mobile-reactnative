@@ -35,6 +35,10 @@ let dropData = [
     value: 'Finished',
   },
   {
+    id: 'pinned',
+    value: 'Pinned',
+  },
+  {
     id: 'Presales',
     value: 'Presales',
   },
@@ -90,7 +94,9 @@ class ProjectsScreen extends Component {
     }
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    // this.loadProjects();
+  }
 
   arrayCompare(a, b) {
     const projectNameA = a.projectName.toUpperCase();
@@ -136,11 +142,23 @@ class ProjectsScreen extends Component {
       case 'Presales : Lost':
         searchValue = 'preSalesL';
         break;
+      case 'Pinned':
+        searchValue = 'pinned';
+        break;
     }
 
-    let filteredData = this.state.allProjects.filter(function(item) {
-      return item.projectStatus.includes(searchValue);
-    });
+    let filteredData = [];
+
+    if (searchValue == 'pinned') {
+      filteredData = this.state.allProjects.filter(function(item) {
+        return item.blockedStatus == true;
+      });
+    } else {
+      filteredData = this.state.allProjects.filter(function(item) {
+        return item.projectStatus.includes(searchValue);
+      });
+    }
+
     let sortData = filteredData.sort(this.arrayCompare);
     this.setState({
       projects: sortData,
@@ -150,8 +168,6 @@ class ProjectsScreen extends Component {
   }
 
   renderProjectList(item) {
-    // TasksScreen
-    //EditProjectScreen
     return (
       <TouchableOpacity
         onPress={() =>
@@ -193,10 +209,32 @@ class ProjectsScreen extends Component {
         <View style={{flex: 1}}>
           <Text style={styles.text}>{item.projectName}</Text>
         </View>
+        <TouchableOpacity onPress={() => this.onPinProject(item)}>
+          <Icon
+            name={item.blockedStatus ? 'star' : 'star-outline'}
+            style={{
+              fontSize: EStyleSheet.value('30rem'),
+              color: colors.colorAmber,
+              marginRight: 15,
+            }}
+          />
+        </TouchableOpacity>
         <View style={[styles.statusView, {backgroundColor: color}]} />
       </View>
     );
   };
+
+  async onPinProject(itemMain) {
+    let searchValue = this.state.searchValue;
+    let filteredData = this.state.allProjects.filter(function(item) {
+      if (itemMain.projectId == item.projectId) {
+        item.blockedStatus = !item.blockedStatus;
+      }
+      return item.projectStatus.includes(searchValue);
+    });
+    let sortData = filteredData.sort(this.arrayCompare);
+    this.setState({projects: sortData});
+  }
 
   renderBase() {
     return (
