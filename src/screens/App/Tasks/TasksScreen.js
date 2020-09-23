@@ -8,6 +8,7 @@ import Projects from '../Projects/ProjectsDetailsScreen';
 import PeopleScreen from '../People/PeopleScreen';
 import FilesScreen from '../Files/ProjectFilesScreen';
 import Board from '../Board/Board';
+import Meetings from '../Meetings/MeetingScreen';
 import {TabView, TabBar} from 'react-native-tab-view';
 import EStyleSheet from 'react-native-extended-stylesheet';
 const entireScreenWidth = Dimensions.get('window').width;
@@ -27,6 +28,7 @@ class TasksScreen extends Component {
         {key: 'prople', title: 'People'},
         {key: 'projects', title: 'Project'},
         {key: 'files', title: 'Files'},
+        {key: 'meetings', title: 'Meetings'},
       ],
     };
   }
@@ -97,6 +99,15 @@ class TasksScreen extends Component {
       case 'board':
         return (
           <Board
+            selectedProjectID={projectId}
+            projDetails={params.projDetails}
+            navigation={this.props.navigation}
+            isActive={isActive}
+          />
+        );
+        case 'meetings':
+        return (
+          <Meetings
             selectedProjectID={projectId}
             projDetails={params.projDetails}
             navigation={this.props.navigation}
