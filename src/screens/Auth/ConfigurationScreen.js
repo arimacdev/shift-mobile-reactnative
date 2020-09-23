@@ -38,7 +38,6 @@ class ConfigurationScreen extends Component {
 
   async initialUserLogin() {
     this.setState({dataLoading: true});
-    let platform = Platform.OS;
     let version = DeviceInfo.getBuildNumber();
     let workSpace = this.state.workSpace;
     APIServices.getOrganizationData(workSpace, version)
