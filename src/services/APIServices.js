@@ -93,6 +93,7 @@ import {
   DELETE_PROJECT_FOLDER,
   MOVE_FILES_BETWEEN_FOLDERS,
   BLOCK_USER,
+  INITIATE_MEETING,
 } from '../api/API';
 import AsyncStorage from '@react-native-community/async-storage';
 import {SET_UPLOAD_PROGRESS} from '../redux/types';
@@ -3584,6 +3585,54 @@ async function blockUnblockUserData(projectID, blockedStatus, blockedUserId) {
   );
 }
 
+async function initiatMeetingData(
+  projectId,
+  meetingDate,
+  meetingTopic,
+  meetingVenue,
+  meetingExpectedTime,
+  meetingActualTime,
+  expectedDuration,
+) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
+  let userIDHeder = null;
+  userIDHeder = await AsyncStorage.getItem('userID');
+
+  let headers = {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+    user: userIDHeder,
+  };
+
+  return request(
+    {
+      url: baseURL + INITIATE_MEETING,
+      method: 'POST',
+      data: {
+        projectId: projectId,
+        meetingDate: meetingDate,
+        meetingTopic: meetingTopic,
+        meetingVenue: meetingVenue,
+        meetingExpectedTime: meetingExpectedTime,
+        meetingActualTime: meetingActualTime,
+        expectedDuration: expectedDuration,
+      },
+    },
+    true,
+    headers,
+  );
+}
+
+//"{ "projectId": "{{projectId}}",
+//"meetingTopic": "ExtraOrdinary",
+//"meetingVenue": "Arimac",
+//"meetingExpectedTime": "2020-10-17",
+//"meetingActualTime": "2020-10-17",
+//"expectedDuration": 100,
+//"actualDuration": 60,
+//"meetingChaired": [ { "attendeeId": "{{userId}}", "isGuest": false }, { "attendeeId": "Non Arimac Chair 1, Non Arimac Chair 2", "isGuest": true } ], "meetingAttended": [ { "attendeeId": "{{userId}}", "isGuest": false }, { "attendeeId": "Non Arimac User 1, Non Arimac User 2, Non Arimac User 3", "isGuest": true } ], "meetingAbsent": [], "meetingCopiesTo": [], "meetingPrepared": [] }"
+
 const APIServices = {
   getAllProjectsByUserData,
   getUserData,
@@ -3705,6 +3754,7 @@ const APIServices = {
   deleteFolderData,
   moveFilesBetweenFoldersData,
   blockUnblockUserData,
+  initiatMeetingData,
 };
 
 export default APIServices;
