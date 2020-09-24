@@ -18,6 +18,9 @@ import EmptyListView from '../../../components/EmptyListView';
 import icons from '../../../asserts/icons/icons';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import moment from 'moment';
+import APIServices from '../../../services/APIServices';
+import Utils from '../../../utils/Utils';
+import _ from 'lodash';
 
 const initialLayout = {width: entireScreenWidth};
 
@@ -64,6 +67,7 @@ class MeetingScreen extends Component {
       dateMeeting: new Date(),
       scheduleTime: new Date(),
       actualTime: new Date(),
+      dateOfMeetingValue: '',
       dateOfMeeting: '',
       scheduleTimeOfMeeting: '',
       actualTimeOfMeeting: '',
@@ -81,7 +85,116 @@ class MeetingScreen extends Component {
     await this.setState({textInputs});
   }
 
-  initiateMeeting() {}
+  async initiateMeeting() {
+    let dateOfMeeting = this.state.dateOfMeeting;
+    let scheduleTimeOfMeeting = this.state.scheduleTimeOfMeeting;
+    let actualTimeOfMeeting = this.state.actualTimeOfMeeting;
+    let textInputs = this.state.textInputs;
+    // APIServices.initiatMeetingData
+    this.validateProject(
+      dateOfMeeting,
+      scheduleTimeOfMeeting,
+      actualTimeOfMeeting,
+      textInputs,
+    );
+  }
+
+  validateProject(
+    dateOfMeeting,
+    scheduleTimeOfMeeting,
+    actualTimeOfMeeting,
+    textInputs,
+  ) {
+    
+    if (!dateOfMeeting && _.isEmpty(dateOfMeeting)) {
+      Utils.showAlert(
+        true,
+        '',
+        'Please set the date for the meeting',
+        this.props,
+      );
+      return false;
+    }
+
+    if (!textInputs[1] && _.isEmpty(textInputs[1])) {
+      Utils.showAlert(
+        true,
+        '',
+        'Please enter the vanue for the meeting',
+        this.props,
+      );
+      return false;
+    }
+
+    if (!textInputs[2] && _.isEmpty(textInputs[2])) {
+      Utils.showAlert(
+        true,
+        '',
+        'Please enter the topic for the meeting',
+        this.props,
+      );
+      return false;
+    }
+
+    if (scheduleTimeOfMeeting && !_.isEmpty(scheduleTimeOfMeeting)) {
+      let startTime = moment(scheduleTimeOfMeeting, 'hh:mm A');
+      let todayTime = moment(new Date()).format('hh:mm A');
+      let endTime = moment(todayTime, 'hh:mm A');
+      let totalHours = startTime.diff(endTime, 'seconds');
+      if (totalHours < 0) {
+        Utils.showAlert(
+          true,
+          '',
+          'Start time cannot be a past time',
+          this.props,
+        );
+        return false;
+      }
+    } else {
+      Utils.showAlert(
+        true,
+        '',
+        'Please set the schedule time for the meeting',
+        this.props,
+      );
+      return false;
+    }
+
+    if (actualTimeOfMeeting && !_.isEmpty(actualTimeOfMeeting)) {
+      let startTime = moment(scheduleTimeOfMeeting, 'hh:mm A');
+      let endTime = moment(actualTimeOfMeeting, 'hh:mm A');
+      let totalTime = endTime.diff(startTime, 'seconds');
+      if (totalTime < 0) {
+        Utils.showAlert(
+          true,
+          '',
+          'Actual time should be after schedule time',
+          this.props,
+        );
+        return false;
+      }
+    } else {
+      Utils.showAlert(
+        true,
+        '',
+        'Please set the actual time for the meeting',
+        this.props,
+      );
+      return false;
+    }
+
+    if (!textInputs[5] && _.isEmpty(textInputs[5])) {
+      Utils.showAlert(
+        true,
+        '',
+        'Please enter the planned duration for the meeting',
+        this.props,
+      );
+      return false;
+    }
+
+    return true;
+  }
 
   hideDateTimePicker = () => {
     this.setState({showPicker: false});
@@ -90,33 +203,30 @@ class MeetingScreen extends Component {
   handleDateTimeConfirm = selectedDateTime => {
     this.hideDateTimePicker();
     let dateTime = new Date(selectedDateTime);
-    let newDate = '';
-    let newDateValue = '';
+    let newDateTime = '';
+    let newDateTimeValue = '';
 
     if (this.state.date && !this.state.actual) {
-      newDate = moment(dateTime).format('MMMM DD, YYYY');
-      newDateValue = moment(dateTime).format('DD MM YYYY');
+      newDateTime = moment(dateTime).format('MMMM DD, YYYY');
+      newDateTimeValue = moment(dateTime).format('DD MM YYYY');
     } else {
-      newDate = moment(dateTime).format('hh:mm A');
-      newDateValue = moment(dateTime).format('hh:mm A');
+      newDateTime = moment(dateTime).format('hh:mm A');
     }
 
     if (this.state.date && !this.state.actual) {
       this.setState({
-        dateOfMeeting: newDate,
-        dateOfMeetingValue: newDateValue,
+        dateOfMeeting: newDateTime,
+        dateOfMeetingValue: newDateTimeValue,
         dateMeeting: new Date(dateTime),
       });
     } else if (!this.state.date && this.state.actual) {
       this.setState({
-        actualTimeOfMeeting: newDate,
-        actualTimeOfMeetingValue: newDateValue,
+        actualTimeOfMeeting: newDateTime,
         actualTime: new Date(dateTime),
       });
     } else {
       this.setState({
-        scheduleTimeOfMeeting: newDate,
-        scheduleTimeOfMeetingValue: newDateValue,
+        scheduleTimeOfMeeting: newDateTime,
         scheduleTime: new Date(dateTime),
       });
     }
@@ -171,12 +281,6 @@ class MeetingScreen extends Component {
       case 1:
         value = this.state.dateOfMeeting;
         break;
-      case 2:
-        value = this.state.b;
-        break;
-      case 3:
-        value = this.state.b;
-        break;
       case 4:
         value = this.state.scheduleTimeOfMeeting;
         break;
@@ -225,11 +329,9 @@ class MeetingScreen extends Component {
                 ref={ref => (this.textInputValuesArray[index] = ref)}
                 style={styles.textInput}
                 placeholder={item.placeHolder}
-                multiline={true}
-                value={this.textInputValuesArray[index]}
+                value={this.state.textInputs[index]}
                 onChangeText={text => this.onChangeText(text, index)}
                 maxLength={100}
-                multiline={true}
               />
             </View>
           </View>
@@ -316,7 +418,7 @@ const styles = EStyleSheet.create({
   },
   bottomContainer: {
     position: 'absolute',
-    bottom: 0,
+    bottom: '0rem',
     width: '100%',
     marginBottom: '15rem',
   },
