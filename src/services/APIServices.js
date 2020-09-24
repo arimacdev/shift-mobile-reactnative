@@ -94,6 +94,7 @@ import {
   MOVE_FILES_BETWEEN_FOLDERS,
   BLOCK_USER,
   INITIATE_MEETING,
+  PIN_PROJECT,
 } from '../api/API';
 import AsyncStorage from '@react-native-community/async-storage';
 import {SET_UPLOAD_PROGRESS} from '../redux/types';
@@ -3585,6 +3586,33 @@ async function blockUnblockUserData(projectID, blockedStatus, blockedUserId) {
   );
 }
 
+async function pinProjectData(projectID, isPin) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
+  let userIDHeder = null;
+  userIDHeder = await AsyncStorage.getItem('userID');
+
+  let headers = {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+    user: userIDHeder,
+  };
+
+  return request(
+    {
+      url: baseURL + PIN_PROJECT,
+      method: 'POST',
+      data: {
+        user: userIDHeder,
+        project: projectID,
+        isPin: isPin,
+      },
+    },
+    true,
+    headers,
+  );
+}
+
 async function initiatMeetingData(
   projectId,
   meetingTopic,
@@ -3757,6 +3785,7 @@ const APIServices = {
   deleteFolderData,
   moveFilesBetweenFoldersData,
   blockUnblockUserData,
+  pinProjectData,
   initiatMeetingData,
 };
 
