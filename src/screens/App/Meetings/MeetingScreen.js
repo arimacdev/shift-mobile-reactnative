@@ -21,6 +21,7 @@ import moment from 'moment';
 import APIServices from '../../../services/APIServices';
 import Utils from '../../../utils/Utils';
 import _ from 'lodash';
+import RichTextEditorPell from '../../../components/RichTextEditorPell';
 
 const initialLayout = {width: entireScreenWidth};
 
@@ -61,6 +62,33 @@ class MeetingScreen extends Component {
           placeHolder: 'Enter planned duration of the meeting (min)',
         },
       ],
+      discusstionPointsArray: [
+        {
+          id: 1,
+          name: 'Discussion point',
+          placeHolder: 'Enter discussion point for the meeting',
+        },
+        {
+          id: 2,
+          name: 'Action By',
+          placeHolder: 'Enter action by for the meeting',
+        },
+        {
+          id: 3,
+          name: 'Target Date',
+          placeHolder: 'Set target date for the meeting',
+        },
+        {
+          id: 4,
+          name: 'Remarks',
+          placeHolder: 'Enter Remarks for the meeting',
+        },
+        {
+          id: 5,
+          name: 'Description',
+          placeHolder: 'Enter description for the meeting',
+        },
+      ],
       showPicker: false,
       date: false,
       actual: false,
@@ -72,6 +100,7 @@ class MeetingScreen extends Component {
       scheduleTimeOfMeeting: '',
       actualTimeOfMeeting: '',
       textInputs: [],
+      indexMain: 1,
     };
   }
 
@@ -87,25 +116,66 @@ class MeetingScreen extends Component {
 
   async initiateMeeting() {
     let dateOfMeeting = this.state.dateOfMeeting;
+    let dateOfMeetingValue = this.state.dateOfMeetingValue;
     let scheduleTimeOfMeeting = this.state.scheduleTimeOfMeeting;
     let actualTimeOfMeeting = this.state.actualTimeOfMeeting;
     let textInputs = this.state.textInputs;
-    // APIServices.initiatMeetingData
-    this.validateProject(
-      dateOfMeeting,
-      scheduleTimeOfMeeting,
-      actualTimeOfMeeting,
-      textInputs,
-    );
+    let projectID = this.props.selectedProjectID;
+    let meetingTopic = textInputs[1];
+    let meetingVenue = textInputs[2];
+    let expectedDuration = textInputs[5];
+    let indexMain = this.state.indexMain;
+
+    if (
+      this.validateFields(
+        dateOfMeeting,
+        scheduleTimeOfMeeting,
+        actualTimeOfMeeting,
+        textInputs,
+      )
+    ) {
+      let meetingScheduleDateTime = dateOfMeetingValue
+        ? moment(
+            dateOfMeetingValue + scheduleTimeOfMeeting,
+            'DD/MM/YYYY hh:mmA',
+          ).format('YYYY-MM-DD[T]HH:mm:ss')
+        : '';
+      let meetingActualDateTime = dateOfMeetingValue
+        ? moment(
+            dateOfMeetingValue + actualTimeOfMeeting,
+            'DD/MM/YYYY hh:mmA',
+          ).format('YYYY-MM-DD[T]HH:mm:ss')
+        : '';
+      this.setState({dataLoading: true});
+      await APIServices.initiatMeetingData(
+        projectID,
+        meetingTopic,
+        meetingVenue,
+        meetingScheduleDateTime,
+        meetingActualDateTime,
+        expectedDuration,
+      )
+        .then(response => {
+          if (response.message == 'success') {
+            this.setState({dataLoading: false, indexMain: indexMain + 1});
+          } else {
+            this.setState({dataLoading: false});
+            Utils.showAlert(true, '', response.message, this.props);
+          }
+        })
+        .catch(error => {
+          this.setState({dataLoading: false});
+          Utils.showAlert(true, '', error.data.message, this.props);
+        });
+    }
   }
 
-  validateProject(
+  validateFields(
     dateOfMeeting,
     scheduleTimeOfMeeting,
     actualTimeOfMeeting,
     textInputs,
   ) {
-    
     if (!dateOfMeeting && _.isEmpty(dateOfMeeting)) {
       Utils.showAlert(
         true,
@@ -137,9 +207,9 @@ class MeetingScreen extends Component {
     }
 
     if (scheduleTimeOfMeeting && !_.isEmpty(scheduleTimeOfMeeting)) {
-      let startTime = moment(scheduleTimeOfMeeting, 'hh:mm A');
-      let todayTime = moment(new Date()).format('hh:mm A');
-      let endTime = moment(todayTime, 'hh:mm A');
+      let startTime = moment(scheduleTimeOfMeeting, 'hh:mmA');
+      let todayTime = moment(new Date()).format('hh:mmA');
+      let endTime = moment(todayTime, 'hh:mmA');
       let totalHours = startTime.diff(endTime, 'seconds');
       if (totalHours < 0) {
         Utils.showAlert(
@@ -161,8 +231,8 @@ class MeetingScreen extends Component {
     }
 
     if (actualTimeOfMeeting && !_.isEmpty(actualTimeOfMeeting)) {
-      let startTime = moment(scheduleTimeOfMeeting, 'hh:mm A');
-      let endTime = moment(actualTimeOfMeeting, 'hh:mm A');
+      let startTime = moment(scheduleTimeOfMeeting, 'hh:mmA');
+      let endTime = moment(actualTimeOfMeeting, 'hh:mmA');
       let totalTime = endTime.diff(startTime, 'seconds');
       if (totalTime < 0) {
         Utils.showAlert(
@@ -210,7 +280,7 @@ class MeetingScreen extends Component {
       newDateTime = moment(dateTime).format('MMMM DD, YYYY');
       newDateTimeValue = moment(dateTime).format('DD MM YYYY');
     } else {
-      newDateTime = moment(dateTime).format('hh:mm A');
+      newDateTime = moment(dateTime).format('hh:mmA');
     }
 
     if (this.state.date && !this.state.actual) {
@@ -294,6 +364,10 @@ class MeetingScreen extends Component {
     return value;
   }
 
+  onFocusTextInput(index) {
+    this.flatList.scrollToIndex({animated: true, index: index});
+  }
+
   renderView(item, index) {
     let key = item.id;
     let value = this.getChangedValue(item);
@@ -332,6 +406,76 @@ class MeetingScreen extends Component {
                 value={this.state.textInputs[index]}
                 onChangeText={text => this.onChangeText(text, index)}
                 maxLength={100}
+                onFocus={() => this.onFocusTextInput(index)}
+              />
+            </View>
+          </View>
+        );
+      default:
+        break;
+    }
+  }
+
+  getRefEditor(refEditor) {
+    this.richText = refEditor;
+  }
+
+  renderDiscussionPointView(item, index) {
+    let key = item.id;
+    let value = this.getChangedValue(item);
+    switch (key) {
+      case 3:
+        return (
+          <View>
+            <Text style={styles.fieldName}>{item.name}</Text>
+            <TouchableOpacity
+              style={styles.textInputFieldView}
+              onPress={() => this.onItemPress(item)}>
+              {value != '' ? (
+                <Text style={styles.textInput}>{value}</Text>
+              ) : (
+                <Text
+                  style={[styles.textInput, {color: colors.colorGreyChateau}]}>
+                  {item.placeHolder}
+                </Text>
+              )}
+            </TouchableOpacity>
+          </View>
+        );
+      case 1:
+      case 2:
+      case 4:
+        return (
+          <View>
+            <Text style={styles.fieldName}>{item.name}</Text>
+            <View style={styles.textInputFieldView}>
+              <TextInput
+                ref={ref => (this.textInputValuesArray[index] = ref)}
+                style={styles.textInput}
+                placeholder={item.placeHolder}
+                value={this.state.textInputs[index]}
+                onChangeText={text => this.onChangeText(text, index)}
+                maxLength={100}
+                onFocus={() => this.onFocusTextInput(index)}
+              />
+            </View>
+          </View>
+        );
+      case 5:
+        return (
+          <View>
+            <Text style={styles.fieldName}>{item.name}</Text>
+            <View style={styles.textEditorStyle}>
+              <RichTextEditorPell
+                chatText={this.state.chatText}
+                timeTextChange={this.state.timeTextChange}
+                taskId={this.state.taskId}
+                getRefEditor={refEditor => this.getRefEditor(refEditor)}
+                doumentPicker={() => {
+                  this.FilePicker();
+                }}
+                onInsertLink={() => this.showEnterUrlModal()}
+                onChangeEditorText={text => this.onChangeEditorText(text)}
               />
             </View>
           </View>
@@ -343,21 +487,57 @@ class MeetingScreen extends Component {
 
   render() {
     let textInputArray = this.state.textInputArray;
+    let discusstionPointsArray = this.state.discusstionPointsArray;
+    let indexMain = this.state.indexMain;
+
     return (
       <View style={styles.container}>
-        <FlatList
-          style={styles.flatListStyle}
-          data={textInputArray}
-          renderItem={({item, index}) => this.renderView(item, index)}
-          keyExtractor={item => item.id}
-        />
-        <View style={styles.bottomContainer}>
-          <TouchableOpacity onPress={() => this.initiateMeeting()}>
-            <View style={styles.button}>
-              <Text style={styles.buttonText}>Initiate Meeting</Text>
+        {indexMain == 0 ? (
+          <View style={{flex: 1}}>
+            <FlatList
+              ref={r => (this.flatList = r)}
+              style={styles.flatListStyle}
+              data={textInputArray}
+              renderItem={({item, index}) => this.renderView(item, index)}
+              keyExtractor={item => item.id}
+            />
+            <View style={styles.bottomContainer}>
+              <TouchableOpacity onPress={() => this.initiateMeeting()}>
+                <View style={styles.button}>
+                  <Text style={styles.buttonText}>Initiate Meeting</Text>
+                </View>
+              </TouchableOpacity>
             </View>
-          </TouchableOpacity>
-        </View>
+          </View>
+        ) : indexMain == 1 ? (
+          <View style={{flex: 1}}>
+            <FlatList
+              ref={r => (this.flatList = r)}
+              style={styles.flatListStyle}
+              data={discusstionPointsArray}
+              renderItem={({item, index}) =>
+                this.renderDiscussionPointView(item, index)
+              }
+              keyExtractor={item => item.id}
+            />
+            <View style={styles.bottomContainer}>
+              <TouchableOpacity onPress={() => this.initiateMeeting()}>
+                <View style={styles.button}>
+                  <Text style={styles.buttonText}>Initiate Meeting</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          </View>
+        ) : (
+          <FlatList
+            ref={r => (this.flatList = r)}
+            style={styles.flatListStyle}
+            data={textInputArray}
+            renderItem={({item, index}) => this.renderView(item, index)}
+            keyExtractor={item => item.id}
+          />
+        )}
+
         {this.state.showPicker ? this.renderDateTimePicker() : null}
       </View>
     );
@@ -421,6 +601,15 @@ const styles = EStyleSheet.create({
     bottom: '0rem',
     width: '100%',
     marginBottom: '15rem',
+  },
+  textEditorStyle: {
+    height: '130rem',
+    borderRadius: '5rem',
+    marginTop: '5rem',
+    marginBottom: '5rem',
+    borderColor: colors.colorSilver,
+    borderWidth: '0.5rem',
+    marginHorizontal: '20rem',
   },
 });
 
