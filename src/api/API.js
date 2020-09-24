@@ -117,4 +117,6 @@ export const MOVE_FILES_BETWEEN_FOLDERS = `projects`;
 
 export const BLOCK_USER = `projects`;
 
+export const PIN_PROJECT = `projects/pin`;
+
 export const INITIATE_MEETING = `meeting`;
