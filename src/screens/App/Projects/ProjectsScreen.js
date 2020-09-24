@@ -20,6 +20,8 @@ import Loader from '../../../components/Loader';
 import {NavigationEvents} from 'react-navigation';
 import {Icon} from 'native-base';
 import EmptyListView from '../../../components/EmptyListView';
+import APIServices from '../../../services/APIServices';
+import Utils from '../../../utils/Utils';
 
 let dropData = [
   {
@@ -151,7 +153,7 @@ class ProjectsScreen extends Component {
 
     if (searchValue == 'pinned') {
       filteredData = this.state.allProjects.filter(function(item) {
-        return item.blockedStatus == true;
+        return item.isStarred == true;
       });
     } else {
       filteredData = this.state.allProjects.filter(function(item) {
@@ -209,9 +211,10 @@ class ProjectsScreen extends Component {
         <View style={{flex: 1}}>
           <Text style={styles.text}>{item.projectName}</Text>
         </View>
-        <TouchableOpacity onPress={() => this.onPinProject(item)}>
+        <TouchableOpacity
+          onPress={() => this.pinProject(item.projectId, item.isStarred, item)}>
           <Icon
-            name={item.blockedStatus ? 'star' : 'star-outline'}
+            name={item.isStarred ? 'star' : 'star-outline'}
             style={{
               fontSize: EStyleSheet.value('30rem'),
               color: colors.colorAmber,
@@ -224,14 +227,30 @@ class ProjectsScreen extends Component {
     );
   };
 
+  async pinProject(projectID, isPin, itemMain) {
+    let isPinProject = !isPin;
+    await APIServices.pinProjectData(projectID, isPinProject)
+      .then(response => {
+        if (response.message == 'success') {
+          this.onPinProject(itemMain);
+        } else {
+          Utils.showAlert(true, '', response.message, this.props);
+        }
+      })
+      .catch(error => {
+        Utils.showAlert(true, '', error.data.message, this.props);
+      });
+  }
+
   async onPinProject(itemMain) {
     let searchValue = this.state.searchValue;
     let filteredData = this.state.allProjects.filter(function(item) {
       if (itemMain.projectId == item.projectId) {
-        item.blockedStatus = !item.blockedStatus;
+        item.isStarred = !item.isStarred;
       }
       return item.projectStatus.includes(searchValue);
     });
+
     let sortData = filteredData.sort(this.arrayCompare);
     this.setState({projects: sortData});
   }
