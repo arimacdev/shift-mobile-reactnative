@@ -74,6 +74,7 @@ class ProjectsScreen extends Component {
       allProjects: [],
       selectedType: 'Presales',
       searchValue: 'presales',
+      dataLoading: false,
     };
   }
 
@@ -86,7 +87,9 @@ class ProjectsScreen extends Component {
       this.props.drawerItemSelect('projects');
       let searchValue = this.state.searchValue;
       let filteredData = this.props.projects.filter(function(item) {
-        return item.projectStatus.includes(searchValue);
+        return searchValue == 'pinned'
+          ? item.isStarred == true
+          : item.projectStatus.includes(searchValue);
       });
       let sortData = filteredData.sort(this.arrayCompare);
       this.setState({
@@ -151,15 +154,11 @@ class ProjectsScreen extends Component {
 
     let filteredData = [];
 
-    if (searchValue == 'pinned') {
-      filteredData = this.state.allProjects.filter(function(item) {
-        return item.isStarred == true;
-      });
-    } else {
-      filteredData = this.state.allProjects.filter(function(item) {
-        return item.projectStatus.includes(searchValue);
-      });
-    }
+    filteredData = this.state.allProjects.filter(function(item) {
+      return searchValue == 'pinned'
+        ? item.isStarred == true
+        : item.projectStatus.includes(searchValue);
+    });
 
     let sortData = filteredData.sort(this.arrayCompare);
     this.setState({
@@ -229,15 +228,20 @@ class ProjectsScreen extends Component {
 
   async pinProject(projectID, isPin, itemMain) {
     let isPinProject = !isPin;
+
+    this.setState({dataLoading: true});
     await APIServices.pinProjectData(projectID, isPinProject)
       .then(response => {
         if (response.message == 'success') {
+          this.setState({dataLoading: false});
           this.onPinProject(itemMain);
         } else {
+          this.setState({dataLoading: false});
           Utils.showAlert(true, '', response.message, this.props);
         }
       })
       .catch(error => {
+        this.setState({dataLoading: false});
         Utils.showAlert(true, '', error.data.message, this.props);
       });
   }
@@ -248,7 +252,9 @@ class ProjectsScreen extends Component {
       if (itemMain.projectId == item.projectId) {
         item.isStarred = !item.isStarred;
       }
-      return item.projectStatus.includes(searchValue);
+      return searchValue == 'pinned'
+        ? item.isStarred == true
+        : item.projectStatus.includes(searchValue);
     });
 
     let sortData = filteredData.sort(this.arrayCompare);
@@ -276,6 +282,7 @@ class ProjectsScreen extends Component {
     let projects = this.state.projects;
     let projectsLoading = this.props.projectsLoading;
     let selectedType = this.state.selectedType;
+    let dataLoading = this.state.dataLoading;
 
     return (
       <View style={styles.container}>
@@ -310,6 +317,7 @@ class ProjectsScreen extends Component {
           ListEmptyComponent={<EmptyListView />}
         />
         {projectsLoading && <Loader />}
+        {dataLoading && <Loader />}
       </View>
     );
   }
