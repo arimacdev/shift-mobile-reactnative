@@ -19,6 +19,8 @@ import AsyncStorage from '@react-native-community/async-storage';
 import Loader from '../../../components/Loader';
 import {Icon} from 'native-base';
 import EmptyListView from '../../../components/EmptyListView';
+import APIServices from '../../../services/APIServices';
+import Utils from '../../../utils/Utils';
 
 class ProjectsSearchScreen extends Component {
   constructor(props) {
@@ -27,6 +29,7 @@ class ProjectsSearchScreen extends Component {
       projects: [],
       allProjects: [],
       searchText: '',
+      dataLoading: false,
     };
   }
 
@@ -36,9 +39,10 @@ class ProjectsSearchScreen extends Component {
       this.props.projects &&
       this.props.projects.length > 0
     ) {
+      let sortData = this.props.projects.sort(this.arrayCompare);
       this.setState({
-        projects: this.props.projects,
-        allProjects: this.props.projects,
+        projects: sortData,
+        allProjects: sortData,
       });
     }
   }
@@ -91,17 +95,62 @@ class ProjectsSearchScreen extends Component {
         <View style={{flex: 1}}>
           <Text style={styles.text}>{item.projectName}</Text>
         </View>
+        <TouchableOpacity
+          onPress={() => this.pinProject(item.projectId, item.isStarred, item)}>
+          <Icon
+            name={item.isStarred ? 'star' : 'star-outline'}
+            style={styles.starIconStyle}
+          />
+        </TouchableOpacity>
         <View style={[styles.statusView, {backgroundColor: color}]} />
       </View>
     );
   };
 
-  renderBase() {
-    return (
-      <View style={{justifyContent: 'center', flex: 1}}>
-        <Image style={styles.dropIcon} source={icons.arrow} />
-      </View>
-    );
+  async pinProject(projectID, isPin, itemMain) {
+    let isPinProject = !isPin;
+
+    this.setState({dataLoading: true});
+    await APIServices.pinProjectData(projectID, isPinProject)
+      .then(response => {
+        if (response.message == 'success') {
+          this.setState({dataLoading: false});
+          this.onPinProject(itemMain);
+        } else {
+          this.setState({dataLoading: false});
+          Utils.showAlert(true, '', response.message, this.props);
+        }
+      })
+      .catch(error => {
+        this.setState({dataLoading: false});
+        Utils.showAlert(true, '', error.data.message, this.props);
+      });
+  }
+
+  async onPinProject(itemMain) {
+    let searchText = this.state.searchText;
+    let filteredData = this.state.allProjects.filter(function(item) {
+      if (itemMain.projectId == item.projectId) {
+        item.isStarred = !item.isStarred;
+      }
+      return item.projectName.toLowerCase().includes(searchText.toLowerCase());
+    });
+
+    let sortData = filteredData.sort(this.arrayCompare);
+    this.setState({projects: sortData});
+  }
+
+  arrayCompare(a, b) {
+    const projectNameA = a.projectName.toUpperCase();
+    const projectNameB = b.projectName.toUpperCase();
+
+    let comparison = 0;
+    if (projectNameA > projectNameB) {
+      comparison = 1;
+    } else if (projectNameA < projectNameB) {
+      comparison = -1;
+    }
+    return comparison;
   }
 
   onSearchTextChange(text) {
@@ -109,16 +158,19 @@ class ProjectsSearchScreen extends Component {
     let result = this.state.allProjects.filter(data =>
       data.projectName.toLowerCase().includes(text.toLowerCase()),
     );
+    let sortData = result.sort(this.arrayCompare);
     if (text == '') {
       this.setState({projects: this.state.allProjects});
     } else {
-      this.setState({projects: result});
+      this.setState({projects: sortData});
     }
   }
 
   render() {
     let projects = this.state.projects;
     let projectsLoading = this.state.projectsLoading;
+    let dataLoading = this.state.dataLoading;
+
     return (
       <View style={styles.container}>
         <View style={styles.projectFilerView}>
@@ -137,6 +189,7 @@ class ProjectsSearchScreen extends Component {
           ListEmptyComponent={<EmptyListView />}
         />
         {projectsLoading && <Loader />}
+        {dataLoading && <Loader />}
       </View>
     );
   }
@@ -199,6 +252,11 @@ const styles = EStyleSheet.create({
   searchIcon: {
     width: '17rem',
     height: '17rem',
+  },
+  starIconStyle: {
+    fontSize: '30rem',
+    color: colors.colorAmber,
+    marginRight: '15rem',
   },
 });
 
