@@ -75,5 +75,6 @@ const colors = {
   colorMediumSlateBlue: '#704CF1',
   colorTurquoiseBlue: '#67D2E0',
   colorChristi: '#6FCD17',
+  colorGreyChateau: '#A5A8AA',
 };
 export default colors;
