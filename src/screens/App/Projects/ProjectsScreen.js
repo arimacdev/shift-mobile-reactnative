@@ -214,11 +214,7 @@ class ProjectsScreen extends Component {
           onPress={() => this.pinProject(item.projectId, item.isStarred, item)}>
           <Icon
             name={item.isStarred ? 'star' : 'star-outline'}
-            style={{
-              fontSize: EStyleSheet.value('30rem'),
-              color: colors.colorAmber,
-              marginRight: 15,
-            }}
+            style={styles.starIconStyle}
           />
         </TouchableOpacity>
         <View style={[styles.statusView, {backgroundColor: color}]} />
@@ -373,6 +369,11 @@ const styles = EStyleSheet.create({
     width: '89.5%',
     marginTop: '60rem',
     marginLeft: '13rem',
+  },
+  starIconStyle: {
+    fontSize: '30rem',
+    color: colors.colorAmber,
+    marginRight: '15rem',
   },
 });
 
