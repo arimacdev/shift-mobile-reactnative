@@ -6,7 +6,6 @@ import {
   FlatList,
   Dimensions,
   TouchableOpacity,
-  Image,
 } from 'react-native';
 import {connect} from 'react-redux';
 import * as actions from '../../../redux/actions';
@@ -14,14 +13,11 @@ import colors from '../../../config/colors';
 import EStyleSheet, {value} from 'react-native-extended-stylesheet';
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
-import EmptyListView from '../../../components/EmptyListView';
-import icons from '../../../asserts/icons/icons';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import moment from 'moment';
 import APIServices from '../../../services/APIServices';
 import Utils from '../../../utils/Utils';
 import _ from 'lodash';
-import RichTextEditorPell from '../../../components/RichTextEditorPell';
 import MeetingDiscussionPointScreen from './MeetingDiscussionPointScreen';
 
 const initialLayout = {width: entireScreenWidth};
@@ -63,33 +59,6 @@ class MeetingScreen extends Component {
           placeHolder: 'Enter planned duration of the meeting (min)',
         },
       ],
-      discusstionPointsArray: [
-        {
-          id: 1,
-          name: 'Discussion point',
-          placeHolder: 'Enter discussion point for the meeting',
-        },
-        {
-          id: 2,
-          name: 'Action By',
-          placeHolder: 'Enter action by for the meeting',
-        },
-        {
-          id: 3,
-          name: 'Target Date',
-          placeHolder: 'Set target date for the meeting',
-        },
-        {
-          id: 4,
-          name: 'Remarks',
-          placeHolder: 'Enter Remarks for the meeting',
-        },
-        {
-          id: 5,
-          name: 'Description',
-          placeHolder: 'Enter description for the meeting',
-        },
-      ],
       showPicker: false,
       date: false,
       actual: false,
@@ -101,7 +70,7 @@ class MeetingScreen extends Component {
       scheduleTimeOfMeeting: '',
       actualTimeOfMeeting: '',
       textInputs: [],
-      indexMain: 0,
+      indexMain: 1,
     };
   }
 
