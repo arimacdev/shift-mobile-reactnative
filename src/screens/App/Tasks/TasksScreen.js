@@ -25,7 +25,7 @@ class TasksScreen extends Component {
       routes: [
         {key: 'tasks', title: 'Tasks'},
         {key: 'board', title: 'Board'},
-        {key: 'prople', title: 'People'},
+        {key: 'people', title: 'People'},
         {key: 'projects', title: 'Project'},
         {key: 'files', title: 'Files'},
         {key: 'meetings', title: 'Meetings'},
@@ -80,7 +80,7 @@ class TasksScreen extends Component {
             isActive={isActive}
           />
         );
-      case 'prople':
+      case 'people':
         return (
           <PeopleScreen
             selectedProjectID={projectId}
@@ -105,11 +105,10 @@ class TasksScreen extends Component {
             isActive={isActive}
           />
         );
-        case 'meetings':
+      case 'meetings':
         return (
           <Meetings
             selectedProjectID={projectId}
-            projDetails={params.projDetails}
             navigation={this.props.navigation}
             isActive={isActive}
           />
