@@ -297,6 +297,7 @@ class MeetingScreen extends Component {
               ? actualTime
               : scheduleTime
           }
+          minimumDate={new Date()}
           mode={date && !actual ? 'date' : 'time'}
           onConfirm={this.handleDateTimeConfirm}
           onCancel={this.hideDateTimePicker}
