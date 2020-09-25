@@ -6,7 +6,6 @@ import {
   FlatList,
   Dimensions,
   TouchableOpacity,
-  Image,
 } from 'react-native';
 import {connect} from 'react-redux';
 import * as actions from '../../../redux/actions';
@@ -14,14 +13,13 @@ import colors from '../../../config/colors';
 import EStyleSheet, {value} from 'react-native-extended-stylesheet';
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
-import EmptyListView from '../../../components/EmptyListView';
-import icons from '../../../asserts/icons/icons';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import moment from 'moment';
 import APIServices from '../../../services/APIServices';
 import Utils from '../../../utils/Utils';
 import _ from 'lodash';
 import RichTextEditorPell from '../../../components/RichTextEditorPell';
+import FilePickerModal from '../../../components/FilePickerModal';
 
 const initialLayout = {width: entireScreenWidth};
 
@@ -58,17 +56,12 @@ class MeetingDiscussionPointScreen extends Component {
         },
       ],
       showPicker: false,
-      date: false,
-      actual: false,
-      dateMeeting: new Date(),
-      scheduleTime: new Date(),
-      actualTime: new Date(),
-      dateOfMeetingValue: '',
-      dateOfMeeting: '',
-      scheduleTimeOfMeeting: '',
-      actualTimeOfMeeting: '',
+      date: new Date(),
+      targetDate: '',
+      targetDateValue: '',
       textInputs: [],
       indexMain: 1,
+      description: '',
     };
   }
 
@@ -90,36 +83,20 @@ class MeetingDiscussionPointScreen extends Component {
   }
 
   async initiateMeeting() {
-    let dateOfMeeting = this.state.dateOfMeeting;
-    let dateOfMeetingValue = this.state.dateOfMeetingValue;
-    let scheduleTimeOfMeeting = this.state.scheduleTimeOfMeeting;
-    let actualTimeOfMeeting = this.state.actualTimeOfMeeting;
+    let targetDate = this.state.targetDate;
+    let targetDateValue = this.state.targetDateValue;
     let textInputs = this.state.textInputs;
     let projectID = this.props.selectedProjectID;
-    let meetingTopic = textInputs[1];
-    let meetingVenue = textInputs[2];
-    let expectedDuration = textInputs[5];
+    let meetingTopic = textInputs[0];
+    let meetingVenue = textInputs[1];
+    let expectedDuration = textInputs[3];
     let indexMain = this.state.indexMain;
 
-    if (
-      this.validateFields(
-        dateOfMeeting,
-        scheduleTimeOfMeeting,
-        actualTimeOfMeeting,
-        textInputs,
-      )
-    ) {
-      let meetingScheduleDateTime = dateOfMeetingValue
-        ? moment(
-            dateOfMeetingValue + scheduleTimeOfMeeting,
-            'DD/MM/YYYY hh:mmA',
-          ).format('YYYY-MM-DD[T]HH:mm:ss')
-        : '';
-      let meetingActualDateTime = dateOfMeetingValue
-        ? moment(
-            dateOfMeetingValue + actualTimeOfMeeting,
-            'DD/MM/YYYY hh:mmA',
-          ).format('YYYY-MM-DD[T]HH:mm:ss')
+    if (this.validateFields(targetDate, textInputs, description)) {
+      let targetDateFormatted = targetDateValue
+        ? moment(targetDateValue, 'DD/MM/YYYY hh:mmA').format(
+            'YYYY-MM-DD[T]HH:mm:ss',
+          )
         : '';
       this.setState({dataLoading: true});
       await APIServices.initiatMeetingData(
@@ -145,17 +122,12 @@ class MeetingDiscussionPointScreen extends Component {
     }
   }
 
-  validateFields(
-    dateOfMeeting,
-    scheduleTimeOfMeeting,
-    actualTimeOfMeeting,
-    textInputs,
-  ) {
-    if (!dateOfMeeting && _.isEmpty(dateOfMeeting)) {
+  validateFields(targetDate, textInputs, description) {
+    if (!textInputs[0] && _.isEmpty(textInputs[0])) {
       Utils.showAlert(
         true,
         '',
-        'Please set the date for the meeting',
+        'Please enter the discussion point',
         this.props,
       );
       return false;
@@ -165,74 +137,37 @@ class MeetingDiscussionPointScreen extends Component {
       Utils.showAlert(
         true,
         '',
-        'Please enter the vanue for the meeting',
+        'Please enter the action by for discussion point',
         this.props,
       );
       return false;
     }
 
-    if (!textInputs[2] && _.isEmpty(textInputs[2])) {
+    if (!targetDate && _.isEmpty(targetDate)) {
       Utils.showAlert(
         true,
         '',
-        'Please enter the topic for the meeting',
+        'Please set the target date for discussion point',
         this.props,
       );
       return false;
     }
 
-    if (scheduleTimeOfMeeting && !_.isEmpty(scheduleTimeOfMeeting)) {
-      let startTime = moment(scheduleTimeOfMeeting, 'hh:mmA');
-      let todayTime = moment(new Date()).format('hh:mmA');
-      let endTime = moment(todayTime, 'hh:mmA');
-      let totalHours = startTime.diff(endTime, 'seconds');
-      if (totalHours < 0) {
-        Utils.showAlert(
-          true,
-          '',
-          'Start time cannot be a past time',
-          this.props,
-        );
-        return false;
-      }
-    } else {
+    if (!textInputs[3] && _.isEmpty(textInputs[3])) {
       Utils.showAlert(
         true,
         '',
-        'Please set the schedule time for the meeting',
+        'Please enter the remarks for discussion point',
         this.props,
       );
       return false;
     }
 
-    if (actualTimeOfMeeting && !_.isEmpty(actualTimeOfMeeting)) {
-      let startTime = moment(scheduleTimeOfMeeting, 'hh:mmA');
-      let endTime = moment(actualTimeOfMeeting, 'hh:mmA');
-      let totalTime = endTime.diff(startTime, 'seconds');
-      if (totalTime < 0) {
-        Utils.showAlert(
-          true,
-          '',
-          'Actual time should be after schedule time',
-          this.props,
-        );
-        return false;
-      }
-    } else {
+    if (!description && _.isEmpty(description)) {
       Utils.showAlert(
         true,
         '',
-        'Please set the actual time for the meeting',
-        this.props,
-      );
-      return false;
-    }
-
-    if (!textInputs[5] && _.isEmpty(textInputs[5])) {
-      Utils.showAlert(
-        true,
-        '',
-        'Please enter the planned duration for the meeting',
+        'Please enter the description for discussion point',
         this.props,
       );
       return false;
@@ -251,51 +186,26 @@ class MeetingDiscussionPointScreen extends Component {
     let newDateTime = '';
     let newDateTimeValue = '';
 
-    if (this.state.date && !this.state.actual) {
-      newDateTime = moment(dateTime).format('MMMM DD, YYYY');
-      newDateTimeValue = moment(dateTime).format('DD MM YYYY');
-    } else {
-      newDateTime = moment(dateTime).format('hh:mmA');
-    }
+    newDateTime = moment(dateTime).format('MMMM DD, YYYY');
+    newDateTimeValue = moment(dateTime).format('DD MM YYYY');
 
-    if (this.state.date && !this.state.actual) {
-      this.setState({
-        dateOfMeeting: newDateTime,
-        dateOfMeetingValue: newDateTimeValue,
-        dateMeeting: new Date(dateTime),
-      });
-    } else if (!this.state.date && this.state.actual) {
-      this.setState({
-        actualTimeOfMeeting: newDateTime,
-        actualTime: new Date(dateTime),
-      });
-    } else {
-      this.setState({
-        scheduleTimeOfMeeting: newDateTime,
-        scheduleTime: new Date(dateTime),
-      });
-    }
+    this.setState({
+      targetDate: newDateTime,
+      targetDateValue: newDateTimeValue,
+      date: new Date(dateTime),
+    });
   };
 
   renderDateTimePicker() {
     let date = this.state.date;
-    let actual = this.state.actual;
-    let dateMeeting = this.state.dateMeeting;
-    let actualTime = this.state.actualTime;
-    let scheduleTime = this.state.scheduleTime;
 
     return (
       <View>
         <DateTimePickerModal
           isVisible={this.state.showPicker}
-          date={
-            date && !actual
-              ? dateMeeting
-              : !date && actual
-              ? actualTime
-              : scheduleTime
-          }
-          mode={date && !actual ? 'date' : 'time'}
+          date={date}
+          mode={'date'}
+          minimumDate={new Date()}
           onConfirm={this.handleDateTimeConfirm}
           onCancel={this.hideDateTimePicker}
         />
@@ -311,10 +221,72 @@ class MeetingDiscussionPointScreen extends Component {
     this.richText = refEditor;
   }
 
+  async filePicker() {
+    this.setState({showImagePickerModal: true});
+  }
+
+  onCloseFilePickerModal() {
+    this.setState({showImagePickerModal: false});
+  }
+
+  async selectCamera() {
+    await this.setState({showImagePickerModal: false});
+
+    const options = {
+      title: 'Select pictures',
+      storageOptions: {
+        skipBackup: true,
+        path: 'images',
+      },
+      quality: 0.2,
+    };
+
+    setTimeout(() => {
+      ImagePicker.launchCamera(options, res => {
+        if (res.didCancel) {
+          console.log('User cancelled image picker');
+        } else if (res.error) {
+          Utils.showAlert(true, '', 'ImagePicker Error', this.props);
+        } else if (res.customButton) {
+          console.log('User tapped custom button');
+        } else {
+          this.setImageForFile(res);
+        }
+      });
+    }, 100);
+  }
+
+  async selectGallery() {
+    await this.setState({showImagePickerModal: false});
+
+    const options = {
+      title: 'Select pictures',
+      storageOptions: {
+        skipBackup: true,
+        path: 'images',
+      },
+      quality: 0.2,
+    };
+
+    setTimeout(() => {
+      ImagePicker.launchImageLibrary(options, res => {
+        if (res.didCancel) {
+          console.log('User cancelled image picker');
+        } else if (res.error) {
+          Utils.showAlert(true, '', 'ImagePicker Error', this.props);
+        } else if (res.customButton) {
+          console.log('User tapped custom button');
+        } else {
+          this.setImageForFile(res);
+        }
+      });
+    }, 100);
+  }
+
   onDiscussionItemPress(item) {
     switch (item.id) {
       case 3:
-        this.setState({showPicker: true, date: true, actual: false});
+        this.setState({showPicker: true});
         break;
       default:
         break;
@@ -323,7 +295,9 @@ class MeetingDiscussionPointScreen extends Component {
 
   renderDiscussionPointView(item, index) {
     let key = item.id;
-    let value = this.state.dateOfMeeting;
+    let value = this.state.targetDate;
+    let description = this.state.description;
+
     switch (key) {
       case 3:
         return (
@@ -368,12 +342,10 @@ class MeetingDiscussionPointScreen extends Component {
             <Text style={styles.fieldName}>{item.name}</Text>
             <View style={styles.textEditorStyle}>
               <RichTextEditorPell
-                chatText={this.state.chatText}
-                timeTextChange={this.state.timeTextChange}
-                taskId={this.state.taskId}
+                chatText={description}
                 getRefEditor={refEditor => this.getRefEditor(refEditor)}
                 doumentPicker={() => {
-                  this.FilePicker();
+                  this.filePicker();
                 }}
                 onInsertLink={() => this.showEnterUrlModal()}
                 onChangeEditorText={text => this.onChangeEditorText(text)}
@@ -407,7 +379,12 @@ class MeetingDiscussionPointScreen extends Component {
             </View>
           </TouchableOpacity>
         </View>
-
+        <FilePickerModal
+          showFilePickerModal={this.state.showImagePickerModal}
+          onPressCancel={() => this.onCloseFilePickerModal()}
+          selectCamera={() => this.selectCamera()}
+          selectFiles={() => this.selectGallery()}
+        />
         {this.state.showPicker ? this.renderDateTimePicker() : null}
       </View>
     );
@@ -473,7 +450,7 @@ const styles = EStyleSheet.create({
     marginBottom: '15rem',
   },
   textEditorStyle: {
-    height: '130rem',
+    // height: '150rem',
     borderRadius: '5rem',
     marginTop: '5rem',
     marginBottom: '5rem',
