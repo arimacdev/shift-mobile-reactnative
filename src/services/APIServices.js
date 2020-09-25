@@ -3655,14 +3655,57 @@ async function initiatMeetingData(
   );
 }
 
-//"{ "projectId": "{{projectId}}",
-//"meetingTopic": "ExtraOrdinary",
-//"meetingVenue": "Arimac",
-//"meetingExpectedTime": "2020-10-17",
-//"meetingActualTime": "2020-10-17",
-//"expectedDuration": 100,
-//"actualDuration": 60,
-//"meetingChaired": [ { "attendeeId": "{{userId}}", "isGuest": false }, { "attendeeId": "Non Arimac Chair 1, Non Arimac Chair 2", "isGuest": true } ], "meetingAttended": [ { "attendeeId": "{{userId}}", "isGuest": false }, { "attendeeId": "Non Arimac User 1, Non Arimac User 2, Non Arimac User 3", "isGuest": true } ], "meetingAbsent": [], "meetingCopiesTo": [], "meetingPrepared": [] }"
+//"{ "meetingId": "{{meetingId}}",
+//"projectId": "{{projectId}}",
+//"description": "Sixth Topic",
+//"discussionPoint": 60,
+//"remarks": "Arimac",
+//"actionBy": "{{userId}}",
+//"actionByGuest": false,
+//"addedBy": "{{userId}}",
+//"dueDate": "2020-09-10" }"
+
+async function addDiscussionPointData(
+  meetingId,
+  projectId,
+  description,
+  discussionPoint,
+  remarks,
+  actionBy,
+  actionByGuest,
+  dueDate,
+) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
+  let userIDHeder = null;
+  userIDHeder = await AsyncStorage.getItem('userID');
+
+  let headers = {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+    user: userIDHeder,
+  };
+
+  return request(
+    {
+      url: baseURL + INITIATE_MEETING,
+      method: 'POST',
+      data: {
+        meetingId: meetingId,
+        projectId: projectId,
+        description: description,
+        discussionPoint: discussionPoint,
+        remarks: remarks,
+        actionBy: actionBy,
+        actionByGuest: actionByGuest,
+        addedBy: userIDHeder,
+        dueDate: dueDate,
+      },
+    },
+    true,
+    headers,
+  );
+}
 
 const APIServices = {
   getAllProjectsByUserData,
@@ -3787,6 +3830,7 @@ const APIServices = {
   blockUnblockUserData,
   pinProjectData,
   initiatMeetingData,
+  addDiscussionPointData,
 };
 
 export default APIServices;
