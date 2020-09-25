@@ -22,6 +22,7 @@ import APIServices from '../../../services/APIServices';
 import Utils from '../../../utils/Utils';
 import _ from 'lodash';
 import RichTextEditorPell from '../../../components/RichTextEditorPell';
+import MeetingDiscussionPointScreen from './MeetingDiscussionPointScreen';
 
 const initialLayout = {width: entireScreenWidth};
 
@@ -100,7 +101,7 @@ class MeetingScreen extends Component {
       scheduleTimeOfMeeting: '',
       actualTimeOfMeeting: '',
       textInputs: [],
-      indexMain: 1,
+      indexMain: 0,
     };
   }
 
@@ -109,8 +110,15 @@ class MeetingScreen extends Component {
   componentDidMount() {}
 
   async onChangeText(text, index) {
+    let removedText = '';
+    if (index == 5) {
+      removedText = text.replace(/\D+/g, '');
+    } else {
+      removedText = text;
+    }
+
     let {textInputs} = this.state;
-    textInputs[index] = text;
+    textInputs[index] = removedText;
     await this.setState({textInputs});
   }
 
@@ -404,78 +412,10 @@ class MeetingScreen extends Component {
                 style={styles.textInput}
                 placeholder={item.placeHolder}
                 value={this.state.textInputs[index]}
+                keyboardType={index == 5 ? 'numeric' : 'default'}
                 onChangeText={text => this.onChangeText(text, index)}
                 maxLength={100}
                 onFocus={() => this.onFocusTextInput(index)}
-              />
-            </View>
-          </View>
-        );
-      default:
-        break;
-    }
-  }
-
-  getRefEditor(refEditor) {
-    this.richText = refEditor;
-  }
-
-  renderDiscussionPointView(item, index) {
-    let key = item.id;
-    let value = this.getChangedValue(item);
-    switch (key) {
-      case 3:
-        return (
-          <View>
-            <Text style={styles.fieldName}>{item.name}</Text>
-            <TouchableOpacity
-              style={styles.textInputFieldView}
-              onPress={() => this.onItemPress(item)}>
-              {value != '' ? (
-                <Text style={styles.textInput}>{value}</Text>
-              ) : (
-                <Text
-                  style={[styles.textInput, {color: colors.colorGreyChateau}]}>
-                  {item.placeHolder}
-                </Text>
-              )}
-            </TouchableOpacity>
-          </View>
-        );
-      case 1:
-      case 2:
-      case 4:
-        return (
-          <View>
-            <Text style={styles.fieldName}>{item.name}</Text>
-            <View style={styles.textInputFieldView}>
-              <TextInput
-                ref={ref => (this.textInputValuesArray[index] = ref)}
-                style={styles.textInput}
-                placeholder={item.placeHolder}
-                value={this.state.textInputs[index]}
-                onChangeText={text => this.onChangeText(text, index)}
-                maxLength={100}
-                onFocus={() => this.onFocusTextInput(index)}
-              />
-            </View>
-          </View>
-        );
-      case 5:
-        return (
-          <View>
-            <Text style={styles.fieldName}>{item.name}</Text>
-            <View style={styles.textEditorStyle}>
-              <RichTextEditorPell
-                chatText={this.state.chatText}
-                timeTextChange={this.state.timeTextChange}
-                taskId={this.state.taskId}
-                getRefEditor={refEditor => this.getRefEditor(refEditor)}
-                doumentPicker={() => {
-                  this.FilePicker();
-                }}
-                onInsertLink={() => this.showEnterUrlModal()}
-                onChangeEditorText={text => this.onChangeEditorText(text)}
               />
             </View>
           </View>
@@ -487,7 +427,6 @@ class MeetingScreen extends Component {
 
   render() {
     let textInputArray = this.state.textInputArray;
-    let discusstionPointsArray = this.state.discusstionPointsArray;
     let indexMain = this.state.indexMain;
 
     return (
@@ -510,24 +449,9 @@ class MeetingScreen extends Component {
             </View>
           </View>
         ) : indexMain == 1 ? (
-          <View style={{flex: 1}}>
-            <FlatList
-              ref={r => (this.flatList = r)}
-              style={styles.flatListStyle}
-              data={discusstionPointsArray}
-              renderItem={({item, index}) =>
-                this.renderDiscussionPointView(item, index)
-              }
-              keyExtractor={item => item.id}
-            />
-            <View style={styles.bottomContainer}>
-              <TouchableOpacity onPress={() => this.initiateMeeting()}>
-                <View style={styles.button}>
-                  <Text style={styles.buttonText}>Initiate Meeting</Text>
-                </View>
-              </TouchableOpacity>
-            </View>
-          </View>
+          <MeetingDiscussionPointScreen
+            selectedProjectID={this.props.selectedProjectID}
+          />
         ) : (
           <FlatList
             ref={r => (this.flatList = r)}
