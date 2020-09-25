@@ -10,7 +10,7 @@ import {
 import {connect} from 'react-redux';
 import * as actions from '../../../redux/actions';
 import colors from '../../../config/colors';
-import EStyleSheet, {value} from 'react-native-extended-stylesheet';
+import EStyleSheet from 'react-native-extended-stylesheet';
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
@@ -18,8 +18,10 @@ import moment from 'moment';
 import APIServices from '../../../services/APIServices';
 import Utils from '../../../utils/Utils';
 import _ from 'lodash';
+import ImagePicker from 'react-native-image-picker';
 import RichTextEditorPell from '../../../components/RichTextEditorPell';
 import FilePickerModal from '../../../components/FilePickerModal';
+import Modal from 'react-native-modal';
 
 const initialLayout = {width: entireScreenWidth};
 
@@ -62,6 +64,11 @@ class MeetingDiscussionPointScreen extends Component {
       textInputs: [],
       indexMain: 1,
       description: '',
+      files: [],
+      showImagePickerModal: false,
+      showEnterUrlModal: false,
+      url:'',
+      urlTitle:'',
     };
   }
 
@@ -69,20 +76,166 @@ class MeetingDiscussionPointScreen extends Component {
 
   componentDidMount() {}
 
-  async onChangeText(text, index) {
-    let removedText = '';
-    if (index == 5) {
-      removedText = text.replace(/\D+/g, '');
-    } else {
-      removedText = text;
+  hideDateTimePicker = () => {
+    this.setState({showPicker: false});
+  };
+
+  handleDateTimeConfirm = selectedDateTime => {
+    this.hideDateTimePicker();
+    let dateTime = new Date(selectedDateTime);
+    let newDateTime = '';
+    let newDateTimeValue = '';
+
+    newDateTime = moment(dateTime).format('MMMM DD, YYYY');
+    newDateTimeValue = moment(dateTime).format('DD MM YYYY');
+
+    this.setState({
+      targetDate: newDateTime,
+      targetDateValue: newDateTimeValue,
+      date: new Date(dateTime),
+    });
+  };
+
+  renderDateTimePicker() {
+    let date = this.state.date;
+
+    return (
+      <View>
+        <DateTimePickerModal
+          isVisible={this.state.showPicker}
+          date={date}
+          mode={'date'}
+          minimumDate={new Date()}
+          onConfirm={this.handleDateTimeConfirm}
+          onCancel={this.hideDateTimePicker}
+        />
+      </View>
+    );
+  }
+
+  onFocusTextInput(index) {
+    this.flatList.scrollToIndex({animated: true, index: index});
+  }
+
+  getRefEditor(refEditor) {
+    this.richText = refEditor;
+  }
+
+  // onChangeEditorText(text) {
+  //   this.setState({description: text});
+  // }
+
+  async filePicker() {
+    this.setState({showImagePickerModal: true});
+  }
+
+  onCloseFilePickerModal() {
+    this.setState({showImagePickerModal: false});
+  }
+
+  async selectCamera() {
+    await this.setState({showImagePickerModal: false});
+
+    const options = {
+      title: 'Select pictures',
+      storageOptions: {
+        skipBackup: true,
+        path: 'images',
+      },
+      quality: 0.2,
+    };
+
+    setTimeout(() => {
+      ImagePicker.launchCamera(options, res => {
+        if (res.didCancel) {
+          console.log('User cancelled image picker');
+        } else if (res.error) {
+          Utils.showAlert(true, '', 'ImagePicker Error', this.props);
+        } else if (res.customButton) {
+          console.log('User tapped custom button');
+        } else {
+          this.setImageForFile(res);
+        }
+      });
+    }, 100);
+  }
+
+  async selectGallery() {
+    await this.setState({showImagePickerModal: false});
+
+    const options = {
+      title: 'Select pictures',
+      storageOptions: {
+        skipBackup: true,
+        path: 'images',
+      },
+      quality: 0.2,
+    };
+
+    setTimeout(() => {
+      ImagePicker.launchImageLibrary(options, res => {
+        if (res.didCancel) {
+          console.log('User cancelled image picker');
+        } else if (res.error) {
+          Utils.showAlert(true, '', 'ImagePicker Error', this.props);
+        } else if (res.customButton) {
+          console.log('User tapped custom button');
+        } else {
+          this.setImageForFile(res);
+        }
+      });
+    }, 100);
+  }
+
+  async setImageForFile(res) {
+    let taskId = this.state.taskId;
+    this.onFilesCrossPress(res.uri);
+    let imgName = res.fileName;
+    let fileSize = res.fileSize / 1000000;
+
+    if (typeof imgName === 'undefined' || imgName == null) {
+      var getFilename = res.uri.split('/');
+      imgName = getFilename[getFilename.length - 1];
     }
 
+    if (fileSize <= 10) {
+      await this.state.files.push({
+        uri: res.uri,
+        type: res.type, // mime type
+        name: imgName,
+        size: res.fileSize,
+        dateTime:
+          moment().format('YYYY/MM/DD') + ' | ' + moment().format('HH:mm'),
+      });
+      this.setState({files: this.state.files}, () => {
+        this.uploadFilesToComment(this.state.files, taskId);
+      });
+    } else {
+      Utils.showAlert(
+        true,
+        '',
+        'File size is too large. Maximum file upload size is 10MB',
+        this.props,
+      );
+    }
+  }
+
+  onFilesCrossPress(uri) {
+    this.setState({files: []}, () => {
+      let filesArray = this.state.files.filter(item => {
+        return item.uri !== uri;
+      });
+      this.setState({files: filesArray});
+    });
+  }
+
+  async onChangeText(text, index) {
     let {textInputs} = this.state;
-    textInputs[index] = removedText;
+    textInputs[index] = text;
     await this.setState({textInputs});
   }
 
-  async initiateMeeting() {
+  async addPoint() {
     let targetDate = this.state.targetDate;
     let targetDateValue = this.state.targetDateValue;
     let textInputs = this.state.textInputs;
@@ -91,6 +244,10 @@ class MeetingDiscussionPointScreen extends Component {
     let meetingVenue = textInputs[1];
     let expectedDuration = textInputs[3];
     let indexMain = this.state.indexMain;
+
+    let html = await this.richText.current?.getContentHtml();
+    await this.setState({description: html});
+    let description = this.state.description;
 
     if (this.validateFields(targetDate, textInputs, description)) {
       let targetDateFormatted = targetDateValue
@@ -176,112 +333,7 @@ class MeetingDiscussionPointScreen extends Component {
     return true;
   }
 
-  hideDateTimePicker = () => {
-    this.setState({showPicker: false});
-  };
-
-  handleDateTimeConfirm = selectedDateTime => {
-    this.hideDateTimePicker();
-    let dateTime = new Date(selectedDateTime);
-    let newDateTime = '';
-    let newDateTimeValue = '';
-
-    newDateTime = moment(dateTime).format('MMMM DD, YYYY');
-    newDateTimeValue = moment(dateTime).format('DD MM YYYY');
-
-    this.setState({
-      targetDate: newDateTime,
-      targetDateValue: newDateTimeValue,
-      date: new Date(dateTime),
-    });
-  };
-
-  renderDateTimePicker() {
-    let date = this.state.date;
-
-    return (
-      <View>
-        <DateTimePickerModal
-          isVisible={this.state.showPicker}
-          date={date}
-          mode={'date'}
-          minimumDate={new Date()}
-          onConfirm={this.handleDateTimeConfirm}
-          onCancel={this.hideDateTimePicker}
-        />
-      </View>
-    );
-  }
-
-  onFocusTextInput(index) {
-    this.flatList.scrollToIndex({animated: true, index: index});
-  }
-
-  getRefEditor(refEditor) {
-    this.richText = refEditor;
-  }
-
-  async filePicker() {
-    this.setState({showImagePickerModal: true});
-  }
-
-  onCloseFilePickerModal() {
-    this.setState({showImagePickerModal: false});
-  }
-
-  async selectCamera() {
-    await this.setState({showImagePickerModal: false});
-
-    const options = {
-      title: 'Select pictures',
-      storageOptions: {
-        skipBackup: true,
-        path: 'images',
-      },
-      quality: 0.2,
-    };
-
-    setTimeout(() => {
-      ImagePicker.launchCamera(options, res => {
-        if (res.didCancel) {
-          console.log('User cancelled image picker');
-        } else if (res.error) {
-          Utils.showAlert(true, '', 'ImagePicker Error', this.props);
-        } else if (res.customButton) {
-          console.log('User tapped custom button');
-        } else {
-          this.setImageForFile(res);
-        }
-      });
-    }, 100);
-  }
-
-  async selectGallery() {
-    await this.setState({showImagePickerModal: false});
-
-    const options = {
-      title: 'Select pictures',
-      storageOptions: {
-        skipBackup: true,
-        path: 'images',
-      },
-      quality: 0.2,
-    };
-
-    setTimeout(() => {
-      ImagePicker.launchImageLibrary(options, res => {
-        if (res.didCancel) {
-          console.log('User cancelled image picker');
-        } else if (res.error) {
-          Utils.showAlert(true, '', 'ImagePicker Error', this.props);
-        } else if (res.customButton) {
-          console.log('User tapped custom button');
-        } else {
-          this.setImageForFile(res);
-        }
-      });
-    }, 100);
-  }
+  onNextPress() {}
 
   onDiscussionItemPress(item) {
     switch (item.id) {
@@ -291,6 +343,96 @@ class MeetingDiscussionPointScreen extends Component {
       default:
         break;
     }
+  }
+
+  showEnterUrlModal() {
+    this.setState({showEnterUrlModal: true});
+  }
+
+  onCloseTaskModal() {
+    this.setState({showEnterUrlModal: false, url: '', urlTitle: ''});
+  }
+
+  onUrlChange(text) {
+    this.setState({url: text});
+  }
+
+  onUrlTitleChange(text) {
+    this.setState({urlTitle: text});
+  }
+
+  async addUrlPress() {
+    let html = await this.richText.current?.getContentHtml();
+    let replacedHtml = html.replace(/(<div[^>]+?>|<div>|<\/div>)/gi, '');
+    await this.setState({description: replacedHtml});
+    let URL = this.state.url;
+    let urlTitle = this.state.urlTitle != '' ? this.state.urlTitle : URL;
+    this.setState({
+      description: this.state.description.concat(
+        ' <a href=' + URL + '>' + urlTitle + '</a>&nbsp;',
+      ),
+    });
+    this.onCloseTaskModal();
+  }
+
+  renderEnterUrlModal() {
+    return (
+      <Modal
+        isVisible={this.state.showEnterUrlModal}
+        style={styles.modalStyleUrl}
+        onBackButtonPress={() => this.onCloseTaskModal()}
+        onBackdropPress={() => this.onCloseTaskModal()}
+        onRequestClose={() => this.onCloseTaskModal()}
+        coverScreen={false}
+        backdropTransitionOutTiming={0}>
+        <View style={styles.urlModalInnerStyle}>
+          <Text style={styles.urlModalTitleStyle}>Insert Link</Text>
+          <View style={styles.urlModalInputTextViewStyle}>
+            <Text style={styles.urlModalTextStyle}>Web address</Text>
+            <View style={styles.urlModalInputTextViewInnerStyle}>
+              <TextInput
+                style={styles.urlModalInputTextInnerStyle}
+                placeholder={'http://example.com'}
+                value={this.state.url}
+                onChangeText={text => this.onUrlChange(text)}
+              />
+            </View>
+          </View>
+          <View style={styles.urlModalInputTextViewStyle}>
+            <Text style={styles.urlModalTextStyle}>Display Name</Text>
+            <View style={styles.urlModalInputTextViewInnerStyle}>
+              <TextInput
+                style={styles.urlModalInputTextInnerStyle}
+                placeholder={'Enter Text'}
+                value={this.state.urlTitle}
+                onChangeText={text => this.onUrlTitleChange(text)}
+              />
+            </View>
+          </View>
+          <View style={styles.ButtonViewStyle}>
+            <TouchableOpacity
+              style={styles.cancelStyle}
+              onPress={() => this.onCloseTaskModal()}>
+              <Text style={styles.cancelTextStyle}>Cancel</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.positiveStyle,
+                {
+                  backgroundColor:
+                    this.state.url == ''
+                      ? colors.lighterGray
+                      : colors.lightGreen,
+                },
+              ]}
+              disabled={this.state.url == '' ? true : false}
+              onPress={() => this.addUrlPress()}>
+              <Text style={styles.positiveTextStyle}>Insert</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+    );
   }
 
   renderDiscussionPointView(item, index) {
@@ -373,10 +515,15 @@ class MeetingDiscussionPointScreen extends Component {
           keyExtractor={item => item.id}
         />
         <View style={styles.bottomContainer}>
-          <TouchableOpacity onPress={() => this.initiateMeeting()}>
-            <View style={styles.button}>
-              <Text style={styles.buttonText}>Add Discussion Point</Text>
-            </View>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => this.addPoint()}>
+            <Text style={styles.buttonText}>Add Discussion Point</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.button, {backgroundColor: colors.colorDeepSkyBlue}]}
+            onPress={() => this.onNextPress()}>
+            <Text style={styles.buttonText}>Next</Text>
           </TouchableOpacity>
         </View>
         <FilePickerModal
@@ -386,6 +533,7 @@ class MeetingDiscussionPointScreen extends Component {
           selectFiles={() => this.selectGallery()}
         />
         {this.state.showPicker ? this.renderDateTimePicker() : null}
+        {this.renderEnterUrlModal()}
       </View>
     );
   }
@@ -425,6 +573,7 @@ const styles = EStyleSheet.create({
     width: '100%',
   },
   button: {
+    flex: 1,
     flexDirection: 'row',
     backgroundColor: colors.colorApple,
     borderRadius: '5rem',
@@ -432,7 +581,7 @@ const styles = EStyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: '12rem',
     height: '50rem',
-    marginHorizontal: '20rem',
+    marginHorizontal: '5rem',
   },
   buttonText: {
     flex: 1,
@@ -446,8 +595,9 @@ const styles = EStyleSheet.create({
   bottomContainer: {
     position: 'absolute',
     bottom: '0rem',
-    width: '100%',
     marginBottom: '15rem',
+    flexDirection: 'row',
+    marginHorizontal: '15rem',
   },
   textEditorStyle: {
     // height: '150rem',
@@ -457,6 +607,68 @@ const styles = EStyleSheet.create({
     borderColor: colors.colorSilver,
     borderWidth: '0.5rem',
     marginHorizontal: '20rem',
+  },
+  urlModalInnerStyle: {
+    backgroundColor: colors.white,
+    borderRadius: '5rem',
+    padding: '20rem',
+  },
+  urlModalTitleStyle: {
+    fontSize: '20rem',
+  },
+  urlModalInputTextViewStyle: {
+    marginTop: '20rem',
+  },
+  urlModalTextStyle: {
+    fontSize: '15rem',
+  },
+  urlModalInputTextViewInnerStyle: {
+    backgroundColor: colors.colorWhisper,
+    borderRadius: '5rem',
+    marginTop: '5rem',
+    height: Platform.OS == 'ios' ? '35rem' : '50rem',
+  },
+  urlModalInputTextInnerStyle: {
+    marginLeft: '10rem',
+    marginTop: Platform.OS == 'ios' ? '10rem' : '0rem',
+  },
+  ButtonViewStyle: {
+    flexDirection: 'row',
+    marginTop: '20rem',
+    marginBottom: '10rem',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  positiveStyle: {
+    flex: 1,
+    height: '45rem',
+    marginLeft: '10rem',
+    backgroundColor: colors.lightGreen,
+    borderRadius: '5rem',
+    paddingHorizontal: '40rem',
+    paddingVertical: '10rem',
+    justifyContent: 'center',
+  },
+  positiveTextStyle: {
+    fontSize: '15rem',
+    color: colors.white,
+    textAlign: 'center',
+    fontFamily: 'CircularStd-Medium',
+  },
+  cancelStyle: {
+    flex: 1,
+    height: '45rem',
+    backgroundColor: colors.lightRed,
+    borderRadius: '5rem',
+    paddingHorizontal: '40rem',
+    paddingVertical: '10rem',
+    justifyContent: 'center',
+  },
+  cancelTextStyle: {
+    fontSize: '15rem',
+    color: colors.white,
+    textAlign: 'center',
+    fontFamily: 'CircularStd-Medium',
   },
 });
 
