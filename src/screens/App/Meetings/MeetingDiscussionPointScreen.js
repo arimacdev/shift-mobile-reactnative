@@ -6,6 +6,7 @@ import {
   FlatList,
   Dimensions,
   TouchableOpacity,
+  Image,
 } from 'react-native';
 import {connect} from 'react-redux';
 import * as actions from '../../../redux/actions';
@@ -22,6 +23,9 @@ import ImagePicker from 'react-native-image-picker';
 import RichTextEditorPell from '../../../components/RichTextEditorPell';
 import FilePickerModal from '../../../components/FilePickerModal';
 import Modal from 'react-native-modal';
+import PopupMenu from '../../../components/PopupMenu';
+import icons from '../../../asserts/icons/icons';
+import FadeIn from 'react-native-fade-in-image';
 
 const initialLayout = {width: entireScreenWidth};
 
@@ -39,22 +43,22 @@ class MeetingDiscussionPointScreen extends Component {
         {
           id: 2,
           name: 'Action By',
-          placeHolder: 'Enter action by for the meeting',
+          placeHolder: 'Enter action by for discussion point',
         },
         {
           id: 3,
           name: 'Target Date',
-          placeHolder: 'Set target date for the meeting',
+          placeHolder: 'Set target date for discussion point',
         },
         {
           id: 4,
           name: 'Remarks',
-          placeHolder: 'Enter Remarks for the meeting',
+          placeHolder: 'Enter Remarks for discussion point',
         },
         {
           id: 5,
           name: 'Description',
-          placeHolder: 'Enter description for the meeting',
+          placeHolder: 'Enter description for discussion point',
         },
       ],
       showPicker: false,
@@ -67,14 +71,21 @@ class MeetingDiscussionPointScreen extends Component {
       files: [],
       showImagePickerModal: false,
       showEnterUrlModal: false,
-      url:'',
-      urlTitle:'',
+      url: '',
+      urlTitle: '',
+      users: [],
+      allUsers: [],
+      popupMenuOpen: false,
+      userName: '',
+      userID: '',
     };
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {}
 
-  componentDidMount() {}
+  componentDidMount() {
+    this.getActiveUsers();
+  }
 
   hideDateTimePicker = () => {
     this.setState({showPicker: false});
@@ -239,30 +250,34 @@ class MeetingDiscussionPointScreen extends Component {
     let targetDate = this.state.targetDate;
     let targetDateValue = this.state.targetDateValue;
     let textInputs = this.state.textInputs;
-    let projectID = this.props.selectedProjectID;
-    let meetingTopic = textInputs[0];
-    let meetingVenue = textInputs[1];
-    let expectedDuration = textInputs[3];
+    let projectId = this.props.selectedProjectID;
+    let meetingId = this.props.meetingId;
+    let discussionPoint = textInputs[0];
+    let actionBy = this.state.userID;
+    let remarks = textInputs[3];
+    let actionByGuest = false;
     let indexMain = this.state.indexMain;
 
     let html = await this.richText.current?.getContentHtml();
     await this.setState({description: html});
     let description = this.state.description;
 
-    if (this.validateFields(targetDate, textInputs, description)) {
+    if (this.validateFields(targetDate, textInputs, actionBy, description)) {
       let targetDateFormatted = targetDateValue
         ? moment(targetDateValue, 'DD/MM/YYYY hh:mmA').format(
             'YYYY-MM-DD[T]HH:mm:ss',
           )
         : '';
       this.setState({dataLoading: true});
-      await APIServices.initiatMeetingData(
-        projectID,
-        meetingTopic,
-        meetingVenue,
-        meetingScheduleDateTime,
-        meetingActualDateTime,
-        expectedDuration,
+      await APIServices.addDiscussionPointData(
+        meetingId,
+        projectId,
+        description,
+        discussionPoint,
+        remarks,
+        actionBy,
+        actionByGuest,
+        targetDateFormatted,
       )
         .then(response => {
           if (response.message == 'success') {
@@ -279,7 +294,7 @@ class MeetingDiscussionPointScreen extends Component {
     }
   }
 
-  validateFields(targetDate, textInputs, description) {
+  validateFields(targetDate, textInputs, actionBy, description) {
     if (!textInputs[0] && _.isEmpty(textInputs[0])) {
       Utils.showAlert(
         true,
@@ -290,7 +305,7 @@ class MeetingDiscussionPointScreen extends Component {
       return false;
     }
 
-    if (!textInputs[1] && _.isEmpty(textInputs[1])) {
+    if (!actionBy && _.isEmpty(actionBy)) {
       Utils.showAlert(
         true,
         '',
@@ -435,10 +450,134 @@ class MeetingDiscussionPointScreen extends Component {
     );
   }
 
+  onSelectUser = async item => {
+    this.setState({
+      userName: item.label,
+      userID: item.key,
+      popupMenuOpen: false,
+    });
+    await this.props.addPeopleModal(false);
+  };
+
+  async onSearchTextChange(text) {
+    await this.props.addPeopleModal(true);
+    this.setState({userName: text, popupMenuOpen: true, userID: ''});
+    let result = this.state.allUsers.filter(data =>
+      data.label.toLowerCase().includes(text.toLowerCase()),
+    );
+    if (text == '') {
+      this.setState({users: this.state.allUsers, userID: ''});
+    } else {
+      this.setState({users: result});
+    }
+  }
+
+  renderMenuTrugger(placeHolder) {
+    return (
+      <View style={styles.textInputFieldView}>
+        <TextInput
+          style={styles.textInput}
+          placeholder={placeHolder}
+          value={this.state.userName}
+          onChangeText={text => this.onSearchTextChange(text)}
+        />
+      </View>
+    );
+  }
+
+  userImage = function(item) {
+    let userImage = item.userImage;
+
+    if (userImage) {
+      return (
+        <FadeIn>
+          <Image source={{uri: userImage}} style={styles.userIcon} />
+        </FadeIn>
+      );
+    } else {
+      return (
+        <Image
+          style={styles.userIcon}
+          source={icons.defultUser}
+          resizeMode="contain"
+        />
+      );
+    }
+  };
+
+  renderUserList(item) {
+    const {navigation} = this.props;
+    return (
+      <View
+        style={[
+          styles.userListStyle,
+          {
+            backgroundColor:
+              item.label == navigation.state.params.userName
+                ? colors.projectBgColor
+                : '',
+          },
+        ]}>
+        {this.userImage(item)}
+        <View style={{flex: 1}}>
+          <Text style={styles.userNameText}>{item.label}</Text>
+        </View>
+      </View>
+    );
+  }
+
+  async getActiveUsers() {
+    try {
+      this.setState({dataLoading: true});
+      let activeUsers = await APIServices.getActiveUsers();
+      if (activeUsers.message == 'success') {
+        let userList = [];
+        // activeUsers.data.sort(this.arrayCompare);
+        for (let i = 0; i < activeUsers.data.length; i++) {
+          if (activeUsers.data[i].firstName && activeUsers.data[i].lastName) {
+            userList.push({
+              key: activeUsers.data[i].userId,
+              label:
+                activeUsers.data[i].firstName +
+                ' ' +
+                activeUsers.data[i].lastName,
+              userImage: activeUsers.data[i].profileImage,
+            });
+          }
+        }
+
+        this.setState({
+          users: userList,
+          allUsers: userList,
+          dataLoading: false,
+        });
+      } else {
+        console.log('error');
+        this.setState({dataLoading: false});
+      }
+    } catch (error) {
+      this.setState({dataLoading: false});
+    }
+  }
+
+  arrayCompare(a, b) {
+    const firstNameA = a.firstName.toUpperCase();
+    const firstNameB = b.firstName.toUpperCase();
+
+    let comparison = 0;
+    if (firstNameA > firstNameB) {
+      comparison = 1;
+    } else if (firstNameA < firstNameB) {
+      comparison = -1;
+    }
+    return comparison;
+  }
+
   renderDiscussionPointView(item, index) {
     let key = item.id;
     let value = this.state.targetDate;
     let description = this.state.description;
+    let allUsers = this.state.allUsers;
 
     switch (key) {
       case 3:
@@ -459,8 +598,20 @@ class MeetingDiscussionPointScreen extends Component {
             </TouchableOpacity>
           </View>
         );
-      case 1:
       case 2:
+        return (
+          <View>
+            <Text style={styles.fieldName}>{item.name}</Text>
+            <PopupMenu
+              menuTrigger={this.renderMenuTrugger(item.placeHolder)}
+              menuOptions={item => this.renderUserList(item)}
+              data={allUsers}
+              onSelect={item => this.onSelectUser(item)}
+              open={this.state.popupMenuOpen}
+            />
+          </View>
+        );
+      case 1:
       case 4:
         return (
           <View>
@@ -669,6 +820,28 @@ const styles = EStyleSheet.create({
     color: colors.white,
     textAlign: 'center',
     fontFamily: 'CircularStd-Medium',
+  },
+  userIcon: {
+    width: '45rem',
+    height: '45rem',
+    borderRadius: 90 / 2,
+  },
+  userListStyle: {
+    height: '50rem',
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginHorizontal: '20rem',
+    borderBottomWidth: 1,
+    borderBottomColor: colors.lighterGray,
+  },
+  userNameText: {
+    fontSize: '12rem',
+    color: colors.projectText,
+    fontWeight: 'bold',
+    lineHeight: '17rem',
+    fontFamily: 'CircularStd-Medium',
+    textAlign: 'left',
+    marginLeft: '10rem',
   },
 });
 
