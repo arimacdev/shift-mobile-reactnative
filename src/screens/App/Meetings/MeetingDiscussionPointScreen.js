@@ -65,7 +65,7 @@ class MeetingDiscussionPointScreen extends Component {
       date: new Date(),
       targetDate: '',
       targetDateValue: '',
-      textInputs: [],
+      textInputs: ['1'],
       indexMain: 1,
       description: '',
       files: [],
@@ -240,9 +240,53 @@ class MeetingDiscussionPointScreen extends Component {
     });
   }
 
+  async uploadFilesToComment(files, taskId) {
+    let html = await this.richText.current?.getContentHtml();
+    await this.setState({description: html});
+
+    await APIServices.uploadFileToComment(files, taskId)
+      .then(response => {
+        if (response.message == 'success') {
+          this.richText.current?.blurContentEditor();
+          this.setState({
+            files: [],
+            description: this.state.description.concat(
+              '<img src=' +
+                response.data +
+                ' class="e-rte-image e-imginline" width="auto" height="auto" style="min-width: 0px; min-height: 0px; marginTop: 10px">&nbsp;',
+            ),
+          });
+        } else {
+          this.setState({files: []});
+        }
+      })
+      .catch(error => {
+        this.setState({files: []});
+        if (error.status == 401) {
+          Utils.showAlert(true, '', error.data.message, this.props);
+        } else if (error.status == 413) {
+          Utils.showAlert(
+            true,
+            '',
+            'File size is too large. Maximum file upload size is 10MB',
+            this.props,
+          );
+        } else {
+          Utils.showAlert(true, '', 'File upload failed', this.props);
+        }
+      });
+  }
+
   async onChangeText(text, index) {
+    let removedText = '';
+    if (index == 0) {
+      removedText = text.replace(/\D+/g, '');
+    } else {
+      removedText = text;
+    }
+
     let {textInputs} = this.state;
-    textInputs[index] = text;
+    textInputs[index] = removedText;
     await this.setState({textInputs});
   }
 
@@ -532,7 +576,6 @@ class MeetingDiscussionPointScreen extends Component {
       let activeUsers = await APIServices.getActiveUsers();
       if (activeUsers.message == 'success') {
         let userList = [];
-        // activeUsers.data.sort(this.arrayCompare);
         for (let i = 0; i < activeUsers.data.length; i++) {
           if (activeUsers.data[i].firstName && activeUsers.data[i].lastName) {
             userList.push({
@@ -545,7 +588,7 @@ class MeetingDiscussionPointScreen extends Component {
             });
           }
         }
-
+        userList.sort(this.arrayCompare);
         this.setState({
           users: userList,
           allUsers: userList,
@@ -561,8 +604,8 @@ class MeetingDiscussionPointScreen extends Component {
   }
 
   arrayCompare(a, b) {
-    const firstNameA = a.firstName.toUpperCase();
-    const firstNameB = b.firstName.toUpperCase();
+    const firstNameA = a.label.toUpperCase();
+    const firstNameB = b.label.toUpperCase();
 
     let comparison = 0;
     if (firstNameA > firstNameB) {
@@ -577,7 +620,7 @@ class MeetingDiscussionPointScreen extends Component {
     let key = item.id;
     let value = this.state.targetDate;
     let description = this.state.description;
-    let allUsers = this.state.allUsers;
+    let users = this.state.users;
 
     switch (key) {
       case 3:
@@ -599,15 +642,23 @@ class MeetingDiscussionPointScreen extends Component {
           </View>
         );
       case 2:
+        const optionsStyles = {
+          optionsContainer: {
+            marginTop: 1,
+            width: '90%',
+            marginLeft: 20,
+          },
+        };
         return (
           <View>
             <Text style={styles.fieldName}>{item.name}</Text>
             <PopupMenu
               menuTrigger={this.renderMenuTrugger(item.placeHolder)}
               menuOptions={item => this.renderUserList(item)}
-              data={allUsers}
+              data={users}
               onSelect={item => this.onSelectUser(item)}
               open={this.state.popupMenuOpen}
+              customStyles={optionsStyles}
             />
           </View>
         );
