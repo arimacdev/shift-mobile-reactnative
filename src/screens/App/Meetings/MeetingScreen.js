@@ -70,7 +70,8 @@ class MeetingScreen extends Component {
       scheduleTimeOfMeeting: '',
       actualTimeOfMeeting: '',
       textInputs: [],
-      indexMain: 1,
+      indexMain: 0,
+      meetingId: '',
     };
   }
 
@@ -134,7 +135,11 @@ class MeetingScreen extends Component {
       )
         .then(response => {
           if (response.message == 'success') {
-            this.setState({dataLoading: false, indexMain: indexMain + 1});
+            this.setState({
+              dataLoading: false,
+              meetingId: response.data.meetingId,
+              indexMain: indexMain + 1,
+            });
           } else {
             this.setState({dataLoading: false});
             Utils.showAlert(true, '', response.message, this.props);
@@ -421,6 +426,8 @@ class MeetingScreen extends Component {
         ) : indexMain == 1 ? (
           <MeetingDiscussionPointScreen
             selectedProjectID={this.props.selectedProjectID}
+            navigation={this.props.navigation}
+            meetingId={this.state.meetingId}
           />
         ) : (
           <FlatList
