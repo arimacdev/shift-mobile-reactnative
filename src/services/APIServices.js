@@ -95,6 +95,7 @@ import {
   BLOCK_USER,
   INITIATE_MEETING,
   PIN_PROJECT,
+  ADD_DISCUSSION_POINT,
 } from '../api/API';
 import AsyncStorage from '@react-native-community/async-storage';
 import {SET_UPLOAD_PROGRESS} from '../redux/types';
@@ -3688,7 +3689,7 @@ async function addDiscussionPointData(
 
   return request(
     {
-      url: baseURL + INITIATE_MEETING,
+      url: baseURL + ADD_DISCUSSION_POINT,
       method: 'POST',
       data: {
         meetingId: meetingId,
