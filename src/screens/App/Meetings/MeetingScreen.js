@@ -19,6 +19,7 @@ import APIServices from '../../../services/APIServices';
 import Utils from '../../../utils/Utils';
 import _ from 'lodash';
 import MeetingDiscussionPointScreen from './MeetingDiscussionPointScreen';
+import MeetingOtherDetailsScreen from './MeetingOtherDetailsScreen';
 
 const initialLayout = {width: entireScreenWidth};
 
@@ -70,7 +71,7 @@ class MeetingScreen extends Component {
       scheduleTimeOfMeeting: '',
       actualTimeOfMeeting: '',
       textInputs: [],
-      indexMain: 0,
+      indexMain: 1,
       meetingId: '',
     };
   }
@@ -351,6 +352,10 @@ class MeetingScreen extends Component {
     this.flatList.scrollToIndex({animated: true, index: index});
   }
 
+  onChangeIndexMain(indexMain) {
+    this.setState({indexMain: indexMain});
+  }
+
   renderView(item, index) {
     let key = item.id;
     let value = this.getChangedValue(item);
@@ -428,14 +433,13 @@ class MeetingScreen extends Component {
             selectedProjectID={this.props.selectedProjectID}
             navigation={this.props.navigation}
             meetingId={this.state.meetingId}
+            onChangeIndexMain={indexMain => this.onChangeIndexMain(indexMain)}
           />
         ) : (
-          <FlatList
-            ref={r => (this.flatList = r)}
-            style={styles.flatListStyle}
-            data={textInputArray}
-            renderItem={({item, index}) => this.renderView(item, index)}
-            keyExtractor={item => item.id}
+          <MeetingOtherDetailsScreen
+            selectedProjectID={this.props.selectedProjectID}
+            navigation={this.props.navigation}
+            meetingId={this.state.meetingId}
           />
         )}
 
