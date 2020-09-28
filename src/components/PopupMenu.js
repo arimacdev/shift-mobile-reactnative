@@ -48,6 +48,16 @@ class PopupMenu extends Component {
   }
 
   render() {
+    const optionsStyles = this.props.customStyles
+      ? this.props.customStyles
+      : {
+          optionsContainer: {
+            marginTop: 40,
+            width: '90%',
+            marginLeft: 20,
+          },
+        };
+
     return (
       <Menu
         opened={this.state.opened}
@@ -69,14 +79,6 @@ class PopupMenu extends Component {
     );
   }
 }
-
-const optionsStyles = {
-  optionsContainer: {
-    marginTop: 40,
-    width: '90%',
-    marginLeft: 20,
-  },
-};
 
 const styles = EStyleSheet.create({});
 
