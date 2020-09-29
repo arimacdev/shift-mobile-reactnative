@@ -20,7 +20,7 @@ import APIServices from '../../../services/APIServices';
 import Utils from '../../../utils/Utils';
 import _ from 'lodash';
 import ImagePicker from 'react-native-image-picker';
-import RichTextEditorPell from '../../../components/RichTextEditorPell';
+// import RichTextEditorPell from '../../../components/RichTextEditorPell';
 import FilePickerModal from '../../../components/FilePickerModal';
 import Modal from 'react-native-modal';
 import PopupMenu from '../../../components/PopupMenu';
@@ -392,7 +392,10 @@ class MeetingDiscussionPointScreen extends Component {
     return true;
   }
 
-  onNextPress() {}
+  onNextPress() {
+    let indexMain = this.state.indexMain + 1;
+    this.props.onChangeIndexMain(indexMain);
+  }
 
   onDiscussionItemPress(item) {
     switch (item.id) {
@@ -673,6 +676,7 @@ class MeetingDiscussionPointScreen extends Component {
                 style={styles.textInput}
                 placeholder={item.placeHolder}
                 value={this.state.textInputs[index]}
+                keyboardType={index == 0 ? 'numeric' : 'default'}
                 onChangeText={text => this.onChangeText(text, index)}
                 maxLength={100}
                 onFocus={() => this.onFocusTextInput(index)}
@@ -685,7 +689,7 @@ class MeetingDiscussionPointScreen extends Component {
           <View>
             <Text style={styles.fieldName}>{item.name}</Text>
             <View style={styles.textEditorStyle}>
-              <RichTextEditorPell
+              {/* <RichTextEditorPell
                 chatText={description}
                 getRefEditor={refEditor => this.getRefEditor(refEditor)}
                 doumentPicker={() => {
@@ -693,7 +697,7 @@ class MeetingDiscussionPointScreen extends Component {
                 }}
                 onInsertLink={() => this.showEnterUrlModal()}
                 onChangeEditorText={text => this.onChangeEditorText(text)}
-              />
+              /> */}
             </View>
           </View>
         );
