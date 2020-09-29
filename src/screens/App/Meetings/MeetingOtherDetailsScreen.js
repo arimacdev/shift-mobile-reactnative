@@ -21,7 +21,6 @@ import _ from 'lodash';
 import PopupMenu from '../../../components/PopupMenu';
 import icons from '../../../asserts/icons/icons';
 import FadeIn from 'react-native-fade-in-image';
-import MultiSelect from 'react-native-multiple-select';
 
 const initialLayout = {width: entireScreenWidth};
 
@@ -110,8 +109,7 @@ class MeetingOtherDetailsScreen extends Component {
       popupMenuOpen: false,
       userName: '',
       userID: '',
-      userList: [],
-      selectedItems: [],
+      userList:[]
     };
   }
 
@@ -255,30 +253,27 @@ class MeetingOtherDetailsScreen extends Component {
     }
   }
 
-  onSelectedItemsChange = selectedItems => {
-    this.setState({selectedItems});
-  };
-
   onSelectUser = async (item, index) => {
     let {textInputsUserList} = this.state;
-    let i = 0;
+    let i=0;
 
     // for (i = 0; i < textInputsUserList.length; i++) {
     //   const element = textInputsUserList[i];
     //   if(index == i){
-
+        
     //       userList.push({userName: e.label, userID: e.key});
-
+        
+        
     //     console.log("Sssssssssssssssssssssss",element)
 
     //   }
-
+      
     // }
     await this.state.userList.push({userName: item.label, userID: item.key});
     textInputsUserList[index] = this.state.userList;
     await this.setState({textInputsUserList});
 
-    console.log('Sssssssssssssssssssssss', textInputsUserList);
+    console.log("Sssssssssssssssssssssss",textInputsUserList)
 
     this.setState({
       popupMenuOpen: false,
@@ -362,8 +357,8 @@ class MeetingOtherDetailsScreen extends Component {
         for (let i = 0; i < activeUsers.data.length; i++) {
           if (activeUsers.data[i].firstName && activeUsers.data[i].lastName) {
             userList.push({
-              id: activeUsers.data[i].userId,
-              name:
+              key: activeUsers.data[i].userId,
+              label:
                 activeUsers.data[i].firstName +
                 ' ' +
                 activeUsers.data[i].lastName,
@@ -445,41 +440,14 @@ class MeetingOtherDetailsScreen extends Component {
         return (
           <View>
             <Text style={styles.fieldName}>{item.name}</Text>
-            {/* <PopupMenu
+            <PopupMenu
               menuTrigger={this.renderMenuTrugger(item.placeHolder, index)}
               menuOptions={item => this.renderUserList(item)}
               data={users}
               onSelect={item => this.onSelectUser(item, index)}
               open={this.state.popupMenuOpen}
               customStyles={optionsStyles}
-            /> */}
-            <MultiSelect
-              hideTags
-              items={users}
-              uniqueKey="id"
-              ref={component => {
-                this.multiSelect = component;
-              }}
-              onSelectedItemsChange={this.onSelectedItemsChange}
-              selectedItems={this.state.selectedItems}
-              selectText="Pick Items"
-              searchInputPlaceholderText="Search Items..."
-              onChangeInput={text => console.log(text)}
-              altFontFamily="ProximaNova-Light"
-              tagRemoveIconColor="#CCC"
-              tagBorderColor="#CCC"
-              tagTextColor="#CCC"
-              selectedItemTextColor="#CCC"
-              selectedItemIconColor="#CCC"
-              itemTextColor="#000"
-              displayKey="name"
-              searchInputStyle={{color: '#CCC'}}
-              submitButtonColor="#CCC"
-              submitButtonText="Submit"
             />
-            <View>
-              {/* {this.multiSelect.getSelectedItemsExt(this.state.selectedItems)} */}
-            </View>
           </View>
         );
       default:
