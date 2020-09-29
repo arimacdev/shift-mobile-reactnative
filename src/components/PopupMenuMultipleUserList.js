@@ -254,7 +254,24 @@ class PopupMenuMultipleUserList extends Component {
   }
 
   async onSelect(item) {
-    this.state.userList.push({userName: item.label, Id: item.key});
+    let userList = this.state.userList;
+    let itemFoundId=''
+    for (let index = 0; index < userList.length; index++) {
+      const element = userList[index];
+      if(element.Id == item.key){
+        itemFoundId = item.key;
+      }
+      
+    } 
+
+    if(itemFoundId!=''){
+      let userListArray = this.state.userList.filter(item => {
+        return item.Id !== itemFoundId;
+      });
+      this.setState({userList: userListArray});
+    }else{
+      this.state.userList.push({userName: item.label, Id: item.key});
+    }
     await this.props.onSelect(item);
     console.log("xxxxxxxxxxxxxxxxxxxx",this.state.userList)
   }
