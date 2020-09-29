@@ -20,6 +20,7 @@
     "jwt-decode": "^2.2.0",
     "lodash": "^4.17.11",
     "moment": "2.24.0",
+    "multiselect-react-dropdown": "^1.6.1",
     "native-base": "^2.13.7",
     "react": "16.11.0",
     "react-native": "0.62.1",
