@@ -128,7 +128,6 @@ class AddEditSubTaskScreen extends Component {
   }
 
   async addSubTask(userID) {
-    let isSelected = this.state.isSelected;
     let subTaskName = this.state.subTaskName;
     let projectID = this.state.projectID;
     let taskID = this.state.taskID;

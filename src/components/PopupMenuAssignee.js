@@ -18,7 +18,6 @@ import * as actions from '../redux/actions';
 import {connect} from 'react-redux';
 
 import {
-  MenuContext,
   Menu,
   MenuOptions,
   MenuOption,
@@ -215,7 +214,7 @@ class PopupMenuAssignee extends Component {
         opened={this.state.opened}
         onBackdropPress={() => this.onBackdropPress()}
         // onSelect={value => this.onOptionSelect(value)}
-        >
+      >
         <MenuTrigger>{this.menuTrigger()}</MenuTrigger>
         <MenuOptions customStyles={optionsStyles}>
           <ScrollView style={scrollStyle.scrollViewMenuOption}>
