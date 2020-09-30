@@ -377,23 +377,8 @@ class MeetingOtherDetailsScreen extends Component {
   }
 
   renderSelectedUserList(item, key) {
-    let {textInputsUserList, selectedUserList} = this.state;
-    let userList = [];
-
-    switch (key) {
-      case 3:
-        userList = textInputsUserList[3] == undefined ? [] : selectedUserList;
-        console.log('3333333333333333333333333333333333', userList);
-
-        break;
-      case 5:
-        userList = textInputsUserList[5] == undefined ? [] : selectedUserList;
-        console.log('5555555555555555555555555555555', userList);
-
-        break;
-      default:
-        break;
-    }
+    let {textInputsUserList} = this.state;
+    let userList = textInputsUserList[key] == undefined ? [] : textInputsUserList[key];
     return userList.length > 0 ? (
       userList.map(list => {
         return (
@@ -411,9 +396,8 @@ class MeetingOtherDetailsScreen extends Component {
 
   renderOtherDetailsView(item, index) {
     let key = item.id;
-    let {textInputsUserList, selectedUserList} = this.state;
-    let userList = [];
-    console.log('vvvvvvvvvvvvvvvvvvvvvv', textInputsUserList);
+    let {textInputsUserList} = this.state;
+    let userList = textInputsUserList[key] == undefined ? [] : textInputsUserList[key];
 
     switch (key) {
       case 1:
@@ -453,6 +437,7 @@ class MeetingOtherDetailsScreen extends Component {
                 styles.textInputFieldView,
                 {
                   flexWrap: userList.length > 0 ? 'wrap' : 'nowrap',
+                  minHeight:EStyleSheet.value('45rem'),
                   height:
                     userList.length > 0 ? 'auto' : EStyleSheet.value('45rem'),
                 },
