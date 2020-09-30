@@ -1,4 +1,4 @@
-import {Image, StyleSheet, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import React from 'react';
 import PropTypes from 'prop-types';
 import colors from '../config/colors';
