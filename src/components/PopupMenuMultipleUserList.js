@@ -226,7 +226,14 @@ class PopupMenuMultipleUserList extends Component {
   };
 
   menuOptions(item) {
-    const {navigation} = this.props;
+    let selectedUserList = this.state.selectedUserList;
+    let itemFoundId = '';
+    for (let index = 0; index < selectedUserList.length; index++) {
+      const element = selectedUserList[index];
+      if (element.Id == item.key) {
+        itemFoundId = item.key;
+      }
+    }
     return (
       <View
         style={[
@@ -252,8 +259,8 @@ class PopupMenuMultipleUserList extends Component {
           </Text>
         </View>
         <Image
-          style={styles.userIcon}
-          source={icons.defultUser}
+          style={styles.addUserIcon}
+          source={itemFoundId == item.key ? icons.rightCircule : icons.whiteCircule}
           resizeMode="contain"
         />
       </View>
@@ -289,7 +296,6 @@ class PopupMenuMultipleUserList extends Component {
     let selectedUserList = this.state.selectedUserList;
     this.setState({opened: false});
     this.props.onSelect(selectedUserList);
-    
   }
 
   render() {
@@ -467,6 +473,10 @@ const styles = EStyleSheet.create({
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
     width: '100%',
+  },
+  addUserIcon: {
+    width: '30rem',
+    height: '30rem',
   },
 });
 
