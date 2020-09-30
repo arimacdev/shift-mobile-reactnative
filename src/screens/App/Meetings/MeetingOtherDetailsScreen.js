@@ -246,12 +246,10 @@ class MeetingOtherDetailsScreen extends Component {
     this.props.onChangeIndexMain(indexMain);
   }
 
-  async onSelectUser(userList) {
+  onSelectUser(userList) {
     let {textInputsUserList, userListIndex} = this.state;
     textInputsUserList[userListIndex] = userList;
-    await this.setState({textInputsUserList, showUserListModal: false});
-
-    console.log('ssssssssssssssssssss', textInputsUserList);
+    this.setState({textInputsUserList, showUserListModal: false});
   }
 
   async onSearchTextChange(text) {
@@ -378,11 +376,44 @@ class MeetingOtherDetailsScreen extends Component {
     });
   }
 
+  renderSelectedUserList(item, key) {
+    let {textInputsUserList, selectedUserList} = this.state;
+    let userList = [];
+
+    switch (key) {
+      case 3:
+        userList = textInputsUserList[3] == undefined ? [] : selectedUserList;
+        console.log('3333333333333333333333333333333333', userList);
+
+        break;
+      case 5:
+        userList = textInputsUserList[5] == undefined ? [] : selectedUserList;
+        console.log('5555555555555555555555555555555', userList);
+
+        break;
+      default:
+        break;
+    }
+    return userList.length > 0 ? (
+      userList.map(list => {
+        return (
+          <View style={styles.selectedUserListViewStyle}>
+            <Text style={styles.selectedUserListStyle}>{list.userName}</Text>
+          </View>
+        );
+      })
+    ) : (
+      <Text style={[styles.textInput, {color: colors.colorGreyChateau}]}>
+        {item.placeHolder}
+      </Text>
+    );
+  }
+
   renderOtherDetailsView(item, index) {
     let key = item.id;
-    let value = this.state.targetDate;
-    let description = this.state.description;
-    let users = this.state.users;
+    let {textInputsUserList, selectedUserList} = this.state;
+    let userList = [];
+    console.log('vvvvvvvvvvvvvvvvvvvvvv', textInputsUserList);
 
     switch (key) {
       case 1:
@@ -418,16 +449,16 @@ class MeetingOtherDetailsScreen extends Component {
           <View>
             <Text style={styles.fieldName}>{item.name}</Text>
             <TouchableOpacity
-              style={styles.textInputFieldView}
+              style={[
+                styles.textInputFieldView,
+                {
+                  flexWrap: userList.length > 0 ? 'wrap' : 'nowrap',
+                  height:
+                    userList.length > 0 ? 'auto' : EStyleSheet.value('45rem'),
+                },
+              ]}
               onPress={() => this.onItemPress(key)}>
-              {value != '' ? (
-                <Text style={styles.textInput}>{value}</Text>
-              ) : (
-                <Text
-                  style={[styles.textInput, {color: colors.colorGreyChateau}]}>
-                  {item.placeHolder}
-                </Text>
-              )}
+              {this.renderSelectedUserList(item, key)}
             </TouchableOpacity>
           </View>
         );
@@ -646,6 +677,20 @@ const styles = EStyleSheet.create({
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
     marginLeft: '10rem',
+  },
+  selectedUserListViewStyle: {
+    backgroundColor: colors.colorsNavyBlue,
+    marginRight: '10rem',
+    borderRadius: '5rem',
+    marginVertical: '5rem',
+  },
+  selectedUserListStyle: {
+    fontSize: '10rem',
+    color: colors.white,
+    lineHeight: '17rem',
+    fontFamily: 'CircularStd-Medium',
+    textAlign: 'left',
+    marginHorizontal: '10rem',
   },
 });
 
