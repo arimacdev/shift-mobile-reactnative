@@ -21,6 +21,7 @@ import _ from 'lodash';
 import PopupMenu from '../../../components/PopupMenu';
 import icons from '../../../asserts/icons/icons';
 import FadeIn from 'react-native-fade-in-image';
+import PopupMenuMultipleUserList from '../../../components/PopupMenuMultipleUserList';
 
 const initialLayout = {width: entireScreenWidth};
 
@@ -91,12 +92,12 @@ class MeetingOtherDetailsScreen extends Component {
           placeHolder: 'Add Prepared by',
         },
       ],
-      showPicker: false,
+      showUserListModal: false,
       date: new Date(),
       targetDate: '',
       targetDateValue: '',
       textInputs: [],
-      textInputsUserList: [{userName: '', userID: ''}],
+      textInputsUserList: [],
       indexMain: 1,
       description: '',
       files: [],
@@ -109,7 +110,8 @@ class MeetingOtherDetailsScreen extends Component {
       popupMenuOpen: false,
       userName: '',
       userID: '',
-      userList:[]
+      userList: [],
+      userListIndex:0
     };
   }
 
@@ -243,43 +245,11 @@ class MeetingOtherDetailsScreen extends Component {
     this.props.onChangeIndexMain(indexMain);
   }
 
-  onDiscussionItemPress(item) {
-    switch (item.id) {
-      case 3:
-        this.setState({showPicker: true});
-        break;
-      default:
-        break;
-    }
+  onSelectUser(userList) {
+    let {textInputsUserList,userListIndex} = this.state;
+    textInputsUserList[userListIndex] = userList;
+    this.setState({textInputsUserList, showUserListModal: false});
   }
-
-  onSelectUser = async (item, index) => {
-    let {textInputsUserList} = this.state;
-    let i=0;
-
-    // for (i = 0; i < textInputsUserList.length; i++) {
-    //   const element = textInputsUserList[i];
-    //   if(index == i){
-        
-    //       userList.push({userName: e.label, userID: e.key});
-        
-        
-    //     console.log("Sssssssssssssssssssssss",element)
-
-    //   }
-      
-    // }
-    await this.state.userList.push({userName: item.label, userID: item.key});
-    textInputsUserList[index] = this.state.userList;
-    await this.setState({textInputsUserList});
-
-    console.log("Sssssssssssssssssssssss",textInputsUserList)
-
-    this.setState({
-      popupMenuOpen: false,
-    });
-    await this.props.addPeopleModal(false);
-  };
 
   async onSearchTextChange(text) {
     await this.props.addPeopleModal(true);
@@ -394,6 +364,10 @@ class MeetingOtherDetailsScreen extends Component {
     return comparison;
   }
 
+  onItemPress(item, key) {
+    this.setState({showUserListModal: true, userListIndex:key});
+  }
+
   renderDiscussionPointView(item, index) {
     let key = item.id;
     let value = this.state.targetDate;
@@ -430,29 +404,52 @@ class MeetingOtherDetailsScreen extends Component {
       case 7:
       case 9:
       case 11:
-        const optionsStyles = {
-          optionsContainer: {
-            marginTop: 1,
-            width: '90%',
-            marginLeft: 20,
-          },
-        };
         return (
           <View>
             <Text style={styles.fieldName}>{item.name}</Text>
-            <PopupMenu
-              menuTrigger={this.renderMenuTrugger(item.placeHolder, index)}
-              menuOptions={item => this.renderUserList(item)}
-              data={users}
-              onSelect={item => this.onSelectUser(item, index)}
-              open={this.state.popupMenuOpen}
-              customStyles={optionsStyles}
-            />
+            <TouchableOpacity
+              style={styles.textInputFieldView}
+              onPress={() => this.onItemPress(item, key)}>
+              {value != '' ? (
+                <Text style={styles.textInput}>{value}</Text>
+              ) : (
+                <Text
+                  style={[styles.textInput, {color: colors.colorGreyChateau}]}>
+                  {item.placeHolder}
+                </Text>
+              )}
+            </TouchableOpacity>
           </View>
         );
       default:
         break;
     }
+  }
+
+  onBackdropPress(){
+    this.setState({showUserListModal:false})
+  }
+
+  renderUserListModal() {
+    let users = this.state.users;
+    let dataLength = this.state.dataLength;
+
+    return (
+      <PopupMenuMultipleUserList
+        addPeopleModelVisible={this.state.showUserListModal}
+        onSelect={userList => this.onSelectUser(userList)}
+        onBackdropPress={()=>this.onBackdropPress()}
+        userName={this.state.userName}
+        activeUsersData={true}
+        activeUsers={users}
+        dataLength={dataLength}
+        keyboardValue={0}
+        customScrollStyle={styles.customScrollStyle}
+        hasBackdrop={true}
+        coverScreen={true}
+        customModalStyle={styles.popupMenuModalStyle}
+      />
+    );
   }
 
   render() {
@@ -481,6 +478,7 @@ class MeetingOtherDetailsScreen extends Component {
             <Text style={styles.buttonText}>Finish</Text>
           </TouchableOpacity>
         </View>
+        {this.renderUserListModal()}
       </View>
     );
   }
