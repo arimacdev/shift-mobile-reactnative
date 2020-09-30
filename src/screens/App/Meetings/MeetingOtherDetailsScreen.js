@@ -374,7 +374,7 @@ class MeetingOtherDetailsScreen extends Component {
     this.setState({
       showUserListModal: true,
       userListIndex: key,
-      selectedUserList: selectedUserList,
+      selectedUserList: selectedUserList == undefined ? [] : selectedUserList,
     });
   }
 
@@ -447,7 +447,7 @@ class MeetingOtherDetailsScreen extends Component {
     return (
       <PopupMenuMultipleUserList
         addPeopleModelVisible={this.state.showUserListModal}
-        onSelect={userList => this.onSelectUser(userList)}
+        onSelect={selectedUserList => this.onSelectUser(selectedUserList)}
         onBackdropPress={() => this.onBackdropPress()}
         selectedUserList={this.state.selectedUserList}
         activeUsersData={true}
