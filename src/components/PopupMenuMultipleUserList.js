@@ -7,7 +7,7 @@ import {
   Image,
   Keyboard,
   TouchableOpacity,
-  TextInput
+  TextInput,
 } from 'react-native';
 import colors from '../config/colors';
 import icons from '../asserts/icons/icons';
@@ -31,7 +31,7 @@ class PopupMenuMultipleUserList extends Component {
       allActiveUsers: [],
       userName: '',
       keyboardHeight: 0,
-      userList:[]
+      selectedUserList: [],
     };
 
     this.keyboardDidShowListener = Keyboard.addListener(
@@ -68,12 +68,14 @@ class PopupMenuMultipleUserList extends Component {
 
   componentDidMount() {
     if (this.props.activeUsersData) {
-      // this.getActiveUserList(this.props.projectID);
       this.DataLength = this.props.dataLength;
       this.setState({
         activeUsers: this.props.activeUsers,
         allActiveUsers: this.props.activeUsers,
-        // dataLoading: false,
+        selectedUserList:
+          this.props.selectedUserList.length > 0
+            ? this.props.selectedUserList
+            : [],
       });
     } else {
       this.getUserList();
@@ -167,6 +169,10 @@ class PopupMenuMultipleUserList extends Component {
         opened: this.props.addPeopleModelVisible,
         activeUsers: this.props.activeUsers,
         allActiveUsers: this.props.activeUsers,
+        selectedUserList:
+          this.props.selectedUserList.length > 0
+            ? this.props.selectedUserList
+            : [],
       });
     }
 
@@ -184,6 +190,7 @@ class PopupMenuMultipleUserList extends Component {
 
   async onBackdropPress() {
     this.setState({opened: false});
+    this.props.onBackdropPress();
   }
 
   async onSearchTextChange(text) {
@@ -254,30 +261,35 @@ class PopupMenuMultipleUserList extends Component {
   }
 
   async onSelect(item) {
-    let userList = this.state.userList;
-    let itemFoundId=''
-    for (let index = 0; index < userList.length; index++) {
-      const element = userList[index];
-      if(element.Id == item.key){
+    let selectedUserList = this.state.selectedUserList;
+    let itemFoundId = '';
+    for (let index = 0; index < selectedUserList.length; index++) {
+      const element = selectedUserList[index];
+      if (element.Id == item.key) {
         itemFoundId = item.key;
       }
-      
-    } 
+    }
 
-    if(itemFoundId!=''){
-      let userListArray = this.state.userList.filter(item => {
+    if (itemFoundId != '') {
+      let userListArray = selectedUserList.filter(item => {
         return item.Id !== itemFoundId;
       });
-      this.setState({userList: userListArray});
-    }else{
-      this.state.userList.push({userName: item.label, Id: item.key});
+      this.setState({selectedUserList: userListArray});
+    } else {
+      selectedUserList.push({userName: item.label, Id: item.key});
     }
-    await this.props.onSelect(item);
-    console.log("xxxxxxxxxxxxxxxxxxxx",this.state.userList)
   }
 
-  onCloseMoveFolderModal() {
+  onCloseModal() {
     this.setState({opened: false});
+    this.props.onBackdropPress();
+  }
+
+  onOkPress() {
+    let selectedUserList = this.state.selectedUserList;
+    this.setState({opened: false});
+    this.props.onSelect(selectedUserList);
+    
   }
 
   render() {
@@ -335,7 +347,7 @@ class PopupMenuMultipleUserList extends Component {
           <View style={styles.ButtonViewStyle}>
             <TouchableOpacity
               style={styles.cancelStyle}
-              onPress={() => this.onCloseMoveFolderModal()}>
+              onPress={() => this.onCloseModal()}>
               <Text style={styles.cancelTextStyle}>Cancel</Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -349,7 +361,7 @@ class PopupMenuMultipleUserList extends Component {
                 },
               ]}
               disabled={this.state.selectedFolderToMove == '' ? true : false}
-              onPress={() => this.moveFileToFolder()}>
+              onPress={() => this.onOkPress()}>
               <Text style={styles.positiveTextStyle}>Ok</Text>
             </TouchableOpacity>
           </View>
@@ -446,7 +458,7 @@ const styles = EStyleSheet.create({
     paddingHorizontal: '12rem',
     height: '45rem',
     marginHorizontal: '10rem',
-    borderBottomWidth:1
+    borderBottomWidth: 1,
   },
   textInput: {
     fontSize: '11rem',
