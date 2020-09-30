@@ -111,7 +111,8 @@ class MeetingOtherDetailsScreen extends Component {
       userName: '',
       userID: '',
       userList: [],
-      userListIndex:0
+      userListIndex: 0,
+      selectedUserList: [],
     };
   }
 
@@ -240,15 +241,17 @@ class MeetingOtherDetailsScreen extends Component {
     return true;
   }
 
-  onNextPress() {
+  onFinishPress() {
     let indexMain = this.state.indexMain + 1;
     this.props.onChangeIndexMain(indexMain);
   }
 
-  onSelectUser(userList) {
-    let {textInputsUserList,userListIndex} = this.state;
+  async onSelectUser(userList) {
+    let {textInputsUserList, userListIndex} = this.state;
     textInputsUserList[userListIndex] = userList;
-    this.setState({textInputsUserList, showUserListModal: false});
+    await this.setState({textInputsUserList, showUserListModal: false});
+
+    console.log('ssssssssssssssssssss', textInputsUserList);
   }
 
   async onSearchTextChange(text) {
@@ -364,11 +367,18 @@ class MeetingOtherDetailsScreen extends Component {
     return comparison;
   }
 
-  onItemPress(item, key) {
-    this.setState({showUserListModal: true, userListIndex:key});
+  onItemPress(key) {
+    let {textInputsUserList} = this.state;
+    let selectedUserList = textInputsUserList[key];
+
+    this.setState({
+      showUserListModal: true,
+      userListIndex: key,
+      selectedUserList: selectedUserList,
+    });
   }
 
-  renderDiscussionPointView(item, index) {
+  renderOtherDetailsView(item, index) {
     let key = item.id;
     let value = this.state.targetDate;
     let description = this.state.description;
@@ -409,7 +419,7 @@ class MeetingOtherDetailsScreen extends Component {
             <Text style={styles.fieldName}>{item.name}</Text>
             <TouchableOpacity
               style={styles.textInputFieldView}
-              onPress={() => this.onItemPress(item, key)}>
+              onPress={() => this.onItemPress(key)}>
               {value != '' ? (
                 <Text style={styles.textInput}>{value}</Text>
               ) : (
@@ -426,8 +436,8 @@ class MeetingOtherDetailsScreen extends Component {
     }
   }
 
-  onBackdropPress(){
-    this.setState({showUserListModal:false})
+  onBackdropPress() {
+    this.setState({showUserListModal: false});
   }
 
   renderUserListModal() {
@@ -438,8 +448,8 @@ class MeetingOtherDetailsScreen extends Component {
       <PopupMenuMultipleUserList
         addPeopleModelVisible={this.state.showUserListModal}
         onSelect={userList => this.onSelectUser(userList)}
-        onBackdropPress={()=>this.onBackdropPress()}
-        userName={this.state.userName}
+        onBackdropPress={() => this.onBackdropPress()}
+        selectedUserList={this.state.selectedUserList}
         activeUsersData={true}
         activeUsers={users}
         dataLength={dataLength}
@@ -462,7 +472,7 @@ class MeetingOtherDetailsScreen extends Component {
           style={styles.flatListStyle}
           data={discusstionPointsArray}
           renderItem={({item, index}) =>
-            this.renderDiscussionPointView(item, index)
+            this.renderOtherDetailsView(item, index)
           }
           keyExtractor={item => item.id}
         />
@@ -474,7 +484,7 @@ class MeetingOtherDetailsScreen extends Component {
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.button, {backgroundColor: colors.colorDeepSkyBlue}]}
-            onPress={() => this.onNextPress()}>
+            onPress={() => this.onFinishPress()}>
             <Text style={styles.buttonText}>Finish</Text>
           </TouchableOpacity>
         </View>
