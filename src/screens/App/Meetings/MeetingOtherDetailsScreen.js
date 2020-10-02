@@ -334,6 +334,7 @@ class MeetingOtherDetailsScreen extends Component {
                 ' ' +
                 activeUsers.data[i].lastName,
               userImage: activeUsers.data[i].profileImage,
+              isSelected: false
             });
           }
         }
