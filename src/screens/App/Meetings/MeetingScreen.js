@@ -71,7 +71,7 @@ class MeetingScreen extends Component {
       scheduleTimeOfMeeting: '',
       actualTimeOfMeeting: '',
       textInputs: [],
-      indexMain: 1,
+      indexMain: 3,
       meetingId: '',
     };
   }
@@ -141,6 +141,17 @@ class MeetingScreen extends Component {
               meetingId: response.data.meetingId,
               indexMain: indexMain + 1,
             });
+            this.meetingDetails = [
+              {
+                meetingId: response.data.meetingId,
+                projectID: projectID,
+                meetingTopic: meetingTopic,
+                meetingVenue: meetingVenue,
+                meetingScheduleDateTime: meetingScheduleDateTime,
+                meetingActualDateTime: meetingActualDateTime,
+                expectedDuration: expectedDuration,
+              },
+            ];
           } else {
             this.setState({dataLoading: false});
             Utils.showAlert(true, '', response.message, this.props);
@@ -440,6 +451,8 @@ class MeetingScreen extends Component {
             selectedProjectID={this.props.selectedProjectID}
             navigation={this.props.navigation}
             meetingId={this.state.meetingId}
+            onChangeIndexMain={indexMain => this.onChangeIndexMain(indexMain)}
+            meetingDetails={this.meetingDetails}
           />
         )}
 
