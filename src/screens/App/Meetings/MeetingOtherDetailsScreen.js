@@ -53,13 +53,13 @@ class MeetingOtherDetailsScreen extends Component {
         },
         {
           id: 5,
-          name: 'Meeting Attended by',
-          placeHolder: 'Add Meeting Attended by',
+          name: 'Meeting Attended',
+          placeHolder: 'Add Meeting Attended',
         },
         {
           id: 6,
-          name: 'Meeting Attended by  - Non Org (Ex: Member 1, Member 2)',
-          placeHolder: 'Add Meeting Attended by',
+          name: 'Meeting Attended  - Non Org (Ex: Member 1, Member 2)',
+          placeHolder: 'Add Meeting Attended',
         },
         {
           id: 7,
@@ -98,7 +98,7 @@ class MeetingOtherDetailsScreen extends Component {
       targetDateValue: '',
       textInputs: [],
       textInputsUserList: [],
-      indexMain: 1,
+      indexMain: 2,
       description: '',
       files: [],
       showImagePickerModal: false,
@@ -139,38 +139,143 @@ class MeetingOtherDetailsScreen extends Component {
     await this.setState({textInputs});
   }
 
-  async addPoint() {
-    let targetDate = this.state.targetDate;
-    let targetDateValue = this.state.targetDateValue;
+  onBackPress() {
+    let indexMain = this.state.indexMain - 1;
+    this.props.onChangeIndexMain(indexMain);
+  }
+
+  async addOtherDetails() {
+    let meetingDetails = this.props.meetingDetails;
     let textInputs = this.state.textInputs;
-    let projectId = this.props.selectedProjectID;
-    let meetingId = this.props.meetingId;
-    let discussionPoint = textInputs[0];
-    let actionBy = this.state.userID;
-    let remarks = textInputs[3];
-    let actionByGuest = false;
+    let textInputsUserList = this.state.textInputsUserList;
     let indexMain = this.state.indexMain;
+    let actualDuration = textInputs[0];
+    let meetingChaired = [];
+    let meetingAttended = [];
+    let meetingAbsent = [];
+    let meetingCopiesTo = [];
+    let meetingPrepared = [];
+    let isUpdated = false;
 
-    let html = await this.richText.current?.getContentHtml();
-    await this.setState({description: html});
-    let description = this.state.description;
+    for (let i = 0; i < textInputsUserList.length; i++) {
+      const element = textInputsUserList[i];
+      switch (i) {
+        case 3:
+          for (let index = 0; index < element.length; index++) {
+            const subElement = element[index];
+            meetingChaired.push({
+              attendeeId: subElement.Id,
+              isGuest: false,
+            });
+          }
+          break;
+        case 5:
+          for (let index = 0; index < element.length; index++) {
+            const subElement = element[index];
+            meetingAttended.push({
+              attendeeId: subElement.Id,
+              isGuest: false,
+            });
+          }
+          break;
+        case 7:
+          for (let index = 0; index < element.length; index++) {
+            const subElement = element[index];
+            meetingAbsent.push({
+              attendeeId: subElement.Id,
+              isGuest: false,
+            });
+          }
+          break;
+        case 9:
+          for (let index = 0; index < element.length; index++) {
+            const subElement = element[index];
+            meetingCopiesTo.push({
+              attendeeId: subElement.Id,
+              isGuest: false,
+            });
+          }
+          break;
+        case 11:
+          for (let index = 0; index < element.length; index++) {
+            const subElement = element[index];
+            meetingPrepared.push({
+              attendeeId: subElement.Id,
+              isGuest: false,
+            });
+          }
+          break;
+        default:
+          break;
+      }
+    }
 
-    if (this.validateFields(targetDate, textInputs, actionBy, description)) {
-      let targetDateFormatted = targetDateValue
-        ? moment(targetDateValue, 'DD/MM/YYYY hh:mmA').format(
-            'YYYY-MM-DD[T]HH:mm:ss',
-          )
-        : '';
+    for (let j = 0; j < textInputs.length; j++) {
+      const element = textInputs[j];
+      switch (j) {
+        case 4:
+          console.log("SSSSSSSSSSSSSSSSSSSSSSSSSSS",element)
+
+          for (let index = 0; index < element.length; index++) {
+            const subElement = element[index];
+            meetingChaired.push({
+              attendeeId: subElement.Id,
+              isGuest: false,
+            });
+          }
+          break;
+        case 6:
+          for (let index = 0; index < element.length; index++) {
+            const subElement = element[index];
+            meetingAttended.push({
+              attendeeId: subElement.Id,
+              isGuest: false,
+            });
+          }
+          break;
+        case 8:
+          for (let index = 0; index < element.length; index++) {
+            const subElement = element[index];
+            meetingAbsent.push({
+              attendeeId: subElement.Id,
+              isGuest: false,
+            });
+          }
+          break;
+        case 10:
+          for (let index = 0; index < element.length; index++) {
+            const subElement = element[index];
+            meetingCopiesTo.push({
+              attendeeId: subElement.Id,
+              isGuest: false,
+            });
+          }
+          break;
+        case 12:
+          for (let index = 0; index < element.length; index++) {
+            const subElement = element[index];
+            meetingPrepared.push({
+              attendeeId: subElement.Id,
+              isGuest: false,
+            });
+          }
+          break;
+        default:
+          break;
+      }
+    }
+
+    if (this.validateFields(textInputs)) {
       this.setState({dataLoading: true});
-      await APIServices.addDiscussionPointData(
-        meetingId,
-        projectId,
-        description,
-        discussionPoint,
-        remarks,
-        actionBy,
-        actionByGuest,
-        targetDateFormatted,
+      await APIServices.updateMeetingData(
+        meetingDetails,
+        actualDuration,
+        meetingChaired,
+        meetingAttended,
+        meetingAbsent,
+        meetingCopiesTo,
+        meetingPrepared,
+        isUpdated,
       )
         .then(response => {
           if (response.message == 'success') {
@@ -187,62 +292,22 @@ class MeetingOtherDetailsScreen extends Component {
     }
   }
 
-  validateFields(targetDate, textInputs, actionBy, description) {
+  validateFields(textInputs) {
     if (!textInputs[0] && _.isEmpty(textInputs[0])) {
       Utils.showAlert(
         true,
         '',
-        'Please enter the discussion point',
+        'Please enter the actual duration of the meeting',
         this.props,
       );
       return false;
     }
-
-    if (!actionBy && _.isEmpty(actionBy)) {
-      Utils.showAlert(
-        true,
-        '',
-        'Please enter the action by for discussion point',
-        this.props,
-      );
-      return false;
-    }
-
-    if (!targetDate && _.isEmpty(targetDate)) {
-      Utils.showAlert(
-        true,
-        '',
-        'Please set the target date for discussion point',
-        this.props,
-      );
-      return false;
-    }
-
-    if (!textInputs[3] && _.isEmpty(textInputs[3])) {
-      Utils.showAlert(
-        true,
-        '',
-        'Please enter the remarks for discussion point',
-        this.props,
-      );
-      return false;
-    }
-
-    if (!description && _.isEmpty(description)) {
-      Utils.showAlert(
-        true,
-        '',
-        'Please enter the description for discussion point',
-        this.props,
-      );
-      return false;
-    }
-
     return true;
   }
 
   onFinishPress() {
     let indexMain = this.state.indexMain + 1;
+    this.addOtherDetails();
     this.props.onChangeIndexMain(indexMain);
   }
 
@@ -250,73 +315,6 @@ class MeetingOtherDetailsScreen extends Component {
     let {textInputsUserList, userListIndex} = this.state;
     textInputsUserList[userListIndex] = userList;
     this.setState({textInputsUserList, showUserListModal: false});
-  }
-
-  async onSearchTextChange(text) {
-    await this.props.addPeopleModal(true);
-    this.setState({userName: text, popupMenuOpen: true, userID: ''});
-    let result = this.state.allUsers.filter(data =>
-      data.label.toLowerCase().includes(text.toLowerCase()),
-    );
-    if (text == '') {
-      this.setState({users: this.state.allUsers, userID: ''});
-    } else {
-      this.setState({users: result});
-    }
-  }
-
-  renderMenuTrugger(placeHolder, index) {
-    return (
-      <View style={styles.textInputFieldView}>
-        <TextInput
-          style={styles.textInput}
-          placeholder={placeHolder}
-          value={this.state.textInputsUserList[index]}
-          onChangeText={text => this.onSearchTextChange(text)}
-        />
-      </View>
-    );
-  }
-
-  userImage = function(item) {
-    let userImage = item.userImage;
-
-    if (userImage) {
-      return (
-        <FadeIn>
-          <Image source={{uri: userImage}} style={styles.userIcon} />
-        </FadeIn>
-      );
-    } else {
-      return (
-        <Image
-          style={styles.userIcon}
-          source={icons.defultUser}
-          resizeMode="contain"
-        />
-      );
-    }
-  };
-
-  renderUserList(item) {
-    const {navigation} = this.props;
-    return (
-      <View
-        style={[
-          styles.userListStyle,
-          {
-            backgroundColor:
-              item.label == navigation.state.params.userName
-                ? colors.projectBgColor
-                : '',
-          },
-        ]}>
-        {this.userImage(item)}
-        <View style={{flex: 1}}>
-          <Text style={styles.userNameText}>{item.label}</Text>
-        </View>
-      </View>
-    );
   }
 
   async getActiveUsers() {
@@ -334,7 +332,7 @@ class MeetingOtherDetailsScreen extends Component {
                 ' ' +
                 activeUsers.data[i].lastName,
               userImage: activeUsers.data[i].profileImage,
-              isSelected: false
+              isSelected: false,
             });
           }
         }
@@ -377,14 +375,29 @@ class MeetingOtherDetailsScreen extends Component {
     });
   }
 
+  onCrossPress(Id, key) {
+    let {textInputsUserList} = this.state;
+    let selectedUserList = textInputsUserList[key];
+
+    let userListArray = selectedUserList.filter(item => {
+      return item.Id !== Id;
+    });
+    textInputsUserList[key] = userListArray;
+    this.setState({textInputsUserList});
+  }
+
   renderSelectedUserList(item, key) {
     let {textInputsUserList} = this.state;
-    let userList = textInputsUserList[key] == undefined ? [] : textInputsUserList[key];
+    let userList =
+      textInputsUserList[key] == undefined ? [] : textInputsUserList[key];
     return userList.length > 0 ? (
       userList.map(list => {
         return (
           <View style={styles.selectedUserListViewStyle}>
             <Text style={styles.selectedUserListStyle}>{list.userName}</Text>
+            <TouchableOpacity onPress={() => this.onCrossPress(list.Id, key)}>
+              <Image source={icons.delete} style={styles.crossIcon} />
+            </TouchableOpacity>
           </View>
         );
       })
@@ -398,7 +411,8 @@ class MeetingOtherDetailsScreen extends Component {
   renderOtherDetailsView(item, index) {
     let key = item.id;
     let {textInputsUserList} = this.state;
-    let userList = textInputsUserList[key] == undefined ? [] : textInputsUserList[key];
+    let userList =
+      textInputsUserList[key] == undefined ? [] : textInputsUserList[key];
 
     switch (key) {
       case 1:
@@ -434,15 +448,15 @@ class MeetingOtherDetailsScreen extends Component {
           <View>
             <Text style={styles.fieldName}>{item.name}</Text>
             <TouchableOpacity
-              style={[
-                styles.textInputFieldView,
-                {
-                  flexWrap: userList.length > 0 ? 'wrap' : 'nowrap',
-                  minHeight:EStyleSheet.value('45rem'),
-                  height:
-                    userList.length > 0 ? 'auto' : EStyleSheet.value('45rem'),
-                },
-              ]}
+              style={
+                userList.length > 0
+                  ? [
+                      styles.textInputFieldView,
+                      {paddingVertical: EStyleSheet.value('7.5rem')},
+                      styles.userListArrayStyle,
+                    ]
+                  : styles.textInputFieldView
+              }
               onPress={() => this.onItemPress(key)}>
               {this.renderSelectedUserList(item, key)}
             </TouchableOpacity>
@@ -496,7 +510,7 @@ class MeetingOtherDetailsScreen extends Component {
         <View style={styles.bottomContainer}>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => this.addPoint()}>
+            onPress={() => this.onBackPress()}>
             <Text style={styles.buttonText}>Back</Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -665,18 +679,31 @@ const styles = EStyleSheet.create({
     marginLeft: '10rem',
   },
   selectedUserListViewStyle: {
+    flexDirection: 'row',
     backgroundColor: colors.colorsNavyBlue,
     marginRight: '10rem',
     borderRadius: '5rem',
-    marginVertical: '5rem',
+    marginTop: '5rem',
+    height: '25rem',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   selectedUserListStyle: {
-    fontSize: '10rem',
+    fontSize: '11rem',
     color: colors.white,
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
     marginHorizontal: '10rem',
+  },
+  crossIcon: {
+    marginRight: '5rem',
+    width: '12rem',
+    height: '12rem',
+  },
+  userListArrayStyle: {
+    flexWrap: 'wrap',
+    height: 'auto',
   },
 });
 
