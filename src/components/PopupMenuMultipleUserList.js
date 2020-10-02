@@ -76,6 +76,7 @@ class PopupMenuMultipleUserList extends Component {
           this.props.selectedUserList.length > 0
             ? this.props.selectedUserList
             : [],
+        userName: '',
       });
     } else {
       this.getUserList();
@@ -173,19 +174,9 @@ class PopupMenuMultipleUserList extends Component {
           this.props.selectedUserList.length > 0
             ? this.props.selectedUserList
             : [],
+        userName: '',
       });
     }
-
-    // if (
-    //   prevProps.addPeopleModelVisible !== this.props.addPeopleModelVisible &&
-    //   !this.props.addPeopleModelVisible
-    // ) {
-    //   this.setState({
-    //     opened: this.props.addPeopleModelVisible,
-    //     activeUsers: this.props.activeUsers,
-    //     allActiveUsers: this.props.activeUsers,
-    //   });
-    // }
   }
 
   async onBackdropPress() {
@@ -260,7 +251,9 @@ class PopupMenuMultipleUserList extends Component {
         </View>
         <Image
           style={styles.addUserIcon}
-          source={itemFoundId == item.key ? icons.rightCircule : icons.whiteCircule}
+          source={
+            itemFoundId == item.key ? icons.rightCircule : icons.whiteCircule
+          }
           resizeMode="contain"
         />
       </View>
