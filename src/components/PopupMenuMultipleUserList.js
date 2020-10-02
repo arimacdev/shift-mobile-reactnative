@@ -277,6 +277,15 @@ class PopupMenuMultipleUserList extends Component {
       }
     }
 
+    let filteredData = this.state.activeUsers.filter(function(item) {
+      if (itemFoundId == item.key) {
+        item.isSelected = !item.isSelected;
+      }
+      return item;
+    });
+
+    this.setState({activeUsers: filteredData});
+
     if (itemFoundId != '') {
       let userListArray = selectedUserList.filter(item => {
         return item.Id !== itemFoundId;
