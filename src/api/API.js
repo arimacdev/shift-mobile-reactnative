@@ -120,4 +120,5 @@ export const BLOCK_USER = `projects`;
 export const PIN_PROJECT = `projects/pin`;
 
 export const INITIATE_MEETING = `meeting`;
-export const ADD_DISCUSSION_POINT = `meeting/discussion`
+export const ADD_DISCUSSION_POINT = `meeting/discussion`;
+export const UPDATE_MEETING = `meeting`;
