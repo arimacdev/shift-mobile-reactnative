@@ -96,6 +96,7 @@ import {
   INITIATE_MEETING,
   PIN_PROJECT,
   ADD_DISCUSSION_POINT,
+  ADD_OTHER_DETAILS,
 } from '../api/API';
 import AsyncStorage from '@react-native-community/async-storage';
 import {SET_UPLOAD_PROGRESS} from '../redux/types';
@@ -3708,6 +3709,56 @@ async function addDiscussionPointData(
   );
 }
 
+async function updateMeetingData(projectID, folderId, folderName) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
+  let userIDHeder = null;
+  userIDHeder = await AsyncStorage.getItem('userID');
+
+  let headers = {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+    user: userIDHeder,
+  };
+
+  return request(
+    {
+      url: baseURL + UPDATE_MEETING + '/' + meetingId,
+      method: 'PUT',
+      data: {
+        projectId: 'projectId',
+        meetingTopic: 'Sixth Topic',
+        meetingVenue: 'Arimac',
+        meetingExpectedTime: '2020-10-17',
+        meetingActualTime: '2020-10-17',
+        expectedDuration: 100,
+        actualDuration: 60,
+        meetingChaired: {
+          isUpdated: true,
+          attendees: [
+            {attendeeId: 'Updated Non Arimac Chair 2', isGuest: true},
+          ],
+        },
+        meetingAttended: {
+          isUpdated: true,
+          attendees: [
+            {attendeeId: '{{userId}}', isGuest: false},
+            {
+              attendeeId: 'Non Arimac Chair 1, Non Arimac Chair 2',
+              isGuest: true,
+            },
+          ],
+        },
+        meetingAbsent: {isUpdated: false, attendees: []},
+        meetingCopiesTo: {isUpdated: false},
+        meetingPrepared: {isUpdated: false},
+      },
+    },
+    true,
+    headers,
+  );
+}
+
 const APIServices = {
   getAllProjectsByUserData,
   getUserData,
@@ -3832,6 +3883,7 @@ const APIServices = {
   pinProjectData,
   initiatMeetingData,
   addDiscussionPointData,
+  updateMeetingData,
 };
 
 export default APIServices;
