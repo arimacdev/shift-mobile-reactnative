@@ -129,6 +129,10 @@ class MeetingOtherDetailsScreen extends Component {
     this.props.onChangeIndexMain(indexMain);
   }
 
+  resetValues() {
+    this.setState({textInputs: [], textInputsUserList: []});
+  }
+
   async addOtherDetails() {
     let meetingDetails = this.props.meetingDetails;
     let textInputs = this.state.textInputs;
