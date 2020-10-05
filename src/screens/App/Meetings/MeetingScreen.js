@@ -20,6 +20,7 @@ import Utils from '../../../utils/Utils';
 import _ from 'lodash';
 import MeetingDiscussionPointScreen from './MeetingDiscussionPointScreen';
 import MeetingOtherDetailsScreen from './MeetingOtherDetailsScreen';
+import MeetingViewScreen from './MeetingViewScreen';
 
 const initialLayout = {width: entireScreenWidth};
 
@@ -71,7 +72,7 @@ class MeetingScreen extends Component {
       scheduleTimeOfMeeting: '',
       actualTimeOfMeeting: '',
       textInputs: [],
-      indexMain: 3,
+      indexMain: 0,
       meetingId: '',
     };
   }
@@ -446,13 +447,20 @@ class MeetingScreen extends Component {
             meetingId={this.state.meetingId}
             onChangeIndexMain={indexMain => this.onChangeIndexMain(indexMain)}
           />
-        ) : (
+        ) : indexMain == 2 ? (
           <MeetingOtherDetailsScreen
             selectedProjectID={this.props.selectedProjectID}
             navigation={this.props.navigation}
             meetingId={this.state.meetingId}
-            onChangeIndexMain={indexMain => this.onChangeIndexMain(indexMain)}
             meetingDetails={this.meetingDetails}
+            onChangeIndexMain={indexMain => this.onChangeIndexMain(indexMain)}
+          />
+        ) : (
+          <MeetingViewScreen
+            selectedProjectID={this.props.selectedProjectID}
+            navigation={this.props.navigation}
+            meetingId={this.state.meetingId}
+            onChangeIndexMain={indexMain => this.onChangeIndexMain(indexMain)}
           />
         )}
 

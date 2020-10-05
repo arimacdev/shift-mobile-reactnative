@@ -28,19 +28,8 @@ class MeetingViewScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      showPicker: false,
-      date: false,
-      actual: false,
-      dateMeeting: new Date(),
-      scheduleTime: new Date(),
-      actualTime: new Date(),
-      dateOfMeetingValue: '',
-      dateOfMeeting: '',
-      scheduleTimeOfMeeting: '',
-      actualTimeOfMeeting: '',
-      textInputs: [],
       indexMain: 3,
-      meetingId: '',
+      meetings: [],
     };
   }
 
@@ -48,133 +37,25 @@ class MeetingViewScreen extends Component {
 
   componentDidMount() {}
 
-  async initiateMeeting() {
+  async loadMeetings() {
     this.setState({dataLoading: true});
-      await APIServices.initiatMeetingData(
-        projectID,
-        meetingTopic,
-        meetingVenue,
-        meetingScheduleDateTime,
-        meetingActualDateTime,
-        expectedDuration,
-      )
-        .then(response => {
-          if (response.message == 'success') {
-            this.setState({
-              dataLoading: false,
-              meetingId: response.data.meetingId,
-              indexMain: indexMain + 1,
-            });
-          } else {
-            this.setState({dataLoading: false});
-            Utils.showAlert(true, '', response.message, this.props);
-          }
-        })
-        .catch(error => {
+    await APIServices.loadMeetingsData(projectID)
+      .then(response => {
+        if (response.message == 'success') {
+          this.setState({
+            dataLoading: false,
+            meetings: response.data.meetingId,
+          });
+        } else {
           this.setState({dataLoading: false});
-          Utils.showAlert(true, '', error.data.message, this.props);
-        });
+          Utils.showAlert(true, '', response.message, this.props);
+        }
+      })
+      .catch(error => {
+        this.setState({dataLoading: false});
+        Utils.showAlert(true, '', error.data.message, this.props);
+      });
   }
-
-  validateFields(
-    dateOfMeeting,
-    scheduleTimeOfMeeting,
-    actualTimeOfMeeting,
-    textInputs,
-  ) {
-    if (!dateOfMeeting && _.isEmpty(dateOfMeeting)) {
-      Utils.showAlert(
-        true,
-        '',
-        'Please set the date for the meeting',
-        this.props,
-      );
-      return false;
-    }
-
-    if (!textInputs[1] && _.isEmpty(textInputs[1])) {
-      Utils.showAlert(
-        true,
-        '',
-        'Please enter the vanue for the meeting',
-        this.props,
-      );
-      return false;
-    }
-
-    if (!textInputs[2] && _.isEmpty(textInputs[2])) {
-      Utils.showAlert(
-        true,
-        '',
-        'Please enter the topic for the meeting',
-        this.props,
-      );
-      return false;
-    }
-
-    if (scheduleTimeOfMeeting && !_.isEmpty(scheduleTimeOfMeeting)) {
-      let startTime = moment(scheduleTimeOfMeeting, 'hh:mmA');
-      let todayTime = moment(new Date()).format('hh:mmA');
-      let endTime = moment(todayTime, 'hh:mmA');
-      let totalHours = startTime.diff(endTime, 'seconds');
-      if (totalHours < 0) {
-        Utils.showAlert(
-          true,
-          '',
-          'Start time cannot be a past time',
-          this.props,
-        );
-        return false;
-      }
-    } else {
-      Utils.showAlert(
-        true,
-        '',
-        'Please set the schedule time for the meeting',
-        this.props,
-      );
-      return false;
-    }
-
-    if (actualTimeOfMeeting && !_.isEmpty(actualTimeOfMeeting)) {
-      let startTime = moment(scheduleTimeOfMeeting, 'hh:mmA');
-      let endTime = moment(actualTimeOfMeeting, 'hh:mmA');
-      let totalTime = endTime.diff(startTime, 'seconds');
-      if (totalTime < 0) {
-        Utils.showAlert(
-          true,
-          '',
-          'Actual time should be after schedule time',
-          this.props,
-        );
-        return false;
-      }
-    } else {
-      Utils.showAlert(
-        true,
-        '',
-        'Please set the actual time for the meeting',
-        this.props,
-      );
-      return false;
-    }
-
-    if (!textInputs[5] && _.isEmpty(textInputs[5])) {
-      Utils.showAlert(
-        true,
-        '',
-        'Please enter the planned duration for the meeting',
-        this.props,
-      );
-      return false;
-    }
-
-    return true;
-  }
-
-  hideDateTimePicker = () => {
-    this.setState({showPicker: false});
-  };
 
   handleDateTimeConfirm = selectedDateTime => {
     this.hideDateTimePicker();
@@ -334,39 +215,22 @@ class MeetingViewScreen extends Component {
 
     return (
       <View style={styles.container}>
-        {indexMain == 0 ? (
-          <View style={{flex: 1}}>
-            <FlatList
-              ref={r => (this.flatList = r)}
-              style={styles.flatListStyle}
-              data={textInputArray}
-              renderItem={({item, index}) => this.renderView(item, index)}
-              keyExtractor={item => item.id}
-            />
-            <View style={styles.bottomContainer}>
-              <TouchableOpacity onPress={() => this.initiateMeeting()}>
-                <View style={styles.button}>
-                  <Text style={styles.buttonText}>Initiate Meeting</Text>
-                </View>
-              </TouchableOpacity>
-            </View>
+        <View style={{flex: 1}}>
+          <FlatList
+            ref={r => (this.flatList = r)}
+            style={styles.flatListStyle}
+            data={textInputArray}
+            renderItem={({item, index}) => this.renderView(item, index)}
+            keyExtractor={item => item.id}
+          />
+          <View style={styles.bottomContainer}>
+            <TouchableOpacity onPress={() => this.initiateMeeting()}>
+              <View style={styles.button}>
+                <Text style={styles.buttonText}>Initiate Meeting</Text>
+              </View>
+            </TouchableOpacity>
           </View>
-        ) : indexMain == 1 ? (
-          <MeetingDiscussionPointScreen
-            selectedProjectID={this.props.selectedProjectID}
-            navigation={this.props.navigation}
-            meetingId={this.state.meetingId}
-            onChangeIndexMain={indexMain => this.onChangeIndexMain(indexMain)}
-          />
-        ) : (
-          <MeetingOtherDetailsScreen
-            selectedProjectID={this.props.selectedProjectID}
-            navigation={this.props.navigation}
-            meetingId={this.state.meetingId}
-          />
-        )}
-
-        {this.state.showPicker ? this.renderDateTimePicker() : null}
+        </View>
       </View>
     );
   }
