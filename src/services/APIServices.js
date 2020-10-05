@@ -96,7 +96,7 @@ import {
   INITIATE_MEETING,
   PIN_PROJECT,
   ADD_DISCUSSION_POINT,
-  ADD_OTHER_DETAILS,
+  UPDATE_MEETING,
 } from '../api/API';
 import AsyncStorage from '@react-native-community/async-storage';
 import {SET_UPLOAD_PROGRESS} from '../redux/types';
@@ -3657,16 +3657,6 @@ async function initiatMeetingData(
   );
 }
 
-//"{ "meetingId": "{{meetingId}}",
-//"projectId": "{{projectId}}",
-//"description": "Sixth Topic",
-//"discussionPoint": 60,
-//"remarks": "Arimac",
-//"actionBy": "{{userId}}",
-//"actionByGuest": false,
-//"addedBy": "{{userId}}",
-//"dueDate": "2020-09-10" }"
-
 async function addDiscussionPointData(
   meetingId,
   projectId,
@@ -3709,7 +3699,16 @@ async function addDiscussionPointData(
   );
 }
 
-async function updateMeetingData(projectID, folderId, folderName) {
+async function updateMeetingData(
+  meetingDetails,
+  actualDuration,
+  meetingChaired,
+  meetingAttended,
+  meetingAbsent,
+  meetingCopiesTo,
+  meetingPrepared,
+  isUpdated,
+) {
   let baseURL = null;
   baseURL = await AsyncStorage.getItem('baseURL');
   let userIDHeder = null;
@@ -3723,35 +3722,21 @@ async function updateMeetingData(projectID, folderId, folderName) {
 
   return request(
     {
-      url: baseURL + UPDATE_MEETING + '/' + meetingId,
+      url: baseURL + UPDATE_MEETING + '/' + meetingDetails.meetingId,
       method: 'PUT',
       data: {
-        projectId: 'projectId',
-        meetingTopic: 'Sixth Topic',
-        meetingVenue: 'Arimac',
-        meetingExpectedTime: '2020-10-17',
-        meetingActualTime: '2020-10-17',
-        expectedDuration: 100,
-        actualDuration: 60,
-        meetingChaired: {
-          isUpdated: true,
-          attendees: [
-            {attendeeId: 'Updated Non Arimac Chair 2', isGuest: true},
-          ],
-        },
-        meetingAttended: {
-          isUpdated: true,
-          attendees: [
-            {attendeeId: '{{userId}}', isGuest: false},
-            {
-              attendeeId: 'Non Arimac Chair 1, Non Arimac Chair 2',
-              isGuest: true,
-            },
-          ],
-        },
-        meetingAbsent: {isUpdated: false, attendees: []},
-        meetingCopiesTo: {isUpdated: false},
-        meetingPrepared: {isUpdated: false},
+        projectId: meetingDetails.projectId,
+        meetingTopic: meetingDetails.meetingTopic,
+        meetingVenue: meetingDetails.meetingVenue,
+        meetingExpectedTime: meetingDetails.meetingExpectedTime,
+        meetingActualTime: meetingDetails.meetingActualTime,
+        expectedDuration: meetingDetails.expectedDuration,
+        actualDuration: actualDuration,
+        meetingChaired: {isUpdated: isUpdated, attendees: meetingChaired},
+        meetingAttended: {isUpdated: isUpdated, attendees: meetingAttended},
+        meetingAbsent: {isUpdated: isUpdated, attendees: meetingAbsent},
+        meetingCopiesTo: {isUpdated: isUpdated, attendees: meetingCopiesTo},
+        meetingPrepared: {isUpdated: isUpdated, attendees: meetingPrepared},
       },
     },
     true,
