@@ -14,13 +14,10 @@ import colors from '../../../config/colors';
 import EStyleSheet from 'react-native-extended-stylesheet';
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
-import moment from 'moment';
 import APIServices from '../../../services/APIServices';
 import Utils from '../../../utils/Utils';
 import _ from 'lodash';
-import PopupMenu from '../../../components/PopupMenu';
 import icons from '../../../asserts/icons/icons';
-import FadeIn from 'react-native-fade-in-image';
 import PopupMenuMultipleUserList from '../../../components/PopupMenuMultipleUserList';
 
 const initialLayout = {width: entireScreenWidth};
@@ -93,23 +90,11 @@ class MeetingOtherDetailsScreen extends Component {
         },
       ],
       showUserListModal: false,
-      date: new Date(),
-      targetDate: '',
-      targetDateValue: '',
       textInputs: [],
       textInputsUserList: [],
       indexMain: 2,
-      description: '',
-      files: [],
-      showImagePickerModal: false,
-      showEnterUrlModal: false,
-      url: '',
-      urlTitle: '',
       users: [],
       allUsers: [],
-      popupMenuOpen: false,
-      userName: '',
-      userID: '',
       userList: [],
       userListIndex: 0,
       selectedUserList: [],
@@ -148,7 +133,6 @@ class MeetingOtherDetailsScreen extends Component {
     let meetingDetails = this.props.meetingDetails;
     let textInputs = this.state.textInputs;
     let textInputsUserList = this.state.textInputsUserList;
-    let indexMain = this.state.indexMain;
     let actualDuration = textInputs[0];
     let meetingChaired = [];
     let meetingAttended = [];
@@ -284,7 +268,8 @@ class MeetingOtherDetailsScreen extends Component {
       )
         .then(response => {
           if (response.message == 'success') {
-            this.setState({dataLoading: false, indexMain: indexMain + 1});
+            this.setState({dataLoading: false, indexMain: 0});
+            this.props.onChangeIndexMain(0);
           } else {
             this.setState({dataLoading: false});
             Utils.showAlert(true, '', response.message, this.props);
@@ -311,9 +296,7 @@ class MeetingOtherDetailsScreen extends Component {
   }
 
   onFinishPress() {
-    let indexMain = this.state.indexMain + 1;
     this.addOtherDetails();
-    this.props.onChangeIndexMain(indexMain);
   }
 
   onSelectUser(userList) {
@@ -589,99 +572,6 @@ const styles = EStyleSheet.create({
     marginBottom: '15rem',
     flexDirection: 'row',
     marginHorizontal: '15rem',
-  },
-  textEditorStyle: {
-    // height: '150rem',
-    borderRadius: '5rem',
-    marginTop: '5rem',
-    marginBottom: '5rem',
-    borderColor: colors.colorSilver,
-    borderWidth: '0.5rem',
-    marginHorizontal: '20rem',
-  },
-  urlModalInnerStyle: {
-    backgroundColor: colors.white,
-    borderRadius: '5rem',
-    padding: '20rem',
-  },
-  urlModalTitleStyle: {
-    fontSize: '20rem',
-  },
-  urlModalInputTextViewStyle: {
-    marginTop: '20rem',
-  },
-  urlModalTextStyle: {
-    fontSize: '15rem',
-  },
-  urlModalInputTextViewInnerStyle: {
-    backgroundColor: colors.colorWhisper,
-    borderRadius: '5rem',
-    marginTop: '5rem',
-    height: Platform.OS == 'ios' ? '35rem' : '50rem',
-  },
-  urlModalInputTextInnerStyle: {
-    marginLeft: '10rem',
-    marginTop: Platform.OS == 'ios' ? '10rem' : '0rem',
-  },
-  ButtonViewStyle: {
-    flexDirection: 'row',
-    marginTop: '20rem',
-    marginBottom: '10rem',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  positiveStyle: {
-    flex: 1,
-    height: '45rem',
-    marginLeft: '10rem',
-    backgroundColor: colors.lightGreen,
-    borderRadius: '5rem',
-    paddingHorizontal: '40rem',
-    paddingVertical: '10rem',
-    justifyContent: 'center',
-  },
-  positiveTextStyle: {
-    fontSize: '15rem',
-    color: colors.white,
-    textAlign: 'center',
-    fontFamily: 'CircularStd-Medium',
-  },
-  cancelStyle: {
-    flex: 1,
-    height: '45rem',
-    backgroundColor: colors.lightRed,
-    borderRadius: '5rem',
-    paddingHorizontal: '40rem',
-    paddingVertical: '10rem',
-    justifyContent: 'center',
-  },
-  cancelTextStyle: {
-    fontSize: '15rem',
-    color: colors.white,
-    textAlign: 'center',
-    fontFamily: 'CircularStd-Medium',
-  },
-  userIcon: {
-    width: '45rem',
-    height: '45rem',
-    borderRadius: 90 / 2,
-  },
-  userListStyle: {
-    height: '50rem',
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginHorizontal: '20rem',
-    borderBottomWidth: 1,
-    borderBottomColor: colors.lighterGray,
-  },
-  userNameText: {
-    fontSize: '12rem',
-    color: colors.projectText,
-    fontWeight: 'bold',
-    lineHeight: '17rem',
-    fontFamily: 'CircularStd-Medium',
-    textAlign: 'left',
-    marginLeft: '10rem',
   },
   selectedUserListViewStyle: {
     flexDirection: 'row',
