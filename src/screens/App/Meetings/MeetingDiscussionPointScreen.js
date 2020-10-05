@@ -20,7 +20,7 @@ import APIServices from '../../../services/APIServices';
 import Utils from '../../../utils/Utils';
 import _ from 'lodash';
 import ImagePicker from 'react-native-image-picker';
-// import RichTextEditorPell from '../../../components/RichTextEditorPell';
+import RichTextEditorPell from '../../../components/RichTextEditorPell';
 import FilePickerModal from '../../../components/FilePickerModal';
 import Modal from 'react-native-modal';
 import PopupMenu from '../../../components/PopupMenu';
@@ -300,7 +300,6 @@ class MeetingDiscussionPointScreen extends Component {
     let actionBy = this.state.userID;
     let remarks = textInputs[3];
     let actionByGuest = false;
-    let indexMain = this.state.indexMain;
 
     let html = await this.richText.current?.getContentHtml();
     await this.setState({description: html});
@@ -315,6 +314,7 @@ class MeetingDiscussionPointScreen extends Component {
       this.setState({dataLoading: true});
       await APIServices.addDiscussionPointData(
         meetingId,
+        // '584adb31-d273-4f59-a04e-ccfc6d09599d',
         projectId,
         description,
         discussionPoint,
@@ -325,7 +325,7 @@ class MeetingDiscussionPointScreen extends Component {
       )
         .then(response => {
           if (response.message == 'success') {
-            this.setState({dataLoading: false, indexMain: indexMain + 1});
+            this.setState({dataLoading: false});
           } else {
             this.setState({dataLoading: false});
             Utils.showAlert(true, '', response.message, this.props);
@@ -689,7 +689,7 @@ class MeetingDiscussionPointScreen extends Component {
           <View>
             <Text style={styles.fieldName}>{item.name}</Text>
             <View style={styles.textEditorStyle}>
-              {/* <RichTextEditorPell
+              <RichTextEditorPell
                 chatText={description}
                 getRefEditor={refEditor => this.getRefEditor(refEditor)}
                 doumentPicker={() => {
@@ -697,7 +697,7 @@ class MeetingDiscussionPointScreen extends Component {
                 }}
                 onInsertLink={() => this.showEnterUrlModal()}
                 onChangeEditorText={text => this.onChangeEditorText(text)}
-              /> */}
+              />
             </View>
           </View>
         );
