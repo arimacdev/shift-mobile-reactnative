@@ -94,6 +94,16 @@ class MeetingScreen extends Component {
     await this.setState({textInputs});
   }
 
+  resetValues() {
+    this.setState({
+      dateOfMeeting: '',
+      dateOfMeetingValue: '',
+      scheduleTimeOfMeeting: '',
+      actualTimeOfMeeting: '',
+      textInputs: [],
+    });
+  }
+
   async initiateMeeting() {
     let dateOfMeeting = this.state.dateOfMeeting;
     let dateOfMeetingValue = this.state.dateOfMeetingValue;
@@ -142,17 +152,16 @@ class MeetingScreen extends Component {
               meetingId: response.data.meetingId,
               indexMain: indexMain + 1,
             });
-            this.meetingDetails = [
-              {
-                meetingId: response.data.meetingId,
-                projectID: projectID,
-                meetingTopic: meetingTopic,
-                meetingVenue: meetingVenue,
-                meetingScheduleDateTime: meetingScheduleDateTime,
-                meetingActualDateTime: meetingActualDateTime,
-                expectedDuration: expectedDuration,
-              },
-            ];
+            this.meetingDetails = {
+              meetingId: response.data.meetingId,
+              projectID: projectID,
+              meetingTopic: meetingTopic,
+              meetingVenue: meetingVenue,
+              meetingScheduleDateTime: meetingScheduleDateTime,
+              meetingActualDateTime: meetingActualDateTime,
+              expectedDuration: expectedDuration,
+            };
+            this.resetValues();
           } else {
             this.setState({dataLoading: false});
             Utils.showAlert(true, '', response.message, this.props);
