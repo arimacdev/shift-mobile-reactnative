@@ -3725,7 +3725,7 @@ async function updateMeetingData(
       url: baseURL + UPDATE_MEETING + '/' + meetingDetails.meetingId,
       method: 'PUT',
       data: {
-        projectId: meetingDetails.projectId,
+        projectId: meetingDetails.projectID,
         meetingTopic: meetingDetails.meetingTopic,
         meetingVenue: meetingDetails.meetingVenue,
         meetingExpectedTime: meetingDetails.meetingExpectedTime,
