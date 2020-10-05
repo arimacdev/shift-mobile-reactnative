@@ -212,51 +212,50 @@ class MeetingOtherDetailsScreen extends Component {
 
     for (let j = 0; j < textInputs.length; j++) {
       const element = textInputs[j];
+      let array = element == undefined ? [] : element.split(',');
       switch (j) {
-        case 4:
-          console.log("SSSSSSSSSSSSSSSSSSSSSSSSSSS",element)
-
-          for (let index = 0; index < element.length; index++) {
-            const subElement = element[index];
+        case 3:
+          for (let index = 0; index < array.length; index++) {
+            const subElement = array[index];
             meetingChaired.push({
-              attendeeId: subElement.Id,
-              isGuest: false,
+              attendeeId: subElement,
+              isGuest: true,
             });
           }
           break;
-        case 6:
-          for (let index = 0; index < element.length; index++) {
-            const subElement = element[index];
+        case 5:
+          for (let index = 0; index < array.length; index++) {
+            const subElement = array[index];
             meetingAttended.push({
-              attendeeId: subElement.Id,
-              isGuest: false,
+              attendeeId: subElement,
+              isGuest: true,
             });
           }
           break;
-        case 8:
-          for (let index = 0; index < element.length; index++) {
-            const subElement = element[index];
+        case 7:
+          for (let index = 0; index < array.length; index++) {
+            const subElement = array[index];
             meetingAbsent.push({
-              attendeeId: subElement.Id,
-              isGuest: false,
+              attendeeId: subElement,
+              isGuest: true,
             });
           }
           break;
-        case 10:
-          for (let index = 0; index < element.length; index++) {
-            const subElement = element[index];
+        case 9:
+          for (let index = 0; index < array.length; index++) {
+            const subElement = array[index];
             meetingCopiesTo.push({
-              attendeeId: subElement.Id,
-              isGuest: false,
+              attendeeId: subElement,
+              isGuest: true,
             });
           }
           break;
-        case 12:
-          for (let index = 0; index < element.length; index++) {
-            const subElement = element[index];
+        case 11:
+          for (let index = 0; index < array.length; index++) {
+            const subElement = array[index];
             meetingPrepared.push({
-              attendeeId: subElement.Id,
-              isGuest: false,
+              attendeeId: subElement,
+              isGuest: true,
             });
           }
           break;
@@ -264,6 +263,12 @@ class MeetingOtherDetailsScreen extends Component {
           break;
       }
     }
+
+    console.log('meetingChaired', meetingChaired);
+    console.log('meetingAttended', meetingAttended);
+    console.log('meetingAbsent', meetingAbsent);
+    console.log('meetingCopiesTo', meetingCopiesTo);
+    console.log('meetingPrepared', meetingPrepared);
 
     if (this.validateFields(textInputs)) {
       this.setState({dataLoading: true});
