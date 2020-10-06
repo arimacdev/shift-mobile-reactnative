@@ -72,6 +72,7 @@ class MeetingViewScreen extends Component {
 
   renderView(item) {
     let meetingActualDate = moment(item.meetingActualTime).format('MMMM DD');
+    let meetingActualYear = moment(item.meetingActualTime).format('YYYY');
     let meetingActualDateValue = moment(item.meetingActualTime).format('ddd');
     let meetingActualTime = moment(item.meetingActualTime).format('hh:mm A');
     return (
@@ -81,21 +82,21 @@ class MeetingViewScreen extends Component {
         <TouchableOpacity
           style={styles.textInputFieldView}
           onPress={() => this.onItemPress(item)}>
-          {/* <View style={{flexDirection: 'row', marginLeft: 20}}>
-            <View style={{alignItems: 'center'}}>
+          <View style={{flexDirection: 'row'}}>
+            <View>
+              <Text style={styles.meetingDateStyle}>{meetingActualYear}</Text>
               <Text style={styles.meetingDateStyle}>{meetingActualDate}</Text>
               <Text style={styles.meetingDateValueStyle}>
-                {meetingActualDateValue}
+                ({meetingActualDateValue})
               </Text>
             </View>
-          </View> */}
-          {/* <View> */}
-          <Text style={styles.meetingDateStyle}>{meetingActualDate}</Text>
-          <Text style={styles.meetingTimeStyle}>{meetingActualTime}</Text>
-          <Text style={styles.meetingVenue}>{item.meetingVenue}</Text>
-          <Text style={styles.meetingTopic}>{item.meetingTopic}</Text>
-
-          {/* </View> */}
+            <View style={{marginLeft: 20}}>
+              {/* <Text style={styles.meetingDateStyle}>{meetingActualDate}</Text> */}
+              <Text style={styles.meetingTimeStyle}>{meetingActualTime}</Text>
+              <Text style={styles.meetingTopic}>{item.meetingTopic}</Text>
+              <Text style={styles.meetingVenue}>{item.meetingVenue}</Text>
+            </View>
+          </View>
         </TouchableOpacity>
       </View>
     );
@@ -131,7 +132,8 @@ const styles = EStyleSheet.create({
     flex: 1,
   },
   flatListStyle: {
-    marginBottom: '100rem',
+    marginTop: '10rem',
+    marginBottom: '80rem',
   },
   fieldName: {
     marginHorizontal: '20rem',
@@ -184,43 +186,34 @@ const styles = EStyleSheet.create({
     width: '100%',
     marginBottom: '15rem',
   },
-  textEditorStyle: {
-    height: '130rem',
-    borderRadius: '5rem',
-    marginTop: '5rem',
-    marginBottom: '5rem',
-    borderColor: colors.colorSilver,
-    borderWidth: '0.5rem',
-    marginHorizontal: '20rem',
-  },
   meetingDateStyle: {
     fontSize: '13rem',
-    color: colors.colorCoralRed,
+    color: colors.colorsNavyBlue,
     lineHeight: '17rem',
-    fontFamily: 'CircularStd-Bold',
+    fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
   },
   meetingTimeStyle: {
-    fontSize: '15rem',
-    color: colors.colorDeepSkyBlue,
+    fontSize: '14rem',
+    color: colors.colorFroly,
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Bold',
     textAlign: 'left',
   },
   meetingTopic: {
-    fontSize: '12rem',
+    fontSize: '13rem',
+    color: colors.colorMidnightBlue,
+    lineHeight: '17rem',
+    fontFamily: 'CircularStd-Medium',
+    textAlign: 'left',
+    marginTop: '5rem',
+  },
+  meetingVenue: {
+    fontSize: '11rem',
     color: colors.gray,
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
-  },
-  meetingVenue: {
-    fontSize: '13rem',
-    color: colors.black,
-    lineHeight: '17rem',
-    fontFamily: 'CircularStd-Medium',
-    textAlign: 'left',
-    marginTop:'5rem'
   },
 });
 
