@@ -232,7 +232,7 @@ class PopupMenuMultipleUserList extends Component {
           {
             backgroundColor: this.props.backgroundColor
               ? this.props.backgroundColor
-              : colors.projectBgColor,
+              : colors.white,
           },
         ]}>
         {this.userImage(item)}
@@ -363,12 +363,12 @@ class PopupMenuMultipleUserList extends Component {
                 styles.positiveStyle,
                 {
                   backgroundColor:
-                    this.state.selectedFolderToMove == ''
+                    this.state.selectedUserList.length == 0
                       ? colors.lighterGray
                       : colors.lightGreen,
                 },
               ]}
-              disabled={this.state.selectedFolderToMove == '' ? true : false}
+              disabled={this.state.selectedUserList.length == 0 ? true : false}
               onPress={() => this.onOkPress()}>
               <Text style={styles.positiveTextStyle}>Ok</Text>
             </TouchableOpacity>
@@ -408,13 +408,13 @@ const styles = EStyleSheet.create({
     // justifyContent: 'flex-end',
   },
   menuStyle: {
-    backgroundColor: colors.projectBgColor,
+    backgroundColor: colors.white,
     borderRadius: '5rem',
   },
   menuStyleIOS: {
     bottom: 200,
     height: '53%',
-    backgroundColor: colors.projectBgColor,
+    backgroundColor: colors.white,
     borderRadius: '5rem',
   },
   ButtonViewStyle: {
@@ -457,7 +457,7 @@ const styles = EStyleSheet.create({
     fontFamily: 'CircularStd-Medium',
   },
   textInputFieldView: {
-    backgroundColor: colors.projectBgColor,
+    backgroundColor: colors.white,
     borderRadius: '5rem',
     marginTop: '5rem',
     marginBottom: '5rem',
