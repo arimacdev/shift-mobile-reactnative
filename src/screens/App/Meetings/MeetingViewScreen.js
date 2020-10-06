@@ -8,7 +8,7 @@ const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
 import APIServices from '../../../services/APIServices';
 import Utils from '../../../utils/Utils';
-import _ from 'lodash';
+import moment from 'moment';
 
 const initialLayout = {width: entireScreenWidth};
 
@@ -70,14 +70,32 @@ class MeetingViewScreen extends Component {
     this.props.onChangeIndexMain(0);
   }
 
-  renderView(item, index) {
+  renderView(item) {
+    let meetingActualDate = moment(item.meetingActualTime).format('MMMM DD');
+    let meetingActualDateValue = moment(item.meetingActualTime).format('ddd');
+    let meetingActualTime = moment(item.meetingActualTime).format('hh:mm A');
     return (
       <View>
-        <Text style={styles.fieldName}>{item.name}</Text>
+        {/* <Text style={styles.fieldName}>{meetingActualDate}</Text> */}
+
         <TouchableOpacity
           style={styles.textInputFieldView}
           onPress={() => this.onItemPress(item)}>
-          <Text style={styles.textInput}>{item.meetingActualTime}</Text>
+          {/* <View style={{flexDirection: 'row', marginLeft: 20}}>
+            <View style={{alignItems: 'center'}}>
+              <Text style={styles.meetingDateStyle}>{meetingActualDate}</Text>
+              <Text style={styles.meetingDateValueStyle}>
+                {meetingActualDateValue}
+              </Text>
+            </View>
+          </View> */}
+          {/* <View> */}
+          <Text style={styles.meetingDateStyle}>{meetingActualDate}</Text>
+          <Text style={styles.meetingTimeStyle}>{meetingActualTime}</Text>
+          <Text style={styles.meetingVenue}>{item.meetingVenue}</Text>
+          <Text style={styles.meetingTopic}>{item.meetingTopic}</Text>
+
+          {/* </View> */}
         </TouchableOpacity>
       </View>
     );
@@ -92,7 +110,7 @@ class MeetingViewScreen extends Component {
             ref={r => (this.flatList = r)}
             style={styles.flatListStyle}
             data={meetings}
-            renderItem={({item, index}) => this.renderView(item, index)}
+            renderItem={({item}) => this.renderView(item)}
             keyExtractor={item => item.id}
           />
           <View style={styles.bottomContainer}>
@@ -127,10 +145,11 @@ const styles = EStyleSheet.create({
     borderRadius: '5rem',
     marginTop: '5rem',
     marginBottom: '5rem',
-    flexDirection: 'row',
-    alignItems: 'center',
     paddingHorizontal: '12rem',
-    height: '45rem',
+    // flexDirection:'row',
+    // alignItems:'center',
+    // height: '45rem',
+    paddingVertical: '10rem',
     marginHorizontal: '20rem',
   },
   textInput: {
@@ -139,7 +158,6 @@ const styles = EStyleSheet.create({
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
-    width: '100%',
   },
   button: {
     flexDirection: 'row',
@@ -174,6 +192,35 @@ const styles = EStyleSheet.create({
     borderColor: colors.colorSilver,
     borderWidth: '0.5rem',
     marginHorizontal: '20rem',
+  },
+  meetingDateStyle: {
+    fontSize: '13rem',
+    color: colors.colorCoralRed,
+    lineHeight: '17rem',
+    fontFamily: 'CircularStd-Bold',
+    textAlign: 'left',
+  },
+  meetingTimeStyle: {
+    fontSize: '15rem',
+    color: colors.colorDeepSkyBlue,
+    lineHeight: '17rem',
+    fontFamily: 'CircularStd-Bold',
+    textAlign: 'left',
+  },
+  meetingTopic: {
+    fontSize: '12rem',
+    color: colors.gray,
+    lineHeight: '17rem',
+    fontFamily: 'CircularStd-Medium',
+    textAlign: 'left',
+  },
+  meetingVenue: {
+    fontSize: '13rem',
+    color: colors.black,
+    lineHeight: '17rem',
+    fontFamily: 'CircularStd-Medium',
+    textAlign: 'left',
+    marginTop:'5rem'
   },
 });
 
