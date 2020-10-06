@@ -22,11 +22,19 @@ import MeetingDiscussionPointScreen from './MeetingDiscussionPointScreen';
 import MeetingOtherDetailsScreen from './MeetingOtherDetailsScreen';
 import MeetingViewScreen from './MeetingViewScreen';
 import Loader from '../../../components/Loader';
-
+import MessageShowModal from '../../../components/MessageShowModal';
+import icons from '../../../asserts/icons/icons';
 
 const initialLayout = {width: entireScreenWidth};
 
 class MeetingScreen extends Component {
+  details = {
+    icon: icons.meetingGreen,
+    type: 'success',
+    title: 'Sucsess',
+    description: 'Meeting has been initiated successfully',
+    buttons: {},
+  };
   textInputValuesArray = [];
   constructor(props) {
     super(props);
@@ -74,8 +82,9 @@ class MeetingScreen extends Component {
       scheduleTimeOfMeeting: '',
       actualTimeOfMeeting: '',
       textInputs: [],
-      indexMain: 3,
+      indexMain: 0,
       meetingId: '',
+      showMessageModal: false,
     };
   }
 
@@ -116,7 +125,6 @@ class MeetingScreen extends Component {
     let meetingTopic = textInputs[1];
     let meetingVenue = textInputs[2];
     let expectedDuration = textInputs[5];
-    let indexMain = this.state.indexMain;
 
     if (
       this.validateFields(
@@ -138,7 +146,7 @@ class MeetingScreen extends Component {
             'DD/MM/YYYY hh:mmA',
           ).format('YYYY-MM-DD[T]HH:mm:ss')
         : '';
-      this.setState({dataLoading: true});
+      this.setState({dataLoading: true, showMessageModal: false});
       await APIServices.initiatMeetingData(
         projectID,
         meetingTopic,
@@ -152,7 +160,7 @@ class MeetingScreen extends Component {
             this.setState({
               dataLoading: false,
               meetingId: response.data.meetingId,
-              indexMain: indexMain + 1,
+              showMessageModal: true,
             });
             this.meetingDetails = {
               meetingId: response.data.meetingId,
@@ -379,8 +387,13 @@ class MeetingScreen extends Component {
     this.setState({indexMain: indexMain});
   }
 
-  viewMeetings(){
+  viewMeetings() {
     this.setState({indexMain: 3});
+  }
+
+  onPressCancel() {
+    let indexMain = this.state.indexMain;
+    this.setState({showMessageModal: false, indexMain: indexMain + 1});
   }
 
   renderView(item, index) {
@@ -486,6 +499,12 @@ class MeetingScreen extends Component {
         )}
 
         {this.state.showPicker ? this.renderDateTimePicker() : null}
+        <MessageShowModal
+          showMessageModal={this.state.showMessageModal}
+          details={this.details}
+          onPress={() => {}}
+          onPressCancel={() => this.onPressCancel(this)}
+        />
         {dataLoading && <Loader />}
       </View>
     );
