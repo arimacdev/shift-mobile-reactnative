@@ -65,6 +65,7 @@ class MeetingDiscussionPointScreen extends Component {
       date: new Date(),
       targetDate: '',
       targetDateValue: '',
+      count: 1,
       textInputs: ['1'],
       indexMain: 1,
       description: '',
@@ -290,6 +291,24 @@ class MeetingDiscussionPointScreen extends Component {
     await this.setState({textInputs});
   }
 
+  async setContentHTML(content) {
+    await this.richText.current?.setContentHTML(content);
+  }
+
+  async resetValues() {
+    let count = this.state.count + 1;
+    this.setState({
+      targetDate: '',
+      targetDateValue: '',
+      userID: '',
+      count: count,
+      textInputs: [count.toString()],
+      description: '',
+      userName: '',
+    });
+    this.setContentHTML('');
+  }
+
   async addPoint() {
     let targetDate = this.state.targetDate;
     let targetDateValue = this.state.targetDateValue;
@@ -326,6 +345,7 @@ class MeetingDiscussionPointScreen extends Component {
         .then(response => {
           if (response.message == 'success') {
             this.setState({dataLoading: false});
+            this.resetValues();
           } else {
             this.setState({dataLoading: false});
             Utils.showAlert(true, '', response.message, this.props);
