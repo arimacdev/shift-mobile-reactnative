@@ -21,6 +21,8 @@ import _ from 'lodash';
 import MeetingDiscussionPointScreen from './MeetingDiscussionPointScreen';
 import MeetingOtherDetailsScreen from './MeetingOtherDetailsScreen';
 import MeetingViewScreen from './MeetingViewScreen';
+import Loader from '../../../components/Loader';
+
 
 const initialLayout = {width: entireScreenWidth};
 
@@ -72,7 +74,7 @@ class MeetingScreen extends Component {
       scheduleTimeOfMeeting: '',
       actualTimeOfMeeting: '',
       textInputs: [],
-      indexMain: 0,
+      indexMain: 3,
       meetingId: '',
     };
   }
@@ -377,6 +379,10 @@ class MeetingScreen extends Component {
     this.setState({indexMain: indexMain});
   }
 
+  viewMeetings(){
+    this.setState({indexMain: 3});
+  }
+
   renderView(item, index) {
     let key = item.id;
     let value = this.getChangedValue(item);
@@ -429,6 +435,7 @@ class MeetingScreen extends Component {
   render() {
     let textInputArray = this.state.textInputArray;
     let indexMain = this.state.indexMain;
+    let dataLoading = this.state.dataLoading;
 
     return (
       <View style={styles.container}>
@@ -442,10 +449,15 @@ class MeetingScreen extends Component {
               keyExtractor={item => item.id}
             />
             <View style={styles.bottomContainer}>
-              <TouchableOpacity onPress={() => this.initiateMeeting()}>
-                <View style={styles.button}>
-                  <Text style={styles.buttonText}>Initiate Meeting</Text>
-                </View>
+              <TouchableOpacity
+                style={[styles.button, {backgroundColor: colors.lightRed}]}
+                onPress={() => this.viewMeetings()}>
+                <Text style={styles.buttonText}>View Meetings</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => this.initiateMeeting()}>
+                <Text style={styles.buttonText}>Initiate Meeting</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -474,6 +486,7 @@ class MeetingScreen extends Component {
         )}
 
         {this.state.showPicker ? this.renderDateTimePicker() : null}
+        {dataLoading && <Loader />}
       </View>
     );
   }
@@ -513,6 +526,7 @@ const styles = EStyleSheet.create({
     width: '100%',
   },
   button: {
+    flex: 1,
     flexDirection: 'row',
     backgroundColor: colors.colorApple,
     borderRadius: '5rem',
@@ -520,7 +534,7 @@ const styles = EStyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: '12rem',
     height: '50rem',
-    marginHorizontal: '20rem',
+    marginHorizontal: '5rem',
   },
   buttonText: {
     flex: 1,
@@ -534,8 +548,9 @@ const styles = EStyleSheet.create({
   bottomContainer: {
     position: 'absolute',
     bottom: '0rem',
-    width: '100%',
     marginBottom: '15rem',
+    flexDirection: 'row',
+    marginHorizontal: '15rem',
   },
   textEditorStyle: {
     height: '130rem',
