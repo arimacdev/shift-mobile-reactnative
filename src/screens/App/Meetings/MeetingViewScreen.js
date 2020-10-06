@@ -39,7 +39,7 @@ class MeetingViewScreen extends Component {
 
   async loadMeetings() {
     this.setState({dataLoading: true});
-    await APIServices.loadMeetingsData(projectID)
+    await APIServices.getMeetingsData(projectID)
       .then(response => {
         if (response.message == 'success') {
           this.setState({
@@ -57,162 +57,36 @@ class MeetingViewScreen extends Component {
       });
   }
 
-  handleDateTimeConfirm = selectedDateTime => {
-    this.hideDateTimePicker();
-    let dateTime = new Date(selectedDateTime);
-    let newDateTime = '';
-    let newDateTimeValue = '';
-
-    if (this.state.date && !this.state.actual) {
-      newDateTime = moment(dateTime).format('MMMM DD, YYYY');
-      newDateTimeValue = moment(dateTime).format('DD MM YYYY');
-    } else {
-      newDateTime = moment(dateTime).format('hh:mmA');
-    }
-
-    if (this.state.date && !this.state.actual) {
-      this.setState({
-        dateOfMeeting: newDateTime,
-        dateOfMeetingValue: newDateTimeValue,
-        dateMeeting: new Date(dateTime),
-      });
-    } else if (!this.state.date && this.state.actual) {
-      this.setState({
-        actualTimeOfMeeting: newDateTime,
-        actualTime: new Date(dateTime),
-      });
-    } else {
-      this.setState({
-        scheduleTimeOfMeeting: newDateTime,
-        scheduleTime: new Date(dateTime),
-      });
-    }
-  };
-
-  renderDateTimePicker() {
-    let date = this.state.date;
-    let actual = this.state.actual;
-    let dateMeeting = this.state.dateMeeting;
-    let actualTime = this.state.actualTime;
-    let scheduleTime = this.state.scheduleTime;
-
-    return (
-      <View>
-        <DateTimePickerModal
-          isVisible={this.state.showPicker}
-          date={
-            date && !actual
-              ? dateMeeting
-              : !date && actual
-              ? actualTime
-              : scheduleTime
-          }
-          minimumDate={new Date()}
-          mode={date && !actual ? 'date' : 'time'}
-          onConfirm={this.handleDateTimeConfirm}
-          onCancel={this.hideDateTimePicker}
-        />
-      </View>
-    );
-  }
-
-  onItemPress(item) {
-    switch (item.id) {
-      case 1:
-        this.setState({showPicker: true, date: true, actual: false});
-        break;
-      case 4:
-        this.setState({showPicker: true, date: false, actual: false});
-        break;
-      case 5:
-        this.setState({showPicker: true, date: false, actual: true});
-        break;
-      default:
-        break;
-    }
-  }
-
-  getChangedValue(item) {
-    let key = item.id;
-    let value = '';
-    switch (key) {
-      case 1:
-        value = this.state.dateOfMeeting;
-        break;
-      case 4:
-        value = this.state.scheduleTimeOfMeeting;
-        break;
-      case 5:
-        value = this.state.actualTimeOfMeeting;
-        break;
-      default:
-        break;
-    }
-
-    return value;
-  }
-
-  onFocusTextInput(index) {
-    this.flatList.scrollToIndex({animated: true, index: index});
-  }
-
   onChangeIndexMain(indexMain) {
     this.setState({indexMain: indexMain});
   }
 
+  initiateMeeting() {
+    this.setState({indexMain: 0});
+    this.props.onChangeIndexMain(0);
+  }
+
   renderView(item, index) {
-    let key = item.id;
-    let value = this.getChangedValue(item);
-    switch (key) {
-      case 1:
-      case 4:
-      case 5:
-        return (
-          <View>
-            <Text style={styles.fieldName}>{item.name}</Text>
-            <TouchableOpacity
-              style={styles.textInputFieldView}
-              onPress={() => this.onItemPress(item)}>
-              {value != '' ? (
-                <Text style={styles.textInput}>{value}</Text>
-              ) : (
-                <Text
-                  style={[styles.textInput, {color: colors.colorGreyChateau}]}>
-                  {item.placeHolder}
-                </Text>
-              )}
-            </TouchableOpacity>
-          </View>
-        );
-      case 2:
-      case 3:
-      case 6:
-        return (
-          <View>
-            <Text style={styles.fieldName}>{item.name}</Text>
-            <View style={styles.textInputFieldView}>
-              <TextInput
-                ref={ref => (this.textInputValuesArray[index] = ref)}
-                style={styles.textInput}
-                placeholder={item.placeHolder}
-                value={this.state.textInputs[index]}
-                keyboardType={index == 5 ? 'numeric' : 'default'}
-                onChangeText={text => this.onChangeText(text, index)}
-                maxLength={100}
-                onFocus={() => this.onFocusTextInput(index)}
-              />
-            </View>
-          </View>
-        );
-      default:
-        break;
-    }
+    return (
+      <View>
+        <Text style={styles.fieldName}>{item.name}</Text>
+        <TouchableOpacity
+          style={styles.textInputFieldView}
+          onPress={() => this.onItemPress(item)}>
+          {value != '' ? (
+            <Text style={styles.textInput}>{value}</Text>
+          ) : (
+            <Text style={[styles.textInput, {color: colors.colorGreyChateau}]}>
+              {item.placeHolder}
+            </Text>
+          )}
+        </TouchableOpacity>
+      </View>
+    );
   }
 
   render() {
     let textInputArray = this.state.textInputArray;
-    let indexMain = this.state.indexMain;
-
     return (
       <View style={styles.container}>
         <View style={{flex: 1}}>
@@ -226,7 +100,7 @@ class MeetingViewScreen extends Component {
           <View style={styles.bottomContainer}>
             <TouchableOpacity onPress={() => this.initiateMeeting()}>
               <View style={styles.button}>
-                <Text style={styles.buttonText}>Initiate Meeting</Text>
+                <Text style={styles.buttonText}>Initiate a Meeting</Text>
               </View>
             </TouchableOpacity>
           </View>

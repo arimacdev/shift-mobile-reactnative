@@ -97,10 +97,11 @@ import {
   PIN_PROJECT,
   ADD_DISCUSSION_POINT,
   UPDATE_MEETING,
+  GET_MEETINGS,
 } from '../api/API';
 import AsyncStorage from '@react-native-community/async-storage';
 import {SET_UPLOAD_PROGRESS} from '../redux/types';
-import _ from 'lodash';
+import _, {filter} from 'lodash';
 
 async function getAllProjectsByUserData(userID) {
   let baseURL = null;
@@ -3744,6 +3745,50 @@ async function updateMeetingData(
   );
 }
 
+async function getMeetingsData(
+  projectId,
+  startIndex,
+  endIndex,
+  filter,
+  filterKey,
+  filterDate,
+) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
+  let userIDHeder = null;
+  userIDHeder = await AsyncStorage.getItem('userID');
+
+  let headers = {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+    user: userIDHeder,
+  };
+
+  return request(
+    {
+      url:
+        baseURL +
+        GET_MEETINGS +
+        'projectId=' +
+        projectId +
+        '&startIndex=' +
+        startIndex +
+        '&endIndex=' +
+        endIndex +
+        '&filter=' +
+        filter +
+        '&filterKey=' +
+        filterKey +
+        '&filterDate=' +
+        filterDate,
+      method: 'GET',
+    },
+    true,
+    headers,
+  );
+}
+//"{{pm-service}}/meeting?projectId={{projectId}}&startIndex=0&endIndex=10&filter=true&filterKey=sc&filterDate=2020-10-17"
+
 const APIServices = {
   getAllProjectsByUserData,
   getUserData,
@@ -3869,6 +3914,7 @@ const APIServices = {
   initiatMeetingData,
   addDiscussionPointData,
   updateMeetingData,
+  getMeetingsData
 };
 
 export default APIServices;
