@@ -1,25 +1,14 @@
 import React, {Component} from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  FlatList,
-  Dimensions,
-  TouchableOpacity,
-} from 'react-native';
+import {View, Text, FlatList, Dimensions, TouchableOpacity} from 'react-native';
 import {connect} from 'react-redux';
 import * as actions from '../../../redux/actions';
 import colors from '../../../config/colors';
 import EStyleSheet, {value} from 'react-native-extended-stylesheet';
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
-import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import moment from 'moment';
 import APIServices from '../../../services/APIServices';
 import Utils from '../../../utils/Utils';
 import _ from 'lodash';
-import MeetingDiscussionPointScreen from './MeetingDiscussionPointScreen';
-import MeetingOtherDetailsScreen from './MeetingOtherDetailsScreen';
 
 const initialLayout = {width: entireScreenWidth};
 
@@ -35,16 +24,31 @@ class MeetingViewScreen extends Component {
 
   componentDidUpdate(prevProps, prevState, snapshot) {}
 
-  componentDidMount() {}
+  componentDidMount() {
+    this.loadMeetings();
+  }
 
   async loadMeetings() {
+    let projectId = this.props.selectedProjectID;
+    let startIndex = 0;
+    let endIndex = 10;
+    let filter = false;
+    let filterKey = '';
+    let filterDate = '';
     this.setState({dataLoading: true});
-    await APIServices.getMeetingsData(projectID)
+    await APIServices.getMeetingsData(
+      projectId,
+      startIndex,
+      endIndex,
+      filter,
+      filterKey,
+      filterDate,
+    )
       .then(response => {
         if (response.message == 'success') {
           this.setState({
             dataLoading: false,
-            meetings: response.data.meetingId,
+            meetings: response.data,
           });
         } else {
           this.setState({dataLoading: false});
@@ -73,27 +77,21 @@ class MeetingViewScreen extends Component {
         <TouchableOpacity
           style={styles.textInputFieldView}
           onPress={() => this.onItemPress(item)}>
-          {value != '' ? (
-            <Text style={styles.textInput}>{value}</Text>
-          ) : (
-            <Text style={[styles.textInput, {color: colors.colorGreyChateau}]}>
-              {item.placeHolder}
-            </Text>
-          )}
+          <Text style={styles.textInput}>{item.meetingActualTime}</Text>
         </TouchableOpacity>
       </View>
     );
   }
 
   render() {
-    let textInputArray = this.state.textInputArray;
+    let meetings = this.state.meetings;
     return (
       <View style={styles.container}>
         <View style={{flex: 1}}>
           <FlatList
             ref={r => (this.flatList = r)}
             style={styles.flatListStyle}
-            data={textInputArray}
+            data={meetings}
             renderItem={({item, index}) => this.renderView(item, index)}
             keyExtractor={item => item.id}
           />
