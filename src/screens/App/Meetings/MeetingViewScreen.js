@@ -46,18 +46,22 @@ class MeetingViewScreen extends Component {
     )
       .then(response => {
         if (response.message == 'success') {
-         
-          let meetingsArray = Object.values(response.data.reduce((acc, item) => {
-            let meetingActualTime = moment(item.meetingActualTime).format('MMMM, YYYY');
-            if (!acc[meetingActualTime]) acc[meetingActualTime] = {
-              meetingActualTime: meetingActualTime,
-                data: []
-            };
-            acc[meetingActualTime].data.push(item);
-            return acc;
-        }, {}))
-        
-        console.log(meetingsArray)
+          let meetingsArray = Object.values(
+            response.data.reduce((acc, item) => {
+              let meetingActualTime = moment(item.meetingActualTime).format(
+                'L',
+              );
+              if (!acc[meetingActualTime])
+                acc[meetingActualTime] = {
+                  meetingActualTime: meetingActualTime,
+                  data: [],
+                };
+              acc[meetingActualTime].data.push(item);
+              return acc;
+            }, {}),
+          );
+
+          console.log(meetingsArray);
 
           this.setState({
             dataLoading: false,
@@ -79,9 +83,9 @@ class MeetingViewScreen extends Component {
     const dateB = b.meetingActualTime;
 
     let comparison = 0;
-    if (dateA < dateB) {
+    if (dateA > dateB) {
       comparison = 1;
-    } else if (dateA > dateB) {
+    } else if (dateA < dateB) {
       comparison = -1;
     }
     return comparison;
@@ -96,32 +100,42 @@ class MeetingViewScreen extends Component {
     this.props.onChangeIndexMain(0);
   }
 
-  renderSubView(item){
+  onItemPress(item) {}
+
+  renderSubView(item) {
     let meetingActualDate = moment(item.meetingActualTime).format('DD');
     let meetingActualDateValue = moment(item.meetingActualTime).format('ddd');
     let meetingActualTime = moment(item.meetingActualTime).format('hh:mm A');
 
-    return(
+    return (
       <TouchableOpacity
-          style={styles.textInputFieldView}
-          onPress={() => this.onItemPress(item)}>
-          <View style={{flexDirection: 'row', alignItems:'center'}}>
-            <View>
-              {/* <Text style={styles.meetingDateStyle}>{meetingActualYear}</Text> */}
-              <Text style={styles.meetingDateStyle}>{meetingActualDate}</Text>
-              <Text style={styles.meetingDateValueStyle}>
-                {meetingActualDateValue}
+        style={styles.textInputFieldView}
+        onPress={() => this.onItemPress(item)}>
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <View style={styles.leftLineStyle} />
+          <View>
+            {/* <Text style={styles.meetingDateStyle}>{meetingActualYear}</Text> */}
+            <Text style={styles.meetingDateStyle}>{meetingActualDate}</Text>
+            <Text style={styles.meetingDateValueStyle}>
+              {meetingActualDateValue}
+            </Text>
+          </View>
+          <View style={{marginLeft: 20, flex: 1}}>
+            {/* <Text style={styles.meetingDateStyle}>{meetingActualDate}</Text> */}
+            <View style={{flexDirection: 'row'}}>
+              <Text style={[styles.meetingTimeStyle, {flex: 1}]}>
+                {meetingActualTime}
+              </Text>
+              <Text style={styles.meetingMinutes}>
+                {item.expectedDuration} minutes
               </Text>
             </View>
-            <View style={{marginLeft: 20}}>
-              {/* <Text style={styles.meetingDateStyle}>{meetingActualDate}</Text> */}
-              <Text style={styles.meetingTimeStyle}>{meetingActualTime}</Text>
-              <Text style={styles.meetingTopic}>{item.meetingTopic}</Text>
-              <Text style={styles.meetingVenue}>{item.meetingVenue}</Text>
-            </View>
+            <Text style={styles.meetingTopic}>{item.meetingTopic}</Text>
+            <Text style={styles.meetingVenue}>{item.meetingVenue}</Text>
           </View>
-        </TouchableOpacity>
-    )
+        </View>
+      </TouchableOpacity>
+    );
   }
 
   renderView(item) {
@@ -133,13 +147,12 @@ class MeetingViewScreen extends Component {
       <View>
         <Text style={styles.fieldName}>{meetingActualYear}</Text>
         <FlatList
-            ref={r => (this.flatList = r)}
-            style={styles.flatListSubStyle}
-            data={item.data}
-            renderItem={({item}) => this.renderSubView(item)}
-            keyExtractor={item => item.meetingId}
-          />
-        
+          ref={r => (this.flatList = r)}
+          style={styles.flatListSubStyle}
+          data={item.data}
+          renderItem={({item}) => this.renderSubView(item)}
+          keyExtractor={item => item.meetingId}
+        />
       </View>
     );
   }
@@ -154,7 +167,7 @@ class MeetingViewScreen extends Component {
             style={styles.flatListStyle}
             data={meetings}
             renderItem={({item}) => this.renderView(item)}
-            keyExtractor={index =>index}
+            keyExtractor={index => index}
           />
           <View style={styles.bottomContainer}>
             <TouchableOpacity onPress={() => this.initiateMeeting()}>
@@ -177,7 +190,7 @@ const styles = EStyleSheet.create({
     marginTop: '10rem',
     marginBottom: '80rem',
   },
-  flatListSubStyle:{
+  flatListSubStyle: {
     marginBottom: '20rem',
   },
   fieldName: {
@@ -192,11 +205,11 @@ const styles = EStyleSheet.create({
     borderRadius: '5rem',
     marginTop: '5rem',
     marginBottom: '5rem',
-    paddingHorizontal: '12rem',
+    // paddingHorizontal: '12rem',
     // flexDirection:'row',
     // alignItems:'center',
-    // height: '45rem',
-    paddingVertical: '10rem',
+    height: '75rem',
+    // paddingVertical: '10rem',
     marginHorizontal: '20rem',
   },
   textInput: {
@@ -260,13 +273,30 @@ const styles = EStyleSheet.create({
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
   },
-  meetingDateValueStyle:{
+  meetingDateValueStyle: {
     fontSize: '11rem',
     color: colors.colorMediumSlateBlue,
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'center',
-  }
+  },
+  leftLineStyle: {
+    backgroundColor: colors.colorOrange,
+    width: '5rem',
+    height: '75rem',
+    marginRight: '10rem',
+    borderTopStartRadius: '5rem',
+    borderBottomStartRadius: '5rem',
+  },
+  meetingMinutes: {
+    backgroundColor: colors.lightGreen,
+    color: colors.white,
+    fontSize: '11rem',
+    borderRadius: '5rem',
+    paddingHorizontal: '5rem',
+    textAlign: 'center',
+    marginRight: '10rem',
+  },
 });
 
 const mapStateToProps = state => {
