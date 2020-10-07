@@ -17,16 +17,29 @@ import APIServices from '../../../services/APIServices';
 import Utils from '../../../utils/Utils';
 import moment from 'moment';
 import icons from '../../../asserts/icons/icons';
+import Loader from '../../../components/Loader';
+import MessageShowModal from '../../../components/MessageShowModal';
 
 const initialLayout = {width: entireScreenWidth};
 
 class MeetingViewScreen extends Component {
+  details = {
+    icon: icons.alertRed,
+    type: 'confirm',
+    title: 'Delete Meeting',
+    description:
+      "You're about to permanently delete this meeting and all of its data.\nIf you're not sure, you can close this pop up.",
+    buttons: {positive: 'Delete', negative: 'Cancel'},
+  };
+  onPressMessageModal = () => {};
+
   textInputValuesArray = [];
   constructor(props) {
     super(props);
     this.state = {
       indexMain: 3,
       meetings: [],
+      showMessageModal: false,
     };
   }
 
@@ -112,10 +125,60 @@ class MeetingViewScreen extends Component {
     let hours = Math.floor(mins / 60);
     let minutes = mins % 60;
     // minutes = minutes < 10 ? '0' + minutes : minutes;
-    return hours > 0 ? `${hours} h ${minutes} m` : `${minutes} mins`;
+    return hours > 0 ? `${hours}h ${minutes}m` : `${minutes} mins`;
   }
 
   onItemPress(item) {}
+
+  onPressCancel() {
+    this.setState({showMessageModal: false});
+  }
+
+  deleteMeetingAlert(item) {
+    this.details = {
+      icon: icons.alertRed,
+      type: 'confirm',
+      title: 'Delete Meeting',
+      description:
+        "You're about to permanently delete this meeting and all of its data.\nIf you're not sure, you can close this pop up.",
+      buttons: {positive: 'Delete', negative: 'Cancel'},
+    };
+    this.setState({showMessageModal: true});
+    this.onPressMessageModal = () => this.deleteMeeting(item);
+  }
+
+  async deleteMeeting(item) {
+    let projectId = this.props.selectedProjectID;
+    let meetingId = item.meetingId;
+
+    this.setState({dataLoading: true, showMessageModal: false});
+    await APIServices.deleteMeetingsData(projectId, meetingId)
+      .then(response => {
+        if (response.message == 'success') {
+          this.details = {
+            icon: icons.meetingGreen,
+            type: 'success',
+            title: 'Sucsess',
+            description: 'Meeting has been deleted successfully',
+            buttons: {},
+          };
+          let filteredData = this.state.meetings.filter(function(itemFilter) {
+            console.log("vvvvvvvvvvvvvvvvvvvv",itemFilter)
+
+            return itemFilter.data.meetingId !== item.meetingId;
+          });
+          console.log("Ssssssssssssssssssssss",filteredData)
+          this.setState({dataLoading: false, showMessageModal: true, meetings:filteredData});
+        } else {
+          this.setState({dataLoading: false});
+          Utils.showAlert(true, '', response.message, this.props);
+        }
+      })
+      .catch(error => {
+        this.setState({dataLoading: false});
+        Utils.showAlert(true, '', error.data.message, this.props);
+      });
+  }
 
   renderSubView(item) {
     let meetingActualDate = moment(item.meetingActualTime).format('DD');
@@ -134,6 +197,7 @@ class MeetingViewScreen extends Component {
               {meetingActualDateValue}
             </Text>
           </View>
+          <View style={styles.horizontalLine} />
           <View style={styles.subViewInnerStyle}>
             <View style={{flexDirection: 'row'}}>
               <Text style={[styles.meetingTimeStyle]}>{meetingActualTime}</Text>
@@ -144,12 +208,7 @@ class MeetingViewScreen extends Component {
             <Text style={styles.meetingTopic}>{item.meetingTopic}</Text>
             <Text style={styles.meetingVenue}>{item.meetingVenue}</Text>
           </View>
-          <View
-            style={{
-             
-              height: 70,
-              justifyContent: 'space-between',
-            }}>
+          <View style={styles.controlOuterView}>
             <Text style={styles.meetingMinutes}>
               {this.convertMinsToTime(item.expectedDuration)}
             </Text>
@@ -161,7 +220,7 @@ class MeetingViewScreen extends Component {
                 />
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={() => this.blockPeople(item)}
+                onPress={() => this.deleteMeetingAlert(item)}
                 style={{marginLeft: EStyleSheet.value('15rem')}}>
                 <Image
                   style={styles.controlIcon}
@@ -196,6 +255,8 @@ class MeetingViewScreen extends Component {
 
   render() {
     let meetings = this.state.meetings;
+    let dataLoading = this.state.dataLoading;
+
     return (
       <View style={styles.container}>
         <View style={{flex: 1}}>
@@ -214,6 +275,13 @@ class MeetingViewScreen extends Component {
             </TouchableOpacity>
           </View>
         </View>
+        <MessageShowModal
+          showMessageModal={this.state.showMessageModal}
+          details={this.details}
+          onPress={this.onPressMessageModal}
+          onPressCancel={() => this.onPressCancel(this)}
+        />
+        {dataLoading && <Loader />}
       </View>
     );
   }
@@ -289,8 +357,8 @@ const styles = EStyleSheet.create({
     textAlign: 'center',
   },
   meetingTimeStyle: {
-    fontSize: '14rem',
-    color: colors.colorFroly,
+    fontSize: '15rem',
+    color: colors.colorTomato,
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Bold',
     textAlign: 'left',
@@ -318,7 +386,7 @@ const styles = EStyleSheet.create({
     textAlign: 'center',
   },
   leftLineStyle: {
-    backgroundColor: colors.colorOrange,
+    backgroundColor: colors.colorFreeSpeechMagenta,
     width: '5rem',
     height: '80rem',
     marginRight: '10rem',
@@ -344,16 +412,26 @@ const styles = EStyleSheet.create({
   },
   subViewInnerStyle: {
     flex: 1,
-    marginLeft: '20rem',
+    marginLeft: '15rem',
   },
   controlView: {
     alignItems: 'center',
     flexDirection: 'row',
-    marginRight:'10rem'
+    marginRight: '10rem',
   },
   controlIcon: {
     width: '25rem',
     height: '25rem',
+  },
+  controlOuterView: {
+    height: '65rem',
+    justifyContent: 'space-between',
+  },
+  horizontalLine: {
+    width: '1rem',
+    height: '50rem',
+    backgroundColor: colors.lightgray,
+    marginLeft: '15rem',
   },
 });
 
