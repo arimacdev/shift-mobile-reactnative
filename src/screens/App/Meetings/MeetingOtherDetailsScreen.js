@@ -19,10 +19,19 @@ import Utils from '../../../utils/Utils';
 import _ from 'lodash';
 import icons from '../../../asserts/icons/icons';
 import PopupMenuMultipleUserList from '../../../components/PopupMenuMultipleUserList';
+import Loader from '../../../components/Loader';
+import MessageShowModal from '../../../components/MessageShowModal';
 
 const initialLayout = {width: entireScreenWidth};
 
 class MeetingOtherDetailsScreen extends Component {
+  details = {
+    icon: icons.otherDetailsYellow,
+    type: 'success',
+    title: 'Sucsess',
+    description: 'Other details has been added successfully',
+    buttons: {},
+  };
   textInputValuesArray = [];
   constructor(props) {
     super(props);
@@ -98,6 +107,7 @@ class MeetingOtherDetailsScreen extends Component {
       userList: [],
       userListIndex: 0,
       selectedUserList: [],
+      showMessageModal: false,
     };
   }
 
@@ -143,7 +153,7 @@ class MeetingOtherDetailsScreen extends Component {
     let meetingAbsent = [];
     let meetingCopiesTo = [];
     let meetingPrepared = [];
-    let isUpdated = false;
+    let isUpdated = true;
 
     for (let i = 0; i < textInputsUserList.length; i++) {
       const element = textInputsUserList[i];
@@ -259,7 +269,7 @@ class MeetingOtherDetailsScreen extends Component {
     console.log('meetingPrepared', meetingPrepared);
 
     if (this.validateFields(textInputs)) {
-      this.setState({dataLoading: true});
+      this.setState({dataLoading: true, showMessageModal: false});
       await APIServices.updateMeetingData(
         meetingDetails,
         actualDuration,
@@ -272,8 +282,7 @@ class MeetingOtherDetailsScreen extends Component {
       )
         .then(response => {
           if (response.message == 'success') {
-            this.setState({dataLoading: false, indexMain: 0});
-            this.props.onChangeIndexMain(0);
+            this.setState({dataLoading: false, showMessageModal: true});
           } else {
             this.setState({dataLoading: false});
             Utils.showAlert(true, '', response.message, this.props);
@@ -376,6 +385,11 @@ class MeetingOtherDetailsScreen extends Component {
     });
     textInputsUserList[key] = userListArray;
     this.setState({textInputsUserList});
+  }
+
+  onPressCancel() {
+    this.setState({showMessageModal: false, indexMain: 0});
+    this.props.onChangeIndexMain(0);
   }
 
   renderSelectedUserList(item, key) {
@@ -487,6 +501,7 @@ class MeetingOtherDetailsScreen extends Component {
 
   render() {
     let discusstionPointsArray = this.state.discusstionPointsArray;
+    let dataLoading = this.state.dataLoading;
 
     return (
       <View style={styles.container}>
@@ -512,6 +527,13 @@ class MeetingOtherDetailsScreen extends Component {
           </TouchableOpacity>
         </View>
         {this.renderUserListModal()}
+        <MessageShowModal
+          showMessageModal={this.state.showMessageModal}
+          details={this.details}
+          onPress={() => {}}
+          onPressCancel={() => this.onPressCancel(this)}
+        />
+        {dataLoading && <Loader />}
       </View>
     );
   }
