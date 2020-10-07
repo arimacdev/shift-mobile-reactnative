@@ -46,9 +46,22 @@ class MeetingViewScreen extends Component {
     )
       .then(response => {
         if (response.message == 'success') {
+         
+          let meetingsArray = Object.values(response.data.reduce((acc, item) => {
+            let meetingActualTime = moment(item.meetingActualTime).format('MMMM, YYYY');
+            if (!acc[meetingActualTime]) acc[meetingActualTime] = {
+              meetingActualTime: meetingActualTime,
+                data: []
+            };
+            acc[meetingActualTime].data.push(item);
+            return acc;
+        }, {}))
+        
+        console.log(meetingsArray)
+
           this.setState({
             dataLoading: false,
-            meetings: response.data,
+            meetings: meetingsArray.sort(this.arrayCompare),
           });
         } else {
           this.setState({dataLoading: false});
@@ -61,6 +74,19 @@ class MeetingViewScreen extends Component {
       });
   }
 
+  arrayCompare(a, b) {
+    const dateA = a.meetingActualTime;
+    const dateB = b.meetingActualTime;
+
+    let comparison = 0;
+    if (dateA < dateB) {
+      comparison = 1;
+    } else if (dateA > dateB) {
+      comparison = -1;
+    }
+    return comparison;
+  }
+
   onChangeIndexMain(indexMain) {
     this.setState({indexMain: indexMain});
   }
@@ -70,24 +96,21 @@ class MeetingViewScreen extends Component {
     this.props.onChangeIndexMain(0);
   }
 
-  renderView(item) {
-    let meetingActualDate = moment(item.meetingActualTime).format('MMMM DD');
-    let meetingActualYear = moment(item.meetingActualTime).format('YYYY');
+  renderSubView(item){
+    let meetingActualDate = moment(item.meetingActualTime).format('DD');
     let meetingActualDateValue = moment(item.meetingActualTime).format('ddd');
     let meetingActualTime = moment(item.meetingActualTime).format('hh:mm A');
-    return (
-      <View>
-        {/* <Text style={styles.fieldName}>{meetingActualDate}</Text> */}
 
-        <TouchableOpacity
+    return(
+      <TouchableOpacity
           style={styles.textInputFieldView}
           onPress={() => this.onItemPress(item)}>
-          <View style={{flexDirection: 'row'}}>
+          <View style={{flexDirection: 'row', alignItems:'center'}}>
             <View>
-              <Text style={styles.meetingDateStyle}>{meetingActualYear}</Text>
+              {/* <Text style={styles.meetingDateStyle}>{meetingActualYear}</Text> */}
               <Text style={styles.meetingDateStyle}>{meetingActualDate}</Text>
               <Text style={styles.meetingDateValueStyle}>
-                ({meetingActualDateValue})
+                {meetingActualDateValue}
               </Text>
             </View>
             <View style={{marginLeft: 20}}>
@@ -98,6 +121,25 @@ class MeetingViewScreen extends Component {
             </View>
           </View>
         </TouchableOpacity>
+    )
+  }
+
+  renderView(item) {
+    let meetingActualDate = moment(item.meetingActualTime).format('DD');
+    let meetingActualYear = moment(item.meetingActualTime).format('MMMM, YYYY');
+    let meetingActualDateValue = moment(item.meetingActualTime).format('ddd');
+    let meetingActualTime = moment(item.meetingActualTime).format('hh:mm A');
+    return (
+      <View>
+        <Text style={styles.fieldName}>{meetingActualYear}</Text>
+        <FlatList
+            ref={r => (this.flatList = r)}
+            style={styles.flatListSubStyle}
+            data={item.data}
+            renderItem={({item}) => this.renderSubView(item)}
+            keyExtractor={item => item.meetingId}
+          />
+        
       </View>
     );
   }
@@ -112,7 +154,7 @@ class MeetingViewScreen extends Component {
             style={styles.flatListStyle}
             data={meetings}
             renderItem={({item}) => this.renderView(item)}
-            keyExtractor={item => item.id}
+            keyExtractor={index =>index}
           />
           <View style={styles.bottomContainer}>
             <TouchableOpacity onPress={() => this.initiateMeeting()}>
@@ -135,10 +177,13 @@ const styles = EStyleSheet.create({
     marginTop: '10rem',
     marginBottom: '80rem',
   },
+  flatListSubStyle:{
+    marginBottom: '20rem',
+  },
   fieldName: {
     marginHorizontal: '20rem',
     marginTop: '10rem',
-    fontSize: '10rem',
+    fontSize: '15rem',
     fontFamily: 'CircularStd-Medium',
     color: colors.projectTaskNameColor,
   },
@@ -187,11 +232,11 @@ const styles = EStyleSheet.create({
     marginBottom: '15rem',
   },
   meetingDateStyle: {
-    fontSize: '13rem',
+    fontSize: '19rem',
     color: colors.colorsNavyBlue,
     lineHeight: '17rem',
-    fontFamily: 'CircularStd-Medium',
-    textAlign: 'left',
+    fontFamily: 'CircularStd-Bold',
+    textAlign: 'center',
   },
   meetingTimeStyle: {
     fontSize: '14rem',
@@ -215,6 +260,13 @@ const styles = EStyleSheet.create({
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
   },
+  meetingDateValueStyle:{
+    fontSize: '11rem',
+    color: colors.colorMediumSlateBlue,
+    lineHeight: '17rem',
+    fontFamily: 'CircularStd-Medium',
+    textAlign: 'center',
+  }
 });
 
 const mapStateToProps = state => {
