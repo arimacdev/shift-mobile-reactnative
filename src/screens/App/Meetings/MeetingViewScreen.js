@@ -1,14 +1,22 @@
 import React, {Component} from 'react';
-import {View, Text, FlatList, Dimensions, TouchableOpacity} from 'react-native';
+import {
+  View,
+  Text,
+  FlatList,
+  Dimensions,
+  TouchableOpacity,
+  Image,
+} from 'react-native';
 import {connect} from 'react-redux';
 import * as actions from '../../../redux/actions';
 import colors from '../../../config/colors';
-import EStyleSheet, {value} from 'react-native-extended-stylesheet';
+import EStyleSheet from 'react-native-extended-stylesheet';
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
 import APIServices from '../../../services/APIServices';
 import Utils from '../../../utils/Utils';
 import moment from 'moment';
+import icons from '../../../asserts/icons/icons';
 
 const initialLayout = {width: entireScreenWidth};
 
@@ -100,6 +108,13 @@ class MeetingViewScreen extends Component {
     this.props.onChangeIndexMain(0);
   }
 
+  convertMinsToTime(mins) {
+    let hours = Math.floor(mins / 60);
+    let minutes = mins % 60;
+    // minutes = minutes < 10 ? '0' + minutes : minutes;
+    return hours > 0 ? `${hours} h ${minutes} m` : `${minutes} mins`;
+  }
+
   onItemPress(item) {}
 
   renderSubView(item) {
@@ -111,27 +126,49 @@ class MeetingViewScreen extends Component {
       <TouchableOpacity
         style={styles.textInputFieldView}
         onPress={() => this.onItemPress(item)}>
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        <View style={styles.subViewStyle}>
           <View style={styles.leftLineStyle} />
           <View>
-            {/* <Text style={styles.meetingDateStyle}>{meetingActualYear}</Text> */}
             <Text style={styles.meetingDateStyle}>{meetingActualDate}</Text>
             <Text style={styles.meetingDateValueStyle}>
               {meetingActualDateValue}
             </Text>
           </View>
-          <View style={{marginLeft: 20, flex: 1}}>
-            {/* <Text style={styles.meetingDateStyle}>{meetingActualDate}</Text> */}
+          <View style={styles.subViewInnerStyle}>
             <View style={{flexDirection: 'row'}}>
-              <Text style={[styles.meetingTimeStyle, {flex: 1}]}>
-                {meetingActualTime}
-              </Text>
-              <Text style={styles.meetingMinutes}>
-                {item.expectedDuration} minutes
-              </Text>
+              <Text style={[styles.meetingTimeStyle]}>{meetingActualTime}</Text>
+              {/* <Text style={styles.meetingMinutes}>
+                {this.convertMinsToTime(item.expectedDuration)}
+              </Text> */}
             </View>
             <Text style={styles.meetingTopic}>{item.meetingTopic}</Text>
             <Text style={styles.meetingVenue}>{item.meetingVenue}</Text>
+          </View>
+          <View
+            style={{
+             
+              height: 70,
+              justifyContent: 'space-between',
+            }}>
+            <Text style={styles.meetingMinutes}>
+              {this.convertMinsToTime(item.expectedDuration)}
+            </Text>
+            <View style={styles.controlView}>
+              <TouchableOpacity onPress={() => this.goToEditPeople(item)}>
+                <Image
+                  style={styles.controlIcon}
+                  source={icons.editRoundWhite}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => this.blockPeople(item)}
+                style={{marginLeft: EStyleSheet.value('15rem')}}>
+                <Image
+                  style={styles.controlIcon}
+                  source={icons.deleteRoundRed}
+                />
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </TouchableOpacity>
@@ -208,7 +245,7 @@ const styles = EStyleSheet.create({
     // paddingHorizontal: '12rem',
     // flexDirection:'row',
     // alignItems:'center',
-    height: '75rem',
+    height: '80rem',
     // paddingVertical: '10rem',
     marginHorizontal: '20rem',
   },
@@ -264,7 +301,7 @@ const styles = EStyleSheet.create({
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
-    marginTop: '5rem',
+    marginTop: '10rem',
   },
   meetingVenue: {
     fontSize: '11rem',
@@ -283,19 +320,40 @@ const styles = EStyleSheet.create({
   leftLineStyle: {
     backgroundColor: colors.colorOrange,
     width: '5rem',
-    height: '75rem',
+    height: '80rem',
     marginRight: '10rem',
     borderTopStartRadius: '5rem',
     borderBottomStartRadius: '5rem',
   },
   meetingMinutes: {
-    backgroundColor: colors.lightGreen,
+    backgroundColor: colors.colorCaribbeanGreen,
     color: colors.white,
     fontSize: '11rem',
+    fontFamily: 'CircularStd-Medium',
     borderRadius: '5rem',
     paddingHorizontal: '5rem',
+    paddingTop: '1rem',
     textAlign: 'center',
     marginRight: '10rem',
+    width: '65rem',
+    height: '18rem',
+  },
+  subViewStyle: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  subViewInnerStyle: {
+    flex: 1,
+    marginLeft: '20rem',
+  },
+  controlView: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    marginRight:'10rem'
+  },
+  controlIcon: {
+    width: '25rem',
+    height: '25rem',
   },
 });
 
