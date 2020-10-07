@@ -122,8 +122,8 @@ class MeetingScreen extends Component {
     let actualTimeOfMeeting = this.state.actualTimeOfMeeting;
     let textInputs = this.state.textInputs;
     let projectID = this.props.selectedProjectID;
-    let meetingTopic = textInputs[1];
-    let meetingVenue = textInputs[2];
+    let meetingVenue = textInputs[1];
+    let meetingTopic = textInputs[2];
     let expectedDuration = textInputs[5];
 
     if (
