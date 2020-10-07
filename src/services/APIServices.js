@@ -98,6 +98,7 @@ import {
   ADD_DISCUSSION_POINT,
   UPDATE_MEETING,
   GET_MEETINGS,
+  DELETE_MEETING,
 } from '../api/API';
 import AsyncStorage from '@react-native-community/async-storage';
 import {SET_UPLOAD_PROGRESS} from '../redux/types';
@@ -3787,7 +3788,30 @@ async function getMeetingsData(
     headers,
   );
 }
-//"{{pm-service}}/meeting?projectId={{projectId}}&startIndex=0&endIndex=10&filter=true&filterKey=sc&filterDate=2020-10-17"
+
+async function deleteMeetingsData(projectId, meetingId) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
+  let userIDHeder = null;
+  userIDHeder = await AsyncStorage.getItem('userID');
+
+  let headers = {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+    user: userIDHeder,
+    type: 'taskGroup',
+  };
+
+  return request(
+    {
+      url:
+        baseURL + DELETE_MEETING + '/' + meetingId + '?projectId=' + projectId,
+      method: 'DELETE',
+    },
+    true,
+    headers,
+  );
+}
 
 const APIServices = {
   getAllProjectsByUserData,
@@ -3914,7 +3938,8 @@ const APIServices = {
   initiatMeetingData,
   addDiscussionPointData,
   updateMeetingData,
-  getMeetingsData
+  getMeetingsData,
+  deleteMeetingsData
 };
 
 export default APIServices;
