@@ -89,6 +89,9 @@ const icons = {
   addFileGray: require('./add_file_gray.png'),
   addFolderGray: require('./add_folder_gray.png'),
   menuGray: require('./menu_gray.png'),
-  addUserRoundedGreen:require('./add_user_rounded_green.png'),
+  addUserRoundedGreen: require('./add_user_rounded_green.png'),
+  meetingGreen: require('./meeting_green.png'),
+  discussionPointRed: require('./discussion_point_red.png'),
+  otherDetailsYellow: require('./other_details_yellow.png'),
 };
 export default icons;
