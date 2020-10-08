@@ -84,21 +84,21 @@ class MeetingViewScreen extends Component {
     )
       .then(response => {
         if (response.message == 'success') {
-          let meetingsArray = Object.values(
-            response.data.reduce((acc, item) => {
-              let meetingExpectedTime = moment
-                .parseZone(item.meetingExpectedTime)
-                .format('L');
-              if (!acc[meetingExpectedTime])
-                acc[meetingExpectedTime] = {
-                  meetingExpectedTime: meetingExpectedTime,
-                  data: [],
-                };
-              acc[meetingExpectedTime].data.push(item);
-              acc[meetingExpectedTime].data.sort(this.arrayCompare);
-              return acc;
-            }, {}),
-          );
+          // let meetingsArray = Object.values(
+          //   response.data.reduce((acc, item) => {
+          //     let meetingExpectedTime = moment
+          //       .parseZone(item.meetingExpectedTime)
+          //       .format('L');
+          //     if (!acc[meetingExpectedTime])
+          //       acc[meetingExpectedTime] = {
+          //         meetingExpectedTime: meetingExpectedTime,
+          //         data: [],
+          //       };
+          //     acc[meetingExpectedTime].data.push(item);
+          //     acc[meetingExpectedTime].data.sort(this.arrayCompare);
+          //     return acc;
+          //   }, {}),
+          // );
           response.data.sort(this.arrayCompare);
           this.setState({
             dataLoading: false,
@@ -219,16 +219,22 @@ class MeetingViewScreen extends Component {
   }
 
   onChangeText(text) {
-    this.setState({filterKey: text});
+    if(text == ''){
+      this.setState({filter: false, filterKey:''});
+    } else{
+      this.setState({filterKey: text});
+    }
+    
   }
 
   async onSubmitEditing(){
-    await this.setState({meetings:[], filterKey:true})
+    await this.setState({meetings:[], filter:true})
     let startIndex = 0;
     let endIndex = 10;
     let filter = this.state.filter;
     let filterKey = this.state.filterKey;
     let filterDate = this.state.filterDate;
+
     this.loadMeetings(startIndex, endIndex, filter, filterKey, filterDate);
   }
 
@@ -361,7 +367,7 @@ class MeetingViewScreen extends Component {
             style={styles.flatListStyle}
             data={meetings}
             renderItem={({item}) => this.renderSubView(item)}
-            keyExtractor={index => index}
+            keyExtractor={item => item.meetingId}
             ListEmptyComponent={<EmptyListView />}
             onEndReached={() =>
               this.loadMeetings(
