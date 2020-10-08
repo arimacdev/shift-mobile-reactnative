@@ -21,6 +21,7 @@ import icons from '../../../asserts/icons/icons';
 import Loader from '../../../components/Loader';
 import MessageShowModal from '../../../components/MessageShowModal';
 import EmptyListView from '../../../components/EmptyListView';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
 const initialLayout = {width: entireScreenWidth};
 
@@ -48,6 +49,8 @@ class MeetingViewScreen extends Component {
       filter: false,
       filterKey: '',
       filterDate: '',
+      date: new Date(),
+      showPicker: false,
     };
   }
 
@@ -149,7 +152,9 @@ class MeetingViewScreen extends Component {
       : `${minutes} mins`;
   }
 
-  onItemPress(item) {}
+  onFilterDatePress() {
+    this.setState({showPicker: true});
+  }
 
   onPressCancel() {
     this.setState({showMessageModal: false});
@@ -219,16 +224,15 @@ class MeetingViewScreen extends Component {
   }
 
   onChangeText(text) {
-    if(text == ''){
-      this.setState({filter: false, filterKey:''});
-    } else{
+    if (text == '') {
+      this.setState({filter: false, filterKey: ''});
+    } else {
       this.setState({filterKey: text});
     }
-    
   }
 
-  async onSubmitEditing(){
-    await this.setState({meetings:[], filter:true})
+  async onSubmitEditing() {
+    await this.setState({meetings: [], filter: true});
     let startIndex = 0;
     let endIndex = 10;
     let filter = this.state.filter;
@@ -242,20 +246,27 @@ class MeetingViewScreen extends Component {
     this.setState({showPicker: false});
   };
 
-  handleDateTimeConfirm = selectedDateTime => {
+  handleDateTimeConfirm = async (selectedDateTime) => {
     this.hideDateTimePicker();
     let dateTime = new Date(selectedDateTime);
     let newDateTime = '';
-    let newDateTimeValue = '';
+    
+    newDateTime = moment(dateTime).format('DD-MMMM-YYYY');
 
-    newDateTime = moment(dateTime).format('MMMM DD, YYYY');
-    newDateTimeValue = moment(dateTime).format('DD MM YYYY');
-
-    this.setState({
-      targetDate: newDateTime,
-      targetDateValue: newDateTimeValue,
+    await this.setState({
+      meetings: [],
+      filter: true,
+      filterDate: newDateTime,
       date: new Date(dateTime),
     });
+
+    let startIndex = 0;
+    let endIndex = 10;
+    let filter = this.state.filter;
+    let filterKey = this.state.filterKey;
+    let filterDate = this.state.filterDate;
+
+    this.loadMeetings(startIndex, endIndex, filter, filterKey, filterDate);
   };
 
   renderDateTimePicker() {
@@ -286,7 +297,7 @@ class MeetingViewScreen extends Component {
       .parseZone(item.meetingExpectedTime)
       .format('hh:mm A');
 
-      let meetingDate = moment
+    let meetingDate = moment
       .parseZone(item.meetingExpectedTime)
       .format('MMMM, YYYY');
 
@@ -305,12 +316,8 @@ class MeetingViewScreen extends Component {
           <View style={styles.horizontalLine} />
           <View style={styles.subViewInnerStyle}>
             {/* <View style={{flexDirection: 'row'}}> */}
-              <Text style={[styles.meetingTimeStyle]}>
-                {meetingExpectedTime}
-              </Text>
-              <Text style={[styles.meetingDate]}>
-                {meetingDate}
-              </Text>
+            <Text style={[styles.meetingTimeStyle]}>{meetingExpectedTime}</Text>
+            <Text style={[styles.meetingDate]}>{meetingDate}</Text>
             {/* </View> */}
             <Text style={styles.meetingTopic}>{item.meetingTopic}</Text>
             <Text style={styles.meetingVenue}>{item.meetingVenue}</Text>
@@ -375,11 +382,11 @@ class MeetingViewScreen extends Component {
             <Text style={styles.fieldNameFilter}>Filter by key</Text>
             <View style={styles.fieldView}>
               <TextInput
-                style={[styles.textInput, {width:'100%'}]}
+                style={[styles.textInput, {width: '100%'}]}
                 placeholder={'Filter key'}
                 value={filterKey}
                 onChangeText={text => this.onChangeText(text)}
-                onSubmitEditing={()=>this.onSubmitEditing()}
+                onSubmitEditing={() => this.onSubmitEditing()}
                 // onFocus={() => this.onFocusTextInput()}
               />
             </View>
@@ -388,7 +395,7 @@ class MeetingViewScreen extends Component {
             <Text style={styles.fieldNameFilter}>Filter by date</Text>
             <TouchableOpacity
               style={styles.fieldView}
-              onPress={() => this.onItemPress()}>
+              onPress={() => this.onFilterDatePress()}>
               {filterDate != '' ? (
                 <Text style={styles.textInput}>{filterDate}</Text>
               ) : (
@@ -432,6 +439,7 @@ class MeetingViewScreen extends Component {
           onPress={this.onPressMessageModal}
           onPressCancel={() => this.onPressCancel(this)}
         />
+        {this.state.showPicker ? this.renderDateTimePicker() : null}
         {dataLoading && <Loader />}
       </View>
     );
@@ -514,7 +522,7 @@ const styles = EStyleSheet.create({
     fontFamily: 'CircularStd-Bold',
     textAlign: 'left',
   },
-  meetingDate:{
+  meetingDate: {
     fontSize: '11rem',
     color: colors.colorGovernorBay,
     lineHeight: '17rem',
