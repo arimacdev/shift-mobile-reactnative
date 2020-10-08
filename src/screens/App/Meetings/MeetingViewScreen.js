@@ -6,6 +6,7 @@ import {
   Dimensions,
   TouchableOpacity,
   Image,
+  TextInput,
 } from 'react-native';
 import {connect} from 'react-redux';
 import * as actions from '../../../redux/actions';
@@ -98,11 +99,11 @@ class MeetingViewScreen extends Component {
               return acc;
             }, {}),
           );
-          meetingsArray.sort(this.arrayCompare);
+          response.data.sort(this.arrayCompare);
           this.setState({
             dataLoading: false,
             // listScroll:false,
-            meetings: this.state.meetings.concat(meetingsArray),
+            meetings: this.state.meetings.concat(response.data),
           });
         } else {
           this.setState({dataLoading: false});
@@ -191,10 +192,16 @@ class MeetingViewScreen extends Component {
             await this.setState({
               dataLoading: false,
               showMessageModal: true,
-              startIndex:0,
-              endIndex:10,
+              startIndex: 0,
+              endIndex: 10,
             });
-            this.loadMeetings(startIndex, endIndex, filter, filterKey, filterDate);
+            this.loadMeetings(
+              startIndex,
+              endIndex,
+              filter,
+              filterKey,
+              filterDate,
+            );
           } else {
             this.setState({dataLoading: false});
             Utils.showAlert(true, '', response.message, this.props);
@@ -211,6 +218,20 @@ class MeetingViewScreen extends Component {
     this.setState({listScroll: true});
   }
 
+  onChangeText(text) {
+    this.setState({filterKey: text});
+  }
+
+  async onSubmitEditing(){
+    await this.setState({meetings:[], filterKey:true})
+    let startIndex = 0;
+    let endIndex = 10;
+    let filter = this.state.filter;
+    let filterKey = this.state.filterKey;
+    let filterDate = this.state.filterDate;
+    this.loadMeetings(startIndex, endIndex, filter, filterKey, filterDate);
+  }
+
   renderSubView(item) {
     let meetingActualDate = moment
       .parseZone(item.meetingExpectedTime)
@@ -221,6 +242,10 @@ class MeetingViewScreen extends Component {
     let meetingExpectedTime = moment
       .parseZone(item.meetingExpectedTime)
       .format('hh:mm A');
+
+      let meetingDate = moment
+      .parseZone(item.meetingExpectedTime)
+      .format('MMMM, YYYY');
 
     return (
       <TouchableOpacity
@@ -236,14 +261,14 @@ class MeetingViewScreen extends Component {
           </View>
           <View style={styles.horizontalLine} />
           <View style={styles.subViewInnerStyle}>
-            <View style={{flexDirection: 'row'}}>
+            {/* <View style={{flexDirection: 'row'}}> */}
               <Text style={[styles.meetingTimeStyle]}>
                 {meetingExpectedTime}
               </Text>
-              {/* <Text style={styles.meetingMinutes}>
-                {this.convertMinsToTime(item.expectedDuration)}
-              </Text> */}
-            </View>
+              <Text style={[styles.meetingDate]}>
+                {meetingDate}
+              </Text>
+            {/* </View> */}
             <Text style={styles.meetingTopic}>{item.meetingTopic}</Text>
             <Text style={styles.meetingVenue}>{item.meetingVenue}</Text>
           </View>
@@ -303,11 +328,39 @@ class MeetingViewScreen extends Component {
     return (
       <View style={styles.container}>
         <View style={{flex: 1}}>
+          <View>
+            <Text style={styles.fieldNameFilter}>Filter by key</Text>
+            <View style={styles.fieldView}>
+              <TextInput
+                style={[styles.textInput, {width:'100%'}]}
+                placeholder={'Filter key'}
+                value={filterKey}
+                onChangeText={text => this.onChangeText(text)}
+                onSubmitEditing={()=>this.onSubmitEditing()}
+                // onFocus={() => this.onFocusTextInput()}
+              />
+            </View>
+          </View>
+          <View>
+            <Text style={styles.fieldNameFilter}>Filter by date</Text>
+            <TouchableOpacity
+              style={styles.fieldView}
+              onPress={() => this.onItemPress()}>
+              {filterDate != '' ? (
+                <Text style={styles.textInput}>{filterDate}</Text>
+              ) : (
+                <Text
+                  style={[styles.textInput, {color: colors.colorGreyChateau}]}>
+                  Filter date
+                </Text>
+              )}
+            </TouchableOpacity>
+          </View>
           <FlatList
             ref={r => (this.flatList = r)}
             style={styles.flatListStyle}
             data={meetings}
-            renderItem={({item}) => this.renderView(item)}
+            renderItem={({item}) => this.renderSubView(item)}
             keyExtractor={index => index}
             ListEmptyComponent={<EmptyListView />}
             onEndReached={() =>
@@ -348,7 +401,7 @@ const styles = EStyleSheet.create({
   },
   flatListStyle: {
     marginTop: '10rem',
-    marginBottom: '80rem',
+    marginBottom: '90rem',
   },
   flatListSubStyle: {
     marginBottom: '20rem',
@@ -368,7 +421,7 @@ const styles = EStyleSheet.create({
     // paddingHorizontal: '12rem',
     // flexDirection:'row',
     // alignItems:'center',
-    height: '80rem',
+    height: '90rem',
     // paddingVertical: '10rem',
     marginHorizontal: '20rem',
   },
@@ -418,13 +471,20 @@ const styles = EStyleSheet.create({
     fontFamily: 'CircularStd-Bold',
     textAlign: 'left',
   },
+  meetingDate:{
+    fontSize: '11rem',
+    color: colors.colorGovernorBay,
+    lineHeight: '17rem',
+    fontFamily: 'CircularStd-Bold',
+    textAlign: 'left',
+  },
   meetingTopic: {
     fontSize: '13rem',
     color: colors.colorMidnightBlue,
     lineHeight: '17rem',
     fontFamily: 'CircularStd-Medium',
     textAlign: 'left',
-    marginTop: '10rem',
+    marginTop: '5rem',
   },
   meetingVenue: {
     fontSize: '11rem',
@@ -443,7 +503,7 @@ const styles = EStyleSheet.create({
   leftLineStyle: {
     backgroundColor: colors.colorFreeSpeechMagenta,
     width: '5rem',
-    height: '80rem',
+    height: '90rem',
     marginRight: '10rem',
     borderTopStartRadius: '5rem',
     borderBottomStartRadius: '5rem',
@@ -484,9 +544,27 @@ const styles = EStyleSheet.create({
   },
   horizontalLine: {
     width: '1rem',
-    height: '50rem',
+    height: '60rem',
     backgroundColor: colors.lightgray,
     marginLeft: '15rem',
+  },
+  fieldView: {
+    backgroundColor: colors.projectBgColor,
+    borderRadius: '5rem',
+    marginTop: '5rem',
+    marginBottom: '5rem',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: '12rem',
+    height: '40rem',
+    marginHorizontal: '20rem',
+  },
+  fieldNameFilter: {
+    marginHorizontal: '20rem',
+    marginTop: '5rem',
+    fontSize: '10rem',
+    fontFamily: 'CircularStd-Medium',
+    color: colors.projectTaskNameColor,
   },
 });
 
