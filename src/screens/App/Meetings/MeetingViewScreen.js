@@ -19,6 +19,7 @@ import moment from 'moment';
 import icons from '../../../asserts/icons/icons';
 import Loader from '../../../components/Loader';
 import MessageShowModal from '../../../components/MessageShowModal';
+import EmptyListView from '../../../components/EmptyListView';
 
 const initialLayout = {width: entireScreenWidth};
 
@@ -40,27 +41,42 @@ class MeetingViewScreen extends Component {
       indexMain: 3,
       meetings: [],
       showMessageModal: false,
+      listScroll: false,
+      startIndex: 0,
+      endIndex: 10,
+      filter: false,
+      filterKey: '',
+      filterDate: '',
     };
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {}
 
   componentDidMount() {
-    this.loadMeetings();
+    let startIndex = this.state.startIndex;
+    let endIndex = this.state.endIndex;
+    let filter = this.state.filter;
+    let filterKey = this.state.filterKey;
+    let filterDate = this.state.filterDate;
+    this.loadMeetings(startIndex, endIndex, filter, filterKey, filterDate);
   }
 
-  async loadMeetings() {
+  async loadMeetings(startIndex, endIndex, filter, filterKey, filterDate) {
     let projectId = this.props.selectedProjectID;
-    let startIndex = 0;
-    let endIndex = 10;
-    let filter = false;
-    let filterKey = '';
-    let filterDate = '';
-    this.setState({dataLoading: true});
+    let listScroll = this.state.listScroll;
+
+    let startIndexData = listScroll ? this.state.startIndex + 10 : startIndex;
+    let endIndexData = listScroll ? this.state.endIndex + 10 : endIndex;
+
+    this.setState({
+      dataLoading: true,
+      startIndex: startIndexData,
+      endIndex: endIndexData,
+    });
     await APIServices.getMeetingsData(
       projectId,
-      startIndex,
-      endIndex,
+      startIndexData,
+      endIndexData,
       filter,
       filterKey,
       filterDate,
@@ -69,24 +85,24 @@ class MeetingViewScreen extends Component {
         if (response.message == 'success') {
           let meetingsArray = Object.values(
             response.data.reduce((acc, item) => {
-              let meetingActualTime = moment(item.meetingActualTime).format(
-                'L',
-              );
-              if (!acc[meetingActualTime])
-                acc[meetingActualTime] = {
-                  meetingActualTime: meetingActualTime,
+              let meetingExpectedTime = moment
+                .parseZone(item.meetingExpectedTime)
+                .format('L');
+              if (!acc[meetingExpectedTime])
+                acc[meetingExpectedTime] = {
+                  meetingExpectedTime: meetingExpectedTime,
                   data: [],
                 };
-              acc[meetingActualTime].data.push(item);
+              acc[meetingExpectedTime].data.push(item);
+              acc[meetingExpectedTime].data.sort(this.arrayCompare);
               return acc;
             }, {}),
           );
-
-          console.log(meetingsArray);
-
+          meetingsArray.sort(this.arrayCompare);
           this.setState({
             dataLoading: false,
-            meetings: meetingsArray.sort(this.arrayCompare),
+            // listScroll:false,
+            meetings: this.state.meetings.concat(meetingsArray),
           });
         } else {
           this.setState({dataLoading: false});
@@ -100,13 +116,13 @@ class MeetingViewScreen extends Component {
   }
 
   arrayCompare(a, b) {
-    const dateA = a.meetingActualTime;
-    const dateB = b.meetingActualTime;
+    const dateA = a.meetingExpectedTime;
+    const dateB = b.meetingExpectedTime;
 
     let comparison = 0;
-    if (dateA > dateB) {
+    if (dateA < dateB) {
       comparison = 1;
-    } else if (dateA < dateB) {
+    } else if (dateA > dateB) {
       comparison = -1;
     }
     return comparison;
@@ -125,7 +141,11 @@ class MeetingViewScreen extends Component {
     let hours = Math.floor(mins / 60);
     let minutes = mins % 60;
     // minutes = minutes < 10 ? '0' + minutes : minutes;
-    return hours > 0 ? `${hours}h ${minutes}m` : `${minutes} mins`;
+    return hours > 0 && minutes > 0
+      ? `${hours}h ${minutes}m`
+      : hours > 0
+      ? `${hours} hour(s)`
+      : `${minutes} mins`;
   }
 
   onItemPress(item) {}
@@ -150,40 +170,57 @@ class MeetingViewScreen extends Component {
   async deleteMeeting(item) {
     let projectId = this.props.selectedProjectID;
     let meetingId = item.meetingId;
+    let startIndex = this.state.startIndex;
+    let endIndex = this.state.endIndex;
+    let filter = this.state.filter;
+    let filterKey = this.state.filterKey;
+    let filterDate = this.state.filterDate;
 
-    this.setState({dataLoading: true, showMessageModal: false});
-    await APIServices.deleteMeetingsData(projectId, meetingId)
-      .then(response => {
-        if (response.message == 'success') {
-          this.details = {
-            icon: icons.meetingGreen,
-            type: 'success',
-            title: 'Sucsess',
-            description: 'Meeting has been deleted successfully',
-            buttons: {},
-          };
-          let filteredData = this.state.meetings.filter(function(itemFilter) {
-            console.log("vvvvvvvvvvvvvvvvvvvv",itemFilter)
-
-            return itemFilter.data.meetingId !== item.meetingId;
-          });
-          console.log("Ssssssssssssssssssssss",filteredData)
-          this.setState({dataLoading: false, showMessageModal: true, meetings:filteredData});
-        } else {
+    setTimeout(async () => {
+      this.setState({dataLoading: true, showMessageModal: false});
+      await APIServices.deleteMeetingsData(projectId, meetingId)
+        .then(async response => {
+          if (response.message == 'success') {
+            this.details = {
+              icon: icons.meetingGreen,
+              type: 'success',
+              title: 'Sucsess',
+              description: 'Meeting has been deleted successfully',
+              buttons: {},
+            };
+            await this.setState({
+              dataLoading: false,
+              showMessageModal: true,
+              startIndex:0,
+              endIndex:10,
+            });
+            this.loadMeetings(startIndex, endIndex, filter, filterKey, filterDate);
+          } else {
+            this.setState({dataLoading: false});
+            Utils.showAlert(true, '', response.message, this.props);
+          }
+        })
+        .catch(error => {
           this.setState({dataLoading: false});
-          Utils.showAlert(true, '', response.message, this.props);
-        }
-      })
-      .catch(error => {
-        this.setState({dataLoading: false});
-        Utils.showAlert(true, '', error.data.message, this.props);
-      });
+          Utils.showAlert(true, '', error.data.message, this.props);
+        });
+    }, 200);
+  }
+
+  onListScroll() {
+    this.setState({listScroll: true});
   }
 
   renderSubView(item) {
-    let meetingActualDate = moment(item.meetingActualTime).format('DD');
-    let meetingActualDateValue = moment(item.meetingActualTime).format('ddd');
-    let meetingActualTime = moment(item.meetingActualTime).format('hh:mm A');
+    let meetingActualDate = moment
+      .parseZone(item.meetingExpectedTime)
+      .format('DD');
+    let meetingActualDateValue = moment
+      .parseZone(item.meetingExpectedTime)
+      .format('ddd');
+    let meetingExpectedTime = moment
+      .parseZone(item.meetingExpectedTime)
+      .format('hh:mm A');
 
     return (
       <TouchableOpacity
@@ -200,7 +237,9 @@ class MeetingViewScreen extends Component {
           <View style={styles.horizontalLine} />
           <View style={styles.subViewInnerStyle}>
             <View style={{flexDirection: 'row'}}>
-              <Text style={[styles.meetingTimeStyle]}>{meetingActualTime}</Text>
+              <Text style={[styles.meetingTimeStyle]}>
+                {meetingExpectedTime}
+              </Text>
               {/* <Text style={styles.meetingMinutes}>
                 {this.convertMinsToTime(item.expectedDuration)}
               </Text> */}
@@ -235,10 +274,10 @@ class MeetingViewScreen extends Component {
   }
 
   renderView(item) {
-    let meetingActualDate = moment(item.meetingActualTime).format('DD');
-    let meetingActualYear = moment(item.meetingActualTime).format('MMMM, YYYY');
-    let meetingActualDateValue = moment(item.meetingActualTime).format('ddd');
-    let meetingActualTime = moment(item.meetingActualTime).format('hh:mm A');
+    let meetingActualYear = moment
+      .parseZone(item.meetingExpectedTime)
+      .format('MMMM, YYYY');
+
     return (
       <View>
         <Text style={styles.fieldName}>{meetingActualYear}</Text>
@@ -256,7 +295,11 @@ class MeetingViewScreen extends Component {
   render() {
     let meetings = this.state.meetings;
     let dataLoading = this.state.dataLoading;
-
+    let startIndex = this.state.startIndex;
+    let endIndex = this.state.endIndex;
+    let filter = this.state.filter;
+    let filterKey = this.state.filterKey;
+    let filterDate = this.state.filterDate;
     return (
       <View style={styles.container}>
         <View style={{flex: 1}}>
@@ -266,6 +309,18 @@ class MeetingViewScreen extends Component {
             data={meetings}
             renderItem={({item}) => this.renderView(item)}
             keyExtractor={index => index}
+            ListEmptyComponent={<EmptyListView />}
+            onEndReached={() =>
+              this.loadMeetings(
+                startIndex,
+                endIndex,
+                filter,
+                filterKey,
+                filterDate,
+              )
+            }
+            onEndReachedThreshold={0.7}
+            onScroll={() => this.onListScroll()}
           />
           <View style={styles.bottomContainer}>
             <TouchableOpacity onPress={() => this.initiateMeeting()}>
