@@ -238,6 +238,43 @@ class MeetingViewScreen extends Component {
     this.loadMeetings(startIndex, endIndex, filter, filterKey, filterDate);
   }
 
+  hideDateTimePicker = () => {
+    this.setState({showPicker: false});
+  };
+
+  handleDateTimeConfirm = selectedDateTime => {
+    this.hideDateTimePicker();
+    let dateTime = new Date(selectedDateTime);
+    let newDateTime = '';
+    let newDateTimeValue = '';
+
+    newDateTime = moment(dateTime).format('MMMM DD, YYYY');
+    newDateTimeValue = moment(dateTime).format('DD MM YYYY');
+
+    this.setState({
+      targetDate: newDateTime,
+      targetDateValue: newDateTimeValue,
+      date: new Date(dateTime),
+    });
+  };
+
+  renderDateTimePicker() {
+    let date = this.state.date;
+
+    return (
+      <View>
+        <DateTimePickerModal
+          isVisible={this.state.showPicker}
+          date={date}
+          mode={'date'}
+          minimumDate={new Date()}
+          onConfirm={this.handleDateTimeConfirm}
+          onCancel={this.hideDateTimePicker}
+        />
+      </View>
+    );
+  }
+
   renderSubView(item) {
     let meetingActualDate = moment
       .parseZone(item.meetingExpectedTime)
