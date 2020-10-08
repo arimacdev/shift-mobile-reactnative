@@ -26,10 +26,19 @@ import Modal from 'react-native-modal';
 import PopupMenu from '../../../components/PopupMenu';
 import icons from '../../../asserts/icons/icons';
 import FadeIn from 'react-native-fade-in-image';
+import Loader from '../../../components/Loader';
+import MessageShowModal from '../../../components/MessageShowModal';
 
 const initialLayout = {width: entireScreenWidth};
 
 class MeetingDiscussionPointScreen extends Component {
+  details = {
+    icon: icons.discussionPointRed,
+    type: 'success',
+    title: 'Sucsess',
+    description: 'Discussion point has been added successfully',
+    buttons: {},
+  };
   textInputValuesArray = [];
   constructor(props) {
     super(props);
@@ -79,6 +88,7 @@ class MeetingDiscussionPointScreen extends Component {
       popupMenuOpen: false,
       userName: '',
       userID: '',
+      showMessageModal: false,
     };
   }
 
@@ -330,7 +340,7 @@ class MeetingDiscussionPointScreen extends Component {
             'YYYY-MM-DD[T]HH:mm:ss',
           )
         : '';
-      this.setState({dataLoading: true});
+      this.setState({dataLoading: true, showMessageModal: false});
       await APIServices.addDiscussionPointData(
         meetingId,
         // '584adb31-d273-4f59-a04e-ccfc6d09599d',
@@ -344,7 +354,7 @@ class MeetingDiscussionPointScreen extends Component {
       )
         .then(response => {
           if (response.message == 'success') {
-            this.setState({dataLoading: false});
+            this.setState({dataLoading: false, showMessageModal: true});
             this.resetValues();
           } else {
             this.setState({dataLoading: false});
@@ -639,6 +649,10 @@ class MeetingDiscussionPointScreen extends Component {
     return comparison;
   }
 
+  onPressCancel() {
+    this.setState({showMessageModal: false});
+  }
+
   renderDiscussionPointView(item, index) {
     let key = item.id;
     let value = this.state.targetDate;
@@ -728,6 +742,7 @@ class MeetingDiscussionPointScreen extends Component {
 
   render() {
     let discusstionPointsArray = this.state.discusstionPointsArray;
+    let dataLoading = this.state.dataLoading;
 
     return (
       <View style={styles.container}>
@@ -760,6 +775,13 @@ class MeetingDiscussionPointScreen extends Component {
         />
         {this.state.showPicker ? this.renderDateTimePicker() : null}
         {this.renderEnterUrlModal()}
+        <MessageShowModal
+          showMessageModal={this.state.showMessageModal}
+          details={this.details}
+          onPress={() => {}}
+          onPressCancel={() => this.onPressCancel(this)}
+        />
+        {dataLoading && <Loader />}
       </View>
     );
   }
