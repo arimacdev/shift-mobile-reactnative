@@ -49,6 +49,7 @@ class MeetingViewScreen extends Component {
       filter: false,
       filterKey: '',
       filterDate: '',
+      filterDateValue:'',
       date: new Date(),
       showPicker: false,
     };
@@ -62,7 +63,9 @@ class MeetingViewScreen extends Component {
     let filter = this.state.filter;
     let filterKey = this.state.filterKey;
     let filterDate = this.state.filterDate;
-    this.loadMeetings(startIndex, endIndex, filter, filterKey, filterDate);
+    let filterDateValue = this.state.filterDateValue;
+
+    this.loadMeetings(startIndex, endIndex, filter, filterKey, filterDateValue);
   }
 
   async loadMeetings(startIndex, endIndex, filter, filterKey, filterDate) {
@@ -105,7 +108,7 @@ class MeetingViewScreen extends Component {
           response.data.sort(this.arrayCompare);
           this.setState({
             dataLoading: false,
-            // listScroll:false,
+            listScroll:false,
             meetings: this.state.meetings.concat(response.data),
           });
         } else {
@@ -181,6 +184,7 @@ class MeetingViewScreen extends Component {
     let filter = this.state.filter;
     let filterKey = this.state.filterKey;
     let filterDate = this.state.filterDate;
+    let filterDateValue = this.state.filterDateValue;
 
     setTimeout(async () => {
       this.setState({dataLoading: true, showMessageModal: false});
@@ -205,7 +209,7 @@ class MeetingViewScreen extends Component {
               endIndex,
               filter,
               filterKey,
-              filterDate,
+              filterDateValue,
             );
           } else {
             this.setState({dataLoading: false});
@@ -232,14 +236,15 @@ class MeetingViewScreen extends Component {
   }
 
   async onSubmitEditing() {
-    await this.setState({meetings: [], filter: true});
+    await this.setState({meetings: [], filter: true, listScroll:false});
     let startIndex = 0;
     let endIndex = 10;
     let filter = this.state.filter;
     let filterKey = this.state.filterKey;
     let filterDate = this.state.filterDate;
+    let filterDateValue = this.state.filterDateValue;
 
-    this.loadMeetings(startIndex, endIndex, filter, filterKey, filterDate);
+    this.loadMeetings(startIndex, endIndex, filter, filterKey, filterDateValue);
   }
 
   hideDateTimePicker = () => {
@@ -250,23 +255,28 @@ class MeetingViewScreen extends Component {
     this.hideDateTimePicker();
     let dateTime = new Date(selectedDateTime);
     let newDateTime = '';
+    let newDateTimeValue = '';
     
     newDateTime = moment(dateTime).format('DD-MMMM-YYYY');
+    newDateTimeValue = moment(dateTime).format('YYYY-MM-DD');
 
     await this.setState({
       meetings: [],
       filter: true,
       filterDate: newDateTime,
+      filterDateValue: newDateTimeValue,
       date: new Date(dateTime),
+      listScroll:false
     });
 
     let startIndex = 0;
     let endIndex = 10;
     let filter = this.state.filter;
     let filterKey = this.state.filterKey;
-    let filterDate = this.state.filterDate;
+    // let filterDate = this.state.filterDate;
+    let filterDateValue = this.state.filterDateValue;
 
-    this.loadMeetings(startIndex, endIndex, filter, filterKey, filterDate);
+    this.loadMeetings(startIndex, endIndex, filter, filterKey, filterDateValue);
   };
 
   renderDateTimePicker() {
@@ -278,7 +288,7 @@ class MeetingViewScreen extends Component {
           isVisible={this.state.showPicker}
           date={date}
           mode={'date'}
-          minimumDate={new Date()}
+          // minimumDate={new Date()}
           onConfirm={this.handleDateTimeConfirm}
           onCancel={this.hideDateTimePicker}
         />
@@ -375,6 +385,8 @@ class MeetingViewScreen extends Component {
     let filter = this.state.filter;
     let filterKey = this.state.filterKey;
     let filterDate = this.state.filterDate;
+    let filterDateValue = this.state.filterDateValue;
+
     return (
       <View style={styles.container}>
         <View style={{flex: 1}}>
@@ -407,7 +419,6 @@ class MeetingViewScreen extends Component {
             </TouchableOpacity>
           </View>
           <FlatList
-            ref={r => (this.flatList = r)}
             style={styles.flatListStyle}
             data={meetings}
             renderItem={({item}) => this.renderSubView(item)}
@@ -419,7 +430,7 @@ class MeetingViewScreen extends Component {
                 endIndex,
                 filter,
                 filterKey,
-                filterDate,
+                filterDateValue,
               )
             }
             onEndReachedThreshold={0.7}
