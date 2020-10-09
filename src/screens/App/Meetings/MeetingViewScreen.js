@@ -109,7 +109,9 @@ class MeetingViewScreen extends Component {
           this.setState({
             dataLoading: false,
             meetings: listScroll
-              ? this.state.meetings.concat(response.data)
+              ? this.state.meetings
+                  .concat(response.data)
+                  .sort(this.arrayCompare)
               : response.data,
           });
         } else {
@@ -213,6 +215,10 @@ class MeetingViewScreen extends Component {
     }, 200);
   }
 
+  editMeeting(){
+    
+  }
+
   onListScroll() {
     this.setState({listScroll: true});
   }
@@ -221,7 +227,7 @@ class MeetingViewScreen extends Component {
     if (text == '') {
       this.setState({filter: false, filterKey: ''});
     } else {
-      this.setState({filterKey: text});
+      this.setState({filter: true, filterKey: text});
     }
   }
 
@@ -294,8 +300,15 @@ class MeetingViewScreen extends Component {
     let dateText = moment.parseZone(date).format('YYYY-MM-DD');
     let color = '';
 
+    let currentTime = moment().format('h:mma');
+    let timeText = moment.parseZone(date).format('h:mma');
+
     if (moment(dateText).isSame(currentDate)) {
-      color = colors.colorApple;
+      if (timeText > currentTime) {
+        color = colors.colorApple;
+      } else {
+        color = colors.colorAmber;
+      }
     } else if (moment(dateText).isAfter(currentDate)) {
       color = colors.colorDeepSkyBlue;
     } else {
@@ -303,6 +316,30 @@ class MeetingViewScreen extends Component {
     }
     return color;
   };
+
+  async clearFilters(fromFilter) {
+    let filterKey = fromFilter == 'text' ? '' : this.state.filterKey;
+    let filterDate = fromFilter == 'date' ? '' : this.state.filterDate;
+    let filterDateValue = fromFilter == 'date' ? '' : this.state.filterDateValue;
+    let filter = filterKey == '' && filterDateValue == '' ? false : this.state.filter;
+
+    await this.setState({
+      filterKey: filterKey,
+      filterDate: filterDate,
+      filterDateValue:filterDateValue,
+      filter:filter,
+      meetings: [],
+      listScroll: false,
+    });
+    let startIndex = 0;
+    let endIndex = 10;
+
+    this.loadMeetings(startIndex, endIndex, filter, filterKey, filterDateValue);
+  }
+
+  onItemPress(item){
+
+  }
 
   renderSubView(item) {
     let meetingActualDate = moment
@@ -366,7 +403,7 @@ class MeetingViewScreen extends Component {
               {this.convertMinsToTime(item.expectedDuration)}
             </Text>
             <View style={styles.controlView}>
-              <TouchableOpacity onPress={() => this.goToEditPeople(item)}>
+              <TouchableOpacity onPress={() => this.editMeeting(item)}>
                 <Image
                   style={styles.controlIcon}
                   source={icons.editRoundWhite}
@@ -424,29 +461,43 @@ class MeetingViewScreen extends Component {
             <Text style={styles.fieldNameFilter}>Filter by key</Text>
             <View style={styles.fieldView}>
               <TextInput
-                style={[styles.textInput, {width: '100%'}]}
+                style={[styles.textInput, {width: '97%'}]}
                 placeholder={'Filter key'}
                 value={filterKey}
                 onChangeText={text => this.onChangeText(text)}
                 onSubmitEditing={() => this.onSubmitEditing()}
-                // onFocus={() => this.onFocusTextInput()}
               />
+              {filterKey != '' ? (
+                <TouchableOpacity onPress={() => this.clearFilters('text')}>
+                  <Image source={icons.cross} style={{width: 10, height: 10}} />
+                </TouchableOpacity>
+              ) : null}
             </View>
           </View>
           <View>
             <Text style={styles.fieldNameFilter}>Filter by date</Text>
-            <TouchableOpacity
-              style={styles.fieldView}
-              onPress={() => this.onFilterDatePress()}>
+            <View style={[styles.fieldView]}>
+              <TouchableOpacity
+                style={{width: '97%'}}
+                onPress={() => this.onFilterDatePress()}>
+                {filterDate != '' ? (
+                  <Text style={[styles.textInput]}>{filterDate}</Text>
+                ) : (
+                  <Text
+                    style={[
+                      styles.textInput,
+                      {color: colors.colorGreyChateau},
+                    ]}>
+                    Filter date
+                  </Text>
+                )}
+              </TouchableOpacity>
               {filterDate != '' ? (
-                <Text style={styles.textInput}>{filterDate}</Text>
-              ) : (
-                <Text
-                  style={[styles.textInput, {color: colors.colorGreyChateau}]}>
-                  Filter date
-                </Text>
-              )}
-            </TouchableOpacity>
+                <TouchableOpacity onPress={() => this.clearFilters('date')}>
+                  <Image source={icons.cross} style={{width: 10, height: 10}} />
+                </TouchableOpacity>
+              ) : null}
+            </View>
           </View>
           <FlatList
             style={styles.flatListStyle}
