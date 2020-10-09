@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Image,
   TextInput,
+  Keyboard,
 } from 'react-native';
 import {connect} from 'react-redux';
 import * as actions from '../../../redux/actions';
@@ -159,6 +160,7 @@ class MeetingViewScreen extends Component {
   }
 
   onFilterDatePress() {
+    Keyboard.dismiss();
     this.setState({showPicker: true});
   }
 
@@ -215,9 +217,7 @@ class MeetingViewScreen extends Component {
     }, 200);
   }
 
-  editMeeting(){
-    
-  }
+  editMeeting() {}
 
   onListScroll() {
     this.setState({listScroll: true});
@@ -318,28 +318,31 @@ class MeetingViewScreen extends Component {
   };
 
   async clearFilters(fromFilter) {
+    Keyboard.dismiss();
+
     let filterKey = fromFilter == 'text' ? '' : this.state.filterKey;
     let filterDate = fromFilter == 'date' ? '' : this.state.filterDate;
-    let filterDateValue = fromFilter == 'date' ? '' : this.state.filterDateValue;
-    let filter = filterKey == '' && filterDateValue == '' ? false : this.state.filter;
+    let filterDateValue =
+      fromFilter == 'date' ? '' : this.state.filterDateValue;
+    let filter =
+      filterKey == '' && filterDateValue == '' ? false : this.state.filter;
 
     await this.setState({
       filterKey: filterKey,
       filterDate: filterDate,
-      filterDateValue:filterDateValue,
-      filter:filter,
+      filterDateValue: filterDateValue,
+      filter: filter,
       meetings: [],
       listScroll: false,
     });
+    
     let startIndex = 0;
     let endIndex = 10;
 
     this.loadMeetings(startIndex, endIndex, filter, filterKey, filterDateValue);
   }
 
-  onItemPress(item){
-
-  }
+  onItemPress(item) {}
 
   renderSubView(item) {
     let meetingActualDate = moment
@@ -469,7 +472,7 @@ class MeetingViewScreen extends Component {
               />
               {filterKey != '' ? (
                 <TouchableOpacity onPress={() => this.clearFilters('text')}>
-                  <Image source={icons.cross} style={{width: 10, height: 10}} />
+                  <Image source={icons.cross} style={styles.crossIcon} />
                 </TouchableOpacity>
               ) : null}
             </View>
@@ -494,7 +497,7 @@ class MeetingViewScreen extends Component {
               </TouchableOpacity>
               {filterDate != '' ? (
                 <TouchableOpacity onPress={() => this.clearFilters('date')}>
-                  <Image source={icons.cross} style={{width: 10, height: 10}} />
+                  <Image source={icons.cross} style={styles.crossIcon} />
                 </TouchableOpacity>
               ) : null}
             </View>
@@ -706,6 +709,10 @@ const styles = EStyleSheet.create({
     fontSize: '10rem',
     fontFamily: 'CircularStd-Medium',
     color: colors.projectTaskNameColor,
+  },
+  crossIcon: {
+    width: '10rem',
+    height: '10rem',
   },
 });
 
