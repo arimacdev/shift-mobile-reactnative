@@ -123,4 +123,4 @@ export const INITIATE_MEETING = `meeting`;
 export const ADD_DISCUSSION_POINT = `meeting/discussion`;
 export const UPDATE_MEETING = `meeting`;
 export const GET_MEETINGS = `meeting?`;
-export const DELETE_MEETING = `meeting`
+export const DELETE_MEETING = `meeting`;
