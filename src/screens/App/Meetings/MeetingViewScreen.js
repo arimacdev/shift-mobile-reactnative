@@ -288,6 +288,22 @@ class MeetingViewScreen extends Component {
     );
   }
 
+  getMeetingDateColor = function(item) {
+    let date = item.meetingExpectedTime;
+    let currentDate = moment().format('YYYY-MM-DD');
+    let dateText = moment.parseZone(date).format('YYYY-MM-DD');
+    let color = '';
+
+    if (moment(dateText).isSame(currentDate)) {
+      color = colors.colorApple;
+    } else if (moment(dateText).isAfter(currentDate)) {
+      color = colors.colorDeepSkyBlue;
+    } else {
+      color = colors.colorTomato;
+    }
+    return color;
+  };
+
   renderSubView(item) {
     let meetingActualDate = moment
       .parseZone(item.meetingExpectedTime)
@@ -308,17 +324,38 @@ class MeetingViewScreen extends Component {
         style={styles.textInputFieldView}
         onPress={() => this.onItemPress(item)}>
         <View style={styles.subViewStyle}>
-          <View style={styles.leftLineStyle} />
+          <View
+            style={[
+              styles.leftLineStyle,
+              {backgroundColor: this.getMeetingDateColor(item)},
+            ]}
+          />
           <View>
-            <Text style={styles.meetingDateStyle}>{meetingActualDate}</Text>
-            <Text style={styles.meetingDateValueStyle}>
+            <Text
+              style={[
+                styles.meetingDateStyle,
+                {color: this.getMeetingDateColor(item)},
+              ]}>
+              {meetingActualDate}
+            </Text>
+            <Text
+              style={[
+                styles.meetingDateValueStyle,
+                {color: this.getMeetingDateColor(item)},
+              ]}>
               {meetingActualDateValue}
             </Text>
           </View>
           <View style={styles.horizontalLine} />
           <View style={styles.subViewInnerStyle}>
             {/* <View style={{flexDirection: 'row'}}> */}
-            <Text style={[styles.meetingTimeStyle]}>{meetingExpectedTime}</Text>
+            <Text
+              style={[
+                styles.meetingTimeStyle,
+                {color: this.getMeetingDateColor(item)},
+              ]}>
+              {meetingExpectedTime}
+            </Text>
             <Text style={[styles.meetingDate]}>{meetingDate}</Text>
             {/* </View> */}
             <Text style={styles.meetingTopic}>{item.meetingTopic}</Text>
@@ -474,7 +511,7 @@ const styles = EStyleSheet.create({
   textInputFieldView: {
     backgroundColor: colors.projectBgColor,
     borderRadius: '5rem',
-    marginVertical:'3rem',
+    marginVertical: '3rem',
     height: '90rem',
     marginHorizontal: '20rem',
   },
