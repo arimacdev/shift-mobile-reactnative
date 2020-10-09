@@ -49,7 +49,7 @@ class MeetingViewScreen extends Component {
       filter: false,
       filterKey: '',
       filterDate: '',
-      filterDateValue:'',
+      filterDateValue: '',
       date: new Date(),
       showPicker: false,
     };
@@ -108,8 +108,9 @@ class MeetingViewScreen extends Component {
           response.data.sort(this.arrayCompare);
           this.setState({
             dataLoading: false,
-            listScroll:false,
-            meetings: this.state.meetings.concat(response.data),
+            meetings: listScroll
+              ? this.state.meetings.concat(response.data)
+              : response.data,
           });
         } else {
           this.setState({dataLoading: false});
@@ -179,12 +180,6 @@ class MeetingViewScreen extends Component {
   async deleteMeeting(item) {
     let projectId = this.props.selectedProjectID;
     let meetingId = item.meetingId;
-    let startIndex = this.state.startIndex;
-    let endIndex = this.state.endIndex;
-    let filter = this.state.filter;
-    let filterKey = this.state.filterKey;
-    let filterDate = this.state.filterDate;
-    let filterDateValue = this.state.filterDateValue;
 
     setTimeout(async () => {
       this.setState({dataLoading: true, showMessageModal: false});
@@ -198,19 +193,14 @@ class MeetingViewScreen extends Component {
               description: 'Meeting has been deleted successfully',
               buttons: {},
             };
+            let filteredData = this.state.meetings.filter(function(item) {
+              return item.meetingId != meetingId;
+            });
             await this.setState({
               dataLoading: false,
               showMessageModal: true,
-              startIndex: 0,
-              endIndex: 10,
+              meetings: filteredData,
             });
-            this.loadMeetings(
-              startIndex,
-              endIndex,
-              filter,
-              filterKey,
-              filterDateValue,
-            );
           } else {
             this.setState({dataLoading: false});
             Utils.showAlert(true, '', response.message, this.props);
@@ -236,7 +226,7 @@ class MeetingViewScreen extends Component {
   }
 
   async onSubmitEditing() {
-    await this.setState({meetings: [], filter: true, listScroll:false});
+    await this.setState({meetings: [], filter: true, listScroll: false});
     let startIndex = 0;
     let endIndex = 10;
     let filter = this.state.filter;
@@ -251,12 +241,14 @@ class MeetingViewScreen extends Component {
     this.setState({showPicker: false});
   };
 
-  handleDateTimeConfirm = async (selectedDateTime) => {
+  handleDateTimeConfirm = async selectedDateTime => {
     this.hideDateTimePicker();
     let dateTime = new Date(selectedDateTime);
     let newDateTime = '';
     let newDateTimeValue = '';
-    
+    let startIndex = 0;
+    let endIndex = 10;
+
     newDateTime = moment(dateTime).format('DD-MMMM-YYYY');
     newDateTimeValue = moment(dateTime).format('YYYY-MM-DD');
 
@@ -266,11 +258,11 @@ class MeetingViewScreen extends Component {
       filterDate: newDateTime,
       filterDateValue: newDateTimeValue,
       date: new Date(dateTime),
-      listScroll:false
+      listScroll: false,
+      startIndex: startIndex,
+      endIndex: endIndex,
     });
 
-    let startIndex = 0;
-    let endIndex = 10;
     let filter = this.state.filter;
     let filterKey = this.state.filterKey;
     // let filterDate = this.state.filterDate;
@@ -386,6 +378,7 @@ class MeetingViewScreen extends Component {
     let filterKey = this.state.filterKey;
     let filterDate = this.state.filterDate;
     let filterDateValue = this.state.filterDateValue;
+    let listScroll = this.state.listScroll;
 
     return (
       <View style={styles.container}>
@@ -424,14 +417,17 @@ class MeetingViewScreen extends Component {
             renderItem={({item}) => this.renderSubView(item)}
             keyExtractor={item => item.meetingId}
             ListEmptyComponent={<EmptyListView />}
-            onEndReached={() =>
-              this.loadMeetings(
-                startIndex,
-                endIndex,
-                filter,
-                filterKey,
-                filterDateValue,
-              )
+            onEndReached={
+              listScroll
+                ? () =>
+                    this.loadMeetings(
+                      startIndex,
+                      endIndex,
+                      filter,
+                      filterKey,
+                      filterDateValue,
+                    )
+                : () => {}
             }
             onEndReachedThreshold={0.7}
             onScroll={() => this.onListScroll()}
@@ -463,7 +459,7 @@ const styles = EStyleSheet.create({
   },
   flatListStyle: {
     marginTop: '10rem',
-    marginBottom: '90rem',
+    marginBottom: '80rem',
   },
   flatListSubStyle: {
     marginBottom: '20rem',
@@ -478,13 +474,8 @@ const styles = EStyleSheet.create({
   textInputFieldView: {
     backgroundColor: colors.projectBgColor,
     borderRadius: '5rem',
-    marginTop: '5rem',
-    marginBottom: '5rem',
-    // paddingHorizontal: '12rem',
-    // flexDirection:'row',
-    // alignItems:'center',
+    marginVertical:'3rem',
     height: '90rem',
-    // paddingVertical: '10rem',
     marginHorizontal: '20rem',
   },
   textInput: {
