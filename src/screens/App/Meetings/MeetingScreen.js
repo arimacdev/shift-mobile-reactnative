@@ -47,13 +47,13 @@ class MeetingScreen extends Component {
         },
         {
           id: 2,
-          name: 'Venue for the meeting',
-          placeHolder: 'Enter venue for the meeting',
+          name: 'Topic for the meeting',
+          placeHolder: 'Enter topic for the meeting',
         },
         {
           id: 3,
-          name: 'Topic for the meeting',
-          placeHolder: 'Enter topic for the meeting',
+          name: 'Venue for the meeting',
+          placeHolder: 'Enter venue for the meeting',
         },
         {
           id: 4,
@@ -122,8 +122,8 @@ class MeetingScreen extends Component {
     let actualTimeOfMeeting = this.state.actualTimeOfMeeting;
     let textInputs = this.state.textInputs;
     let projectID = this.props.selectedProjectID;
-    let meetingVenue = textInputs[1];
-    let meetingTopic = textInputs[2];
+    let meetingTopic = textInputs[1];
+    let meetingVenue = textInputs[2];
     let expectedDuration = textInputs[5];
 
     if (
@@ -204,7 +204,7 @@ class MeetingScreen extends Component {
       Utils.showAlert(
         true,
         '',
-        'Please enter the vanue for the meeting',
+        'Please enter the topic for the meeting',
         this.props,
       );
       return false;
@@ -214,7 +214,7 @@ class MeetingScreen extends Component {
       Utils.showAlert(
         true,
         '',
-        'Please enter the topic for the meeting',
+        'Please enter the vanue for the meeting',
         this.props,
       );
       return false;
