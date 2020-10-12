@@ -1298,6 +1298,7 @@ class ChatScreen extends Component {
               </TouchableOpacity>
               <RichTextEditorPell
                 chatText={this.state.chatText}
+                fromActions={false}
                 timeTextChange={this.state.timeTextChange}
                 taskId={this.state.taskId}
                 getRefEditor={refEditor => this.getRefEditor(refEditor)}
