@@ -7,6 +7,7 @@ import {
   Dimensions,
   TouchableOpacity,
   Image,
+  Switch,
 } from 'react-native';
 import {connect} from 'react-redux';
 import * as actions from '../../../redux/actions';
@@ -89,6 +90,8 @@ class MeetingDiscussionPointScreen extends Component {
       userName: '',
       userID: '',
       showMessageModal: false,
+      actionByGuest: false,
+      guestName: '',
     };
   }
 
@@ -326,9 +329,9 @@ class MeetingDiscussionPointScreen extends Component {
     let projectId = this.props.selectedProjectID;
     let meetingId = this.props.meetingId;
     let discussionPoint = textInputs[0];
-    let actionBy = this.state.userID;
+    let actionByGuest = this.state.actionByGuest;
+    let actionBy = actionByGuest ? this.state.guestName : this.state.userID;
     let remarks = textInputs[3];
-    let actionByGuest = false;
 
     let html = await this.richText.current?.getContentHtml();
     await this.setState({description: html});
@@ -551,7 +554,14 @@ class MeetingDiscussionPointScreen extends Component {
 
   renderMenuTrugger(placeHolder) {
     return (
-      <View style={styles.textInputFieldView}>
+      <View
+        style={[
+          styles.textInputFieldView,
+          {
+            marginRight: EStyleSheet.value('20rem'),
+            marginLeft: EStyleSheet.value('5rem'),
+          },
+        ]}>
         <TextInput
           style={styles.textInput}
           placeholder={placeHolder}
@@ -653,11 +663,25 @@ class MeetingDiscussionPointScreen extends Component {
     this.setState({showMessageModal: false});
   }
 
+  setActionByGuest(value) {
+    this.setState({
+      actionByGuest: value,
+      userID: '',
+      userName: '',
+      guestName: '',
+    });
+  }
+
+  onChangeActionByText(text) {
+    this.setState({guestName: text});
+  }
+
   renderDiscussionPointView(item, index) {
     let key = item.id;
     let value = this.state.targetDate;
     let description = this.state.description;
     let users = this.state.users;
+    let actionByGuest = this.state.actionByGuest;
 
     switch (key) {
       case 3:
@@ -682,21 +706,63 @@ class MeetingDiscussionPointScreen extends Component {
         const optionsStyles = {
           optionsContainer: {
             marginTop: 1,
-            width: '90%',
-            marginLeft: 20,
+            width: '70%',
+            marginLeft: 7,
           },
         };
         return (
-          <View>
-            <Text style={styles.fieldName}>{item.name}</Text>
-            <PopupMenu
-              menuTrigger={this.renderMenuTrugger(item.placeHolder)}
-              menuOptions={item => this.renderUserList(item)}
-              data={users}
-              onSelect={item => this.onSelectUser(item)}
-              open={this.state.popupMenuOpen}
-              customStyles={optionsStyles}
-            />
+          <View style={{flexDirection: 'row'}}>
+            <View style={{flex: 0.3}}>
+              <Text style={styles.fieldName}>By guest</Text>
+              <View
+                style={[
+                  styles.textInputFieldView,
+                  {marginRight: EStyleSheet.value('5rem')},
+                ]}>
+                <Switch
+                  onValueChange={value => this.setActionByGuest(value)}
+                  value={actionByGuest}
+                  trackColor={colors.switchOnBgColor}
+                  thumbColor={actionByGuest ? colors.switchColor : colors.gray}
+                />
+              </View>
+            </View>
+            <View style={{flex: 1}}>
+              <Text
+                style={[
+                  styles.fieldName,
+                  {marginLeft: EStyleSheet.value('7rem')},
+                ]}>
+                {item.name}
+              </Text>
+              {actionByGuest ? (
+                <View
+                  style={[
+                    styles.textInputFieldView,
+                    {
+                      marginRight: EStyleSheet.value('20rem'),
+                      marginLeft: EStyleSheet.value('5rem'),
+                    },
+                  ]}>
+                  <TextInput
+                    style={styles.textInput}
+                    placeholder={item.placeHolder}
+                    value={this.state.textInputs[index]}
+                    onChangeText={text => this.onChangeActionByText(text)}
+                    maxLength={100}
+                  />
+                </View>
+              ) : (
+                <PopupMenu
+                  menuTrigger={this.renderMenuTrugger(item.placeHolder)}
+                  menuOptions={item => this.renderUserList(item)}
+                  data={users}
+                  onSelect={item => this.onSelectUser(item)}
+                  open={this.state.popupMenuOpen}
+                  customStyles={optionsStyles}
+                />
+              )}
+            </View>
           </View>
         );
       case 1:
@@ -725,6 +791,7 @@ class MeetingDiscussionPointScreen extends Component {
             <View style={styles.textEditorStyle}>
               <RichTextEditorPell
                 chatText={description}
+                fromActions={true}
                 getRefEditor={refEditor => this.getRefEditor(refEditor)}
                 doumentPicker={() => {
                   this.filePicker();
