@@ -98,6 +98,7 @@ class MeetingDiscussionPointScreen extends Component {
       actionByGuest: false,
       guestName: '',
       TaskName: '',
+      convertToTask: false,
     };
   }
 
@@ -329,7 +330,6 @@ class MeetingDiscussionPointScreen extends Component {
   }
 
   async convertToTask() {
-
     let textInputs = this.state.textInputs;
     let projectId = this.props.selectedProjectID;
     let meetingId = this.props.meetingId;
@@ -337,26 +337,21 @@ class MeetingDiscussionPointScreen extends Component {
     let actionBy = actionByGuest ? this.state.guestName : this.state.userID;
     let taskName = textInputs[3];
 
-      this.setState({dataLoading: true, showMessageModal: false});
-      await APIServices.addDiscussionPointData(
-        meetingId,
-        projectId,
-        taskName,
-      )
-        .then(response => {
-          if (response.message == 'success') {
-            this.setState({dataLoading: false, showMessageModal: true});
-            this.resetValues();
-          } else {
-            this.setState({dataLoading: false});
-            Utils.showAlert(true, '', response.message, this.props);
-          }
-        })
-        .catch(error => {
+    this.setState({dataLoading: true, showMessageModal: false});
+    await APIServices.addDiscussionPointData(meetingId, projectId, taskName)
+      .then(response => {
+        if (response.message == 'success') {
+          this.setState({dataLoading: false, showMessageModal: true});
+          this.resetValues();
+        } else {
           this.setState({dataLoading: false});
-          Utils.showAlert(true, '', error.data.message, this.props);
-        });
-    
+          Utils.showAlert(true, '', response.message, this.props);
+        }
+      })
+      .catch(error => {
+        this.setState({dataLoading: false});
+        Utils.showAlert(true, '', error.data.message, this.props);
+      });
   }
 
   async addPoint() {
@@ -369,12 +364,21 @@ class MeetingDiscussionPointScreen extends Component {
     let actionByGuest = this.state.actionByGuest;
     let actionBy = actionByGuest ? this.state.guestName : this.state.userID;
     let remarks = textInputs[4];
+    let convertToTask = this.state.convertToTask;
 
     let html = await this.richText.current?.getContentHtml();
     await this.setState({description: html});
     let description = this.state.description;
 
-    if (this.validateFields(targetDate, textInputs, actionBy, description)) {
+    if (
+      this.validateFields(
+        targetDate,
+        textInputs,
+        actionBy,
+        convertToTask,
+        description,
+      )
+    ) {
       let targetDateFormatted = targetDateValue
         ? moment(targetDateValue, 'DD/MM/YYYY hh:mmA').format(
             'YYYY-MM-DD[T]HH:mm:ss',
@@ -408,9 +412,7 @@ class MeetingDiscussionPointScreen extends Component {
     }
   }
 
-  validateFields(targetDate, textInputs, actionBy, description) {
-    let convetToTask = this.state.convetToTask;
-    
+  validateFields(targetDate, textInputs, actionBy, convertToTask, description) {
     if (!textInputs[0] && _.isEmpty(textInputs[0])) {
       Utils.showAlert(
         true,
@@ -431,11 +433,11 @@ class MeetingDiscussionPointScreen extends Component {
       return false;
     }
 
-    if (convetToTask && !textInputs[3] && _.isEmpty(textInputs[3])) {
+    if (convertToTask && !textInputs[3] && _.isEmpty(textInputs[3])) {
       Utils.showAlert(
         true,
         '',
-        'Please enter the action by for discussion point',
+        'Please enter the task name',
         this.props,
       );
       return false;
@@ -726,9 +728,9 @@ class MeetingDiscussionPointScreen extends Component {
     this.setState({guestName: text});
   }
 
-  setConvetToTask(){
+  setConvertToTask(value) {
     this.setState({
-      convetToTask: value,
+      convertToTask: value,
     });
   }
 
@@ -738,6 +740,7 @@ class MeetingDiscussionPointScreen extends Component {
     let description = this.state.description;
     let users = this.state.users;
     let actionByGuest = this.state.actionByGuest;
+    let convertToTask = this.state.convertToTask;
 
     switch (key) {
       case 1:
@@ -823,7 +826,7 @@ class MeetingDiscussionPointScreen extends Component {
           </View>
         );
       case 3:
-        return (
+        return !actionByGuest ? (
           <View style={{flexDirection: 'row'}}>
             <View style={{flex: 0.3}}>
               <Text style={styles.fieldName}>To Task</Text>
@@ -833,10 +836,10 @@ class MeetingDiscussionPointScreen extends Component {
                   {marginRight: EStyleSheet.value('5rem')},
                 ]}>
                 <Switch
-                  onValueChange={value => this.setConvetToTask(value)}
-                  value={convetToTask}
+                  onValueChange={value => this.setConvertToTask(value)}
+                  value={convertToTask}
                   trackColor={colors.switchOnBgColor}
-                  thumbColor={actionByGuest ? colors.switchColor : colors.gray}
+                  thumbColor={convertToTask ? colors.switchColor : colors.gray}
                 />
               </View>
             </View>
@@ -859,15 +862,16 @@ class MeetingDiscussionPointScreen extends Component {
                 ]}>
                 <TextInput
                   style={styles.textInput}
+                  editable={convertToTask}
                   placeholder={item.placeHolder}
                   value={this.state.textInputs[index]}
-                  onChangeText={text => this.onChangeActionByText(text)}
+                  onChangeText={text => this.onChangeText(text)}
                   maxLength={100}
                 />
               </View>
             </View>
           </View>
-        );
+        ) : null;
       case 4:
         return (
           <View>
