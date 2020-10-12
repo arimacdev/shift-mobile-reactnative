@@ -99,6 +99,7 @@ import {
   UPDATE_MEETING,
   GET_MEETINGS,
   DELETE_MEETING,
+  CONVERT_TO_TASK,
 } from '../api/API';
 import AsyncStorage from '@react-native-community/async-storage';
 import {SET_UPLOAD_PROGRESS} from '../redux/types';
@@ -3813,6 +3814,48 @@ async function deleteMeetingsData(projectId, meetingId) {
   );
 }
 
+async function convertToTaskData(
+  meetingId,
+  discussionId,
+  projectId,
+  taskName,
+  taskAssignee,
+) {
+  let baseURL = null;
+  baseURL = await AsyncStorage.getItem('baseURL');
+  let userIDHeder = null;
+  userIDHeder = await AsyncStorage.getItem('userID');
+
+  let headers = {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+    user: userIDHeder,
+  };
+
+  return request(
+    {
+      url:
+        baseURL +
+        CONVERT_TO_TASK +
+        '/' +
+        meetingId +
+        '/discussion/' +
+        discussionId +
+        '/transition',
+      method: 'POST',
+      data: {
+        projectId: projectId,
+        taskName: taskName,
+        taskInitiator: userIDHeder,
+        taskAssignee: taskAssignee,
+        issueType: 'general',
+      },
+    },
+    true,
+    headers,
+  );
+}
+
 const APIServices = {
   getAllProjectsByUserData,
   getUserData,
@@ -3939,7 +3982,8 @@ const APIServices = {
   addDiscussionPointData,
   updateMeetingData,
   getMeetingsData,
-  deleteMeetingsData
+  deleteMeetingsData,
+  convertToTaskData,
 };
 
 export default APIServices;

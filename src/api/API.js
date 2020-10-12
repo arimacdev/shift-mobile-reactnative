@@ -124,3 +124,4 @@ export const ADD_DISCUSSION_POINT = `meeting/discussion`;
 export const UPDATE_MEETING = `meeting`;
 export const GET_MEETINGS = `meeting?`;
 export const DELETE_MEETING = `meeting`;
+export const CONVERT_TO_TASK = `meeting`;
