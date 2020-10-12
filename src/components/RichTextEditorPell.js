@@ -11,7 +11,12 @@ import {
   ScrollView,
   Dimensions,
 } from 'react-native';
-import {RichEditor, RichToolbar} from 'react-native-pell-rich-editor';
+import {
+  RichEditor,
+  RichToolbar,
+  actions,
+  defaultActions,
+} from 'react-native-pell-rich-editor';
 import colors from '../config/colors';
 import EStyleSheet from 'react-native-extended-stylesheet';
 const entireScreenWidth = Dimensions.get('window').width;
@@ -129,6 +134,8 @@ class RichTextEditorPell extends React.Component {
     const {contentStyle, initHTML} = that.state;
     const {backgroundColor, color} = contentStyle;
     const themeBg = {backgroundColor};
+    const fromActions = this.props.fromActions;
+
     return (
       <SafeAreaView style={[styles.container, themeBg]}>
         <ScrollView
@@ -142,7 +149,23 @@ class RichTextEditorPell extends React.Component {
             placeholder={'please input content'}
             initialContentHTML={initHTML}
             onChange={text => this.props.onChangeEditorText(text)}
+            scrollEnabled
+            useContainer={false}
+            // onHeightChange={e => {
+            //   console.log('change height');
+            //   console.log(e);
+            //   setEditorHeight(e);
+            // }}
           />
+          {/* <RichEditor
+            editorStyle={contentStyle}
+            containerStyle={themeBg}
+            ref={that.richText}
+            style={[styles.rich, themeBg]}
+            placeholder={'please input content'}
+            initialContentHTML={initHTML}
+            onChange={text => this.props.onChangeEditorText(text)}
+          /> */}
         </ScrollView>
         <KeyboardAvoidingView behavior={'padding'}>
           <RichToolbar
@@ -158,6 +181,17 @@ class RichTextEditorPell extends React.Component {
             selectedButtonStyle={{backgroundColor: 'transparent'}}
             onPressAddImage={that.props.doumentPicker}
             onInsertLink={that.props.onInsertLink}
+            actions={
+              fromActions
+                ? [
+                    actions.setBold,
+                    actions.setItalic,
+                    actions.insertBulletsList,
+                    actions.insertOrderedList,
+                    actions.insertLink,
+                  ]
+                : [...defaultActions]
+            }
           />
         </KeyboardAvoidingView>
       </SafeAreaView>
