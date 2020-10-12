@@ -335,7 +335,7 @@ class MeetingViewScreen extends Component {
       meetings: [],
       listScroll: false,
     });
-    
+
     let startIndex = 0;
     let endIndex = 10;
 
@@ -406,12 +406,13 @@ class MeetingViewScreen extends Component {
               {this.convertMinsToTime(item.expectedDuration)}
             </Text>
             <View style={styles.controlView}>
-              <TouchableOpacity onPress={() => this.editMeeting(item)}>
+              {/**Commented according to the requriment. If need please uncomment this.*/}
+              {/* <TouchableOpacity onPress={() => this.editMeeting(item)}>
                 <Image
                   style={styles.controlIcon}
                   source={icons.editRoundWhite}
                 />
-              </TouchableOpacity>
+              </TouchableOpacity> */}
               <TouchableOpacity
                 onPress={() => this.deleteMeetingAlert(item)}
                 style={{marginLeft: EStyleSheet.value('15rem')}}>
@@ -674,7 +675,9 @@ const styles = EStyleSheet.create({
     marginLeft: '15rem',
   },
   controlView: {
-    alignItems: 'center',
+    alignItems: 'flex-end',
+    justifyContent: 'flex-end',
+    // alignItems:'center', // Uncomment if edit enable. Comment alignItems:'flex-end', justifyContent: 'flex-end'
     flexDirection: 'row',
     marginRight: '10rem',
   },
