@@ -57,16 +57,21 @@ class MeetingDiscussionPointScreen extends Component {
         },
         {
           id: 3,
+          name: 'Task Name',
+          placeHolder: 'Enter task name',
+        },
+        {
+          id: 4,
           name: 'Target Date',
           placeHolder: 'Set target date for discussion point',
         },
         {
-          id: 4,
+          id: 5,
           name: 'Remarks',
           placeHolder: 'Enter Remarks for discussion point',
         },
         {
-          id: 5,
+          id: 6,
           name: 'Description',
           placeHolder: 'Enter description for discussion point',
         },
@@ -92,6 +97,7 @@ class MeetingDiscussionPointScreen extends Component {
       showMessageModal: false,
       actionByGuest: false,
       guestName: '',
+      TaskName: '',
     };
   }
 
@@ -322,6 +328,37 @@ class MeetingDiscussionPointScreen extends Component {
     this.setContentHTML('');
   }
 
+  async convertToTask() {
+
+    let textInputs = this.state.textInputs;
+    let projectId = this.props.selectedProjectID;
+    let meetingId = this.props.meetingId;
+    let actionByGuest = this.state.actionByGuest;
+    let actionBy = actionByGuest ? this.state.guestName : this.state.userID;
+    let taskName = textInputs[3];
+
+      this.setState({dataLoading: true, showMessageModal: false});
+      await APIServices.addDiscussionPointData(
+        meetingId,
+        projectId,
+        taskName,
+      )
+        .then(response => {
+          if (response.message == 'success') {
+            this.setState({dataLoading: false, showMessageModal: true});
+            this.resetValues();
+          } else {
+            this.setState({dataLoading: false});
+            Utils.showAlert(true, '', response.message, this.props);
+          }
+        })
+        .catch(error => {
+          this.setState({dataLoading: false});
+          Utils.showAlert(true, '', error.data.message, this.props);
+        });
+    
+  }
+
   async addPoint() {
     let targetDate = this.state.targetDate;
     let targetDateValue = this.state.targetDateValue;
@@ -331,7 +368,7 @@ class MeetingDiscussionPointScreen extends Component {
     let discussionPoint = textInputs[0];
     let actionByGuest = this.state.actionByGuest;
     let actionBy = actionByGuest ? this.state.guestName : this.state.userID;
-    let remarks = textInputs[3];
+    let remarks = textInputs[4];
 
     let html = await this.richText.current?.getContentHtml();
     await this.setState({description: html});
@@ -372,6 +409,8 @@ class MeetingDiscussionPointScreen extends Component {
   }
 
   validateFields(targetDate, textInputs, actionBy, description) {
+    let convetToTask = this.state.convetToTask;
+    
     if (!textInputs[0] && _.isEmpty(textInputs[0])) {
       Utils.showAlert(
         true,
@@ -392,35 +431,46 @@ class MeetingDiscussionPointScreen extends Component {
       return false;
     }
 
-    if (!targetDate && _.isEmpty(targetDate)) {
+    if (convetToTask && !textInputs[3] && _.isEmpty(textInputs[3])) {
       Utils.showAlert(
         true,
         '',
-        'Please set the target date for discussion point',
+        'Please enter the action by for discussion point',
         this.props,
       );
       return false;
     }
 
-    if (!textInputs[3] && _.isEmpty(textInputs[3])) {
-      Utils.showAlert(
-        true,
-        '',
-        'Please enter the remarks for discussion point',
-        this.props,
-      );
-      return false;
-    }
+    //Commnted for remove validations. For add the validations please remove.
+    // if (!targetDate && _.isEmpty(targetDate)) {
+    //   Utils.showAlert(
+    //     true,
+    //     '',
+    //     'Please set the target date for discussion point',
+    //     this.props,
+    //   );
+    //   return false;
+    // }
 
-    if (!description && _.isEmpty(description)) {
-      Utils.showAlert(
-        true,
-        '',
-        'Please enter the description for discussion point',
-        this.props,
-      );
-      return false;
-    }
+    // if (!textInputs[4] && _.isEmpty(textInputs[4])) {
+    //   Utils.showAlert(
+    //     true,
+    //     '',
+    //     'Please enter the remarks for discussion point',
+    //     this.props,
+    //   );
+    //   return false;
+    // }
+
+    // if (!description && _.isEmpty(description)) {
+    //   Utils.showAlert(
+    //     true,
+    //     '',
+    //     'Please enter the description for discussion point',
+    //     this.props,
+    //   );
+    //   return false;
+    // }
 
     return true;
   }
@@ -432,7 +482,7 @@ class MeetingDiscussionPointScreen extends Component {
 
   onDiscussionItemPress(item) {
     switch (item.id) {
-      case 3:
+      case 4:
         this.setState({showPicker: true});
         break;
       default:
@@ -676,6 +726,12 @@ class MeetingDiscussionPointScreen extends Component {
     this.setState({guestName: text});
   }
 
+  setConvetToTask(){
+    this.setState({
+      convetToTask: value,
+    });
+  }
+
   renderDiscussionPointView(item, index) {
     let key = item.id;
     let value = this.state.targetDate;
@@ -684,22 +740,23 @@ class MeetingDiscussionPointScreen extends Component {
     let actionByGuest = this.state.actionByGuest;
 
     switch (key) {
-      case 3:
+      case 1:
+      case 5:
         return (
           <View>
             <Text style={styles.fieldName}>{item.name}</Text>
-            <TouchableOpacity
-              style={styles.textInputFieldView}
-              onPress={() => this.onDiscussionItemPress(item)}>
-              {value != '' ? (
-                <Text style={styles.textInput}>{value}</Text>
-              ) : (
-                <Text
-                  style={[styles.textInput, {color: colors.colorGreyChateau}]}>
-                  {item.placeHolder}
-                </Text>
-              )}
-            </TouchableOpacity>
+            <View style={styles.textInputFieldView}>
+              <TextInput
+                ref={ref => (this.textInputValuesArray[index] = ref)}
+                style={styles.textInput}
+                placeholder={item.placeHolder}
+                value={this.state.textInputs[index]}
+                keyboardType={index == 0 ? 'numeric' : 'default'}
+                onChangeText={text => this.onChangeText(text, index)}
+                maxLength={100}
+                onFocus={() => this.onFocusTextInput(index)}
+              />
+            </View>
           </View>
         );
       case 2:
@@ -747,7 +804,7 @@ class MeetingDiscussionPointScreen extends Component {
                   <TextInput
                     style={styles.textInput}
                     placeholder={item.placeHolder}
-                    value={this.state.textInputs[index]}
+                    value={this.state.guestName}
                     onChangeText={text => this.onChangeActionByText(text)}
                     maxLength={100}
                   />
@@ -765,26 +822,71 @@ class MeetingDiscussionPointScreen extends Component {
             </View>
           </View>
         );
-      case 1:
+      case 3:
+        return (
+          <View style={{flexDirection: 'row'}}>
+            <View style={{flex: 0.3}}>
+              <Text style={styles.fieldName}>To Task</Text>
+              <View
+                style={[
+                  styles.textInputFieldView,
+                  {marginRight: EStyleSheet.value('5rem')},
+                ]}>
+                <Switch
+                  onValueChange={value => this.setConvetToTask(value)}
+                  value={convetToTask}
+                  trackColor={colors.switchOnBgColor}
+                  thumbColor={actionByGuest ? colors.switchColor : colors.gray}
+                />
+              </View>
+            </View>
+            <View style={{flex: 1}}>
+              <Text
+                style={[
+                  styles.fieldName,
+                  {marginLeft: EStyleSheet.value('7rem')},
+                ]}>
+                {item.name}
+              </Text>
+
+              <View
+                style={[
+                  styles.textInputFieldView,
+                  {
+                    marginRight: EStyleSheet.value('20rem'),
+                    marginLeft: EStyleSheet.value('5rem'),
+                  },
+                ]}>
+                <TextInput
+                  style={styles.textInput}
+                  placeholder={item.placeHolder}
+                  value={this.state.textInputs[index]}
+                  onChangeText={text => this.onChangeActionByText(text)}
+                  maxLength={100}
+                />
+              </View>
+            </View>
+          </View>
+        );
       case 4:
         return (
           <View>
             <Text style={styles.fieldName}>{item.name}</Text>
-            <View style={styles.textInputFieldView}>
-              <TextInput
-                ref={ref => (this.textInputValuesArray[index] = ref)}
-                style={styles.textInput}
-                placeholder={item.placeHolder}
-                value={this.state.textInputs[index]}
-                keyboardType={index == 0 ? 'numeric' : 'default'}
-                onChangeText={text => this.onChangeText(text, index)}
-                maxLength={100}
-                onFocus={() => this.onFocusTextInput(index)}
-              />
-            </View>
+            <TouchableOpacity
+              style={styles.textInputFieldView}
+              onPress={() => this.onDiscussionItemPress(item)}>
+              {value != '' ? (
+                <Text style={styles.textInput}>{value}</Text>
+              ) : (
+                <Text
+                  style={[styles.textInput, {color: colors.colorGreyChateau}]}>
+                  {item.placeHolder}
+                </Text>
+              )}
+            </TouchableOpacity>
           </View>
         );
-      case 5:
+      case 6:
         return (
           <View>
             <Text style={styles.fieldName}>{item.name}</Text>
