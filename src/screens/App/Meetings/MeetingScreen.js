@@ -6,12 +6,15 @@ import {
   FlatList,
   Dimensions,
   TouchableOpacity,
+  KeyboardAvoidingView,
+  Keyboard,
 } from 'react-native';
 import {connect} from 'react-redux';
 import * as actions from '../../../redux/actions';
 import colors from '../../../config/colors';
 import EStyleSheet, {value} from 'react-native-extended-stylesheet';
 const entireScreenWidth = Dimensions.get('window').width;
+const {height, width} = Dimensions.get('window');
 EStyleSheet.build({$rem: entireScreenWidth / 380});
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import moment from 'moment';
@@ -82,15 +85,45 @@ class MeetingScreen extends Component {
       scheduleTimeOfMeeting: '',
       actualTimeOfMeeting: '',
       textInputs: [],
-      indexMain: 0,
+      indexMain: 1,
       meetingId: '',
       showMessageModal: false,
+      keyboardShow: false,
+      textInputIndex: 0,
     };
+    this.keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      this._keyboardDidShow.bind(this),
+    );
+    this.keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      this._keyboardDidHide.bind(this),
+    );
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {}
 
   componentDidMount() {}
+
+  componentWillUnmount() {
+    this.keyboardDidShowListener.remove();
+    this.keyboardDidHideListener.remove();
+  }
+
+  _keyboardDidShow(e) {
+    this.setState({keyboardShow: true});
+  }
+
+  _keyboardDidHide(e) {
+    let textInputIndex = this.state.textInputIndex;
+    let indexMain = this.state.indexMain;
+
+    this.setState({keyboardShow: false});
+    if(indexMain == 0){
+      this.textInputValuesArray[textInputIndex].blur();
+    }
+    
+  }
 
   async onChangeText(text, index) {
     let removedText = '';
@@ -107,6 +140,9 @@ class MeetingScreen extends Component {
 
   resetValues() {
     this.setState({
+      dateMeeting: new Date(),
+      scheduleTime: new Date(),
+      actualTime: new Date(),
       dateOfMeeting: '',
       dateOfMeetingValue: '',
       scheduleTimeOfMeeting: '',
@@ -381,10 +417,13 @@ class MeetingScreen extends Component {
 
   onFocusTextInput(index) {
     this.flatList.scrollToIndex({animated: true, index: index});
+    this.setState({textInputIndex: index});
   }
 
   onChangeIndexMain(indexMain) {
     this.setState({indexMain: indexMain});
+    this.keyboardDidShowListener.remove();
+    this.keyboardDidHideListener.remove();
   }
 
   viewMeetings() {
@@ -449,14 +488,23 @@ class MeetingScreen extends Component {
     let textInputArray = this.state.textInputArray;
     let indexMain = this.state.indexMain;
     let dataLoading = this.state.dataLoading;
+    let keyboardShow = this.state.keyboardShow;
 
     return (
+      <KeyboardAvoidingView style={{flex: 1}} behavior="height">
       <View style={styles.container}>
         {indexMain == 0 ? (
           <View style={{flex: 1}}>
             <FlatList
               ref={r => (this.flatList = r)}
-              style={styles.flatListStyle}
+              style={[
+                styles.flatListStyle,
+                {
+                  marginBottom: keyboardShow
+                    ? EStyleSheet.value('240rem')
+                    : EStyleSheet.value('100rem'),
+                },
+              ]}
               data={textInputArray}
               renderItem={({item, index}) => this.renderView(item, index)}
               keyExtractor={item => item.id}
@@ -479,6 +527,7 @@ class MeetingScreen extends Component {
             selectedProjectID={this.props.selectedProjectID}
             navigation={this.props.navigation}
             meetingId={this.state.meetingId}
+            meetingDetails={this.meetingDetails}
             onChangeIndexMain={indexMain => this.onChangeIndexMain(indexMain)}
           />
         ) : indexMain == 2 ? (
@@ -507,6 +556,7 @@ class MeetingScreen extends Component {
         />
         {dataLoading && <Loader />}
       </View>
+      </KeyboardAvoidingView>
     );
   }
 }
