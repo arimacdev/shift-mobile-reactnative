@@ -21,7 +21,7 @@ import APIServices from '../../../services/APIServices';
 import Utils from '../../../utils/Utils';
 import _ from 'lodash';
 import ImagePicker from 'react-native-image-picker';
-// import RichTextEditorPell from '../../../components/RichTextEditorPell';
+import RichTextEditorPell from '../../../components/RichTextEditorPell';
 import FilePickerModal from '../../../components/FilePickerModal';
 import Modal from 'react-native-modal';
 import PopupMenu from '../../../components/PopupMenu';
@@ -337,13 +337,12 @@ class MeetingDiscussionPointScreen extends Component {
     let textInputs = this.state.textInputs;
     let meetingId = this.props.meetingId;
     let projectId = this.props.selectedProjectID;
-    let taskName = textInputs[3];
+    let taskName = textInputs[2];
     let actionBy = this.state.userID;
 
     this.setState({dataLoading: true});
     await APIServices.convertToTaskData(
-      // meetingId,
-      'e385c24f-cf8a-4b91-9f85-b77a032d539a',
+      meetingId,
       discussionId,
       projectId,
       taskName,
@@ -395,8 +394,7 @@ class MeetingDiscussionPointScreen extends Component {
         : '';
       this.setState({dataLoading: true, showMessageModal: false});
       await APIServices.addDiscussionPointData(
-        // meetingId,
-        'e385c24f-cf8a-4b91-9f85-b77a032d539a',
+        meetingId,
         projectId,
         description,
         discussionPoint,
@@ -902,7 +900,7 @@ class MeetingDiscussionPointScreen extends Component {
           <View>
             <Text style={styles.fieldName}>{item.name}</Text>
             <View style={styles.textEditorStyle}>
-              {/* <RichTextEditorPell
+              <RichTextEditorPell
                 chatText={description}
                 fromActions={true}
                 getRefEditor={refEditor => this.getRefEditor(refEditor)}
@@ -911,7 +909,7 @@ class MeetingDiscussionPointScreen extends Component {
                 }}
                 onInsertLink={() => this.showEnterUrlModal()}
                 onChangeEditorText={text => this.onChangeEditorText(text)}
-              /> */}
+              />
             </View>
           </View>
         );
