@@ -143,7 +143,7 @@ class MeetingViewScreen extends Component {
     this.setState({indexMain: indexMain});
   }
 
-  initiateMeeting() {
+  navigateToInitiateMeeting() {
     this.setState({indexMain: 0});
     this.props.onChangeIndexMain(0);
   }
@@ -360,9 +360,10 @@ class MeetingViewScreen extends Component {
       .format('MMMM, YYYY');
 
     return (
-      <TouchableOpacity
+      <View
         style={styles.textInputFieldView}
-        onPress={() => this.onItemPress(item)}>
+        // onPress={() => this.onItemPress(item)}// If uncommented and change the <View> into <TouchableOpacity>
+      >
         <View style={styles.subViewStyle}>
           <View
             style={[
@@ -424,7 +425,7 @@ class MeetingViewScreen extends Component {
             </View>
           </View>
         </View>
-      </TouchableOpacity>
+      </View>
     );
   }
 
@@ -525,7 +526,7 @@ class MeetingViewScreen extends Component {
             onScroll={() => this.onListScroll()}
           />
           <View style={styles.bottomContainer}>
-            <TouchableOpacity onPress={() => this.initiateMeeting()}>
+            <TouchableOpacity onPress={() => this.navigateToInitiateMeeting()}>
               <View style={styles.button}>
                 <Text style={styles.buttonText}>Initiate a Meeting</Text>
               </View>
