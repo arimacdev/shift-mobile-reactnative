@@ -450,7 +450,7 @@ class MeetingDiscussionPointScreen extends Component {
       return false;
     }
 
-    //Commnted for remove validations. For add the validations please remove.
+    //Commnted for remove validations. For add the validations please uncomment.
     // if (!targetDate && _.isEmpty(targetDate)) {
     //   Utils.showAlert(
     //     true,
