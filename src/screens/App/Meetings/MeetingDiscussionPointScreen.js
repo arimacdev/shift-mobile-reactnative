@@ -21,7 +21,7 @@ import APIServices from '../../../services/APIServices';
 import Utils from '../../../utils/Utils';
 import _ from 'lodash';
 import ImagePicker from 'react-native-image-picker';
-import RichTextEditorPell from '../../../components/RichTextEditorPell';
+// import RichTextEditorPell from '../../../components/RichTextEditorPell';
 import FilePickerModal from '../../../components/FilePickerModal';
 import Modal from 'react-native-modal';
 import PopupMenu from '../../../components/PopupMenu';
@@ -325,24 +325,33 @@ class MeetingDiscussionPointScreen extends Component {
       textInputs: [count.toString()],
       description: '',
       userName: '',
+      guestName: '',
+      taskName: '',
+      actionByGuest: false,
+      convertToTask: false,
     });
     this.setContentHTML('');
   }
 
-  async convertToTask() {
+  async convertToTask(discussionId) {
     let textInputs = this.state.textInputs;
-    let projectId = this.props.selectedProjectID;
     let meetingId = this.props.meetingId;
-    let actionByGuest = this.state.actionByGuest;
-    let actionBy = actionByGuest ? this.state.guestName : this.state.userID;
+    let projectId = this.props.selectedProjectID;
     let taskName = textInputs[3];
+    let actionBy = this.state.userID;
 
-    this.setState({dataLoading: true, showMessageModal: false});
-    await APIServices.addDiscussionPointData(meetingId, projectId, taskName)
+    this.setState({dataLoading: true});
+    await APIServices.convertToTaskData(
+      // meetingId,
+      'e385c24f-cf8a-4b91-9f85-b77a032d539a',
+      discussionId,
+      projectId,
+      taskName,
+      actionBy,
+    )
       .then(response => {
         if (response.message == 'success') {
-          this.setState({dataLoading: false, showMessageModal: true});
-          this.resetValues();
+          this.setState({dataLoading: false});
         } else {
           this.setState({dataLoading: false});
           Utils.showAlert(true, '', response.message, this.props);
@@ -366,8 +375,8 @@ class MeetingDiscussionPointScreen extends Component {
     let remarks = textInputs[4];
     let convertToTask = this.state.convertToTask;
 
-    let html = await this.richText.current?.getContentHtml();
-    await this.setState({description: html});
+    // let html = await this.richText.current?.getContentHtml();
+    // await this.setState({description: html});
     let description = this.state.description;
 
     if (
@@ -386,8 +395,8 @@ class MeetingDiscussionPointScreen extends Component {
         : '';
       this.setState({dataLoading: true, showMessageModal: false});
       await APIServices.addDiscussionPointData(
-        meetingId,
-        // '584adb31-d273-4f59-a04e-ccfc6d09599d',
+        // meetingId,
+        'e385c24f-cf8a-4b91-9f85-b77a032d539a',
         projectId,
         description,
         discussionPoint,
@@ -399,6 +408,9 @@ class MeetingDiscussionPointScreen extends Component {
         .then(response => {
           if (response.message == 'success') {
             this.setState({dataLoading: false, showMessageModal: true});
+            if (!actionByGuest && convertToTask) {
+              this.convertToTask(response.data.minuteId);
+            }
             this.resetValues();
           } else {
             this.setState({dataLoading: false});
@@ -433,13 +445,8 @@ class MeetingDiscussionPointScreen extends Component {
       return false;
     }
 
-    if (convertToTask && !textInputs[3] && _.isEmpty(textInputs[3])) {
-      Utils.showAlert(
-        true,
-        '',
-        'Please enter the task name',
-        this.props,
-      );
+    if (convertToTask && !textInputs[2] && _.isEmpty(textInputs[2])) {
+      Utils.showAlert(true, '', 'Please enter the task name', this.props);
       return false;
     }
 
@@ -865,7 +872,7 @@ class MeetingDiscussionPointScreen extends Component {
                   editable={convertToTask}
                   placeholder={item.placeHolder}
                   value={this.state.textInputs[index]}
-                  onChangeText={text => this.onChangeText(text)}
+                  onChangeText={text => this.onChangeText(text, index)}
                   maxLength={100}
                 />
               </View>
@@ -895,7 +902,7 @@ class MeetingDiscussionPointScreen extends Component {
           <View>
             <Text style={styles.fieldName}>{item.name}</Text>
             <View style={styles.textEditorStyle}>
-              <RichTextEditorPell
+              {/* <RichTextEditorPell
                 chatText={description}
                 fromActions={true}
                 getRefEditor={refEditor => this.getRefEditor(refEditor)}
@@ -904,7 +911,7 @@ class MeetingDiscussionPointScreen extends Component {
                 }}
                 onInsertLink={() => this.showEnterUrlModal()}
                 onChangeEditorText={text => this.onChangeEditorText(text)}
-              />
+              /> */}
             </View>
           </View>
         );
