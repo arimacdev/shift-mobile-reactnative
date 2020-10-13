@@ -39,7 +39,7 @@ class MeetingOtherDetailsScreen extends Component {
       discusstionPointsArray: [
         {
           id: 1,
-          name: 'Actual duration of the meeting',
+          name: 'Actual duration of the meeting (min)',
           placeHolder: 'Enter actual duration of the meeting',
         },
         {
