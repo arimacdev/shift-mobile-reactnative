@@ -156,7 +156,8 @@ class MeetingOtherDetailsScreen extends Component {
     let isUpdated = true;
 
     for (let i = 0; i < textInputsUserList.length; i++) {
-      const element = textInputsUserList[i];
+      const element =
+        textInputsUserList[i] == undefined ? [] : textInputsUserList[i];
       switch (i) {
         case 3:
           for (let index = 0; index < element.length; index++) {
@@ -283,6 +284,7 @@ class MeetingOtherDetailsScreen extends Component {
         .then(response => {
           if (response.message == 'success') {
             this.setState({dataLoading: false, showMessageModal: true});
+            this.resetValues();
           } else {
             this.setState({dataLoading: false});
             Utils.showAlert(true, '', response.message, this.props);
@@ -490,11 +492,9 @@ class MeetingOtherDetailsScreen extends Component {
         activeUsersData={true}
         activeUsers={users}
         dataLength={dataLength}
-        keyboardValue={0}
-        customScrollStyle={styles.customScrollStyle}
+        keyboardValue={0.01}
         hasBackdrop={true}
         coverScreen={true}
-        customModalStyle={styles.popupMenuModalStyle}
       />
     );
   }
@@ -544,7 +544,7 @@ const styles = EStyleSheet.create({
     flex: 1,
   },
   flatListStyle: {
-    marginBottom: '100rem',
+    marginBottom: '80rem',
   },
   fieldName: {
     marginHorizontal: '20rem',
