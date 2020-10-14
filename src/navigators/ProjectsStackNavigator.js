@@ -23,6 +23,7 @@ import AddEditSubTaskScreen from '../screens/App/Tasks/AddEditSubTaskScreen';
 import FilesView from '../screens/App/Tasks/FilesView';
 import AddEditSprint from '../screens/App/Board/AddEditSprint';
 import TasksLogScreen from '../screens/App/Tasks/TasksLogScreen';
+import MeetingScreen from '../screens/App/Meetings/MeetingScreen';
 
 export const ProjectsStackNavigator = createStackNavigator(
   {
@@ -225,13 +226,25 @@ export const ProjectsStackNavigator = createStackNavigator(
         ),
       }),
     },
-    TaskLogScreen: {
+    TasksLogScreen: {
       screen: TasksLogScreen,
       navigationOptions: ({navigation}) => ({
         header: (
           <Header
             navigation={navigation}
             title={'Task Log'}
+            onPress={() => navigation.goBack()}
+          />
+        ),
+      }),
+    },
+    MeetingScreen: {
+      screen: MeetingScreen,
+      navigationOptions: ({navigation}) => ({
+        header: (
+          <Header
+            navigation={navigation}
+            title={'Create Meeting'}
             onPress={() => navigation.goBack()}
           />
         ),
