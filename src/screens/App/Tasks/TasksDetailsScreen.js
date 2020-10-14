@@ -2699,7 +2699,7 @@ class TasksDetailsScreen extends Component {
           // taskStatus={taskStatus ? taskStatus : ''}
           onPress={() => this.backPress()}
           onPressTaskLog={() =>
-            this.props.navigation.navigate('TaskLogScreen', {
+            this.props.navigation.navigate('TasksLogScreen', {
               selectedProjectTaskID: this.state.selectedProjectTaskID,
             })
           }
