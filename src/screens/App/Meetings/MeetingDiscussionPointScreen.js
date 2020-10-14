@@ -318,12 +318,13 @@ class MeetingDiscussionPointScreen extends Component {
   async resetValues() {
     let count = this.state.count + 1;
     this.setState({
+      date: new Date(),
       targetDate: '',
       targetDateValue: '',
-      userID: '',
       count: count,
       textInputs: [count.toString()],
       description: '',
+      userID: '',
       userName: '',
       guestName: '',
       taskName: '',
@@ -363,6 +364,7 @@ class MeetingDiscussionPointScreen extends Component {
   }
 
   async addPoint() {
+    let meetingDetails = this.props.meetingDetails;
     let targetDate = this.state.targetDate;
     let targetDateValue = this.state.targetDateValue;
     let textInputs = this.state.textInputs;
@@ -385,6 +387,7 @@ class MeetingDiscussionPointScreen extends Component {
         actionBy,
         convertToTask,
         description,
+        meetingDetails,
       )
     ) {
       let targetDateFormatted = targetDateValue
@@ -422,7 +425,14 @@ class MeetingDiscussionPointScreen extends Component {
     }
   }
 
-  validateFields(targetDate, textInputs, actionBy, convertToTask, description) {
+  validateFields(
+    targetDate,
+    textInputs,
+    actionBy,
+    convertToTask,
+    description,
+    meetingDetails,
+  ) {
     if (!textInputs[0] && _.isEmpty(textInputs[0])) {
       Utils.showAlert(
         true,
@@ -446,6 +456,27 @@ class MeetingDiscussionPointScreen extends Component {
     if (convertToTask && !textInputs[2] && _.isEmpty(textInputs[2])) {
       Utils.showAlert(true, '', 'Please enter the task name', this.props);
       return false;
+    }
+
+    if (targetDate && !_.isEmpty(targetDate)) {
+      let startDateFormatted = moment
+        .parseZone(meetingDetails.meetingScheduleDateTime)
+        .format('DD MM YYYY');
+      let endDateFormatted = moment.parseZone(targetDate).format('DD MM YYYY');
+
+      let startDate = moment(startDateFormatted, 'DD MM YYYY');
+      let endDate = moment(endDateFormatted, 'DD MM YYYY');
+
+      let totalDates = endDate.diff(startDate, 'days');
+      if (totalDates < 0) {
+        Utils.showAlert(
+          true,
+          '',
+          'Target date cannot be a past date of meeting schedule',
+          this.props,
+        );
+        return false;
+      }
     }
 
     //Commnted for remove validations. For add the validations please uncomment.
