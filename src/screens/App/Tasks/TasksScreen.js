@@ -8,8 +8,8 @@ import Projects from '../Projects/ProjectsDetailsScreen';
 import PeopleScreen from '../People/PeopleScreen';
 import FilesScreen from '../Files/ProjectFilesScreen';
 import Board from '../Board/Board';
-import Meetings from '../Meetings/MeetingScreen';
-import {TabView, TabBar} from 'react-native-tab-view';
+import Meetings from '../Meetings/MeetingViewScreen';
+import {TabView, TabBar, ScrollPager} from 'react-native-tab-view';
 import EStyleSheet from 'react-native-extended-stylesheet';
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
@@ -126,6 +126,7 @@ class TasksScreen extends Component {
           onIndexChange={index => this.setState({index})}
           initialLayout={initialLayout}
           renderTabBar={props => this.renderTabBar(props)}
+          // renderPager={props => <ScrollPager { ...props }/>}
         />
       </MenuProvider>
     );
