@@ -23,6 +23,7 @@ import Loader from '../../../components/Loader';
 import MessageShowModal from '../../../components/MessageShowModal';
 import EmptyListView from '../../../components/EmptyListView';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import {NavigationEvents} from 'react-navigation';
 
 const initialLayout = {width: entireScreenWidth};
 
@@ -56,9 +57,17 @@ class MeetingViewScreen extends Component {
     };
   }
 
-  componentDidUpdate(prevProps, prevState, snapshot) {}
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (prevProps.isActive !== this.props.isActive && this.props.isActive) {
+      this.loadPage();
+    }
+  }
 
   componentDidMount() {
+    this.loadPage();
+  }
+
+  loadPage() {
     let startIndex = this.state.startIndex;
     let endIndex = this.state.endIndex;
     let filter = this.state.filter;
@@ -144,8 +153,11 @@ class MeetingViewScreen extends Component {
   }
 
   navigateToInitiateMeeting() {
-    this.setState({indexMain: 0});
-    this.props.onChangeIndexMain(0);
+    // this.setState({indexMain: 0});
+    // this.props.onChangeIndexMain(0);
+    this.props.navigation.navigate('MeetingScreen', {
+      selectedProjectID: this.props.selectedProjectID,
+    });
   }
 
   convertMinsToTime(mins) {
@@ -327,6 +339,10 @@ class MeetingViewScreen extends Component {
     let filter =
       filterKey == '' && filterDateValue == '' ? false : this.state.filter;
 
+    if (fromFilter == 'date') {
+      this.setState({date: new Date()});
+    }
+
     await this.setState({
       filterKey: filterKey,
       filterDate: filterDate,
@@ -461,6 +477,7 @@ class MeetingViewScreen extends Component {
 
     return (
       <View style={styles.container}>
+        <NavigationEvents onWillFocus={payload => this.loadPage(payload)} />
         <View style={{flex: 1}}>
           <View>
             <Text style={styles.fieldNameFilter}>Filter by key</Text>
@@ -510,18 +527,7 @@ class MeetingViewScreen extends Component {
             renderItem={({item}) => this.renderSubView(item)}
             keyExtractor={item => item.meetingId}
             ListEmptyComponent={<EmptyListView />}
-            onEndReached={
-              listScroll
-                ? () =>
-                    this.loadMeetings(
-                      startIndex,
-                      endIndex,
-                      filter,
-                      filterKey,
-                      filterDateValue,
-                    )
-                : () => {}
-            }
+            onEndReached={listScroll ? () => this.loadPage() : () => {}}
             onEndReachedThreshold={0.7}
             onScroll={() => this.onListScroll()}
           />
