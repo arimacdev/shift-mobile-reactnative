@@ -113,6 +113,8 @@ class TasksScreen extends Component {
             isActive={isActive}
           />
         );
+      default:
+        return null;
     }
   }
 
