@@ -376,8 +376,8 @@ class MeetingDiscussionPointScreen extends Component {
     let remarks = textInputs[4];
     let convertToTask = this.state.convertToTask;
 
-    // let html = await this.richText.current?.getContentHtml();
-    // await this.setState({description: html});
+    let html = await this.richText.current?.getContentHtml();
+    await this.setState({description: html});
     let description = this.state.description;
 
     if (
@@ -1057,7 +1057,6 @@ const styles = EStyleSheet.create({
     marginHorizontal: '15rem',
   },
   textEditorStyle: {
-    // height: '150rem',
     borderRadius: '5rem',
     marginTop: '5rem',
     marginBottom: '5rem',
