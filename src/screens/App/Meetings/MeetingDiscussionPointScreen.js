@@ -1001,7 +1001,7 @@ const styles = EStyleSheet.create({
     flex: 1,
   },
   flatListStyle: {
-    marginBottom: '100rem',
+    marginBottom: '80rem',
   },
   fieldName: {
     marginHorizontal: '20rem',
