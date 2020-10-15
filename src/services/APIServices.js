@@ -108,8 +108,7 @@ import _, {filter} from 'lodash';
 async function getAllProjectsByUserData(userID) {
   let baseURL = null;
   baseURL = await AsyncStorage.getItem('baseURL');
-  let userIDHeder = null;
-  userIDHeder = await AsyncStorage.getItem('userID');
+
   let headers = {
     Accept: 'application/json',
     'Content-Type': 'application/json',
