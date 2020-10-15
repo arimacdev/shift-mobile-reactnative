@@ -24,6 +24,7 @@ import MeetingViewScreen from './MeetingViewScreen';
 import Loader from '../../../components/Loader';
 import MessageShowModal from '../../../components/MessageShowModal';
 import icons from '../../../asserts/icons/icons';
+import {MenuProvider} from 'react-native-popup-menu';
 
 const initialLayout = {width: entireScreenWidth};
 
@@ -85,12 +86,22 @@ class MeetingScreen extends Component {
       indexMain: 0,
       meetingId: '',
       showMessageModal: false,
+      selectedProjectID: '',
     };
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {}
 
-  componentDidMount() {}
+  componentDidMount() {
+    const {
+      navigation: {
+        state: {params},
+      },
+    } = this.props;
+
+    let selectedProjectID = params.selectedProjectID;
+    this.setState({selectedProjectID: selectedProjectID});
+  }
 
   async onChangeText(text, index) {
     let removedText = '';
@@ -124,7 +135,7 @@ class MeetingScreen extends Component {
     let scheduleTimeOfMeeting = this.state.scheduleTimeOfMeeting;
     let actualTimeOfMeeting = this.state.actualTimeOfMeeting;
     let textInputs = this.state.textInputs;
-    let projectID = this.props.selectedProjectID;
+    let projectID = this.state.selectedProjectID;
     let meetingTopic = textInputs[1];
     let meetingVenue = textInputs[2];
     let expectedDuration = textInputs[5];
@@ -391,7 +402,8 @@ class MeetingScreen extends Component {
   }
 
   viewMeetings() {
-    this.setState({indexMain: 3});
+    // this.setState({indexMain: 3});
+    this.props.navigation.goBack();
   }
 
   onPressCancel() {
@@ -454,63 +466,58 @@ class MeetingScreen extends Component {
     let dataLoading = this.state.dataLoading;
 
     return (
-      <View style={styles.container}>
-        {indexMain == 0 ? (
-          <View style={{flex: 1}}>
-            <FlatList
-              ref={r => (this.flatList = r)}
-              style={styles.flatListStyle}
-              data={textInputArray}
-              renderItem={({item, index}) => this.renderView(item, index)}
-              keyExtractor={item => item.id}
-            />
-            <View style={styles.bottomContainer}>
-              <TouchableOpacity
-                style={[styles.button, {backgroundColor: colors.lightRed}]}
-                onPress={() => this.viewMeetings()}>
-                <Text style={styles.buttonText}>View Meetings</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.button}
-                onPress={() => this.initiateMeeting()}>
-                <Text style={styles.buttonText}>Initiate Meeting</Text>
-              </TouchableOpacity>
+      <MenuProvider style={{flex: 1}}>
+        <View style={styles.container}>
+          {indexMain == 0 ? (
+            <View style={{flex: 1}}>
+              <FlatList
+                ref={r => (this.flatList = r)}
+                style={styles.flatListStyle}
+                data={textInputArray}
+                renderItem={({item, index}) => this.renderView(item, index)}
+                keyExtractor={item => item.id}
+              />
+              <View style={styles.bottomContainer}>
+                <TouchableOpacity
+                  style={[styles.button, {backgroundColor: colors.lightRed}]}
+                  onPress={() => this.viewMeetings()}>
+                  <Text style={styles.buttonText}>View Meetings</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={() => this.initiateMeeting()}>
+                  <Text style={styles.buttonText}>Initiate Meeting</Text>
+                </TouchableOpacity>
+              </View>
             </View>
-          </View>
-        ) : indexMain == 1 ? (
-          <MeetingDiscussionPointScreen
-            selectedProjectID={this.props.selectedProjectID}
-            navigation={this.props.navigation}
-            meetingId={this.state.meetingId}
-            meetingDetails={this.meetingDetails}
-            onChangeIndexMain={indexMain => this.onChangeIndexMain(indexMain)}
-          />
-        ) : indexMain == 2 ? (
-          <MeetingOtherDetailsScreen
-            selectedProjectID={this.props.selectedProjectID}
-            navigation={this.props.navigation}
-            meetingId={this.state.meetingId}
-            meetingDetails={this.meetingDetails}
-            onChangeIndexMain={indexMain => this.onChangeIndexMain(indexMain)}
-          />
-        ) : (
-          <MeetingViewScreen
-            selectedProjectID={this.props.selectedProjectID}
-            navigation={this.props.navigation}
-            meetingId={this.state.meetingId}
-            onChangeIndexMain={indexMain => this.onChangeIndexMain(indexMain)}
-          />
-        )}
+          ) : indexMain == 1 ? (
+            <MeetingDiscussionPointScreen
+              selectedProjectID={this.state.selectedProjectID}
+              navigation={this.props.navigation}
+              meetingId={this.state.meetingId}
+              meetingDetails={this.meetingDetails}
+              onChangeIndexMain={indexMain => this.onChangeIndexMain(indexMain)}
+            />
+          ) : (
+            <MeetingOtherDetailsScreen
+              selectedProjectID={this.state.selectedProjectID}
+              navigation={this.props.navigation}
+              meetingId={this.state.meetingId}
+              meetingDetails={this.meetingDetails}
+              onChangeIndexMain={indexMain => this.onChangeIndexMain(indexMain)}
+            />
+          )}
 
-        {this.state.showPicker ? this.renderDateTimePicker() : null}
-        <MessageShowModal
-          showMessageModal={this.state.showMessageModal}
-          details={this.details}
-          onPress={() => {}}
-          onPressCancel={() => this.onPressCancel(this)}
-        />
-        {dataLoading && <Loader />}
-      </View>
+          {this.state.showPicker ? this.renderDateTimePicker() : null}
+          <MessageShowModal
+            showMessageModal={this.state.showMessageModal}
+            details={this.details}
+            onPress={() => {}}
+            onPressCancel={() => this.onPressCancel(this)}
+          />
+          {dataLoading && <Loader />}
+        </View>
+      </MenuProvider>
     );
   }
 }
@@ -520,7 +527,7 @@ const styles = EStyleSheet.create({
     flex: 1,
   },
   flatListStyle: {
-    marginBottom: '100rem',
+    marginBottom: '80rem',
   },
   fieldName: {
     marginHorizontal: '20rem',
