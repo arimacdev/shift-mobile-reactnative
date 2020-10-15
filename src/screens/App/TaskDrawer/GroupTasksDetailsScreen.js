@@ -2026,7 +2026,7 @@ class GroupTasksDetailsScreen extends Component {
           // taskStatus={taskStatus ? taskStatus : ''}
           onPress={() => this.props.navigation.goBack()}
           onPressTaskLog={() =>
-            this.props.navigation.navigate('TaskLogScreen', {
+            this.props.navigation.navigate('TasksLogScreen', {
               selectedProjectTaskID: this.state.selectedTaskID,
             })
           }
