@@ -20,7 +20,6 @@ import Utils from '../../../utils/Utils';
 import _ from 'lodash';
 import MeetingDiscussionPointScreen from './MeetingDiscussionPointScreen';
 import MeetingOtherDetailsScreen from './MeetingOtherDetailsScreen';
-import MeetingViewScreen from './MeetingViewScreen';
 import Loader from '../../../components/Loader';
 import MessageShowModal from '../../../components/MessageShowModal';
 import icons from '../../../asserts/icons/icons';
@@ -581,15 +580,6 @@ const styles = EStyleSheet.create({
     marginBottom: '15rem',
     flexDirection: 'row',
     marginHorizontal: '15rem',
-  },
-  textEditorStyle: {
-    height: '130rem',
-    borderRadius: '5rem',
-    marginTop: '5rem',
-    marginBottom: '5rem',
-    borderColor: colors.colorSilver,
-    borderWidth: '0.5rem',
-    marginHorizontal: '20rem',
   },
 });
 
