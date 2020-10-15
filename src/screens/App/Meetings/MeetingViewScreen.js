@@ -59,22 +59,29 @@ class MeetingViewScreen extends Component {
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (prevProps.isActive !== this.props.isActive && this.props.isActive) {
-      this.loadPage();
+      this.loadPage(true);
     }
   }
 
   componentDidMount() {
-    this.loadPage();
+    this.loadPage(true);
   }
 
-  loadPage() {
-    let startIndex = this.state.startIndex;
-    let endIndex = this.state.endIndex;
+  async loadPage(initiate) {
+    let startIndex = initiate ? 0 : this.state.startIndex;
+    let endIndex = initiate ? 10 : this.state.endIndex;
     let filter = this.state.filter;
     let filterKey = this.state.filterKey;
-    let filterDate = this.state.filterDate;
     let filterDateValue = this.state.filterDateValue;
 
+    if (initiate) {
+      await this.setState({
+        meetings:[],
+        listScroll: false,
+        startIndex: startIndex,
+        endIndex: endIndex,
+      });
+    }
     this.loadMeetings(startIndex, endIndex, filter, filterKey, filterDateValue);
   }
 
@@ -249,7 +256,6 @@ class MeetingViewScreen extends Component {
     let endIndex = 10;
     let filter = this.state.filter;
     let filterKey = this.state.filterKey;
-    let filterDate = this.state.filterDate;
     let filterDateValue = this.state.filterDateValue;
 
     this.loadMeetings(startIndex, endIndex, filter, filterKey, filterDateValue);
@@ -283,7 +289,6 @@ class MeetingViewScreen extends Component {
 
     let filter = this.state.filter;
     let filterKey = this.state.filterKey;
-    // let filterDate = this.state.filterDate;
     let filterDateValue = this.state.filterDateValue;
 
     this.loadMeetings(startIndex, endIndex, filter, filterKey, filterDateValue);
@@ -467,17 +472,13 @@ class MeetingViewScreen extends Component {
   render() {
     let meetings = this.state.meetings;
     let dataLoading = this.state.dataLoading;
-    let startIndex = this.state.startIndex;
-    let endIndex = this.state.endIndex;
-    let filter = this.state.filter;
     let filterKey = this.state.filterKey;
     let filterDate = this.state.filterDate;
-    let filterDateValue = this.state.filterDateValue;
     let listScroll = this.state.listScroll;
 
     return (
       <View style={styles.container}>
-        <NavigationEvents onWillFocus={payload => this.loadPage(payload)} />
+        <NavigationEvents onWillFocus={() => this.loadPage(true)} />
         <View style={{flex: 1}}>
           <View>
             <Text style={styles.fieldNameFilter}>Filter by key</Text>
@@ -527,7 +528,7 @@ class MeetingViewScreen extends Component {
             renderItem={({item}) => this.renderSubView(item)}
             keyExtractor={item => item.meetingId}
             ListEmptyComponent={<EmptyListView />}
-            onEndReached={listScroll ? () => this.loadPage() : () => {}}
+            onEndReached={listScroll ? () => this.loadPage(false) : () => {}}
             onEndReachedThreshold={0.7}
             onScroll={() => this.onListScroll()}
           />
