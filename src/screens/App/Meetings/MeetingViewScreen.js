@@ -25,8 +25,6 @@ import EmptyListView from '../../../components/EmptyListView';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {NavigationEvents} from 'react-navigation';
 
-const initialLayout = {width: entireScreenWidth};
-
 class MeetingViewScreen extends Component {
   details = {
     icon: icons.alertRed,
@@ -145,8 +143,6 @@ class MeetingViewScreen extends Component {
   }
 
   navigateToInitiateMeeting() {
-    // this.setState({indexMain: 0});
-    // this.props.onChangeIndexMain(0);
     this.props.navigation.navigate('MeetingScreen', {
       selectedProjectID: this.props.selectedProjectID,
     });
@@ -288,7 +284,6 @@ class MeetingViewScreen extends Component {
           isVisible={this.state.showPicker}
           date={date}
           mode={'date'}
-          // minimumDate={new Date()}
           onConfirm={this.handleDateTimeConfirm}
           onCancel={this.hideDateTimePicker}
         />
