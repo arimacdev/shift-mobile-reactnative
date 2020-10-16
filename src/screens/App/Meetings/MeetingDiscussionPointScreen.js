@@ -153,10 +153,6 @@ class MeetingDiscussionPointScreen extends Component {
     this.richText = refEditor;
   }
 
-  // onChangeEditorText(text) {
-  //   this.setState({description: text});
-  // }
-
   async filePicker() {
     this.setState({showImagePickerModal: true});
   }
@@ -939,7 +935,6 @@ class MeetingDiscussionPointScreen extends Component {
                   this.filePicker();
                 }}
                 onInsertLink={() => this.showEnterUrlModal()}
-                onChangeEditorText={text => this.onChangeEditorText(text)}
               />
             </View>
           </View>
