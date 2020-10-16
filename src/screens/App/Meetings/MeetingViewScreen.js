@@ -107,21 +107,6 @@ class MeetingViewScreen extends Component {
     )
       .then(response => {
         if (response.message == 'success') {
-          // let meetingsArray = Object.values(
-          //   response.data.reduce((acc, item) => {
-          //     let meetingExpectedTime = moment
-          //       .parseZone(item.meetingExpectedTime)
-          //       .format('L');
-          //     if (!acc[meetingExpectedTime])
-          //       acc[meetingExpectedTime] = {
-          //         meetingExpectedTime: meetingExpectedTime,
-          //         data: [],
-          //       };
-          //     acc[meetingExpectedTime].data.push(item);
-          //     acc[meetingExpectedTime].data.sort(this.arrayCompare);
-          //     return acc;
-          //   }, {}),
-          // );
           response.data.sort(this.arrayCompare);
           this.setState({
             dataLoading: false,
