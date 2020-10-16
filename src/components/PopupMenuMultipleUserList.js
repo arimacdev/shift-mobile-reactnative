@@ -52,7 +52,6 @@ class PopupMenuMultipleUserList extends Component {
   _keyboardDidShow(e) {
     console.log('Keyboard Show');
     this.DataLength = this.props.activeUsers.length;
-    // alert('Keyboard Shown');
     this.setState({keyboardHeight: height * 0.85 - e.endCoordinates.height});
   }
 
@@ -60,7 +59,6 @@ class PopupMenuMultipleUserList extends Component {
     console.log('KeyBoard Hide');
     let value = this.props.keyboardValue ? this.props.keyboardValue : 0.23;
     this.setState({keyboardHeight: height * value - e.endCoordinates.height});
-    // alert('Keyboard Hidden');
   }
   onTriggerPress() {
     this.setState({opened: true});
@@ -303,7 +301,6 @@ class PopupMenuMultipleUserList extends Component {
   render() {
     const scrollStyle = {
       scrollViewMenuOption: {
-        // height: height - (this.state.keyboardHeight + 140)
         maxHeight:
           50 * this.DataLength <= height - (this.state.keyboardHeight + 240)
             ? 50 * this.DataLength
@@ -318,14 +315,7 @@ class PopupMenuMultipleUserList extends Component {
         onBackdropPress={() => this.onBackdropPress()}
         hideModalContentWhileAnimating={true}
         hasBackdrop={this.props.hasBackdrop ? this.props.hasBackdrop : false}
-        coverScreen={this.props.coverScreen ? this.props.coverScreen : false}
-        // animationIn="slideInDown"
-        // animationOut="slideOutUp"
-        // animationInTiming={600}
-        // animationOutTiming={600}
-        // backdropTransitionInTiming={600}
-        // backdropTransitionOutTiming={600}
-      >
+        coverScreen={this.props.coverScreen ? this.props.coverScreen : false}>
         <View
           style={[
             Platform.OS == 'ios' ? styles.menuStyleIOS : styles.menuStyle,
@@ -344,13 +334,19 @@ class PopupMenuMultipleUserList extends Component {
               scrollStyle.scrollViewMenuOption,
               this.props.customScrollStyle,
             ]}>
-            {this.state.activeUsers.map(item => {
-              return (
-                <MenuOption onSelect={() => this.onSelect(item)}>
-                  {this.menuOptions(item)}
-                </MenuOption>
-              );
-            })}
+            {this.state.activeUsers.length > 0 ? (
+              this.state.activeUsers.map(item => {
+                return (
+                  <MenuOption onSelect={() => this.onSelect(item)}>
+                    {this.menuOptions(item)}
+                  </MenuOption>
+                );
+              })
+            ) : (
+              <View style={styles.noUserFoundView}>
+                <Text style={styles.noUserFoundText}>No user found</Text>
+              </View>
+            )}
           </ScrollView>
           <View style={styles.ButtonViewStyle}>
             <TouchableOpacity
@@ -479,6 +475,18 @@ const styles = EStyleSheet.create({
   addUserIcon: {
     width: '30rem',
     height: '30rem',
+  },
+  noUserFoundView: {
+    height: '70rem',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  noUserFoundText: {
+    fontSize: '15rem',
+    color: colors.gray,
+    lineHeight: '17rem',
+    fontFamily: 'CircularStd-Medium',
+    textAlign: 'center',
   },
 });
 
