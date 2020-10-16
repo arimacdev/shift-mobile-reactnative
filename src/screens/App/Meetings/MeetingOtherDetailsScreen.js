@@ -263,12 +263,6 @@ class MeetingOtherDetailsScreen extends Component {
       }
     }
 
-    console.log('meetingChaired', meetingChaired);
-    console.log('meetingAttended', meetingAttended);
-    console.log('meetingAbsent', meetingAbsent);
-    console.log('meetingCopiesTo', meetingCopiesTo);
-    console.log('meetingPrepared', meetingPrepared);
-
     if (this.validateFields(textInputs)) {
       this.setState({dataLoading: true, showMessageModal: false});
       await APIServices.updateMeetingData(
