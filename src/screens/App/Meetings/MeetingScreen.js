@@ -25,8 +25,6 @@ import MessageShowModal from '../../../components/MessageShowModal';
 import icons from '../../../asserts/icons/icons';
 import {MenuProvider} from 'react-native-popup-menu';
 
-const initialLayout = {width: entireScreenWidth};
-
 class MeetingScreen extends Component {
   details = {
     icon: icons.meetingGreen,
