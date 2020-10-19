@@ -461,11 +461,11 @@ class MeetingViewScreen extends Component {
         <NavigationEvents onWillFocus={() => this.loadPage(true)} />
         <View style={{flex: 1}}>
           <View>
-            <Text style={styles.fieldNameFilter}>Filter by key</Text>
+            <Text style={styles.fieldNameFilter}>Filter by topic</Text>
             <View style={styles.fieldView}>
               <TextInput
                 style={[styles.textInput, {width: '97%'}]}
-                placeholder={'Filter key'}
+                placeholder={'Filter topic'}
                 value={filterKey}
                 onChangeText={text => this.onChangeText(text)}
                 onSubmitEditing={() => this.onSubmitEditing()}
