@@ -206,7 +206,6 @@ class AddNewTasksScreen extends Component {
         buttons: {},
       };
       this.setState({showMessageModal: true});
-      // Utils.showAlert(true, '', this.props.addFileTaskErrorMessage, this.props);
     }
   }
 
@@ -216,9 +215,7 @@ class AddNewTasksScreen extends Component {
   }
 
   onSuccess(text) {
-    // const {navigation} = this.props;
     this.props.onSuccess(text);
-    // navigation.goBack();
   }
 
   async componentDidMount() {
