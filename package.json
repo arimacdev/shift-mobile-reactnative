@@ -64,6 +64,7 @@
     "react-native-tab-view": "^2.15.2",
     "react-native-triangle": "0.0.9",
     "react-native-vector-icons": "^6.6.0",
+    "react-native-virgil-crypto": "^0.6.1",
     "react-native-webview": "^10.3.2",
     "react-navigation": "^4.0.0",
     "react-navigation-drawer": "^2.2.1",
