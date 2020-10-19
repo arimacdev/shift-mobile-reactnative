@@ -11,6 +11,7 @@ import OneSignal from 'react-native-onesignal';
 import strings from './config/strings';
 import AsyncStorage from '@react-native-community/async-storage';
 import ErrorModal from './components/ErrorModal';
+import CryptoJS from 'react-native-crypto-js';
 
 console.disableYellowBox = true;
 
@@ -22,7 +23,10 @@ export default class App extends Component {
     //Remove this method to stop OneSignal Debugging
     // OneSignal.setLogLevel(6, 0);
 
-    OneSignal.init(strings.oneSignal.oneSignalAppId, {
+    let bytes = CryptoJS.AES.decrypt(strings.oneSignal.oneSignalAppId, 'shift');
+    let oneSignalAppId = bytes.toString(CryptoJS.enc.Utf8);
+
+    OneSignal.init(oneSignalAppId, {
       kOSSettingsKeyAutoPrompt: false,
       kOSSettingsKeyInAppLaunchURL: false,
       kOSSettingsKeyInFocusDisplayOption: 2,
