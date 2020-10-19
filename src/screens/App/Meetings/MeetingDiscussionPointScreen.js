@@ -30,8 +30,6 @@ import FadeIn from 'react-native-fade-in-image';
 import Loader from '../../../components/Loader';
 import MessageShowModal from '../../../components/MessageShowModal';
 
-const initialLayout = {width: entireScreenWidth};
-
 class MeetingDiscussionPointScreen extends Component {
   details = {
     icon: icons.discussionPointRed,

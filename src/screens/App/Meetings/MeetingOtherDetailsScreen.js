@@ -22,8 +22,6 @@ import PopupMenuMultipleUserList from '../../../components/PopupMenuMultipleUser
 import Loader from '../../../components/Loader';
 import MessageShowModal from '../../../components/MessageShowModal';
 
-const initialLayout = {width: entireScreenWidth};
-
 class MeetingOtherDetailsScreen extends Component {
   details = {
     icon: icons.otherDetailsYellow,
