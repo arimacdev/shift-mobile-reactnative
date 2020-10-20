@@ -309,6 +309,10 @@ class MeetingDiscussionPointScreen extends Component {
     await this.richText.current?.setContentHTML(content);
   }
 
+  async blurContentEditor() {
+    await this.richText.current?.blurContentEditor();
+  }
+
   async resetValues() {
     let count = this.state.count + 1;
     this.setState({
@@ -516,6 +520,7 @@ class MeetingDiscussionPointScreen extends Component {
     switch (item.id) {
       case 4:
         this.setState({showPicker: true});
+        this.blurContentEditor();
         break;
       default:
         break;
@@ -619,6 +624,7 @@ class MeetingDiscussionPointScreen extends Component {
       popupMenuOpen: false,
     });
     await this.props.addPeopleModal(false);
+    this.blurContentEditor();
   };
 
   async onSearchTextChange(text) {
@@ -677,16 +683,7 @@ class MeetingDiscussionPointScreen extends Component {
   renderUserList(item) {
     const {navigation} = this.props;
     return (
-      <View
-        style={[
-          styles.userListStyle,
-          {
-            backgroundColor:
-              item.label == navigation.state.params.userName
-                ? colors.projectBgColor
-                : '',
-          },
-        ]}>
+      <View style={styles.userListStyle}>
         {this.userImage(item)}
         <View style={{flex: 1}}>
           <Text style={styles.userNameText}>{item.label}</Text>
@@ -787,7 +784,8 @@ class MeetingDiscussionPointScreen extends Component {
                 keyboardType={index == 0 ? 'numeric' : 'default'}
                 onChangeText={text => this.onChangeText(text, index)}
                 maxLength={100}
-                onFocus={() => this.onFocusTextInput(index)}
+                // onFocus={() => this.onFocusTextInput(index)}
+                onBlur={() => this.blurContentEditor()}
               />
             </View>
           </View>
@@ -840,6 +838,7 @@ class MeetingDiscussionPointScreen extends Component {
                     value={this.state.guestName}
                     onChangeText={text => this.onChangeActionByText(text)}
                     maxLength={100}
+                    onBlur={() => this.blurContentEditor()}
                   />
                 </View>
               ) : (
@@ -897,6 +896,7 @@ class MeetingDiscussionPointScreen extends Component {
                   value={this.state.textInputs[index]}
                   onChangeText={text => this.onChangeText(text, index)}
                   maxLength={100}
+                  onBlur={() => this.blurContentEditor()}
                 />
               </View>
             </View>
