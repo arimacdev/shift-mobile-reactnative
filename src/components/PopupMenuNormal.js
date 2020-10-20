@@ -38,9 +38,6 @@ class PopupMenuNormal extends Component {
           text: nextProps.data[0].text,
         });
       }
-      // if (nextProps.data.length === 1) {
-      //   this.onDefaultOptionSelect(nextProps.data[0]);
-      // }
     }
   }
 
@@ -65,13 +62,6 @@ class PopupMenuNormal extends Component {
       this.props.onChange(item);
     }
   }
-
-  // onDefaultOptionSelect(item) {
-  //   if (this.props.onChange && !this.defaultRan) {
-  //     this.defaultRan = true;
-  //     this.props.onChange(item);
-  //   }
-  // }
 
   // updateDataOrder(item) {
   //   const currentIndex = this.props.data.findIndex(elem => {
