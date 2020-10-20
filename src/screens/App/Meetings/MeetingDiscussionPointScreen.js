@@ -147,9 +147,9 @@ class MeetingDiscussionPointScreen extends Component {
     this.flatList.scrollToIndex({animated: true, index: index});
   }
 
-  getRefEditor(refEditor) {
-    this.richText = refEditor;
-  }
+  // getRefEditor(refEditor) {
+  //   this.richText = refEditor;
+  // }
 
   async filePicker() {
     this.setState({showImagePickerModal: true});
@@ -305,6 +305,10 @@ class MeetingDiscussionPointScreen extends Component {
     await this.setState({textInputs});
   }
 
+  onChangeDescriptionText(text) {
+    this.setState({description:text});
+  }
+
   async setContentHTML(content) {
     await this.richText.current?.setContentHTML(content);
   }
@@ -374,8 +378,10 @@ class MeetingDiscussionPointScreen extends Component {
     let remarks = textInputs[4];
     let convertToTask = this.state.convertToTask;
 
-    let html = await this.richText.current?.getContentHtml();
-    await this.setState({description: html});
+    // let html = await this.richText.current?.getContentHtml();
+    await this.setState({
+      description: '<html>' + this.state.description + '</html>',
+    });
     let description = this.state.description;
 
     if (
@@ -520,7 +526,7 @@ class MeetingDiscussionPointScreen extends Component {
     switch (item.id) {
       case 4:
         this.setState({showPicker: true});
-        this.blurContentEditor();
+        // this.blurContentEditor();
         break;
       default:
         break;
@@ -624,7 +630,7 @@ class MeetingDiscussionPointScreen extends Component {
       popupMenuOpen: false,
     });
     await this.props.addPeopleModal(false);
-    this.blurContentEditor();
+    // this.blurContentEditor();
   };
 
   async onSearchTextChange(text) {
@@ -785,7 +791,7 @@ class MeetingDiscussionPointScreen extends Component {
                 onChangeText={text => this.onChangeText(text, index)}
                 maxLength={100}
                 // onFocus={() => this.onFocusTextInput(index)}
-                onBlur={() => this.blurContentEditor()}
+                // onBlur={() => this.blurContentEditor()}
               />
             </View>
           </View>
@@ -838,7 +844,7 @@ class MeetingDiscussionPointScreen extends Component {
                     value={this.state.guestName}
                     onChangeText={text => this.onChangeActionByText(text)}
                     maxLength={100}
-                    onBlur={() => this.blurContentEditor()}
+                    // onBlur={() => this.blurContentEditor()}
                   />
                 </View>
               ) : (
@@ -896,7 +902,7 @@ class MeetingDiscussionPointScreen extends Component {
                   value={this.state.textInputs[index]}
                   onChangeText={text => this.onChangeText(text, index)}
                   maxLength={100}
-                  onBlur={() => this.blurContentEditor()}
+                  // onBlur={() => this.blurContentEditor()}
                 />
               </View>
             </View>
@@ -924,7 +930,7 @@ class MeetingDiscussionPointScreen extends Component {
         return (
           <View>
             <Text style={styles.fieldName}>{item.name}</Text>
-            <View style={styles.textEditorStyle}>
+            {/* <View style={styles.textEditorStyle}>
               <RichTextEditorPell
                 chatText={description}
                 fromActions={true}
@@ -933,6 +939,19 @@ class MeetingDiscussionPointScreen extends Component {
                   this.filePicker();
                 }}
                 onInsertLink={() => this.showEnterUrlModal()}
+              />
+            </View> */}
+            <View style={[styles.textInputFieldView, {height: 150}]}>
+              <TextInput
+                ref={ref => (this.textInputValuesArray[index] = ref)}
+                style={[styles.textInput,{height:150}]}
+                placeholder={item.placeHolder}
+                value={this.state.description}
+                onChangeText={text => this.onChangeDescriptionText(text)}
+                multiline={true}
+                textAlignVertical={'top'}
+                // onFocus={() => this.onFocusTextInput(index)}
+                // onBlur={() => this.blurContentEditor()}
               />
             </View>
           </View>
