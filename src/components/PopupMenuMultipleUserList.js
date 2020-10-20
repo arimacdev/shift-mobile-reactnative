@@ -56,7 +56,7 @@ class PopupMenuMultipleUserList extends Component {
   }
 
   _keyboardDidHide(e) {
-    console.log('KeyBoard Hide');
+    console.log('KeyBoard Hide multiple');
     let value = this.props.keyboardValue ? this.props.keyboardValue : 0.23;
     this.setState({keyboardHeight: height * value - e.endCoordinates.height});
   }

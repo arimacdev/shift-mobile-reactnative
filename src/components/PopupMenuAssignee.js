@@ -59,7 +59,7 @@ class PopupMenuAssignee extends Component {
   }
 
   _keyboardDidHide(e) {
-    console.log('KeyBoard Hide');
+    console.log('KeyBoard Hide assignee');
     this.setState({keyboardHeight: height * 0.23 - e.endCoordinates.height});
     // alert('Keyboard Hidden');
   }
