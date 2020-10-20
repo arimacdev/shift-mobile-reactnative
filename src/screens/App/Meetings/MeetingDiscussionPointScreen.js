@@ -306,7 +306,7 @@ class MeetingDiscussionPointScreen extends Component {
   }
 
   onChangeDescriptionText(text) {
-    this.setState({description:text});
+    this.setState({description: text});
   }
 
   async setContentHTML(content) {
@@ -333,7 +333,7 @@ class MeetingDiscussionPointScreen extends Component {
       actionByGuest: false,
       convertToTask: false,
     });
-    this.setContentHTML('');
+    // this.setContentHTML('');
   }
 
   async convertToTask(discussionId) {
@@ -379,10 +379,10 @@ class MeetingDiscussionPointScreen extends Component {
     let convertToTask = this.state.convertToTask;
 
     // let html = await this.richText.current?.getContentHtml();
-    await this.setState({
-      description: '<html>' + this.state.description + '</html>',
-    });
-    let description = this.state.description;
+    // await this.setState({
+    //   description: html,
+    // });
+    let description = '<html>' + this.state.description + '</html>';
 
     if (
       this.validateFields(
@@ -944,14 +944,12 @@ class MeetingDiscussionPointScreen extends Component {
             <View style={[styles.textInputFieldView, {height: 150}]}>
               <TextInput
                 ref={ref => (this.textInputValuesArray[index] = ref)}
-                style={[styles.textInput,{height:150}]}
+                style={[styles.textInput, {height: 150}]}
                 placeholder={item.placeHolder}
                 value={this.state.description}
                 onChangeText={text => this.onChangeDescriptionText(text)}
                 multiline={true}
                 textAlignVertical={'top'}
-                // onFocus={() => this.onFocusTextInput(index)}
-                // onBlur={() => this.blurContentEditor()}
               />
             </View>
           </View>
