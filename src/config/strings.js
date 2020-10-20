@@ -18,8 +18,8 @@ const strings = {
     goBack: 'Go Back',
   },
   slack: {
-    clientId: '345426929140.1020110511447', // found under App Credentials
-    clientSecret: 'fd851b7af77e525c1700879de9b328ab', // found under App Credentials
+    clientId: 'U2FsdGVkX19FzdF9pkp/zXdAzVjjTCRKLsVjl1BtD+7u34rJHOnZIDPpVrI60FOD', // found under App Credentials
+    clientSecret: 'U2FsdGVkX18w1a9zsZ3akuqYiqu+/DTI1nqUdQckFNp6r+9PW9Hd2s2hcG9bvTQDQXRC/hPrUD4MFMQdphSqOw=', // found under App Credentials
     scopes: ['incoming-webhook,chat:write'],
     // redirectUrl: 'io.identityserver.demo://oauthSlackredirect',
     redirectUrl: 'com.arimacpmtool://oauthSlackredirect',
@@ -32,7 +32,7 @@ const strings = {
   },
 
   oneSignal: {
-    oneSignalAppId: 'fe6df906-c5cf-4c5e-bc1f-21003be4b2d5',
+    oneSignalAppId: 'U2FsdGVkX1/mmH45CQsq1g3H5CkQQlBLP7cxkkHgL/3/+JrO/RZfwqNDypZiTuE0sZSUu+vVj5h7tNk4scFdVQ=='
   },
 };
 

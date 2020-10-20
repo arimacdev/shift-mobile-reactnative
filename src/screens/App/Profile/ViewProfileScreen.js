@@ -30,8 +30,10 @@ import ImagePicker from 'react-native-image-picker';
 import MessageShowModal from '../../../components/MessageShowModal';
 import Utils from '../../../utils/Utils';
 import FilePickerModal from '../../../components/FilePickerModal';
+import CryptoJS from 'react-native-crypto-js';
 
-const config = strings.slack;
+
+let config = strings.slack;
 
 class ViewProfileScreen extends Component {
   successDetails = {
@@ -77,6 +79,16 @@ class ViewProfileScreen extends Component {
     let userID = profile.userId;
     this.setState({userID: userID});
     this.fetchUserData(userID);
+
+    let bytesClientId = CryptoJS.AES.decrypt(strings.slack.clientId, 'shift');
+    let clientId = bytesClientId.toString(CryptoJS.enc.Utf8);
+
+    let bytesClientSecret = CryptoJS.AES.decrypt(strings.slack.clientSecret, 'shift');
+    let clientSecret = bytesClientSecret.toString(CryptoJS.enc.Utf8);
+
+    strings.slack.clientId = clientId;
+    strings.slack.clientSecret = clientSecret;
+    config = strings.slack;
   }
 
   async fetchUserData(userID) {
