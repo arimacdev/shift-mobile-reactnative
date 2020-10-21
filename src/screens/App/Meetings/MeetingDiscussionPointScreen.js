@@ -941,12 +941,16 @@ class MeetingDiscussionPointScreen extends Component {
                 onInsertLink={() => this.showEnterUrlModal()}
               />
             </View> */}
-            <View style={[styles.textInputFieldView, {height: 150}]}>
+            <View
+              style={[
+                styles.textInputFieldView,
+                {height: EStyleSheet.value('150rem')},
+              ]}>
               <TextInput
                 ref={ref => (this.textInputValuesArray[index] = ref)}
-                style={[styles.textInput, {height: 150}]}
+                style={[styles.textInput, {height: EStyleSheet.value('150rem')}]}
                 placeholder={item.placeHolder}
-                value={this.state.description}
+                value={description}
                 onChangeText={text => this.onChangeDescriptionText(text)}
                 multiline={true}
                 textAlignVertical={'top'}
