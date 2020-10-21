@@ -74,7 +74,7 @@ class MeetingViewScreen extends Component {
 
     if (initiate) {
       await this.setState({
-        meetings:[],
+        meetings: [],
         listScroll: false,
         startIndex: startIndex,
         endIndex: endIndex,
@@ -461,7 +461,13 @@ class MeetingViewScreen extends Component {
         <NavigationEvents onWillFocus={() => this.loadPage(true)} />
         <View style={{flex: 1}}>
           <View>
-            <Text style={styles.fieldNameFilter}>Filter by topic</Text>
+            <Text
+              style={[
+                styles.fieldNameFilter,
+                {marginTop: EStyleSheet.value('10rem')},
+              ]}>
+              Filter by topic
+            </Text>
             <View style={styles.fieldView}>
               <TextInput
                 style={[styles.textInput, {width: '97%'}]}
