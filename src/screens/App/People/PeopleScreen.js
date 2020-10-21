@@ -23,7 +23,6 @@ import AsyncStorage from '@react-native-community/async-storage';
 import Loader from '../../../components/Loader';
 import {NavigationEvents} from 'react-navigation';
 import MessageShowModal from '../../../components/MessageShowModal';
-const initialLayout = {width: entireScreenWidth};
 
 class PeopleScreen extends Component {
   details = {
