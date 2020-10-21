@@ -21,7 +21,6 @@ const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
 import Loader from '../../../components/Loader';
 import {NavigationEvents} from 'react-navigation';
-const initialLayout = {width: entireScreenWidth};
 
 class PeopleScreen extends Component {
   constructor(props) {
