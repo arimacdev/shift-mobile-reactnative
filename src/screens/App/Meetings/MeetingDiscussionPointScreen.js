@@ -948,7 +948,10 @@ class MeetingDiscussionPointScreen extends Component {
               ]}>
               <TextInput
                 ref={ref => (this.textInputValuesArray[index] = ref)}
-                style={[styles.textInput, {height: EStyleSheet.value('150rem')}]}
+                style={[
+                  styles.textInput,
+                  {height: EStyleSheet.value('150rem')},
+                ]}
                 placeholder={item.placeHolder}
                 value={description}
                 onChangeText={text => this.onChangeDescriptionText(text)}
