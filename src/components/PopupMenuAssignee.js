@@ -173,16 +173,12 @@ class PopupMenuAssignee extends Component {
   };
 
   menuOptions(item) {
-    const {navigation} = this.props;
     return (
       <View
         style={[
           styles.projectView,
           {
             backgroundColor: colors.projectBgColor,
-            // item.label == this.props.userName
-            //   ? colors.projectBgColor
-            //   : '',
           },
         ]}>
         {this.userImage(item)}
