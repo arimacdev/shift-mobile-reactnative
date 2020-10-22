@@ -99,7 +99,7 @@ const CustomDrawerContentComponent = props => {
           style={styles.header}
           onPress={() =>
             props.navigation.navigate('ViewProfileScreen', {
-              profile: props.loginUser
+              profile: props.loginUser,
             })
           }>
           <View style={styles.headerLeft}>
