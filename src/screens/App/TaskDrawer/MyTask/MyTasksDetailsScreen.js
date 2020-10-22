@@ -20,7 +20,6 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
 import {Dropdown} from 'react-native-material-dropdown';
-import AsyncStorage from '@react-native-community/async-storage';
 import Loader from '../../../../components/Loader';
 import moment from 'moment';
 import FadeIn from 'react-native-fade-in-image';
@@ -30,13 +29,11 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import APIServices from '../../../../services/APIServices';
 import AwesomeAlert from 'react-native-awesome-alerts';
 import Header from '../../../../components/Header';
-import Accordion from 'react-native-collapsible/Accordion';
 import DocumentPicker from 'react-native-document-picker';
 import * as Progress from 'react-native-progress';
 import RNFetchBlob from 'rn-fetch-blob';
 import fileTypes from '../../../../asserts/fileTypes/fileTypes';
 import * as Animatable from 'react-native-animatable';
-import Modal from 'react-native-modal';
 import ImagePicker from 'react-native-image-picker';
 import MessageShowModal from '../../../../components/MessageShowModal';
 import Utils from '../../../../utils/Utils';
@@ -184,13 +181,6 @@ class MyTasksDetailsScreen extends Component {
         buttons: {},
       };
       this.setState({deleteTaskSuccess: true, showMessageModal: true});
-
-      // Alert.alert(
-      //   'Success',
-      //   'Task Deleted',
-      //   [{text: 'OK', onPress: () => this.props.navigation.goBack()}],
-      //   {cancelable: false},
-      // );
     }
 
     if (
@@ -276,10 +266,6 @@ class MyTasksDetailsScreen extends Component {
       dateTimeMilliseconds - moment().utcOffset() * MS_PER_MINUTE,
     );
 
-    // let dateTime = moment
-    //   .parseZone(taskResult.data.taskDueDateAt)
-    //   .format('YYYY-MM-DD hh:mm:ss a');
-
     if (taskDueDate != 'Invalid date') {
       this.setState({
         duedate: taskDueDate,
@@ -306,10 +292,6 @@ class MyTasksDetailsScreen extends Component {
     let dateTime = new Date(
       dateTimeMilliseconds - moment().utcOffset() * MS_PER_MINUTE,
     );
-
-    // let dateTime = moment
-    //   .parseZone(taskResult.data.taskReminderAt)
-    //   .format('YYYY-MM-DD hh:mm:ss a');
 
     if (taskReminderDate != 'Invalid date') {
       this.setState({
@@ -437,7 +419,6 @@ class MyTasksDetailsScreen extends Component {
         dateTime:
           moment().format('YYYY/MM/DD') + ' | ' + moment().format('HH:mm'),
       });
-      // this.setState({ files: this.state.files });
 
       await this.setState({
         files: this.state.files,
@@ -599,19 +580,6 @@ class MyTasksDetailsScreen extends Component {
   }
 
   deleteFileAlert(item) {
-    // Alert.alert(
-    //   'Delete File',
-    //   'You are about to permanantly delete this file,\n If you are not sure, you can cancel this action.',
-    //   [
-    //     {
-    //       text: 'Cancel',
-    //       onPress: () => console.log('Cancel Pressed'),
-    //       style: 'cancel',
-    //     },
-    //     {text: 'Ok', onPress: () => this.deleteFile(item)},
-    //   ],
-    //   {cancelable: false},
-    // );
     this.details = {
       icon: icons.alertRed,
       type: 'confirm',
@@ -864,8 +832,7 @@ class MyTasksDetailsScreen extends Component {
     this.hideTimePicker();
     let time = new Date(time1);
     let newTime = moment(time).format('hh:mmA');
-    // let newTime = time.getHours() + ':' + time.getMinutes();
-    // if (event.type == 'set') {
+
     if (this.state.reminder) {
       this.setState(
         {
@@ -889,12 +856,6 @@ class MyTasksDetailsScreen extends Component {
         () => this.changeTaskDueDate(),
       );
     }
-    // } else {
-    //   this.setState({
-    //     showPicker: false,
-    //     showTimePicker: false,
-    //   });
-    // }
   };
 
   onChangeDate(event, selectedDate) {
@@ -1373,11 +1334,9 @@ class MyTasksDetailsScreen extends Component {
           }
         })
         .catch(error => {
-          //if (error.status == 401 || error.status == 403) {
           this.setState({dataLoading: false});
           this.showAlert('', error.data.message);
           this.setDueDate(this.state.taskResult);
-          //}
         });
     } catch {
       this.setState({dataLoading: false});
@@ -1419,11 +1378,9 @@ class MyTasksDetailsScreen extends Component {
           }
         })
         .catch(error => {
-          //if (error.status == 401 || error.status == 403) {
           this.setState({dataLoading: false});
           this.showAlert('', error.data.message);
           this.setReminderDate(this.state.taskResult);
-          //}
         });
     } catch {
       this.setState({dataLoading: false});
@@ -1447,20 +1404,6 @@ class MyTasksDetailsScreen extends Component {
     };
     this.onPressMessageModal = () => this.deleteMyTask(this);
     this.setState({showMessageModal: true});
-
-    // Alert.alert(
-    //   'Delete Task',
-    //   "You're about to permanently delete this task, its comments\n and attachments, and all of its data.\nIf you're not sure, you can close this pop up.",
-    //   [
-    //     {
-    //       text: 'Cancel',
-    //       onPress: () => console.log('Cancel Pressed'),
-    //       style: 'cancel',
-    //     },
-    //     {text: 'Delete', onPress: () => this.props.deleteTaskInMyTasks(taskID)},
-    //   ],
-    //   {cancelable: false},
-    // );
   }
 
   onPressCancel() {
