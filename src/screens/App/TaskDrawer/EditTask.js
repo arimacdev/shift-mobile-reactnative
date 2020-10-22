@@ -5,7 +5,7 @@ import {
   TouchableOpacity,
   Text,
   TextInput,
-  ScrollView
+  ScrollView,
 } from 'react-native';
 import {connect} from 'react-redux';
 import * as actions from '../../../redux/actions';
@@ -241,7 +241,7 @@ class EditTask extends Component {
               />
             </View>
             <TouchableOpacity
-              style={{marginTop: 10}}
+              style={styles.buttonStyle}
               disabled={isChange}
               onPress={() => this.renameGroup()}>
               <View
@@ -262,7 +262,7 @@ class EditTask extends Component {
         </ScrollView>
         <View style={styles.bottomView}>
           <TouchableOpacity
-            style={{marginTop: 10}}
+            style={styles.buttonStyle}
             onPress={() => this.deleteGroupdeleteGroupAlert()}>
             <View style={styles.button}>
               <View style={{flex: 1}}>
@@ -372,6 +372,9 @@ const styles = EStyleSheet.create({
     width: '100rem',
     backgroundColor: colors.colorBittersweet,
     alignItems: 'center',
+  },
+  buttonStyle: {
+    marginTop: '10rem',
   },
 });
 
