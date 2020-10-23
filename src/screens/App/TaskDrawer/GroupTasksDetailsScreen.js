@@ -315,10 +315,8 @@ class GroupTasksDetailsScreen extends Component {
         }
       })
       .catch(error => {
-        //if (error.status == 401 || error.status == 403) {
         this.setState({dataLoading: false});
         this.showAlert('', error.data.message);
-        //}
       });
   }
 
@@ -617,19 +615,6 @@ class GroupTasksDetailsScreen extends Component {
   }
 
   deleteFileAlert(item) {
-    // Alert.alert(
-    //   'Delete File',
-    //   'You are about to permanantly delete this file,\n If you are not sure, you can cancel this action.',
-    //   [
-    //     {
-    //       text: 'Cancel',
-    //       onPress: () => console.log('Cancel Pressed'),
-    //       style: 'cancel',
-    //     },
-    //     {text: 'Ok', onPress: () => this.deleteFile(item)},
-    //   ],
-    //   {cancelable: false},
-    // );
     this.details = {
       icon: icons.alertRed,
       type: 'confirm',
@@ -670,10 +655,8 @@ class GroupTasksDetailsScreen extends Component {
         }
       })
       .catch(error => {
-        //if (error.status == 401) {
         this.setState({dataLoading: false});
         this.showAlert('', error.data.message);
-        //}
       });
   }
 
@@ -928,7 +911,6 @@ class GroupTasksDetailsScreen extends Component {
         );
         this.setState({
           name: result.assigneeFirstName + ' ' + result.assigneeLastName,
-          //activeUsers : activeUsers.data,
         });
       } else {
         this.setState({dataLoading: false});
@@ -954,10 +936,6 @@ class GroupTasksDetailsScreen extends Component {
     let dateTime = new Date(
       dateTimeMilliseconds - moment().utcOffset() * MS_PER_MINUTE,
     );
-
-    // let dateTime = moment
-    //   .parseZone(taskResult.data.taskDueDateAt)
-    //   .format('YYYY-MM-DD hh:mm:ss a');
 
     if (taskDueDate != 'Invalid date') {
       this.setState({
@@ -985,10 +963,6 @@ class GroupTasksDetailsScreen extends Component {
     let dateTime = new Date(
       dateTimeMilliseconds - moment().utcOffset() * MS_PER_MINUTE,
     );
-
-    // let dateTime = moment
-    //   .parseZone(taskResult.data.taskReminderAt)
-    //   .format('YYYY-MM-DD hh:mm:ss a');
 
     if (taskReminderDate != 'Invalid date') {
       this.setState({
@@ -1100,8 +1074,7 @@ class GroupTasksDetailsScreen extends Component {
     this.hideTimePicker();
     let time = new Date(time1);
     let newTime = moment(time).format('hh:mmA');
-    // let newTime = time.getHours() + ':' + time.getMinutes();
-    // if (event.type == 'set') {
+
     if (this.state.reminder) {
       this.setState(
         {
@@ -1125,12 +1098,6 @@ class GroupTasksDetailsScreen extends Component {
         () => this.changeTaskDueDate(),
       );
     }
-    // } else {
-    //   this.setState({
-    //     showPicker: false,
-    //     showTimePicker: false,
-    //   });
-    // }
   };
 
   onChangeDate(event, selectedDate) {
@@ -1439,10 +1406,8 @@ class GroupTasksDetailsScreen extends Component {
         }
       })
       .catch(error => {
-        //if (error.status == 401 || error.status == 403) {
         this.setState({dataLoading: false});
         this.showAlert('', error.data.message);
-        //}
       });
   }
 
@@ -1475,10 +1440,8 @@ class GroupTasksDetailsScreen extends Component {
         }
       })
       .catch(error => {
-        //if (error.status == 401 || error.status == 403) {
         this.setState({dataLoading: false});
         this.showAlert('', error.data.message);
-        //}
       });
   }
 
@@ -1511,10 +1474,8 @@ class GroupTasksDetailsScreen extends Component {
         }
       })
       .catch(error => {
-        //if (error.status == 401 || error.status == 403 || error.status == 400) {
         this.setState({dataLoading: false});
         this.showAlert('', error.data.message);
-        //}
       });
   }
 
@@ -1583,11 +1544,9 @@ class GroupTasksDetailsScreen extends Component {
         }
       })
       .catch(error => {
-        //if (error.status == 401 || error.status == 403) {
         this.setState({dataLoading: false});
         this.showAlert('', error.data.message);
         this.setDueDate(this.state.taskResult);
-        //}
       });
   }
 
@@ -1637,24 +1596,6 @@ class GroupTasksDetailsScreen extends Component {
     let selectedTaskID = this.state.selectedTaskID;
 
     this.onGroupSubTaskDeletePress(selectedGroupTaskID, selectedTaskID);
-
-    // Alert.alert(
-    //   'Delete Task',
-    //   "You're about to permanently delete this task, its comments\n and attachments, and all of its data.\nIf you're not sure, you can close this pop up.",
-    //   [
-    //     {
-    //       text: 'Cancel',
-    //       onPress: () => console.log('Cancel Pressed'),
-    //       style: 'cancel',
-    //     },
-    //     {
-    //       text: 'Delete',
-    //       onPress: () =>
-    //         this.onGroupSubTaskDeletePress(selectedGroupTaskID, selectedTaskID),
-    //     },
-    //   ],
-    //   {cancelable: false},
-    // );
   }
 
   onGroupSubTaskDeletePress(selectedGroupTaskID, selectedTaskID) {
@@ -1676,12 +1617,6 @@ class GroupTasksDetailsScreen extends Component {
             deleteTaskSuccess: true,
             showMessageModal: true,
           });
-          // Alert.alert(
-          //   'Success',
-          //   'Task Deleted',
-          //   [{text: 'OK', onPress: () => this.props.navigation.goBack()}],
-          //   {cancelable: false},
-          // );
         } else {
           this.setState({dataLoading: false, deleteTaskSuccess: false});
         }
@@ -1903,20 +1838,15 @@ class GroupTasksDetailsScreen extends Component {
             buttons: {},
           };
           this.setState({dataLoading: false, showMessageModal: true});
-          // if (fromParent) {
           this.fetchData(selectedGroupTaskID, this.state.selectedTaskID);
-          // this.fetchFilesData(selectedGroupTaskID, this.state.selectedTaskID);
-          // this.getAllTaskByGroup(this.state.selectedGroupTaskID);
           this.setState({parentTaskName: parentTaskName});
         } else {
           this.setState({dataLoading: false});
         }
       })
       .catch(error => {
-        //if (error.status == 401 || error.status == 403) {
         this.setState({dataLoading: false});
         this.showAlert('', error.data.message);
-        //}
       });
   }
 
@@ -2022,8 +1952,6 @@ class GroupTasksDetailsScreen extends Component {
           isDelete={true}
           navigation={this.props.navigation}
           title={taskName}
-          // drawStatus={true}
-          // taskStatus={taskStatus ? taskStatus : ''}
           onPress={() => this.props.navigation.goBack()}
           onPressTaskLog={() =>
             this.props.navigation.navigate('TasksLogScreen', {
