@@ -755,6 +755,12 @@ class MeetingDiscussionPointScreen extends Component {
       userName: '',
       guestName: '',
     });
+
+    if (value == true) {
+      let {textInputs} = this.state;
+      textInputs[2] = '';
+      this.setState({textInputs, convertToTask: false});
+    }
   }
 
   onChangeActionByText(text) {
@@ -765,6 +771,12 @@ class MeetingDiscussionPointScreen extends Component {
     this.setState({
       convertToTask: value,
     });
+
+    if (value == false) {
+      let {textInputs} = this.state;
+      textInputs[2] = '';
+      this.setState({textInputs});
+    }
   }
 
   renderDiscussionPointView(item, index) {
@@ -930,6 +942,9 @@ class MeetingDiscussionPointScreen extends Component {
         return (
           <View>
             <Text style={styles.fieldName}>{item.name}</Text>
+
+            {/* Commented because of the issue in RichTextEditorPell. 
+            If this used in flatlist all the screen will blinking.*/}
             {/* <View style={styles.textEditorStyle}>
               <RichTextEditorPell
                 chatText={description}
