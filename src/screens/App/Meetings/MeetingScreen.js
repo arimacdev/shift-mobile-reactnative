@@ -84,6 +84,7 @@ class MeetingScreen extends Component {
       meetingId: '',
       showMessageModal: false,
       selectedProjectID: '',
+      count: 1,
     };
   }
 
@@ -408,6 +409,10 @@ class MeetingScreen extends Component {
     this.setState({showMessageModal: false, indexMain: indexMain + 1});
   }
 
+  onSetCount(count) {
+    this.setState({count: count});
+  }
+
   renderView(item, index) {
     let key = item.id;
     let value = this.getChangedValue(item);
@@ -494,6 +499,8 @@ class MeetingScreen extends Component {
               meetingId={this.state.meetingId}
               meetingDetails={this.meetingDetails}
               onChangeIndexMain={indexMain => this.onChangeIndexMain(indexMain)}
+              onSetCount={count => this.onSetCount(count)}
+              count={this.state.count}
             />
           ) : (
             <MeetingOtherDetailsScreen
@@ -502,6 +509,8 @@ class MeetingScreen extends Component {
               meetingId={this.state.meetingId}
               meetingDetails={this.meetingDetails}
               onChangeIndexMain={indexMain => this.onChangeIndexMain(indexMain)}
+              onSetCount={count => this.onSetCount(count)}
+              count={this.state.count}
             />
           )}
 
