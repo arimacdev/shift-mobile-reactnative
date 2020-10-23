@@ -135,10 +135,12 @@ class MeetingOtherDetailsScreen extends Component {
   onBackPress() {
     let indexMain = this.state.indexMain - 1;
     this.props.onChangeIndexMain(indexMain);
+    this.props.onSetCount(this.props.count);
   }
 
   resetValues() {
     this.setState({textInputs: [], textInputsUserList: []});
+    this.props.onSetCount(1);
   }
 
   async addOtherDetails() {
