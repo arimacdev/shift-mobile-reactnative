@@ -297,8 +297,8 @@ class MeetingViewScreen extends Component {
     let dateText = moment.parseZone(date).format('YYYY-MM-DD');
     let color = '';
 
-    let currentTime = moment().format('h:mma');
-    let timeText = moment.parseZone(date).format('h:mma');
+    let currentTime = moment().format('HH:mm');
+    let timeText = moment.parseZone(date).format('HH:mm');
 
     if (moment(dateText).isSame(currentDate)) {
       if (timeText > currentTime) {
