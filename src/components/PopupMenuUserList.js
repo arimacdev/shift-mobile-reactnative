@@ -218,7 +218,6 @@ class PopupMenuUserList extends Component {
   };
 
   menuOptions(item) {
-    const {navigation} = this.props;
     return (
       <View
         style={[
