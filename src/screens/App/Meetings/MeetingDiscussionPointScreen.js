@@ -104,6 +104,11 @@ class MeetingDiscussionPointScreen extends Component {
 
   componentDidMount() {
     this.getActiveUsers();
+    let count = this.props.count;
+    this.setState({
+      count: count,
+      textInputs: [count.toString()],
+    });
   }
 
   hideDateTimePicker = () => {
@@ -332,7 +337,9 @@ class MeetingDiscussionPointScreen extends Component {
       taskName: '',
       actionByGuest: false,
       convertToTask: false,
+      popupMenuOpen: false,
     });
+    this.props.addPeopleModal(false);
     // this.setContentHTML('');
   }
 
@@ -520,6 +527,7 @@ class MeetingDiscussionPointScreen extends Component {
   onNextPress() {
     let indexMain = this.state.indexMain + 1;
     this.props.onChangeIndexMain(indexMain);
+    this.props.onSetCount(this.state.count);
   }
 
   onDiscussionItemPress(item) {
@@ -759,7 +767,8 @@ class MeetingDiscussionPointScreen extends Component {
     if (value == true) {
       let {textInputs} = this.state;
       textInputs[2] = '';
-      this.setState({textInputs, convertToTask: false});
+      this.setState({textInputs, convertToTask: false, popupMenuOpen: false});
+      this.props.addPeopleModal(false);
     }
   }
 
