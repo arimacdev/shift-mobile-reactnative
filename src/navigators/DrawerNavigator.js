@@ -1,7 +1,6 @@
 import React from 'react';
-import {View, Dimensions, Image} from 'react-native';
+import {Dimensions} from 'react-native';
 import {createDrawerNavigator} from 'react-navigation-drawer';
-import {Icon} from 'native-base';
 import EStyleSheet from 'react-native-extended-stylesheet';
 
 import {ProjectsStackNavigator} from '../navigators/ProjectsStackNavigator';
@@ -9,10 +8,8 @@ import {UsersStackNavigator} from '../navigators/UsersStackNavigator';
 import {TasksStackNavigator} from '../navigators/TasksStackNavigator';
 
 import colors from '../config/colors';
-import Header from '../components/Header';
 import CustomDrawerContentComponent from '../components/CustomDrawerMenu';
 import {WorkloadStackNavigator} from './WorkloadStackNavigator';
-import icons from '../asserts/icons/icons';
 
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
