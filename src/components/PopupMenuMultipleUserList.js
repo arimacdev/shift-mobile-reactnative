@@ -408,7 +408,7 @@ const styles = EStyleSheet.create({
     borderRadius: '5rem',
   },
   menuStyleIOS: {
-    bottom: 200,
+    bottom: 30,
     height: '53%',
     backgroundColor: colors.white,
     borderRadius: '5rem',
