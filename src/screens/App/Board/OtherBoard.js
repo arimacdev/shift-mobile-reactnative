@@ -23,7 +23,6 @@ import moment from 'moment';
 import PopupMenuNormal from '../../../components/PopupMenuNormal';
 import Triangle from 'react-native-triangle';
 import EmptyListView from '../../../components/EmptyListView';
-import Toast from 'react-native-simple-toast';
 
 const menuItems = [
   {value: 0, text: 'Edit Board Names'},
