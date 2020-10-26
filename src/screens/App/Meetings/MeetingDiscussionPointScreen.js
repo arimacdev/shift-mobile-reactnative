@@ -822,7 +822,7 @@ class MeetingDiscussionPointScreen extends Component {
       case 2:
         const optionsStyles = {
           optionsContainer: {
-            marginTop: 1,
+            marginTop: Platform.OS = 'ios'? -27: 1,
             width: '70%',
             marginLeft: 7,
           },
