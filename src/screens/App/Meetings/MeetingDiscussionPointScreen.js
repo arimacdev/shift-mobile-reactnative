@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Image,
   Switch,
+  Platform
 } from 'react-native';
 import {connect} from 'react-redux';
 import * as actions from '../../../redux/actions';
@@ -811,6 +812,7 @@ class MeetingDiscussionPointScreen extends Component {
                 keyboardType={index == 0 ? 'numeric' : 'default'}
                 onChangeText={text => this.onChangeText(text, index)}
                 maxLength={100}
+                editable={index == 0 ? false : true}
                 // onFocus={() => this.onFocusTextInput(index)}
                 // onBlur={() => this.blurContentEditor()}
               />
