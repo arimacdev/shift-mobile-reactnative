@@ -21,7 +21,6 @@ import {NavigationEvents} from 'react-navigation';
 import Triangle from 'react-native-triangle';
 import EmptyListView from '../../../components/EmptyListView';
 import icons from '../../../asserts/icons/icons';
-import Toast from 'react-native-simple-toast';
 
 class DefaultBoard extends Component {
   constructor(props) {
