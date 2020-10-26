@@ -252,7 +252,6 @@ class AddNewTasksScreen extends Component {
   }
 
   async getAllSprintInProject(selectedProjectID) {
-    // let selectedProjectID = this.props.selectedProjectID;
     this.setState({dataLoading: true});
     let sprintData = await APIServices.getAllSprintInProject(selectedProjectID);
     if (sprintData.message == 'success') {
@@ -261,18 +260,12 @@ class AddNewTasksScreen extends Component {
         let sprintObj = sprintData.data[i];
         let sprintID = sprintObj.sprintId;
         let sprintName = sprintObj.sprintName;
-        // let taskArray = [];
-        // taskArray =  taskData.filter(function(obj) {
-        //     return obj.sprintId == sprintID;
-        // });
-        // sprintObj.tasks = taskArray;
         sprintsArray.push({
           id: sprintID,
           value: sprintName,
         });
       }
       this.setState({dropSprintData: sprintsArray, dataLoading: false});
-      // this.setState({dataLoading:false,sprints:sprintsArray});
     } else {
       this.setState({dataLoading: false});
     }
@@ -283,7 +276,6 @@ class AddNewTasksScreen extends Component {
     let listStartIndex = 0;
     let listEndIndex = 10;
     let allTasks = true;
-    // let selectedProjectID = this.props.selectedProjectID;
     this.setState({dataLoading: true});
     let parentTaskData = await APIServices.getAllTaskInProjectsData(
       userID,
@@ -539,17 +531,8 @@ class AddNewTasksScreen extends Component {
 
   renderDocPickeredView(item) {
     return (
-      <View
-        style={{
-          width: 165,
-          height: 50,
-          flexDirection: 'row',
-          backgroundColor: colors.white,
-          borderRadius: 5,
-          marginRight: 5,
-          marginBottom: 5,
-        }}>
-        <View style={{justifyContent: 'center', marginLeft: 10}}>
+      <View style={styles.docPickerMainView}>
+        <View style={styles.docPickerImageView}>
           <Image
             style={styles.gallaryIcon}
             source={icons.gallary}
@@ -557,28 +540,14 @@ class AddNewTasksScreen extends Component {
           />
         </View>
 
-        <View
-          style={{
-            flexDirection: 'column',
-            marginLeft: 10,
-            justifyContent: 'center',
-            flex: 1,
-          }}>
-          <Text style={{marginTop: -2}}>
+        <View style={styles.docPickerTextView}>
+          <Text style={styles.docPickerText}>
             {item.name.substring(0, 5)}...{item.name.substr(-7)}
           </Text>
-          <Text style={{fontSize: 10, marginTop: -2, color: colors.lightgray}}>
-            {item.dateTime}
-          </Text>
+          <Text style={styles.docPickerDateTime}>{item.dateTime}</Text>
         </View>
 
-        <View
-          style={{
-            justifyContent: 'flex-start',
-            marginRight: 4,
-            marginTop: 4,
-            // backgroundColor:'red'
-          }}>
+        <View style={styles.crossIconView}>
           <TouchableOpacity onPress={() => this.onFilesCrossPress(item.uri)}>
             <Image
               style={styles.cross}
@@ -1163,7 +1132,10 @@ class AddNewTasksScreen extends Component {
             ) : (
               <View style={[styles.taskFieldView, {flexDirection: 'row'}]}>
                 <Image
-                  style={[styles.calendarIcon, {marginRight: 10}]}
+                  style={[
+                    styles.calendarIcon,
+                    {marginRight: EStyleSheet.value('10rem')},
+                  ]}
                   source={icons.upload}
                   resizeMode={'contain'}
                 />
@@ -1171,11 +1143,19 @@ class AddNewTasksScreen extends Component {
               </View>
             )}
           </TouchableOpacity>
-          <View style={[styles.taskFieldView, {height: 160}]}>
+          <View
+            style={[
+              styles.taskFieldView,
+              {height: EStyleSheet.value('160rem')},
+            ]}>
             <TextInput
               style={[
                 styles.textInput,
-                {width: '95%', textAlignVertical: 'top', height: 150},
+                {
+                  width: '95%',
+                  textAlignVertical: 'top',
+                  height: EStyleSheet.value('150rem'),
+                },
               ]}
               placeholder={'Notes'}
               value={this.state.notes}
@@ -1188,7 +1168,10 @@ class AddNewTasksScreen extends Component {
               <Image
                 style={[
                   styles.bottomBarIcon,
-                  {marginRight: 15, marginLeft: 10},
+                  {
+                    marginRight: EStyleSheet.value('15rem'),
+                    marginLeft: EStyleSheet.value('10rem'),
+                  },
                 ]}
                 source={icons.taskWhite}
                 resizeMode={'contain'}
@@ -1198,7 +1181,10 @@ class AddNewTasksScreen extends Component {
               </View>
 
               <Image
-                style={[styles.addIcon, {marginRight: 10}]}
+                style={[
+                  styles.addIcon,
+                  {marginRight: EStyleSheet.value('10rem')},
+                ]}
                 source={icons.add}
                 // resizeMode={'contain'}
               />
@@ -1349,6 +1335,38 @@ const styles = EStyleSheet.create({
     width: '100rem',
     backgroundColor: colors.colorBittersweet,
     alignItems: 'center',
+  },
+  docPickerMainView: {
+    width: '163rem',
+    height: '43rem',
+    flexDirection: 'row',
+    backgroundColor: colors.white,
+    borderRadius: '5rem',
+    marginRight: '5rem',
+    marginBottom: '5rem',
+  },
+  docPickerImageView: {
+    justifyContent: 'center',
+    marginLeft: '10rem',
+  },
+  docPickerTextView: {
+    flexDirection: 'column',
+    marginLeft: '10rem',
+    justifyContent: 'center',
+    flex: 1,
+  },
+  docPickerText: {
+    marginTop: '-2rem',
+  },
+  docPickerDateTime: {
+    fontSize: '9rem',
+    marginTop: '-2rem',
+    color: colors.lightgray,
+  },
+  crossIconView: {
+    justifyContent: 'flex-start',
+    marginRight: '4rem',
+    marginTop: '4rem',
   },
 });
 
