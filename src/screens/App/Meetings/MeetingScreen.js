@@ -141,6 +141,7 @@ class MeetingScreen extends Component {
     if (
       this.validateFields(
         dateOfMeeting,
+        dateOfMeetingValue,
         scheduleTimeOfMeeting,
         actualTimeOfMeeting,
         textInputs,
@@ -198,6 +199,7 @@ class MeetingScreen extends Component {
 
   validateFields(
     dateOfMeeting,
+    dateOfMeetingValue,
     scheduleTimeOfMeeting,
     actualTimeOfMeeting,
     textInputs,
@@ -233,10 +235,15 @@ class MeetingScreen extends Component {
     }
 
     if (scheduleTimeOfMeeting && !_.isEmpty(scheduleTimeOfMeeting)) {
-      let startTime = moment(scheduleTimeOfMeeting, 'hh:mmA');
-      let todayTime = moment(new Date()).format('hh:mmA');
-      let endTime = moment(todayTime, 'hh:mmA');
+      let dateTime = dateOfMeetingValue + scheduleTimeOfMeeting;
+      let startTimeFormat = moment(dateTime, 'DD/MM/YYYY hh:mmA').format(
+        'DD/MM/YYYY hh:mmA',
+      );
+      let startTime = moment.parseZone(startTimeFormat, 'DD/MM/YYYY hh:mmA');
+      let todayTime = moment(new Date()).format('DD/MM/YYYY hh:mmA');
+      let endTime = moment.parseZone(todayTime, 'DD/MM/YYYY hh:mmA');
       let totalHours = startTime.diff(endTime, 'seconds');
+
       if (totalHours < 0) {
         Utils.showAlert(
           true,
