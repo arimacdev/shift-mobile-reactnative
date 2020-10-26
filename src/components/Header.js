@@ -83,7 +83,7 @@ class Header extends Component {
       isTaskLog,
       isDelete,
     } = this.props;
-    // console.log('PPPP',this.props)
+
     return (
       <SafeAreaView style={{backgroundColor: colors.primary}}>
         <StatusBar backgroundColor={colors.primary} barStyle="light-content" />
