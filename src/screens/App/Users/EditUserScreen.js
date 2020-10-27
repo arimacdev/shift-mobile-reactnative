@@ -70,7 +70,6 @@ class EditUserScreen extends Component {
       prevProps.editUserSuccess !== this.props.editUserSuccess &&
       this.props.editUserSuccess
     ) {
-      // this.showAlert('', 'User updated successfully');
       this.setState({showMessageModal: true});
     }
   }
