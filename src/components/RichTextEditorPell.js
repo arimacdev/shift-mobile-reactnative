@@ -22,14 +22,6 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
 
-// const initHTML = `<br/>
-// <center><b>Pell.js Rich Editor</b></center>
-// <center>React Native</center>
-// <br/>
-// <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/1024px-React-icon.svg.png" ></br></br>
-// </br></br>
-// `;
-
 class RichTextEditorPell extends React.Component {
   richText = React.createRef();
 
