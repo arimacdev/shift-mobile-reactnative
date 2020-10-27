@@ -462,7 +462,7 @@ const styles = EStyleSheet.create({
     paddingHorizontal: '12rem',
     height: '45rem',
     marginHorizontal: '10rem',
-    borderBottomWidth: 1,
+    borderBottomWidth: '1rem',
   },
   textInput: {
     fontSize: '11rem',
