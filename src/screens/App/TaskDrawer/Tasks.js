@@ -699,7 +699,6 @@ class Tasks extends Component {
 
   // render main list without filter
   renderTaskList(item, indexMain) {
-    let index = this.state.index;
     let selectedTaskGroupId = this.props.selectedTaskGroupId;
     let parentTaskName = item.parentTask.taskName;
     return (
@@ -740,11 +739,6 @@ class Tasks extends Component {
             />
             <View style={styles.tasksMainView}>
               <View style={styles.tasksHeaderView}>
-                {/* <Text style={styles.textMain}>
-                  {this.state.selectedProjectName}
-                </Text>
-                <Text style={styles.text}>{item.parentTask.taskName}</Text> */}
-
                 <Text style={styles.textMain} numberOfLines={1}>
                   {item.parentTask.taskName}
                 </Text>
