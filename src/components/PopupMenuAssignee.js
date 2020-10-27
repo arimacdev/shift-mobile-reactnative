@@ -197,7 +197,6 @@ class PopupMenuAssignee extends Component {
   render() {
     const scrollStyle = {
       scrollViewMenuOption: {
-        // height: height - (this.state.keyboardHeight + 140)
         maxHeight:
           50 * this.DataLength <= height - (this.state.keyboardHeight + 240)
             ? 50 * this.DataLength
@@ -209,7 +208,6 @@ class PopupMenuAssignee extends Component {
       <Menu
         opened={this.state.opened}
         onBackdropPress={() => this.onBackdropPress()}
-        // onSelect={value => this.onOptionSelect(value)}
       >
         <MenuTrigger>{this.menuTrigger()}</MenuTrigger>
         <MenuOptions customStyles={optionsStyles}>
@@ -240,7 +238,7 @@ const optionsStyles = {
 const styles = EStyleSheet.create({
   taskFieldView: {
     backgroundColor: colors.projectBgColor,
-    borderRadius: 5,
+    borderRadius: '5rem',
     marginTop: '0rem',
     marginBottom: '0rem',
     flexDirection: 'row',
@@ -269,7 +267,7 @@ const styles = EStyleSheet.create({
     marginHorizontal: '10rem',
     paddingBottom: '10rem',
     paddingTop: '5rem',
-    borderBottomWidth: 1,
+    borderBottomWidth: '1rem',
     borderBottomColor: colors.lighterGray,
   },
   text: {
