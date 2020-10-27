@@ -4,7 +4,6 @@ import {
   View,
   Text,
   TouchableOpacity,
-  Platform,
   AppState,
   Image,
   TextInput,
