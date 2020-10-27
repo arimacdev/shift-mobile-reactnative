@@ -138,7 +138,6 @@ class AddPeopleScreen extends Component {
     let taskItemID = this.state.taskItemID;
     if (this.validateUser(userID)) {
       this.addUser(userID, taskItemID);
-      //this.props.addUserToGroupTask(userID,taskItemID);
     }
   }
 
@@ -148,7 +147,6 @@ class AddPeopleScreen extends Component {
       let resultObj = await APIServices.addUserToGroupTask(userID, taskItemID);
       if (resultObj.message == 'success') {
         this.setState({dataLoading: false, showMessageModal: true});
-        // this.showAlert('', 'Successfully completed');
         this.setState({
           name: '',
           role: '',
