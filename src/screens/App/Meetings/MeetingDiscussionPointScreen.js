@@ -490,38 +490,6 @@ class MeetingDiscussionPointScreen extends Component {
         return false;
       }
     }
-
-    //Commnted for remove validations. For add the validations please uncomment.
-    // if (!targetDate && _.isEmpty(targetDate)) {
-    //   Utils.showAlert(
-    //     true,
-    //     '',
-    //     'Please set the target date for discussion point',
-    //     this.props,
-    //   );
-    //   return false;
-    // }
-
-    // if (!textInputs[4] && _.isEmpty(textInputs[4])) {
-    //   Utils.showAlert(
-    //     true,
-    //     '',
-    //     'Please enter the remarks for discussion point',
-    //     this.props,
-    //   );
-    //   return false;
-    // }
-
-    // if (!description && _.isEmpty(description)) {
-    //   Utils.showAlert(
-    //     true,
-    //     '',
-    //     'Please enter the description for discussion point',
-    //     this.props,
-    //   );
-    //   return false;
-    // }
-
     return true;
   }
 
@@ -696,7 +664,6 @@ class MeetingDiscussionPointScreen extends Component {
   };
 
   renderUserList(item) {
-    const {navigation} = this.props;
     return (
       <View style={styles.userListStyle}>
         {this.userImage(item)}
