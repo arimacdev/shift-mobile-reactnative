@@ -20,7 +20,6 @@ const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
 import Loader from '../../../components/Loader';
 import EmptyListView from '../../../components/EmptyListView';
-const initialLayout = {width: entireScreenWidth};
 
 class WorkloadSearchScreen extends Component {
   constructor(props) {
