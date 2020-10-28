@@ -66,7 +66,6 @@ class AddUserScreen extends Component {
       prevProps.addUserSuccess !== this.props.addUserSuccess &&
       this.props.addUserSuccess
     ) {
-      // this.showAlert('', 'User created successfully');
       this.setState({showMessageModal: true});
       this.resetState();
     }
