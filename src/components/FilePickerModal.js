@@ -51,7 +51,6 @@ class FilePickerModal extends Component {
   render() {
     return (
       <Modal
-        // isVisible={true}
         isVisible={this.state.showFilePickerModal}
         style={styles.modalStyleFilePicker}
         onBackButtonPress={() => this.onCanclePress()}
@@ -90,8 +89,6 @@ class FilePickerModal extends Component {
 const styles = EStyleSheet.create({
   modalStyleFilePicker: {
     bottom: Platform.OS == 'ios' ? '15%' : '0%',
-    // justifyContent: 'flex-end',
-    // margin: 0,
   },
   filePickerButtonViewStyle: {
     marginTop: '20rem',
