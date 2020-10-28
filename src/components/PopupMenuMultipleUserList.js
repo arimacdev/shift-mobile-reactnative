@@ -491,9 +491,7 @@ const styles = EStyleSheet.create({
 });
 
 const mapStateToProps = state => {
-  return {
-    // addPeopleModelVisible: state.project.addPeopleModelVisible,
-  };
+  return {};
 };
 export default connect(
   mapStateToProps,
