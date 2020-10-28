@@ -210,11 +210,6 @@ export const updateproject = (
           type: EDIT_PROJECT_FAILED_MASSAGE,
           payload: errorMsg,
         });
-        // if (error.status == 403 || error.status == 422) {
-
-        // } else {
-        //   dispatch({type: EDIT_PROJECT_FAILED});
-        // }
       });
   };
 };
@@ -346,7 +341,6 @@ export const addTaskToProject = (
 };
 
 export const addFileToTask = (file, taskId, selectedProjectID) => {
-  // console.log(file[0].uri, taskId, selectedProjectID,'file, taskId, selectedProjectID')
   return dispatch => {
     dispatch({type: ADD_FILE_TO_TASK});
     APIServices.addFileToTask(file, taskId, selectedProjectID)
