@@ -243,7 +243,6 @@ class AttendanceScreen extends Component {
         <NavigationEvents onWillFocus={payload => this.loadProjects(payload)} />
         <View style={styles.projectFilerView}>
           <Dropdown
-            // style={{}}
             label=""
             labelFontSize={0}
             data={dropData}
@@ -285,17 +284,14 @@ class AttendanceScreen extends Component {
 const styles = EStyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: colors.pageBackGroundColor,
   },
   projectFilerView: {
     backgroundColor: colors.lightBlue,
-    borderRadius: 5,
-    // width: '330rem',
+    borderRadius: '5rem',
     marginTop: '17rem',
     marginBottom: '12rem',
     flexDirection: 'row',
     alignItems: 'center',
-    // justifyContent: 'center',
     paddingHorizontal: '12rem',
     height: '45rem',
     marginHorizontal: '20rem',
