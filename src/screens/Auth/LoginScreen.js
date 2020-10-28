@@ -51,9 +51,7 @@ class LoginScreen extends Component {
 
   componentDidMount() {
     AppState.addEventListener('change', this._handleAppStateChange);
-    // if (Platform.OS == 'ios') {
     this.getMobileVersionStatus();
-    // }
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {}
@@ -273,7 +271,6 @@ class LoginScreen extends Component {
             onPress={() => this.props.navigation.goBack()}>
             <Text style={styles.textGoBack}>{strings.login.goBack}</Text>
           </TouchableOpacity>
-          {/* <Text style={styles.copyRights}>{strings.login.copyRights}</Text> */}
         </View>
         {/* </ScrollView> */}
         <ForceUpdateModal
