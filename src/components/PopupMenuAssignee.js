@@ -54,14 +54,12 @@ class PopupMenuAssignee extends Component {
   _keyboardDidShow(e) {
     console.log('Keyboard Show');
     this.DataLength = this.state.allActiveUsers.length;
-    // alert('Keyboard Shown');
     this.setState({keyboardHeight: height * 0.9 - e.endCoordinates.height});
   }
 
   _keyboardDidHide(e) {
     console.log('KeyBoard Hide assignee');
     this.setState({keyboardHeight: height * 0.23 - e.endCoordinates.height});
-    // alert('Keyboard Hidden');
   }
   onTriggerPress() {
     this.setState({opened: true});
