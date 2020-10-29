@@ -49,7 +49,6 @@ class Board extends Component {
             selectedProjectID={projectId}
             navigation={this.props.navigation}
             selectedProjectName={projectName}
-            //   isActive={isActive}
           />
         );
     }
