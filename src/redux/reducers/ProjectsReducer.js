@@ -142,16 +142,12 @@ export default (state = INITIAL_STATE, action) => {
         addProjectErrorMassage: '',
       };
     case ADD_PROJECT_SUCCESS:
-      let newProject = action.payload.data;
-      //const existingProjects = [...(state.projects)];
-      //existingProjects.push(...(newProject));
       return {
         ...state,
         addProjectLoading: false,
         addProjectrSuccess: true,
         addProjectError: false,
         addProjectErrorMassage: '',
-        //projects :  [...(state.projects)];,
       };
     case ADD_PROJECT_FAILED:
       return {
