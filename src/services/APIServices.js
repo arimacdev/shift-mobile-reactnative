@@ -1000,9 +1000,9 @@ async function updateSubTask(
         subTaskID,
       method: 'PUT',
       data: {
-        subtaskName: subTaskName, //
-        subtaskStatus: isSelected, //
-        subTaskEditor: userID, //
+        subtaskName: subTaskName,
+        subtaskStatus: isSelected,
+        subTaskEditor: userID,
         taskType: 'project',
       },
     },
@@ -2183,9 +2183,9 @@ async function myTaskUpdateSubTask(
         subTaskID,
       method: 'PUT',
       data: {
-        subtaskName: subTaskName, //
-        subtaskStatus: isSelected, //
-        subTaskEditor: userID, //
+        subtaskName: subTaskName,
+        subtaskStatus: isSelected,
+        subTaskEditor: userID,
         taskType: 'personal',
       },
     },
@@ -2193,7 +2193,7 @@ async function myTaskUpdateSubTask(
     headers,
   );
 }
-//oooooo
+
 async function getAllTaskInDefaultBoardData(
   projectID,
   startIndex,
