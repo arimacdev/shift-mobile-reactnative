@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   TextInput,
   ScrollView,
-  Alert,
   Platform,
 } from 'react-native';
 import {connect} from 'react-redux';
@@ -423,7 +422,6 @@ class AddNewTasksScreen extends Component {
   onChangeTime(event, selectedTime) {
     let time = new Date(selectedTime);
     let newTime = moment(time).format('hh:mmA');
-    // let newTime = time.getHours() + ':' + time.getMinutes();
 
     if (event.type == 'set') {
       if (this.state.reminder) {
@@ -953,10 +951,8 @@ class AddNewTasksScreen extends Component {
               itemColor={'black'}
               selectedItemColor={'black'}
               onChangeText={value => this.selectAssignee(value)}
-              // onChangeText={(value)=>{this.selectAssignee(item.name, value)}}
               dropdownOffset={{top: 10}}
               baseColor={colors.projectBgColor}
-              // renderBase={this.renderBase}
               renderAccessory={this.renderBase}
               itemTextStyle={{marginLeft: 15}}
               itemPadding={10}
@@ -980,10 +976,8 @@ class AddNewTasksScreen extends Component {
               itemColor={'black'}
               selectedItemColor={'black'}
               onChangeText={this.setParentTask}
-              // onChangeText={(value)=>{this.selectAssignee(item.name, value)}}
               dropdownOffset={{top: 10}}
               baseColor={colors.projectBgColor}
-              // renderBase={this.renderBase}
               renderAccessory={this.renderBase}
               itemTextStyle={{marginLeft: 15}}
               itemPadding={10}
@@ -1012,7 +1006,6 @@ class AddNewTasksScreen extends Component {
               dropdownOffset={{top: 10}}
               baseColor={colors.projectBgColor}
               onChangeText={this.selectOperationalStatus}
-              // renderBase={this.renderBase}
               renderAccessory={this.renderBase}
               itemTextStyle={{marginLeft: 15}}
               itemPadding={10}
@@ -1039,7 +1032,6 @@ class AddNewTasksScreen extends Component {
               dropdownOffset={{top: 10}}
               baseColor={colors.projectBgColor}
               onChangeText={value => this.selectStatus(value)}
-              // renderBase={this.renderBase}
               renderAccessory={this.renderBase}
               itemTextStyle={{marginLeft: 15}}
               itemPadding={10}
@@ -1070,9 +1062,7 @@ class AddNewTasksScreen extends Component {
                 selectedItemColor={'black'}
                 dropdownOffset={{top: 10}}
                 baseColor={colors.projectBgColor}
-                // onChangeText={value => this.selectSprintStatus(value)}
                 onChangeText={this.selectSprintStatus}
-                // renderBase={this.renderBase}
                 renderAccessory={this.renderBase}
                 itemTextStyle={{marginLeft: 15}}
                 itemPadding={10}
@@ -1186,7 +1176,6 @@ class AddNewTasksScreen extends Component {
                   {marginRight: EStyleSheet.value('10rem')},
                 ]}
                 source={icons.add}
-                // resizeMode={'contain'}
               />
             </View>
           </TouchableOpacity>
