@@ -254,7 +254,6 @@ class PopupMenuUserList extends Component {
   render() {
     const scrollStyle = {
       scrollViewMenuOption: {
-        // height: height - (this.state.keyboardHeight + 140)
         maxHeight:
           50 * this.DataLength <= height - (this.state.keyboardHeight + 240)
             ? 50 * this.DataLength
@@ -269,14 +268,7 @@ class PopupMenuUserList extends Component {
         onBackdropPress={() => this.onBackdropPress()}
         hideModalContentWhileAnimating={true}
         hasBackdrop={this.props.hasBackdrop ? this.props.hasBackdrop : false}
-        coverScreen={this.props.coverScreen ? this.props.coverScreen : false}
-        // animationIn="slideInDown"
-        // animationOut="slideOutUp"
-        // animationInTiming={600}
-        // animationOutTiming={600}
-        // backdropTransitionInTiming={600}
-        // backdropTransitionOutTiming={600}
-      >
+        coverScreen={this.props.coverScreen ? this.props.coverScreen : false}>
         <View
           style={[
             Platform.OS == 'ios' ? styles.menuStyleIOS : styles.menuStyle,
@@ -342,9 +334,7 @@ const styles = EStyleSheet.create({
 });
 
 const mapStateToProps = state => {
-  return {
-    // addPeopleModelVisible: state.project.addPeopleModelVisible,
-  };
+  return {};
 };
 export default connect(
   mapStateToProps,
