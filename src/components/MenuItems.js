@@ -1,12 +1,5 @@
 import React, {Component} from 'react';
-import {
-  View,
-  Text,
-  Image,
-  FlatList,
-  Platform,
-  Dimensions,
-} from 'react-native';
+import {View, Text, Image, FlatList, Platform, Dimensions} from 'react-native';
 import {
   Menu,
   MenuOptions,
@@ -71,7 +64,6 @@ class MenuItems extends Component {
       color: item.color,
       selectdItem: item,
     });
-    // this.updateDataOrder(item);
     if (this.props.onChange) {
       this.props.onChange(item);
     }
@@ -83,14 +75,6 @@ class MenuItems extends Component {
       this.props.onChange(item);
     }
   }
-
-  // updateDataOrder(item) {
-  //   const currentIndex = this.props.data.findIndex(elem => {
-  //     return elem.value === item.value;
-  //   });
-  //   const newData = Utils.moveElementInArray(this.props.data, currentIndex, 0);
-  //   this.props.data = newData;
-  // }
 
   onTriggerPress() {
     this.setState({opened: true});
@@ -110,7 +94,6 @@ class MenuItems extends Component {
         width: EStyleSheet.value('145rem'),
         paddingVertical: EStyleSheet.value('10rem'),
         paddingHorizontal: 0,
-        // paddingTop:10,
         marginTop:
           Platform.OS === 'ios'
             ? EStyleSheet.value('15rem')
