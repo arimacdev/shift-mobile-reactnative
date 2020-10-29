@@ -559,7 +559,6 @@ class ProjectFilesScreen extends Component {
   renderImagePickerModal() {
     return (
       <Modal
-        // isVisible={true}
         isVisible={this.state.showFilePickerModal}
         style={styles.modalStyleImagePicker}
         onBackButtonPress={() => this.onCloseFilePickerModal()}
@@ -1263,7 +1262,6 @@ class ProjectFilesScreen extends Component {
     let alertTitle = this.state.alertTitle;
     let alertMsg = this.state.alertMsg;
     let addFileTaskLoading = this.props.addFileTaskLoading;
-    let isFetching = this.state.isFetching;
     let folderData = this.state.folderData;
     let folderNavigation = this.state.folderNavigation;
     let length = this.state.folderNavigation.length - 1;
@@ -1616,8 +1614,6 @@ const styles = EStyleSheet.create({
   },
   modalStyleImagePicker: {
     bottom: Platform.OS == 'ios' ? '15%' : '0%',
-    // justifyContent: 'flex-end',
-    // margin: 0,
   },
   modalStyle: {
     bottom: Platform.OS == 'ios' ? '15%' : '0%',
