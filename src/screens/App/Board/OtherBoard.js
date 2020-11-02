@@ -23,6 +23,7 @@ import moment from 'moment';
 import PopupMenuNormal from '../../../components/PopupMenuNormal';
 import Triangle from 'react-native-triangle';
 import EmptyListView from '../../../components/EmptyListView';
+import Utils from '../../../utils/Utils';
 
 const menuItems = [
   {value: 0, text: 'Edit Board Names'},
@@ -98,6 +99,7 @@ class OtherBoard extends Component {
       }
     } catch (error) {
       this.setState({dataLoading: false});
+      Utils.showAlert(true, '', error.data.message, this.props);
     }
   };
 
@@ -147,6 +149,7 @@ class OtherBoard extends Component {
       }
     } catch (error) {
       this.setState({dataLoading: false});
+      Utils.showAlert(true, '', error.data.message, this.props);
     }
   }
 
