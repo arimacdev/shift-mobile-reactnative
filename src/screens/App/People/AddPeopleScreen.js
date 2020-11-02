@@ -78,7 +78,6 @@ class AddPeopleScreen extends Component {
         this.props.addPeopleProjectSuccess &&
       this.props.addPeopleProjectSuccess
     ) {
-      // this.showAlert('', 'Successfully completed');
       this.setState({showMessageModal: true});
       this.setState({
         name: '',
@@ -542,7 +541,6 @@ const mapStateToProps = state => {
     addPeopleProjectError: state.project.addPeopleProjectError,
     addPeopleProjectSuccess: state.project.addPeopleProjectSuccess,
     addPeopleProjectErrorMessage: state.project.addPeopleProjectErrorMessage,
-    // projectUsers: state.users.projectUsers
   };
 };
 export default connect(
