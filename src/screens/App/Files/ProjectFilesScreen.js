@@ -213,7 +213,7 @@ class ProjectFilesScreen extends Component {
         );
       })
       .catch(error => {
-        console.log(error);
+        this.showAlert('', 'File download failed');
       });
   };
 
@@ -278,6 +278,8 @@ class ProjectFilesScreen extends Component {
         this.setState({dataLoading: false});
         if (error.status == 401) {
           this.showAlert('', error.data.message);
+        } else {
+          this.showAlert('', 'File delete failed');
         }
       });
   }
@@ -384,6 +386,8 @@ class ProjectFilesScreen extends Component {
         this.setState({dataLoading: false});
         if (error.status == 401) {
           this.showAlert('', error.data.message);
+        } else {
+          this.showAlert('', 'Folder name update failed');
         }
       });
   }
