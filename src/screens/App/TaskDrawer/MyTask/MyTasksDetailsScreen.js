@@ -1477,7 +1477,6 @@ class MyTasksDetailsScreen extends Component {
               <View style={styles.taskTypeDropMainView}>
                 <View style={[styles.taskTypeDropDownView]}>
                   <Dropdown
-                    // style={{}}
                     label=""
                     labelFontSize={0}
                     data={dropData}
@@ -1520,9 +1519,7 @@ class MyTasksDetailsScreen extends Component {
                   placeholder={'Notes'}
                   value={this.state.note}
                   multiline={true}
-                  // blurOnSubmit={true}
                   onChangeText={text => this.changeTaskNote(text)}
-                  // onSubmitEditing={() => this.onSubmitTaskNote(this.state.note)}
                 />
                 <TouchableOpacity
                   style={styles.updateNotesView}
