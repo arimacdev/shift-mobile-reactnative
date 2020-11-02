@@ -235,7 +235,7 @@ class ProjectFilesScreen extends Component {
         );
       }
     } catch (err) {
-      console.warn(err);
+      Utils.showAlert(true, '', 'Permission request error', this.props);
     }
   }
 
@@ -791,7 +791,7 @@ class ProjectFilesScreen extends Component {
       if (DocumentPicker.isCancel(err)) {
         console.log('file pick error', err);
       } else {
-        throw err;
+        Utils.showAlert(true, '', 'File pick error', this.props);
       }
     }
   }
