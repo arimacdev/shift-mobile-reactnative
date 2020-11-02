@@ -21,6 +21,7 @@ import {NavigationEvents} from 'react-navigation';
 import Triangle from 'react-native-triangle';
 import EmptyListView from '../../../components/EmptyListView';
 import icons from '../../../asserts/icons/icons';
+import Utils from '../../../utils/Utils';
 
 class DefaultBoard extends Component {
   constructor(props) {
@@ -124,6 +125,7 @@ class DefaultBoard extends Component {
       }
     } catch (error) {
       this.setState({dataLoading: false});
+      Utils.showAlert(true, '', error.data.message, this.props);
     }
   };
 
