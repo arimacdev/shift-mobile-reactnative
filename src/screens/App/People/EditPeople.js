@@ -152,6 +152,8 @@ class EditPeople extends Component {
         this.setState({dataLoading: false});
         if (e.status == 403) {
           this.showAlert('', e.data.message);
+        }else {
+          this.showAlert('', 'Error occurred while editing the user');
         }
       }
     }
