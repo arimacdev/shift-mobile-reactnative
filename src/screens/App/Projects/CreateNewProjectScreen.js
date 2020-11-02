@@ -105,7 +105,6 @@ class CreateNewProjectScreen extends Component {
       prevProps.addProjectrSuccess !== this.props.addProjectrSuccess &&
       this.props.addProjectrSuccess
     ) {
-      // this.showAlert('', 'Project Created');
       this.setState({showMessageModal: true});
     }
   }
@@ -177,8 +176,6 @@ class CreateNewProjectScreen extends Component {
     this.hideTimePicker();
     let time = new Date(time1);
     let newTime = moment(time).format('hh:mmA');
-    // let newTime = time.getHours() + ':' + time.getMinutes();
-    // if (event.type == 'set') {
     if (this.state.reminder) {
       this.setState({
         projectEndTime: newTime,
@@ -196,12 +193,6 @@ class CreateNewProjectScreen extends Component {
         time: new Date(time1),
       });
     }
-    // } else {
-    //   this.setState({
-    //     showPicker: false,
-    //     showTimePicker: false,
-    //   });
-    // }
   };
 
   onChangeDate(event, selectedDate) {
@@ -241,7 +232,6 @@ class CreateNewProjectScreen extends Component {
   onChangeTime(event, selectedTime) {
     let time = new Date(selectedTime);
     let newTime = moment(time).format('hh:mmA');
-    // let newTime = time.getHours() + ':' + time.getMinutes();
 
     if (event.type == 'set') {
       if (this.state.reminder) {
@@ -601,7 +591,6 @@ class CreateNewProjectScreen extends Component {
               selectedItemColor={'black'}
               dropdownOffset={{top: 10}}
               baseColor={colors.projectBgColor}
-              // renderBase={this.renderBase}
               renderAccessory={this.renderBase}
               itemTextStyle={{marginLeft: 15}}
               itemPadding={10}
