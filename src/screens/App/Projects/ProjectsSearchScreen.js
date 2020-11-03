@@ -123,7 +123,10 @@ class ProjectsSearchScreen extends Component {
       })
       .catch(error => {
         this.setState({dataLoading: false});
-        Utils.showAlert(true, '', error.data.message, this.props);
+        let message = error.data
+          ? error.data.message
+          : 'Error occurred while pin the project';
+        Utils.showAlert(true, '', message, this.props);
       });
   }
 
