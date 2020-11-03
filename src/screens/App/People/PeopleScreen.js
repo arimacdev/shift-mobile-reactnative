@@ -23,6 +23,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import Loader from '../../../components/Loader';
 import {NavigationEvents} from 'react-navigation';
 import MessageShowModal from '../../../components/MessageShowModal';
+import Utils from '../../../utils/Utils';
 
 class PeopleScreen extends Component {
   details = {
@@ -67,7 +68,6 @@ class PeopleScreen extends Component {
         userID,
       );
       if (projectPeopleData.message == 'success') {
-        // this.props.setProjectUsers(projectPeopleData);
         let ownerArray = [];
         let adminsArray = [];
         let usersArray = [];
@@ -98,6 +98,8 @@ class PeopleScreen extends Component {
       }
     } catch (error) {
       this.setState({dataLoading: false});
+      let message = error.data ? error.data.message : 'Data loading error'
+      Utils.showAlert(true, '', message, this.props);
     }
   }
 
@@ -185,6 +187,10 @@ class PeopleScreen extends Component {
       }
     } catch (error) {
       this.setState({dataLoading: false});
+      let message = blockedStatus
+        ? 'Error occurred while blocking the user'
+        : 'Error occurred while unblocking the user';
+      Utils.showAlert(true, '', message, this.props);
     }
   }
 
@@ -306,9 +312,6 @@ class PeopleScreen extends Component {
                   this.renderPeopleList(item, true, false)
                 }
                 keyExtractor={item => item.projId}
-                // ListEmptyComponent={<EmptyListView />}
-                // onRefresh={() => this.onRefresh()}
-                // refreshing={isFetching}
               />
             </View>
           ) : null}
