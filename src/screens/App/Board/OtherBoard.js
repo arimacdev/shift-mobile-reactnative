@@ -99,7 +99,7 @@ class OtherBoard extends Component {
       }
     } catch (error) {
       this.setState({dataLoading: false});
-      let message = error.data ? error.data.message : 'Data loading error'
+      let message = error.data ? error.data.message : 'Data loading error';
       Utils.showAlert(true, '', message, this.props);
     }
   };
@@ -150,7 +150,7 @@ class OtherBoard extends Component {
       }
     } catch (error) {
       this.setState({dataLoading: false});
-      let message = error.data ? error.data.message : 'Data loading error'
+      let message = error.data ? error.data.message : 'Data loading error';
       Utils.showAlert(true, '', message, this.props);
     }
   }
