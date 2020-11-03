@@ -99,9 +99,7 @@ class ProjectsScreen extends Component {
     }
   }
 
-  componentDidMount() {
-    // this.loadProjects();
-  }
+  componentDidMount() {}
 
   arrayCompare(a, b) {
     const projectNameA = a.projectName.toUpperCase();
@@ -238,7 +236,10 @@ class ProjectsScreen extends Component {
       })
       .catch(error => {
         this.setState({dataLoading: false});
-        Utils.showAlert(true, '', error.data.message, this.props);
+        let message = error.data
+          ? error.data.message
+          : 'Error occurred while pin the project';
+        Utils.showAlert(true, '', message, this.props);
       });
   }
 
