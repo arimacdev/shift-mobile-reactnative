@@ -213,9 +213,10 @@ class MyTasks extends Component {
         } else {
           this.setState({dataLoading: false});
         }
-      } catch (e) {
+      } catch (error) {
         this.setState({dataLoading: false});
-        this.showAlert('', 'New task added fail');
+        let message = error.data ? error.data.message : 'New task added failed';
+        Utils.showAlert(true, '', message, this.props);
       }
     } else {
       Utils.showAlert(true, '', 'Please enter the task name', this.props);
