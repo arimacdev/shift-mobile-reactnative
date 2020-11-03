@@ -113,16 +113,17 @@ class MyTaskAddEditSubTaskScreen extends Component {
           this.showAlert('', 'Error');
         }
       } catch (e) {
+        this.setState({dataLoading: false});
         if (e.status == 401) {
-          this.setState({dataLoading: false});
           this.showAlert('', e.data.message);
+        } else {
+          this.showAlert('', 'Error occurred while editting the sub task');
         }
       }
     }
   }
 
   async addSubTask(userID) {
-    let isSelected = this.state.isSelected;
     let subTaskName = this.state.subTaskName;
     let taskID = this.state.taskID;
 
@@ -145,9 +146,11 @@ class MyTaskAddEditSubTaskScreen extends Component {
           this.showAlert('', 'Error');
         }
       } catch (e) {
+        this.setState({dataLoading: false});
         if (e.status == 401) {
-          this.setState({dataLoading: false});
           this.showAlert('', e.data.message);
+        } else {
+          this.showAlert('', 'Error occurred while adding the sub task');
         }
       }
     }
