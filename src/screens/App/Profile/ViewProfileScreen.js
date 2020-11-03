@@ -7,7 +7,6 @@ import {
   ScrollView,
   TouchableOpacity,
   Switch,
-  Alert,
   TextInput,
   FlatList,
 } from 'react-native';
@@ -60,7 +59,6 @@ class ViewProfileScreen extends Component {
       alertMsg: '',
       files: [],
       userID: '',
-      // switchValue: false,
       showMessageModal: false,
       userMetricsData: [],
       showFilePickerModal: false,
@@ -341,8 +339,10 @@ class ViewProfileScreen extends Component {
         this.setState({dataLoading: false});
         this.props.UserInfoSuccess(responseUser);
       })
-      .catch(() => {
+      .catch(error => {
         this.setState({dataLoading: false});
+        let message = error.data ? error.data.message : 'Data loading error';
+        Utils.showAlert(true, '', message, this.props);
       });
   }
 
@@ -443,11 +443,12 @@ class ViewProfileScreen extends Component {
         } else {
           this.setState({dataLoading: false});
         }
-      } catch (e) {
-        if (e.status == 500) {
-          this.setState({dataLoading: false});
-          this.showAlert('', e.data.message);
-        }
+      } catch (error) {
+        this.setState({dataLoading: false});
+        let message = error.data
+          ? error.data.message
+          : 'Error occurred while saving the user';
+        Utils.showAlert(true, '', message, this.props);
       }
     }
   }
@@ -526,10 +527,6 @@ class ViewProfileScreen extends Component {
   onPressCancel() {
     this.setState({showMessageModal: false});
   }
-
-  // toggleSwitch = value => {
-  //   this.updateSlackNotificationStatus()
-  // };
 
   renderSkillList(item) {
     return (
@@ -692,7 +689,6 @@ class ViewProfileScreen extends Component {
               />
               <Text style={styles.textBottom}>Enable Slack Notifications</Text>
               <Switch
-                // style={{marginTop: 30}}
                 onValueChange={value =>
                   this.updateSlackNotificationStatus(userEmail, value)
                 }
