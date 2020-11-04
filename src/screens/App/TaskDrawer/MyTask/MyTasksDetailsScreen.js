@@ -483,7 +483,7 @@ class MyTasksDetailsScreen extends Component {
       if (DocumentPicker.isCancel(err)) {
         console.log('file pick error', err);
       } else {
-        throw err;
+        Utils.showAlert(true, '', 'File pick error', this.props);
       }
     }
   }
@@ -575,7 +575,7 @@ class MyTasksDetailsScreen extends Component {
         );
       }
     } catch (err) {
-      console.warn(err);
+      Utils.showAlert(true, '', 'Permission request error', this.props);
     }
   }
 
@@ -620,7 +620,7 @@ class MyTasksDetailsScreen extends Component {
       if (e.status == 401) {
         this.showAlert('', e.data.message);
       } else {
-        this.showAlert('', e);
+        this.showAlert('', 'Error occurred while deleting the file');
       }
     }
   }
@@ -1221,9 +1221,12 @@ class MyTasksDetailsScreen extends Component {
       } else {
         this.setState({dataLoading: false});
       }
-    } catch {
+    } catch (error) {
       this.setState({dataLoading: false});
-      this.showAlert('', 'Task status update failed');
+      let message = error.data
+        ? error.data.message
+        : 'Task status update failed';
+      Utils.showAlert(true, '', message, this.props);
     }
   }
 
@@ -1258,9 +1261,12 @@ class MyTasksDetailsScreen extends Component {
         } else {
           this.setState({dataLoading: false});
         }
-      } catch {
+      } catch (error) {
         this.setState({dataLoading: false});
-        this.showAlert('', 'Task name update failed');
+        let message = error.data
+          ? error.data.message
+          : 'Task name update failed';
+        Utils.showAlert(true, '', message, this.props);
       }
     } else {
       Utils.showAlert(true, '', 'Please enter the task name', this.props);
@@ -1297,9 +1303,10 @@ class MyTasksDetailsScreen extends Component {
       } else {
         this.setState({dataLoading: false});
       }
-    } catch {
+    } catch (error) {
       this.setState({dataLoading: false});
-      this.showAlert('', 'Notes update failed');
+      let message = error.data ? error.data.message : 'Notes update failed';
+      Utils.showAlert(true, '', message, this.props);
     }
   }
 
@@ -1335,8 +1342,11 @@ class MyTasksDetailsScreen extends Component {
         })
         .catch(error => {
           this.setState({dataLoading: false});
-          this.showAlert('', error.data.message);
           this.setDueDate(this.state.taskResult);
+          let message = error.data
+            ? error.data.message
+            : 'Due date update failed';
+          Utils.showAlert(true, '', message, this.props);
         });
     } catch {
       this.setState({dataLoading: false});
@@ -1379,8 +1389,11 @@ class MyTasksDetailsScreen extends Component {
         })
         .catch(error => {
           this.setState({dataLoading: false});
-          this.showAlert('', error.data.message);
           this.setReminderDate(this.state.taskResult);
+          let message = error.data
+            ? error.data.message
+            : 'Remind date update failed';
+          Utils.showAlert(true, '', message, this.props);
         });
     } catch {
       this.setState({dataLoading: false});
