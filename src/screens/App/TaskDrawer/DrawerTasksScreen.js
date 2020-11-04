@@ -65,9 +65,12 @@ class DrawerTasksScreen extends Component {
         } else {
           this.setState({dataLoading: false});
         }
-      } catch (e) {
+      } catch (error) {
         this.setState({dataLoading: false});
-        this.showAlert('', e.data.message);
+        let message = error.data
+          ? error.data.message
+          : 'Error occurred while creating the group';
+        Utils.showAlert(true, '', message, this.props);
       }
     } else {
       Utils.showAlert(true, '', 'Please enter the group name', this.props);
