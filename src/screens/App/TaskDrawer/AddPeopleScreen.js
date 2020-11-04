@@ -161,6 +161,8 @@ class AddPeopleScreen extends Component {
       this.setState({dataLoading: false});
       if (e.status == 400 || e.status == 401 || e.status == 403) {
         this.showAlert('', e.data.message);
+      } else {
+        this.showAlert('', 'Error occurred while adding the user');
       }
     }
   }
@@ -244,10 +246,6 @@ class AddPeopleScreen extends Component {
   renderUserList(item) {
     const {navigation} = this.props;
     return (
-      // <TouchableOpacity
-      //   onPress={() =>
-      //     this.onSelectUser(item.firstName + ' ' + item.lastName, item.userId)
-      //   }>
       <View
         style={[
           styles.projectView,
@@ -262,9 +260,7 @@ class AddPeopleScreen extends Component {
         <View style={{flex: 1}}>
           <Text style={styles.text}>{item.label}</Text>
         </View>
-        {/* {this.colorCode(item)} */}
       </View>
-      // </TouchableOpacity>
     );
   }
 
