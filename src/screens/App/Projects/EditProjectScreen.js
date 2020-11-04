@@ -169,7 +169,6 @@ class EditProjectScreen extends Component {
       prevProps.updateProjectSuccess !== this.props.updateProjectSuccess &&
       this.props.updateProjectSuccess
     ) {
-      // this.showAlert('', 'Project Updated');
       this.setState({showMessageModal: true});
     }
     // delete project
@@ -193,7 +192,6 @@ class EditProjectScreen extends Component {
       prevProps.deleteProjectSuccess !== this.props.deleteProjectSuccess &&
       this.props.deleteProjectSuccess
     ) {
-      // this.showAlert('', 'Project Deleted');
       NavigationService.navigate('ProjectsScreen');
     }
   }
@@ -221,16 +219,15 @@ class EditProjectScreen extends Component {
           weightType: projectData.data.weightMeasure,
           weightTypeValue:
             projectData.data.weightMeasure == 'time' ? 'Time' : 'Story Points',
-          //projectStartDate : startDate,
-          //projectEndDate : endDate,
-          //projectStatus : projectStatus,
           dataLoading: false,
         });
       } else {
         this.setState({dataLoading: false});
       }
-    } catch {
+    } catch (error) {
       this.setState({dataLoading: false});
+      let message = error.data ? error.data.message : 'Data loading error';
+      Utils.showAlert(true, '', message, this.props);
     }
   }
 
@@ -349,8 +346,6 @@ class EditProjectScreen extends Component {
     this.hideTimePicker();
     let time = new Date(time1);
     let newTime = moment(time).format('hh:mmA');
-    // let newTime = time.getHours() + ':' + time.getMinutes();
-    // if (event.type == 'set') {
     if (this.state.reminder) {
       this.setState({
         projectEndTime: newTime,
@@ -368,12 +363,6 @@ class EditProjectScreen extends Component {
         time: new Date(time1),
       });
     }
-    // } else {
-    //   this.setState({
-    //     showPicker: false,
-    //     showTimePicker: false,
-    //   });
-    // }
   };
 
   onChangeDate(event, selectedDate) {
@@ -415,7 +404,6 @@ class EditProjectScreen extends Component {
   onChangeTime(event, selectedTime) {
     let time = new Date(selectedTime);
     let newTime = moment(time).format('hh:mmA');
-    // let newTime = time.getHours() + ':' + time.getMinutes();
 
     if (event.type == 'set') {
       if (this.state.reminder) {
@@ -839,7 +827,10 @@ class EditProjectScreen extends Component {
         })
         .catch(error => {
           this.setState({dataLoading: false});
-          Utils.showAlert(true, '', error.data.message, this.props);
+          let message = error.data
+            ? error.data.message
+            : 'Error occurred while updating the weight type';
+          Utils.showAlert(true, '', message, this.props);
         });
     } else {
       Utils.showAlert(true, '', 'Project name not matched', this.props);
@@ -911,7 +902,6 @@ class EditProjectScreen extends Component {
               selectedItemColor={'black'}
               dropdownOffset={{top: 10}}
               baseColor={colors.projectBgColor}
-              // renderBase={this.renderBase}
               renderAccessory={this.renderBase}
               itemTextStyle={{marginLeft: 15}}
               itemPadding={10}
@@ -971,7 +961,6 @@ class EditProjectScreen extends Component {
               selectedItemColor={'black'}
               dropdownOffset={{top: 10}}
               baseColor={colors.projectBgColor}
-              // renderBase={this.renderBase}
               renderAccessory={this.renderBase}
               itemTextStyle={{marginLeft: 15}}
               itemPadding={10}
