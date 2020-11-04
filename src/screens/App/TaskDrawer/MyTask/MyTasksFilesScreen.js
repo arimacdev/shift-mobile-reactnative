@@ -91,8 +91,8 @@ class MyTasksFilesScreen extends Component {
         this.setState({dataLoading: false});
       }
     } catch (e) {
+      this.setState({dataLoading: false});
       if (e.status == 401) {
-        this.setState({dataLoading: false});
         this.showAlert('', e.data.message);
       }
     }
@@ -218,7 +218,6 @@ class MyTasksFilesScreen extends Component {
       dateTime:
         moment().format('YYYY/MM/DD') + ' | ' + moment().format('HH:mm'),
     });
-    // this.setState({ files: this.state.files });
 
     await this.setState({
       files: this.state.files,
