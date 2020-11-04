@@ -27,6 +27,7 @@ import EmptyListView from '../../../components/EmptyListView';
 import AwesomeAlert from 'react-native-awesome-alerts';
 import PopupMenuUserList from '../../../components/PopupMenuUserList';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import Utils from '../../../utils/Utils';
 
 let dropData = [
   {
@@ -98,17 +99,7 @@ class Tasks extends Component {
     }
   }
 
-  async componentDidMount() {
-    // let selectedTaskGroupId = this.props.selectedTaskGroupId;
-    //   this.setState(
-    //     {
-    //       selectedTaskGroupId: selectedTaskGroupId,
-    //     },
-    //     () => {
-    //       this.getAllTaskInGroup();
-    //     },
-    //   );
-  }
+  async componentDidMount() {}
 
   async getAllTaskInGroup() {
     this.setState({
@@ -489,9 +480,10 @@ class Tasks extends Component {
       } else {
         this.showAlert('', 'Please enter the main task name first');
       }
-    } catch (e) {
+    } catch (error) {
       this.setState({dataLoading: false});
-      this.showAlert('', 'New task added fail');
+      let message = error.data ? error.data.message : 'New task added failed';
+      Utils.showAlert(true, '', message, this.props);
     }
   }
 
@@ -584,7 +576,10 @@ class Tasks extends Component {
       }
     } catch (error) {
       this.setState({dataLoading: false, textInputs: []});
-      this.showAlert('', 'New sub task added fail');
+      let message = error.data
+        ? error.data.message
+        : 'New sub task added failed';
+      Utils.showAlert(true, '', message, this.props);
     }
   }
 
