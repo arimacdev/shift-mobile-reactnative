@@ -407,7 +407,6 @@ class MeetingScreen extends Component {
   }
 
   viewMeetings() {
-    // this.setState({indexMain: 3});
     this.props.navigation.goBack();
   }
 
