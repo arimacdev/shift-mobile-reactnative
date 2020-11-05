@@ -257,8 +257,6 @@ class GroupTasksDetailsScreen extends Component {
     });
 
     this.fetchData(selectedGroupTaskID, selectedTaskID);
-    // this.fetchFilesData(selectedGroupTaskID, selectedTaskID);
-    // this.getAllTaskByGroup(selectedGroupTaskID);
   }
 
   async fetchFilesData(selectedGroupTaskID, selectedTaskID) {
@@ -277,7 +275,7 @@ class GroupTasksDetailsScreen extends Component {
     }
   }
 
-  async gerTaskParentName(parentTaskId) {
+  async getParentTaskName(parentTaskId) {
     this.setState({dataLoading: true});
     try {
       let taskResult = await APIServices.getGroupSingleTaskData(
@@ -294,7 +292,7 @@ class GroupTasksDetailsScreen extends Component {
     }
   }
 
-  async getSubTAskDetails() {
+  async getSubTaskDetails() {
     this.setState({dataLoading: true});
     await APIServices.getChildTasksOfTaskGroupData(
       this.state.selectedGroupTaskID,
@@ -316,7 +314,10 @@ class GroupTasksDetailsScreen extends Component {
       })
       .catch(error => {
         this.setState({dataLoading: false});
-        this.showAlert('', error.data.message);
+        let message = error.data
+          ? error.data.message
+          : 'Error occurred while loading the sub tasks details';
+        Utils.showAlert(true, '', message, this.props);
       });
   }
 
@@ -451,7 +452,6 @@ class GroupTasksDetailsScreen extends Component {
         dateTime:
           moment().format('YYYY/MM/DD') + ' | ' + moment().format('HH:mm'),
       });
-      // this.setState({ files: this.state.files });
 
       await this.setState({
         files: this.state.files,
@@ -512,9 +512,9 @@ class GroupTasksDetailsScreen extends Component {
       }
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
-        console.log('file pick error', err);
+        console.log('File pick error', err);
       } else {
-        throw err;
+        Utils.showAlert(true, '', 'File pick error', this.props);
       }
     }
   }
@@ -610,7 +610,7 @@ class GroupTasksDetailsScreen extends Component {
         );
       }
     } catch (err) {
-      console.warn(err);
+      Utils.showAlert(true, '', 'Permission request error', this.props);
     }
   }
 
@@ -656,7 +656,10 @@ class GroupTasksDetailsScreen extends Component {
       })
       .catch(error => {
         this.setState({dataLoading: false});
-        this.showAlert('', error.data.message);
+        let message = error.data
+          ? error.data.message
+          : 'Error occurred while deleting the file';
+        Utils.showAlert(true, '', message, this.props);
       });
   }
 
@@ -730,10 +733,6 @@ class GroupTasksDetailsScreen extends Component {
     details = size + ' | ' + date + ' by ' + name;
 
     return (
-      // <TouchableOpacity
-      //   onPress={() =>
-      //     this.props.navigation.navigate('FilesView', {filesData: item})
-      //   }>
       <View style={styles.filesView}>
         <Image
           source={this.getTypeIcons(item.taskFileName)}
@@ -768,7 +767,6 @@ class GroupTasksDetailsScreen extends Component {
           </TouchableOpacity>
         </View>
       </View>
-      // </TouchableOpacity>
     );
   }
 
@@ -813,6 +811,9 @@ class GroupTasksDetailsScreen extends Component {
       if (error.data.status == 404) {
         Utils.showAlert(true, '', 'Could not load the details', this.props);
         this.props.navigation.goBack();
+      } else {
+        let message = error.data ? error.data.message : 'Data loading error';
+        Utils.showAlert(true, '', message, this.props);
       }
     }
   }
@@ -987,11 +988,11 @@ class GroupTasksDetailsScreen extends Component {
         addParentTaskShow: false,
         addChildTaskShow: false,
       });
-      this.gerTaskParentName(taskResult.data.parentId);
+      this.getParentTaskName(taskResult.data.parentId);
     }
 
     if (isParent) {
-      this.getSubTAskDetails();
+      this.getSubTaskDetails();
     }
   }
 
@@ -1407,7 +1408,10 @@ class GroupTasksDetailsScreen extends Component {
       })
       .catch(error => {
         this.setState({dataLoading: false});
-        this.showAlert('', error.data.message);
+        let message = error.data
+          ? error.data.message
+          : 'Error occurred while submitting the task notes';
+        Utils.showAlert(true, '', message, this.props);
       });
   }
 
@@ -1441,7 +1445,10 @@ class GroupTasksDetailsScreen extends Component {
       })
       .catch(error => {
         this.setState({dataLoading: false});
-        this.showAlert('', error.data.message);
+        let message = error.data
+          ? error.data.message
+          : 'Error occurred while updating the assignee';
+        Utils.showAlert(true, '', message, this.props);
       });
   }
 
@@ -1475,7 +1482,10 @@ class GroupTasksDetailsScreen extends Component {
       })
       .catch(error => {
         this.setState({dataLoading: false});
-        this.showAlert('', error.data.message);
+        let message = error.data
+          ? error.data.message
+          : 'Error occurred while updating the task status';
+        Utils.showAlert(true, '', message, this.props);
       });
   }
 
@@ -1503,9 +1513,11 @@ class GroupTasksDetailsScreen extends Component {
         this.setState({dataLoading: false});
       }
     } catch (e) {
+      this.setState({dataLoading: false});
       if (e.status == 401 || e.status == 403) {
-        this.setState({dataLoading: false});
         this.showAlert('', e.data.message);
+      } else {
+        this.showAlert('', 'Error occurred while updating the task name');
       }
     }
   }
@@ -1545,8 +1557,11 @@ class GroupTasksDetailsScreen extends Component {
       })
       .catch(error => {
         this.setState({dataLoading: false});
-        this.showAlert('', error.data.message);
         this.setDueDate(this.state.taskResult);
+        let message = error.data
+          ? error.data.message
+          : 'Error occurred while updating the task due date';
+        Utils.showAlert(true, '', message, this.props);
       });
   }
 
@@ -1582,12 +1597,13 @@ class GroupTasksDetailsScreen extends Component {
         this.setState({dataLoading: false});
         this.setReminderDate(this.state.taskResult);
       }
-    } catch (e) {
-      if (e.status == 401 || e.status == 403) {
-        this.setState({dataLoading: false});
-        this.showAlert('', e.data.message);
-        this.setReminderDate(this.state.taskResult);
-      }
+    } catch (error) {
+      this.setState({dataLoading: false});
+      this.setReminderDate(this.state.taskResult);
+      let message = error.data
+        ? error.data.message
+        : 'Error occurred while updating the task reminder date';
+      Utils.showAlert(true, '', message, this.props);
     }
   }
 
@@ -1623,7 +1639,10 @@ class GroupTasksDetailsScreen extends Component {
       })
       .catch(error => {
         this.setState({dataLoading: false, deleteTaskSuccess: false});
-        this.showAlert('', error.data.message);
+        let message = error.data
+          ? error.data.message
+          : 'Error occurred while deleting the task';
+        Utils.showAlert(true, '', message, this.props);
       });
   }
 
@@ -1738,7 +1757,6 @@ class GroupTasksDetailsScreen extends Component {
   };
 
   onTaskDeketePress() {
-    // this.deleteTask();
     let isParent = this.state.isParent;
     let descriptionTask =
       "You're about to permanently delete this group task, its comments and attachments, and all of its data.\nIf you're not sure, you can close this pop up.";
@@ -1846,7 +1864,10 @@ class GroupTasksDetailsScreen extends Component {
       })
       .catch(error => {
         this.setState({dataLoading: false});
-        this.showAlert('', error.data.message);
+        let message = error.data
+          ? error.data.message
+          : 'Error occurred while adding the task';
+        Utils.showAlert(true, '', message, this.props);
       });
   }
 
@@ -1859,7 +1880,6 @@ class GroupTasksDetailsScreen extends Component {
         onBackButtonPress={() => this.onCloseTaskModal()}
         onBackdropPress={() => this.onCloseTaskModal()}
         onRequestClose={() => this.onCloseTaskModal()}
-        // coverScreen={false}
         backdropTransitionOutTiming={0}>
         <View style={styles.modalMainView}>
           <View style={styles.modalHeaderView}>
@@ -1874,7 +1894,6 @@ class GroupTasksDetailsScreen extends Component {
           </View>
           <View style={styles.taskModalDropDownView}>
             <Dropdown
-              // style={{}}
               label=""
               labelFontSize={0}
               data={this.state.taskModalData}
@@ -2050,7 +2069,6 @@ class GroupTasksDetailsScreen extends Component {
               <View style={styles.taskTypeDropMainView}>
                 <View style={[styles.taskTypeDropDownView]}>
                   <Dropdown
-                    // style={{}}
                     label=""
                     labelFontSize={0}
                     data={taskStatusData}
@@ -2092,9 +2110,7 @@ class GroupTasksDetailsScreen extends Component {
                   placeholder={'Notes'}
                   value={this.state.note}
                   multiline={true}
-                  // blurOnSubmit={true}
                   onChangeText={text => this.changeTaskNote(text)}
-                  // onSubmitEditing={() => this.onSubmitTaskNote(this.state.note)}
                 />
                 <TouchableOpacity
                   style={styles.updateNotesView}
@@ -2138,8 +2154,6 @@ class GroupTasksDetailsScreen extends Component {
               data={this.state.filesData}
               renderItem={({item}) => this.renderFilesList(item)}
               keyExtractor={item => item.projId}
-              // onRefresh={() => this.onRefresh()}
-              // refreshing={isFetching}
             />
             {this.state.showPicker ? this.renderDatePicker() : null}
             {this.state.showTimePicker ? this.renderTimePicker() : null}
