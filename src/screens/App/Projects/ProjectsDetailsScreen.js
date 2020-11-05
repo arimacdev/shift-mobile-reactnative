@@ -299,7 +299,6 @@ class ProjectsDetailsScreen extends Component {
 
   navigateToEditProject() {
     let projectID = this.state.projectID;
-    //props.navigation.navigate('EditProjectScreen',{projDetails:projectID});
     NavigationService.navigate('EditProjectScreen', {projDetails: projectID});
   }
 
